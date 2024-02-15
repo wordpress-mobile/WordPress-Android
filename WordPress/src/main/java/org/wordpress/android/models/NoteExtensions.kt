@@ -23,6 +23,7 @@ sealed class Notification {
             NoteType.Like -> Like(url = rawNote.url, title = rawNote.title)
             NoteType.Reblog -> Reblog(url= rawNote.url, title = rawNote.title)
             NoteType.NewPost -> NewPost(url= rawNote.url, title = rawNote.title)
+            NoteType.Comment -> Comment
             else -> Unknown
         }
     }

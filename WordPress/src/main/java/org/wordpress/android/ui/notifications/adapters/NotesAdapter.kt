@@ -4,6 +4,7 @@ package org.wordpress.android.ui.notifications.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.AsyncTask
 import android.text.Spanned
 import android.text.TextUtils
@@ -18,6 +19,7 @@ import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +43,7 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
@@ -273,7 +276,6 @@ class NotesAdapter(
 
     private fun Note.shouldShowMultipleAvatars() = isFollowType || isLikeType || isCommentLikeType
 
-
     private fun handleMaxLines(subject: TextView, detail: TextView) {
         subject.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
@@ -303,6 +305,21 @@ class NotesAdapter(
         cancelReloadNotesTask()
         reloadNotesFromDBTask = ReloadNotesFromDBTask()
         reloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    }
+
+    /**
+     * Update the note in the adapter and notify the change
+     */
+    fun updateNote(note: Note) {
+        val notePosition = notes.indexOfFirst { it.id == note.id }
+        if (notePosition != -1) {
+            notes[notePosition] = note
+        }
+        val filteredPosition = filteredNotes.indexOfFirst { it.id == note.id }
+        if (filteredPosition != -1) {
+            filteredNotes[filteredPosition] = note
+            notifyItemChanged(filteredPosition)
+        }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -359,28 +376,53 @@ class NotesAdapter(
         @Suppress("ForbiddenComment")
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
-                Comment -> {
-                    actionIcon.setImageResource(R.drawable.star_empty)
-                    actionIcon.isVisible = true
-                    actionIcon.setOnClickListener {
-                        // TODO: handle tap on comment's inline action icon (the star)
-                    }
-                }
-                is PostNotification -> {
-                    actionIcon.setImageResource(R.drawable.block_share)
-                    actionIcon.isVisible = true
-                    actionIcon.setOnClickListener {
-                        coroutineScope.launch {
-                            inlineActionEvents.emit(
-                                InlineActionEvent.SharePostButtonTapped(notification)
-                            )
-                        }
-                    }
-                }
+                Comment -> bindLikeCommentAction(note)
+                is PostNotification.NewPost -> bindLikePostAction()
+                is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
                     actionIcon.isVisible = false
                 }
             }
+        }
+
+        private fun bindShareAction(notification: PostNotification) {
+            actionIcon.setImageResource(R.drawable.block_share)
+            val color = contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
+            actionIcon.isVisible = true
+            actionIcon.setOnClickListener {
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.SharePostButtonTapped(notification)
+                    )
+                }
+            }
+        }
+
+        private fun bindLikePostAction() {
+            // implement like post action
+        }
+
+        private fun bindLikeCommentAction(note: Note) {
+            if (note.canLike().not()) return
+            setupLikeIcon(note.hasLikedComment())
+            actionIcon.setOnClickListener {
+                val liked = note.hasLikedComment().not()
+                setupLikeIcon(liked)
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.LikeCommentButtonTapped(note, liked)
+                    )
+                }
+            }
+        }
+
+        private fun setupLikeIcon(liked: Boolean) {
+            actionIcon.isVisible = true
+            actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+            val color = if (liked) contentView.context.getColor(R.color.inline_action_filled)
+            else contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
         }
     }
 
@@ -423,15 +465,19 @@ class NotesAdapter(
                     FILTERS.FILTER_COMMENT -> if (currentNote.isCommentType) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_FOLLOW -> if (currentNote.isFollowType) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_UNREAD -> if (currentNote.isUnread) {
                         filteredNotes.add(currentNote)
                     }
+
                     FILTERS.FILTER_LIKE -> if (currentNote.isLikeType) {
                         filteredNotes.add(currentNote)
                     }
+
                     else -> Unit
                 }
             }
