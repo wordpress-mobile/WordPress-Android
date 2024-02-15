@@ -28,15 +28,13 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.LocaleManager;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import javax.inject.Inject;
-
-import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_FOLLOWING_FETCHED;
 
 public class ReaderUpdateLogic {
     /***
@@ -60,11 +58,6 @@ public class ReaderUpdateLogic {
 
     @Inject AccountStore mAccountStore;
     @Inject TagUpdateClientUtilsProvider mClientUtilsProvider;
-
-    @Inject ReaderTracker mReaderTracker;
-
-    private static final String ANALYTICS_COUNT_KEY = "count";
-    private static final String ANALYTICS_TYPE_KEY = "type";
 
     public ReaderUpdateLogic(Context context, WordPress app, ServiceCompletionListener listener) {
         mCompletionListener = listener;
@@ -128,24 +121,17 @@ public class ReaderUpdateLogic {
                             .get("read/menu", params, null, listener, errorListener);
     }
 
-    private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
-        boolean updateDone = false;
-
+    private void updateDisplayNameForServerTopics(ReaderTagList serverTopics) {
         for (ReaderTag tag : serverTopics) {
             String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_subscribed_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isPostsILike()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }
-
-        return updateDone;
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -156,10 +142,10 @@ public class ReaderUpdateLogic {
                 // reader since user won't have any followed tags
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
+                updateDisplayNameForServerTopics(serverTopics);
 
-                boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
-
-                serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
+                final ReaderTagList subscribedTags = parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED);
+                serverTopics.addAll(subscribedTags);
 
                 // manually insert Bookmark tag, as server doesn't support bookmarking yet
                 // and check if we are going to change it to trigger UI update in case of downgrade
@@ -182,13 +168,10 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
                 localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
+                localTopics.addAll(Collections.singletonList(ReaderTag.createDiscoverPostCardsTag()));
 
-                if (
-                        !localTopics.isSameList(serverTopics)
-                        || displayNameUpdateWasNeeded
-                ) {
-                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
-                                              + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
+                if (!localTopics.isSameList(serverTopics)) {
+                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed ");
 
                     if (!mAccountStore.hasAccessToken()) {
                         // Do not delete locally saved tags for logged out user
@@ -203,7 +186,7 @@ public class ReaderUpdateLogic {
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                     // bump analytics
-                    trackFollowedTagsOrSitesAnalytics(true, serverTopics.size());
+                    ReaderTracker.trackFollowedTagsCount(subscribedTags.size());
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
@@ -326,13 +309,6 @@ public class ReaderUpdateLogic {
         WordPress.getRestClientUtilsV1_2().get("read/following/mine?meta=site%2Cfeed", listener, errorListener);
     }
 
-    private void trackFollowedTagsOrSitesAnalytics(final boolean isTag, final int numberOfItems) {
-        Map<String, String> props = new HashMap<>();
-        props.put(ANALYTICS_TYPE_KEY, isTag ? "tags" : "sites");
-        props.put(ANALYTICS_COUNT_KEY, String.valueOf(numberOfItems));
-        mReaderTracker.track(READER_FOLLOWING_FETCHED, props);
-    }
-
     private void handleFollowedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override
@@ -353,7 +329,7 @@ public class ReaderUpdateLogic {
                         EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
                         // bump analytics
                         final int totalSites = jsonObject == null ? 0 : jsonObject.optInt("total_subscriptions", 0);
-                        trackFollowedTagsOrSitesAnalytics(false, totalSites);
+                        ReaderTracker.trackFollowedSitesCount(totalSites);
                     }
                 }
 

@@ -15,6 +15,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
+import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -143,6 +144,7 @@ public class ReaderTagActions {
             AppLog.i(T.READER, "add tag succeeded");
             // the response will contain the list of the user's followed tags
             ReaderTagList followedTags = parseFollowedTags(jsonObject);
+            ReaderTracker.trackFollowedTagsCount(followedTags.size());
             ReaderTagTable.replaceFollowedTags(followedTags);
             if (actionListener != null) {
                 ReaderActions.callActionListener(actionListener, true);
