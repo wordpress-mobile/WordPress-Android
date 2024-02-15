@@ -24,6 +24,7 @@ import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
+import org.wordpress.android.ui.reader.utils.DateProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -170,6 +171,14 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
                 localTopics.addAll(Collections.singletonList(ReaderTag.createDiscoverPostCardsTag()));
 
+                // Check last time we've update tags followed analytics for this user, and force bumping if > 1 day
+                boolean shouldBumpTagsAnalytics = false;
+                long tagsUpdatedTimestamp = AppPrefs.getReaderTagsUpdatedTimestamp();
+                long now = new DateProvider().getCurrentDate().getTime();
+                if (now - tagsUpdatedTimestamp > 1000 * 60 * 60 * 12) { // 12 hrs
+                    shouldBumpTagsAnalytics = true;
+                }
+
                 if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed ");
 
@@ -186,6 +195,9 @@ public class ReaderUpdateLogic {
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                     // bump analytics
+                    shouldBumpTagsAnalytics = true;
+                }
+                if (shouldBumpTagsAnalytics) {
                     ReaderTracker.trackFollowedTagsCount(subscribedTags.size());
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
