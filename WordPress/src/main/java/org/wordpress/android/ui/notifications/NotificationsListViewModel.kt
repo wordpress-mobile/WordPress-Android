@@ -94,5 +94,9 @@ class NotificationsListViewModel @Inject constructor(
     sealed class InlineActionEvent {
         data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
+
+        companion object {
+            const val KEY_INLINE_ACTION = "inline_action"
+        }
     }
 }
