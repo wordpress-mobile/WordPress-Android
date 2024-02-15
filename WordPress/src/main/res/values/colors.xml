@@ -151,4 +151,7 @@
     <color name="partial_media_access_prompt_background">#DEDEDE</color>
 
     <color name="text_secondary">#8A8A8E</color>
+
+    <!-- Notifications -->
+    <color name="inline_action_filled">@color/jetpack_green_50</color>
 </resources>
