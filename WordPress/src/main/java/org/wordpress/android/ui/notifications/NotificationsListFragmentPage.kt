@@ -241,9 +241,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                     )
                 },
                 {
-                    // Open the latest version of this note in case it has changed, which can happen if the note was tapped
-                    // from the list after it was updated by another fragment (such as NotificationsDetailListFragment).
-                    openNoteForReply(activity, noteId, false, null, notesAdapter!!.currentFilter, false)
+                    // Open the latest version of this note in case it has changed, which can happen if the note was
+                    // tapped from the list after it was updated by another fragment (such as the
+                    // NotificationsDetailListFragment).
+                    openNoteForReply(activity, noteId, filter = notesAdapter?.currentFilter)
                 }
             )
         }
@@ -533,10 +534,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
-            shouldShowKeyboard: Boolean,
-            replyText: String?,
-            filter: FILTERS?,
-            isTappedFromPushNotification: Boolean
+            shouldShowKeyboard: Boolean = false,
+            replyText: String? = null,
+            filter: FILTERS? = null,
+            isTappedFromPushNotification: Boolean = false,
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {
                 return
