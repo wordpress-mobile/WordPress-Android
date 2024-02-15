@@ -417,6 +417,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 }
             }
             is InlineActionEvent.LikeCommentButtonTapped -> viewModel.likeComment(actionEvent.note, actionEvent.liked)
+            is InlineActionEvent.LikePostButtonTapped -> viewModel.likePost(actionEvent.note, actionEvent.liked)
         }
     }
 

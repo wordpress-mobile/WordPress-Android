@@ -23,6 +23,15 @@ class ReaderPostActionsWrapper @Inject constructor(private val siteStore: SiteSt
         actionListener: ActionListener
     ) = ReaderPostActions.performLikeActionRemote(post, isAskingToLike, wpComUserId, actionListener)
 
+    fun performLikeActionRemote(
+        post: ReaderPost?,
+        postId: Long,
+        blogId: Long,
+        isAskingToLike: Boolean,
+        wpComUserId: Long,
+        actionListener: ActionListener
+    ) = ReaderPostActions.performLikeActionRemote(post, blogId, postId, isAskingToLike, wpComUserId, actionListener)
+
     fun bumpPageViewForPost(post: ReaderPost) = ReaderPostActions.bumpPageViewForPost(siteStore, post)
 
     fun requestRelatedPosts(sourcePost: ReaderPost) = ReaderPostActions.requestRelatedPosts(sourcePost)

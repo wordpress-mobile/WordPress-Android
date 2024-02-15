@@ -376,7 +376,7 @@ class NotesAdapter(
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
                 Comment -> bindLikeCommentAction(note)
-                is PostNotification.NewPost -> bindLikePostAction()
+                is PostNotification.NewPost -> bindLikePostAction(note)
                 is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
                     actionIcon.isVisible = false
@@ -398,12 +398,26 @@ class NotesAdapter(
             }
         }
 
-        private fun bindLikePostAction() {
-            // implement like post action
+        private fun bindLikePostAction(note: Note) {
+            if (note.canLikePost().not()) return
+
+            actionIcon.isVisible = true
+            actionIcon.setImageResource(if (note.hasLikedPost()) R.drawable.star_filled else R.drawable.star_empty)
+            ImageViewCompat.setImageTintList(actionIcon, null)
+
+            actionIcon.setOnClickListener {
+                val liked = note.hasLikedPost().not()
+                actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.LikePostButtonTapped(note, liked)
+                    )
+                }
+            }
         }
 
         private fun bindLikeCommentAction(note: Note) {
-            if (note.canLike().not()) return
+            if (note.canLikeComment().not()) return
 
             actionIcon.isVisible = true
             actionIcon.setImageResource(if (note.hasLikedComment()) R.drawable.star_filled else R.drawable.star_empty)

@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
@@ -21,6 +23,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NO
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -34,8 +37,10 @@ class NotificationsListViewModel @Inject constructor(
     private val gcmMessageHandler: GCMMessageHandler,
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore,
+    private val postActionsWrapper: ReaderPostActionsWrapper,
+    private val accountStore: AccountStore
 
-    ) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
@@ -92,8 +97,28 @@ class NotificationsListViewModel @Inject constructor(
         }
     }
 
+    fun likePost(note: Note, liked: Boolean) {
+        note.setLikedPost(liked)
+        _updatedNote.postValue(note)
+        viewModelScope.launch {
+            val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
+            postActionsWrapper.performLikeActionRemote(
+                post,
+                note.postId.toLong(),
+                note.siteId.toLong(),
+                liked,
+                accountStore.account.userId
+            ) { success ->
+                if (success) {
+                    NotificationsTable.saveNote(note)
+                }
+            }
+        }
+    }
+
     sealed class InlineActionEvent {
         data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
+        class LikePostButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
     }
 }
