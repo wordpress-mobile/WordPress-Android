@@ -171,7 +171,7 @@ class StatsViewModel
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
 
-            if (launchedFrom == StatsLaunchedFrom.STATS_WIDGET) {
+            if (launchedFrom == StatsLaunchedFrom.WIDGET) {
                 analyticsTracker.track(AnalyticsTracker.Stat.STATS_WIDGET_TAPPED, statsSiteProvider.siteModel)
             }
 

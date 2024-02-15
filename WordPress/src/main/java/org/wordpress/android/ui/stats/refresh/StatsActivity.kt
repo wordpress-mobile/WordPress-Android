@@ -88,8 +88,15 @@ class StatsActivity : LocaleAwareActivity() {
         }
     }
 
-    enum class StatsLaunchedFrom {
-        STATS_WIDGET,
-        NOTIFICATIONS
+    enum class StatsLaunchedFrom(val value: String) {
+        QUICK_ACTIONS("quick_actions"),
+        TODAY_STATS_CARD("today_stats_card"),
+        ROW("row"),
+        WIDGET("widget"),
+        NOTIFICATION("notification"),
+        LINK("link"),
+        SHORTCUT("shortcut"),
+        ACTIVITY_LOG("activity_log"),
+        JETPACK_CONNECTION("jetpack_connection")
     }
 }
