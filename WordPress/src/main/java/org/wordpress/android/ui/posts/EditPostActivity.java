@@ -71,13 +71,13 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
-import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
+import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -177,6 +177,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener;
+import org.wordpress.android.ui.posts.prepublishing.publishing.PublishingViewModel;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -441,6 +442,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private StorageUtilsViewModel mStorageUtilsViewModel;
     private EditorBloggingPromptsViewModel mEditorBloggingPromptsViewModel;
     private EditorJetpackSocialViewModel mEditorJetpackSocialViewModel;
+    private PublishingViewModel mPublishingViewModel;
 
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
@@ -578,6 +580,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .get(EditorBloggingPromptsViewModel.class);
         mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(EditorJetpackSocialViewModel.class);
+        mPublishingViewModel = new ViewModelProvider(this, mViewModelFactory).get(PublishingViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         createEditShareMessageActivityResultLauncher();

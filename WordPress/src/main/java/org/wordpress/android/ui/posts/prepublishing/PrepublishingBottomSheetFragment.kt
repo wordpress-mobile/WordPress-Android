@@ -44,6 +44,7 @@ import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActio
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
+import org.wordpress.android.ui.posts.prepublishing.publishing.PublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.publishsettings.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.social.PrepublishingSocialFragment
 import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
@@ -66,7 +67,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     @Inject
     internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private lateinit var viewModel: PrepublishingViewModel
+    private lateinit var publishingViewModel: PublishingViewModel
+
     private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
     private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
@@ -180,6 +184,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory)[PrepublishingViewModel::class.java]
+
+        publishingViewModel = ViewModelProvider(this, viewModelFactory)[PublishingViewModel::class.java]
 
         viewModel.navigationTarget.observeEvent(this) { navigationState ->
             navigateToScreen(navigationState)
