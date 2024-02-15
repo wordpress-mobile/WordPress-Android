@@ -13,6 +13,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.push.GCMMessageHandler
@@ -21,7 +23,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
@@ -30,9 +31,6 @@ private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 class NotificationsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
-
-    @Mock
-    private lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Mock
     private lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
@@ -50,6 +48,12 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
 
     @Mock
+    private lateinit var siteStore: SiteStore
+
+    @Mock
+    private lateinit var commentStore: CommentsStore
+
+    @Mock
     private lateinit var action: ActionHandler
 
     private lateinit var viewModel: NotificationsListViewModel
@@ -59,12 +63,13 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         viewModel = NotificationsListViewModel(
             testDispatcher(),
             appPrefsWrapper,
-            jetpackBrandingUtils,
             jetpackFeatureRemovalOverlayUtil,
             gcmMessageHandler,
             notificationsUtilsWrapper,
             readerPostTableWrapper,
-            readerPostActionsWrapper
+            readerPostActionsWrapper,
+            siteStore,
+            commentStore
         )
     }
 
