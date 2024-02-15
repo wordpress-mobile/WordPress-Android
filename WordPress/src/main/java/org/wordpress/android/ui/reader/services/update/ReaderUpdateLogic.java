@@ -14,6 +14,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
@@ -327,6 +328,24 @@ public class ReaderUpdateLogic {
             public void run() {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
+
+                // Remove duplicates from the server blogs list if local and remote doesn't match.
+                // This is required because under obscure circumstances the server can return duplicates.
+                // We could have modified the function isSameList to eliminate the length check,
+                // but it's better to keep it separate since we aim to remove this check as soon as possible.
+                if (serverBlogs.size() != localBlogs.size()) {
+                    for (int i = 0; i < serverBlogs.size(); i++) {
+                        ReaderBlog outer = serverBlogs.get(i);
+                        for (int j = serverBlogs.size() - 1; j > i; j--) {
+                            ReaderBlog inner = serverBlogs.get(j);
+                            if (outer.blogId == inner.blogId && outer.feedId == inner.feedId) {
+                                // If the 'id' && 'feedId' properties are the same,
+                                // remove the later object to avoid duplicates
+                                serverBlogs.remove(j);
+                            }
+                        }
+                    }
+                }
 
                 if (!localBlogs.isSameList(serverBlogs)) {
                     // always update the list of followed blogs if there are *any* changes between
