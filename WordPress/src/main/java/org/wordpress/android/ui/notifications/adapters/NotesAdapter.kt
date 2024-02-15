@@ -1,5 +1,4 @@
 @file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.notifications.adapters
 
 import android.annotation.SuppressLint
@@ -47,7 +46,6 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
-
 
 class NotesAdapter(
     context: Context, dataLoadedListener: DataLoadedListener,
@@ -386,7 +384,7 @@ class NotesAdapter(
         }
 
         private fun bindLikePostAction() {
-            // TODO: implement like post action
+            TODO("implement like post action")
         }
 
         private fun bindLikeCommentAction(note: Note) {
