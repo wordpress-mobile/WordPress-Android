@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
+import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -86,6 +87,9 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 
+    @Mock
+    lateinit var trafficOverviewMapper: TrafficOverviewMapper
+
     private lateinit var useCase: OverviewUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -111,7 +115,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
             localeManagerWrapper,
             resourceProvider,
             statsUtils,
-            trafficTabFeatureConfig
+            trafficTabFeatureConfig,
+            trafficOverviewMapper
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
