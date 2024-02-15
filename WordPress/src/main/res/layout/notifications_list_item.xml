@@ -116,7 +116,7 @@
             android:ellipsize="end"
             android:importantForAccessibility="no"
             android:maxLines="2"
-            android:gravity="start"
+            android:textAlignment="viewStart"
             android:textAppearance="@style/WordPress.TextAppearance.NotificationItemContent"
             android:visibility="gone"
             app:layout_goneMarginEnd="@dimen/margin_extra_large"
