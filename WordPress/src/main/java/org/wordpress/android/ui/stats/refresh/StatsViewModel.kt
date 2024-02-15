@@ -114,7 +114,7 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
-        val launchedFrom = intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_LAUNCHED_FROM)
+        val launchedFrom = intent.getSerializableExtraCompat<StatsLaunchedFrom>(StatsActivity.ARG_LAUNCHED_FROM)
         val initialTimeFrame = getInitialTimeFrame(intent)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
@@ -148,7 +148,7 @@ class StatsViewModel
     @Suppress("ComplexMethod", "LongParameterList")
     fun start(
         localSiteId: Int,
-        launchedFrom: Serializable?,
+        launchedFrom: StatsLaunchedFrom?,
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
         restart: Boolean,

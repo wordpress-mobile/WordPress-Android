@@ -123,7 +123,7 @@ class StatsViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil
         )
 
-        viewModel.start(1, false, null, null, false, null)
+        viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
     }
 
     @Test
@@ -337,7 +337,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
     private fun startViewModel(statsModuleEnabled: Boolean = true) {
         whenever(site.isActiveModuleEnabled(any())).thenReturn(statsModuleEnabled)
-        viewModel.start(1, false, null, null, false, null)
+        viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, null, null, false, null)
     }
 
     private val networkUnavailableError = StatsModuleActivateRequestState.Failure.NetworkUnavailable
