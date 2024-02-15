@@ -9,9 +9,12 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
-import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
@@ -21,7 +24,6 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -29,33 +31,29 @@ import javax.inject.Named
 
 @HiltViewModel
 class NotificationsListViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val gcmMessageHandler: GCMMessageHandler,
     private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
-    ) : ScopedViewModel(mainDispatcher) {
+    private val siteStore: SiteStore,
+    private val commentStore: CommentsStore
+) : ScopedViewModel(bgDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
     private val _showJetpackOverlay = MutableLiveData<Event<Boolean>>()
     val showJetpackOverlay: LiveData<Event<Boolean>> = _showJetpackOverlay
 
+    private val _updatedNote = MutableLiveData<Note>()
+    val updatedNote: LiveData<Note> = _updatedNote
+
     val inlineActionEvents = MutableSharedFlow<InlineActionEvent>()
 
     val isNotificationsPermissionsWarningDismissed
         get() = appPrefsWrapper.notificationPermissionsWarningDismissed
-
-    init {
-        if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-    }
-
-    private fun showJetpackPoweredBottomSheet() {
-//        _showJetpackPoweredBottomSheet.value = Event(true)
-    }
 
     fun onResume() {
         if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(NOTIFICATIONS))
@@ -85,6 +83,19 @@ class NotificationsListViewModel @Inject constructor(
                 NotificationsTable.saveNotes(it, false)
                 EventBus.getDefault().post(NotificationsChanged())
             }
+    }
+
+    fun likeComment(note: Note, liked: Boolean) = launch {
+        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: SiteModel().apply {
+            siteId = note.siteId.toLong()
+            setIsWPCom(true)
+        }
+        note.setLikedComment(liked)
+        _updatedNote.postValue(note)
+        val result = commentStore.likeComment(site, note.commentId, null, liked)
+        if (result.isError.not()) {
+            NotificationsTable.saveNote(note)
+        }
     }
 
     fun openNote(
@@ -117,6 +128,11 @@ class NotificationsListViewModel @Inject constructor(
     }
 
     sealed class InlineActionEvent {
-        data class SharePostButtonTapped(val notification: PostNotification): InlineActionEvent()
+        data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
+        class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
+
+        companion object {
+            const val KEY_INLINE_ACTION = "inline_action"
+        }
     }
 }

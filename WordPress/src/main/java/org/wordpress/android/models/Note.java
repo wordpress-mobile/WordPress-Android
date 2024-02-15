@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DateUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -520,6 +521,17 @@ public class Note {
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
         return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+    }
+
+    public void setLikedComment(boolean liked) {
+        JSONObject jsonActions = getCommentActions();
+        if (jsonActions != null) {
+            try {
+                jsonActions.put(ACTION_KEY_LIKE, liked);
+            } catch (JSONException e) {
+                AppLog.e(T.NOTIFS, "Failed to set 'like' property for the note", e);
+            }
+        }
     }
 
     public String getUrl() {

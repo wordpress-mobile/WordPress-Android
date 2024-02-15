@@ -26,6 +26,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_INLINE_ACTION_TAPPED
 import org.wordpress.android.databinding.NotificationsListFragmentPageBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -64,6 +65,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
@@ -72,7 +74,7 @@ import javax.inject.Inject
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
     OnScrollToTopListener,
     DataLoadedListener {
-    private var notesAdapter: NotesAdapter? = null
+    private lateinit var notesAdapter: NotesAdapter
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
     private var shouldRefreshNotifications = false
@@ -85,6 +87,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     @Inject
     lateinit var gcmMessageHandler: GCMMessageHandler
 
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
             binding?.notificationsList?.addOnScrollListener(mOnScrollListener)
@@ -95,17 +100,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
-    }
-
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val adapter = createOrGetNotesAdapter()
-        binding?.notificationsList?.adapter = adapter
-        if (savedInstanceState != null) {
-            tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, All.ordinal)
-        }
-        (TabPosition.values().getOrNull(tabPosition) ?: All).let { adapter.setFilter(it.filter) }
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
@@ -133,21 +127,32 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
+        notesAdapter = NotesAdapter( requireActivity(), this, null,
+            inlineActionEvents = viewModel.inlineActionEvents).apply {
+            this.setOnNoteClickListener(mOnNoteClickListener)
+            viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .onEach(::handleInlineActionEvent)
+                .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
             notificationsList.layoutManager = LinearLayoutManager(activity)
+            notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
                 fetchNotesFromRemote()
             }
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
+            (TabPosition.values().getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
+        }
+        viewModel.updatedNote.observe(viewLifecycleOwner) {
+            notesAdapter.updateNote(it)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        notesAdapter?.cancelReloadNotesTask()
-        notesAdapter = null
+        notesAdapter.cancelReloadNotesTask()
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
@@ -184,7 +189,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (accountStore.hasAccessToken()) {
-            notesAdapter!!.reloadNotesFromDBAsync()
+            notesAdapter.reloadNotesFromDBAsync()
             if (shouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
@@ -244,7 +249,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                     // Open the latest version of this note in case it has changed, which can happen if the note was
                     // tapped from the list after it was updated by another fragment (such as the
                     // NotificationsDetailListFragment).
-                    openNoteForReply(activity, noteId, filter = notesAdapter?.currentFilter)
+                    openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
                 }
             )
         }
@@ -265,7 +270,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     private fun fetchNotesFromRemote() {
-        if (!isAdded || notesAdapter == null) {
+        if (!isAdded) {
             return
         }
         if (!NetworkUtils.isNetworkAvailable(activity)) {
@@ -426,24 +431,17 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
-    private fun createOrGetNotesAdapter(): NotesAdapter {
-        return notesAdapter ?: NotesAdapter( requireActivity(), this, null,
-            inlineActionEvents = viewModel.inlineActionEvents).apply {
-            notesAdapter = this
-            this.setOnNoteClickListener(mOnNoteClickListener)
-            viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                .onEach(::handleInlineActionEvent)
-                .launchIn(viewLifecycleOwner.lifecycleScope)
-        }
-    }
-
     private fun handleInlineActionEvent(actionEvent: InlineActionEvent) {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_INLINE_ACTION_TAPPED, mapOf(
+            InlineActionEvent.KEY_INLINE_ACTION to actionEvent::class.simpleName
+        ))
         when (actionEvent) {
             is SharePostButtonTapped -> actionEvent.notification.let { postNotification ->
                 context?.let {
                     ActivityLauncher.openShareIntent(it, postNotification.url, postNotification.title)
                 }
             }
+            is InlineActionEvent.LikeCommentButtonTapped -> viewModel.likeComment(actionEvent.note, actionEvent.liked)
         }
     }
 
@@ -452,7 +450,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
      * Mark notifications as read in CURRENT tab, use filteredNotes instead of notes
      */
     fun markAllNotesAsRead() {
-        viewModel.markNoteAsRead(requireContext(), createOrGetNotesAdapter().filteredNotes)
+        viewModel.markNoteAsRead(requireContext(), notesAdapter.filteredNotes)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)
@@ -477,7 +475,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         if (!isAdded) {
             return
         }
-        notesAdapter!!.reloadNotesFromDBAsync()
+        notesAdapter.reloadNotesFromDBAsync()
         if (event.hasUnseenNotes) {
             binding?.showNewUnseenNotificationsUI()
         }
@@ -489,7 +487,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         swipeToRefreshHelper?.isRefreshing = false
-        notesAdapter!!.addAll(event.notes, true)
+        notesAdapter.addAll(event.notes, true)
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
