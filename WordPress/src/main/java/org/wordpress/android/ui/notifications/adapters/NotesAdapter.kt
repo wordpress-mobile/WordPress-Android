@@ -306,6 +306,21 @@ class NotesAdapter(
         reloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
+    /**
+     * Update the note in the adapter and notify the change
+     */
+    fun updateNote(note: Note) {
+        val notePosition = notes.indexOfFirst { it.id == note.id }
+        if (notePosition != -1) {
+            notes[notePosition] = note
+        }
+        val filteredPosition = filteredNotes.indexOfFirst { it.id == note.id }
+        if (filteredPosition != -1) {
+            filteredNotes[filteredPosition] = note
+            notifyItemChanged(filteredPosition)
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     private inner class ReloadNotesFromDBTask : AsyncTask<Void?, Void?, ArrayList<Note>>() {
         override fun doInBackground(vararg voids: Void?): ArrayList<Note> {
@@ -384,7 +399,7 @@ class NotesAdapter(
         }
 
         private fun bindLikePostAction() {
-            TODO("implement like post action")
+            // implement like post action
         }
 
         private fun bindLikeCommentAction(note: Note) {

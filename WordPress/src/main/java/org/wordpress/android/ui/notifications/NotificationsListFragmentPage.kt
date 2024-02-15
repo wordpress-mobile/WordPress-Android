@@ -457,6 +457,14 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     @Subscribe(threadMode = MAIN)
+    fun onEventMainThread(event: NotificationEvents.NoteLikeCommentActionPerformed) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter!!.updateNote(event.note)
+    }
+
+    @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: NotificationsChanged) {
         if (!isAdded) {
             return

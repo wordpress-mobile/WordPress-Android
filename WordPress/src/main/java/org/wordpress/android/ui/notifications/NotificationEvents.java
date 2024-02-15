@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.models.Note;
@@ -22,6 +24,16 @@ public class NotificationEvents {
 
         public NoteLikeOrModerationStatusChanged(String noteId) {
             this.noteId = noteId;
+        }
+    }
+
+    /**
+     * Event fired when a note is liked or unliked from the Like comment inline action
+     */
+    public static class NoteLikeCommentActionPerformed {
+        public final Note note;
+        public NoteLikeCommentActionPerformed(@NonNull final Note note) {
+            this.note = note;
         }
     }
 
