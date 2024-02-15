@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_VIEWS_VISITORS_TOGGLED
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType.WEEK_VIEWS
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
+private const val TAP_SOURCE_PROPERTY = "tap_source"
 private const val GRANULARITY_PROPERTY = "granularity"
 private const val DAYS_PROPERTY = "days"
 private const val WEEKS_PROPERTY = "weeks"
@@ -26,6 +28,9 @@ private const val ALL_TIME_WIDGET_PROPERTY = "all_time"
 private const val MINIFIED_WIDGET_PROPERTY = "minified"
 private const val CHIP_VIEWS_PROPERTY = "views"
 private const val CHIP_VISITORS__PROPERTY = "visitors"
+
+fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =
+    track(stat = Stat.STATS_ACCESSED, site = site, properties = mutableMapOf(TAP_SOURCE_PROPERTY to tapSource))
 
 fun AnalyticsTrackerWrapper.trackGranular(stat: Stat, granularity: StatsGranularity) {
     val property = when (granularity) {

@@ -49,6 +49,7 @@ import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -161,7 +162,10 @@ class StatsViewModel
         if (!isInitialized || restart) {
             isInitialized = true
 
-            analyticsTracker.track(stat = AnalyticsTracker.Stat.STATS_ACCESSED, site = statsSiteProvider.siteModel)
+            analyticsTracker.trackStatsAccessed(
+                site = statsSiteProvider.siteModel,
+                tapSource = launchedFrom?.value ?: ""
+            )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
             trackSectionSelected(statsSectionManager.getSelectedSection())
