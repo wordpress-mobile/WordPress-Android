@@ -194,13 +194,9 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(action, times(1)).openDetailView()
     }
 
-    private class ActionHandler {
-        fun openInTheReader(siteId: Long, postId: Long, commentId: Long) {
-            println("openInTheReader($siteId, $postId, $commentId)")
-        }
+    interface ActionHandler {
+        fun openInTheReader(siteId: Long, postId: Long, commentId: Long)
 
-        fun openDetailView() {
-            println("openDetailView")
-        }
+        fun openDetailView()
     }
 }
