@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
@@ -77,15 +78,16 @@ class NotificationsListViewModel @Inject constructor(
             }
     }
 
-    fun likeComment(note: Note, liked: Boolean) {
-        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
+    fun likeComment(note: Note, liked: Boolean) = launch {
+        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: SiteModel().apply {
+            siteId = note.siteId.toLong()
+            setIsWPCom(true)
+        }
         note.setLikedComment(liked)
         _updatedNote.postValue(note)
-        launch {
-            val result = commentStore.likeComment(site, note.commentId, null, liked)
-            if (result.isError.not()) {
-                NotificationsTable.saveNote(note)
-            }
+        val result = commentStore.likeComment(site, note.commentId, null, liked)
+        if (result.isError.not()) {
+            NotificationsTable.saveNote(note)
         }
     }
 
