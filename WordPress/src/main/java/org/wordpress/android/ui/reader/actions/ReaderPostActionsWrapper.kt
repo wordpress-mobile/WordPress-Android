@@ -23,6 +23,7 @@ class ReaderPostActionsWrapper @Inject constructor(private val siteStore: SiteSt
         actionListener: ActionListener
     ) = ReaderPostActions.performLikeActionRemote(post, isAskingToLike, wpComUserId, actionListener)
 
+    @Suppress("LongParameterList")
     fun performLikeActionRemote(
         post: ReaderPost?,
         postId: Long,

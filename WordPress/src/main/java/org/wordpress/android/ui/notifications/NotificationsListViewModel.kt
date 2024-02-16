@@ -3,11 +3,9 @@ package org.wordpress.android.ui.notifications
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderPostTable

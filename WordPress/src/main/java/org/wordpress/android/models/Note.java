@@ -25,7 +25,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -390,16 +389,14 @@ public class Note {
         return mActions;
     }
 
-    private JSONObject getPostActions() {
+    @NonNull private JSONObject getPostActions() {
         if (mActions == null) {
-            // Find comment block that matches the root note comment id
-            long commentId = getPostId();
             JSONArray bodyArray = getBody();
             for (int i = 0; i < bodyArray.length(); i++) {
                 try {
                     JSONObject bodyItem = bodyArray.getJSONObject(i);
                     if (bodyItem.has("type") && bodyItem.optString("type").equals("post")
-                        && commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.post", 0)) {
+                        && getPostId() == JSONUtils.queryJSON(bodyItem, "meta.ids.post", 0)) {
                         mActions = JSONUtils.queryJSON(bodyItem, "actions", new JSONObject());
                         break;
                     }
@@ -416,23 +413,25 @@ public class Note {
         return mActions;
     }
 
-    /*
+    /**
      * returns the actions allowed on this note, assumes it's a comment notification
      */
+    @NonNull
     public EnumSet<EnabledActions> getEnabledCommentActions() {
         return getEnabledActions(getCommentActions());
     }
 
-    /*
+    /**
      * returns the actions allowed on this note, assumes it's a post notification
      */
+     @NonNull
     public EnumSet<EnabledActions> getEnabledPostActions() {
         return getEnabledActions(getPostActions());
     }
 
-    private EnumSet<EnabledActions> getEnabledActions(final JSONObject jsonActions) {
+    @NonNull private EnumSet<EnabledActions> getEnabledActions(@NonNull final JSONObject jsonActions) {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
-        if (jsonActions == null || jsonActions.length() == 0) {
+        if (jsonActions.length() == 0) {
             return actions;
         }
 
@@ -506,7 +505,7 @@ public class Note {
         return comment;
     }
 
-    public String getCommentAuthorName() {
+    @NonNull public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
         for (int i = 0; i < bodyArray.length(); i++) {
