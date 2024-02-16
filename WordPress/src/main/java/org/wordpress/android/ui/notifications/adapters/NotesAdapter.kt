@@ -20,6 +20,7 @@ import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -99,15 +100,22 @@ class NotesAdapter(
         currentFilter = newFilter
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun addAll(notes: List<Note>) {
-        try {
-            filteredNotes.clear()
-            filteredNotes.addAll(buildFilteredNotesList(notes, currentFilter))
-        } finally {
-            notifyDataSetChanged()
-            dataLoadedListener.onDataLoaded(itemCount)
-        }
+        val newNotes = buildFilteredNotesList(notes, currentFilter)
+        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = filteredNotes.size
+            override fun getNewListSize(): Int = newNotes.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                filteredNotes[oldItemPosition].id == newNotes[newItemPosition].id
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
+        })
+
+        filteredNotes.clear()
+        filteredNotes.addAll(newNotes)
+        result.dispatchUpdatesTo(this)
+        dataLoadedListener.onDataLoaded(itemCount)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
