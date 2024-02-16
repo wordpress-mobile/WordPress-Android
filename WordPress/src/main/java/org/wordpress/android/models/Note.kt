@@ -113,10 +113,7 @@ class Note {
     fun canModerate() = enabledCommentActions.contains(EnabledActions.ACTION_APPROVE) ||
             enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)
 
-    fun canMarkAsSpam() = enabledCommentActions.contains(EnabledActions.ACTION_SPAM)
-
     fun canReply() = enabledCommentActions.contains(EnabledActions.ACTION_REPLY)
-    fun canTrash() = canModerate()
 
     fun canLikeComment() = enabledCommentActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
 
@@ -232,9 +229,7 @@ class Note {
                 return JSONArray()
             }
         }
-    val noticonCharacter: String
-        // returns character code for notification font
-        get() = queryJSON("noticon", "")
+
     private val commentActions: JSONObject
         get() {
             if (mActions == null) {
