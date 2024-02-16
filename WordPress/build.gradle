@@ -342,7 +342,7 @@ kapt {
 }
 
 dependencies {
-    implementation 'androidx.webkit:webkit:1.7.0'
+    implementation 'androidx.webkit:webkit:1.10.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     kapt project(':libs:processors')
@@ -381,7 +381,12 @@ dependencies {
     }
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
-    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation("$gradle.ext.tracksBinaryPath") {
+        version {
+            strictly automatticTracksVersion
+        }
+    }
+
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }

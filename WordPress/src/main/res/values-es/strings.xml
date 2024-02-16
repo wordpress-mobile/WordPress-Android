@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-23 12:31:12+0000
+Translation-Revision-Date: 2024-02-07 19:42:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: es
 -->
 <resources>
+    <string name="site_monitoring_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor webs</string>
+    <string name="site_monitoring_tab_title_php_logs">Registros de PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Métricas</string>
+    <string name="site_monitoring">Supervisión del sitio</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Utiliza &lt;b&gt;Descubrir&lt;/b&gt; para encontrar sitios y etiquetas. Prueba a seleccionar &lt;b&gt;Suscripciones&lt;/b&gt; para ver el contenido suscrito y gestionar tus suscripciones.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Ir a suscripciones</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Los blogs a los que estás suscrito no han publicado nada recientemente</string>
+    <string name="reader_no_followed_blogs_description_subs">Suscríbete a blogs en Descubrir o busca un blog que ya te guste.</string>
+    <string name="reader_no_recommended_blogs_title">No hay blogs recomendados</string>
+    <string name="reader_no_followed_tags_title">No hay suscripciones a etiquetas</string>
+    <string name="reader_no_posts_with_this_tag">No hay entradas con esta etiqueta</string>
+    <string name="reader_toast_err_unable_to_block_blog">No ha sido posible bloquear este blog</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Las entradas de este blog ya no se mostrarán</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">No se ha podido cancelar la suscripción al blog</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">No tienes autorización para acceder a este blog</string>
+    <string name="reader_toast_err_unable_to_follow_blog">No es posible suscribirse a este blog</string>
+    <string name="reader_toast_err_already_follow_this_blog">Ya estás suscrito a este blog.</string>
+    <string name="reader_toast_err_show_blog">No se puede mostrar este blog</string>
+    <string name="reader_toast_err_tag_already_subscribed">Ya estás suscrito a esta etiqueta</string>
+    <string name="reader_label_choose_interests">Elige tus intereses</string>
+    <string name="reader_label_subscribers_count_single">1 suscriptor</string>
+    <string name="reader_label_subscribers_count">%s suscriptores</string>
+    <string name="reader_label_subscribe_count">%,d suscriptores</string>
+    <string name="reader_label_blog_subscribed">Blog suscrito</string>
+    <string name="reader_hint_search_subscribed_blogs">Buscar blogs suscritos</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Introduce una URL o etiqueta a la que suscribirte</string>
+    <string name="reader_btn_subscribed">Suscrito</string>
+    <string name="reader_btn_subscribe">Suscribirse</string>
+    <string name="reader_menu_block_this_blog">Bloquear este blog</string>
+    <string name="reader_menu_tags_and_blogs">Editar etiquetas y blogs</string>
+    <string name="reader_page_followed_blogs_title">Blogs suscritos</string>
+    <string name="reader_page_followed_tags_title">Etiquetas suscritas</string>
+    <string name="reader_title_tags">Seguir etiquetas</string>
+    <string name="reader_activity_title_manage_tags_blogs">Gestionar etiquetas y blogs</string>
+    <string name="reader_activity_title_tag_preview">Etiqueta</string>
+    <string name="reader_activity_title_blog_preview">Blog del lector</string>
+    <string name="reader_subscribed_display_name">Suscrito</string>
+    <string name="reader_filter_chip_tag_other">%d etiquetas</string>
+    <string name="reader_filter_chip_tag_one">1 etiqueta</string>
+    <string name="reader_filter_chip_tag_zero">0 etiquetas</string>
+    <string name="reader_filter_chip_blog_other">%d blogs</string>
+    <string name="reader_filter_chip_blog_one">1 blog</string>
+    <string name="reader_filter_chip_blog_zero">0 blogs</string>
+    <string name="reader_dropdown_menu_lists">Listas</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">Me gustó</string>
+    <string name="reader_dropdown_menu_saved">Guardado</string>
+    <string name="reader_dropdown_menu_subscriptions">Suscripciones</string>
+    <string name="reader_dropdown_menu_discover">Descubrir</string>
+    <string name="reader_search_content_description">Buscar</string>
+    <string name="reader_discover_no_posts_button_tags_text">Suscribirse a etiquetas</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">Intenta suscribirte a más etiquetas para ampliar la búsqueda</string>
+    <string name="reader_discover_empty_subtitle_subscribe">Suscríbete a etiquetas para descubrir nuevos blogs</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs a los que suscribirse</string>
+    <string name="reader_filter_empty_tags_action_subscribe">Suscribirse a una etiqueta</string>
+    <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
+    <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
+    <string name="reader_filter_empty_tags_list_text">Suscríbete a una etiqueta y podrás ve las mejores publicaciones asociadas a ella.</string>
+    <string name="reader_filter_empty_tags_list_title">Sin etiquetas</string>
+    <string name="reader_filter_empty_blogs_list_text">Suscríbete a blogs en Descubrir y verás sus últimas publicaciones aquí. O busca un blog que ya te guste.</string>
+    <string name="reader_filter_empty_blogs_list_title">No hay suscripciones al blog</string>
+    <string name="reader_filter_empty_blogs_action">Suscríbete a un blog</string>
+    <string name="reader_filter_empty_tags_list_subscribe">Puedes suscribirte a publicaciones sobre un tema específico añadiendo una etiqueta</string>
+    <string name="reader_filter_empty_blogs_list">Ver las últimas entradas de los blogs a los que estás suscrito</string>
+    <string name="reader_filter_by_tag_title">Filtrar por etiqueta</string>
+    <string name="reader_filter_by_blog_title">Filtrar por blog</string>
+    <string name="stats_timeframe_by_year">Por año</string>
+    <string name="stats_timeframe_by_month">Por mes</string>
+    <string name="stats_timeframe_by_week">Por semana</string>
+    <string name="stats_timeframe_by_day">Por día</string>
     <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
     <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_working_offline">Trabajo sin conexión</string>
@@ -99,7 +170,6 @@ Language: es
     <string name="account_and_settings">Cuenta y ajustes</string>
     <string name="site_creation_plans_selection_title">Elige un plan</string>
     <string name="site_creation_domain_free_with_annual_plan">Gratis durante el primer año con los planes de pago anuales</string>
-    <string name="reader_label_followers_count_single">1 seguidor</string>
     <string name="reader_secondary_bookmarked">Guardado</string>
     <string name="reader_secondary_bookmark">Guardar</string>
     <string name="reader_discover_recommended_header_new">Puede que te guste</string>
@@ -601,7 +671,6 @@ Language: es
     <string name="quick_start_dialog_check_notifications_message_short">Selecciona la %1$s Pestaña de avisos %2$s para recibir actualizaciones sobre la marcha.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecciona %1$s Más %2$s para subir medios. Puedes añadirlos a tus entradas o páginas desde cualquier dispositivo.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios y etiquetas.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Utiliza &lt;b&gt; Descubrir &lt;/b&gt; para encontrar sitios y etiquetas. Prueba a seleccionar %1$s Ajustes %2$s para añadir temáticas que te gusten.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatura de vídeo</string>
     <string name="stats_details_top_commentators">Principales comentaristas</string>
     <string name="stats_published_years_ago">Publicada hace %1$d años</string>
@@ -1098,7 +1167,6 @@ Language: es
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
-    <string name="reader_title_interests">Seguir temas</string>
     <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenidos atrayentes en tu sitio.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
@@ -1410,8 +1478,6 @@ Language: es
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="continue_site_credentials">Continuar con las credenciales de la tienda</string>
     <string name="login_find_your_connected_email">Encuentra tu correo electrónico conectado</string>
-    <string name="reader_discover_no_posts_button_text">Seguir temas</string>
-    <string name="reader_discover_no_posts_subtitle">Prueba a seguir más temas para ampliar la búsqueda</string>
     <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
     <string name="scan">Explorar</string>
@@ -1450,7 +1516,6 @@ Language: es
     <string name="login_prologue_title_second">Con el potente editor puedes publicar sobre la marcha.</string>
     <string name="login_prologue_title_first">Bienvenido al maquetador web más popular del mundo.</string>
     <string name="media_loading_failed">La carga del medio ha fallado</string>
-    <string name="reader_discover_recommended_blogs_header">Sitios a seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">«%s» no es totalmente compatible</string>
     <string name="gutenberg_native_help_button">Botón de ayuda</string>
@@ -1471,7 +1536,6 @@ Language: es
     <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
     <string name="reader_label_toolbar_back">Volver</string>
     <string name="reader_discover_empty_button_text">Primeros pasos</string>
-    <string name="reader_discover_empty_subtitle">Sigue temáticas para descubrir nuevos blogs</string>
     <string name="reader_post_details_header_by_author_name">por</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -1629,7 +1693,6 @@ Language: es
     <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">El título del sitio solo puede ser cambiado por un usuario con el perfil de administrador.</string>
     <string name="my_site_title_changer_dialog_hint">El título del sitio se muestra en la barra de título de un navegador web y en la cabecera de la mayoría de los temas.</string>
-    <string name="reader_title_tag_preview">Tema</string>
     <string name="error_update_site_title_network">No se ha podido actualizar el título del sitio. Comprueba tu conexión de red e inténtalo nuevamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Cambios sin guardar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>
@@ -1661,8 +1724,7 @@ Language: es
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
-    <string name="reader_label_choose_your_interests">Elige tus temáticas</string>
-    <string name="reader_choose_interests_content_description">Elige tus temáticas</string>
+    <string name="reader_choose_interests_tags_content_description">Elige tus etiquetas</string>
     <string name="reader_btn_done">Hecho</string>
     <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
     <string name="post_status_post_published">Publicado</string>
@@ -1705,7 +1767,6 @@ Language: es
     <string name="page_cannot_set_homepage">Para establecer la página de inicio, activa «Página de inicio estática» en los ajustes del sitio</string>
     <string name="gutenberg_native_select_a_color">Seleccionar un color</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
-    <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
     <string name="feature_announcement_find_out_mode">Saber más</string>
     <string name="feature_announcement_dialog_label">Qué hay de nuevo en %s</string>
     <string name="insert_label_with_count">Insertar %d</string>
@@ -1719,9 +1780,9 @@ Language: es
     <string name="site_picker_ask_site_select">No se ha podido seleccionar el sitio. Por favor, inténtalo de nuevo.</string>
     <string name="sitepicker_continue_flow">Continuar</string>
     <string name="reader_reblog_error">Ha fallado reblog</string>
-    <string name="reader_no_site_to_reblog_action">Gestionar los sitios</string>
-    <string name="reader_no_site_to_reblog_detail">Una vez que crees un sitio en WordPress.com, puedes volver a publicar el contenido que te gusta en tu propio sitio.</string>
-    <string name="reader_no_site_to_reblog_title">No hay disponibles sitios WordPress.com</string>
+    <string name="reader_no_blog_to_reblog_action">Gestionar blogs</string>
+    <string name="reader_no_blog_to_reblog_detail">Una vez que crees un sitio en WordPress.com, puedes volver a publicar el contenido que te gusta en tu propio sitio.</string>
+    <string name="reader_no_blog_to_reblog_title">No hay blogs de WordPress.com disponibles</string>
     <string name="whats_new_in_version_title">Qué hay de nuevo</string>
     <string name="comment_q_action_copied_url">Copiada la dirección del enlace</string>
     <string name="copy_link_address">Copiar la dirección del enlace</string>
@@ -1821,23 +1882,17 @@ Language: es
     <string name="stats_management_screen_title">Añadir una nueva tarjeta</string>
     <string name="stats_management_add_new_stats_card">Añadir una nueva tarjeta de estadísticas</string>
     <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
-    <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
-    <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
+    <string name="reader_bottom_sheet_select_content_description">Selecciona una etiqueta o blog, ventana emergente</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
-    <string name="reader_title_subs">Gestionar temas y sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver las últimas entradas de los temas que sigues</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver las últimas entradas de los sitios que sigues</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Accede a WordPress.com para ver las últimas entradas de las etiquetas que sigues</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Accede a WordPress.com para ver las últimas entradas de los blogs que sigues</string>
     <string name="gutenberg_native_replace_current_block">Reemplazar el bloque actual</string>
     <string name="gutenberg_native_add_to_end">Añadir al final</string>
     <string name="gutenberg_native_add_to_beginning">Añadir al principio</string>
     <string name="gutenberg_native_add_block_before">Añadir el bloque antes</string>
     <string name="gutenberg_native_add_block_after">Añadir el bloque después</string>
-    <string name="reader_filter_empty_tags_action">Añadir un tema</string>
-    <string name="reader_filter_empty_sites_action">Seguir un sitio</string>
-    <string name="reader_filter_empty_tags_list">Puedes seguir entradas sobre un tema específico añadiendo un tema</string>
-    <string name="reader_filter_empty_sites_list">Mira las entradas más recientes de los sitios que sigues</string>
-    <string name="reader_filter_main_title">Siguiendo</string>
+    <string name="reader_filter_empty_tags_add_action">Añadir una etiqueta</string>
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Leyenda del vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar el vídeo</string>
@@ -1882,7 +1937,6 @@ Language: es
     <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Accede con las credenciales de tu sitio %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
-    <string name="reader_following_display_name">Siguiendo</string>
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="reader_discover_display_name">Descubrir</string>
     <string name="reader_save_for_later_display_name">Guardado</string>
@@ -2376,7 +2430,7 @@ Language: es
     <string name="login_error_sms_throttled">Hemos hecho demasiados intentos para enviar un código de verificación por SMS - tómate un descanso y solicita uno nuevo dentro de un minuto.</string>
     <string name="login_error_email_not_found_v2">No hay ninguna cuenta de WordPress.com que coincida con esta cuenta de Google.</string>
     <string name="site_picker_remove_site_empty">Ningún sitio coincide con tu búsqueda</string>
-    <string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide con tu búsqueda</string>
+    <string name="reader_no_followed_blogs_search_title">Ningún blog coincide con tu búsqueda</string>
     <string name="page_parent_changed">La página superior ha cambiado</string>
     <string name="page_permanently_deleted">La página se ha borrado permanentemente</string>
     <string name="page_moved_to_scheduled">La página se ha programado</string>
@@ -2409,8 +2463,7 @@ Language: es
     <string name="quick_start_button_negative">Ahora no</string>
     <string name="content_description_more">Más</string>
     <string name="my_site_create_new_site_title">No tienes sitios</string>
-    <string name="reader_empty_followed_tags_title">Temas no seguidos</string>
-    <string name="reader_empty_followed_tags_subtitle">Añade aquí temas para descubrir entradas sobre tus temáticas favoritas</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Añade aquí etiquetas para descubrir entradas sobre tus temas favoritos</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ de Jetpack</string>
@@ -2430,9 +2483,7 @@ Language: es
     <string name="people_empty_list_filtered_users">No hay usuarios aún</string>
     <string name="reader_empty_posts_liked_description">Las entradas que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
-    <string name="reader_empty_followed_blogs_button_followed">Ir a los siguientes</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
-    <string name="reader_empty_followed_blogs_title">Sitios a los que no sigues</string>
+    <string name="reader_no_followed_blogs_button_discover">Descubre blogs</string>
     <string name="notifications_empty_likes">No hay me gusta aún</string>
     <string name="notifications_empty_followers">No hay seguidores aún</string>
     <string name="activity_log_limited_content_on_free_plan">Como estás en un plan gratuito verás eventos limitados en tu actividad.</string>
@@ -2497,8 +2548,8 @@ Language: es
     <string name="reader_followed_blog_notifications_this">este sitio</string>
     <string name="reader_followed_blog_notifications_action">Activar</string>
     <string name="reader_followed_blog_notifications">¿Activar avisos para %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>
-    <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
+    <string name="reader_btn_blog_notifications_on">Activar los avisos del blog</string>
+    <string name="reader_btn_blog_notifications_off">Desactivar los avisos del blog</string>
     <string name="activity_log_jetpack_icon">Icono de Jetpack</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icono de actividad</string>
@@ -3080,7 +3131,6 @@ Language: es
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
     <string name="xmlrpc_post_blocked_error">No se pudo conectar. Tu alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con tu sitio. Ponte en contacto con tu alojamiento para solucionar este problema.</string>
-    <string name="reader_hint_search_followed_sites">Buscar en los sitios seguidos</string>
     <string name="pending_draft_one_generic">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_week_2">«%1$s» se ha guardado como borrador. ¡Acuérdate de publicarla!</string>
@@ -3182,7 +3232,7 @@ Language: es
     <string name="person_remove_confirmation_title">Eliminar %1$s</string>
     <string name="role">Perfil</string>
     <string name="people">Gente</string>
-    <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada últimamente.</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Los blogs de esta lista no han publicado nada últimamente.</string>
     <string name="error_remove_user">No se ha podido eliminar el usuario</string>
     <string name="error_update_role">No se ha podido actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudieron recuperar los espectadores del sitio</string>
@@ -3395,7 +3445,6 @@ Language: es
     <string name="reader_err_get_post_not_found">Esta entrada ya no existe</string>
     <string name="reader_err_get_post_not_authorized">No estás autorizado a ver esta entrada</string>
     <string name="reader_err_get_post_generic">No se pudo recuperar esta entrada</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que estás siguiendo no han publicado nada recientemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No hay entradas recientes</string>
     <string name="media_edit_copy_url_toast">URL copiada en el portapapeles</string>
     <string name="selected_theme">Tema seleccionado</string>
@@ -3440,8 +3489,6 @@ Language: es
     <string name="reader_short_like_count_multi">%s Me gusta</string>
     <string name="reader_short_like_count_one">1 Me gusta</string>
     <string name="reader_short_like_count_none">Me gusta</string>
-    <string name="reader_label_follow_count">%,d seguidores</string>
-    <string name="reader_menu_tags">Editar temas y sitios</string>
     <string name="reader_title_post_detail">Entrada del lector</string>
     <string name="notifications_push_summary">Ajustes para los avisos que aparecen en tu dispositivo.</string>
     <string name="notifications_email_summary">Ajustes para los avisos que se envían al correo electrónico enlazado a tu cuenta.</string>
@@ -3463,8 +3510,7 @@ Language: es
     <string name="button_view">Ver</string>
     <string name="button_publish">Publicar</string>
     <string name="button_edit">Editar</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este sitio</string>
-    <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">No se pudo encontrar este blog</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Accede a WordPress.com para volver a intentarlo.</string>
     <string name="ignore">Ignorar</string>
@@ -3508,7 +3554,7 @@ Language: es
     <string name="posts_fetching">Recuperando entradas…</string>
     <string name="media_fetching">Recuperando medios…</string>
     <string name="logs_copied_to_clipboard">Los registros de la aplicación han sido copiados al portapapeles</string>
-    <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
+    <string name="reader_no_posts_in_blog">Este blog está vacío</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ha ocurrido un error al copiar el texto en el portapapeles</string>
     <string name="post_uploading">Subiendo entrada</string>
@@ -3536,7 +3582,6 @@ Language: es
     <string name="cab_selected">%d seleccionados</string>
     <string name="browse_our_faq_button">Explora nuestras Preguntas frecuentes.</string>
     <string name="reader_empty_comments">Aún no hay comentarios</string>
-    <string name="reader_empty_posts_in_tag">No hay entradas con esta temática</string>
     <string name="reader_label_like">Me gusta</string>
     <string name="reader_label_view_original">Ver artículo original</string>
     <string name="reader_label_comments_closed">Los comentarios están cerrados</string>
@@ -3556,22 +3601,8 @@ Language: es
     <string name="posts_empty_list">Aún no se han publicado entradas. ¿Por qué no crear una?</string>
     <string name="signing_out">Cerrando sesión…</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="reader_toast_err_block_blog">No es posible bloquear este sitio</string>
-    <string name="reader_toast_blog_blocked">Las entradas de este sitio no volverán a mostrarse</string>
-    <string name="reader_menu_block_blog">Bloquear este sitio</string>
     <string name="schedule_verb">Programar</string>
     <string name="update_verb">Actualizar</string>
-    <string name="reader_empty_recommended_blogs">Sin sitios recomendados</string>
-    <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir este sitio</string>
-    <string name="reader_toast_err_follow_blog">No se puede seguir este sitio</string>
-    <string name="reader_toast_err_already_follow_blog">Ya estás siguiendo este sitio</string>
-    <string name="reader_toast_err_get_blog_info">No se puede mostrar este sitio</string>
-    <string name="reader_label_followed_blog">Sitio seguido</string>
-    <string name="reader_label_followers_count">%s seguidores</string>
-    <string name="reader_hint_add_tag_or_url">Introduce una URL o tema para seguir</string>
-    <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_page_followed_tags">Temas seguidos</string>
-    <string name="reader_title_blog_preview">Sitio del lector</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
     <string name="help">Ayuda</string>
@@ -3597,8 +3628,8 @@ Language: es
     <string name="blog_not_found">Ha ocurrido un error al acceder a este blog</string>
     <string name="gallery_error">El elemento multimedia no ha podido ser recuperado</string>
     <string name="no_network_message">No hay ninguna red disponible</string>
-    <string name="reader_toast_err_remove_tag">No se ha podido eliminar este tema</string>
-    <string name="reader_toast_err_add_tag">No se ha podido añadir este tema</string>
+    <string name="reader_toast_err_removing_tag">No se ha podido eliminar esta etiqueta</string>
+    <string name="reader_toast_err_adding_tag">No se ha podido añadir esta etiqueta</string>
     <string name="reader_title_applog">Registro de la aplicación</string>
     <string name="fatal_db_error">Ha ocurrido un error al crear la base de datos de la aplicación. Por favor, intenta reinstalar la aplicación. </string>
     <string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
@@ -3660,15 +3691,13 @@ Language: es
     <string name="reader_toast_err_url_intent">Imposible abrir %s</string>
     <string name="reader_toast_err_view_image">Imposible ver la imágen</string>
     <string name="reader_toast_err_share_intent">Imposible compartir</string>
-    <string name="reader_toast_err_tag_invalid">Este no es un tema válido</string>
-    <string name="reader_toast_err_tag_exists">Ya estás siguiendo este tema</string>
+    <string name="reader_toast_err_tag_not_valid">Esa no es un etiqueta válida</string>
     <string name="reader_toast_err_comment_failed">No se pudo publicar tu comentario </string>
     <string name="reader_likes_only_you">Te gusta esto</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_label_added_tag">Añadido %s</string>
     <string name="reader_hint_comment_on_comment">Contestar al comentario </string>
-    <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_view_reblog">Reblog</string>

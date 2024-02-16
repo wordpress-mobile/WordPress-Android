@@ -22,8 +22,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapAsync
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -147,4 +147,13 @@ class BaseListUseCase(
     fun onListSelected() {
         mutableListSelected.call()
     }
+
+    fun clone(newUseCases: List<BaseStatsUseCase<*, *>>) = BaseListUseCase(
+        bgDispatcher,
+        mainDispatcher,
+        statsSiteProvider,
+        newUseCases,
+        getStatsTypes,
+        mapUiModel
+    )
 }

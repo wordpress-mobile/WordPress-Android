@@ -44,7 +44,7 @@ class StatsDateSelectorTest : BaseUnitTest() {
     @Before
     fun setUp() {
         dateProviderSelectedDate.value = GranularityChange(statsGranularity)
-        whenever(selectedDateProvider.granularSelectedDateChanged(statsGranularity))
+        whenever(selectedDateProvider.granularSelectedDateChanged())
             .thenReturn(dateProviderSelectedDate)
 
         dateSelector = StatsDateSelector(

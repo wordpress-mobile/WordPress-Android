@@ -62,7 +62,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -271,7 +273,6 @@ class StatsModule {
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
-    @Singleton
     @Named(TRAFFIC_USE_CASE)
     @Suppress("LongParameterList")
     fun provideTrafficUseCase(
@@ -280,13 +281,16 @@ class StatsModule {
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
         @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(
             bgDispatcher,
             mainDispatcher,
             statsSiteProvider,
-            useCasesFactories.map { it.build(DAYS, BLOCK) },
+            useCasesFactories.map {
+                it.build(selectedTrafficGranularityManager.getSelectedTrafficGranularity(), BLOCK)
+            },
             { statsStore.getTimeStatsTypes(it) },
             uiModelMapper::mapTimeStats
         )
@@ -408,16 +412,20 @@ class StatsModule {
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
-        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase
+        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
+        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
-        return mapOf(
-            StatsSection.INSIGHTS to insightsUseCase,
-            StatsSection.TRAFFIC to trafficUseCase,
-            StatsSection.DAYS to dayStatsUseCase,
-            StatsSection.WEEKS to weekStatsUseCase,
-            StatsSection.MONTHS to monthStatsUseCase,
-            StatsSection.YEARS to yearStatsUseCase
-        )
+        return if (trafficTabFeatureConfig.isEnabled()) {
+            mapOf(StatsSection.TRAFFIC to trafficUseCase, StatsSection.INSIGHTS to insightsUseCase)
+        } else {
+            mapOf(
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.DAYS to dayStatsUseCase,
+                StatsSection.WEEKS to weekStatsUseCase,
+                StatsSection.MONTHS to monthStatsUseCase,
+                StatsSection.YEARS to yearStatsUseCase
+            )
+        }
     }
 
     /**

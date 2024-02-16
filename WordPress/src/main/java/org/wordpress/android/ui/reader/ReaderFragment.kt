@@ -1,7 +1,13 @@
 package org.wordpress.android.ui.reader
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -67,6 +73,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     private var binding: ReaderFragmentLayoutBinding? = null
 
+    private var readerSearchResultLauncher: ActivityResultLauncher<Intent>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initTopAppBar()
@@ -87,6 +95,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     override fun onPause() {
         super.onPause()
         activity?.let { viewModel.onScreenInBackground(it.isChangingConfigurations) }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        initReaderSearchActivityResultLauncher()
+    }
+
+    private fun initReaderSearchActivityResultLauncher() {
+        readerSearchResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null) {
+                    val shouldRefreshSubscriptions =
+                        data.getBooleanExtra(ReaderSearchActivity.RESULT_SHOULD_REFRESH_SUBSCRIPTIONS, false)
+                    if (shouldRefreshSubscriptions) {
+                        getSubFilterViewModel()?.loadSubFilters()
+                    }
+                }
+            }
+        }
     }
 
     private fun ReaderFragmentLayoutBinding.initTopAppBar() {
@@ -125,7 +155,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
 
         viewModel.showSearch.observeEvent(viewLifecycleOwner) {
-            ReaderActivityLauncher.showReaderSearch(context)
+            context?.let {
+                val intent = ReaderActivityLauncher.createReaderSearchIntent(it)
+                readerSearchResultLauncher?.launch(intent)
+            }
         }
 
         viewModel.showReaderInterests.observeEvent(viewLifecycleOwner) {
@@ -168,7 +201,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        viewModel.onSaveInstanceState(outState)
+        if (::viewModel.isInitialized) {
+            viewModel.onSaveInstanceState(outState)
+        }
     }
 
     private fun updateUiState(uiState: ReaderViewModel.ReaderUiState) {

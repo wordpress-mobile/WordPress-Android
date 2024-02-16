@@ -640,7 +640,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
                                 SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
-                                visibleState.getCategories(),
+                                visibleState.getCategory(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
@@ -1261,7 +1261,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+            public boolean onMenuItemActionCollapse(@NonNull final MenuItem item) {
+                if (getActivity() instanceof ReaderSearchActivity) {
+                    ((ReaderSearchActivity) requireActivity()).finishWithRefreshSubscriptionsResult();
+                }
                 requireActivity().finish();
                 return false;
             }
