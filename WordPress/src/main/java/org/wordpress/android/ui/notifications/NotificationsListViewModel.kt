@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.BG_THREAD
@@ -21,8 +22,11 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -34,6 +38,8 @@ class NotificationsListViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val gcmMessageHandler: GCMMessageHandler,
+    private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
+    private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
@@ -94,6 +100,36 @@ class NotificationsListViewModel @Inject constructor(
         val result = commentStore.likeComment(site, note.commentId, null, liked)
         if (result.isError.not()) {
             NotificationsTable.saveNote(note)
+        }
+    }
+
+    fun openNote(
+        noteId: String?,
+        openInTheReader: (siteId: Long, postId: Long, commentId: Long) -> Unit,
+        openDetailView: () -> Unit
+    ) {
+        val note = noteId?.let { notificationsUtilsWrapper.getNoteById(noteId) }
+        if (note != null && note.isCommentType && !note.canModerate()) {
+            val readerPost = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
+            if (readerPost != null) {
+                openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+            } else {
+                readerPostActionsWrapper.requestBlogPost(
+                    note.siteId.toLong(),
+                    note.postId.toLong(),
+                    object : ReaderActions.OnRequestListener<String> {
+                        override fun onSuccess(result: String?) {
+                            openInTheReader(note.siteId.toLong(), note.postId.toLong(), note.commentId)
+                        }
+
+                        override fun onFailure(statusCode: Int) {
+                            appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: $statusCode")
+                            openDetailView()
+                        }
+                    })
+            }
+        } else {
+            openDetailView()
         }
     }
 

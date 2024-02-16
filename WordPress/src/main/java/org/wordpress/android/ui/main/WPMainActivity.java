@@ -108,6 +108,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
+import org.wordpress.android.ui.notifications.NotificationsListViewModel;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
@@ -127,7 +128,9 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.privacy.banner.PrivacyBannerFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartTracker;
+import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderFragment;
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -190,6 +193,9 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.util.extensions.InAppReviewExtensionsKt.logException;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function3;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -251,6 +257,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private ModalLayoutPickerViewModel mMLPViewModel;
     @NonNull private ReviewViewModel mReviewViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
+    private NotificationsListViewModel mNotificationsViewModel;
     private FloatingActionButton mFloatingActionButton;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
     private static final String BLOGGING_REMINDERS_BOTTOM_SHEET_TAG = "BLOGGING_REMINDERS_BOTTOM_SHEET_TAG";
@@ -1057,11 +1064,34 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     // we processed the voice reply, so we exit this function immediately
                     return;
                 } else {
-                    boolean shouldShowKeyboard =
-                            getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment
-                            .openNoteForReply(this, noteId, shouldShowKeyboard, null,
-                                    NotesAdapter.FILTERS.FILTER_ALL, true);
+                    if (mNotificationsViewModel == null) {
+                        mNotificationsViewModel = new ViewModelProvider(this).get(NotificationsListViewModel.class);
+                    }
+                    mNotificationsViewModel.openNote(noteId, new Function3<Long, Long, Long, Unit>() {
+                                @Nullable @Override
+                                public Unit invoke(@NonNull Long siteId, @NonNull Long postId,
+                                                   @NonNull Long commentId) {
+                                    ReaderActivityLauncher.showReaderComments(
+                                            WPMainActivity.this,
+                                            siteId,
+                                            postId,
+                                            commentId,
+                                            ThreadedCommentsActionSource.COMMENT_NOTIFICATION.getSourceDescription()
+                                    );
+                                    return null;
+                                }
+                            }, new Function0<Unit>() {
+                                @Nullable @Override
+                                public Unit invoke() {
+                                    boolean shouldShowKeyboard = getIntent().getBooleanExtra(
+                                            NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
+                                            false);
+                                    NotificationsListFragment.openNoteForReply(WPMainActivity.this, noteId,
+                                            shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL, true);
+                                    return null;
+                                }
+                            }
+                    );
                 }
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");

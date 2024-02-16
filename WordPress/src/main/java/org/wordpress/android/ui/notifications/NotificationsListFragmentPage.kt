@@ -57,6 +57,8 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedLi
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -232,9 +234,24 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
 
-            // Open the latest version of this note in case it has changed, which can happen if the note was tapped
-            // from the list after it was updated by another fragment (such as NotificationsDetailListFragment).
-            openNoteForReply(activity, noteId, false, null, notesAdapter.currentFilter, false)
+            viewModel.openNote(
+                noteId,
+                { siteId, postId, commentId ->
+                    ReaderActivityLauncher.showReaderComments(
+                        activity,
+                        siteId,
+                        postId,
+                        commentId,
+                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                    )
+                },
+                {
+                    // Open the latest version of this note in case it has changed, which can happen if the note was
+                    // tapped from the list after it was updated by another fragment (such as the
+                    // NotificationsDetailListFragment).
+                    openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
+                }
+            )
         }
     }
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
@@ -516,10 +533,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
-            shouldShowKeyboard: Boolean,
-            replyText: String?,
-            filter: FILTERS?,
-            isTappedFromPushNotification: Boolean
+            shouldShowKeyboard: Boolean = false,
+            replyText: String? = null,
+            filter: FILTERS? = null,
+            isTappedFromPushNotification: Boolean = false,
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {
                 return
