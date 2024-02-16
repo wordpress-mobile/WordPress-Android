@@ -118,13 +118,13 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        arguments?.let {
-            tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.let {
+            tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
+        }
         notesAdapter = NotesAdapter( requireActivity(), this, null,
             inlineActionEvents = viewModel.inlineActionEvents).apply {
             this.setOnNoteClickListener(mOnNoteClickListener)

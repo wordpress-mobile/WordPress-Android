@@ -102,7 +102,7 @@ class NotesAdapter(
     }
 
     /**
-     * Add a note to the adapter and notify the change
+     * Add notes to the adapter and notify the change
      */
     fun addAll(notes: List<Note>) {
         val newNotes = buildFilteredNotesList(notes, currentFilter)
