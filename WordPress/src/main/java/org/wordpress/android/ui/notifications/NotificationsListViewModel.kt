@@ -98,21 +98,19 @@ class NotificationsListViewModel @Inject constructor(
         }
     }
 
-    fun likePost(note: Note, liked: Boolean) {
+    fun likePost(note: Note, liked: Boolean) = launch {
         note.setLikedPost(liked)
         _updatedNote.postValue(note)
-        viewModelScope.launch {
-            val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
-            postActionsWrapper.performLikeActionRemote(
-                post,
-                note.postId.toLong(),
-                note.siteId.toLong(),
-                liked,
-                accountStore.account.userId
-            ) { success ->
-                if (success) {
-                    NotificationsTable.saveNote(note)
-                }
+        val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
+        postActionsWrapper.performLikeActionRemote(
+            post = post,
+            postId = note.postId.toLong(),
+            blogId = note.siteId.toLong(),
+            isAskingToLike = liked,
+            wpComUserId = accountStore.account.userId
+        ) { success ->
+            if (success) {
+                NotificationsTable.saveNote(note)
             }
         }
     }

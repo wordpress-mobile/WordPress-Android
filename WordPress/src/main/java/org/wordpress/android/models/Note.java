@@ -319,13 +319,6 @@ public class Note {
         }
     }
 
-    public static class TimeStampComparator implements Comparator<Note> {
-        @Override
-        public int compare(Note a, Note b) {
-            return b.getTimestampString().compareTo(a.getTimestampString());
-        }
-    }
-
     /**
      * The inverse of isRead
      */

@@ -471,7 +471,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         swipeToRefreshHelper?.isRefreshing = false
-        notesAdapter.addAll(event.notes, true)
+        notesAdapter.addAll(event.notes)
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
