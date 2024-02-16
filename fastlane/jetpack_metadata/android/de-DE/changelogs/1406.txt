@@ -1,7 +1,0 @@
-24.1:
-- Du wirst benachrichtigt, wenn du offline arbeitest.
-- Uploads auf Bildblöcke werden abhängig von der Internetverbindung pausiert bzw. fortgesetzt.
-- Du kannst im Editor individuelle Verläufe auswählen.
-- Die Pfeile für vor und zurück wurden für Rechts-nach-Links-Sprachen korrigiert.
-- Schlagwörter zu täglichen Schreibanregungen funktionieren ordnungsgemäß.
-- Mit Karten für Website-Domains kannst du deine Domains verwalten.
