@@ -104,7 +104,7 @@ class NotesAdapter(
     /**
      * Add notes to the adapter and notify the change
      */
-    fun addAll(notes: List<Note>) {
+    fun addAll(notes: List<Note>) = coroutineScope.launch {
         val newNotes = buildFilteredNotesList(notes, currentFilter)
         val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize(): Int = filteredNotes.size
@@ -115,11 +115,13 @@ class NotesAdapter(
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
                 filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
         })
-        
+
         filteredNotes.clear()
         filteredNotes.addAll(newNotes)
-        result.dispatchUpdatesTo(this)
-        dataLoadedListener.onDataLoaded(itemCount)
+        withContext(Dispatchers.Main) {
+            result.dispatchUpdatesTo(this@NotesAdapter)
+            dataLoadedListener.onDataLoaded(itemCount)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
