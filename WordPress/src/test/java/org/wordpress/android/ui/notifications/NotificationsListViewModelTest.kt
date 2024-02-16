@@ -15,6 +15,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.push.GCMMessageHandler
@@ -47,6 +48,8 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
 
+    @Mock lateinit var appLogWrapper: AppLogWrapper
+
     @Mock
     private lateinit var siteStore: SiteStore
 
@@ -68,6 +71,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             notificationsUtilsWrapper,
             readerPostTableWrapper,
             readerPostActionsWrapper,
+            appLogWrapper,
             siteStore,
             commentStore
         )

@@ -12,6 +12,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.modules.BG_THREAD
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -38,6 +40,7 @@ class NotificationsListViewModel @Inject constructor(
     private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore
 ) : ScopedViewModel(bgDispatcher) {
@@ -118,6 +121,7 @@ class NotificationsListViewModel @Inject constructor(
                         }
 
                         override fun onFailure(statusCode: Int) {
+                            appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: $statusCode")
                             openDetailView()
                         }
                     })
