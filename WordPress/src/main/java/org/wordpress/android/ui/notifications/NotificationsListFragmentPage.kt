@@ -17,8 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -77,7 +80,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private lateinit var notesAdapter: NotesAdapter
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
-    private var shouldRefreshNotifications = false
     private var tabPosition = 0
     private val viewModel: NotificationsListViewModel by viewModels()
 
@@ -105,7 +107,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
-            shouldRefreshNotifications = false
             if (resultCode == Activity.RESULT_OK) {
                 val noteId = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)
                 val newStatus = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA)
@@ -119,7 +120,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        shouldRefreshNotifications = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -139,7 +139,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
-                fetchNotesFromRemote()
+                fetchRemoteNotes()
             }
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
@@ -148,11 +148,18 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         viewModel.updatedNote.observe(viewLifecycleOwner) {
             notesAdapter.updateNote(it)
         }
+
+        if (tabPosition == All.ordinal) {
+            swipeToRefreshHelper?.isRefreshing = true
+            fetchRemoteNotes()
+        } else {
+            notesAdapter.reloadLocalNotes()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        notesAdapter.cancelReloadNotesTask()
+        notesAdapter.cancelReloadLocalNotes()
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
@@ -175,11 +182,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        shouldRefreshNotifications = true
-    }
-
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return binding?.notificationsList
     }
@@ -188,12 +190,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onResume()
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (accountStore.hasAccessToken()) {
-            notesAdapter.reloadNotesFromDBAsync()
-            if (shouldRefreshNotifications) {
-                fetchNotesFromRemote()
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -265,11 +261,15 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private fun NotificationsListFragmentPageBinding.clearPendingNotificationsItemsOnUI() {
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        NotificationsActions.updateNotesSeenTimestamp()
-        Thread { gcmMessageHandler.removeAllNotifications(activity) }.start()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                NotificationsActions.updateNotesSeenTimestamp()
+                gcmMessageHandler.removeAllNotifications(activity)
+            }
+        }
     }
 
-    private fun fetchNotesFromRemote() {
+    private fun fetchRemoteNotes() {
         if (!isAdded) {
             return
         }
@@ -422,12 +422,14 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
-    private fun updateNote(noteId: String, status: CommentStatus) {
-        val note = NotificationsTable.getNoteById(noteId)
-        if (note != null) {
-            note.localStatus = status.toString()
-            NotificationsTable.saveNote(note)
-            EventBus.getDefault().post(NotificationsChanged())
+    private fun updateNote(noteId: String, status: CommentStatus) = lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val note = NotificationsTable.getNoteById(noteId)
+            if (note != null) {
+                note.localStatus = status.toString()
+                NotificationsTable.saveNote(note)
+                EventBus.getDefault().post(NotificationsChanged())
+            }
         }
     }
 
@@ -456,27 +458,31 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NoteLikeOrModerationStatusChanged) {
-        NotificationsActions.downloadNoteAndUpdateDB(
-            event.noteId,
-            {
-                EventBus.getDefault()
-                    .removeStickyEvent(
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                NotificationsActions.downloadNoteAndUpdateDB(
+                    event.noteId,
+                    {
+                        EventBus.getDefault()
+                            .removeStickyEvent(
+                                NoteLikeOrModerationStatusChanged::class.java
+                            )
+                    }
+                ) {
+                    EventBus.getDefault().removeStickyEvent(
                         NoteLikeOrModerationStatusChanged::class.java
                     )
+                }
             }
-        ) {
-            EventBus.getDefault().removeStickyEvent(
-                NoteLikeOrModerationStatusChanged::class.java
-            )
         }
     }
 
-    @Subscribe(threadMode = MAIN)
+    @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NotificationsChanged) {
         if (!isAdded) {
             return
         }
-        notesAdapter.reloadNotesFromDBAsync()
+        notesAdapter.reloadLocalNotes()
         if (event.hasUnseenNotes) {
             binding?.showNewUnseenNotificationsUI()
         }

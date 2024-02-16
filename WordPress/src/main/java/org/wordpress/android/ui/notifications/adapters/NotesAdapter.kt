@@ -2,10 +2,8 @@
 
 package org.wordpress.android.ui.notifications.adapters
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
-import android.os.AsyncTask
 import android.text.Spanned
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -20,11 +18,14 @@ import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
@@ -56,6 +57,7 @@ class NotesAdapter(
     private val textIndentSize: Int
     private val dataLoadedListener: DataLoadedListener
     private val onLoadMoreListener: OnLoadMoreListener?
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
     val filteredNotes = ArrayList<Note>()
 
     @Inject
@@ -84,7 +86,7 @@ class NotesAdapter(
 
     var currentFilter = FILTERS.FILTER_ALL
         private set
-    private var reloadNotesFromDBTask: ReloadNotesFromDBTask? = null
+    private var reloadLocalNotesJob: Job? = null
 
     interface DataLoadedListener {
         fun onDataLoaded(itemsCount: Int)
@@ -99,13 +101,25 @@ class NotesAdapter(
         currentFilter = newFilter
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun addAll(notes: List<Note>) {
-        try {
-            filteredNotes.clear()
-            filteredNotes.addAll(buildFilteredNotesList(notes, currentFilter))
-        } finally {
-            notifyDataSetChanged()
+    /**
+     * Add notes to the adapter and notify the change
+     */
+    fun addAll(notes: List<Note>) = coroutineScope.launch {
+        val newNotes = buildFilteredNotesList(notes, currentFilter)
+        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize(): Int = filteredNotes.size
+            override fun getNewListSize(): Int = newNotes.size
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                filteredNotes[oldItemPosition].id == newNotes[newItemPosition].id
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+                filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
+        })
+
+        filteredNotes.clear()
+        filteredNotes.addAll(newNotes)
+        withContext(Dispatchers.Main) {
+            result.dispatchUpdatesTo(this@NotesAdapter)
             dataLoadedListener.onDataLoaded(itemCount)
         }
     }
@@ -120,7 +134,6 @@ class NotesAdapter(
     } else null
 
     private fun isValidPosition(position: Int): Boolean = position >= 0 && position < filteredNotes.size
-
 
     override fun getItemCount(): Int = filteredNotes.size
 
@@ -278,17 +291,19 @@ class NotesAdapter(
         onNoteClickListener = mNoteClickListener
     }
 
-    fun cancelReloadNotesTask() {
-        if (reloadNotesFromDBTask != null && reloadNotesFromDBTask!!.status != AsyncTask.Status.FINISHED) {
-            reloadNotesFromDBTask!!.cancel(true)
-            reloadNotesFromDBTask = null
-        }
+    fun cancelReloadLocalNotes() {
+        reloadLocalNotesJob?.cancel()
     }
 
-    fun reloadNotesFromDBAsync() {
-        cancelReloadNotesTask()
-        reloadNotesFromDBTask = ReloadNotesFromDBTask()
-        reloadNotesFromDBTask!!.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+    /**
+     * Reload the notes from local database and update the adapter
+     */
+    fun reloadLocalNotes() {
+        cancelReloadLocalNotes()
+        reloadLocalNotesJob = coroutineScope.launch {
+            val notes = NotificationsTable.getLatestNotes()
+            addAll(notes)
+        }
     }
 
     /**
@@ -299,17 +314,6 @@ class NotesAdapter(
         if (notePosition != -1) {
             filteredNotes[notePosition] = note
             notifyItemChanged(notePosition)
-        }
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    private inner class ReloadNotesFromDBTask : AsyncTask<Void?, Void?, ArrayList<Note>>() {
-        override fun doInBackground(vararg voids: Void?): ArrayList<Note> {
-            return NotificationsTable.getLatestNotes()
-        }
-
-        override fun onPostExecute(notes: ArrayList<Note>) {
-            addAll(notes)
         }
     }
 
@@ -329,8 +333,6 @@ class NotesAdapter(
         val threeAvatars3: ImageView
         val unreadNotificationView: View
         val actionIcon: ImageView
-
-        val coroutineScope = CoroutineScope(Dispatchers.Main)
 
         init {
             contentView = checkNotNull(view.findViewById(R.id.note_content_container))
