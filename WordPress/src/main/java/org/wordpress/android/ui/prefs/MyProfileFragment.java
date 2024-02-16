@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.TextInputDialogFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -39,7 +38,6 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
-    private Button mLearMoreAtGravatar;
     private Button mGravatarSyncButton;
     private View mGravatarSyncContainer;
 
@@ -49,7 +47,6 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private static final String TRACK_PROPERTY_FIELD_NAME = "field_name";
     private static final String TRACK_PROPERTY_PAGE = "page";
     private static final String TRACK_PROPERTY_PAGE_MY_PROFILE = "my_profile";
-    private static final String GRAVATAR_URL = "https://www.gravatar.com";
 
     public static MyProfileFragment newInstance() {
         return new MyProfileFragment();
@@ -91,7 +88,6 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         mLastName = rootView.findViewById(R.id.last_name);
         mDisplayName = rootView.findViewById(R.id.display_name);
         mAboutMe = rootView.findViewById(R.id.about_me);
-        mLearMoreAtGravatar = rootView.findViewById(R.id.learn_more_at_gravatar);
         mGravatarSyncButton = rootView.findViewById(R.id.gravatar_sync_button);
         mGravatarSyncContainer = rootView.findViewById(R.id.gravatar_sync_container);
 
@@ -119,7 +115,6 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                         getString(R.string.about_me_hint),
                         mAboutMe,
                         true));
-        mLearMoreAtGravatar.setOnClickListener(v -> ActivityLauncher.openUrlExternal(getActivity(), GRAVATAR_URL));
         mGravatarSyncButton.setOnClickListener(v -> mGravatarSyncContainer.setVisibility(View.GONE));
 
         return rootView;

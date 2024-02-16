@@ -150,4 +150,8 @@
     <!-- Partial Media Access -->
     <color name="partial_media_access_prompt_background">#DEDEDE</color>
 
+    <!-- Gravatar Info Banners -->
+    <color name="gravatar_info_banner">#FAFAFA</color>
+    <color name="gravatar_sync_info_banner">#2C2C2E</color>
+
 </resources>

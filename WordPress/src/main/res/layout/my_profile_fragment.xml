@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/margin_small"
-        app:layout_constraintBottom_toTopOf="@+id/gravatar_info_container"
+        app:layout_constraintBottom_toTopOf="@+id/gravatar_sync_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -90,92 +90,14 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <LinearLayout
-        android:id="@+id/gravatar_info_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/margin_extra_small_large"
-        android:layout_margin="@dimen/margin_extra_large"
-        android:background="@drawable/bg_wordpress_gravatar_info"
-        app:layout_constraintBottom_toTopOf="@+id/gravatar_sync_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="@dimen/my_profile_gravatar_info_avatar_size"
-                android:layout_height="@dimen/my_profile_gravatar_info_avatar_size"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_logo" />
-
-            <ImageView
-                android:layout_width="@dimen/my_profile_gravatar_info_avatar_size"
-                android:layout_height="@dimen/my_profile_gravatar_info_avatar_size"
-                android:layout_marginStart="@dimen/my_profile_gravatar_info_avatars_overlap"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_logo_gravatar" />
-        </LinearLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/gravatar_description"
-            style="@style/MyProfileLabel"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/gravatar_info_description" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/learn_more_at_gravatar"
-            style="@style/OverlayMigrationHelperText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/gravatar_info_learn_more_link"
-            android:textColor="@color/jetpack_green_50"
-            app:drawableEndCompat="@drawable/ic_external_white_24dp"
-            app:icon="@drawable/ic_external_white_24dp" />
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/gravatar_sync_container"
+    <include
+        layout="@layout/gravatar_sync_info_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large"
-        android:background="@drawable/bg_wordpress_gravatar_info"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_extra_small_large"
-        android:paddingStart="@dimen/margin_extra_small_large"
-        android:paddingTop="@dimen/margin_extra_small_large"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="RtlSymmetry"
-        tools:visibility="visible">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/gravatar_sync_message"
-            style="@style/MyProfileLabel"
-            android:layout_width="0dp"
-            android:text="@string/gravatar_info_sync_message"
-            app:layout_constraintEnd_toStartOf="@+id/gravatar_sync_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/gravatar_sync_button"
-            style="@style/OverlayMigrationHelperText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gravatar_info_sync_done_button"
-            android:textColor="@color/jetpack_green_50"
-            android:textStyle="bold"
-            app:drawableEndCompat="@drawable/ic_external_white_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

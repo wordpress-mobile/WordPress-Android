@@ -200,6 +200,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
+        learnMoreAtGravatar.setOnClickListener {
+            ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
+        }
+        gravatarSyncView.gravatarSyncButton.setOnClickListener {
+            gravatarSyncView.gravatarSyncContainer.visibility = View.GONE
+        }
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
 
@@ -691,6 +697,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (event.success) {
             AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
             binding?.loadAvatar(event.filePath)
+            binding?.gravatarSyncView?.gravatarSyncContainer?.visibility = View.VISIBLE
         } else {
             ToastUtils.showToast(
                 activity,
@@ -709,6 +716,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
+        private const val GRAVATAR_URL = "https://www.gravatar.com";
         fun newInstance(): MeFragment {
             return MeFragment()
         }
