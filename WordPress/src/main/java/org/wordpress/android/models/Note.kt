@@ -4,6 +4,7 @@
 package org.wordpress.android.models
 
 import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextUtils
 import android.util.Base64
 import org.json.JSONArray
@@ -27,11 +28,13 @@ import java.util.zip.DataFormatException
 import java.util.zip.Inflater
 
 class Note {
-    private var mActions: JSONObject? = null
-    private var mNoteJSON: JSONObject?
     val id: String
-    private val mSyncLock = Any()
+
+    private var mNoteJSON: JSONObject?
+    private var mActions: JSONObject? = null
     private var mLocalStatus: String? = null
+
+    private val mSyncLock = Any()
 
     enum class EnabledActions {
         ACTION_REPLY,
@@ -57,11 +60,11 @@ class Note {
 
     constructor(noteJSON: JSONObject?) {
         mNoteJSON = noteJSON
-        id = mNoteJSON!!.optString("id", "")
+        id = mNoteJSON?.optString("id", "") ?: ""
     }
 
-    val jSON: JSONObject
-        get() = if (mNoteJSON != null) mNoteJSON!! else JSONObject()
+    val json: JSONObject
+        get() = mNoteJSON ?: JSONObject()
     val rawType: String
         get() = queryJSON("type", NOTE_UNKNOWN_TYPE)
 
@@ -72,12 +75,8 @@ class Note {
     val isCommentType: Boolean
         get() {
             synchronized(mSyncLock) {
-                return (isAutomattcherType && JSONUtils.queryJSON(
-                    mNoteJSON,
-                    "meta.ids.comment",
-                    -1
-                ) != -1
-                        || isTypeRaw(NOTE_COMMENT_TYPE))
+                return (isAutomattcherType && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1 ||
+                        isTypeRaw(NOTE_COMMENT_TYPE))
             }
         }
     val isAutomattcherType: Boolean
@@ -121,12 +120,14 @@ class Note {
         set(localStatus) {
             mLocalStatus = localStatus
         }
+
+    @Suppress("SwallowedException")
     val subject: JSONObject?
         get() {
             try {
                 synchronized(mSyncLock) {
-                    val subjectArray = mNoteJSON!!.getJSONArray("subject")
-                    if (subjectArray.length() > 0) {
+                    val subjectArray = mNoteJSON?.getJSONArray("subject")
+                    if (subjectArray != null && subjectArray.length() > 0) {
                         return subjectArray.getJSONObject(0)
                     }
                 }
@@ -137,7 +138,7 @@ class Note {
         }
 
     fun getFormattedSubject(notificationsUtilsWrapper: NotificationsUtilsWrapper): Spannable {
-        return notificationsUtilsWrapper.getSpannableContentForRanges(subject!!)
+        return subject?.let { notificationsUtilsWrapper.getSpannableContentForRanges(it) } ?: SpannableString("")
     }
 
     val title: String
@@ -147,7 +148,7 @@ class Note {
     val iconURLs: List<String>?
         get() {
             synchronized(mSyncLock) {
-                val bodyArray = mNoteJSON!!.optJSONArray("body")
+                val bodyArray = mNoteJSON?.optJSONArray("body")
                 if (bodyArray != null && bodyArray.length() > 0) {
                     val iconUrls = ArrayList<String>()
                     for (i in 0 until bodyArray.length()) {
@@ -164,7 +165,7 @@ class Note {
     val commentSubject: String?
         get() {
             synchronized(mSyncLock) {
-                val subjectArray = mNoteJSON!!.optJSONArray("subject")
+                val subjectArray = mNoteJSON?.optJSONArray("subject")
                 if (subjectArray != null) {
                     var commentSubject = JSONUtils.queryJSON(subjectArray, "subject[1].text", "")
 
@@ -177,6 +178,7 @@ class Note {
             }
             return ""
         }
+    @Suppress("SwallowedException")
     val commentSubjectNoticon: String
         get() {
             with(queryJSON("subject[0].ranges", JSONArray())) {
@@ -205,7 +207,7 @@ class Note {
 
     fun setRead() {
         try {
-            mNoteJSON!!.putOpt("read", 1)
+            mNoteJSON?.putOpt("read", 1)
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.NOTIFS, "Failed to set 'read' property", e)
         }
@@ -216,70 +218,62 @@ class Note {
          * Get the timestamp provided by the API for the note
          */
         get() = DateTimeUtils.timestampFromIso8601(timestampString)
-    val timestampString: String
+    private val timestampString: String
         get() = queryJSON("timestamp", "")
+    @Suppress("SwallowedException")
     val body: JSONArray
         get() {
             try {
-                synchronized(mSyncLock) { return mNoteJSON!!.getJSONArray("body") }
+                synchronized(mSyncLock) { return mNoteJSON?.getJSONArray("body") ?: JSONArray() }
             } catch (e: JSONException) {
                 return JSONArray()
             }
         }
 
+    @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val commentActions: JSONObject
-        get() {
-            if (mActions == null) {
-                // Find comment block that matches the root note comment id
-                val commentId = commentId
-                val bodyArray = body
-                for (i in 0 until bodyArray.length()) {
-                    try {
-                        val bodyItem = bodyArray.getJSONObject(i)
-                        if (bodyItem.has("type") && bodyItem.optString("type") == "comment" && commentId == JSONUtils.queryJSON(
-                                bodyItem,
-                                "meta.ids.comment",
-                                0
-                            ).toLong()
-                        ) {
-                            mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
-                            break
-                        }
-                    } catch (e: JSONException) {
+        get() = mActions ?: run {
+            // Find comment block that matches the root note comment id
+            val commentId = commentId
+            val bodyArray = body
+            for (i in 0 until bodyArray.length()) {
+                try {
+                    val bodyItem = bodyArray.getJSONObject(i)
+                    if (bodyItem.has("type") && bodyItem.optString("type") == "comment" &&
+                        commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.comment", 0).toLong()) {
+                        mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
                         break
                     }
-                }
-                if (mActions == null) {
-                    mActions = JSONObject()
+                } catch (e: JSONException) {
+                    break
                 }
             }
-            return mActions!!
+            if (mActions == null) {
+                mActions = JSONObject()
+            }
+            return requireNotNull(mActions)
         }
+
+    @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val postActions: JSONObject
-        get() {
-            if (mActions == null) {
-                val bodyArray = body
-                for (i in 0 until bodyArray.length()) {
-                    try {
-                        val bodyItem = bodyArray.getJSONObject(i)
-                        if (bodyItem.has("type") && bodyItem.optString("type") == "post" && postId == JSONUtils.queryJSON(
-                                bodyItem,
-                                "meta.ids.post",
-                                0
-                            )
-                        ) {
-                            mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
-                            break
-                        }
-                    } catch (e: JSONException) {
+        get() = mActions ?: run {
+            val bodyArray = body
+            for (i in 0 until bodyArray.length()) {
+                try {
+                    val bodyItem = bodyArray.getJSONObject(i)
+                    if (bodyItem.has("type") && bodyItem.optString("type") == "post" &&
+                        postId == JSONUtils.queryJSON(bodyItem, "meta.ids.post", 0)) {
+                        mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
                         break
                     }
-                }
-                if (mActions == null) {
-                    mActions = JSONObject()
+                } catch (e: JSONException) {
+                    break
                 }
             }
-            return mActions!!
+            if (mActions == null) {
+                mActions = JSONObject()
+            }
+            return requireNotNull(mActions)
         }
     val enabledCommentActions: EnumSet<EnabledActions>
         /**
@@ -367,6 +361,7 @@ class Note {
         return comment
     }
 
+    @Suppress("SwallowedException")
     val commentAuthorName: String
         get() {
             val bodyArray = body
@@ -384,6 +379,7 @@ class Note {
         }
     private val commentText: String
         get() = queryJSON("body[last].text", "")
+    @Suppress("SwallowedException")
     private val commentAuthorUrl: String
         get() {
             val bodyArray = body
@@ -442,7 +438,7 @@ class Note {
     // the purpose of checking if the local Note is any different from a remote note.
     fun equalsTimeAndLength(note: Note?) = note != null &&
             (timestampString.equals(note.timestampString, ignoreCase = true) &&
-                    jSON.length() == note.jSON.length())
+                    json.length() == note.json.length())
 
     companion object {
         // Maximum character length for a comment preview
@@ -469,6 +465,7 @@ class Note {
         /**
          * Compare note timestamp to now and return a time grouping
          */
+        @Suppress("MagicNumber")
         fun getTimeGroupForTimestamp(timestamp: Long): NoteTimeGroup {
             val today = Date()
             val then = Date(timestamp * 1000)
@@ -476,22 +473,9 @@ class Note {
                 NoteTimeGroup.GROUP_OLDER_MONTH
             } else if (then.compareTo(addWeeks(today, -1)) < 0) {
                 NoteTimeGroup.GROUP_OLDER_WEEK
-            } else if (then.compareTo(addDays(today, -2)) < 0
-                || isSameDay(
-                    addDays(
-                        today,
-                        -2
-                    ), then
-                )
-            ) {
+            } else if (then.compareTo(addDays(today, -2)) < 0 || isSameDay(addDays(today, -2), then)) {
                 NoteTimeGroup.GROUP_OLDER_TWO_DAYS
-            } else if (isSameDay(
-                    addDays(
-                        today,
-                        -1
-                    ), then
-                )
-            ) {
+            } else if (isSameDay(addDays(today, -1), then)) {
                 NoteTimeGroup.GROUP_YESTERDAY
             } else {
                 NoteTimeGroup.GROUP_TODAY
@@ -500,49 +484,42 @@ class Note {
 
         @JvmStatic
         @Synchronized
+        @Suppress("NestedBlockDepth", "MagicNumber")
         fun buildFromBase64EncodedData(noteId: String, base64FullNoteData: String?): Note? {
-            var note: Note? = null
-            if (base64FullNoteData == null) {
-                return null
-            }
+            if (base64FullNoteData == null) return null
             val b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT)
 
             // Decompress the payload
             val decompresser = Inflater()
             decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.size)
             val result = ByteArray(4096) // max length an Android PN payload can have
-            var resultLength = 0
-            try {
-                resultLength = decompresser.inflate(result)
+            val resultLength = try {
+                val length = decompresser.inflate(result)
                 decompresser.end()
+                length
             } catch (e: DataFormatException) {
-                AppLog.e(
-                    AppLog.T.NOTIFS,
-                    "Can't decompress the PN BlockListPayload. It could be > 4K",
-                    e
-                )
+                AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. It could be > 4K", e)
+                0
             }
-            var out: String? = null
-            try {
-                out = String(result, 0, resultLength, charset("UTF8"))
+            val out: String? = try {
+                String(result, 0, resultLength, charset("UTF8"))
             } catch (e: UnsupportedEncodingException) {
                 AppLog.e(AppLog.T.NOTIFS, "Notification data contains non UTF8 characters.", e)
+                null
             }
-            if (out != null) {
-                try {
-                    var jsonObject = JSONObject(out)
-                    if (jsonObject.has("notes")) {
-                        val jsonArray : JSONArray? = jsonObject.getJSONArray("notes")
-                        if (jsonArray != null && jsonArray.length() == 1) {
-                            jsonObject = jsonArray.getJSONObject(0)
-                        }
+            return if (out == null) null else try {
+                var jsonObject = JSONObject(out)
+                if (jsonObject.has("notes")) {
+                    val jsonArray: JSONArray? = jsonObject.getJSONArray("notes")
+                    if (jsonArray != null && jsonArray.length() == 1) {
+                        jsonObject = jsonArray.getJSONObject(0)
                     }
-                    note = Note(noteId, jsonObject)
-                } catch (e: JSONException) {
-                    AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e)
                 }
+                Note(noteId, jsonObject)
+            } catch (e: JSONException) {
+                AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e)
+                null
             }
-            return note
         }
     }
 }
