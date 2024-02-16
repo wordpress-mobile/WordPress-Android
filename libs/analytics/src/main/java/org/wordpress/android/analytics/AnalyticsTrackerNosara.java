@@ -2711,6 +2711,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notification_menu_tapped";
             case NOTIFICATIONS_MARK_ALL_READ_TAPPED:
                 return "notifications_mark_all_read_tapped";
+            case NOTIFICATIONS_INLINE_ACTION_TAPPED:
+                return "notifications_inline_action_tapped";
             case WEBVIEW_TOO_LARGE_PAYLOAD_ERROR:
                 return "webview_too_large_payload_error";
         }

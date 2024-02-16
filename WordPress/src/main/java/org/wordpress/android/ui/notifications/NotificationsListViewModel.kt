@@ -11,12 +11,13 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
-import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
@@ -31,7 +32,7 @@ import javax.inject.Named
 
 @HiltViewModel
 class NotificationsListViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val gcmMessageHandler: GCMMessageHandler,
@@ -39,8 +40,7 @@ class NotificationsListViewModel @Inject constructor(
     private val commentStore: CommentsStore,
     private val postActionsWrapper: ReaderPostActionsWrapper,
     private val accountStore: AccountStore
-
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(bgDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
@@ -85,15 +85,16 @@ class NotificationsListViewModel @Inject constructor(
             }
     }
 
-    fun likeComment(note: Note, liked: Boolean) {
-        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: return
+    fun likeComment(note: Note, liked: Boolean) = launch {
+        val site = siteStore.getSiteBySiteId(note.siteId.toLong()) ?: SiteModel().apply {
+            siteId = note.siteId.toLong()
+            setIsWPCom(true)
+        }
         note.setLikedComment(liked)
         _updatedNote.postValue(note)
-        viewModelScope.launch {
-            val result = commentStore.likeComment(site, note.commentId, null, liked)
-            if (result.isError.not()) {
-                NotificationsTable.saveNote(note)
-            }
+        val result = commentStore.likeComment(site, note.commentId, null, liked)
+        if (result.isError.not()) {
+            NotificationsTable.saveNote(note)
         }
     }
 
@@ -120,5 +121,9 @@ class NotificationsListViewModel @Inject constructor(
         data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
         class LikePostButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
+
+        companion object {
+            const val KEY_INLINE_ACTION = "inline_action"
+        }
     }
 }
