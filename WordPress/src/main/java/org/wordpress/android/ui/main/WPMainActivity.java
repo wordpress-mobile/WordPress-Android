@@ -29,6 +29,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
@@ -138,6 +139,7 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
+import org.wordpress.android.ui.utils.UiString.UiStringRes;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -152,6 +154,9 @@ import org.wordpress.android.util.QuickStartUtils;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.SnackbarItem;
+import org.wordpress.android.util.SnackbarItem.Info;
+import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -233,6 +238,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_IS_CHANGING_CONFIGURATION = "IS_CHANGING_CONFIGURATION";
     public static final String ARG_BYPASS_MIGRATION = "bypass_migration";
     public static final String ARG_MEDIA = "show_media";
+    public static final String ARG_OPEN_PAGE_MESSAGE = "open_page_message";
     private boolean mIsChangingConfiguration = false;
     private WPMainNavigationView mBottomNav;
 
@@ -286,6 +292,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
     @Inject ActivityNavigator mActivityNavigator;
+
+    @Inject SnackbarSequencer mSnackbarSequencer;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -380,10 +388,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 } else if (openedFromShortcut) {
                     initSelectedSite();
-                        mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
-                        showJetpackOverlayIfNeeded(getIntent().getStringExtra(
-                                ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
+                    mShortcutsNavigator.showTargetScreen(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT), this, getSelectedSite());
+                    showJetpackOverlayIfNeeded(getIntent().getStringExtra(
+                            ShortcutsNavigator.ACTION_OPEN_SHORTCUT));
                 } else if (openRequestedPage) {
                     handleOpenPageIntent(getIntent());
                 } else if (isQuickStartRequestedFromPush) {
@@ -880,6 +888,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     private void handleOpenPageIntent(@NonNull Intent intent) {
+        showOpenPageMessageIfNeeded();
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
@@ -1919,5 +1928,25 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 //        startActivityForResult(intent, RequestCodes.SETTINGS); // TODO: do we need to handle the result?
         startActivity(intent);
+    }
+
+    private void showOpenPageMessageIfNeeded() {
+        if (getIntent() != null) {
+            int messageResId = getIntent().getIntExtra(ARG_OPEN_PAGE_MESSAGE, -1);
+            if (messageResId > -1) {
+                mSnackbarSequencer.enqueue(
+                        new SnackbarItem(
+                                new Info(
+                                        findViewById(R.id.coordinator),
+                                        new UiStringRes(messageResId),
+                                        Snackbar.LENGTH_LONG
+                                ),
+                                null,
+                                null,
+                                null
+                        )
+                );
+            }
+        }
     }
 }

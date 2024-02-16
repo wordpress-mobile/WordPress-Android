@@ -364,7 +364,7 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun setupActions() {
+    private fun PostListActivityBinding.setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
         }
@@ -377,11 +377,16 @@ class PostsListActivity : LocaleAwareActivity(),
                     uploadActionUseCase,
                     uploadUtilsWrapper
                 ) { isFirstTimePublishing ->
+                    changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                     reviewViewModel.onPublishingPost(isFirstTimePublishing)
                 }
             }
         }
+    }
+
+    private fun PostListActivityBinding.changeTabsOnPostUpload() {
+        tabLayout.getTabAt(PostListType.PUBLISHED.ordinal)?.select()
     }
 
     private fun PostListActivityBinding.loadViewState(state: PostListMainViewState) {

@@ -28,7 +28,7 @@ class QRCodeMediaLinkHandler @Inject constructor(
                 analyticsTrackerWrapper.track(AnalyticsTracker.Stat.DEEP_LINK_FAILED,
                     mapOf(ERROR to INVALID_SITE_ID,
                         CAMPAIGN to uri.getQueryParameter(CAMPAIGN)?.replace("-", "_")))
-                NavigateAction.OpenMySite
+                NavigateAction.OpenMySiteWithMessage(org.wordpress.android.R.string.qrcode_media_deeplink_error)
             }
             else -> {
                 NavigateAction.OpenMediaPickerForSite(siteModel)

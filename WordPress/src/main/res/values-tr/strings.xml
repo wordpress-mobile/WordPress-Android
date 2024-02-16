@@ -96,7 +96,6 @@ Language: tr
     <string name="account_and_settings">Hesap ve Ayarlar</string>
     <string name="site_creation_plans_selection_title">Paket seçin</string>
     <string name="site_creation_domain_free_with_annual_plan">Yıllık ücretli paketlerde ilk yıl ücretsizdir.</string>
-    <string name="reader_label_followers_count_single">1 takipçi</string>
     <string name="reader_secondary_bookmarked">Kaydedildi</string>
     <string name="reader_secondary_bookmark">Kaydet</string>
     <string name="reader_discover_recommended_header_new">Şunları beğenebilirsiniz:</string>
@@ -598,7 +597,6 @@ Language: tr
     <string name="quick_start_dialog_check_notifications_message_short">Hareket halindeyken güncellemeleri almak için %1$s Bildirimleri sekmesini %2$s seçin.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Ortam yüklemek için %1$s artı %2$s seçin. Herhangi bir cihazdan yazılarınıza / sayfalarınıza ekleyebilirsiniz.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Siteleri ve etiketleri bulmak için &lt;b&gt;Keşfet&lt;/b&gt;\'i kullanın.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Siteleri ve etiketleri bulmak için &lt;b&gt;Keşfet&lt;/b&gt;\'i kullanın. Beğendiğiniz konuları eklemek için %1$s Ayarlar\'ı %2$s seçmeyi deneyin.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video küçük resmi</string>
     <string name="stats_details_top_commentators">En iyi yorumcular</string>
     <string name="stats_published_years_ago">%1$d yıl önce yayımlandı</string>
@@ -1095,7 +1093,6 @@ Language: tr
     <string name="jetpack_brute_force_allowlist_title">Her zaman izin verilen IP adresleri</string>
     <string name="site_settings_denylist_title">İzin verilmeyen yorumlar</string>
     <string name="gutenberg_native_add_button_text">Düğme metni ekle</string>
-    <string name="reader_title_interests">Konuları takip et</string>
     <string name="stories_intro_main_subtitle">Sitenizde ilgi çekici içerik oluşturmanın ve yayınlamanın yeni bir yolu.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Kapat</string>
     <string name="activity_log_backup_download_notice_download_action">İndir</string>
@@ -1407,8 +1404,6 @@ Language: tr
     <string name="hpp_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
     <string name="continue_site_credentials">Mağaza kimlik bilgileriyle devam edin</string>
     <string name="login_find_your_connected_email">Bağlı e-postanızı bulun</string>
-    <string name="reader_discover_no_posts_button_text">Takip edilen konular</string>
-    <string name="reader_discover_no_posts_subtitle">Arama kapsamını genişletmek için daha fazla konuyu takip etmeyi deneyin</string>
     <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
     <string name="scan">Tarama</string>
@@ -1447,7 +1442,6 @@ Language: tr
     <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
     <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
     <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
-    <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tamamen desteklenmiyor</string>
     <string name="gutenberg_native_help_button">Yardım düğmesi</string>
@@ -1468,7 +1462,6 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
-    <string name="reader_discover_empty_subtitle">Yeni bloglar keşfetmek için konular takip edin</string>
     <string name="reader_post_details_header_by_author_name">gönderen:</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>
@@ -1626,7 +1619,6 @@ Language: tr
     <string name="gutenberg_native_block_copied">Blok kopyalandı</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Site Başlığı yalnızca yönetici rolüne sahip bir kullanıcı tarafından değiştirilebilir.</string>
     <string name="my_site_title_changer_dialog_hint">Site Başlığı, web tarayıcısının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide gösterilir.</string>
-    <string name="reader_title_tag_preview">Konu</string>
     <string name="error_update_site_title_network">Site başlığı güncellenemedi. Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Kaydedilmemiş değişiklikler</string>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
@@ -1658,8 +1650,6 @@ Language: tr
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Çöpe atılan yazılar düzenlenemez. Üzerinde çalışabilmek için bu yazının durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
-    <string name="reader_label_choose_your_interests"> Konularınızı seçin</string>
-    <string name="reader_choose_interests_content_description">Konularınızı seçin</string>
     <string name="reader_btn_done">Tamamlandı</string>
     <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
     <string name="post_status_post_published">Yayımlandı</string>
@@ -1702,7 +1692,6 @@ Language: tr
     <string name="page_cannot_set_homepage">Ana sayfa ayarlamak için Site Ayarları’nda “Statik Ana Sayfa” seçeneğini belirleyin</string>
     <string name="gutenberg_native_select_a_color">Bir renk seçin</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
-    <string name="reader_empty_followed_blogs_description">Siteleri takip ettiğinizde, içeriklerini burada görürsünüz</string>
     <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
     <string name="feature_announcement_dialog_label">%s İle İlgili Yenilikler </string>
     <string name="insert_label_with_count">%d ekle</string>
@@ -1716,9 +1705,6 @@ Language: tr
     <string name="site_picker_ask_site_select">Site seçilemedi. Lütfen yeniden deneyin.</string>
     <string name="sitepicker_continue_flow">Devam</string>
     <string name="reader_reblog_error">Yeniden bloglama başarısız</string>
-    <string name="reader_no_site_to_reblog_action">Siteleri yönet</string>
-    <string name="reader_no_site_to_reblog_detail">Bir WordPress.com sitesi oluşturduktan sonra, beğendiğiniz içeriği kendi sitenize yeniden bloglayabilirsiniz.</string>
-    <string name="reader_no_site_to_reblog_title">Kullanılabilir WordPress.com sitesi yok</string>
     <string name="whats_new_in_version_title">Neler yeni</string>
     <string name="comment_q_action_copied_url">Bağlantı kopyalandı</string>
     <string name="copy_link_address">Bağlantıyı kopyala</string>
@@ -1818,23 +1804,13 @@ Language: tr
     <string name="stats_management_screen_title">Yeni kart ekle</string>
     <string name="stats_management_add_new_stats_card">Yeni istatistik kartı ekle</string>
     <string name="reader_self_hosted_select_filter">Belirli konular hakkında yazılar bulmak için filtre düğmesini kullanın</string>
-    <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
-    <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
-    <string name="reader_title_subs">Konuları ve Siteleri Yönetme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Takip ettiğiniz konulardaki en yeni yazıları görmek için WordPress.com\'da oturum açın</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Takip ettiğiniz sitelerdeki en son yazıları görmek için WordPress.com\'da oturum açın</string>
     <string name="gutenberg_native_replace_current_block">Mevcut bloğu değiştir</string>
     <string name="gutenberg_native_add_to_end">Sona ekle</string>
     <string name="gutenberg_native_add_to_beginning">Başa ekle</string>
     <string name="gutenberg_native_add_block_before">Blok öncesine ekle</string>
     <string name="gutenberg_native_add_block_after">Blok sonrasına ekle</string>
-    <string name="reader_filter_empty_tags_action">Bir konu ekle</string>
-    <string name="reader_filter_empty_sites_action">Bir siteyi takip et</string>
-    <string name="reader_filter_empty_tags_list">Bir konu ekleyerek o konudaki yazıları takip edebilirsiniz</string>
-    <string name="reader_filter_empty_sites_list">Takip ettiğiniz sitelerdeki en yeni yazıları görün</string>
-    <string name="reader_filter_main_title">Takip edilen</string>
     <string name="reader_filter_cta">Filtrele</string>
     <string name="gutenberg_native_video_caption_s">Video yazısı. %s</string>
     <string name="gutenberg_native_edit_video">Videoyu düzenle</string>
@@ -1879,7 +1855,6 @@ Language: tr
     <string name="login_site_credentials_magic_link_label">Çok az kaldı! Sadece Jetpack bağlantılı e-posta adresinizi doğrulamamız gerekiyor&lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">%1$s site kimlik bilginizle giriş yapın</string>
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
-    <string name="reader_following_display_name">Takip Ediliyor</string>
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="reader_discover_display_name">Keşfet</string>
     <string name="reader_save_for_later_display_name">Kaydedildi</string>
@@ -2373,7 +2348,6 @@ Language: tr
     <string name="login_error_sms_throttled">Çok fazla SMS doğrulama kodu gönderimi yaptık. Biraz mola verin ve bir dakika sonra yenisini talep edin.</string>
     <string name="login_error_email_not_found_v2">Bu Google hesabıyla eşleşen bir WordPress.com hesabı bulunmuyor.</string>
     <string name="site_picker_remove_site_empty">Aramanızla eşleşen site bulunamadı</string>
-    <string name="reader_empty_followed_blogs_search_title">Aramanızla eşleşen site bulunamadı</string>
     <string name="page_parent_changed">Üst sayfa değiştirildi</string>
     <string name="page_permanently_deleted">Sayfa kalıcı olarak silindi</string>
     <string name="page_moved_to_scheduled">Sayfa zamanlandı</string>
@@ -2406,8 +2380,6 @@ Language: tr
     <string name="quick_start_button_negative">Şimdi değil</string>
     <string name="content_description_more">Daha fazlası</string>
     <string name="my_site_create_new_site_title">Hiçbir siteniz yok</string>
-    <string name="reader_empty_followed_tags_title">Takip edilen konu yok</string>
-    <string name="reader_empty_followed_tags_subtitle">En sevdiğiniz konularla ilgili yazıları bulmak için buraya konu ekleyin</string>
     <string name="login_to_to_connect_jetpack">Jetpack\'i bağlamak için kullandığınız WordPress.com hesabına giriş yapın.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack SSS</string>
@@ -2427,9 +2399,6 @@ Language: tr
     <string name="people_empty_list_filtered_users">Henüz kullanıcı yok</string>
     <string name="reader_empty_posts_liked_description">Beğendiğiniz yazılar burada yer alacak</string>
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
-    <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
-    <string name="reader_empty_followed_blogs_button_discover">Siteleri keşfet</string>
-    <string name="reader_empty_followed_blogs_title">Takip edilen site yok</string>
     <string name="notifications_empty_likes">Henüz beğeni yok</string>
     <string name="notifications_empty_followers">Henüz takipçi yok</string>
     <string name="activity_log_limited_content_on_free_plan">Ücretsiz bir paket kullandığınız için etkinliklerinizde sınırlı içerik görüyorsunuz.</string>
@@ -2494,8 +2463,6 @@ Language: tr
     <string name="reader_followed_blog_notifications_this">bu site</string>
     <string name="reader_followed_blog_notifications_action">Etkinleştir</string>
     <string name="reader_followed_blog_notifications">%1$s%2$s%3$s için bildirimler etkinleştirilsin mi?</string>
-    <string name="reader_btn_notifications_on">Site bildirimlerini aç</string>
-    <string name="reader_btn_notifications_off">Site bildirimlerini kapat</string>
     <string name="activity_log_jetpack_icon">Jetpack simgesi</string>
     <string name="activity_log_event">İşlem</string>
     <string name="activity_log_icon">Etkinlik simgesi</string>
@@ -3077,7 +3044,6 @@ Language: tr
     <string name="confirm">Onayla</string>
     <string name="xmlrpc_endpoint_forbidden_error">Bağlanılamıyor. Sitenizin XMLRPC uç noktasına bağlanırken bir 403\n     hatası aldık. Uygulamanın sitenizle iletişim kurabilmesi için gereklidir. Problemi çözmek için\n     servis sağlayıcınızla iletişime geçin.</string>
     <string name="xmlrpc_post_blocked_error">Bağlanılamıyor. Sunucunuz POST isteklerini engelliyor ve uygulama sitenizle\n    iletişim kurmak için buna ihtiyaç duyuyor. Bu problemi gidermek için servis sağlayıcınızla iletişime geçin.</string>
-    <string name="reader_hint_search_followed_sites">Takip edilen siteleri ara</string>
     <string name="pending_draft_one_generic">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_month">Asılı bırakmayın! \'%1$s\' yayınlanmayı bekliyor.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' bir taslak olarak kaldı. Yayınlamayı unutmayın!</string>
@@ -3179,7 +3145,6 @@ Language: tr
     <string name="person_remove_confirmation_title">%1$s kullanıcısını kaldır</string>
     <string name="role">Rol</string>
     <string name="people">Kişiler</string>
-    <string name="reader_empty_posts_in_custom_list">Bu listedeki siteler yakın zamanda herhangi bir gönderide bulunmadı</string>
     <string name="error_remove_user">Kullanıcı kaldırılamıyor</string>
     <string name="error_update_role">Kullanıcı rolü güncellenemiyor</string>
     <string name="error_fetch_viewers_list">Site izleyicileri getirilemedi</string>
@@ -3392,7 +3357,6 @@ Language: tr
     <string name="reader_err_get_post_not_found">Bu yazı artık mevcut değil</string>
     <string name="reader_err_get_post_not_authorized">Bu yazıyı görüntülemeye yetkili değilsiniz</string>
     <string name="reader_err_get_post_generic">Bu yazı getirilemiyor</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Takip ettiğiniz siteler yakın tarihte herhangi bir gönderi yapmadı</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Yeni yazı yok</string>
     <string name="media_edit_copy_url_toast">Adres panoya kopyalandı</string>
     <string name="selected_theme">Seçili tema</string>
@@ -3437,8 +3401,6 @@ Language: tr
     <string name="reader_short_like_count_multi">%s beğeni</string>
     <string name="reader_short_like_count_one">1 beğeni</string>
     <string name="reader_short_like_count_none">Beğen</string>
-    <string name="reader_label_follow_count">%,d takipçi</string>
-    <string name="reader_menu_tags">Konu ve site düzenleme</string>
     <string name="reader_title_post_detail">Okuyucu yazısı</string>
     <string name="notifications_push_summary">Cihazınızda görünen bildirimlerin ayarları.</string>
     <string name="notifications_email_summary">Hesabınıza bağlı e-posta adresine gönderilen bildirimlerin ayarları.</string>
@@ -3460,8 +3422,6 @@ Language: tr
     <string name="button_view">Görüntüle</string>
     <string name="button_publish">Yayımla</string>
     <string name="button_edit">Düzenle</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Bu siteye erişim için yetkiniz yok</string>
-    <string name="reader_toast_err_follow_blog_not_found">Site bulunamadı</string>
     <string name="undo">Geri al</string>
     <string name="push_auth_expired">İstek süresi doldu. WordPress.com\'a giriş yaparak tekrar deneyin.</string>
     <string name="ignore">Yoksay</string>
@@ -3505,7 +3465,6 @@ Language: tr
     <string name="posts_fetching">Yazılar alınıyor…</string>
     <string name="media_fetching">Medya alınıyor…</string>
     <string name="logs_copied_to_clipboard">Uygulama günlükleri panoya kopyalandı</string>
-    <string name="reader_empty_posts_in_blog">Bu site boş</string>
     <string name="reader_label_new_posts">Yeni yazılar</string>
     <string name="error_copy_to_clipboard">Metin panoya kopyalanırken bir hata oluştu</string>
     <string name="post_uploading">Yazı yükleniyor</string>
@@ -3533,7 +3492,6 @@ Language: tr
     <string name="cab_selected">%d seçili</string>
     <string name="browse_our_faq_button">SSS sayfamıza göz atın</string>
     <string name="reader_empty_comments">Henüz yorum yapılmadı</string>
-    <string name="reader_empty_posts_in_tag">Bu konuyla ilgili hiç yazı yok</string>
     <string name="reader_label_like">Beğen</string>
     <string name="reader_label_view_original">Orijinal makaleyi oku</string>
     <string name="reader_label_comments_closed">Yorumlar kapandı</string>
@@ -3553,22 +3511,8 @@ Language: tr
     <string name="posts_empty_list">Henüz yazı yok. Bir yazı oluşturmaya ne dersiniz?</string>
     <string name="signing_out">Çıkış yapılıyor…</string>
     <string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
-    <string name="reader_toast_err_block_blog">Bu site engellenemiyor</string>
-    <string name="reader_toast_blog_blocked">Bu siteden yazılar artık gösterilmeyecek</string>
-    <string name="reader_menu_block_blog">Bu siteyi engelleyin</string>
     <string name="schedule_verb">Zamanla</string>
     <string name="update_verb">Güncelle</string>
-    <string name="reader_empty_recommended_blogs">Önerilen site yok</string>
-    <string name="reader_toast_err_unfollow_blog">Bu sitenin takibi bırakılamıyor</string>
-    <string name="reader_toast_err_follow_blog">Bu site takip edilemiyor</string>
-    <string name="reader_toast_err_already_follow_blog">Bu siteyi zaten takip ediyorsunuz</string>
-    <string name="reader_toast_err_get_blog_info">Bu site gösterilemiyor</string>
-    <string name="reader_label_followed_blog">Site takip edildi</string>
-    <string name="reader_label_followers_count">%s takipçi</string>
-    <string name="reader_hint_add_tag_or_url">Bir URL veya takip etmek istediğiniz konuyu girin</string>
-    <string name="reader_page_followed_blogs">Takip edilen siteler</string>
-    <string name="reader_page_followed_tags">Takip edilen konular</string>
-    <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>
     <string name="help">Yardım</string>
@@ -3594,8 +3538,6 @@ Language: tr
     <string name="blog_not_found">Bu bloga erişilirken hata ile karşılaşıldı</string>
     <string name="gallery_error">Ortam dosyası geri getirilemedi</string>
     <string name="no_network_message">Uygun durumda şebeke yok</string>
-    <string name="reader_toast_err_remove_tag">Bu konu silinemiyor</string>
-    <string name="reader_toast_err_add_tag">Bu konu eklenemiyor</string>
     <string name="reader_title_applog">Uygulama günlüğü</string>
     <string name="fatal_db_error">Uygulama veritabanı oluşturulurken hata meydana geldi. Uygulamayı tekrar yüklemeyi deneyin.</string>
     <string name="error_blog_hidden">Bu blog gizli ve yüklenemedi. Ayarlardan yeniden etkinleştirin ve yeniden deneyin.</string>
@@ -3657,15 +3599,12 @@ Language: tr
     <string name="reader_toast_err_url_intent">%s açılamadı</string>
     <string name="reader_toast_err_view_image">Görsel görüntülenemedi</string>
     <string name="reader_toast_err_share_intent">Paylaşılamadı</string>
-    <string name="reader_toast_err_tag_invalid">Bu geçerli bir konu değil</string>
-    <string name="reader_toast_err_tag_exists">Bu konuyu zaten takip ediyorsunuz</string>
     <string name="reader_toast_err_comment_failed">Yorumunuz gönderilemedi</string>
     <string name="reader_likes_only_you">Bunu beğendin</string>
     <string name="reader_likes_one">Bir kişi bunu beğendi</string>
     <string name="reader_label_removed_tag">%s kaldırıldı</string>
     <string name="reader_label_added_tag">%s eklendi</string>
     <string name="reader_hint_comment_on_comment">Yorumu yanıtla…</string>
-    <string name="reader_btn_unfollow">Takipte</string>
     <string name="reader_btn_follow">Takip et</string>
     <string name="reader_btn_share">Paylaş</string>
     <string name="reader_view_reblog">Yeniden blogla</string>
