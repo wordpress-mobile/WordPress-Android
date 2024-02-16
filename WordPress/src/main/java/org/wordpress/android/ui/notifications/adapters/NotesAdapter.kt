@@ -302,7 +302,7 @@ class NotesAdapter(
         cancelReloadLocalNotes()
         reloadLocalNotesJob = coroutineScope.launch {
             val notes = NotificationsTable.getLatestNotes()
-            withContext(Dispatchers.Main) { addAll(notes) }
+            addAll(notes)
         }
     }
 
