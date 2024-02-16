@@ -551,7 +551,7 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     public void setDbTimestamp(long timestamp) {
         mDbTimestamp = timestamp;
     }
-
+    @Override
     public long getDbTimestamp() {
         return mDbTimestamp;
     }
