@@ -25,7 +25,6 @@ import org.wordpress.android.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
@@ -53,7 +52,8 @@ public class Note {
     private static final String ACTION_KEY_REPLY = "replyto-comment";
     private static final String ACTION_KEY_APPROVE = "approve-comment";
     private static final String ACTION_KEY_SPAM = "spam-comment";
-    private static final String ACTION_KEY_LIKE = "like-comment";
+    private static final String ACTION_KEY_LIKE_COMMENT = "like-comment";
+    private static final String ACTION_KEY_LIKE_POST = "like-post";
 
     private JSONObject mActions;
     private JSONObject mNoteJSON;
@@ -67,7 +67,8 @@ public class Note {
         ACTION_APPROVE,
         ACTION_UNAPPROVE,
         ACTION_SPAM,
-        ACTION_LIKE
+        ACTION_LIKE_COMMENT,
+        ACTION_LIKE_POST,
     }
 
     public enum NoteTimeGroup {
@@ -174,18 +175,18 @@ public class Note {
      * does user have permission to moderate/reply/spam this comment?
      */
     public boolean canModerate() {
-        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        EnumSet<EnabledActions> enabledActions = getEnabledCommentActions();
         return enabledActions != null && (enabledActions.contains(EnabledActions.ACTION_APPROVE) || enabledActions
                 .contains(EnabledActions.ACTION_UNAPPROVE));
     }
 
     public boolean canMarkAsSpam() {
-        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        EnumSet<EnabledActions> enabledActions = getEnabledCommentActions();
         return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_SPAM));
     }
 
     public boolean canReply() {
-        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        EnumSet<EnabledActions> enabledActions = getEnabledCommentActions();
         return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_REPLY));
     }
 
@@ -193,9 +194,14 @@ public class Note {
         return canModerate();
     }
 
-    public boolean canLike() {
-        EnumSet<EnabledActions> enabledActions = getEnabledActions();
-        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE));
+    public boolean canLikeComment() {
+        EnumSet<EnabledActions> enabledActions = getEnabledCommentActions();
+        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE_COMMENT));
+    }
+
+    public boolean canLikePost() {
+        EnumSet<EnabledActions> enabledActions = getEnabledPostActions();
+        return (enabledActions != null && enabledActions.contains(EnabledActions.ACTION_LIKE_POST));
     }
 
     public String getLocalStatus() {
@@ -312,13 +318,6 @@ public class Note {
         }
     }
 
-    public static class TimeStampComparator implements Comparator<Note> {
-        @Override
-        public int compare(Note a, Note b) {
-            return b.getTimestampString().compareTo(a.getTimestampString());
-        }
-    }
-
     /**
      * The inverse of isRead
      */
@@ -364,6 +363,7 @@ public class Note {
         return queryJSON("noticon", "");
     }
 
+    @NonNull
     private JSONObject getCommentActions() {
         if (mActions == null) {
             // Find comment block that matches the root note comment id
@@ -390,13 +390,51 @@ public class Note {
         return mActions;
     }
 
-    /*
+    @NonNull
+    private JSONObject getPostActions() {
+        if (mActions == null) {
+            JSONArray bodyArray = getBody();
+            for (int i = 0; i < bodyArray.length(); i++) {
+                try {
+                    JSONObject bodyItem = bodyArray.getJSONObject(i);
+                    if (bodyItem.has("type") && bodyItem.optString("type").equals("post")
+                        && getPostId() == JSONUtils.queryJSON(bodyItem, "meta.ids.post", 0)) {
+                        mActions = JSONUtils.queryJSON(bodyItem, "actions", new JSONObject());
+                        break;
+                    }
+                } catch (JSONException e) {
+                    break;
+                }
+            }
+
+            if (mActions == null) {
+                mActions = new JSONObject();
+            }
+        }
+
+        return mActions;
+    }
+
+    /**
      * returns the actions allowed on this note, assumes it's a comment notification
      */
-    public EnumSet<EnabledActions> getEnabledActions() {
+    @NonNull
+    public EnumSet<EnabledActions> getEnabledCommentActions() {
+        return getEnabledActions(getCommentActions());
+    }
+
+    /**
+     * returns the actions allowed on this note, assumes it's a post notification
+     */
+    @NonNull
+    public EnumSet<EnabledActions> getEnabledPostActions() {
+        return getEnabledActions(getPostActions());
+    }
+
+    @NonNull
+    private EnumSet<EnabledActions> getEnabledActions(@NonNull final JSONObject jsonActions) {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
-        JSONObject jsonActions = getCommentActions();
-        if (jsonActions == null || jsonActions.length() == 0) {
+        if (jsonActions.length() == 0) {
             return actions;
         }
 
@@ -412,10 +450,12 @@ public class Note {
         if (jsonActions.has(ACTION_KEY_SPAM)) {
             actions.add(EnabledActions.ACTION_SPAM);
         }
-        if (jsonActions.has(ACTION_KEY_LIKE)) {
-            actions.add(EnabledActions.ACTION_LIKE);
+        if (jsonActions.has(ACTION_KEY_LIKE_COMMENT)) {
+            actions.add(EnabledActions.ACTION_LIKE_COMMENT);
         }
-
+        if (jsonActions.has(ACTION_KEY_LIKE_POST)) {
+            actions.add(EnabledActions.ACTION_LIKE_POST);
+        }
         return actions;
     }
 
@@ -468,6 +508,7 @@ public class Note {
         return comment;
     }
 
+    @NonNull
     public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
@@ -507,7 +548,7 @@ public class Note {
     }
 
     public CommentStatus getCommentStatus() {
-        EnumSet<EnabledActions> enabledActions = getEnabledActions();
+        EnumSet<EnabledActions> enabledActions = getEnabledCommentActions();
 
         if (enabledActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
             return CommentStatus.APPROVED;
@@ -520,14 +561,30 @@ public class Note {
 
     public boolean hasLikedComment() {
         JSONObject jsonActions = getCommentActions();
-        return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE);
+        return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE_COMMENT);
+    }
+
+    public boolean hasLikedPost() {
+        JSONObject jsonActions = getPostActions();
+        return !(jsonActions == null || jsonActions.length() == 0) && jsonActions.optBoolean(ACTION_KEY_LIKE_POST);
     }
 
     public void setLikedComment(boolean liked) {
         JSONObject jsonActions = getCommentActions();
         if (jsonActions != null) {
             try {
-                jsonActions.put(ACTION_KEY_LIKE, liked);
+                jsonActions.put(ACTION_KEY_LIKE_COMMENT, liked);
+            } catch (JSONException e) {
+                AppLog.e(T.NOTIFS, "Failed to set 'like' property for the note", e);
+            }
+        }
+    }
+
+    public void setLikedPost(boolean liked) {
+        JSONObject jsonActions = getPostActions();
+        if (jsonActions != null) {
+            try {
+                jsonActions.put(ACTION_KEY_LIKE_POST, liked);
             } catch (JSONException e) {
                 AppLog.e(T.NOTIFS, "Failed to set 'like' property for the note", e);
             }

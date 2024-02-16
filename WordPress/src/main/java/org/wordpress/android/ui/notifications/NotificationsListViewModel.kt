@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -38,11 +39,12 @@ class NotificationsListViewModel @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val gcmMessageHandler: GCMMessageHandler,
     private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
-    private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
-    private val commentStore: CommentsStore
+    private val commentStore: CommentsStore,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val accountStore: AccountStore
 ) : ScopedViewModel(bgDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
@@ -131,9 +133,31 @@ class NotificationsListViewModel @Inject constructor(
         }
     }
 
+    fun likePost(note: Note, liked: Boolean) = launch {
+        note.setLikedPost(liked)
+        _updatedNote.postValue(note)
+        val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
+        readerPostActionsWrapper.performLikeActionRemote(
+            post = post,
+            postId = note.postId.toLong(),
+            blogId = note.siteId.toLong(),
+            isAskingToLike = liked,
+            wpComUserId = accountStore.account.userId
+        ) { success ->
+            if (success) {
+                NotificationsTable.saveNote(note)
+                if (post == null) {
+                    // sync post from server
+                    readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+                }
+            }
+        }
+    }
+
     sealed class InlineActionEvent {
         data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
+        class LikePostButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
 
         companion object {
             const val KEY_INLINE_ACTION = "inline_action"
