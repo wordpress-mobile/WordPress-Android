@@ -10,7 +10,7 @@ plugins {
     id "io.sentry.android.gradle"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
-    id 'dagger.hilt.android.plugin'
+    id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
 }
 
