@@ -1,5 +1,0 @@
-24.1:
-- Du wirst benachrichtigt, wenn du offline arbeitest.
-- Uploads auf Bildblöcke werden pausiert, wenn deine Internetverbindung unterbrochen ist, und fortgesetzt, sobald die Verbindung wiederhergestellt ist.
-- Du kannst im Editor einen individuellen Verlauf auswählen und erhältst einen Farbhinweis.
-- Die Pfeile für vor und zurück sind bei Rechts-nach-Links-Sprachen richtig.
