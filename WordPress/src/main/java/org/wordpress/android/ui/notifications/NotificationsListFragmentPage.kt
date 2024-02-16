@@ -150,7 +150,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     override fun onDestroyView() {
         super.onDestroyView()
-        notesAdapter.cancelReloadNotesTask()
+        notesAdapter.cancelReloadLocalNotes()
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
@@ -187,7 +187,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (accountStore.hasAccessToken()) {
-            notesAdapter.reloadNotesFromDBAsync()
+            notesAdapter.reloadLocalNotes()
             if (shouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
@@ -459,7 +459,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         if (!isAdded) {
             return
         }
-        notesAdapter.reloadNotesFromDBAsync()
+        notesAdapter.reloadLocalNotes()
         if (event.hasUnseenNotes) {
             binding?.showNewUnseenNotificationsUI()
         }
