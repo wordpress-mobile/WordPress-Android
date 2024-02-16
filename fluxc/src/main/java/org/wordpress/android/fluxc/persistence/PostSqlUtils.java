@@ -69,7 +69,7 @@ public class PostSqlUtils {
         int numberOfDeletedRows = 0;
         if (postResult.isEmpty()) {
             // insert
-            post.setDbTimestamp();
+            post.setDbTimestamp(System.currentTimeMillis());
             WellSql.insert(post).asSingleTransaction(true).execute();
             return 1;
         } else {
@@ -93,7 +93,7 @@ public class PostSqlUtils {
             // Update only if local changes for this post don't exist
             if (overwriteLocalChanges || !postResult.get(0).isLocallyChanged()) {
                 int oldId = postResult.get(0).getId();
-                post.setDbTimestamp();
+                post.setDbTimestamp(System.currentTimeMillis());
                 return WellSql.update(PostModel.class).whereId(oldId)
                               .put(post, new UpdateAllExceptId<>(PostModel.class)).execute()
                        + numberOfDeletedRows;
