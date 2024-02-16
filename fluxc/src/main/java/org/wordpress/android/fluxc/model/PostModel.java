@@ -548,8 +548,8 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
         mAutoShareMessage = autoShareMessage;
     }
 
-    public void setDbTimestamp() {
-        mDbTimestamp = System.currentTimeMillis();
+    public void setDbTimestamp(long timestamp) {
+        mDbTimestamp = timestamp;
     }
 
     public long getDbTimestamp() {
