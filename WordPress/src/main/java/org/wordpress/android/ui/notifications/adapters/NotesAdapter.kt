@@ -113,7 +113,10 @@ class NotesAdapter(
                 filteredNotes[oldItemPosition].id == newNotes[newItemPosition].id
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
+                filteredNotes[oldItemPosition].equalsTimeAndLength(newNotes[newItemPosition]) &&
+                filteredNotes[oldItemPosition].isUnread == newNotes[newItemPosition].isUnread &&
+                filteredNotes[oldItemPosition].hasLikedPost() == newNotes[newItemPosition].hasLikedPost() &&
+                filteredNotes[oldItemPosition].hasLikedComment() == newNotes[newItemPosition].hasLikedComment()
         })
 
         filteredNotes.clear()

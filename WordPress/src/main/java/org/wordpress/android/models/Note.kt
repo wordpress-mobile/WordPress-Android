@@ -33,9 +33,6 @@ class Note {
     private val mSyncLock = Any()
     private var mLocalStatus: String? = null
 
-    val json: JSONObject
-        get() = mNoteJSON ?: JSONObject()
-
     enum class EnabledActions {
         ACTION_REPLY,
         ACTION_APPROVE,
@@ -448,8 +445,6 @@ class Note {
                     jSON.length() == note.jSON.length())
 
     companion object {
-        private const val TAG = "NoteModel"
-
         // Maximum character length for a comment preview
         private const val MAX_COMMENT_PREVIEW_LENGTH = 200
 
