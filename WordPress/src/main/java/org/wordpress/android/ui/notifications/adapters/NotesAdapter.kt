@@ -30,7 +30,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
-import org.wordpress.android.models.Note.TimeStampComparator
 import org.wordpress.android.models.Notification
 import org.wordpress.android.models.Notification.Comment
 import org.wordpress.android.models.Notification.PostNotification
@@ -57,7 +56,6 @@ class NotesAdapter(
     private val textIndentSize: Int
     private val dataLoadedListener: DataLoadedListener
     private val onLoadMoreListener: OnLoadMoreListener?
-    private val notes = ArrayList<Note>()
     val filteredNotes = ArrayList<Note>()
 
     @Inject
@@ -101,44 +99,30 @@ class NotesAdapter(
         currentFilter = newFilter
     }
 
-    fun addAll(notes: List<Note>, clearBeforeAdding: Boolean) {
-        notes.sortedWith(TimeStampComparator())
+    @SuppressLint("NotifyDataSetChanged")
+    fun addAll(notes: List<Note>) {
         try {
-            if (clearBeforeAdding) {
-                this.notes.clear()
-            }
-            this.notes.addAll(notes)
+            filteredNotes.clear()
+            filteredNotes.addAll(buildFilteredNotesList(notes, currentFilter))
         } finally {
-            myNotifyDatasetChanged()
+            notifyDataSetChanged()
+            dataLoadedListener.onDataLoaded(itemCount)
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun myNotifyDatasetChanged() {
-        buildFilteredNotesList(filteredNotes, notes, currentFilter)
-        notifyDataSetChanged()
-        dataLoadedListener.onDataLoaded(itemCount)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
-        val view = LayoutInflater.from(parent.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
+        LayoutInflater.from(parent.context)
             .inflate(R.layout.notifications_list_item, parent, false)
-        return NoteViewHolder(view)
-    }
+            .let { NoteViewHolder(it) }
 
-    private fun getNoteAtPosition(position: Int): Note? {
-        return if (isValidPosition(position)) {
-            filteredNotes[position]
-        } else null
-    }
+    private fun getNoteAtPosition(position: Int): Note? = if (isValidPosition(position)) {
+        filteredNotes[position]
+    } else null
 
-    private fun isValidPosition(position: Int): Boolean {
-        return position >= 0 && position < filteredNotes.size
-    }
+    private fun isValidPosition(position: Int): Boolean = position >= 0 && position < filteredNotes.size
 
-    override fun getItemCount(): Int {
-        return filteredNotes.size
-    }
+
+    override fun getItemCount(): Int = filteredNotes.size
 
     private val Note.timeGroup
         get() = Note.getTimeGroupForTimestamp(timestamp)
@@ -311,14 +295,10 @@ class NotesAdapter(
      * Update the note in the adapter and notify the change
      */
     fun updateNote(note: Note) {
-        val notePosition = notes.indexOfFirst { it.id == note.id }
+        val notePosition = filteredNotes.indexOfFirst { it.id == note.id }
         if (notePosition != -1) {
-            notes[notePosition] = note
-        }
-        val filteredPosition = filteredNotes.indexOfFirst { it.id == note.id }
-        if (filteredPosition != -1) {
-            filteredNotes[filteredPosition] = note
-            notifyItemChanged(filteredPosition)
+            filteredNotes[notePosition] = note
+            notifyItemChanged(notePosition)
         }
     }
 
@@ -329,9 +309,7 @@ class NotesAdapter(
         }
 
         override fun onPostExecute(notes: ArrayList<Note>) {
-            this@NotesAdapter.notes.clear()
-            this@NotesAdapter.notes.addAll(notes)
-            myNotifyDatasetChanged()
+            addAll(notes)
         }
     }
 
@@ -373,11 +351,10 @@ class NotesAdapter(
             contentView.setOnClickListener(onClickListener)
         }
 
-        @Suppress("ForbiddenComment")
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
                 Comment -> bindLikeCommentAction(note)
-                is PostNotification.NewPost -> bindLikePostAction()
+                is PostNotification.NewPost -> bindLikePostAction(note)
                 is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
                     actionIcon.isVisible = false
@@ -399,12 +376,22 @@ class NotesAdapter(
             }
         }
 
-        private fun bindLikePostAction() {
-            // implement like post action
+        private fun bindLikePostAction(note: Note) {
+            if (note.canLikePost().not()) return
+            setupLikeIcon(note.hasLikedPost())
+            actionIcon.setOnClickListener {
+                val liked = note.hasLikedPost().not()
+                setupLikeIcon(liked)
+                coroutineScope.launch {
+                    inlineActionEvents.emit(
+                        InlineActionEvent.LikePostButtonTapped(note, liked)
+                    )
+                }
+            }
         }
 
         private fun bindLikeCommentAction(note: Note) {
-            if (note.canLike().not()) return
+            if (note.canLikeComment().not()) return
             setupLikeIcon(note.hasLikedComment())
             actionIcon.setOnClickListener {
                 val liked = note.hasLikedComment().not()
@@ -450,37 +437,18 @@ class NotesAdapter(
     companion object {
         // Instead of building the filtered notes list dynamically, create it once and re-use it.
         // Otherwise it's re-created so many times during layout.
+        @JvmStatic
         fun buildFilteredNotesList(
-            filteredNotes: ArrayList<Note>,
-            notes: ArrayList<Note>,
+            notes: List<Note>,
             filter: FILTERS
-        ) {
-            filteredNotes.clear()
-            if (notes.isEmpty() || filter == FILTERS.FILTER_ALL) {
-                filteredNotes.addAll(notes)
-                return
+        ): ArrayList<Note> = notes.filter { note ->
+            when (filter) {
+                FILTERS.FILTER_ALL -> true
+                FILTERS.FILTER_COMMENT -> note.isCommentType
+                FILTERS.FILTER_FOLLOW -> note.isFollowType
+                FILTERS.FILTER_UNREAD -> note.isUnread
+                FILTERS.FILTER_LIKE -> note.isLikeType
             }
-            for (currentNote in notes) {
-                when (filter) {
-                    FILTERS.FILTER_COMMENT -> if (currentNote.isCommentType) {
-                        filteredNotes.add(currentNote)
-                    }
-
-                    FILTERS.FILTER_FOLLOW -> if (currentNote.isFollowType) {
-                        filteredNotes.add(currentNote)
-                    }
-
-                    FILTERS.FILTER_UNREAD -> if (currentNote.isUnread) {
-                        filteredNotes.add(currentNote)
-                    }
-
-                    FILTERS.FILTER_LIKE -> if (currentNote.isLikeType) {
-                        filteredNotes.add(currentNote)
-                    }
-
-                    else -> Unit
-                }
-            }
-        }
+        }.sortedByDescending { it.timestamp }.let { result -> ArrayList(result) }
     }
 }

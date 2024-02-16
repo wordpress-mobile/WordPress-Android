@@ -425,6 +425,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 }
             }
             is InlineActionEvent.LikeCommentButtonTapped -> viewModel.likeComment(actionEvent.note, actionEvent.liked)
+            is InlineActionEvent.LikePostButtonTapped -> viewModel.likePost(actionEvent.note, actionEvent.liked)
         }
     }
 
@@ -470,7 +471,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         swipeToRefreshHelper?.isRefreshing = false
-        notesAdapter.addAll(event.notes, true)
+        notesAdapter.addAll(event.notes)
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")

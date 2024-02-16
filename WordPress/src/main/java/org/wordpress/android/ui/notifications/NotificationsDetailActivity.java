@@ -374,10 +374,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                                                                                  NotesAdapter.FILTERS filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
-        ArrayList<Note> filteredNotes = new ArrayList<>();
 
         // apply filter to the list so we show the same items that the list show vertically, but horizontally
-        NotesAdapter.Companion.buildFilteredNotesList(filteredNotes, notes, filter);
+        ArrayList<Note> filteredNotes = NotesAdapter.buildFilteredNotesList(notes, filter);
+
         adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
 
         if (mBinding != null) {

@@ -516,7 +516,7 @@ public class GCMMessageHandler {
                 } else {
                     // else offer REPLY / LIKE actions
                     // LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                    if (note.canLike()) {
+                    if (note.canLikeComment()) {
                         addCommentLikeActionForCommentNotification(context, builder, noteId);
                     }
                 }

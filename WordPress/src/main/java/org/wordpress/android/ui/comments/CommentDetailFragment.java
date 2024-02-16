@@ -1354,7 +1354,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canLike(@NonNull SiteModel site) {
-        return mEnabledActions.contains(EnabledActions.ACTION_LIKE)
+        return mEnabledActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
                && SiteUtils.isAccessedViaWPComRest(site);
     }
 
@@ -1387,7 +1387,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
          * this user made on someone else's blog
          */
         if (note != null) {
-            mEnabledActions = note.getEnabledActions();
+            mEnabledActions = note.getEnabledCommentActions();
         }
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
