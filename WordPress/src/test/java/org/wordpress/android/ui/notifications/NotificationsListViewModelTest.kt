@@ -13,6 +13,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -57,6 +58,9 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     private lateinit var commentStore: CommentsStore
 
     @Mock
+    private lateinit var  accountStore: AccountStore
+
+    @Mock
     private lateinit var action: ActionHandler
 
     private lateinit var viewModel: NotificationsListViewModel
@@ -69,11 +73,12 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             jetpackFeatureRemovalOverlayUtil,
             gcmMessageHandler,
             notificationsUtilsWrapper,
-            readerPostTableWrapper,
-            readerPostActionsWrapper,
             appLogWrapper,
             siteStore,
-            commentStore
+            commentStore,
+            readerPostTableWrapper,
+            readerPostActionsWrapper,
+            accountStore,
         )
     }
 
