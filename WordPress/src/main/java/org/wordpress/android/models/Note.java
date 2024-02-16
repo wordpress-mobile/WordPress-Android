@@ -363,6 +363,7 @@ public class Note {
         return queryJSON("noticon", "");
     }
 
+    @NonNull
     private JSONObject getCommentActions() {
         if (mActions == null) {
             // Find comment block that matches the root note comment id
@@ -389,7 +390,8 @@ public class Note {
         return mActions;
     }
 
-    @NonNull private JSONObject getPostActions() {
+    @NonNull
+    private JSONObject getPostActions() {
         if (mActions == null) {
             JSONArray bodyArray = getBody();
             for (int i = 0; i < bodyArray.length(); i++) {
@@ -424,12 +426,13 @@ public class Note {
     /**
      * returns the actions allowed on this note, assumes it's a post notification
      */
-     @NonNull
+    @NonNull
     public EnumSet<EnabledActions> getEnabledPostActions() {
         return getEnabledActions(getPostActions());
     }
 
-    @NonNull private EnumSet<EnabledActions> getEnabledActions(@NonNull final JSONObject jsonActions) {
+    @NonNull
+    private EnumSet<EnabledActions> getEnabledActions(@NonNull final JSONObject jsonActions) {
         EnumSet<EnabledActions> actions = EnumSet.noneOf(EnabledActions.class);
         if (jsonActions.length() == 0) {
             return actions;
@@ -505,7 +508,8 @@ public class Note {
         return comment;
     }
 
-    @NonNull public String getCommentAuthorName() {
+    @NonNull
+    public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
         for (int i = 0; i < bodyArray.length(); i++) {
