@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostNotification
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -22,6 +24,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NO
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -36,7 +39,8 @@ class NotificationsListViewModel @Inject constructor(
     private val gcmMessageHandler: GCMMessageHandler,
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore,
-    private val postActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
     private val accountStore: AccountStore
 ) : ScopedViewModel(bgDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
@@ -99,8 +103,8 @@ class NotificationsListViewModel @Inject constructor(
     fun likePost(note: Note, liked: Boolean) = launch {
         note.setLikedPost(liked)
         _updatedNote.postValue(note)
-        val post = ReaderPostTable.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
-        postActionsWrapper.performLikeActionRemote(
+        val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
+        readerPostActionsWrapper.performLikeActionRemote(
             post = post,
             postId = note.postId.toLong(),
             blogId = note.siteId.toLong(),
@@ -109,6 +113,10 @@ class NotificationsListViewModel @Inject constructor(
         ) { success ->
             if (success) {
                 NotificationsTable.saveNote(note)
+                if (post == null) {
+                    // sync post from server
+                    readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
+                }
             }
         }
     }
