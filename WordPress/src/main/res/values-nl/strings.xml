@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 15:54:08+0000
+Translation-Revision-Date: 2024-02-16 18:16:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: nl
@@ -22,7 +22,7 @@ Language: nl
     <string name="reader_toast_err_already_follow_this_blog">Je bent al geabonneerd op deze blog.</string>
     <string name="reader_toast_err_tag_already_subscribed">Je hebt je al geabonneerd op deze site!</string>
     <string name="reader_label_subscribers_count_single">(1 abonnee)</string>
-    <string name="reader_label_subscribe_count">abonnees</string>
+    <string name="reader_label_subscribe_count">%,d Abonnees</string>
     <string name="reader_label_blog_subscribed">Blog subscribed</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
     <string name="reader_hint_add_tag_or_url_subscribe">Voer de URL in van een blog waarop je je wilt abonneren</string>
