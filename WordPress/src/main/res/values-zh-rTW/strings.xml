@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 09:54:08+0000
+Translation-Revision-Date: 2024-02-15 12:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0-beta.2
 Language: zh_TW
 -->
 <resources>
+    <string name="error_media_could_not_share_media_from_device">無法載入媒體供分享。 請檢查應用程式權限\n        或使用應用程式的媒體庫。</string>
+    <string name="site_monitoring_cannot_be_started">目前我們無法開啟網站監控。 請稍後再試一次</string>
+    <string name="site_monitoring_tab_title_web_server_logs">網頁伺服器記錄</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP 記錄</string>
+    <string name="site_monitoring_tab_title_metrics">指標</string>
+    <string name="site_monitoring">網站監控</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">使用&lt;b&gt;探索&lt;/b&gt;功能來找出網站和分頁。 嘗試選取&lt;b&gt;訂閱&lt;/b&gt;，即可檢視已訂閱的內容並管理訂閱項目。</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">前往訂閱</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">你訂閱的網誌最近未張貼任何文章</string>
+    <string name="reader_no_followed_blogs_description_subs">訂閱「探索」中的網誌或搜尋你已按讚的網誌。</string>
+    <string name="reader_no_recommended_blogs_title">沒有推薦的網誌</string>
+    <string name="reader_no_followed_tags_title">沒有訂閱的標籤</string>
+    <string name="reader_no_posts_with_this_tag">沒有任何含有此標籤的文章</string>
+    <string name="reader_toast_err_unable_to_block_blog">無法封鎖此網誌</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">將不再顯示此網誌的文章</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">無法將網誌取消訂閱</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">你沒有存取此網誌的權限</string>
+    <string name="reader_toast_err_unable_to_follow_blog">無法訂閱此網誌</string>
+    <string name="reader_toast_err_already_follow_this_blog">你已訂閱此網誌</string>
+    <string name="reader_toast_err_show_blog">無法顯示此網誌</string>
+    <string name="reader_toast_err_tag_already_subscribed">你已訂閱此標籤</string>
+    <string name="reader_label_choose_interests">選擇你的興趣</string>
+    <string name="reader_label_subscribers_count_single">1 名訂閱者</string>
+    <string name="reader_label_subscribers_count">%s 名訂閱者</string>
+    <string name="reader_label_subscribe_count">%,d 名訂閱者</string>
+    <string name="reader_label_blog_subscribed">網誌已訂閱</string>
+    <string name="reader_hint_search_subscribed_blogs">搜尋已訂閱的網誌</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">輸入要訂閱的 URL 或標籤</string>
+    <string name="reader_btn_subscribed">已訂閱</string>
+    <string name="reader_btn_subscribe">訂閱</string>
+    <string name="reader_menu_block_this_blog">封鎖此網誌</string>
+    <string name="reader_menu_tags_and_blogs">編輯標籤和網誌</string>
+    <string name="reader_page_followed_blogs_title">已訂閱的網誌</string>
+    <string name="reader_page_followed_tags_title">已訂閱的標籤</string>
+    <string name="reader_title_tags">關注標籤</string>
+    <string name="reader_activity_title_manage_tags_blogs">管理標籤和網誌</string>
+    <string name="reader_activity_title_tag_preview">標籤</string>
+    <string name="reader_activity_title_blog_preview">讀者網誌</string>
+    <string name="reader_subscribed_display_name">已訂閱</string>
+    <string name="reader_filter_chip_tag_other">%d 個標籤</string>
+    <string name="reader_filter_chip_tag_one">1 個標籤</string>
+    <string name="reader_filter_chip_tag_zero">0 個標籤</string>
+    <string name="reader_filter_chip_blog_other">%d 個網誌</string>
+    <string name="reader_filter_chip_blog_one">1 個網誌</string>
+    <string name="reader_filter_chip_blog_zero">0 個網誌</string>
+    <string name="reader_dropdown_menu_lists">清單</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">已按讚</string>
+    <string name="reader_dropdown_menu_saved">已儲存</string>
+    <string name="reader_dropdown_menu_subscriptions">訂閱</string>
+    <string name="reader_dropdown_menu_discover">探索</string>
+    <string name="reader_search_content_description">搜尋</string>
+    <string name="reader_discover_no_posts_button_tags_text">訂閱標籤</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">嘗試訂閱更多標籤，即可擴大搜尋範圍</string>
+    <string name="reader_discover_empty_subtitle_subscribe">訂閱標籤即可探索新網誌</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">可訂閱的網誌</string>
+    <string name="reader_filter_empty_tags_action_subscribe">訂閱標籤</string>
+    <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
+    <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
+    <string name="reader_filter_empty_tags_list_text">只要訂閱標籤，就能從此處看到最佳文章。</string>
+    <string name="reader_filter_empty_tags_list_title">無標籤</string>
+    <string name="reader_filter_empty_blogs_list_text">在「探索」中訂閱網誌，就會於此處看到網誌的最新文章。 或者搜尋你已按讚的網誌。</string>
+    <string name="reader_filter_empty_blogs_list_title">無網誌訂閱</string>
+    <string name="reader_filter_empty_blogs_action">訂閱網誌</string>
+    <string name="reader_filter_empty_tags_list_subscribe">你可以新增標籤以訂閱特定主題的文章</string>
+    <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
+    <string name="reader_filter_by_tag_title">依標籤篩選</string>
+    <string name="reader_filter_by_blog_title">依網誌篩選</string>
+    <string name="stats_timeframe_by_year">依年份</string>
+    <string name="stats_timeframe_by_month">依月</string>
+    <string name="stats_timeframe_by_week">依週</string>
+    <string name="stats_timeframe_by_day">依天</string>
     <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
     <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">離線作業</string>
@@ -1017,7 +1089,7 @@ Language: zh_TW
     <string name="gutenberg_native_move_image_forward">向前移動圖片</string>
     <string name="gutenberg_native_move_image_backward">向後移動圖片</string>
     <string name="gutenberg_native_width_settings">寬度設定</string>
-    <string name="gutenberg_native_link_rel">鏈結 Rel</string>
+    <string name="gutenberg_native_link_rel">連結 rel 屬性</string>
     <string name="gutenberg_native_column_settings">欄位設定</string>
     <string name="gutenberg_native_no_description">無描述</string>
     <string name="user_profile_untitled_site">(未命名)</string>
@@ -1645,6 +1717,7 @@ Language: zh_TW
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">移至草稿</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
+    <string name="reader_choose_interests_tags_content_description">選擇標籤</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
     <string name="post_status_post_published">已發佈</string>
@@ -1700,6 +1773,9 @@ Language: zh_TW
     <string name="site_picker_ask_site_select">無法選擇網站，請再試一次。</string>
     <string name="sitepicker_continue_flow">繼續</string>
     <string name="reader_reblog_error">轉發失敗</string>
+    <string name="reader_no_blog_to_reblog_action">管理網誌</string>
+    <string name="reader_no_blog_to_reblog_detail">你在建立 WordPress.com 網誌後，就能將喜歡的內容轉貼到自己的網站。</string>
+    <string name="reader_no_blog_to_reblog_title">無可用的 WordPress.com 網誌</string>
     <string name="whats_new_in_version_title">最新內容</string>
     <string name="comment_q_action_copied_url">已複製連結位址</string>
     <string name="copy_link_address">複製連結位址</string>
@@ -1798,13 +1874,17 @@ Language: zh_TW
     <string name="stats_management_screen_title">新增卡片</string>
     <string name="stats_management_add_new_stats_card">新增統計資料卡片</string>
     <string name="reader_self_hosted_select_filter">使用篩選按鈕尋找特定主題的文章</string>
+    <string name="reader_bottom_sheet_select_content_description">選取標籤或網誌、快顯視窗</string>
     <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登入 WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">登入 WordPress.com，查看訂閱標籤的最新文章</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">登入 WordPress.com，查看訂閱網誌的最新文章</string>
     <string name="gutenberg_native_replace_current_block">取代目前區塊</string>
     <string name="gutenberg_native_add_to_end">新增至「結束」</string>
     <string name="gutenberg_native_add_to_beginning">新增至「開始」</string>
     <string name="gutenberg_native_add_block_before">在之前新增區塊</string>
     <string name="gutenberg_native_add_block_after">在之後新增區塊</string>
+    <string name="reader_filter_empty_tags_add_action">新增標籤</string>
     <string name="reader_filter_cta">篩選</string>
     <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>
     <string name="gutenberg_native_edit_video">編輯視訊</string>
@@ -2342,6 +2422,7 @@ Language: zh_TW
     <string name="login_error_sms_throttled">已嘗試傳送 SMS 驗證碼太多次，請稍待片刻，一分鐘後再送出新驗證碼要求。</string>
     <string name="login_error_email_not_found_v2">沒有 WordPress.com 帳號符合此 Google 帳號。</string>
     <string name="site_picker_remove_site_empty">沒有網站符合你的搜尋條件</string>
+    <string name="reader_no_followed_blogs_search_title">沒有網誌符合你的搜尋條件</string>
     <string name="page_parent_changed">頁面上層項目已變更</string>
     <string name="page_permanently_deleted">頁面已永久刪除</string>
     <string name="page_moved_to_scheduled">頁面已排程</string>
@@ -2373,6 +2454,7 @@ Language: zh_TW
     <string name="quick_start_button_negative">現在不要</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">你沒有任何網站</string>
+    <string name="reader_empty_subscribed_tags_subtitle">請在此處新增標籤，尋找有關最愛主題的文章</string>
     <string name="login_to_to_connect_jetpack">請登入你用來連結 Jetpack 的 WordPress.com 帳號。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常見問題</string>
@@ -2392,6 +2474,7 @@ Language: zh_TW
     <string name="people_empty_list_filtered_users">尚未有使用者</string>
     <string name="reader_empty_posts_liked_description">這裡會顯示你按讚的文章</string>
     <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
+    <string name="reader_no_followed_blogs_button_discover">探索網誌</string>
     <string name="notifications_empty_likes">尚未有人按讚</string>
     <string name="notifications_empty_followers">尚未有關注者</string>
     <string name="activity_log_limited_content_on_free_plan">由於你使用免費版方案，你將無法查看所有活動。</string>
@@ -2456,6 +2539,8 @@ Language: zh_TW
     <string name="reader_followed_blog_notifications_this">此網站</string>
     <string name="reader_followed_blog_notifications_action">啟用</string>
     <string name="reader_followed_blog_notifications">要啟用 %1$s%2$s%3$s 的通知？</string>
+    <string name="reader_btn_blog_notifications_on">開啟網誌通知</string>
+    <string name="reader_btn_blog_notifications_off">關閉網誌通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 圖示</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活動圖示</string>
@@ -3136,6 +3221,7 @@ Language: zh_TW
     <string name="person_remove_confirmation_title">移除 %1$s</string>
     <string name="role">角色</string>
     <string name="people">使用者</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">此清單中的網誌最近尚未張貼任何文章</string>
     <string name="error_remove_user">無法移除使用者</string>
     <string name="error_update_role">無法更新使用者角色</string>
     <string name="error_fetch_viewers_list">無法擷取網站使用者</string>
@@ -3413,6 +3499,7 @@ Language: zh_TW
     <string name="button_view">檢視</string>
     <string name="button_publish">上架</string>
     <string name="button_edit">編輯</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">找不到此網誌</string>
     <string name="undo">復原</string>
     <string name="push_auth_expired">要求已到期。登入 WordPress.com 再試一次。</string>
     <string name="ignore">忽略</string>
@@ -3456,6 +3543,7 @@ Language: zh_TW
     <string name="posts_fetching">正在擷取文章…</string>
     <string name="media_fetching">正在擷取媒體…</string>
     <string name="logs_copied_to_clipboard">應用程式記錄已複製到剪貼簿</string>
+    <string name="reader_no_posts_in_blog">這個網誌沒有內容</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="error_copy_to_clipboard">將文字複製到剪貼簿時發生錯誤</string>
     <string name="post_uploading">正在上傳文章</string>
@@ -3529,6 +3617,8 @@ Language: zh_TW
     <string name="blog_not_found">存取此網誌時發生錯誤</string>
     <string name="gallery_error">無法擷取媒體項目</string>
     <string name="no_network_message">沒有可用的網路</string>
+    <string name="reader_toast_err_removing_tag">無法移除此標籤</string>
+    <string name="reader_toast_err_adding_tag">無法新增此標籤</string>
     <string name="reader_title_applog">應用程式記錄檔</string>
     <string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
     <string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
@@ -3590,6 +3680,7 @@ Language: zh_TW
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>
+    <string name="reader_toast_err_tag_not_valid">這並非有效的標籤</string>
     <string name="reader_toast_err_comment_failed">無法張貼你的回應</string>
     <string name="reader_likes_only_you">你說這個讚</string>
     <string name="reader_likes_one">1 人說這個讚</string>

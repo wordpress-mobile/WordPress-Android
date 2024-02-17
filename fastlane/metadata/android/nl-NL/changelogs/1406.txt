@@ -1,5 +1,0 @@
-24.1:
-- Krijg een melding wanneer je offline werkt.
-- Uploads naar het afbeeldingblok pauzeren wanneer je geen verbinding meer hebt met het internet en hervatten wanneer je weer verbinding hebt.
-- Selecteer een aangepast kleurverloop in de editor en zie een kleurenindicator.
-- De pijlen verder/terug kloppen voor lezers die van rechts naar links lezen.
