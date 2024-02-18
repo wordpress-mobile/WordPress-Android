@@ -41,11 +41,12 @@ import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -95,6 +96,9 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -121,7 +125,8 @@ class StatsViewModelTest : BaseUnitTest() {
             statsModuleActivateUseCase,
             notificationsTracker,
             jetpackBrandingUtils,
-            jetpackFeatureRemovalOverlayUtil
+            jetpackFeatureRemovalOverlayUtil,
+            trafficTabFeatureConfig
         )
 
         viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
@@ -133,7 +138,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
         // The TRAFFIC tab is already the initial tab.
 
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
@@ -153,7 +158,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
@@ -163,7 +168,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
     }
 
     @Test
@@ -173,7 +178,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
     }
 
     @Test
@@ -183,7 +188,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
     }
 
     @Test
