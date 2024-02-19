@@ -121,19 +121,16 @@ class Note {
             mLocalStatus = localStatus
         }
 
-    @Suppress("SwallowedException")
     val subject: JSONObject?
-        get() {
-            try {
-                synchronized(mSyncLock) {
-                    val subjectArray = mNoteJSON?.getJSONArray("subject")
-                    if (subjectArray != null && subjectArray.length() > 0) {
-                        return subjectArray.getJSONObject(0)
-                    }
+        get() = runCatching {
+            synchronized(mSyncLock) {
+                val subjectArray = mNoteJSON?.getJSONArray("subject")
+                if (subjectArray != null && subjectArray.length() > 0) {
+                    return subjectArray.getJSONObject(0)
                 }
-            } catch (e: JSONException) {
-                return null
             }
+            return null
+        }.getOrElse {
             return null
         }
 
@@ -178,17 +175,16 @@ class Note {
             }
             return ""
         }
-    @Suppress("SwallowedException")
     val commentSubjectNoticon: String
         get() {
             with(queryJSON("subject[0].ranges", JSONArray())) {
                 for (i in 0 until length()) {
-                    try {
+                    runCatching {
                         val rangeItem = getJSONObject(i)
                         if (rangeItem.has("type") && rangeItem.optString("type") == "noticon") {
                             return rangeItem.optString("value", "")
                         }
-                    } catch (e: JSONException) {
+                    }.getOrElse {
                         return ""
                     }
                 }
@@ -220,14 +216,11 @@ class Note {
         get() = DateTimeUtils.timestampFromIso8601(timestampString)
     private val timestampString: String
         get() = queryJSON("timestamp", "")
-    @Suppress("SwallowedException")
     val body: JSONArray
-        get() {
-            try {
-                synchronized(mSyncLock) { return mNoteJSON?.getJSONArray("body") ?: JSONArray() }
-            } catch (e: JSONException) {
-                return JSONArray()
-            }
+        get() = runCatching {
+            synchronized(mSyncLock) { return mNoteJSON?.getJSONArray("body") ?: JSONArray() }
+        }.getOrElse {
+            JSONArray()
         }
 
     @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
@@ -361,17 +354,16 @@ class Note {
         return comment
     }
 
-    @Suppress("SwallowedException")
     val commentAuthorName: String
         get() {
             val bodyArray = body
             for (i in 0 until bodyArray.length()) {
-                try {
+                runCatching {
                     val bodyItem = bodyArray.getJSONObject(i)
                     if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
                         return bodyItem.optString("text")
                     }
-                } catch (e: JSONException) {
+                }.getOrElse {
                     return ""
                 }
             }
@@ -379,17 +371,16 @@ class Note {
         }
     private val commentText: String
         get() = queryJSON("body[last].text", "")
-    @Suppress("SwallowedException")
     private val commentAuthorUrl: String
         get() {
             val bodyArray = body
             for (i in 0 until bodyArray.length()) {
-                try {
+                runCatching {
                     val bodyItem = bodyArray.getJSONObject(i)
                     if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
                         return JSONUtils.queryJSON(bodyItem, "meta.links.home", "")
                     }
-                } catch (e: JSONException) {
+                }.getOrElse {
                     return ""
                 }
             }
