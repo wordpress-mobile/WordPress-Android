@@ -435,6 +435,8 @@ class Note {
         // Maximum character length for a comment preview
         private const val MAX_COMMENT_PREVIEW_LENGTH = 200
 
+        private const val MAX_PN_LENGTH = 4096 // max length an Android PN payload can have
+
         // Note types
         const val NOTE_FOLLOW_TYPE = "follow"
         const val NOTE_LIKE_TYPE = "like"
@@ -478,7 +480,7 @@ class Note {
 
         @JvmStatic
         @Synchronized
-        @Suppress("NestedBlockDepth", "MagicNumber")
+        @Suppress("NestedBlockDepth")
         fun buildFromBase64EncodedData(noteId: String, base64FullNoteData: String?): Note? {
             if (base64FullNoteData == null) return null
             val b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT)
@@ -486,7 +488,7 @@ class Note {
             // Decompress the payload
             val decompresser = Inflater()
             decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.size)
-            val result = ByteArray(4096) // max length an Android PN payload can have
+            val result = ByteArray(MAX_PN_LENGTH)
             val resultLength = try {
                 val length = decompresser.inflate(result)
                 decompresser.end()
