@@ -55,8 +55,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment.Companio
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent.SharePostButtonTapped
+import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -137,7 +137,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
-            (TabPosition.values().getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
+            (TabPosition.entries.getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
         }
         viewModel.updatedNote.observe(viewLifecycleOwner) {
             notesAdapter.updateNote(it)
@@ -531,7 +531,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             noteId: String?,
             shouldShowKeyboard: Boolean = false,
             replyText: String? = null,
-            filter: FILTERS? = null,
+            filter: Filter? = null,
             isTappedFromPushNotification: Boolean = false,
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {

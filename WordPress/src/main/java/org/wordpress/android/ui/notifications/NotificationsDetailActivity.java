@@ -43,6 +43,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
+import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -203,9 +204,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             }
         }
 
-        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+        Filter filter = Filter.ALL;
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-            filter = (NotesAdapter.FILTERS) getIntent()
+            filter = (Filter) getIntent()
                     .getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
 
@@ -371,7 +372,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(Note note,
-                                                                                 NotesAdapter.FILTERS filter) {
+                                                                                 Filter filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
 

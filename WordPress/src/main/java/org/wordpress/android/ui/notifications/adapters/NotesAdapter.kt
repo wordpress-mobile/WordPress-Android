@@ -37,12 +37,12 @@ import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.models.Notification.Unknown
 import org.wordpress.android.ui.comments.CommentUtils
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.indexOrNull
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
@@ -51,10 +51,13 @@ import kotlin.math.roundToInt
 class NotesAdapter(context: Context, private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>) :
     RecyclerView.Adapter<NoteViewHolder>() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    private var reloadLocalNotesJob: Job? = null
     val filteredNotes = ArrayList<Note>()
     var onNoteClicked = { _: String -> }
     var onNotesLoaded = { _: Int -> }
-    var onScrolledToBottom = { _:Long -> }
+    var onScrolledToBottom = { _: Long -> }
+    var currentFilter = Filter.ALL
+        private set
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -72,29 +75,7 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
         setHasStableIds(false)
     }
 
-    enum class FILTERS {
-        FILTER_ALL,
-        FILTER_COMMENT,
-        FILTER_FOLLOW,
-        FILTER_LIKE,
-        FILTER_UNREAD;
-
-        override fun toString(): String {
-            return when (this) {
-                FILTER_ALL -> "all"
-                FILTER_COMMENT -> "comment"
-                FILTER_FOLLOW -> "follow"
-                FILTER_LIKE -> "like"
-                FILTER_UNREAD -> "unread"
-            }
-        }
-    }
-
-    var currentFilter = FILTERS.FILTER_ALL
-        private set
-    private var reloadLocalNotesJob: Job? = null
-
-    fun setFilter(newFilter: FILTERS) {
+    fun setFilter(newFilter: Filter) {
         currentFilter = newFilter
     }
 
@@ -120,7 +101,11 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
-        NoteViewHolder(NotificationsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        NoteViewHolder(
+            NotificationsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            inlineActionEvents,
+            coroutineScope
+        )
 
     override fun getItemCount(): Int = filteredNotes.size
 
@@ -287,8 +272,7 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
     fun reloadLocalNotes() {
         cancelReloadLocalNotes()
         reloadLocalNotesJob = coroutineScope.launch {
-            val notes = NotificationsTable.getLatestNotes()
-            addAll(notes)
+            addAll(NotificationsTable.getLatestNotes())
         }
     }
 
@@ -296,73 +280,9 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
      * Update the note in the adapter and notify the change
      */
     fun updateNote(note: Note) {
-        val notePosition = filteredNotes.indexOfFirst { it.id == note.id }
-        if (notePosition != -1) {
+        filteredNotes.indexOrNull { it.id == note.id }?.let { notePosition ->
             filteredNotes[notePosition] = note
             notifyItemChanged(notePosition)
-        }
-    }
-
-    inner class NoteViewHolder(val binding: NotificationsListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
-            when (notification) {
-                Comment -> bindLikeCommentAction(note)
-                is PostNotification.NewPost -> bindLikePostAction(note)
-                is PostNotification -> bindShareAction(notification)
-                is Unknown -> {
-                    binding.action.isVisible = false
-                }
-            }
-        }
-
-        private fun bindShareAction(notification: PostNotification) {
-            binding.action.setImageResource(R.drawable.block_share)
-            val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
-            ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
-            binding.action.isVisible = true
-            binding.action.setOnClickListener {
-                coroutineScope.launch {
-                    inlineActionEvents.emit(
-                        InlineActionEvent.SharePostButtonTapped(notification)
-                    )
-                }
-            }
-        }
-
-        private fun bindLikePostAction(note: Note) {
-            if (note.canLikePost().not()) return
-            setupLikeIcon(note.hasLikedPost())
-            binding.action.setOnClickListener {
-                val liked = note.hasLikedPost().not()
-                setupLikeIcon(liked)
-                coroutineScope.launch {
-                    inlineActionEvents.emit(
-                        InlineActionEvent.LikePostButtonTapped(note, liked)
-                    )
-                }
-            }
-        }
-
-        private fun bindLikeCommentAction(note: Note) {
-            if (note.canLikeComment().not()) return
-            setupLikeIcon(note.hasLikedComment())
-            binding.action.setOnClickListener {
-                val liked = note.hasLikedComment().not()
-                setupLikeIcon(liked)
-                coroutineScope.launch {
-                    inlineActionEvents.emit(
-                        InlineActionEvent.LikeCommentButtonTapped(note, liked)
-                    )
-                }
-            }
-        }
-
-        private fun setupLikeIcon(liked: Boolean) {
-            binding.action.isVisible = true
-            binding.action.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
-            val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
-            else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
-            ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
         }
     }
 
@@ -372,15 +292,90 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
         @JvmStatic
         fun buildFilteredNotesList(
             notes: List<Note>,
-            filter: FILTERS
+            filter: Filter
         ): ArrayList<Note> = notes.filter { note ->
             when (filter) {
-                FILTERS.FILTER_ALL -> true
-                FILTERS.FILTER_COMMENT -> note.isCommentType
-                FILTERS.FILTER_FOLLOW -> note.isFollowType
-                FILTERS.FILTER_UNREAD -> note.isUnread
-                FILTERS.FILTER_LIKE -> note.isLikeType
+                Filter.ALL -> true
+                Filter.COMMENT -> note.isCommentType
+                Filter.FOLLOW -> note.isFollowType
+                Filter.UNREAD -> note.isUnread
+                Filter.LIKE -> note.isLikeType
             }
         }.sortedByDescending { it.timestamp }.let { result -> ArrayList(result) }
     }
+}
+
+class NoteViewHolder(
+    val binding: NotificationsListItemBinding,
+    private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>,
+    private val coroutineScope: CoroutineScope
+) : RecyclerView.ViewHolder(binding.root) {
+    fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
+        when (notification) {
+            Comment -> bindLikeCommentAction(note)
+            is PostNotification.NewPost -> bindLikePostAction(note)
+            is PostNotification -> bindShareAction(notification)
+            is Unknown -> {
+                binding.action.isVisible = false
+            }
+        }
+    }
+
+    private fun bindShareAction(notification: PostNotification) {
+        binding.action.setImageResource(R.drawable.block_share)
+        val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+        ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
+        binding.action.isVisible = true
+        binding.action.setOnClickListener {
+            coroutineScope.launch {
+                inlineActionEvents.emit(
+                    InlineActionEvent.SharePostButtonTapped(notification)
+                )
+            }
+        }
+    }
+
+    private fun bindLikePostAction(note: Note) {
+        if (note.canLikePost().not()) return
+        setupLikeIcon(note.hasLikedPost())
+        binding.action.setOnClickListener {
+            val liked = note.hasLikedPost().not()
+            setupLikeIcon(liked)
+            coroutineScope.launch {
+                inlineActionEvents.emit(
+                    InlineActionEvent.LikePostButtonTapped(note, liked)
+                )
+            }
+        }
+    }
+
+    private fun bindLikeCommentAction(note: Note) {
+        if (note.canLikeComment().not()) return
+        setupLikeIcon(note.hasLikedComment())
+        binding.action.setOnClickListener {
+            val liked = note.hasLikedComment().not()
+            setupLikeIcon(liked)
+            coroutineScope.launch {
+                inlineActionEvents.emit(
+                    InlineActionEvent.LikeCommentButtonTapped(note, liked)
+                )
+            }
+        }
+    }
+
+    private fun setupLikeIcon(liked: Boolean) {
+        binding.action.isVisible = true
+        binding.action.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+        val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
+        else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+        ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
+    }
+}
+
+enum class Filter(val value: String) {
+    ALL("all"),
+    COMMENT("comment"),
+    FOLLOW("follow"),
+    LIKE("like"),
+    UNREAD("unread");
 }

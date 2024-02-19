@@ -52,12 +52,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Companion.KEY_TAB_POSITION
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_COMMENT
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_FOLLOW
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_LIKE
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
+import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
@@ -322,12 +317,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
 
-        enum class TabPosition(@StringRes val titleRes: Int, val filter: FILTERS) {
-            All(R.string.notifications_tab_title_all, FILTER_ALL),
-            Unread(R.string.notifications_tab_title_unread_notifications, FILTER_UNREAD),
-            Comment(R.string.notifications_tab_title_comments, FILTER_COMMENT),
-            Follow(R.string.notifications_tab_title_follows, FILTER_FOLLOW),
-            Like(R.string.notifications_tab_title_likes, FILTER_LIKE);
+        enum class TabPosition(@StringRes val titleRes: Int, val filter: Filter) {
+            All(R.string.notifications_tab_title_all, Filter.ALL),
+            Unread(R.string.notifications_tab_title_unread_notifications, Filter.UNREAD),
+            Comment(R.string.notifications_tab_title_comments, Filter.COMMENT),
+            Follow(R.string.notifications_tab_title_follows, Filter.FOLLOW),
+            Like(R.string.notifications_tab_title_likes, Filter.LIKE);
         }
 
         private const val KEY_LAST_TAB_POSITION = "lastTabPosition"
@@ -348,7 +343,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             noteId: String?,
             shouldShowKeyboard: Boolean,
             replyText: String?,
-            filter: FILTERS?,
+            filter: Filter?,
             isTappedFromPushNotification: Boolean
         ) {
             if (noteId == null || activity == null) {
