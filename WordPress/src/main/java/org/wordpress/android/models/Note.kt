@@ -475,17 +475,13 @@ class Note {
         fun getTimeGroupForTimestamp(timestamp: Long): NoteTimeGroup {
             val today = Date()
             val then = Date(timestamp * MILLISECOND)
-            return if (then < addMonths(today, LAST_MONTH)) {
-                NoteTimeGroup.GROUP_OLDER_MONTH
-            } else if (then < addWeeks(today, LAST_WEEK)) {
-                NoteTimeGroup.GROUP_OLDER_WEEK
-            } else if (then < addDays(today, LAST_TWO_DAYS) ||
-                isSameDay(addDays(today, LAST_TWO_DAYS), then)) {
-                NoteTimeGroup.GROUP_OLDER_TWO_DAYS
-            } else if (isSameDay(addDays(today, SINCE_YESTERDAY), then)) {
-                NoteTimeGroup.GROUP_YESTERDAY
-            } else {
-                NoteTimeGroup.GROUP_TODAY
+            return when {
+                then < addMonths(today, LAST_MONTH) -> NoteTimeGroup.GROUP_OLDER_MONTH
+                then < addWeeks(today, LAST_WEEK) -> NoteTimeGroup.GROUP_OLDER_WEEK
+                then < addDays(today, LAST_TWO_DAYS) ||
+                        isSameDay(addDays(today, LAST_TWO_DAYS), then) -> NoteTimeGroup.GROUP_OLDER_TWO_DAYS
+                isSameDay(addDays(today, SINCE_YESTERDAY), then) -> NoteTimeGroup.GROUP_YESTERDAY
+                else -> NoteTimeGroup.GROUP_TODAY
             }
         }
 
