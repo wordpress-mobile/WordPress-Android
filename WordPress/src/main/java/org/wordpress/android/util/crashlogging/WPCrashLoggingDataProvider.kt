@@ -43,7 +43,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     }
 
     override val buildType: String = BuildConfig.BUILD_TYPE
-    override val enableCrashLoggingLogs: Boolean = BuildConfig.DEBUG
+    override val enableCrashLoggingLogs: Boolean = false
     override val locale: Locale
         get() = localeManager.getLocale()
     override val releaseName: String = BuildConfig.VERSION_NAME

@@ -1,4 +1,4 @@
-* [**] Fix editor crash occurring on large posts [https://github.com/wordpress-mobile/WordPress-Android/pull/20046]
-* [*] [Jetpack-only] Site Monitoring: Add Metrics, PHP Logs, and Web Server Logs under Site Monitoring [https://github.com/wordpress-mobile/WordPress-Android/issues/20067]
-* [**] Prevent images from temporarily disappearing when uploading media [https://github.com/WordPress/gutenberg/pull/57869]
-* [***] [Jetpack-only] Reader: introduced new UI/UX for content navigation and filtering [https://github.com/wordpress-mobile/WordPress-Android/pull/19978]
+- We added a new look and feel for content navigation and filtering.
+- Images and other media won’t “blink” during upload.
+- The editor won’t crash when you’re working on a large post.
+- We added new Site Monitoring menu items like metrics, PHP logs, and web server logs.

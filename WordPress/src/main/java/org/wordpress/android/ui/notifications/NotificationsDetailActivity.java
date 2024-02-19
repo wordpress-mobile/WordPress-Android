@@ -54,6 +54,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
+import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -504,7 +505,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0,
                     site.getId());
         } else {
-            ActivityLauncher.viewBlogStats(this, site);
+            ActivityLauncher.viewBlogStats(this, site, StatsLaunchedFrom.NOTIFICATION);
         }
     }
 

@@ -1,7 +1,0 @@
-24.1:
-- Få notiser när du arbetar offline.
-- Bildblocksuppladdningar pausas/återupptas baserat på din internetanslutning.
-- Se anpassade gradientval i redigeraren.
-- Fasta framåt-/bakåtpilar för höger-till-vänster-läsare.
-- Etiketter för dagliga uppmaningar fungerar korrekt.
-- Tryck på webbplatsdomänkorten för att hantera domäner.
