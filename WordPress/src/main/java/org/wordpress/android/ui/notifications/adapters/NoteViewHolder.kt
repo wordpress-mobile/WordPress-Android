@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.NotificationsListItemBinding
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification
@@ -34,7 +35,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 
 class NoteViewHolder(
-    val binding: NotificationsListItemBinding,
+    private val binding: NotificationsListItemBinding,
     private val inlineActionEvents: MutableSharedFlow<NotificationsListViewModel.InlineActionEvent>,
     private val coroutineScope: CoroutineScope
 ) : RecyclerView.ViewHolder(binding.root) {
@@ -42,6 +43,11 @@ class NoteViewHolder(
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
     @Inject
     lateinit var imageManager: ImageManager
+
+    init {
+        (itemView.context.applicationContext as WordPress).component().inject(this)
+    }
+
     fun bindTimeGroupHeader(note: Note, previousNote: Note?, position: Int) {
         // Display time group header
         timeGroupHeaderText(note, previousNote)?.let { timeGroupText ->

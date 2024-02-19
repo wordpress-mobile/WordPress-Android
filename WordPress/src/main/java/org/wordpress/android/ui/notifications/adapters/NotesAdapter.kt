@@ -74,11 +74,9 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
 
     override fun getItemCount(): Int = filteredNotes.size
 
-
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = filteredNotes.getOrNull(position) ?: return
         val previousNote = filteredNotes.getOrNull(position - 1)
-
 
         noteViewHolder.bindTimeGroupHeader(note, previousNote, position)
         noteViewHolder.bindSubject(note)
@@ -87,7 +85,6 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
         noteViewHolder.bindAvatars(note)
         noteViewHolder.bindInlineActions(note)
         noteViewHolder.bindOthers(note, onNoteClicked)
-
 
         // request to load more comments when we near the end
         if (position >= itemCount - 1) {
