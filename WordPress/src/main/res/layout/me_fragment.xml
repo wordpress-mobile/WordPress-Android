@@ -423,8 +423,7 @@
                     app:fixWidowWords="true"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:text="@string/gravatar_info_title"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/gravatar_description"
