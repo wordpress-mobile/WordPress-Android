@@ -100,10 +100,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     private var binding: NotificationsListFragmentPageBinding? = null
 
-    interface OnNoteClickListener {
-        fun onClickNote(noteId: String?)
-    }
-
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
@@ -127,9 +123,11 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
-        notesAdapter = NotesAdapter( requireActivity(), this, null,
-            inlineActionEvents = viewModel.inlineActionEvents).apply {
-            this.setOnNoteClickListener(mOnNoteClickListener)
+        notesAdapter = NotesAdapter(
+            requireActivity(), this, null,
+            inlineActionEvents = viewModel.inlineActionEvents
+        ).apply {
+            onNoteClicked = { noteId -> handleNoteClick(noteId) }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .onEach(::handleInlineActionEvent)
                 .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -220,36 +218,32 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onStop()
     }
 
-    private val mOnNoteClickListener: OnNoteClickListener = object : OnNoteClickListener {
-        override fun onClickNote(noteId: String?) {
-            if (!isAdded) {
-                return
-            }
-            if (TextUtils.isEmpty(noteId)) {
-                return
-            }
-            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
-
-            viewModel.openNote(
-                noteId,
-                { siteId, postId, commentId ->
-                    ReaderActivityLauncher.showReaderComments(
-                        activity,
-                        siteId,
-                        postId,
-                        commentId,
-                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
-                    )
-                },
-                {
-                    // Open the latest version of this note in case it has changed, which can happen if the note was
-                    // tapped from the list after it was updated by another fragment (such as the
-                    // NotificationsDetailListFragment).
-                    openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
-                }
-            )
+    private fun handleNoteClick(noteId: String) {
+        if (!isAdded || noteId.isEmpty()) {
+            return
         }
+        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
+
+        viewModel.openNote(
+            noteId,
+            { siteId, postId, commentId ->
+                ReaderActivityLauncher.showReaderComments(
+                    activity,
+                    siteId,
+                    postId,
+                    commentId,
+                    ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                )
+            },
+            {
+                // Open the latest version of this note in case it has changed, which can happen if the note was
+                // tapped from the list after it was updated by another fragment (such as the
+                // NotificationsDetailListFragment).
+                openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
+            }
+        )
     }
+
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)

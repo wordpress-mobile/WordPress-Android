@@ -36,7 +36,6 @@ import org.wordpress.android.models.Notification.Comment
 import org.wordpress.android.models.Notification.PostNotification
 import org.wordpress.android.models.Notification.Unknown
 import org.wordpress.android.ui.comments.CommentUtils
-import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.OnNoteClickListener
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.NoteViewHolder
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
@@ -59,6 +58,7 @@ class NotesAdapter(
     private val onLoadMoreListener: OnLoadMoreListener?
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     val filteredNotes = ArrayList<Note>()
+    var onNoteClicked = { _: String -> }
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -96,7 +96,6 @@ class NotesAdapter(
         fun onLoadMore(timestamp: Long)
     }
 
-    private var onNoteClickListener: OnNoteClickListener? = null
     fun setFilter(newFilter: FILTERS) {
         currentFilter = newFilter
     }
@@ -106,7 +105,7 @@ class NotesAdapter(
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
         val newNotes = buildFilteredNotesList(notes, currentFilter)
-        val diff = AsyncListDiffer(this@NotesAdapter, object: ItemCallback<Note>(){
+        val differ = AsyncListDiffer(this@NotesAdapter, object: ItemCallback<Note>(){
             override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
                 oldItem.id == newItem.id
 
@@ -117,7 +116,7 @@ class NotesAdapter(
         filteredNotes.clear()
         filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
-            diff.submitList(newNotes)
+            differ.submitList(newNotes)
             dataLoadedListener.onDataLoaded(itemCount)
         }
     }
@@ -153,7 +152,7 @@ class NotesAdapter(
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = filteredNotes.getOrNull(position) ?: return
         val previousNote = filteredNotes.getOrNull(position - 1)
-        noteViewHolder.binding.noteContentContainer.tag = note.id
+        noteViewHolder.binding.noteContentContainer.setOnClickListener { onNoteClicked(note.id) }
 
         // Display time group header
         timeGroupHeaderText(note, previousNote)?.let { timeGroupText ->
@@ -277,10 +276,6 @@ class NotesAdapter(
         })
     }
 
-    fun setOnNoteClickListener(mNoteClickListener: OnNoteClickListener?) {
-        onNoteClickListener = mNoteClickListener
-    }
-
     fun cancelReloadLocalNotes() {
         reloadLocalNotesJob?.cancel()
     }
@@ -308,10 +303,6 @@ class NotesAdapter(
     }
 
     inner class NoteViewHolder(val binding: NotificationsListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.noteContentContainer.setOnClickListener(onClickListener)
-        }
-
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
             when (notification) {
                 Comment -> bindLikeCommentAction(note)
@@ -371,12 +362,6 @@ class NotesAdapter(
             val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
             else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
             ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
-        }
-    }
-
-    private val onClickListener = View.OnClickListener { view ->
-        if (onNoteClickListener != null && view.tag is String) {
-            onNoteClickListener!!.onClickNote(view.tag as String)
         }
     }
 
