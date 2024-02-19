@@ -58,12 +58,10 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_FOLLOW
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_LIKE
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
-import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
@@ -89,7 +87,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private val viewModel: NotificationsListViewModel by viewModels()
 
-    private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
 
@@ -99,11 +96,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         if (savedInstanceState != null) {
             binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, All.ordinal))
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        shouldRefreshNotifications = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,11 +153,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        shouldRefreshNotifications = true
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -184,9 +171,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 connectJetpack.visibility = View.GONE
                 tabLayout.visibility = View.VISIBLE
                 viewPager.visibility = View.VISIBLE
-                if (shouldRefreshNotifications) {
-                    fetchNotesFromRemote()
-                }
             }
             setSelectedTab(lastTabPosition)
             setNotificationPermissionWarning()
@@ -204,13 +188,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             val params = toolbarMain.layoutParams as LayoutParams
             params.scrollFlags = 0
         }
-    }
-
-    private fun fetchNotesFromRemote() {
-        if (!isAdded || !NetworkUtils.isNetworkAvailable(activity)) {
-            return
-        }
-        NotificationsUpdateServiceStarter.startService(activity)
     }
 
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
