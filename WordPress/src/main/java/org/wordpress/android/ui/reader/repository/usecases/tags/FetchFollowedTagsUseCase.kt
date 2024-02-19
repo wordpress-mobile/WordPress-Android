@@ -2,7 +2,7 @@ package org.wordpress.android.ui.reader.repository.usecases.tags
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
@@ -48,7 +48,7 @@ class FetchFollowedTagsUseCase @Inject constructor(
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    fun onFollowedTagsChanged(event: FollowedTagsChanged) {
+    fun onFollowedTagsFetched(event: FollowedTagsFetched) {
         val result = if (event.didSucceed()) {
             Success
         } else {

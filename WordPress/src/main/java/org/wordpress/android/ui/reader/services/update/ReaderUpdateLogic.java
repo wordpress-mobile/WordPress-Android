@@ -24,6 +24,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
@@ -178,6 +179,7 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
                 localTopics.addAll(ReaderTagTable.getDiscoverPostCardsTags());
 
+                boolean didChangeFollowedTags = false;
                 if (!localTopics.isSameList(serverTopics)) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
@@ -193,9 +195,9 @@ public class ReaderUpdateLogic {
                         ReaderTagTable.replaceTags(serverTopics);
                     }
                     // broadcast the fact that there are changes
-                    // TODO thomashortadev this was being sent EVERY time
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+                    didChangeFollowedTags = true;
                 }
+                EventBus.getDefault().post(new FollowedTagsFetched(true, didChangeFollowedTags));
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);

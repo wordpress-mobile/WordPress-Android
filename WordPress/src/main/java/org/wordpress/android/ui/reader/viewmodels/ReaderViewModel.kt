@@ -216,7 +216,7 @@ class ReaderViewModel @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
-    fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
+    fun onTagsUpdated(event: ReaderEvents.FollowedTagsFetched) {
         loadTabs()
     }
 
