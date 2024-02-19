@@ -44,6 +44,8 @@ sealed class PrepublishingHomeItemUiState(
             true
         )
 
+        // todo: annmarie @ajesh - notice that Schedule, Update, and Save button states set PublishPost = false - I wonder what this
+        // means?
         data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
             UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
             false
@@ -61,6 +63,21 @@ sealed class PrepublishingHomeItemUiState(
 
         data class SaveButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
             UiStringRes(R.string.prepublishing_nudges_home_save_button),
+            false
+        )
+
+        data class InProgressButtonUiState(override val onButtonClicked: ((PublishPost) -> Unit)? = null) : ButtonUiState(
+            UiStringRes(R.string.prepublishing_nudges_home_in_progress_button),
+            false
+        )
+
+        data class ErrorButtonUiState(override val onButtonClicked: ((PublishPost) -> Unit)? = null) : ButtonUiState(
+            UiStringRes(R.string.prepublishing_nudges_home_error_button),
+            false
+        )
+
+        data class DoneButtonUiState(override val onButtonClicked: ((PublishPost) -> Unit)? = null) : ButtonUiState(
+            UiStringRes(R.string.prepublishing_nudges_home_done_button),
             false
         )
     }
