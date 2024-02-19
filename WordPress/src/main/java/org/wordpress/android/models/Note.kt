@@ -32,7 +32,6 @@ class Note {
 
     private var mNoteJSON: JSONObject? = null
     private var mActions: JSONObject? = null
-    private var mLocalStatus: String? = null
 
     enum class EnabledActions {
         ACTION_REPLY,
@@ -111,11 +110,8 @@ class Note {
 
     fun canLikePost() = enabledPostActions.contains(EnabledActions.ACTION_LIKE_POST)
 
-    var localStatus: String?
-        get() = StringUtils.notNullStr(mLocalStatus)
-        set(localStatus) {
-            mLocalStatus = localStatus
-        }
+    var localStatus: String? = null
+        get() = StringUtils.notNullStr(field)
 
     val subject: JSONObject? by lazy {
         runCatching {
