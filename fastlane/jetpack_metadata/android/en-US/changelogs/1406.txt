@@ -1,6 +1,0 @@
-- Get notified when you’re working offline.
-- Image block uploads pause/resume with internet connection.
-- See custom gradient selections in the editor.
-- Fixed forward/back arrows for right-to-left readers.
-- Daily Prompt tags work properly.
-- Tap Site Domain cards to manage domains.

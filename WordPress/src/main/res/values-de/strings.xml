@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-07 08:07:30+0000
+Translation-Revision-Date: 2024-02-13 14:29:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: de
 -->
 <resources>
+    <string name="error_media_could_not_share_media_from_device">Die Medien können nicht zum Teilen geladen werden. Bitte überprüfe die Berechtigungen der App\n    oder verwende die Mediathek der App.</string>
     <string name="site_monitoring_cannot_be_started">Wir können die Website-Überwachung im Moment nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webserver-Protokolle</string>
     <string name="site_monitoring_tab_title_php_logs">PHP-Protokolle</string>

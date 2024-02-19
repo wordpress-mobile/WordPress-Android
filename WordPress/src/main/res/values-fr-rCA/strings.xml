@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-06 09:54:08+0000
+Translation-Revision-Date: 2024-02-15 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: fr
 -->
 <resources>
+    <string name="error_media_could_not_share_media_from_device">Impossible de charger le média pour le partage. Veuillez vérifier les droits de l’application\n        ou utilisez la bibliothèque de médias de l’application.</string>
+    <string name="site_monitoring_cannot_be_started">Nous ne sommes pas en mesure d’ouvrir la surveillance du site actuellement. Veuillez réessayer plus tard</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Journaux du serveur Web</string>
+    <string name="site_monitoring_tab_title_php_logs">Journaux PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Indicateurs</string>
+    <string name="site_monitoring">Surveillance du site</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Utilisez &lt;b&gt;Découvrir&lt;/b&gt; pour rechercher des sites et des étiquettes. Essayez de sélectionner &lt;b&gt;Abonnements&lt;/b&gt; pour afficher le contenu provenant de vos abonnements et gérer ces derniers.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Accéder aux abonnements</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Les blogs auxquels vous êtes abonné(e) n’ont rien publié récemment</string>
+    <string name="reader_no_followed_blogs_description_subs">Abonnez-vous à des blogs dans Découvrir ou cherchez un blog que vous aimez déjà.</string>
+    <string name="reader_no_recommended_blogs_title">Aucun blog recommandé</string>
+    <string name="reader_no_followed_tags_title">Aucune étiquette dans vos abonnements</string>
+    <string name="reader_no_posts_with_this_tag">Pas d’articles avec cette étiquette</string>
+    <string name="reader_toast_err_unable_to_block_blog">Impossible de bloquer ce blog</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">Impossible de se désabonner du blog</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">Vous n’êtes pas autorisé(e) à accéder à ce blog</string>
+    <string name="reader_toast_err_unable_to_follow_blog">Impossible de s’abonner à ce blog</string>
+    <string name="reader_toast_err_already_follow_this_blog">Ce blog fait déjà partie de vos abonnements</string>
+    <string name="reader_toast_err_show_blog">Impossible d’afficher ce blog</string>
+    <string name="reader_toast_err_tag_already_subscribed">Cette étiquette fait déjà partie de vos abonnements</string>
+    <string name="reader_label_choose_interests">Choisissez vos centres d’intérêt</string>
+    <string name="reader_label_subscribers_count_single">1 abonné</string>
+    <string name="reader_label_subscribers_count">%s abonnés</string>
+    <string name="reader_label_subscribe_count">%,d abonnés</string>
+    <string name="reader_label_blog_subscribed">Abonné(e) au blog</string>
+    <string name="reader_hint_search_subscribed_blogs">Rechercher parmi les blogs auxquels vous êtes abonné(e)</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Saisir l’URL ou une étiquette auxquels s’abonner</string>
+    <string name="reader_btn_subscribed">Abonné(e)</string>
+    <string name="reader_btn_subscribe">S’abonner</string>
+    <string name="reader_menu_block_this_blog">Bloquer ce blog</string>
+    <string name="reader_menu_tags_and_blogs">Modifier les étiquettes et les blogs</string>
+    <string name="reader_page_followed_blogs_title">Abonné(e) à ces blogs</string>
+    <string name="reader_page_followed_tags_title">Abonné(e) à ces étiquettes</string>
+    <string name="reader_title_tags">Suivre les étiquettes</string>
+    <string name="reader_activity_title_manage_tags_blogs">Gérer les étiquettes et les blogs</string>
+    <string name="reader_activity_title_tag_preview">Étiquette</string>
+    <string name="reader_activity_title_blog_preview">Blog lecteur</string>
+    <string name="reader_subscribed_display_name">Abonné(e)</string>
+    <string name="reader_filter_chip_tag_other">%d étiquettes</string>
+    <string name="reader_filter_chip_tag_one">1 étiquette</string>
+    <string name="reader_filter_chip_tag_zero">0 étiquette</string>
+    <string name="reader_filter_chip_blog_other">%d blogs</string>
+    <string name="reader_filter_chip_blog_one">1 blog</string>
+    <string name="reader_filter_chip_blog_zero">0 Blog</string>
+    <string name="reader_dropdown_menu_lists">Listes</string>
+    <string name="reader_dropdown_menu_liked">J’aime</string>
+    <string name="reader_dropdown_menu_saved">Enregistré</string>
+    <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
+    <string name="reader_dropdown_menu_discover">Découvrir</string>
+    <string name="reader_search_content_description">Rechercher</string>
+    <string name="reader_discover_no_posts_button_tags_text">S’abonner aux étiquettes</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">Essayer de s’abonner à d’autres étiquettes pour élargir la recherche</string>
+    <string name="reader_discover_empty_subtitle_subscribe">S’abonner à des étiquettes pour découvrir de nouveaux blogs</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs auxquels s’abonner</string>
+    <string name="reader_filter_empty_tags_action_subscribe">S’abonner à une étiquette</string>
+    <string name="reader_filter_empty_tags_action_suggested">Étiquettes suggérées</string>
+    <string name="reader_filter_empty_blogs_action_search">Chercher un blog</string>
+    <string name="reader_filter_empty_tags_list_text">Abonnez-vous à une étiquette et vous verrez les meilleurs articles sur le sujet apparaître ici.</string>
+    <string name="reader_filter_empty_tags_list_title">Aucune étiquette</string>
+    <string name="reader_filter_empty_blogs_list_text">Abonnez-vous à des blogs dans Découvrir et vous verrez apparaître ici leurs derniers articles. Ou cherchez un blog que vous aimez déjà.</string>
+    <string name="reader_filter_empty_blogs_list_title">Aucun abonnement à un blog</string>
+    <string name="reader_filter_empty_blogs_action">S’abonner à un blog</string>
+    <string name="reader_filter_empty_tags_list_subscribe">Vous pouvez vous abonner aux articles relatifs à un sujet particulier en ajoutant une étiquette</string>
+    <string name="reader_filter_empty_blogs_list">Voir les articles les plus récents des blogs auxquels vous êtes abonné(e)</string>
+    <string name="reader_filter_by_tag_title">Filtrer par étiquette</string>
+    <string name="reader_filter_by_blog_title">Filtrer par blog</string>
+    <string name="stats_timeframe_by_year">Par an</string>
+    <string name="stats_timeframe_by_month">Par mois</string>
+    <string name="stats_timeframe_by_week">Par semaine</string>
+    <string name="stats_timeframe_by_day">Par jour</string>
     <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Travail hors ligne</string>
@@ -1645,6 +1716,7 @@ Language: fr
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Passer en brouillon</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Les articles dans la corbeille ne peuvent pas être modifier. Voulez-vous changer le statut de cet article vers « brouillon » pour pouvoir travailler dessus ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Déplacer l’article vers Brouillons ?</string>
+    <string name="reader_choose_interests_tags_content_description">Choisir vos étiquettes</string>
     <string name="reader_btn_done">Terminé</string>
     <string name="reader_btn_select_few_interests">Sélectionnez-en quelques-uns pour continuer.</string>
     <string name="post_status_post_published">Publié</string>
@@ -1699,6 +1771,9 @@ Language: fr
     <string name="site_picker_ask_site_select">Impossible de sélectionner le site. Veuillez réessayer.</string>
     <string name="sitepicker_continue_flow">Continuer</string>
     <string name="reader_reblog_error">Échec du reblogue</string>
+    <string name="reader_no_blog_to_reblog_action">Gérer les blogs</string>
+    <string name="reader_no_blog_to_reblog_detail">Quand vous créez un blog WordPress.com, vous pouvez rebloguer le contenu que vous aimez sur votre propre site.</string>
+    <string name="reader_no_blog_to_reblog_title">Aucun blog WordPress.com disponible</string>
     <string name="whats_new_in_version_title">Quoi de neuf ?</string>
     <string name="comment_q_action_copied_url">Adresse du lien copiée</string>
     <string name="copy_link_address">Copier l’adresse du lien</string>
@@ -1797,13 +1872,17 @@ Language: fr
     <string name="stats_management_screen_title">Ajouter une nouvelle carte</string>
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
+    <string name="reader_bottom_sheet_select_content_description">Sélectionner une étiquette ou un blog, fenêtre contextuelle</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Se connecter à WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Se connecter à WordPress.com pour voir les derniers articles contenant les étiquettes auxquelles vous êtes abonn(é)</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Se connecter à WordPress.com pour voir les derniers articles des blogs auxquels vous êtes abonn(é)</string>
     <string name="gutenberg_native_replace_current_block">Remplacer le bloc actuel</string>
     <string name="gutenberg_native_add_to_end">Ajouter à la fin</string>
     <string name="gutenberg_native_add_to_beginning">Ajouter au début</string>
     <string name="gutenberg_native_add_block_before">Ajouter le bloc avant</string>
     <string name="gutenberg_native_add_block_after">Ajouter le bloc après</string>
+    <string name="reader_filter_empty_tags_add_action">Ajouter une étiquette</string>
     <string name="reader_filter_cta">Filtrer</string>
     <string name="gutenberg_native_video_caption_s">Sous-titre vidéo. %s</string>
     <string name="gutenberg_native_edit_video">Modifier la vidéo</string>
@@ -2341,6 +2420,7 @@ Language: fr
     <string name="login_error_sms_throttled">Le nombre de tentatives d\'envoi d\'un code de vérification par SMS a été dépassé – faites une pause et redemandez-en un dans une minute.</string>
     <string name="login_error_email_not_found_v2">Aucun compte WordPress.com ne correspond à ce compte Google.</string>
     <string name="site_picker_remove_site_empty">Aucun site ne correspond à votre recherche</string>
+    <string name="reader_no_followed_blogs_search_title">Aucun blog ne correspond à votre recherche</string>
     <string name="page_parent_changed">Le parent de la page a été modifié</string>
     <string name="page_permanently_deleted">La page a été supprimée définitivement</string>
     <string name="page_moved_to_scheduled">La page a été planifiée</string>
@@ -2373,6 +2453,7 @@ Language: fr
     <string name="quick_start_button_negative">Pas maintenant</string>
     <string name="content_description_more">Plus</string>
     <string name="my_site_create_new_site_title">Vous n\'avez pas de sites.</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Ajouter des étiquettes ici pour trouver des articles sur vos thèmes préférés</string>
     <string name="login_to_to_connect_jetpack">Connectez-vous au compte WordPress.com que vous utilisez pour connecter Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -2392,6 +2473,7 @@ Language: fr
     <string name="people_empty_list_filtered_users">Pas encore d\'utilisateurs</string>
     <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
+    <string name="reader_no_followed_blogs_button_discover">Découvrir des blogs</string>
     <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
     <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
     <string name="activity_log_limited_content_on_free_plan">Comme vous disposez d\'un plan gratuit, vous ne verrez qu\'un nombre limité d\'événements dans vos activités.</string>
@@ -2456,6 +2538,8 @@ Language: fr
     <string name="reader_followed_blog_notifications_this">ce site</string>
     <string name="reader_followed_blog_notifications_action">Activer</string>
     <string name="reader_followed_blog_notifications">Activer les notifications pour %1$s%2$s%3$s ?</string>
+    <string name="reader_btn_blog_notifications_on">Activer les notifications du blog</string>
+    <string name="reader_btn_blog_notifications_off">Désactiver les notifications du blog</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
     <string name="activity_log_event">Événement</string>
     <string name="activity_log_icon">Icône d\'activité</string>
@@ -3138,6 +3222,7 @@ Language: fr
     <string name="person_remove_confirmation_title">Supprimer %1$s</string>
     <string name="role">Rôle</string>
     <string name="people">Personnes</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Les blogs de cette liste n’ont rien publié récemment</string>
     <string name="error_remove_user">Impossible de supprimer l’utilisateur</string>
     <string name="error_update_role">Impossible de mettre à jour le rôle utilisateur</string>
     <string name="error_fetch_viewers_list">Impossible de récupérer les utilisateurs du site</string>
@@ -3415,6 +3500,7 @@ Language: fr
     <string name="button_view">Vue</string>
     <string name="button_publish">Publier</string>
     <string name="button_edit">Editer</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Impossible de trouver ce blog</string>
     <string name="undo">Annuler</string>
     <string name="push_auth_expired">La requête a expiré. Connectez-vous à WordPress.com et réessayez.</string>
     <string name="ignore">Ignorer</string>
@@ -3458,6 +3544,7 @@ Language: fr
     <string name="posts_fetching">Récupération des articles…</string>
     <string name="media_fetching">Récupération des médias…</string>
     <string name="logs_copied_to_clipboard">Les logs de l\'application ont été copiés dans le presse papier</string>
+    <string name="reader_no_posts_in_blog">Ce blog est vide</string>
     <string name="reader_label_new_posts">Nouveaux articles</string>
     <string name="error_copy_to_clipboard">Une erreur s\'est produite lors de la copie dans le presse papier</string>
     <string name="post_uploading">Article en cours de téléversement</string>
@@ -3531,6 +3618,8 @@ Language: fr
     <string name="blog_not_found">Une erreur s\'est produite en accédant à ce blog</string>
     <string name="gallery_error">Le média ne peut pas être récupéré</string>
     <string name="no_network_message">Aucun réseau disponible</string>
+    <string name="reader_toast_err_removing_tag">Impossible de supprimer cette étiquette</string>
+    <string name="reader_toast_err_adding_tag">Impossible d’ajouter cette étiquette</string>
     <string name="reader_title_applog">Journal de l\'application</string>
     <string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
     <string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
@@ -3592,6 +3681,7 @@ Language: fr
     <string name="reader_toast_err_url_intent">Impossible d\'ouvrir %s</string>
     <string name="reader_toast_err_view_image">Impossible de voir l\'image</string>
     <string name="reader_toast_err_share_intent">Impossible de partager</string>
+    <string name="reader_toast_err_tag_not_valid">Ce n’est pas une étiquette valide</string>
     <string name="reader_toast_err_comment_failed">Impossible d\'envoyer votre commentaire</string>
     <string name="reader_likes_only_you">Vous aimez ça</string>
     <string name="reader_likes_one">Une personne aime ça</string>

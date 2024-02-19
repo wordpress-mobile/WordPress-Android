@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-07 19:42:53+0000
+Translation-Revision-Date: 2024-02-14 19:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0-beta.2
 Language: es
 -->
 <resources>
+    <string name="error_media_could_not_share_media_from_device">No se pueden cargar los medios para compartir. Comprueba los permisos de la aplicación\n        o utiliza la biblioteca de medios.</string>
     <string name="site_monitoring_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor webs</string>
     <string name="site_monitoring_tab_title_php_logs">Registros de PHP</string>

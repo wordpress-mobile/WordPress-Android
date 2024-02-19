@@ -69,8 +69,9 @@ class StatsActivity : LocaleAwareActivity() {
             context: Context,
             site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
-            period: String? = null
-        ) = context.startActivity(buildIntent(context, site, statsTimeframe, period))
+            period: String? = null,
+            launchedFrom: StatsLaunchedFrom
+        ) = context.startActivity(buildIntent(context, site, statsTimeframe, period, launchedFrom))
 
         @JvmStatic
         @JvmOverloads
@@ -79,17 +80,26 @@ class StatsActivity : LocaleAwareActivity() {
             site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
             period: String? = null,
+            launchedFrom: StatsLaunchedFrom,
             notificationType: NotificationType? = null
         ) = Intent(context, StatsActivity::class.java).apply {
             putExtra(WordPress.LOCAL_SITE_ID, site.id)
             statsTimeframe?.let { putExtra(ARG_DESIRED_TIMEFRAME, it) }
             period?.let { putExtra(INITIAL_SELECTED_PERIOD_KEY, it) }
+            putExtra(ARG_LAUNCHED_FROM, launchedFrom)
             notificationType?.let { putExtra(ARG_NOTIFICATION_TYPE, it) }
         }
     }
 
-    enum class StatsLaunchedFrom {
-        STATS_WIDGET,
-        NOTIFICATIONS
+    enum class StatsLaunchedFrom(val value: String) {
+        QUICK_ACTIONS("quick_actions"),
+        TODAY_STATS_CARD("today_stats_card"),
+        ROW("row"),
+        WIDGET("widget"),
+        NOTIFICATION("notification"),
+        LINK("link"),
+        SHORTCUT("shortcut"),
+        ACTIVITY_LOG("activity_log"),
+        JETPACK_CONNECTION("jetpack_connection")
     }
 }
