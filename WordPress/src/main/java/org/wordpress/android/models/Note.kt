@@ -29,9 +29,21 @@ import java.util.zip.Inflater
 
 class Note {
     val id: String
+    var localStatus: String? = null
+        get() = StringUtils.notNullStr(field)
 
     private var mNoteJSON: JSONObject? = null
     private var mActions: JSONObject? = null
+
+    constructor(key: String, noteJSON: JSONObject?) {
+        id = key
+        mNoteJSON = noteJSON
+    }
+
+    constructor(noteJSON: JSONObject?) {
+        mNoteJSON = noteJSON
+        id = mNoteJSON?.optString("id", "") ?: ""
+    }
 
     enum class EnabledActions {
         ACTION_REPLY,
@@ -50,30 +62,129 @@ class Note {
         GROUP_OLDER_MONTH
     }
 
-    constructor(key: String, noteJSON: JSONObject?) {
-        id = key
-        mNoteJSON = noteJSON
+    /**
+     * Immutable lazily initialised properties from the note JSON
+     */
+
+    val siteId: Int by lazy { queryJSON("meta.ids.site", 0) }
+    val postId: Int by lazy { queryJSON("meta.ids.post", 0) }
+    val rawType: String by lazy { queryJSON("type", NOTE_UNKNOWN_TYPE) }
+    val commentId: Long by lazy { queryJSON("meta.ids.comment", 0).toLong() }
+    val parentCommentId: Long by lazy { queryJSON("meta.ids.parent_comment", 0).toLong() }
+    val url: String by lazy { queryJSON("url", "") }
+    val header: JSONArray? by lazy { mNoteJSON?.optJSONArray("header") }
+    val commentReplyId: Long by lazy { queryJSON("meta.ids.reply_comment", 0).toLong() }
+    val title: String by lazy { queryJSON("title", "") }
+    val iconURL: String by lazy { queryJSON("icon", "") }
+    val enabledCommentActions: EnumSet<EnabledActions> by lazy { getEnabledActions(commentActions) }
+    private val enabledPostActions: EnumSet<EnabledActions> by lazy { getEnabledActions(postActions) }
+    private val timestampString: String by lazy { queryJSON("timestamp", "") }
+    private val commentText: String by lazy { queryJSON("body[last].text", "") }
+
+    val body: JSONArray by lazy {
+        runCatching {
+            mNoteJSON?.getJSONArray("body") ?: JSONArray()
+        }.getOrElse {
+            JSONArray()
+        }
     }
 
-    constructor(noteJSON: JSONObject?) {
-        mNoteJSON = noteJSON
-        id = mNoteJSON?.optString("id", "") ?: ""
+    val subject: JSONObject? by lazy {
+        runCatching {
+            val subjectArray = mNoteJSON?.getJSONArray("subject")
+            if (subjectArray != null && subjectArray.length() > 0) {
+                subjectArray.getJSONObject(0)
+            } else null
+        }.getOrElse {
+            null
+        }
     }
 
-    val json: JSONObject
-        get() = mNoteJSON ?: JSONObject()
-
-    val rawType: String by lazy {
-        queryJSON("type", NOTE_UNKNOWN_TYPE)
+    val iconURLs: List<String>? by lazy {
+        val bodyArray = mNoteJSON?.optJSONArray("body")
+        if (bodyArray != null && bodyArray.length() > 0) {
+            val iconUrls = ArrayList<String>()
+            for (i in 0 until bodyArray.length()) {
+                val iconUrl = JSONUtils.queryJSON(bodyArray, "body[$i].media[0].url", "")
+                if (iconUrl != null && iconUrl.isNotEmpty()) {
+                    iconUrls.add(iconUrl)
+                }
+            }
+            return@lazy iconUrls
+        }
+        null
     }
 
-    private fun isTypeRaw(rawType: String) = this.rawType == rawType
+    val commentSubject: String? by lazy {
+        val subjectArray = mNoteJSON?.optJSONArray("subject")
+        if (subjectArray != null) {
+            var commentSubject = JSONUtils.queryJSON(subjectArray, "subject[1].text", "")
+
+            // Trim down the comment preview if the comment text is too large.
+            if (commentSubject != null && commentSubject.length > MAX_COMMENT_PREVIEW_LENGTH) {
+                commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1)
+            }
+            return@lazy commentSubject
+        }
+        ""
+    }
+
+    val commentSubjectNoticon: String by lazy {
+        with(queryJSON("subject[0].ranges", JSONArray())) {
+            for (i in 0 until length()) {
+                runCatching {
+                    val rangeItem = getJSONObject(i)
+                    if (rangeItem.has("type") && rangeItem.optString("type") == "noticon") {
+                        return@lazy rangeItem.optString("value", "")
+                    }
+                }.getOrElse {
+                    return@lazy ""
+                }
+            }
+        }
+        ""
+    }
+
+    val commentAuthorName: String by lazy {
+        val bodyArray = body
+        for (i in 0 until bodyArray.length()) {
+            runCatching {
+                val bodyItem = bodyArray.getJSONObject(i)
+                if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
+                    return@lazy bodyItem.optString("text")
+                }
+            }.getOrElse {
+                return@lazy ""
+            }
+        }
+        ""
+    }
 
     val isCommentType: Boolean by lazy {
         isTypeRaw(NOTE_COMMENT_TYPE) ||
                 isAutomattcherType && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1
     }
 
+    private val commentAuthorUrl: String by lazy {
+        val bodyArray = body
+        for (i in 0 until bodyArray.length()) {
+            runCatching {
+                val bodyItem = bodyArray.getJSONObject(i)
+                if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
+                    return@lazy JSONUtils.queryJSON(bodyItem, "meta.links.home", "")
+                }
+            }.getOrElse {
+                return@lazy ""
+            }
+        }
+        ""
+    }
+
+    /**
+     * Computed properties
+     */
+    val json: JSONObject
+        get() = mNoteJSON ?: JSONObject()
     val isAutomattcherType: Boolean
         get() = isTypeRaw(NOTE_MATCHER_TYPE)
     val isNewPostType: Boolean
@@ -97,97 +208,26 @@ class Note {
         get() = isCommentType && !TextUtils.isEmpty(commentSubjectNoticon)
     val isUserList: Boolean
         get() = isLikeType || isFollowType || isReblogType
+    val isUnread: Boolean // Parsing every time since it may change
+        get() = queryJSON("read", 0) != 1
+    val timestamp: Long
+        get() = DateTimeUtils.timestampFromIso8601(timestampString)
+    private val commentActions: JSONObject
+        get() = mActions ?: getActions(commentId, "comment")
+    private val postActions: JSONObject
+        get() = mActions ?: getActions(postId.toLong(), "post")
+    val commentStatus: CommentStatus
+        get() = if (enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
+            CommentStatus.APPROVED
+        } else if (enabledCommentActions.contains(EnabledActions.ACTION_APPROVE)) {
+            CommentStatus.UNAPPROVED
+        } else {
+            CommentStatus.ALL
+        }
 
-    /*
-     * does user have permission to moderate/reply/spam this comment?
+    /**
+     * Setters
      */
-    fun canModerate() = enabledCommentActions.contains(EnabledActions.ACTION_APPROVE) ||
-            enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)
-
-    fun canReply() = enabledCommentActions.contains(EnabledActions.ACTION_REPLY)
-
-    fun canLikeComment() = enabledCommentActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
-
-    fun canLikePost() = enabledPostActions.contains(EnabledActions.ACTION_LIKE_POST)
-
-    var localStatus: String? = null
-        get() = StringUtils.notNullStr(field)
-
-    val subject: JSONObject? by lazy {
-        runCatching {
-            val subjectArray = mNoteJSON?.getJSONArray("subject")
-            if (subjectArray != null && subjectArray.length() > 0) {
-                subjectArray.getJSONObject(0)
-            } else null
-        }.getOrElse {
-            null
-        }
-    }
-
-    fun getFormattedSubject(notificationsUtilsWrapper: NotificationsUtilsWrapper): Spannable {
-        return subject?.let { notificationsUtilsWrapper.getSpannableContentForRanges(it) } ?: SpannableString("")
-    }
-
-    val title: String by lazy {
-        queryJSON("title", "")
-    }
-    val iconURL: String by lazy {
-        queryJSON("icon", "")
-    }
-
-    val iconURLs: List<String>? by lazy {
-        val bodyArray = mNoteJSON?.optJSONArray("body")
-        if (bodyArray != null && bodyArray.length() > 0) {
-            val iconUrls = ArrayList<String>()
-            for (i in 0 until bodyArray.length()) {
-                val iconUrl = JSONUtils.queryJSON(bodyArray, "body[$i].media[0].url", "")
-                if (iconUrl != null && !iconUrl.isEmpty()) {
-                    iconUrls.add(iconUrl)
-                }
-            }
-            return@lazy iconUrls
-        }
-        null
-    }
-    val commentSubject: String? by lazy {
-        val subjectArray = mNoteJSON?.optJSONArray("subject")
-        if (subjectArray != null) {
-            var commentSubject = JSONUtils.queryJSON(subjectArray, "subject[1].text", "")
-
-            // Trim down the comment preview if the comment text is too large.
-            if (commentSubject != null && commentSubject.length > MAX_COMMENT_PREVIEW_LENGTH) {
-                commentSubject = commentSubject.substring(0, MAX_COMMENT_PREVIEW_LENGTH - 1)
-            }
-            return@lazy commentSubject
-        }
-        ""
-    }
-    val commentSubjectNoticon: String by lazy {
-        with(queryJSON("subject[0].ranges", JSONArray())) {
-            for (i in 0 until length()) {
-                runCatching {
-                    val rangeItem = getJSONObject(i)
-                    if (rangeItem.has("type") && rangeItem.optString("type") == "noticon") {
-                        return@lazy rangeItem.optString("value", "")
-                    }
-                }.getOrElse {
-                    return@lazy ""
-                }
-            }
-        }
-        ""
-    }
-    val commentReplyId: Long by lazy {
-        queryJSON("meta.ids.reply_comment", 0).toLong()
-    }
-
-    val isUnread: Boolean
-        /**
-         * The inverse of isRead
-         */
-        get() = !isRead
-    private val isRead: Boolean
-        get() = queryJSON("read", 0) == 1
 
     fun setRead() {
         try {
@@ -197,29 +237,85 @@ class Note {
         }
     }
 
-    val timestamp: Long
-        /**
-         * Get the timestamp provided by the API for the note
-         */
-        get() = DateTimeUtils.timestampFromIso8601(timestampString)
-    private val timestampString: String by lazy {
-        queryJSON("timestamp", "")
-    }
-
-    val body: JSONArray by lazy {
-        runCatching {
-            mNoteJSON?.getJSONArray("body") ?: JSONArray()
-        }.getOrElse {
-            JSONArray()
+    fun setLikedComment(liked: Boolean) {
+        try {
+            commentActions.put(ACTION_KEY_LIKE_COMMENT, liked)
+        } catch (e: JSONException) {
+            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'like' property for the note", e)
         }
     }
 
-    private val commentActions: JSONObject
-        get() = mActions ?: getActions(commentId, "comment")
+    fun setLikedPost(liked: Boolean) {
+        try {
+            postActions.put(ACTION_KEY_LIKE_POST, liked)
+        } catch (e: JSONException) {
+            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'like' property for the note", e)
+        }
+    }
 
-    private val postActions: JSONObject
-        get() = mActions ?: getActions(postId.toLong(), "post")
+    /**
+     * Helper methods
+     */
 
+    fun canModerate() = enabledCommentActions.contains(EnabledActions.ACTION_APPROVE) ||
+            enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)
+
+    fun canReply() = enabledCommentActions.contains(EnabledActions.ACTION_REPLY)
+
+    fun canLikeComment() = enabledCommentActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
+
+    fun canLikePost() = enabledPostActions.contains(EnabledActions.ACTION_LIKE_POST)
+
+    fun getFormattedSubject(notificationsUtilsWrapper: NotificationsUtilsWrapper): Spannable {
+        return subject?.let { notificationsUtilsWrapper.getSpannableContentForRanges(it) } ?: SpannableString("")
+    }
+
+    fun hasLikedComment() = commentActions.length() > 0 && commentActions.optBoolean(ACTION_KEY_LIKE_COMMENT)
+
+    fun hasLikedPost() = postActions.length() > 0 && postActions.optBoolean(ACTION_KEY_LIKE_POST)
+
+    /**
+     * Compares two notes to see if they are the same: as it's potentially a very processing intensive operation,
+     * we're only comparing the note id, timestamp, and raw JSON length, which is accurate enough for the purpose of
+     * checking if the local Note is any different from a remote note.
+     */
+    fun equalsTimeAndLength(note: Note?) = note != null &&
+            (timestampString.equals(note.timestampString, ignoreCase = true) &&
+                    json.length() == note.json.length())
+
+    /**
+     * Constructs a new Comment object based off of data in a Note
+     */
+    fun buildComment(): CommentModel {
+        val comment = CommentModel()
+        comment.remotePostId = postId.toLong()
+        comment.remoteCommentId = commentId
+        comment.authorName = commentAuthorName
+        comment.datePublished = DateTimeUtils.iso8601FromTimestamp(timestamp)
+        comment.content = commentText
+        comment.status = commentStatus.toString()
+        comment.authorUrl = commentAuthorUrl
+        comment.postTitle = title // unavailable in note model
+        comment.authorEmail = "" // unavailable in note model
+        comment.authorProfileImageUrl = iconURL
+        comment.iLike = hasLikedComment()
+        return comment
+    }
+
+    private fun isTypeRaw(rawType: String) = this.rawType == rawType
+
+    /**
+     * Rudimentary system for pulling an item out of a JSON object hierarchy
+     */
+    private fun <U> queryJSON(query: String?, defaultObject: U): U =
+        if (mNoteJSON == null) defaultObject
+        else JSONUtils.queryJSON(mNoteJSON, query, defaultObject)
+
+    /**
+     * Get the actions for a given comment or post
+     * @param itemId The comment or post id
+     * @param type The type of the item: `post` or `comment`
+     */
     private fun getActions(itemId: Long, type: String): JSONObject {
         val bodyArray = body
         var foundOrError = false
@@ -238,10 +334,6 @@ class Note {
         }
         return requireNotNull(mActions)
     }
-
-    val enabledCommentActions: EnumSet<EnabledActions> by lazy { getEnabledActions(commentActions) }
-
-    private val enabledPostActions: EnumSet<EnabledActions> by lazy { getEnabledActions(postActions) }
 
     private fun getEnabledActions(jsonActions: JSONObject): EnumSet<EnabledActions> {
         val actions = EnumSet.noneOf(EnabledActions::class.java)
@@ -268,122 +360,8 @@ class Note {
         return actions
     }
 
-    val siteId: Int by lazy {
-        queryJSON("meta.ids.site", 0)
-    }
-    val postId: Int by lazy {
-        queryJSON("meta.ids.post", 0)
-    }
-    val commentId: Long by lazy {
-        queryJSON("meta.ids.comment", 0).toLong()
-    }
-    val parentCommentId: Long by lazy {
-        queryJSON("meta.ids.parent_comment", 0).toLong()
-    }
-
-    /**
-     * Rudimentary system for pulling an item out of a JSON object hierarchy
-     */
-    private fun <U> queryJSON(query: String?, defaultObject: U): U =
-        if (mNoteJSON == null) defaultObject
-        else JSONUtils.queryJSON(mNoteJSON, query, defaultObject)
-
-    /**
-     * Constructs a new Comment object based off of data in a Note
-     */
-    fun buildComment(): CommentModel {
-        val comment = CommentModel()
-        comment.remotePostId = postId.toLong()
-        comment.remoteCommentId = commentId
-        comment.authorName = commentAuthorName
-        comment.datePublished = DateTimeUtils.iso8601FromTimestamp(timestamp)
-        comment.content = commentText
-        comment.status = commentStatus.toString()
-        comment.authorUrl = commentAuthorUrl
-        comment.postTitle = title // unavailable in note model
-        comment.authorEmail = "" // unavailable in note model
-        comment.authorProfileImageUrl = iconURL
-        comment.iLike = hasLikedComment()
-        return comment
-    }
-
-    val commentAuthorName: String by lazy {
-        val bodyArray = body
-        for (i in 0 until bodyArray.length()) {
-            runCatching {
-                val bodyItem = bodyArray.getJSONObject(i)
-                if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
-                    return@lazy bodyItem.optString("text")
-                }
-            }.getOrElse {
-                return@lazy ""
-            }
-        }
-        ""
-    }
-
-    private val commentText: String by lazy { queryJSON("body[last].text", "") }
-    private val commentAuthorUrl: String by lazy {
-        val bodyArray = body
-        for (i in 0 until bodyArray.length()) {
-            runCatching {
-                val bodyItem = bodyArray.getJSONObject(i)
-                if (bodyItem.has("type") && bodyItem.optString("type") == "user") {
-                    return@lazy JSONUtils.queryJSON(bodyItem, "meta.links.home", "")
-                }
-            }.getOrElse {
-                return@lazy ""
-            }
-        }
-        ""
-    }
-    val commentStatus: CommentStatus
-        get() = if (enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
-            CommentStatus.APPROVED
-        } else if (enabledCommentActions.contains(EnabledActions.ACTION_APPROVE)) {
-            CommentStatus.UNAPPROVED
-        } else {
-            CommentStatus.ALL
-        }
-
-    fun hasLikedComment() = commentActions.length() > 0 && commentActions.optBoolean(ACTION_KEY_LIKE_COMMENT)
-
-    fun hasLikedPost() = postActions.length() > 0 && postActions.optBoolean(ACTION_KEY_LIKE_POST)
-
-    fun setLikedComment(liked: Boolean) {
-        try {
-            commentActions.put(ACTION_KEY_LIKE_COMMENT, liked)
-        } catch (e: JSONException) {
-            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'like' property for the note", e)
-        }
-    }
-
-    fun setLikedPost(liked: Boolean) {
-        try {
-            postActions.put(ACTION_KEY_LIKE_POST, liked)
-        } catch (e: JSONException) {
-            AppLog.e(AppLog.T.NOTIFS, "Failed to set 'like' property for the note", e)
-        }
-    }
-
-    val url: String by lazy {
-        queryJSON("url", "")
-    }
-    val header: JSONArray? by lazy {
-        mNoteJSON?.optJSONArray("header")
-    }
-
-    // this method is used to compare two Notes: as it's potentially a very processing intensive operation,
-    // we're only comparing the note id, timestamp, and raw JSON length, which is accurate enough for
-    // the purpose of checking if the local Note is any different from a remote note.
-    fun equalsTimeAndLength(note: Note?) = note != null &&
-            (timestampString.equals(note.timestampString, ignoreCase = true) &&
-                    json.length() == note.json.length())
-
     companion object {
-        // Maximum character length for a comment preview
-        private const val MAX_COMMENT_PREVIEW_LENGTH = 200
-
+        private const val MAX_COMMENT_PREVIEW_LENGTH = 200 // maximum character length for a comment preview
         private const val MAX_PN_LENGTH = 4096 // max length an Android PN payload can have
 
         // Note types
