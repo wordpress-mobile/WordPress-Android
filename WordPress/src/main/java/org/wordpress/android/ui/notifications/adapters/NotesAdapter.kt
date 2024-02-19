@@ -16,7 +16,8 @@ import androidx.core.text.BidiFormatter
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -105,32 +106,24 @@ class NotesAdapter(
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
         val newNotes = buildFilteredNotesList(notes, currentFilter)
-        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = filteredNotes.size
-            override fun getNewListSize(): Int = newNotes.size
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                filteredNotes[oldItemPosition].id == newNotes[newItemPosition].id
+        val diff = AsyncListDiffer(this@NotesAdapter, object: ItemCallback<Note>(){
+            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
+                oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
+            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
+                oldItem.json.toString() == newItem.json.toString()
         })
 
         filteredNotes.clear()
         filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
-            result.dispatchUpdatesTo(this@NotesAdapter)
+            diff.submitList(newNotes)
             dataLoadedListener.onDataLoaded(itemCount)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
         NoteViewHolder(NotificationsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
-    private fun getNoteAtPosition(position: Int): Note? = if (isValidPosition(position)) {
-        filteredNotes[position]
-    } else null
-
-    private fun isValidPosition(position: Int): Boolean = position >= 0 && position < filteredNotes.size
 
     override fun getItemCount(): Int = filteredNotes.size
 
@@ -158,8 +151,8 @@ class NotesAdapter(
 
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
-        val note = getNoteAtPosition(position) ?: return
-        val previousNote = getNoteAtPosition(position - 1)
+        val note = filteredNotes.getOrNull(position) ?: return
+        val previousNote = filteredNotes.getOrNull(position - 1)
         noteViewHolder.binding.noteContentContainer.tag = note.id
 
         // Display time group header
