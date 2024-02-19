@@ -1,4 +1,3 @@
-- We added a new look and feel for content navigation and filtering.
-- Images and other media won’t “blink” during upload.
-- The editor won’t crash when you’re working on a large post.
-- We added new Site Monitoring menu items like metrics, PHP logs, and web server logs.
+* [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
+* [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
+
