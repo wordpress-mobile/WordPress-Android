@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.4
+-----
+
+
 24.3
 -----
 * [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
