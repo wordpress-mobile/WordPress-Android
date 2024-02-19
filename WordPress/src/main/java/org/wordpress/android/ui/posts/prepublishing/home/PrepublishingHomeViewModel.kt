@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.prepublishing.publishing.PublishingEvent
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
@@ -252,5 +254,31 @@ class PrepublishingHomeViewModel @Inject constructor(
         } ?: SocialUiState.Hidden
 
         _socialUiState.postValue(newState)
+    }
+
+    fun updatePublishingState(publishingEvent: PublishingEvent) {
+        Log.i(javaClass.simpleName, "***=> updatePublishingState: $uiState")
+         val newButtonState = when (publishingEvent) {
+            is PublishingEvent.MediaUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+            is PublishingEvent.PostUploadError ->  PrepublishingHomeItemUiState.ButtonUiState.ErrorButtonUiState(null)
+            is PublishingEvent.PostUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+            is PublishingEvent.PostUploadStarted -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+            is PublishingEvent.PostUploadSuccess -> PrepublishingHomeItemUiState.ButtonUiState.DoneButtonUiState(null)
+            is PublishingEvent.ReadyToUpload -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+        }
+
+        val updatedUiState = uiState.value?.map { item ->
+            if (item is PrepublishingHomeItemUiState.ButtonUiState) {
+                // update button state
+                newButtonState
+            } else {
+                item
+            }
+        }
+
+        // Post the updated state
+        updatedUiState?.let { updatedValue ->
+            _uiState.postValue(updatedValue)
+        }
     }
 }
