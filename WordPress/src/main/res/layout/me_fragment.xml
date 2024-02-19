@@ -420,6 +420,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/gravatar_title"
                     style="@style/MyProfileLabel"
+                    app:fixWidowWords="true"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:text="@string/gravatar_info_title"
                     android:textAppearance="?attr/textAppearanceHeadline6"
@@ -428,6 +429,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/gravatar_description"
                     style="@style/MyProfileLabel"
+                    app:fixWidowWords="true"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:text="@string/gravatar_info_description" />
 
