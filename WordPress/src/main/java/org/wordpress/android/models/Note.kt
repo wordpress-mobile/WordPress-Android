@@ -480,7 +480,6 @@ class Note {
 
         @JvmStatic
         @Synchronized
-        @Suppress("NestedBlockDepth")
         fun buildFromBase64EncodedData(noteId: String, base64FullNoteData: String?): Note? {
             if (base64FullNoteData == null) return null
             val b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT)
@@ -503,7 +502,7 @@ class Note {
                 AppLog.e(AppLog.T.NOTIFS, "Notification data contains non UTF8 characters.", e)
                 null
             }
-            return if (out == null) null else try {
+            return out?.runCatching {
                 var jsonObject = JSONObject(out)
                 if (jsonObject.has("notes")) {
                     val jsonArray: JSONArray? = jsonObject.getJSONArray("notes")
@@ -512,8 +511,8 @@ class Note {
                     }
                 }
                 Note(noteId, jsonObject)
-            } catch (e: JSONException) {
-                AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e)
+            }?.getOrElse {
+                AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN")
                 null
             }
         }
