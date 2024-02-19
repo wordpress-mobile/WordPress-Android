@@ -49,6 +49,7 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
         withContext(Dispatchers.Main) {
+            // make sure that the differ should be in the main thread, otherwise it will throw an IndexOutOfBoundsException
             val newNotes = buildFilteredNotesList(notes, currentFilter)
             val differ = AsyncListDiffer(this@NotesAdapter, object : ItemCallback<Note>() {
                 override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
