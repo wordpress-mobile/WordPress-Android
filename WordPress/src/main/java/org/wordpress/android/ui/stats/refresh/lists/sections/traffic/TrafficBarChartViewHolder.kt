@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
+import org.wordpress.android.ui.stats.refresh.utils.BarChartLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
 
@@ -72,7 +74,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
         configureChartView()
         configureYAxis(item)
-        configureXAxis()
+        configureXAxis(item)
 
         invalidate()
         return data.dataSets.size
@@ -115,6 +117,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             this.description = description
 
             extraRightOffset = 8f
+            extraBottomOffset = 8f
 
             animateY(1000, Easing.EaseInSine)
         }
@@ -152,20 +155,17 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun configureXAxis() {
+    private fun configureXAxis(item: BlockListItem.BarChartItem) {
         chart.xAxis.apply {
             granularity = 1f
             setDrawAxisLine(false)
             setDrawGridLines(false)
-            setDrawLabels(false)
 
-//            setLabelCount(3, true)
-//            setAvoidFirstLastClipping(true)
-//            setLabelCount(3, true)
-//            setAvoidFirstLastClipping(true)
-//            position = XAxis.XAxisPosition.BOTTOM
-//            valueFormatter = LineChartLabelFormatter(thisWeekData)
-//            textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
+            setDrawLabels(true)
+            setAvoidFirstLastClipping(true)
+            position = XAxis.XAxisPosition.BOTTOM
+            valueFormatter = BarChartLabelFormatter(item.entries)
+            textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
         }
     }
 
