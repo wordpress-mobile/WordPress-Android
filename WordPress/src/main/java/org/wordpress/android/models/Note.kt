@@ -33,7 +33,6 @@ class Note {
         get() = StringUtils.notNullStr(field)
 
     private var mNoteJSON: JSONObject? = null
-    private var mActions: JSONObject? = null
 
     constructor(key: String, noteJSON: JSONObject?) {
         id = key
@@ -80,6 +79,8 @@ class Note {
     private val enabledPostActions: EnumSet<EnabledActions> by lazy { getEnabledActions(postActions) }
     private val timestampString: String by lazy { queryJSON("timestamp", "") }
     private val commentText: String by lazy { queryJSON("body[last].text", "") }
+    private val commentActions: JSONObject by lazy { getActions(commentId, "comment") }
+    private val postActions: JSONObject by lazy { getActions(postId.toLong(), "post") }
 
     val body: JSONArray by lazy {
         runCatching {
@@ -212,10 +213,6 @@ class Note {
         get() = queryJSON("read", 0) != 1
     val timestamp: Long
         get() = DateTimeUtils.timestampFromIso8601(timestampString)
-    private val commentActions: JSONObject
-        get() = mActions ?: getActions(commentId, "comment")
-    private val postActions: JSONObject
-        get() = mActions ?: getActions(postId.toLong(), "post")
     val commentStatus: CommentStatus
         get() = if (enabledCommentActions.contains(EnabledActions.ACTION_UNAPPROVE)) {
             CommentStatus.APPROVED
@@ -317,22 +314,19 @@ class Note {
      * @param type The type of the item: `post` or `comment`
      */
     private fun getActions(itemId: Long, type: String): JSONObject {
-        val bodyArray = body
+        var actions: JSONObject? = null
         var foundOrError = false
         var i = 0
-        while (!foundOrError && i < bodyArray.length()) {
-            val bodyItem = runCatching { bodyArray.getJSONObject(i) }.getOrNull()
+        while (!foundOrError && i < body.length()) {
+            val bodyItem = runCatching { body.getJSONObject(i) }.getOrNull()
             if (bodyItem?.has("type") == true && bodyItem.optString("type") == type &&
                 itemId == JSONUtils.queryJSON(bodyItem, "meta.ids.$type", 0).toLong()) {
-                mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
+                actions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
                 foundOrError = true
             }
             i++
         }
-        if (mActions == null) {
-            mActions = JSONObject()
-        }
-        return requireNotNull(mActions)
+        return actions ?: JSONObject()
     }
 
     private fun getEnabledActions(jsonActions: JSONObject): EnumSet<EnabledActions> {
