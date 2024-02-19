@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -38,6 +39,9 @@ class PublishingViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<PublishingEvent>()
     val uiState: LiveData<PublishingEvent> = _uiState
+
+    private val _uiStateFlow = MutableStateFlow<PublishingEvent>(PublishingEvent.ReadyToUpload)
+    val uiStateFlow: MutableStateFlow<PublishingEvent> = _uiStateFlow
 
     init {
         dispatcher.register(this)
