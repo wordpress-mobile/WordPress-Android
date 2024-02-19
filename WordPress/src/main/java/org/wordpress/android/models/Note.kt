@@ -462,20 +462,27 @@ class Note {
         private const val ACTION_KEY_LIKE_COMMENT = "like-comment"
         private const val ACTION_KEY_LIKE_POST = "like-post"
 
+        // Time constants
+        private const val LAST_MONTH = -1
+        private const val LAST_WEEK = -1
+        private const val LAST_TWO_DAYS = -2
+        private const val SINCE_YESTERDAY = -1
+        private const val MILLISECOND = 1000
+
         /**
          * Compare note timestamp to now and return a time grouping
          */
-        @Suppress("MagicNumber")
         fun getTimeGroupForTimestamp(timestamp: Long): NoteTimeGroup {
             val today = Date()
-            val then = Date(timestamp * 1000)
-            return if (then.compareTo(addMonths(today, -1)) < 0) {
+            val then = Date(timestamp * MILLISECOND)
+            return if (then < addMonths(today, LAST_MONTH)) {
                 NoteTimeGroup.GROUP_OLDER_MONTH
-            } else if (then.compareTo(addWeeks(today, -1)) < 0) {
+            } else if (then < addWeeks(today, LAST_WEEK)) {
                 NoteTimeGroup.GROUP_OLDER_WEEK
-            } else if (then.compareTo(addDays(today, -2)) < 0 || isSameDay(addDays(today, -2), then)) {
+            } else if (then < addDays(today, LAST_TWO_DAYS) ||
+                isSameDay(addDays(today, LAST_TWO_DAYS), then)) {
                 NoteTimeGroup.GROUP_OLDER_TWO_DAYS
-            } else if (isSameDay(addDays(today, -1), then)) {
+            } else if (isSameDay(addDays(today, SINCE_YESTERDAY), then)) {
                 NoteTimeGroup.GROUP_YESTERDAY
             } else {
                 NoteTimeGroup.GROUP_TODAY
