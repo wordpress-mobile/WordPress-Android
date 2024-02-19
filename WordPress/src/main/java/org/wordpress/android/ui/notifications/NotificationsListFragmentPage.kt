@@ -74,7 +74,6 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
     OnScrollToTopListener {
