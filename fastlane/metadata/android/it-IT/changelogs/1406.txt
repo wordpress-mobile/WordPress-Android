@@ -1,5 +1,0 @@
-24.1:
-- Ricevi notifiche mentre lavori offline.
-- I caricamenti del blocco immagine vengono messi in pausa quando perdi la connessione internet e ripresi quando ti riconnetti.
-- Seleziona un gradiente personalizzato nell'editor e vedi un indicatore di colore.
-- Sono state sistemate le frecce avanti/indietro per chi legge da destra verso sinistra.

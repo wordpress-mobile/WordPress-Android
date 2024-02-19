@@ -59,6 +59,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
@@ -607,7 +608,12 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.quickStartEvent
         )
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
-        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
+            activity,
+            action.site,
+            StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS
+        )
+
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
@@ -667,8 +673,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenStatsInsights ->
-            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
+
+        is SiteNavigationAction.OpenStatsInsights -> ActivityLauncher.viewBlogStatsForTimeframe(
+            requireActivity(),
+            action.site,
+            StatsTimeframe.INSIGHTS,
+            StatsActivity.StatsLaunchedFrom.TODAY_STATS_CARD
+        )
+
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenUrlInWebView ->
