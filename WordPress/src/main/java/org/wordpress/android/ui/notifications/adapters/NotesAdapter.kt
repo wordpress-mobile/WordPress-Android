@@ -48,18 +48,19 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
      * Add notes to the adapter and notify the change
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
-        val newNotes = buildFilteredNotesList(notes, currentFilter)
-        val differ = AsyncListDiffer(this@NotesAdapter, object : ItemCallback<Note>() {
-            override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
-                oldItem.id == newItem.id
-
-            override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
-                oldItem.json.toString() == newItem.json.toString()
-        })
-
-        filteredNotes.clear()
-        filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
+            val newNotes = buildFilteredNotesList(notes, currentFilter)
+            val differ = AsyncListDiffer(this@NotesAdapter, object : ItemCallback<Note>() {
+                override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
+                    oldItem.id == newItem.id
+
+                override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
+                    oldItem.json.toString() == newItem.json.toString()
+            })
+
+            filteredNotes.clear()
+            filteredNotes.addAll(newNotes)
+
             differ.submitList(newNotes)
             onNotesLoaded(itemCount)
         }
