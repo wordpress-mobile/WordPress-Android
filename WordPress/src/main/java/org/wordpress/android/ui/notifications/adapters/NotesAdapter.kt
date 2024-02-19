@@ -46,25 +46,31 @@ import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class NotesAdapter(
-    context: Context, dataLoadedListener: DataLoadedListener,
-    onLoadMoreListener: OnLoadMoreListener?,
-    private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>,
-) : RecyclerView.Adapter<NoteViewHolder>() {
-    private val avatarSize: Int
-    private val textIndentSize: Int
-    private val dataLoadedListener: DataLoadedListener
-    private val onLoadMoreListener: OnLoadMoreListener?
+class NotesAdapter(context: Context, private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>) :
+    RecyclerView.Adapter<NoteViewHolder>() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     val filteredNotes = ArrayList<Note>()
     var onNoteClicked = { _: String -> }
+    var onNotesLoaded = { _: Int -> }
+    var onScrolledToBottom = { _:Long -> }
 
     @Inject
     lateinit var imageManager: ImageManager
 
     @Inject
     lateinit var notificationsUtilsWrapper: NotificationsUtilsWrapper
+
+    init {
+        (context.applicationContext as WordPress).component().inject(this)
+
+        // this is on purpose - we don't show more than a hundred or so notifications at a time so no need to set
+        // stable IDs. This helps prevent crashes in case a note comes with no ID (we've code checking for that
+        // elsewhere, but telling the RecyclerView.Adapter the notes have stable Ids and then failing to provide them
+        // will make things go south as in https://github.com/wordpress-mobile/WordPress-Android/issues/8741
+        setHasStableIds(false)
+    }
 
     enum class FILTERS {
         FILTER_ALL,
@@ -88,14 +94,6 @@ class NotesAdapter(
         private set
     private var reloadLocalNotesJob: Job? = null
 
-    interface DataLoadedListener {
-        fun onDataLoaded(itemsCount: Int)
-    }
-
-    interface OnLoadMoreListener {
-        fun onLoadMore(timestamp: Long)
-    }
-
     fun setFilter(newFilter: FILTERS) {
         currentFilter = newFilter
     }
@@ -117,7 +115,7 @@ class NotesAdapter(
         filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
             differ.submitList(newNotes)
-            dataLoadedListener.onDataLoaded(itemCount)
+            onNotesLoaded(itemCount)
         }
     }
 
@@ -194,6 +192,8 @@ class NotesAdapter(
             if (RtlUtils.isRtl(noteViewHolder.itemView.context)) {
                 noteViewHolder.binding.noteSubjectNoticon.scaleX = -1f
             }
+            val textIndentSize = noteViewHolder.itemView.context.resources
+                .getDimensionPixelSize(R.dimen.notifications_text_indent_sz)
             CommentUtils.indentTextViewFirstLine(noteViewHolder.binding.noteSubject, textIndentSize)
             noteViewHolder.binding.noteSubjectNoticon.text = noteSubjectNoticon
             noteViewHolder.binding.noteSubjectNoticon.visibility = View.VISIBLE
@@ -213,8 +213,8 @@ class NotesAdapter(
         noteViewHolder.binding.notificationUnread.isVisible = note.isUnread
 
         // request to load more comments when we near the end
-        if (onLoadMoreListener != null && position >= itemCount - 1) {
-            onLoadMoreListener.onLoadMore(note.timestamp)
+        if (position >= itemCount - 1) {
+            onScrolledToBottom(note.timestamp)
         }
         val headerMarginTop: Int
         val context = noteViewHolder.itemView.context
@@ -256,6 +256,7 @@ class NotesAdapter(
     }
 
     private fun loadAvatar(imageView: ImageView, avatarUrl: String) {
+        val avatarSize = imageView.context.resources.getDimension(R.dimen.notifications_avatar_sz).roundToInt()
         val url = GravatarUtils.fixGravatarUrl(avatarUrl, avatarSize)
         imageManager.loadIntoCircle(imageView, ImageType.AVATAR_WITH_BACKGROUND, url)
     }
@@ -363,21 +364,6 @@ class NotesAdapter(
             else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
             ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
         }
-    }
-
-    init {
-        (context.applicationContext as WordPress).component().inject(this)
-        this.dataLoadedListener = dataLoadedListener
-        this.onLoadMoreListener = onLoadMoreListener
-
-        // this is on purpose - we don't show more than a hundred or so notifications at a time so no need to set
-        // stable IDs. This helps prevent crashes in case a note comes with no ID (we've code checking for that
-        // elsewhere, but telling the RecyclerView.Adapter the notes have stable Ids and then failing to provide them
-        // will make things go south as in https://github.com/wordpress-mobile/WordPress-Android/issues/8741
-        setHasStableIds(false)
-        avatarSize = context.resources.getDimension(R.dimen.notifications_avatar_sz).toInt()
-        textIndentSize =
-            context.resources.getDimensionPixelSize(R.dimen.notifications_text_indent_sz)
     }
 
     companion object {
