@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -827,6 +828,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorJetpackSocialViewModel.start(mSite, mEditPostRepository);
 
         customizeToolbar();
+
+        mPublishingViewModel.getUiState().observe(this, uiState -> {
+            if (uiState != null) {
+                Log.e("EditPostActivity", "ui state: " + uiState);
+            }
+        });
     }
 
     private void customizeToolbar() {
@@ -955,6 +962,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void startObserving() {
         mEditorMedia.getUiState().observe(this, uiState -> {
+            Log.e("EditPostActivity", "startObserving: " + uiState);
             if (uiState != null) {
                 updateAddingMediaToEditorProgressDialogState(uiState.getProgressDialogUiState());
                 if (uiState.getEditorOverlayVisibility()) {
@@ -1857,6 +1865,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (!media.getMarkedLocallyAsFeatured() && mEditorMediaUploadListener != null) {
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                         FluxCUtils.mediaFileFromMediaModel(media));
+                mPublishingViewModel.onMediaUploadedSuccessfully(media);
                 if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
                     // make sure to sync the local post object with the UI and save
                     // then post the event for StoriesEventListener to process
@@ -1876,6 +1885,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mEditorMediaUploadListener != null) {
             mEditorMediaUploadListener.onMediaUploadProgress(localMediaId, progress);
         }
+        mPublishingViewModel.onMediaUploadInProgress(localMediaId, progress);
     }
 
     private void launchPictureLibrary() {
@@ -2192,11 +2202,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void uploadPost(final boolean publishPost) {
+        mPublishingViewModel.onPostPublishingStarted();
         updateAndSavePostAsyncOnEditorExit(((updatePostResult) -> {
             AccountModel account = mAccountStore.getAccount();
             // prompt user to verify e-mail before publishing
             if (!account.getEmailVerified()) {
                 mViewModel.hideSavingProgressDialog();
+                mPublishingViewModel.onPostUploadError();
                 String message = TextUtils.isEmpty(account.getEmail())
                         ? getString(R.string.editor_confirm_email_prompt_message)
                         : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
@@ -2219,6 +2231,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
             if (!mPostUtils.isPublishable(mEditPostRepository.getPost())) {
                 mViewModel.hideSavingProgressDialog();
+                mPublishingViewModel.onPostUploadError();
                 // TODO we don't want to show "publish" message when the user clicked on eg. save
                 mEditPostRepository.updateStatusFromPostSnapshotWhenEditorOpened();
                 EditPostActivity.this.runOnUiThread(() -> {
@@ -2260,7 +2273,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }, (postModel, result) -> {
                 if (result == Updated.INSTANCE) {
                     ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
-                    mViewModel.finish(activityFinishState);
+                    Log.e("PostUpload", "uploadPost: " + activityFinishState);
+                    mPublishingViewModel.onPostUploadInProgress(postModel);
+//                    mViewModel.finish(activityFinishState);
                 }
                 return null;
             });
@@ -2279,6 +2294,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             // if post was modified during this editing session, save it
             boolean shouldSave = shouldSavePost() || forceSave;
+
+            Log.e("SavePost", "shouldSave: " + shouldSave + " is First time" +
+                              isFirstTimePublish + " " + forceSave);
 
             mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
@@ -2316,7 +2334,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean existingPostWithChanges = mEditPostRepository.hasPostSnapshotWhenEditorOpened() && hasChanges;
         // if post was modified during this editing session, save it
-        return isPublishable && (existingPostWithChanges || isNewPost());
+        return isPublishable && (!existingPostWithChanges || isNewPost());
     }
 
 
@@ -3035,6 +3053,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showInsertMediaDialog(ids);
         } else {
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
+
             mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
             if (mShowGutenbergEditor && mEditorPhotoPicker.getAllowMultipleSelection()) {
                 mEditorPhotoPicker.setAllowMultipleSelection(false);
@@ -3275,6 +3294,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onMediaDropped(final ArrayList<Uri> mediaUris) {
+        Log.e("EditPostActivity", "onMediaDropped: " + mediaUris.size() + " media items");
         mEditorMedia.setDroppedMediaUris(mediaUris);
         ArrayList<Uri> media = new ArrayList<>(mediaUris);
         mEditorMedia.addNewMediaItemsToEditorAsync(media, false);
@@ -3325,6 +3345,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // Note: we should actually do this when the editor fragment starts instead of waiting for user input.
             // Notify the editor fragment upload was successful and it should replace the local url by the remote url.
             if (mEditorMediaUploadListener != null) {
+                Log.e("EditPostActivity", "onMediaRetryClicked: " + media.getId() + " media item");
                 mEditorMediaUploadListener.onMediaUploadSucceeded(String.valueOf(media.getId()),
                         FluxCUtils.mediaFileFromMediaModel(media));
             }
@@ -3670,6 +3691,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError() && !NetworkUtils.isNetworkAvailable(this)) {
+            Log.e("EditPostActivity", "onMediaUploaded: " + event.media.getId() + " media item");
             mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, event.error);
             return;
         }
@@ -3694,9 +3716,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (TextUtils.isEmpty(event.media.getUrl()) && !NetworkUtils.isNetworkAvailable(this)) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                Log.e("EditPostActivity", "onMediaUploaded: " + event.media.getId() + " media item");
                 mEditorMedia.onMediaUploadPaused(mEditorMediaUploadListener, event.media, error);
             } else if (TextUtils.isEmpty(event.media.getUrl())) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
+                Log.e("EditPostActivity", "onMediaUploaded error: " + event.media.getId() + " media item");
                 mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {
                 onUploadSuccess(event.media);
@@ -3802,6 +3826,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (!event.isError()) {
                     mEditPostRepository.set(() -> {
                         updateOnSuccessfulUpload();
+                        mPublishingViewModel.onPostUploadSuccess(post);
                         return post;
                     });
                 }

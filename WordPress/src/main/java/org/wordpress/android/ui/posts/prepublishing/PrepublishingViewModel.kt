@@ -143,7 +143,6 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {
-        onCloseClicked()
         _triggerOnSubmitButtonClickedListener.postValue(Event(publishPost))
     }
 
