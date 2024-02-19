@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.notifications.adapters
 
 import android.content.Context
@@ -28,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.NotificationsListItemBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.NoteTimeGroup
@@ -125,9 +124,7 @@ class NotesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder =
-        LayoutInflater.from(parent.context)
-            .inflate(R.layout.notifications_list_item, parent, false)
-            .let { NoteViewHolder(it) }
+        NoteViewHolder(NotificationsListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     private fun getNoteAtPosition(position: Int): Note? = if (isValidPosition(position)) {
         filteredNotes[position]
@@ -163,16 +160,16 @@ class NotesAdapter(
     override fun onBindViewHolder(noteViewHolder: NoteViewHolder, position: Int) {
         val note = getNoteAtPosition(position) ?: return
         val previousNote = getNoteAtPosition(position - 1)
-        noteViewHolder.contentView.tag = note.id
+        noteViewHolder.binding.noteContentContainer.tag = note.id
 
         // Display time group header
         timeGroupHeaderText(note, previousNote)?.let { timeGroupText ->
-            with(noteViewHolder.headerText) {
+            with(noteViewHolder.binding.headerText) {
                 visibility = View.VISIBLE
                 setText(timeGroupText)
             }
         } ?: run {
-            noteViewHolder.headerText.visibility = View.GONE
+            noteViewHolder.binding.headerText.visibility = View.GONE
         }
 
         // Subject is stored in db as html to preserve text formatting
@@ -188,40 +185,40 @@ class NotesAdapter(
             NoteBlockClickableSpan::class.java
         )
         for (span in spans) {
-            span.enableColors(noteViewHolder.contentView.context)
+            span.enableColors(noteViewHolder.itemView.context)
         }
-        noteViewHolder.textSubject.text = noteSubjectSpanned
+        noteViewHolder.binding.noteSubject.text = noteSubjectSpanned
         val noteSubjectNoticon = note.commentSubjectNoticon
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
-            val parent = noteViewHolder.textSubject.parent
+            val parent = noteViewHolder.binding.noteSubject.parent
             // Fix position of the subject noticon in the RtL mode
             if (parent is ViewGroup) {
                 val textDirection = if (BidiFormatter.getInstance()
-                        .isRtl(noteViewHolder.textSubject.text)
+                        .isRtl(noteViewHolder.binding.noteSubject.text)
                 ) ViewCompat.LAYOUT_DIRECTION_RTL else ViewCompat.LAYOUT_DIRECTION_LTR
                 ViewCompat.setLayoutDirection(parent, textDirection)
             }
             // mirror noticon in the rtl mode
             if (RtlUtils.isRtl(noteViewHolder.itemView.context)) {
-                noteViewHolder.textSubjectNoticon.scaleX = -1f
+                noteViewHolder.binding.noteSubjectNoticon.scaleX = -1f
             }
-            CommentUtils.indentTextViewFirstLine(noteViewHolder.textSubject, textIndentSize)
-            noteViewHolder.textSubjectNoticon.text = noteSubjectNoticon
-            noteViewHolder.textSubjectNoticon.visibility = View.VISIBLE
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.binding.noteSubject, textIndentSize)
+            noteViewHolder.binding.noteSubjectNoticon.text = noteSubjectNoticon
+            noteViewHolder.binding.noteSubjectNoticon.visibility = View.VISIBLE
         } else {
-            noteViewHolder.textSubjectNoticon.visibility = View.GONE
+            noteViewHolder.binding.noteSubjectNoticon.visibility = View.GONE
         }
         val noteSnippet = note.commentSubject
         if (!TextUtils.isEmpty(noteSnippet)) {
-            handleMaxLines(noteViewHolder.textSubject, noteViewHolder.textDetail)
-            noteViewHolder.textDetail.text = noteSnippet
-            noteViewHolder.textDetail.visibility = View.VISIBLE
+            handleMaxLines(noteViewHolder.binding.noteSubject, noteViewHolder.binding.noteDetail)
+            noteViewHolder.binding.noteDetail.text = noteSnippet
+            noteViewHolder.binding.noteDetail.visibility = View.VISIBLE
         } else {
-            noteViewHolder.textDetail.visibility = View.GONE
+            noteViewHolder.binding.noteDetail.visibility = View.GONE
         }
         noteViewHolder.loadAvatars(note)
         noteViewHolder.bindInlineActionIconsForNote(note)
-        noteViewHolder.unreadNotificationView.isVisible = note.isUnread
+        noteViewHolder.binding.notificationUnread.isVisible = note.isUnread
 
         // request to load more comments when we near the end
         if (onLoadMoreListener != null && position >= itemCount - 1) {
@@ -236,33 +233,33 @@ class NotesAdapter(
             context.resources
                 .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_n)
         }
-        val layoutParams = noteViewHolder.headerText.layoutParams as MarginLayoutParams
+        val layoutParams = noteViewHolder.binding.headerText.layoutParams as MarginLayoutParams
         layoutParams.topMargin = headerMarginTop
-        noteViewHolder.headerText.layoutParams = layoutParams
+        noteViewHolder.binding.headerText.layoutParams = layoutParams
     }
 
     private fun NoteViewHolder.loadAvatars(note: Note) {
         if (note.shouldShowMultipleAvatars() && note.iconURLs != null && note.iconURLs!!.size > 1) {
             val avatars = note.iconURLs!!.toList()
             if (avatars.size == 2) {
-                imageAvatar.visibility = View.INVISIBLE
-                twoAvatarsView.visibility = View.VISIBLE
-                threeAvatarsView.visibility = View.INVISIBLE
-                loadAvatar(twoAvatars1, avatars[1])
-                loadAvatar(twoAvatars2, avatars[0])
+                binding.noteAvatar.visibility = View.INVISIBLE
+                binding.twoAvatarsView.root.visibility = View.VISIBLE
+                binding.threeAvatarsView.root.visibility = View.INVISIBLE
+                loadAvatar(binding.twoAvatarsView.twoAvatars1, avatars[1])
+                loadAvatar(binding.twoAvatarsView.twoAvatars2, avatars[0])
             } else { // size > 3
-                imageAvatar.visibility = View.INVISIBLE
-                twoAvatarsView.visibility = View.INVISIBLE
-                threeAvatarsView.visibility = View.VISIBLE
-                loadAvatar(threeAvatars1, avatars[2])
-                loadAvatar(threeAvatars2, avatars[1])
-                loadAvatar(threeAvatars3, avatars[0])
+                binding.noteAvatar.visibility = View.INVISIBLE
+                binding.twoAvatarsView.root.visibility = View.INVISIBLE
+                binding.threeAvatarsView.root.visibility = View.VISIBLE
+                loadAvatar(binding.threeAvatarsView.threeAvatars1, avatars[2])
+                loadAvatar(binding.threeAvatarsView.threeAvatars2, avatars[1])
+                loadAvatar(binding.threeAvatarsView.threeAvatars3, avatars[0])
             }
         } else { // single avatar
-            imageAvatar.visibility = View.VISIBLE
-            twoAvatarsView.visibility = View.INVISIBLE
-            threeAvatarsView.visibility = View.INVISIBLE
-            loadAvatar(imageAvatar, note.iconURL)
+            binding.noteAvatar.visibility = View.VISIBLE
+            binding.twoAvatarsView.root.visibility = View.INVISIBLE
+            binding.threeAvatarsView.root.visibility = View.INVISIBLE
+            loadAvatar(binding.noteAvatar, note.iconURL)
         }
     }
 
@@ -317,40 +314,9 @@ class NotesAdapter(
         }
     }
 
-    inner class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val contentView: View
-        val headerText: TextView
-        val textSubject: TextView
-        val textSubjectNoticon: TextView
-        val textDetail: TextView
-        val imageAvatar: ImageView
-        val twoAvatarsView: View
-        val twoAvatars1: ImageView
-        val twoAvatars2: ImageView
-        val threeAvatarsView: View
-        val threeAvatars1: ImageView
-        val threeAvatars2: ImageView
-        val threeAvatars3: ImageView
-        val unreadNotificationView: View
-        val actionIcon: ImageView
-
+    inner class NoteViewHolder(val binding: NotificationsListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            contentView = checkNotNull(view.findViewById(R.id.note_content_container))
-            headerText = checkNotNull(view.findViewById(R.id.header_text))
-            textSubject = checkNotNull(view.findViewById(R.id.note_subject))
-            textSubjectNoticon = checkNotNull(view.findViewById(R.id.note_subject_noticon))
-            textDetail = checkNotNull(view.findViewById(R.id.note_detail))
-            imageAvatar = checkNotNull(view.findViewById(R.id.note_avatar))
-            twoAvatars1 = checkNotNull(view.findViewById(R.id.two_avatars_1))
-            twoAvatars2 = checkNotNull(view.findViewById(R.id.two_avatars_2))
-            threeAvatars1 = checkNotNull(view.findViewById(R.id.three_avatars_1))
-            threeAvatars2 = checkNotNull(view.findViewById(R.id.three_avatars_2))
-            threeAvatars3 = checkNotNull(view.findViewById(R.id.three_avatars_3))
-            twoAvatarsView = checkNotNull(view.findViewById(R.id.two_avatars_view))
-            threeAvatarsView = checkNotNull(view.findViewById(R.id.three_avatars_view))
-            unreadNotificationView = checkNotNull(view.findViewById(R.id.notification_unread))
-            actionIcon = checkNotNull(view.findViewById(R.id.action))
-            contentView.setOnClickListener(onClickListener)
+            binding.noteContentContainer.setOnClickListener(onClickListener)
         }
 
         fun bindInlineActionIconsForNote(note: Note) = Notification.from(note).let { notification ->
@@ -359,17 +325,17 @@ class NotesAdapter(
                 is PostNotification.NewPost -> bindLikePostAction(note)
                 is PostNotification -> bindShareAction(notification)
                 is Unknown -> {
-                    actionIcon.isVisible = false
+                    binding.action.isVisible = false
                 }
             }
         }
 
         private fun bindShareAction(notification: PostNotification) {
-            actionIcon.setImageResource(R.drawable.block_share)
-            val color = contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
-            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
-            actionIcon.isVisible = true
-            actionIcon.setOnClickListener {
+            binding.action.setImageResource(R.drawable.block_share)
+            val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
+            binding.action.isVisible = true
+            binding.action.setOnClickListener {
                 coroutineScope.launch {
                     inlineActionEvents.emit(
                         InlineActionEvent.SharePostButtonTapped(notification)
@@ -381,7 +347,7 @@ class NotesAdapter(
         private fun bindLikePostAction(note: Note) {
             if (note.canLikePost().not()) return
             setupLikeIcon(note.hasLikedPost())
-            actionIcon.setOnClickListener {
+            binding.action.setOnClickListener {
                 val liked = note.hasLikedPost().not()
                 setupLikeIcon(liked)
                 coroutineScope.launch {
@@ -395,7 +361,7 @@ class NotesAdapter(
         private fun bindLikeCommentAction(note: Note) {
             if (note.canLikeComment().not()) return
             setupLikeIcon(note.hasLikedComment())
-            actionIcon.setOnClickListener {
+            binding.action.setOnClickListener {
                 val liked = note.hasLikedComment().not()
                 setupLikeIcon(liked)
                 coroutineScope.launch {
@@ -407,11 +373,11 @@ class NotesAdapter(
         }
 
         private fun setupLikeIcon(liked: Boolean) {
-            actionIcon.isVisible = true
-            actionIcon.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
-            val color = if (liked) contentView.context.getColor(R.color.inline_action_filled)
-            else contentView.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
-            ImageViewCompat.setImageTintList(actionIcon, ColorStateList.valueOf(color))
+            binding.action.isVisible = true
+            binding.action.setImageResource(if (liked) R.drawable.star_filled else R.drawable.star_empty)
+            val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
+            else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+            ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
         }
     }
 
