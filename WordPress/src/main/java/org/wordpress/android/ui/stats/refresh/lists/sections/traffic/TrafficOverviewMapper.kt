@@ -160,7 +160,7 @@ class TrafficOverviewMapper @Inject constructor(
                 else -> 0L
             }
             BlockListItem.BarChartItem.Bar(
-                statsDateFormatter.printGranularDate(it.period, statsGranularity),
+                statsDateFormatter.printTrafficGranularDate(it.period, statsGranularity),
                 it.period,
                 value.toInt()
             )
