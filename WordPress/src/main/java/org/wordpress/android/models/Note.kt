@@ -68,13 +68,11 @@ class Note {
         queryJSON("type", NOTE_UNKNOWN_TYPE)
     }
 
-    private fun isTypeRaw(rawType: String): Boolean {
-        return this.rawType == rawType
-    }
+    private fun isTypeRaw(rawType: String) = this.rawType == rawType
 
     val isCommentType: Boolean by lazy {
-        (isAutomattcherType && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1 ||
-                isTypeRaw(NOTE_COMMENT_TYPE))
+        isTypeRaw(NOTE_COMMENT_TYPE) ||
+                isAutomattcherType && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1
     }
 
     val isAutomattcherType: Boolean
