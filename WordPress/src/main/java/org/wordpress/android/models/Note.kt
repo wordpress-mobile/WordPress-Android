@@ -223,11 +223,9 @@ class Note {
             JSONArray()
         }
 
-    @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val commentActions: JSONObject
         get() = mActions ?: getActions(commentId, "comment")
 
-    @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val postActions: JSONObject
         get() = mActions ?: getActions(postId.toLong(), "post")
 
