@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -72,6 +74,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
+
 @AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
     OnScrollToTopListener {
@@ -129,7 +132,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManager(activity)
+            notificationsList.layoutManager = LinearLayoutManagerWrapper(activity)
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
@@ -553,5 +556,27 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
+    }
+
+    /**
+     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that causes IndexOutOfBoundsException
+     * @see [link](https://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in)
+     */
+    internal class LinearLayoutManagerWrapper : LinearLayoutManager {
+        constructor(context: Context) : super(context)
+        constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(
+            context,
+            orientation,
+            reverseLayout
+        )
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+            context,
+            attrs,
+            defStyleAttr,
+            defStyleRes
+        )
+
+        override fun supportsPredictiveItemAnimations(): Boolean = false
     }
 }
