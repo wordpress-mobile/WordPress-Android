@@ -225,49 +225,31 @@ class Note {
 
     @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val commentActions: JSONObject
-        get() = mActions ?: run {
-            // Find comment block that matches the root note comment id
-            val commentId = commentId
-            val bodyArray = body
-            for (i in 0 until bodyArray.length()) {
-                try {
-                    val bodyItem = bodyArray.getJSONObject(i)
-                    if (bodyItem.has("type") && bodyItem.optString("type") == "comment" &&
-                        commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.comment", 0).toLong()) {
-                        mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
-                        break
-                    }
-                } catch (e: JSONException) {
-                    break
-                }
-            }
-            if (mActions == null) {
-                mActions = JSONObject()
-            }
-            return requireNotNull(mActions)
-        }
+        get() = mActions ?: getActions(commentId, "comment")
 
     @Suppress("SwallowedException", "LoopWithTooManyJumpStatements")
     private val postActions: JSONObject
-        get() = mActions ?: run {
-            val bodyArray = body
-            for (i in 0 until bodyArray.length()) {
-                try {
-                    val bodyItem = bodyArray.getJSONObject(i)
-                    if (bodyItem.has("type") && bodyItem.optString("type") == "post" &&
-                        postId == JSONUtils.queryJSON(bodyItem, "meta.ids.post", 0)) {
-                        mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
-                        break
-                    }
-                } catch (e: JSONException) {
-                    break
-                }
+        get() = mActions ?: getActions(postId.toLong(), "post")
+
+    private fun getActions(itemId: Long, type: String): JSONObject {
+        val bodyArray = body
+        var foundOrError = false
+        var i = 0
+        while (!foundOrError && i < bodyArray.length()) {
+            val bodyItem = kotlin.runCatching { bodyArray.getJSONObject(i) }.getOrNull()
+            if (bodyItem?.has("type") == true && bodyItem.optString("type") == type &&
+                itemId == JSONUtils.queryJSON(bodyItem, "meta.ids.$type", 0).toLong()) {
+                mActions = JSONUtils.queryJSON(bodyItem, "actions", JSONObject())
+                foundOrError = true
             }
-            if (mActions == null) {
-                mActions = JSONObject()
-            }
-            return requireNotNull(mActions)
+            i++
         }
+        if (mActions == null) {
+            mActions = JSONObject()
+        }
+        return requireNotNull(mActions)
+    }
+
     val enabledCommentActions: EnumSet<EnabledActions>
         /**
          * returns the actions allowed on this note, assumes it's a comment notification
