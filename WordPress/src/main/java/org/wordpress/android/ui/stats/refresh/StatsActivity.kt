@@ -95,6 +95,7 @@ class StatsActivity : LocaleAwareActivity() {
         QUICK_ACTIONS("quick_actions"),
         TODAY_STATS_CARD("today_stats_card"),
         ROW("row"),
+        POSTS("posts"),
         WIDGET("widget"),
         NOTIFICATION("notification"),
         LINK("link"),
