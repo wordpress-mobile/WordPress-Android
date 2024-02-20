@@ -77,7 +77,7 @@ public class NotificationsTable {
     }
 
     private static boolean putNote(Note note, boolean checkBeforeInsert) {
-        String rawNote = prepareNote(note.getId(), note.getJSON().toString());
+        String rawNote = prepareNote(note.getId(), note.getJson().toString());
 
         ContentValues values = new ContentValues();
         values.put("type", note.getRawType());

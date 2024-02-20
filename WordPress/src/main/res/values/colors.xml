@@ -154,4 +154,8 @@
 
     <!-- Notifications -->
     <color name="inline_action_filled">@color/jetpack_green_50</color>
+
+    <!-- Gravatar Info Banners -->
+    <color name="gravatar_info_banner">#F2F2F7</color>
+    <color name="gravatar_sync_info_banner">#2C2C2E</color>
 </resources>

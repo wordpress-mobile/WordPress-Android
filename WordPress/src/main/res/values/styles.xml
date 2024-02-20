@@ -51,6 +51,9 @@
         <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
         <item name="wpColorTextSecondary">@color/text_secondary</item>
 
+        <item name="grColorInfoBanner">@color/gravatar_info_banner</item>
+        <item name="grColorSyncBanner">@color/gravatar_sync_info_banner</item>
+
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
 

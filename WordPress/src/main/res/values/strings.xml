@@ -2872,6 +2872,11 @@
     <string name="premium_upgrades_message">You have active premium upgrades on your site. Please cancel your upgrades prior to deleting your site.</string>
     <string name="show_purchases">Show purchases</string>
     <string name="checking_purchases">Checking purchases</string>
+    <string name="gravatar_info_title">Your WordPress.com profile is powered by Gravatar</string>
+    <string name="gravatar_info_description">Updating your avatar, name, and about info here will also update it across all sites that use Gravatar profiles.</string>
+    <string name="gravatar_info_learn_more_link">What is Gravatar?</string>
+    <string name="gravatar_info_sync_message">Updates might take some time to sync with your Gravatar profile.</string>
+    <string name="gravatar_info_sync_done_button">Done</string>
 
     <!--Account Settings-->
     <string name="account_settings">Account Settings</string>

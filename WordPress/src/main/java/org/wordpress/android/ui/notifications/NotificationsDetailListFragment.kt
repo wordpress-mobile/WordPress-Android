@@ -470,7 +470,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 }
                 var pingbackUrl: String? = null
                 val isPingback = isPingback(note)
-                if (bodyArray != null && bodyArray.length() > 0) {
+                if (bodyArray.length() > 0) {
                     pingbackUrl = addNotesBlock(note, noteList, bodyArray, isPingback)
                 }
                 if (isPingback) {
@@ -489,7 +489,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         private fun isPingback(note: Note): Boolean {
             var hasRangeOfTypeSite = false
             var hasRangeOfTypePost = false
-            val rangesArray = note.subject.optJSONArray("ranges")
+            val rangesArray = note.subject?.optJSONArray("ranges")
             if (rangesArray != null) {
                 for (i in 0 until rangesArray.length()) {
                     val rangeObject = rangesArray.optJSONObject(i) ?: continue
