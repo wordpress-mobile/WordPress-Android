@@ -117,6 +117,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
+import org.wordpress.android.ui.reader.utils.DateProvider;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -945,6 +946,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 updateCurrentTag();
             }
         }
+
+        // Check last time we've bumped tags followed analytics for this user,
+        // and bumping again if > 1 hrs
+        long tagsUpdatedTimestamp = AppPrefs.getReaderAnalyticsCountTagsTimestamp();
+        long now = new DateProvider().getCurrentDate().getTime();
+        if (now - tagsUpdatedTimestamp > 1000 * 60 * 60) { // 1 hr
+            ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
+            AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -956,6 +966,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
+
+        ReaderBlogTable.getFollowedBlogs();
+        ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
+        AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
     }
 
     @Override

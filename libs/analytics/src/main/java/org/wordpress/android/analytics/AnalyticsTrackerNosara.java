@@ -717,6 +717,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_saved_post_opened";
             case READER_SITE_SHARED:
                 return "reader_site_shared";
+            case READER_FOLLOWING_FETCHED:
+                return "reader_following_fetched";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:

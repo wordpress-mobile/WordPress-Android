@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.tracker
 import android.net.Uri
 import androidx.annotation.MainThread
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -463,6 +464,22 @@ class ReaderTracker @Inject constructor(
                 TAG_KEY to tag
             )
             AnalyticsTracker.track(stat, properties)
+        }
+
+        @JvmStatic
+        fun trackFollowedTagsCount(numberOfItems: Int) {
+            val props: MutableMap<String, String> = HashMap()
+            props["type"] = "tags"
+            props["count"] = numberOfItems.toString()
+            AnalyticsTracker.track(Stat.READER_FOLLOWING_FETCHED, props)
+        }
+
+        @JvmStatic
+        fun trackFollowedSitesCount(numberOfItems: Int) {
+            val props: MutableMap<String, String> = HashMap()
+            props["type"] = "sites"
+            props["count"] = numberOfItems.toString()
+            AnalyticsTracker.track(Stat.READER_FOLLOWING_FETCHED, props)
         }
 
         fun isUserProfileSource(source: String): Boolean {
