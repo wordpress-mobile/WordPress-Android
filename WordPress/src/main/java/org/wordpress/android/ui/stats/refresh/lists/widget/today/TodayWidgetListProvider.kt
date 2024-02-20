@@ -68,7 +68,7 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
-        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.STATS_WIDGET)
+        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
         rv.setOnClickFillInIntent(R.id.container, intent)
         return rv
     }
