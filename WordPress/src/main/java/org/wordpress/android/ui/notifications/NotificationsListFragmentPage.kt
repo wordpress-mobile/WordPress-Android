@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -55,9 +57,8 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment.Companio
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent.SharePostButtonTapped
+import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedListener
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -75,8 +76,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
-    OnScrollToTopListener,
-    DataLoadedListener {
+    OnScrollToTopListener {
     private lateinit var notesAdapter: NotesAdapter
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
@@ -100,11 +100,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     private var binding: NotificationsListFragmentPageBinding? = null
 
-    interface OnNoteClickListener {
-        fun onClickNote(noteId: String?)
-    }
-
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
             if (resultCode == Activity.RESULT_OK) {
@@ -127,15 +123,15 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
-        notesAdapter = NotesAdapter( requireActivity(), this, null,
-            inlineActionEvents = viewModel.inlineActionEvents).apply {
-            this.setOnNoteClickListener(mOnNoteClickListener)
+        notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
+            onNoteClicked = { noteId -> handleNoteClick(noteId) }
+            onNotesLoaded = { itemCount -> updateEmptyLayouts(itemCount) }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .onEach(::handleInlineActionEvent)
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManager(activity)
+            notificationsList.layoutManager = LinearLayoutManagerWrapper(view.context)
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
@@ -143,7 +139,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
-            (TabPosition.values().getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
+            (TabPosition.entries.getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
         }
         viewModel.updatedNote.observe(viewLifecycleOwner) {
             notesAdapter.updateNote(it)
@@ -166,7 +162,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         binding = null
     }
 
-    override fun onDataLoaded(itemsCount: Int) {
+    private fun updateEmptyLayouts(itemsCount: Int) {
         if (!isAdded) {
             AppLog.d(
                 T.NOTIFS,
@@ -220,36 +216,32 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onStop()
     }
 
-    private val mOnNoteClickListener: OnNoteClickListener = object : OnNoteClickListener {
-        override fun onClickNote(noteId: String?) {
-            if (!isAdded) {
-                return
-            }
-            if (TextUtils.isEmpty(noteId)) {
-                return
-            }
-            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
-
-            viewModel.openNote(
-                noteId,
-                { siteId, postId, commentId ->
-                    ReaderActivityLauncher.showReaderComments(
-                        activity,
-                        siteId,
-                        postId,
-                        commentId,
-                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
-                    )
-                },
-                {
-                    // Open the latest version of this note in case it has changed, which can happen if the note was
-                    // tapped from the list after it was updated by another fragment (such as the
-                    // NotificationsDetailListFragment).
-                    openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
-                }
-            )
+    private fun handleNoteClick(noteId: String) {
+        if (!isAdded || noteId.isEmpty()) {
+            return
         }
+        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
+
+        viewModel.openNote(
+            noteId,
+            { siteId, postId, commentId ->
+                ReaderActivityLauncher.showReaderComments(
+                    activity,
+                    siteId,
+                    postId,
+                    commentId,
+                    ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                )
+            },
+            {
+                // Open the latest version of this note in case it has changed, which can happen if the note was
+                // tapped from the list after it was updated by another fragment (such as the
+                // NotificationsDetailListFragment).
+                openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
+            }
+        )
     }
+
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -541,7 +533,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             noteId: String?,
             shouldShowKeyboard: Boolean = false,
             replyText: String? = null,
-            filter: FILTERS? = null,
+            filter: Filter? = null,
             isTappedFromPushNotification: Boolean = false,
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {
@@ -563,5 +555,27 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
+    }
+
+    /**
+     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that blocks the UI thread
+     * when we perform the first click on the inline actions in the notifications list.
+     */
+    internal class LinearLayoutManagerWrapper : LinearLayoutManager {
+        constructor(context: Context) : super(context)
+        constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(
+            context,
+            orientation,
+            reverseLayout
+        )
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+            context,
+            attrs,
+            defStyleAttr,
+            defStyleRes
+        )
+
+        override fun supportsPredictiveItemAnimations(): Boolean = false
     }
 }
