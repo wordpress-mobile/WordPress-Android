@@ -63,6 +63,13 @@ class PrepublishingHomeViewModel @Inject constructor(
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
+    // todo: annmarie @ajesh - I think we need to break the button state out of the UI state, so we can manage this more
+    // easily - what happens if the start up logic finishes after the emitted value is received? I don't want to
+    // screw up access to the state. This is all solvable, just need to think about it. I guess we can set a init
+    // value ONLY if the state hasn't been emitted yet? Wdyt?  What is the bummer, is that the eventBus events
+    // can constantly emit if we are in the image uploading state. Of course, we also want to lock the publish
+    // button or the other buttons - ooh, now we have other buttons to think about to
+
     private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
 
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = merge(
@@ -83,6 +90,8 @@ class PrepublishingHomeViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
+        // todo: annmarie @ajesh - starting and the button state? And also the sheet state - we need to make sure
+        // we can allow back press and close in certain instances too.
         setupHomeUiState(editPostRepository, site, isStoryPost)
     }
 
@@ -257,14 +266,16 @@ class PrepublishingHomeViewModel @Inject constructor(
     }
 
     fun updatePublishingState(publishingEvent: PublishingEvent) {
-        Log.i(javaClass.simpleName, "***=> updatePublishingState: $uiState")
+        Log.i(javaClass.simpleName, "***=> updatePublishingState: $publishingEvent")
          val newButtonState = when (publishingEvent) {
             is PublishingEvent.MediaUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
             is PublishingEvent.PostUploadError ->  PrepublishingHomeItemUiState.ButtonUiState.ErrorButtonUiState(null)
             is PublishingEvent.PostUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
             is PublishingEvent.PostUploadStarted -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
             is PublishingEvent.PostUploadSuccess -> PrepublishingHomeItemUiState.ButtonUiState.DoneButtonUiState(null)
-            is PublishingEvent.ReadyToUpload -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+            is PublishingEvent.ReadyToUpload -> {
+                PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
+            }
         }
 
         val updatedUiState = uiState.value?.map { item ->
