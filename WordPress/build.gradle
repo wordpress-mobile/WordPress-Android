@@ -346,7 +346,7 @@ dependencies {
     implementation 'androidx.webkit:webkit:1.10.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
-    kapt project(':libs:processors')
+    ksp project(':libs:processors')
     implementation (project(path:':libs:networking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
