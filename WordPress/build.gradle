@@ -642,9 +642,15 @@ tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTas
     commentTemplate = """
 ### The PR caused the following dependency changes:
 
+<details><summary>expand</summary>
+<p>
+
 ```diff
 {{{violation.message}}}
 ```
+
+</p>
+</details>
 
 *Please review and act accordingly*
 """
