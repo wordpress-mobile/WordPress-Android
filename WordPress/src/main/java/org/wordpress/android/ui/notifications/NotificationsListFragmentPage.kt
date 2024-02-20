@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -129,7 +131,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManager(view.context)
+            notificationsList.layoutManager = LinearLayoutManagerWrapper(view.context)
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
@@ -553,5 +555,23 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
+    }
+
+    internal class LinearLayoutManagerWrapper : LinearLayoutManager {
+        constructor(context: Context) : super(context)
+        constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(
+            context,
+            orientation,
+            reverseLayout
+        )
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+            context,
+            attrs,
+            defStyleAttr,
+            defStyleRes
+        )
+
+        override fun supportsPredictiveItemAnimations(): Boolean = false
     }
 }
