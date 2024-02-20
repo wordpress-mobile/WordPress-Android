@@ -78,8 +78,6 @@ class SignupConfirmationFragment : Fragment(), MenuProvider {
             mPhotoUrl = it.getString(ARG_SOCIAL_PHOTO_URL)
             mService = it.getString(ARG_SOCIAL_SERVICE)
         }
-
-        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onCreateView(
@@ -118,6 +116,8 @@ class SignupConfirmationFragment : Fragment(), MenuProvider {
         if (savedInstanceState == null) {
             mAnalyticsListener.trackSocialSignupConfirmationViewed()
         }
+
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
