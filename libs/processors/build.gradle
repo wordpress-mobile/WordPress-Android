@@ -1,6 +1,5 @@
 plugins {
     id "org.jetbrains.kotlin.jvm"
-    id "org.jetbrains.kotlin.kapt"
     id "org.jetbrains.kotlinx.kover"
 }
 
@@ -10,9 +9,9 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     implementation project(":libs:annotations")
 
-    implementation "com.google.auto.service:auto-service:$googleAutoServiceVersion"
-    kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
     implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
+    implementation "com.squareup:kotlinpoet-ksp:$squareupKotlinPoetVersion"
+    implementation "com.google.devtools.ksp:symbol-processing-api:$gradle.ext.kspVersion"
 
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
