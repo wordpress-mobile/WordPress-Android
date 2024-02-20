@@ -5,7 +5,7 @@ import org.junit.Test
 
 class FeaturesInDevelopmentDefaultsBuilderTest {
     @Test
-    fun `given a list of features in development, when building the object, then generate list of features in development`() {
+    fun `given a list of features in development, when building the object, then generate the correct list`() {
         // given
         val featureA = "valueA"
         val featureB = "valueB"
@@ -35,7 +35,7 @@ class FeaturesInDevelopmentDefaultsBuilderTest {
     }
 
     @Test
-    fun `given an empty list of features in development, when building the object, then generate empty list of features in development`() {
+    fun `given an empty list of features in development, when building the object, then generate empty list`() {
         // given
         val features = emptyList<String>()
 
