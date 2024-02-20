@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.services.update;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -14,6 +16,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
@@ -322,6 +325,11 @@ public class ReaderUpdateLogic {
                 ReaderBlogList serverBlogs = ReaderBlogList.fromJson(jsonObject);
                 ReaderBlogList localBlogs = ReaderBlogTable.getFollowedBlogs();
 
+                // This is required because under rare circumstances the server can return duplicates.
+                // We could have modified the function isSameList to eliminate the length check,
+                // but it's better to keep it separate since we aim to remove this check as soon as possible.
+                removeDuplicateBlogs(serverBlogs);
+
                 if (!localBlogs.isSameList(serverBlogs)) {
                     // always update the list of followed blogs if there are *any* changes between
                     // server and local (including subscription count, description, etc.)
@@ -339,5 +347,25 @@ public class ReaderUpdateLogic {
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
             }
         }.start();
+    }
+
+    /**
+     * Remove duplicates from the input list.
+     * Note that this method modifies the input list.
+     *
+     * @param blogList The list of blogs to remove duplicates from.
+     */
+    private void removeDuplicateBlogs(@NonNull ReaderBlogList blogList) {
+        for (int i = 0; i < blogList.size(); i++) {
+            ReaderBlog outer = blogList.get(i);
+            for (int j = blogList.size() - 1; j > i; j--) {
+                ReaderBlog inner = blogList.get(j);
+                if (outer.blogId == inner.blogId) {
+                    // If the 'id' property is the same,
+                    // remove the later object to avoid duplicates
+                    blogList.remove(j);
+                }
+            }
+        }
     }
 }

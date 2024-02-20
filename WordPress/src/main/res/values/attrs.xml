@@ -24,6 +24,10 @@
     <attr name="colorGutenbergDivider" format="reference|color" />
     <attr name="colorGutenbergBackground" format="reference|color" />
 
+    <!-- Gravatar colors -->
+    <attr name="grColorInfoBanner" format="reference|color" />
+    <attr name="grColorSyncBanner" format="reference|color" />
+
     <!-- Modal layout picker colors-->
     <attr name="layoutPickerBackground" format="reference|color" />
     <attr name="categoriesButtonBackground" format="reference|color" />

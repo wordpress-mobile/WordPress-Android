@@ -110,7 +110,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListViewModel;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -1089,7 +1089,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                             NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                                             false);
                                     NotificationsListFragment.openNoteForReply(WPMainActivity.this, noteId,
-                                            shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL, true);
+                                            shouldShowKeyboard, null, Filter.ALL, true);
                                     return null;
                                 }
                             }
