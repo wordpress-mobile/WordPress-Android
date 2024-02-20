@@ -47,6 +47,12 @@ class GetButtonUiStateUseCase @Inject constructor(
 
         // Okay, so what if we used MutableStateFlow- which, as a hot observable, will emit the last value to new subscribers???
         // This could work!
+
+        // @ajesh on feb 20th
+
+        // Yup this could work, I think we will need observe the media events and update the state of the
+        // button accordingly everytime , this should be not only just consumed the first time when the user goes to
+        // the editor
         return when (editorAction) {
             PrimaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
             PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
