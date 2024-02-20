@@ -97,6 +97,7 @@ class NoteViewHolder(
                 )
             }
         }
+        binding.action.contentDescription = binding.root.context.getString(R.string.share_action)
     }
 
     private fun bindLikePostAction(note: Note) {
@@ -136,6 +137,8 @@ class NoteViewHolder(
         val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
         else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
         ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
+        binding.action.contentDescription =
+            binding.root.context.getString(if (liked) R.string.mnu_comment_liked else R.string.reader_label_like)
     }
 
     @StringRes
