@@ -131,7 +131,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManagerWrapper(activity)
+            notificationsList.layoutManager = LinearLayoutManagerWrapper(view.context)
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
