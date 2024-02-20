@@ -5,7 +5,6 @@ import org.assertj.core.api.Assertions
 import org.junit.Test
 
 class RemoteFeatureConfigCheckBuilderTest {
-
     @Test
     fun `given feature classes, when building config check, then generate the correct checks`() {
         // given

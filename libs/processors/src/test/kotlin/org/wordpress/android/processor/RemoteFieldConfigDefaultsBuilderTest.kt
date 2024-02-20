@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class RemoteFieldConfigDefaultsBuilderTest {
-
     @Test
     fun `given a list of remote fields, when building the object, then generate list of remote fields`() {
         // given
