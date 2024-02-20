@@ -85,24 +85,17 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (savedInstanceState != null) {
-            binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, All.ordinal))
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding = NotificationsListFragmentBinding.bind(view).apply {
+            setSelectedTab(savedInstanceState?.getInt(KEY_LAST_TAB_POSITION, All.ordinal) ?: All.ordinal)
             toolbarMain.setTitle(R.string.notifications_screen_title)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
             tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: Tab) {
-                    val tabPosition = TabPosition.values().getOrNull(tab.position) ?: All
+                    val tabPosition = TabPosition.entries.getOrNull(tab.position) ?: All
                     AnalyticsTracker.track(
                         NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
                             NOTIFICATIONS_SELECTED_FILTER to tabPosition.filter.toString()
@@ -116,7 +109,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             })
             viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = TabPosition.values().getOrNull(position)?.let { getString(it.titleRes) } ?: ""
+                tab.text = TabPosition.entries.getOrNull(position)?.let { getString(it.titleRes) } ?: ""
             }.attach()
             viewPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
@@ -250,13 +243,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     }
 
     private class NotificationsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-        override fun getItemCount(): Int {
-            return TabPosition.values().size
-        }
+        override fun getItemCount(): Int = TabPosition.entries.size
 
-        override fun createFragment(position: Int): Fragment {
-            return NotificationsListFragmentPage.newInstance(position)
-        }
+        override fun createFragment(position: Int): Fragment = NotificationsListFragmentPage.newInstance(position)
     }
 
     @Suppress("OVERRIDE_DEPRECATION")

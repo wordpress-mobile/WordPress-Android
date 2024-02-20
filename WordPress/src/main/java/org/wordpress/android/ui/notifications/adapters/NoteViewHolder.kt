@@ -60,15 +60,13 @@ class NoteViewHolder(
         }
 
         // handle the margin top for the header
-        val headerMarginTop: Int
-        val context = itemView.context
-        headerMarginTop = if (position == 0) {
-            context.resources
-                .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_0)
-        } else {
-            context.resources
-                .getDimensionPixelSize(R.dimen.notifications_header_margin_top_position_n)
-        }
+        val headerMarginTop = itemView.context.resources.getDimensionPixelSize(
+            if (position == 0) {
+                R.dimen.notifications_header_margin_top_position_0
+            } else {
+                R.dimen.notifications_header_margin_top_position_n
+            }
+        )
         val layoutParams = binding.headerText.layoutParams as ViewGroup.MarginLayoutParams
         layoutParams.topMargin = headerMarginTop
         binding.headerText.layoutParams = layoutParams

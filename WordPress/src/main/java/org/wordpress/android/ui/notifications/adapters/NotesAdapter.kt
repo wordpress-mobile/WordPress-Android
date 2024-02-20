@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.notifications.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -12,14 +11,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.NotificationsListItemBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
 import org.wordpress.android.util.extensions.indexOrNull
 
-class NotesAdapter(context: Context, private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>) :
+class NotesAdapter(private val inlineActionEvents: MutableSharedFlow<InlineActionEvent>) :
     RecyclerView.Adapter<NoteViewHolder>() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private var reloadLocalNotesJob: Job? = null
@@ -31,8 +29,6 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
         private set
 
     init {
-        (context.applicationContext as WordPress).component().inject(this)
-
         // this is on purpose - we don't show more than a hundred or so notifications at a time so no need to set
         // stable IDs. This helps prevent crashes in case a note comes with no ID (we've code checking for that
         // elsewhere, but telling the RecyclerView.Adapter the notes have stable Ids and then failing to provide them
@@ -79,13 +75,15 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
         val note = filteredNotes.getOrNull(position) ?: return
         val previousNote = filteredNotes.getOrNull(position - 1)
 
-        noteViewHolder.bindTimeGroupHeader(note, previousNote, position)
-        noteViewHolder.bindSubject(note)
-        noteViewHolder.bindSubjectNoticon(note)
-        noteViewHolder.bindContent(note)
-        noteViewHolder.bindAvatars(note)
-        noteViewHolder.bindInlineActions(note)
-        noteViewHolder.bindOthers(note, onNoteClicked)
+        with(noteViewHolder) {
+            bindTimeGroupHeader(note, previousNote, position)
+            bindSubject(note)
+            bindSubjectNoticon(note)
+            bindContent(note)
+            bindAvatars(note)
+            bindInlineActions(note)
+            bindOthers(note, onNoteClicked)
+        }
 
         // request to load more comments when we near the end
         if (position >= itemCount - 1) {
