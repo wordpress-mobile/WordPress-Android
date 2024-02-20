@@ -2,8 +2,6 @@ package org.wordpress.android.ui.notifications.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,21 +42,14 @@ class NotesAdapter(private val inlineActionEvents: MutableSharedFlow<InlineActio
      * Add notes to the adapter and notify the change
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
+        val currentSize: Int = filteredNotes.size
+        val newNotes = buildFilteredNotesList(notes, currentFilter)
+        filteredNotes.clear()
+        filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
-            val newNotes = buildFilteredNotesList(notes, currentFilter)
-            val differ = AsyncListDiffer(this@NotesAdapter, object : ItemCallback<Note>() {
-                override fun areItemsTheSame(oldItem: Note, newItem: Note): Boolean =
-                    oldItem.id == newItem.id
-
-                override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean =
-                    oldItem.json.toString() == newItem.json.toString()
-            })
-
-            filteredNotes.clear()
-            filteredNotes.addAll(newNotes)
-
-            differ.submitList(newNotes)
-            onNotesLoaded(itemCount)
+            notifyItemRangeRemoved(0, currentSize)
+            notifyItemRangeInserted(0, newNotes.size)
+            onNotesLoaded(newNotes.size)
         }
     }
 

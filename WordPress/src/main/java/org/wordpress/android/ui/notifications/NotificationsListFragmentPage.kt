@@ -558,8 +558,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     }
 
     /**
-     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that causes IndexOutOfBoundsException
-     * @see [link](https://stackoverflow.com/questions/31759171/recyclerview-and-java-lang-indexoutofboundsexception-inconsistency-detected-in)
+     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that blocks the UI thread
+     * when we perform the first click on the inline actions in the notifications list.
      */
     internal class LinearLayoutManagerWrapper : LinearLayoutManager {
         constructor(context: Context) : super(context)
