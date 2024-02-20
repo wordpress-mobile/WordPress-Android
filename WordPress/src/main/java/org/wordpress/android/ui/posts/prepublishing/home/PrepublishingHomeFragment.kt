@@ -4,9 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
@@ -131,8 +137,16 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         publishingViewModel =
             ViewModelProvider(requireActivity(), viewModelFactory)[PublishingViewModel::class.java]
 
-        publishingViewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            uiState?.let { viewModel.updatePublishingState(it) }
+//        publishingViewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+//            uiState?.let { viewModel.updatePublishingState(it) }
+//        }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                publishingViewModel.uiStateFlow.onEach { uiState ->
+                    uiState.let { viewModel.updatePublishingState(it) }
+                }.collect()
+            }
         }
     }
 

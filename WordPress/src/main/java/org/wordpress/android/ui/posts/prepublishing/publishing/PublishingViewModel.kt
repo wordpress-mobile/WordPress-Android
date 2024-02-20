@@ -7,7 +7,9 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -155,28 +157,34 @@ class PublishingViewModel @Inject constructor(
     fun onMediaUploadInProgress(localMediaId: String, progress: Float) {
         if (progress == 100f) {
             listOfMediaInProgress.remove(localMediaId)
-            return _uiState.postValue(
-                PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-            )
+
+            return emitPublishingEvent(PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
+//            return _uiState.postValue(
+//                PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+//            )
         }
         if (!listOfMediaInProgress.contains(localMediaId)) {
             listOfMediaInProgress.add(localMediaId)
         }
-        _uiState.postValue(
-            PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-        )
+//        _uiState.postValue(
+//            PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+//        )
+        emitPublishingEvent(PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
     }
 
     fun onMediaUploadedSuccessfully(media: MediaModel) {
         if (listOfMediaInProgress.contains(media.id.toString())) {
             listOfMediaInProgress.remove(media.id.toString())
             if (listOfMediaInProgress.isEmpty()) {
-                _uiState.postValue(
-                    PublishingEvent.ReadyToUpload
-                )
-            } else _uiState.postValue(
-                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-                )
+                emitPublishingEvent(PublishingEvent.ReadyToUpload)
+//                _uiState.postValue(
+//                    PublishingEvent.ReadyToUpload
+//                )
+            } else emitPublishingEvent(
+                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
+                //                _uiState.postValue(
+//                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+//                )
         }
     }
 
@@ -184,47 +192,68 @@ class PublishingViewModel @Inject constructor(
         if (listOfMediaInProgress.contains(media.id.toString())) {
             listOfMediaInProgress.remove(media.id.toString())
             if (listOfMediaInProgress.isEmpty()) {
-                _uiState.postValue(
-                    PublishingEvent.ReadyToUpload
-                )
-            } else _uiState.postValue(
-                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-                )
+//                _uiState.postValue(
+//                    PublishingEvent.ReadyToUpload
+//                )
+                emitPublishingEvent(PublishingEvent.ReadyToUpload)
+            } else emitPublishingEvent(
+                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
+//                _uiState.postValue(
+//                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+//                )
         }
     }
 
     fun onMediaRemoved() {
-
+        // todo:
     }
 
     fun onPostUploadInProgress(post: PostImmutableModel) {
         Log.e("PublishingViewModel", "onPostUploadInProgress")
-        _uiState.postValue(
+        emitPublishingEvent(
             PublishingEvent.PostUploadInProgress(post)
         )
+//        _uiState.postValue(
+//            PublishingEvent.PostUploadInProgress(post)
+//        )
     }
 
     fun onPostUploadSuccess(post: PostModel) {
         Log.e("PublishingViewModel", "onPostUploadSuccess")
-        _uiState.postValue(
-            PublishingEvent.PostUploadSuccess(post)
-        )
+        emitPublishingEvent(
+            PublishingEvent.PostUploadSuccess(post))
+//        _uiState.postValue(
+//            PublishingEvent.PostUploadSuccess(post)
+//        )
     }
 
     fun onPostPublishingStarted() {
         Log.e("PublishingViewModel", "onPostPublishingStarted")
-        _uiState.postValue(
+        emitPublishingEvent(
             PublishingEvent.PostUploadStarted(PostModel())
         )
+//        _uiState.postValue(
+//            PublishingEvent.PostUploadStarted(PostModel())
+//        )
     }
 
     fun onPostUploadError() {
         Log.e("PublishingViewModel", "onPostUploadError")
-        _uiState.postValue(
+        emitPublishingEvent(
             PublishingEvent.PostUploadError(PostModel())
         )
+//        _uiState.postValue(
+//            PublishingEvent.PostUploadError(PostModel())
+//        )
     }
 
+    private fun emitPublishingEvent(event: PublishingEvent) {
+        launch {
+            withContext(Dispatchers.Main) {
+                _uiStateFlow.emit(event)
+            }
+        }
+    }
 }
 
 sealed class PublishingEvent {
