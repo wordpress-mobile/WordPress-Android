@@ -10,8 +10,8 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
-import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
@@ -55,7 +55,7 @@ class StatsDetailViewModel
     ) {
         analyticsTrackerWrapper.trackStatsAccessed(
             statsSiteProvider.siteModel,
-            StatsActivity.StatsLaunchedFrom.POSTS.value
+            StatsLaunchedFrom.POSTS.value
         )
 
         statsPostProvider.init(postId, postType, postTitle, postUrl)
