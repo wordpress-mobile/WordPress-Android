@@ -51,6 +51,13 @@ public class ReaderEvents {
     }
 
     public static class FollowedBlogsChanged {
+        private final int mTotalSubscriptions;
+        public int getTotalSubscriptions() {
+            return mTotalSubscriptions;
+        }
+        public FollowedBlogsChanged(int totalSubscriptions) {
+            mTotalSubscriptions = totalSubscriptions;
+        }
     }
 
     public static class InterestTagsFetchEnded {

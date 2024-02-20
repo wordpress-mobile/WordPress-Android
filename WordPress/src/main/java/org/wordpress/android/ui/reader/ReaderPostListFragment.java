@@ -967,9 +967,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             refreshPosts();
         }
 
-        ReaderBlogTable.getFollowedBlogs();
-        ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
-        AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
+        ReaderTracker.trackFollowedSitesCount(event.getTotalSubscriptions());
     }
 
     @Override
