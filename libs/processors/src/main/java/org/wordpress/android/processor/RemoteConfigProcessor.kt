@@ -4,6 +4,7 @@
 package org.wordpress.android.processor
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.containingFile
 import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Resolver
@@ -65,40 +66,45 @@ class RemoteConfigProcessor(
             .writeTo(
                 codeGenerator,
                 aggregating = true,
+                originatingKSFiles = remoteFeatures.map { it.containingFile!! }
             )
     }
 
     private fun generateRemoteFieldsConfigDefaults(resolver: Resolver) {
-        val remoteFieldDefaults =
+        val remoteFields =
             resolver.getSymbolsWithAnnotation("org.wordpress.android.annotation.RemoteFieldDefaultGenerater")
                 .toList()
-                .associate { element: KSAnnotated ->
-                    element.getAnnotationsByType(RemoteFieldDefaultGenerater::class)
-                        .toList()
-                        .first()
-                        .let { annotation ->
-                            annotation.remoteField to annotation.defaultValue
-                        }
-                }
+        val remoteFieldDefaults = remoteFields
+            .associate { element: KSAnnotated ->
+                element.getAnnotationsByType(RemoteFieldDefaultGenerater::class)
+                    .toList()
+                    .first()
+                    .let { annotation ->
+                        annotation.remoteField to annotation.defaultValue
+                    }
+            }
 
         RemoteFieldConfigDefaultsBuilder(remoteFieldDefaults).getContent()
             .writeTo(
                 codeGenerator,
                 aggregating = true,
+                originatingKSFiles = remoteFields.map { it.containingFile!! }
             )
     }
 
     private fun generateFeaturesInDevelopment(resolver: Resolver) {
-        val featuresInDevelopmentDefaults =
+        val featuresInDevelopment =
             resolver.getSymbolsWithAnnotation("org.wordpress.android.annotation.FeatureInDevelopment")
                 .filterIsInstance<KSClassDeclaration>()
                 .toList()
-                .map { it.simpleName.asString() }
+        val featuresInDevelopmentDefaults = featuresInDevelopment
+            .map { it.simpleName.asString() }
 
         FeaturesInDevelopmentDefaultsBuilder(featuresInDevelopmentDefaults).getContent()
             .writeTo(
                 codeGenerator,
                 aggregating = true,
+                originatingKSFiles = featuresInDevelopment.map { it.containingFile!! }
             )
     }
 
@@ -108,6 +114,7 @@ class RemoteConfigProcessor(
         ).getContent().writeTo(
             codeGenerator,
             aggregating = true,
+            originatingKSFiles = remoteFeatures.map { it.containingFile!! }
         )
     }
 }
