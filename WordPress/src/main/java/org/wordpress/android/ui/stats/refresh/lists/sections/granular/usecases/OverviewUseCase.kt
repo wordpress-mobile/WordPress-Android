@@ -14,23 +14,18 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewUseCase.UiState
-import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewMapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
@@ -52,10 +47,7 @@ class OverviewUseCase constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val resourceProvider: ResourceProvider,
-    private val statsUtils: StatsUtils,
-    private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig,
-    private val trafficOverviewMapper: TrafficOverviewMapper
+    private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
     OVERVIEW,
     mainDispatcher,
@@ -63,27 +55,6 @@ class OverviewUseCase constructor(
     UiState(),
     uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity))
 ) {
-    // The granularity of the chart is one level lower than the current one, probably there's a better way to do this
-    private val trafficTabGranularity = when (statsGranularity) {
-        StatsGranularity.WEEKS -> StatsGranularity.DAYS
-        StatsGranularity.MONTHS -> StatsGranularity.WEEKS
-        StatsGranularity.YEARS -> StatsGranularity.MONTHS
-        else -> statsGranularity
-    }
-
-    private val granularityByConfig = if (trafficTabFeatureConfig.isEnabled()) {
-        trafficTabGranularity
-    } else {
-        statsGranularity
-    }
-
-    private val itemsToLoad = when (statsGranularity) {
-        StatsGranularity.WEEKS -> 7
-        StatsGranularity.MONTHS -> 5
-        StatsGranularity.YEARS -> 12
-        else -> OVERVIEW_ITEMS_TO_LOAD
-    }
-
     override fun buildLoadingItem(): List<BlockListItem> =
         listOf(
             ValueItem(
@@ -99,11 +70,11 @@ class OverviewUseCase constructor(
         statsWidgetUpdaters.updateWeekViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
             statsSiteProvider.siteModel,
-            granularityByConfig,
-            if (trafficTabFeatureConfig.isEnabled()) LimitMode.Top(itemsToLoad) else LimitMode.All
+            statsGranularity,
+            LimitMode.All
         )
         if (cachedData != null) {
-            logIfIncorrectData(cachedData, granularityByConfig, statsSiteProvider.siteModel, false)
+            logIfIncorrectData(cachedData, statsGranularity, statsSiteProvider.siteModel, false)
             selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
         }
         return cachedData
@@ -112,8 +83,8 @@ class OverviewUseCase constructor(
     override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
         val response = visitsAndViewsStore.fetchVisits(
             statsSiteProvider.siteModel,
-            granularityByConfig,
-            LimitMode.Top(if (trafficTabFeatureConfig.isEnabled()) itemsToLoad else OVERVIEW_ITEMS_TO_LOAD),
+            statsGranularity,
+            LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
             forced
         )
         val model = response.model
@@ -125,7 +96,7 @@ class OverviewUseCase constructor(
                 State.Error(error.message ?: error.type.name)
             }
             model != null && model.dates.isNotEmpty() -> {
-                logIfIncorrectData(model, granularityByConfig, statsSiteProvider.siteModel, true)
+                logIfIncorrectData(model, statsGranularity, statsSiteProvider.siteModel, true)
                 selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Data(model)
             }
@@ -172,120 +143,6 @@ class OverviewUseCase constructor(
         domainModel: VisitsAndViewsModel,
         uiState: UiState
     ): List<BlockListItem> {
-        return if (trafficTabFeatureConfig.isEnabled()) {
-            buildTrafficOverview(domainModel, uiState)
-        } else {
-            buildGranularOverview(domainModel, uiState)
-        }
-    }
-
-    private fun buildTrafficOverview(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
-        val items = mutableListOf<BlockListItem>()
-        if (domainModel.dates.isNotEmpty()) {
-            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
-            val availableDates = domainModel.dates.map {
-                statsDateFormatter.parseStatsDate(
-                    trafficTabGranularity,
-                    it.period
-                )
-            }
-            val selectedDate = dateFromProvider ?: availableDates.last()
-            val index = availableDates.indexOf(selectedDate)
-
-            selectedDateProvider.selectDate(
-                selectedDate,
-                availableDates.takeLast(visibleBarCount),
-                statsGranularity
-            )
-            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
-
-            if (statsGranularity == StatsGranularity.DAYS) {
-                buildTodayCard(selectedItem,items)
-            } else {
-                buildGranularChart(domainModel, uiState, items, selectedItem, previousItem)
-            }
-        } else {
-            selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
-        }
-        return items
-    }
-
-    private fun buildTodayCard(
-        selectedItem: VisitsAndViewsModel.PeriodData?,
-        items: MutableList<BlockListItem>
-    ) {
-        val views = selectedItem?.views ?: 0
-        val visitors = selectedItem?.visitors ?: 0
-        val likes = selectedItem?.likes ?: 0
-        val comments = selectedItem?.comments ?: 0
-
-        items.add(BlockListItem.Title(R.string.stats_timeframe_today))
-        items.add(
-            QuickScanItem(
-                Column(
-                    R.string.stats_views,
-                    statsUtils.toFormattedString(views)
-                ),
-                Column(
-                    R.string.stats_visitors,
-                    statsUtils.toFormattedString(visitors)
-                )
-            )
-        )
-
-        items.add(
-            QuickScanItem(
-                Column(
-                    R.string.stats_likes,
-                    statsUtils.toFormattedString(likes)
-                ),
-                Column(
-                    R.string.stats_comments,
-                    statsUtils.toFormattedString(comments)
-                )
-            )
-        )
-    }
-
-    private fun buildGranularChart(
-        domainModel: VisitsAndViewsModel,
-        uiState: UiState,
-        items: MutableList<BlockListItem>,
-        selectedItem: VisitsAndViewsModel.PeriodData,
-        previousItem: VisitsAndViewsModel.PeriodData?
-    ) {
-        items.add(
-            trafficOverviewMapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                isLast = selectedItem == domainModel.dates.last(),
-                statsGranularity = trafficTabGranularity
-            )
-        )
-        items.addAll(
-            trafficOverviewMapper.buildChart(
-                domainModel.dates,
-                trafficTabGranularity,
-                this::onBarSelected,
-                this::onBarChartDrawn,
-                uiState.selectedPosition,
-                selectedItem.period
-            )
-        )
-        items.add(
-            trafficOverviewMapper.buildColumns(
-                selectedItem,
-                this::onColumnSelected,
-                uiState.selectedPosition
-            )
-        )
-    }
-
-    private fun buildGranularOverview(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
@@ -379,10 +236,7 @@ class OverviewUseCase constructor(
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
         private val localeManagerWrapper: LocaleManagerWrapper,
-        private val resourceProvider: ResourceProvider,
-        private val statsUtils: StatsUtils,
-        private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig,
-        private val trafficOverviewMapper: TrafficOverviewMapper
+        private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
             OverviewUseCase(
@@ -397,10 +251,7 @@ class OverviewUseCase constructor(
                 analyticsTracker,
                 statsWidgetUpdaters,
                 localeManagerWrapper,
-                resourceProvider,
-                statsUtils,
-                trafficTabFeatureConfig,
-                trafficOverviewMapper
+                resourceProvider
             )
     }
 }
