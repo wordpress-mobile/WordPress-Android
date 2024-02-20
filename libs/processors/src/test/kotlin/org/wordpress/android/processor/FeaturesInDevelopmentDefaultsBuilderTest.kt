@@ -23,8 +23,8 @@ class FeaturesInDevelopmentDefaultsBuilderTest {
             import kotlin.String
             import kotlin.collections.List
 
-            object FeaturesInDevelopment {
-                val featuresInDevelopment: List<String> = listOf(
+            public object FeaturesInDevelopment {
+                public val featuresInDevelopment: List<String> = listOf(
                         "$featureA",
                         "$featureB"
                         )
@@ -51,8 +51,8 @@ class FeaturesInDevelopmentDefaultsBuilderTest {
                 import kotlin.String
                 import kotlin.collections.List
 
-                object FeaturesInDevelopment {
-                    val featuresInDevelopment: List<String> = listOf(
+                public object FeaturesInDevelopment {
+                    public val featuresInDevelopment: List<String> = listOf(
                             )
                 }
 

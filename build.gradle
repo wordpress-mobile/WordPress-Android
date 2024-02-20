@@ -85,7 +85,7 @@ ext {
     kotlinxCoroutinesVersion = '1.7.3'
     lottieVersion = '6.1.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
-    squareupKotlinPoetVersion = '1.6.0'
+    squareupKotlinPoetVersion = '1.16.0'
     squareupOkioVersion = '3.6.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.8'

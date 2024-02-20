@@ -28,14 +28,14 @@ class RemoteFeatureConfigCheckBuilderTest {
             import org.wordpress.$classA
             import org.wordpress.$classB
 
-            class RemoteFeatureConfigCheck(
-                val appConfig: AppConfig
+            public class RemoteFeatureConfigCheck(
+                public val appConfig: AppConfig,
             ) {
-                val $classA: $classA = $classA(appConfig)
+                public val $classA: $classA = $classA(appConfig)
 
-                val $classB: $classB = $classB(appConfig)
+                public val $classB: $classB = $classB(appConfig)
 
-                fun checkRemoteFields() {
+                public fun checkRemoteFields() {
                     if ($classA.remoteField == null) {
                         throw IllegalArgumentException(""${'"'}org.wordpress.$classA needs to define
                             remoteField""${'"'})

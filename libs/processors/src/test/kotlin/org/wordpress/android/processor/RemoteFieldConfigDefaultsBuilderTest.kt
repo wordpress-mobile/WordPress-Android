@@ -26,8 +26,8 @@ class RemoteFieldConfigDefaultsBuilderTest {
             import kotlin.String
             import kotlin.collections.Map
 
-            object RemoteFieldConfigDefaults {
-                val remoteFieldConfigDefaults: Map<String, Any> = mapOf(
+            public object RemoteFieldConfigDefaults {
+                public val remoteFieldConfigDefaults: Map<String, Any> = mapOf(
                         "$keyA" to "$valueA",
                         "$keyB" to "$valueB"
                         )
@@ -55,8 +55,8 @@ class RemoteFieldConfigDefaultsBuilderTest {
                 import kotlin.String
                 import kotlin.collections.Map
 
-                object RemoteFieldConfigDefaults {
-                    val remoteFieldConfigDefaults: Map<String, Any> = mapOf(
+                public object RemoteFieldConfigDefaults {
+                    public val remoteFieldConfigDefaults: Map<String, Any> = mapOf(
                             )
                 }
 
