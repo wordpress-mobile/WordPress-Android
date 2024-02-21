@@ -54,6 +54,41 @@ class RemoteConfigProcessorTest {
         ).containsEntry("remoteField", "default")
     }
 
+    @Test
+    fun `given class with feature and class with experiment annotation, when compiling, generate expected config defaults class`() {
+        // given
+        val experiment = SourceFile.kotlin(
+            "Experiment.kt", """
+        import org.wordpress.android.annotation.Experiment
+        import org.wordpress.android.util.config.AppConfig
+
+        @Experiment("experimentFeature", "defaultVariant")
+        class Experiment
+        """
+        )
+
+        // when
+        val result = compile(listOf(featureA, experiment))
+
+        // then
+        assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
+        val remoteFieldConfigDefaultsClass =
+            result.classLoader.loadClass("org.wordpress.android.util.config.RemoteFeatureConfigDefaults")
+        val remoteFieldConfigDefaultsObject = remoteFieldConfigDefaultsClass.kotlin.objectInstance
+
+        assertThat(
+            remoteFieldConfigDefaultsClass.getDeclaredField("remoteFeatureConfigDefaults")
+                .apply { isAccessible = true }
+                .get(remoteFieldConfigDefaultsObject)
+                .cast<Map<String, Any>>()
+        ).containsExactlyInAnyOrderEntriesOf(
+            mapOf(
+                "experimentFeature" to "defaultVariant",
+                "remoteField" to "false"
+            )
+        )
+    }
+
     private fun compile(src: List<SourceFile>) = KotlinCompilation().apply {
         sources = src + fakeAppConfig
         annotationProcessors = listOf(RemoteConfigProcessor())
