@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.Test
 
 class RemoteConfigProcessorTest {
-
     @Test
     fun `given a class with features annotation, when compiling, generate expected configuration check`() {
         // when
@@ -55,7 +54,7 @@ class RemoteConfigProcessorTest {
     }
 
     @Test
-    fun `given class with feature and class with experiment annotation, when compiling, generate expected config defaults class`() {
+    fun `given class with feature and experiment annotation, when compiling, generate config defaults class`() {
         // given
         val experiment = SourceFile.kotlin(
             "Experiment.kt", """
@@ -149,5 +148,4 @@ class RemoteConfigProcessorTest {
         class FeatureA(appConfig: AppConfig, val remoteField: String ="foo")
         """
     )
-
 }
