@@ -62,12 +62,14 @@ class RemoteConfigProcessor(
             }.flatMap { it.toList() }
             .toMap()
 
-        RemoteFeatureConfigDefaultsBuilder(defaults).getContent()
-            .writeTo(
-                codeGenerator,
-                aggregating = true,
-                originatingKSFiles = remoteFeatures.map { it.containingFile!! }
-            )
+        if (defaults.isNotEmpty()) {
+            RemoteFeatureConfigDefaultsBuilder(defaults).getContent()
+                .writeTo(
+                    codeGenerator,
+                    aggregating = true,
+                    originatingKSFiles = remoteFeatures.map { it.containingFile!! }
+                )
+        }
     }
 
     private fun generateRemoteFieldsConfigDefaults(resolver: Resolver) {
@@ -84,12 +86,14 @@ class RemoteConfigProcessor(
                     }
             }
 
-        RemoteFieldConfigDefaultsBuilder(remoteFieldDefaults).getContent()
-            .writeTo(
-                codeGenerator,
-                aggregating = true,
-                originatingKSFiles = remoteFields.map { it.containingFile!! }
-            )
+        if(remoteFieldDefaults.isNotEmpty()) {
+            RemoteFieldConfigDefaultsBuilder(remoteFieldDefaults).getContent()
+                .writeTo(
+                    codeGenerator,
+                    aggregating = true,
+                    originatingKSFiles = remoteFields.map { it.containingFile!! }
+                )
+        }
     }
 
     private fun generateFeaturesInDevelopment(resolver: Resolver) {
@@ -100,21 +104,25 @@ class RemoteConfigProcessor(
         val featuresInDevelopmentDefaults = featuresInDevelopment
             .map { it.simpleName.asString() }
 
-        FeaturesInDevelopmentDefaultsBuilder(featuresInDevelopmentDefaults).getContent()
-            .writeTo(
-                codeGenerator,
-                aggregating = true,
-                originatingKSFiles = featuresInDevelopment.map { it.containingFile!! }
-            )
+        if(featuresInDevelopmentDefaults.isNotEmpty()) {
+            FeaturesInDevelopmentDefaultsBuilder(featuresInDevelopmentDefaults).getContent()
+                .writeTo(
+                    codeGenerator,
+                    aggregating = true,
+                    originatingKSFiles = featuresInDevelopment.map { it.containingFile!! }
+                )
+        }
     }
 
     private fun generateRemoteFeatureConfigCheck(remoteFeatures: List<KSAnnotated>) {
-        RemoteFeatureConfigCheckBuilder(
-            remoteFeatures.filterIsInstance<KSClassDeclaration>().map { it.asType(emptyList()).toTypeName() }
-        ).getContent().writeTo(
-            codeGenerator,
-            aggregating = true,
-            originatingKSFiles = remoteFeatures.map { it.containingFile!! }
-        )
+        if(remoteFeatures.isNotEmpty()) {
+            RemoteFeatureConfigCheckBuilder(
+                remoteFeatures.filterIsInstance<KSClassDeclaration>().map { it.asType(emptyList()).toTypeName() }
+            ).getContent().writeTo(
+                codeGenerator,
+                aggregating = true,
+                originatingKSFiles = remoteFeatures.map { it.containingFile!! }
+            )
+        }
     }
 }
