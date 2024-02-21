@@ -3,6 +3,7 @@
 24.3
 -----
 * [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
+* [**] Block editor: Introduce VideoPress v5 support, to fix issues using video block with dotcom and Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6634]
 
 24.2
 -----
