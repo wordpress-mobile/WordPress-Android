@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +24,6 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
-import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_ONLINE
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.Failed
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields
@@ -77,9 +77,14 @@ class StorePostViewModel
         isFirstTimePublish: Boolean,
         context: Context,
         editPostRepository: EditPostRepository,
-        site: SiteModel
+        site: SiteModel,
     ): ActivityFinishState {
-        savePostToDbUseCase.savePostToDb(editPostRepository, site)
+        Log.e("StorePostViewModel", "savePostOnline: is called $isFirstTimePublish")
+        // todo: @annmarie, ajesh
+        // in my analysis this is only called when the user pressess update/publish post and not when the user
+        // pressess back
+        // this might be a good place to check if the user is offline and show a snackbar and not save
+        // the post to db if its an already published post
         return if (networkUtils.isNetworkAvailable()) {
             postUtils.trackSavePostAnalytics(
                 editPostRepository.getPost(),
@@ -89,9 +94,10 @@ class StorePostViewModel
                 context, editPostRepository.id, isFirstTimePublish,
                 "StorePostViewModel#savePostOnline"
             )
+            savePostToDbUseCase.savePostToDb(editPostRepository, site)
             SAVED_ONLINE
-        } else {
-            SAVED_LOCALLY
+        } else  {
+            ActivityFinishState.NETWORK_ERROR
         }
     }
 
@@ -213,6 +219,6 @@ class StorePostViewModel
     }
 
     enum class ActivityFinishState {
-        SAVED_ONLINE, SAVED_LOCALLY, CANCELLED
+        SAVED_ONLINE, SAVED_LOCALLY, CANCELLED, NETWORK_ERROR
     }
 }
