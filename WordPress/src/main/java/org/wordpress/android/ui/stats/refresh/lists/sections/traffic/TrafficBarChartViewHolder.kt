@@ -117,7 +117,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             this.description = description
 
             extraRightOffset = 8f
-            extraBottomOffset = 8f
 
             animateY(1000, Easing.EaseInSine)
         }
@@ -162,7 +161,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
 
             setDrawLabels(true)
-            setAvoidFirstLastClipping(true)
             position = XAxis.XAxisPosition.BOTTOM
             valueFormatter = BarChartLabelFormatter(item.entries)
             textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
