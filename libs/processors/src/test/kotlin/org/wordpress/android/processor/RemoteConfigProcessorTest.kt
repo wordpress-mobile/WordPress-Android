@@ -2,6 +2,8 @@ package org.wordpress.android.processor
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspWithCompilation
+import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.Test
@@ -124,7 +126,8 @@ class RemoteConfigProcessorTest {
 
     private fun compile(src: List<SourceFile>) = KotlinCompilation().apply {
         sources = src + fakeAppConfig
-        annotationProcessors = listOf(RemoteConfigProcessor())
+        symbolProcessorProviders = listOf(RemoteConfigProcessorProvider())
+        kspWithCompilation = true
         inheritClassPath = true
         messageOutputStream = System.out
     }.compile()
