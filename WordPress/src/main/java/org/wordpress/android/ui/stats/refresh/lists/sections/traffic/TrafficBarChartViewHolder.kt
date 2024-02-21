@@ -161,6 +161,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
 
             setDrawLabels(true)
+            labelCount = item.entries.size
             position = XAxis.XAxisPosition.BOTTOM
             valueFormatter = BarChartLabelFormatter(item.entries)
             textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
