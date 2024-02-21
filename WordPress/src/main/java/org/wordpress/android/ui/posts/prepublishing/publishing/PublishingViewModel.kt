@@ -147,16 +147,10 @@ class PublishingViewModel @Inject constructor(
             listOfMediaInProgress.remove(localMediaId)
 
             return emitPublishingEvent(PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
-//            return _uiState.postValue(
-//                PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-//            )
         }
         if (!listOfMediaInProgress.contains(localMediaId)) {
             listOfMediaInProgress.add(localMediaId)
         }
-//        _uiState.postValue(
-//            PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-//        )
         emitPublishingEvent(PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
     }
 
@@ -165,14 +159,9 @@ class PublishingViewModel @Inject constructor(
             listOfMediaInProgress.remove(media.id.toString())
             if (listOfMediaInProgress.isEmpty()) {
                 emitPublishingEvent(PublishingEvent.ReadyToUpload)
-//                _uiState.postValue(
-//                    PublishingEvent.ReadyToUpload
-//                )
             } else emitPublishingEvent(
-                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
-                //                _uiState.postValue(
-//                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-//                )
+                PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+            )
         }
     }
 
@@ -180,15 +169,10 @@ class PublishingViewModel @Inject constructor(
         if (listOfMediaInProgress.contains(media.id.toString())) {
             listOfMediaInProgress.remove(media.id.toString())
             if (listOfMediaInProgress.isEmpty()) {
-//                _uiState.postValue(
-//                    PublishingEvent.ReadyToUpload
-//                )
                 emitPublishingEvent(PublishingEvent.ReadyToUpload)
             } else emitPublishingEvent(
-                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress))
-//                _uiState.postValue(
-//                    PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
-//                )
+                PublishingEvent.MediaUploadInProgress(listOfMediaInProgress)
+            )
         }
     }
 
@@ -201,18 +185,13 @@ class PublishingViewModel @Inject constructor(
         emitPublishingEvent(
             PublishingEvent.PostUploadInProgress(post)
         )
-//        _uiState.postValue(
-//            PublishingEvent.PostUploadInProgress(post)
-//        )
     }
 
     fun onPostUploadSuccess(post: PostModel) {
         Log.e("PublishingViewModel", "onPostUploadSuccess")
         emitPublishingEvent(
-            PublishingEvent.PostUploadSuccess(post))
-//        _uiState.postValue(
-//            PublishingEvent.PostUploadSuccess(post)
-//        )
+            PublishingEvent.PostUploadSuccess(post)
+        )
     }
 
     fun onPostPublishingStarted() {
@@ -220,9 +199,6 @@ class PublishingViewModel @Inject constructor(
         emitPublishingEvent(
             PublishingEvent.PostUploadStarted(PostModel())
         )
-//        _uiState.postValue(
-//            PublishingEvent.PostUploadStarted(PostModel())
-//        )
     }
 
     fun onPostUploadError() {
@@ -230,9 +206,6 @@ class PublishingViewModel @Inject constructor(
         emitPublishingEvent(
             PublishingEvent.PostUploadError(PostModel())
         )
-//        _uiState.postValue(
-//            PublishingEvent.PostUploadError(PostModel())
-//        )
     }
 
     private fun emitPublishingEvent(event: PublishingEvent) {
@@ -246,7 +219,7 @@ class PublishingViewModel @Inject constructor(
 
 sealed class PublishingEvent {
     data class PostUploadStarted(val post: PostModel) : PublishingEvent()
-    data class PostUploadError(val post: PostModel) : PublishingEvent()
+    data class PostUploadError(val post: PostImmutableModel) : PublishingEvent()
     data class PostUploadSuccess(val post: PostModel) : PublishingEvent()
     data class PostUploadInProgress(val post: PostImmutableModel) : PublishingEvent()
     data class MediaUploadInProgress(val listOfMedia: ArrayList<String>) : PublishingEvent()
