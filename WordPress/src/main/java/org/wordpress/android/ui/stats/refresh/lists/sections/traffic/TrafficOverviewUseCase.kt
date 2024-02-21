@@ -176,12 +176,11 @@ class TrafficOverviewUseCase constructor(
                 trafficTabGranularity
             )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
 
             if (statsGranularity == StatsGranularity.DAYS) {
                 buildTodayCard(selectedItem,items)
             } else {
-                buildGranularChart(domainModel, uiState, items, selectedItem, previousItem)
+                buildGranularChart(domainModel, uiState, items, selectedItem)
             }
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
@@ -231,18 +230,8 @@ class TrafficOverviewUseCase constructor(
         domainModel: VisitsAndViewsModel,
         uiState: UiState,
         items: MutableList<BlockListItem>,
-        selectedItem: VisitsAndViewsModel.PeriodData,
-        previousItem: VisitsAndViewsModel.PeriodData?
+        selectedItem: VisitsAndViewsModel.PeriodData
     ) {
-        items.add(
-            trafficOverviewMapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                isLast = selectedItem == domainModel.dates.last(),
-                statsGranularity = trafficTabGranularity
-            )
-        )
         items.addAll(
             trafficOverviewMapper.buildChart(
                 domainModel.dates,
