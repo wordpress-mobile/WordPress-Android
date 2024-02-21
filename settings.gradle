@@ -6,7 +6,7 @@ pluginManagement {
     gradle.ext.sentryVersion = '3.14.0'
     gradle.ext.daggerVersion = "2.50"
     gradle.ext.detektVersion = '1.23.0'
-    gradle.ext.violationCommentsVersion = '1.67'
+    gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '2.0.3'
     gradle.ext.koverVersion = '0.7.5'
 
