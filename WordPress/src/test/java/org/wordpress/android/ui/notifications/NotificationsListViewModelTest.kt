@@ -15,7 +15,9 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -160,6 +162,80 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note2, times(0)).setRead()
         verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note1), false)
         verify(eventBusWrapper, times(1)).post(any())
+    }
+
+    @Test
+    fun `WHEN liking a comment THEN set the remote like status and save it`() = test {
+        // Given
+        val siteId = 1L
+        val commentId = 3L
+        val note = mock<Note>()
+        val site = mock<SiteModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+        whenever(note.commentId).thenReturn(commentId)
+        whenever(commentStore.likeComment(site, commentId, null, true)).thenReturn(
+            CommentsStore.CommentsActionPayload(
+                CommentsStore.CommentsData.CommentsActionData(emptyList(), 0)
+            )
+        )
+
+        // When
+        viewModel.likeComment(note, true)
+
+        // Then
+        verify(note, times(1)).setLikedComment(true)
+        verify(commentStore, times(1)).likeComment(site, commentId, null, true)
+        verify(notificationsTableWrapper, times(1)).saveNote(note)
+    }
+
+    @Test
+    fun `WHEN unliking a comment THEN set the remote like status and save it`() = test {
+        // Given
+        val siteId = 1L
+        val commentId = 3L
+        val note = mock<Note>()
+        val site = mock<SiteModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+        whenever(note.commentId).thenReturn(commentId)
+        whenever(commentStore.likeComment(site, commentId, null, false)).thenReturn(
+            CommentsStore.CommentsActionPayload(
+                CommentsStore.CommentsData.CommentsActionData(emptyList(), 0)
+            )
+        )
+
+        // When
+        viewModel.likeComment(note, false)
+
+        // Then
+        verify(note, times(1)).setLikedComment(false)
+        verify(commentStore, times(1)).likeComment(site, commentId, null, false)
+        verify(notificationsTableWrapper, times(1)).saveNote(note)
+    }
+
+    @Test
+    fun `WHEN liking a comment and changing the remote status fails THEN do not save it`() = test {
+        // Given
+        val siteId = 1L
+        val commentId = 3L
+        val note = mock<Note>()
+        val site = mock<SiteModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(siteStore.getSiteBySiteId(siteId)).thenReturn(site)
+        whenever(note.commentId).thenReturn(commentId)
+        whenever(commentStore.likeComment(site, commentId, null, true)).thenReturn(
+            CommentsStore.CommentsActionPayload(
+                CommentStore.CommentError(CommentStore.CommentErrorType.GENERIC_ERROR,"error"), null)
+        )
+
+        // When
+        viewModel.likeComment(note, true)
+
+        // Then
+        verify(note, times(1)).setLikedComment(true)
+        verify(commentStore, times(1)).likeComment(site, commentId, null, true)
+        verify(notificationsTableWrapper, times(0)).saveNote(note)
     }
 
     @Test
