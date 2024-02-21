@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications
 
+import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -96,6 +97,69 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             eventBusWrapper,
             accountStore,
         )
+    }
+
+    @Test
+    fun `WHEN marking a note as read THEN the note is marked as read and the notification removed from system bar`() {
+        // Given
+        val noteId = "1"
+        val context: Context = mock()
+        val note = mock<Note>()
+        whenever(note.id).thenReturn(noteId)
+        whenever(note.isUnread).thenReturn(true)
+
+        // When
+        viewModel.markNoteAsRead(context, listOf(note))
+
+        // Then
+        verify(gcmMessageHandler, times(1)).removeNotificationWithNoteIdFromSystemBar(context, noteId)
+        verify(notificationsActionsWrapper, times(1)).markNoteAsRead(note)
+        verify(note, times(1)).setRead()
+        verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note), false)
+        verify(eventBusWrapper, times(1)).post(any())
+    }
+
+    @Test
+    fun `WHEN marking a note as read THEN the read note is saved`() {
+        // Given
+        val noteId = "1"
+        val context: Context = mock()
+        val note = mock<Note>()
+        whenever(note.id).thenReturn(noteId)
+        whenever(note.isUnread).thenReturn(true)
+
+        // When
+        viewModel.markNoteAsRead(context, listOf(note))
+
+        // Then
+        verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note), false)
+        verify(eventBusWrapper, times(1)).post(any())
+    }
+
+    @Test
+    fun `WHEN marking all as read THEN only the unread notes are marked as read and saved`() {
+        // Given
+        val noteId1 = "1"
+        val noteId2 = "2"
+        val context: Context = mock()
+        val note1 = mock<Note>()
+        val note2 = mock<Note>()
+        whenever(note1.id).thenReturn(noteId1)
+        whenever(note1.isUnread).thenReturn(true)
+        whenever(note2.isUnread).thenReturn(false)
+
+        // When
+        viewModel.markNoteAsRead(context, listOf(note1, note2))
+
+        // Then
+        verify(gcmMessageHandler, times(1)).removeNotificationWithNoteIdFromSystemBar(context, noteId1)
+        verify(notificationsActionsWrapper, times(1)).markNoteAsRead(note1)
+        verify(note1, times(1)).setRead()
+        verify(gcmMessageHandler, times(0)).removeNotificationWithNoteIdFromSystemBar(context, noteId2)
+        verify(notificationsActionsWrapper, times(0)).markNoteAsRead(note2)
+        verify(note2, times(0)).setRead()
+        verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note1), false)
+        verify(eventBusWrapper, times(1)).post(any())
     }
 
     @Test
