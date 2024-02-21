@@ -19,7 +19,7 @@
     <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/18185 -->
     <issue id="MissingFirebaseInstanceTokenRefresh">
         <!-- GCM -->
-        <ignore path="**/generated/source/kapt/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
+        <ignore path="**/generated/ksp/**/org/wordpress/android/push/Hilt_GCMMessageService.java" />
     </issue>
     <issue id="GradleDependency" severity="ignore" /> <!-- Dependabot will take care of this -->
     <issue id="MissingNullAnnotationOnField">
@@ -63,7 +63,7 @@
         <ignore path="**/src/wordpress/res" /> <!-- drawable-hdpi, drawable-xxhdpi -->
     </issue>
     <issue id="ObsoleteSdkInt">
-        <ignore path="**/generated/source/kapt/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
+        <ignore path="**/generated/ksp/**/org/wordpress/android/ui/main/Hilt_WPMainNavigationView.java" />
     </issue>
     <!-- INTEROPERABILITY -->
     <issue id="UnknownNullness" severity="informational">
