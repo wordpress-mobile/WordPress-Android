@@ -1852,7 +1852,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    // todo we need to determine if is called to publish or update a post or
+    // to save a draft
+    // is this called when
     private ActivityFinishState savePostOnline(boolean isFirstTimePublish) {
+        Log.e("EditPostActivity", "save post online called + "
+                                  + "isFirstTimePublish: " + isFirstTimePublish);
         if (mEditorFragment instanceof GutenbergEditorFragment) {
             ((GutenbergEditorFragment) mEditorFragment).sendToJSPostSaveEvent();
         }
@@ -2272,9 +2277,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return true;
             }, (postModel, result) -> {
                 if (result == Updated.INSTANCE) {
-                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
+                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish, false);
                     Log.e("PostUpload", "uploadPost: " + activityFinishState);
-                    mPublishingViewModel.onPostUploadInProgress(postModel);
+                    if(activityFinishState == ActivityFinishState.NETWORK_ERROR) {
+                        mViewModel.hideSavingProgressDialog();
+                        mPublishingViewModel.onPostUploadError();
+                    }
+                    else mPublishingViewModel.onPostUploadInProgress(postModel);
 //                    mViewModel.finish(activityFinishState);
                 }
                 return null;
@@ -2295,8 +2304,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             // if post was modified during this editing session, save it
             boolean shouldSave = shouldSavePost() || forceSave;
 
-            Log.e("SavePost", "shouldSave: " + shouldSave + " is First time" +
-                              isFirstTimePublish + " " + forceSave);
+            Log.e("SavePost", "shouldSave: " + shouldSave + " is First time = " +
+                              isFirstTimePublish + " force save = " + forceSave);
 
             mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
             ActivityFinishState activityFinishState = ActivityFinishState.CANCELLED;
@@ -2307,7 +2316,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                  * it only when the user explicitly confirms the changes - eg. clicks on save/publish/submit. The
                  * user didn't confirm the changes in this code path.
                  */
-                boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || mEditPostRepository.isLocalDraft();
+
+                boolean isLocalDraft = mEditPostRepository.isLocalDraft();
+                boolean isWpComOrIsLocalDraft = mSite.isUsingWpComRestApi() || isLocalDraft;
                 if (isWpComOrIsLocalDraft) {
                     activityFinishState = savePostOnline(isFirstTimePublish);
                 } else if (forceSave) {
