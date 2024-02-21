@@ -3932,7 +3932,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void showVideoDurationLimitWarning(@NonNull String fileName) {
-        ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG);
+        ToastUtils.showToast(EditPostActivity.this,
+                R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG);
     }
 
     @Override
