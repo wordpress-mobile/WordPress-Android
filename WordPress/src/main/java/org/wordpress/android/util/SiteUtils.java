@@ -342,7 +342,8 @@ public class SiteUtils {
     }
 
     public static boolean supportsVideoPressV5Feature(SiteModel site, String minimalJetpackVersion) {
-        return site != null && site.isWPCom() || site.isWPComAtomic() || checkMinimalJetpackVersion(site, minimalJetpackVersion);
+        return site != null && site.isWPCom() || site.isWPComAtomic() || checkMinimalJetpackVersion(site,
+                minimalJetpackVersion);
     }
 
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
