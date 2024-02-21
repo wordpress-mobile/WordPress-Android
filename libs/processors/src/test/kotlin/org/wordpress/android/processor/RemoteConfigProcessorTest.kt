@@ -89,6 +89,40 @@ class RemoteConfigProcessorTest {
         )
     }
 
+    @Test
+    fun `given class with feature in development annotation, when compiling, generate expected list of classes`() {
+        // given
+        val experiment = SourceFile.kotlin(
+            "Experiment.kt", """
+        import org.wordpress.android.annotation.FeatureInDevelopment
+        import org.wordpress.android.util.config.AppConfig
+
+        @FeatureInDevelopment
+        class DevFeature
+        """
+        )
+
+        // when
+        val result = compile(
+            listOf(
+                experiment,
+                featureA, /* adding a feature, as without it, annotation processor won't start */
+            )
+        )
+
+        // then
+
+        val featuresInDevelopmentClass =
+            result.classLoader.loadClass("org.wordpress.android.util.config.FeaturesInDevelopment")
+        val featuresInDevelopmentObject = featuresInDevelopmentClass.kotlin.objectInstance
+        assertThat(
+            featuresInDevelopmentClass.getDeclaredField("featuresInDevelopment")
+                .apply { isAccessible = true }
+                .get(featuresInDevelopmentObject)
+                .cast<List<String>>()
+        ).containsOnly("DevFeature")
+    }
+
     private fun compile(src: List<SourceFile>) = KotlinCompilation().apply {
         sources = src + fakeAppConfig
         annotationProcessors = listOf(RemoteConfigProcessor())
