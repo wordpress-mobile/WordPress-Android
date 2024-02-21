@@ -641,11 +641,15 @@ tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTas
     commentOnlyChangedFiles = false
     minSeverity = SEVERITY.INFO
     commentTemplate = """
-### The PR caused the following dependency changes:
+<details><summary>The PR caused some dependency changes (expand to see details)</summary>
+<p>
 
 ```diff
 {{{violation.message}}}
 ```
+
+</p>
+</details>
 
 *Please review and act accordingly*
 """
