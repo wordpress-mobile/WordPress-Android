@@ -30,6 +30,9 @@
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
         <item name="wpColorLoginPrologueBg">?attr/colorSurface</item>
 
+        <item name="grColorInfoBanner">@color/gravatar_info_banner</item>
+        <item name="grColorSyncBanner">@color/gravatar_sync_info_banner</item>
+
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
         <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest_disabled</item>

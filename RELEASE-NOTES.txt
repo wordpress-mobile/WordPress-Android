@@ -1,7 +1,12 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.4
+-----
+
+
 24.3
 -----
+* [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
 * [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
 * [**] Block editor: Introduce VideoPress v5 support, to fix issues using video block with dotcom and Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6634]
 

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
@@ -214,7 +215,7 @@ class InsightsListViewModel
 class TrafficListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TRAFFIC_USE_CASE) private val trafficStatsUseCase: BaseListUseCase,
-    analyticsTracker: AnalyticsTrackerWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory,
     @Named(GRANULAR_USE_CASE_FACTORIES)
     private val useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
@@ -230,6 +231,11 @@ class TrafficListViewModel @Inject constructor(
 ) {
     fun onGranularitySelected(statsGranularity: StatsGranularity) {
         if (dateSelector?.statsGranularity != statsGranularity) {
+            analyticsTracker.trackWithGranularity(
+                Stat.STATS_PERIOD_ACCESSED,
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+
             // Remove observers from the UI before changing the statsUseCase. This prevents removed use cases from
             // affecting the UI.
             mutableUiSourceRemoved.call()

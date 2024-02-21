@@ -10,7 +10,7 @@ plugins {
     id "io.sentry.android.gradle"
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
-    id 'dagger.hilt.android.plugin'
+    id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
 }
 
@@ -381,7 +381,12 @@ dependencies {
     }
     implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
-    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation("$gradle.ext.tracksBinaryPath") {
+        version {
+            strictly automatticTracksVersion
+        }
+    }
+
     implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
@@ -635,11 +640,15 @@ tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTas
     commentOnlyChangedFiles = false
     minSeverity = SEVERITY.INFO
     commentTemplate = """
-### The PR caused the following dependency changes:
+<details><summary>The PR caused some dependency changes (expand to see details)</summary>
+<p>
 
 ```diff
 {{{violation.message}}}
 ```
+
+</p>
+</details>
 
 *Please review and act accordingly*
 """

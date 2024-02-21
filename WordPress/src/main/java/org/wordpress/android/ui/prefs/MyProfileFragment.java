@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -37,6 +38,8 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
     private WPTextView mLastName;
     private WPTextView mDisplayName;
     private WPTextView mAboutMe;
+    private Button mGravatarSyncButton;
+    private View mGravatarSyncContainer;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -85,6 +88,8 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         mLastName = rootView.findViewById(R.id.last_name);
         mDisplayName = rootView.findViewById(R.id.display_name);
         mAboutMe = rootView.findViewById(R.id.about_me);
+        mGravatarSyncButton = rootView.findViewById(R.id.gravatar_sync_button);
+        mGravatarSyncContainer = rootView.findViewById(R.id.gravatar_sync_container);
 
         rootView.findViewById(R.id.first_name_row).setOnClickListener(
                 createOnClickListener(
@@ -110,6 +115,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                         getString(R.string.about_me_hint),
                         mAboutMe,
                         true));
+        mGravatarSyncButton.setOnClickListener(v -> mGravatarSyncContainer.setVisibility(View.GONE));
 
         return rootView;
     }
@@ -174,6 +180,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         payload.params.put(restParamForTextView(textView), textView.getText().toString());
         mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         trackSettingsDidChange(restParamForTextView(textView));
+        mGravatarSyncContainer.setVisibility(View.VISIBLE);
     }
 
     private void trackSettingsDidChange(String fieldName) {

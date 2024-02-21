@@ -5,6 +5,7 @@ import android.app.Activity;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class ShortcutsNavigator {
                     if (mJetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
                         ActivityLauncher.showJetpackStaticPoster(activity);
                     } else {
-                        ActivityLauncher.viewBlogStats(activity, currentSite);
+                        ActivityLauncher.viewBlogStats(activity, currentSite, StatsLaunchedFrom.SHORTCUT);
                     }
                 }
                 break;

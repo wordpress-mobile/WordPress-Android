@@ -49,6 +49,9 @@
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
         <item name="wpColorLoginPrologueBg">@color/blue_0</item>
 
+        <item name="grColorInfoBanner">@color/gravatar_info_banner</item>
+        <item name="grColorSyncBanner">@color/gravatar_sync_info_banner</item>
+
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
 

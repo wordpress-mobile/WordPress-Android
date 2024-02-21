@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodDa
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetService
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsCo
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureFragment.WidgetType
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -180,7 +180,7 @@ class WidgetUtils
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, statsTimeframe)
-        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.STATS_WIDGET)
+        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
         return PendingIntent.getActivity(
             context,
             getRandomId(),

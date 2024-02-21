@@ -15,6 +15,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
@@ -69,8 +70,9 @@ class StatsActivity : LocaleAwareActivity() {
             context: Context,
             site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
-            period: String? = null
-        ) = context.startActivity(buildIntent(context, site, statsTimeframe, period))
+            period: String? = null,
+            launchedFrom: StatsLaunchedFrom
+        ) = context.startActivity(buildIntent(context, site, statsTimeframe, period, launchedFrom))
 
         @JvmStatic
         @JvmOverloads
@@ -79,17 +81,14 @@ class StatsActivity : LocaleAwareActivity() {
             site: SiteModel,
             statsTimeframe: StatsTimeframe? = null,
             period: String? = null,
+            launchedFrom: StatsLaunchedFrom,
             notificationType: NotificationType? = null
         ) = Intent(context, StatsActivity::class.java).apply {
             putExtra(WordPress.LOCAL_SITE_ID, site.id)
             statsTimeframe?.let { putExtra(ARG_DESIRED_TIMEFRAME, it) }
             period?.let { putExtra(INITIAL_SELECTED_PERIOD_KEY, it) }
+            putExtra(ARG_LAUNCHED_FROM, launchedFrom)
             notificationType?.let { putExtra(ARG_NOTIFICATION_TYPE, it) }
         }
-    }
-
-    enum class StatsLaunchedFrom {
-        STATS_WIDGET,
-        NOTIFICATIONS
     }
 }
