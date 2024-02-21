@@ -33,6 +33,7 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
+    public static final String WP_VIDEOPRESS_V5_JETPACK_VERSION = "8.5";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";
@@ -340,8 +341,8 @@ public class SiteUtils {
         return site != null && site.isWPCom();
     }
 
-    public static boolean supportsVideoPressV5Feature(SiteModel site) {
-        return site != null && site.isWPCom() || (site.isWPComAtomic() && site.isVideoPressSupported());
+    public static boolean supportsVideoPressV5Feature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && site.isWPCom() || site.isWPComAtomic() || checkMinimalJetpackVersion(site, minimalJetpackVersion);
     }
 
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {
