@@ -1,2 +1,1 @@
-* [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
-
+You can log in to your WordPress website using Google credentials, physical devices, and other third-party passkeys. Don’t worry, your site is still locked down tighter than the Colonel’s secret recipe.
