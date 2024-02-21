@@ -12,6 +12,7 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentsStore
@@ -21,10 +22,12 @@ import org.wordpress.android.models.Note
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
+import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
+import org.wordpress.android.util.EventBusWrapper
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
@@ -49,7 +52,17 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerPostActionsWrapper: ReaderPostActionsWrapper
 
-    @Mock lateinit var appLogWrapper: AppLogWrapper
+    @Mock
+    private lateinit var notificationsActionsWrapper: NotificationsActionsWrapper
+
+    @Mock
+    private lateinit var notificationsTableWrapper: NotificationsTableWrapper
+
+    @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
+    private lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
     private lateinit var siteStore: SiteStore
@@ -78,6 +91,9 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             commentStore,
             readerPostTableWrapper,
             readerPostActionsWrapper,
+            notificationsTableWrapper,
+            notificationsActionsWrapper,
+            eventBusWrapper,
             accountStore,
         )
     }
