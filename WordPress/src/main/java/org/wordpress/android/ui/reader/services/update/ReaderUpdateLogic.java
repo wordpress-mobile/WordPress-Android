@@ -123,24 +123,21 @@ public class ReaderUpdateLogic {
                             .get("read/menu", params, null, listener, errorListener);
     }
 
-    private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
-        boolean updateDone = false;
-
+    /**
+     * Update the display names of the default tags (such as Subscribed and Discover) in the serverTopics list.
+     *
+     * @param serverTopics The list of default tags.
+     */
+    private void updateDisplayNamesIfNeeded(@NonNull ReaderTagList serverTopics) {
         for (ReaderTag tag : serverTopics) {
-            String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_subscribed_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isPostsILike()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }
-
-        return updateDone;
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -152,7 +149,7 @@ public class ReaderUpdateLogic {
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
 
-                boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
+                updateDisplayNamesIfNeeded(serverTopics);
 
                 serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
 
@@ -181,8 +178,7 @@ public class ReaderUpdateLogic {
 
                 boolean didChangeFollowedTags = false;
                 if (!localTopics.isSameList(serverTopics)) {
-                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
-                                              + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
+                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
 
                     if (!mAccountStore.hasAccessToken()) {
                         // Do not delete locally saved tags for logged out user
