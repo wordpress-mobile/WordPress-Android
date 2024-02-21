@@ -19,24 +19,17 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.ProgressEvent
-import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import javax.inject.Inject
 import javax.inject.Named
 
 class PublishingViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
-    uploadActionUseCase: UploadActionUseCase,
-    uploadStore: UploadStore
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
 
     private val _uiState = MutableLiveData<PublishingEvent>()
@@ -54,11 +47,6 @@ class PublishingViewModel @Inject constructor(
      * Handles the [Lifecycle.Event.ON_DESTROY] event to cleanup the registration for dispatcher and removing the
      * observer for lifecycle.
      */
-
-    private val uploadStatusTracker = PostModelUploadStatusTracker(
-        uploadStore = uploadStore,
-        uploadActionUseCase = uploadActionUseCase
-    )
 
     private val listOfMediaInProgress = ArrayList<String>()
 
