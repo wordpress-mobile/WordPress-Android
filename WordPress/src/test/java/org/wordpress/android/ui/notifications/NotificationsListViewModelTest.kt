@@ -5,6 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
@@ -15,6 +16,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentStore
@@ -235,6 +237,90 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         // Then
         verify(note, times(1)).setLikedComment(true)
         verify(commentStore, times(1)).likeComment(site, commentId, null, true)
+        verify(notificationsTableWrapper, times(0)).saveNote(note)
+    }
+
+    @Test
+    fun `WHEN liking a post THEN set the remote like status and save it`() = test {
+        // Given
+        val siteId = 1L
+        val postId = 2L
+        val userId = 4L
+        val note = mock<Note>()
+        val post = mock<ReaderPost>()
+        val account = mock<AccountModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(note.postId).thenReturn(postId.toInt())
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.userId).thenReturn(userId)
+        whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
+        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
+            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
+        }
+
+        // When
+        viewModel.likePost(note, true)
+
+        // Then
+        verify(note, times(1)).setLikedPost(true)
+        verify(readerPostActionsWrapper, times(1))
+            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(notificationsTableWrapper, times(1)).saveNote(note)
+    }
+
+    @Test
+    fun `WHEN unliking a post THEN set the remote like status and save it`() = test {
+        // Given
+        val siteId = 1L
+        val postId = 2L
+        val userId = 4L
+        val note = mock<Note>()
+        val post = mock<ReaderPost>()
+        val account = mock<AccountModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(note.postId).thenReturn(postId.toInt())
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.userId).thenReturn(userId)
+        whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
+        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
+            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(true)
+        }
+
+        // When
+        viewModel.likePost(note, false)
+
+        // Then
+        verify(note, times(1)).setLikedPost(false)
+        verify(readerPostActionsWrapper, times(1))
+            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(false), eq(userId), any())
+        verify(notificationsTableWrapper, times(1)).saveNote(note)
+    }
+
+    @Test
+    fun `WHEN liking a post and changing the remote status fails THEN do not save it`() = test {
+        // Given
+        val siteId = 1L
+        val postId = 2L
+        val userId = 4L
+        val note = mock<Note>()
+        val post = mock<ReaderPost>()
+        val account = mock<AccountModel>()
+        whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(note.postId).thenReturn(postId.toInt())
+        whenever(accountStore.account).thenReturn(account)
+        whenever(account.userId).thenReturn(userId)
+        whenever(readerPostTableWrapper.getBlogPost(siteId, postId, true)).thenReturn(post)
+        whenever(readerPostActionsWrapper.performLikeActionRemote(any(), any(), any(), any(), any(), any())).then {
+            (it.arguments[5] as ReaderActions.ActionListener).onActionResult(false)
+        }
+
+        // When
+        viewModel.likePost(note, true)
+
+        // Then
+        verify(note, times(1)).setLikedPost(true)
+        verify(readerPostActionsWrapper, times(1))
+            .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
         verify(notificationsTableWrapper, times(0)).saveNote(note)
     }
 
