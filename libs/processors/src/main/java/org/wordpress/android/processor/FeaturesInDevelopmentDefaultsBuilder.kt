@@ -28,7 +28,7 @@ class FeaturesInDevelopmentDefaultsBuilder(private val featuresInDevelopment: Li
             .build()
         return FileSpec.builder("org.wordpress.android.util.config", "FeaturesInDevelopment")
             .addType(remoteConfigDefaults)
-            .addComment("Automatically generated file. DO NOT MODIFY")
+            .addFileComment("Automatically generated file. DO NOT MODIFY")
             .indent("    ")
             .build()
     }

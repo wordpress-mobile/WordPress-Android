@@ -42,7 +42,7 @@ class RemoteFeatureConfigCheckBuilder(private val remoteFeatures: List<TypeName>
             .build()
         return FileSpec.builder("org.wordpress.android.util.config", "RemoteFeatureConfigCheck")
             .addType(remoteFeatureConfigDefaults)
-            .addComment("Automatically generated file. DO NOT MODIFY")
+            .addFileComment("Automatically generated file. DO NOT MODIFY")
             .indent("    ")
             .build()
     }

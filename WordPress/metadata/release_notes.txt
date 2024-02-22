@@ -1,3 +1,1 @@
-We fixed an issue that made images and other media blink away while being uploaded. Presto, no more disappearing act.
-
-The editor won’t crash anymore when you’re working on large posts. That’s right, we’ve saved your drafts and your sanity.
+You can log in to your WordPress website using Google credentials, physical devices, and other third-party passkeys. Don’t worry, your site is still locked down tighter than the Colonel’s secret recipe.

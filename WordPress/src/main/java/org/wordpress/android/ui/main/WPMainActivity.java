@@ -134,7 +134,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
