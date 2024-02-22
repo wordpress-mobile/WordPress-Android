@@ -62,12 +62,13 @@ fun ColorCard (colorName: String, color: Color) {
     Row (modifier = Modifier.padding(all = 8.dp)) {
         Box (Modifier.background(MaterialTheme.colorScheme.tertiaryContainer)) {
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(30.dp)
                     .then(
                         Modifier
                             .fillMaxWidth()
-                            .wrapContentSize(Alignment.TopCenter)
+                            .wrapContentSize(Alignment.TopCenter),
                     )
             ) {
                 Text(
