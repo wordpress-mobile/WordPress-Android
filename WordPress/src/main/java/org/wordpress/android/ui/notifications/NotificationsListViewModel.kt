@@ -139,6 +139,8 @@ class NotificationsListViewModel @Inject constructor(
     fun likePost(note: Note, liked: Boolean) = launch {
         note.setLikedPost(liked)
         _updatedNote.postValue(note)
+        // for updating the UI in other tabs
+        EventBus.getDefault().postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
         readerPostActionsWrapper.performLikeActionRemote(
             post = post,

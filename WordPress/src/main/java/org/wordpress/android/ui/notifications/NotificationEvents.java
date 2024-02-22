@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.notifications;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 
 import org.wordpress.android.models.Note;
@@ -67,7 +69,17 @@ public class NotificationEvents {
         public final Note note;
         public final boolean liked;
 
-        public OnNoteCommentLikeChanged(Note note, boolean liked) {
+        public OnNoteCommentLikeChanged(@NonNull Note note, boolean liked) {
+            this.note = note;
+            this.liked = liked;
+        }
+    }
+
+    public static class OnNotePostLikeChanged {
+        public final Note note;
+        public final boolean liked;
+
+        public OnNotePostLikeChanged(@NonNull Note note, boolean liked) {
             this.note = note;
             this.liked = liked;
         }

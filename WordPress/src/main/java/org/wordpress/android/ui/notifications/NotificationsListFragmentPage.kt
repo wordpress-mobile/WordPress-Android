@@ -518,7 +518,14 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         notesAdapter.updateNote(event.note.apply { setLikedComment(event.liked) })
-        EventBus.getDefault().removeStickyEvent(OnNoteCommentLikeChanged::class.java)
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: NotificationEvents.OnNotePostLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note.apply { setLikedPost(event.liked) })
     }
 
     companion object {
