@@ -189,6 +189,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedComment(true)
         verify(commentStore, times(1)).likeComment(site, commentId, null, true)
         verify(notificationsTableWrapper, times(1)).saveNote(note)
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNoteCommentLikeChanged>())
     }
 
     @Test
@@ -214,6 +215,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedComment(false)
         verify(commentStore, times(1)).likeComment(site, commentId, null, false)
         verify(notificationsTableWrapper, times(1)).saveNote(note)
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNoteCommentLikeChanged>())
     }
 
     @Test
@@ -238,6 +240,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedComment(true)
         verify(commentStore, times(1)).likeComment(site, commentId, null, true)
         verify(notificationsTableWrapper, times(0)).saveNote(note)
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNoteCommentLikeChanged>())
     }
 
     @Test
@@ -265,6 +268,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedPost(true)
         verify(readerPostActionsWrapper, times(1))
             .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
 
@@ -293,6 +297,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedPost(false)
         verify(readerPostActionsWrapper, times(1))
             .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(false), eq(userId), any())
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(1)).saveNote(note)
     }
 
@@ -321,6 +326,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(note, times(1)).setLikedPost(true)
         verify(readerPostActionsWrapper, times(1))
             .performLikeActionRemote(eq(post), eq(postId), eq(siteId), eq(true), eq(userId), any())
+        verify(eventBusWrapper, times(1)).postSticky(any<NotificationEvents.OnNotePostLikeChanged>())
         verify(notificationsTableWrapper, times(0)).saveNote(note)
     }
 

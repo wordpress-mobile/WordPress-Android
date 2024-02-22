@@ -49,6 +49,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsCh
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshCompleted
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshError
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
+import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLikeChanged
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Comment
@@ -125,7 +126,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
         notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
             onNoteClicked = { noteId -> handleNoteClick(noteId) }
-            onNotesLoaded = { itemCount -> updateEmptyLayouts(itemCount) }
+            onNotesLoaded = {
+                itemCount -> updateEmptyLayouts(itemCount)
+                swipeToRefreshHelper?.isRefreshing = false
+            }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .onEach(::handleInlineActionEvent)
                 .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -145,12 +149,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             notesAdapter.updateNote(it)
         }
 
-        if (tabPosition == All.ordinal) {
-            swipeToRefreshHelper?.isRefreshing = true
-            fetchRemoteNotes()
-        } else {
-            notesAdapter.reloadLocalNotes()
-        }
+        swipeToRefreshHelper?.isRefreshing = true
+        notesAdapter.reloadLocalNotes()
     }
 
     override fun onDestroyView() {
@@ -269,6 +269,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             swipeToRefreshHelper?.isRefreshing = false
             return
         }
+        swipeToRefreshHelper?.isRefreshing = true
         NotificationsUpdateServiceStarter.startService(activity)
     }
 
@@ -511,6 +512,22 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: OnNoteCommentLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note.apply { setLikedComment(event.liked) })
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: NotificationEvents.OnNotePostLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note.apply { setLikedPost(event.liked) })
+    }
+
     companion object {
         const val KEY_TAB_POSITION = "tabPosition"
         fun newInstance(position: Int): Fragment {
@@ -549,10 +566,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
                 isTappedFromPushNotification
             )
-            openNoteForReplyWithParams(detailIntent, activity)
-        }
-
-        private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
     }

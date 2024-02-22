@@ -1471,6 +1471,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
                 new RemoteLikeCommentPayload(site, comment, actionBinding.btnLike.isActivated()))
         );
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents
+                    .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
+        }
+
         actionBinding.btnLike.announceForAccessibility(
                 getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
                         : R.string.comment_unliked_talkback)

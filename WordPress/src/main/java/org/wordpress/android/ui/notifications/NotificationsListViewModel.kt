@@ -20,6 +20,7 @@ import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
+import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLikeChanged
 import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -100,6 +101,8 @@ class NotificationsListViewModel @Inject constructor(
         }
         note.setLikedComment(liked)
         _updatedNote.postValue(note)
+        // for updating the UI in other tabs
+        eventBusWrapper.postSticky(OnNoteCommentLikeChanged(note, liked))
         val result = commentStore.likeComment(site, note.commentId, null, liked)
         if (result.isError.not()) {
             notificationsTableWrapper.saveNote(note)
@@ -139,6 +142,8 @@ class NotificationsListViewModel @Inject constructor(
     fun likePost(note: Note, liked: Boolean) = launch {
         note.setLikedPost(liked)
         _updatedNote.postValue(note)
+        // for updating the UI in other tabs
+        eventBusWrapper.postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
         readerPostActionsWrapper.performLikeActionRemote(
             post = post,
