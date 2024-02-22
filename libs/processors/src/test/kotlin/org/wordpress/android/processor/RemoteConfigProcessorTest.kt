@@ -34,12 +34,7 @@ class RemoteConfigProcessorTest {
         )
 
         // when
-        val result = compile(
-            listOf(
-                remoteFieldA,
-                featureA, /* adding a feature, as without it, annotation processor won't start */
-            )
-        )
+        val result = compile(listOf(remoteFieldA))
 
         // then
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
@@ -104,12 +99,7 @@ class RemoteConfigProcessorTest {
         )
 
         // when
-        val result = compile(
-            listOf(
-                experiment,
-                featureA, /* adding a feature, as without it, annotation processor won't start */
-            )
-        )
+        val result = compile(listOf(experiment))
 
         // then
 
