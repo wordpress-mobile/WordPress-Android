@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -129,7 +130,7 @@ class StatsViewModelTest : BaseUnitTest() {
             trafficTabFeatureConfig
         )
 
-        viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
+        viewModel.start(1, StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
     }
 
     @Test
@@ -352,7 +353,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
     private fun startViewModel(statsModuleEnabled: Boolean = true) {
         whenever(site.isActiveModuleEnabled(any())).thenReturn(statsModuleEnabled)
-        viewModel.start(1, StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS, null, null, false, null)
+        viewModel.start(1, StatsLaunchedFrom.QUICK_ACTIONS, null, null, false, null)
     }
 
     private val networkUnavailableError = StatsModuleActivateRequestState.Failure.NetworkUnavailable

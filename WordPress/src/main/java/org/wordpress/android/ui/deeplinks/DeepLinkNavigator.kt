@@ -29,7 +29,7 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewP
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -66,14 +66,14 @@ class DeepLinkNavigator
             is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(
                 activity,
                 navigateAction.site,
-                StatsActivity.StatsLaunchedFrom.LINK
+                StatsLaunchedFrom.LINK
             )
 
             is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
                 activity,
                 navigateAction.site,
                 navigateAction.statsTimeframe,
-                StatsActivity.StatsLaunchedFrom.LINK
+                StatsLaunchedFrom.LINK
             )
 
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)

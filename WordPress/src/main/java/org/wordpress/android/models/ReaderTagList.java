@@ -44,6 +44,8 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
                 return false;
             } else if (!otherTag.getTagTitle().equals(this.get(i).getTagTitle())) {
                 return false;
+            } else if (!otherTag.getTagDisplayName().equals(this.get(i).getTagDisplayName())) {
+                return false;
             }
         }
 

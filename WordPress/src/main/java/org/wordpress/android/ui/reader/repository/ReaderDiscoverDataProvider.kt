@@ -14,7 +14,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -211,7 +211,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = BACKGROUND)
-    fun onFollowedTagsChanged(event: FollowedTagsChanged) {
+    fun onFollowedTagsFetched(event: FollowedTagsFetched) {
         launch {
             refreshCards()
         }

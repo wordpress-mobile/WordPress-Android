@@ -30,6 +30,19 @@ private const val MINIFIED_WIDGET_PROPERTY = "minified"
 private const val CHIP_VIEWS_PROPERTY = "views"
 private const val CHIP_VISITORS__PROPERTY = "visitors"
 
+enum class StatsLaunchedFrom(val value: String) {
+    QUICK_ACTIONS("quick_actions"),
+    TODAY_STATS_CARD("today_stats_card"),
+    ROW("row"),
+    POSTS("posts"),
+    WIDGET("widget"),
+    NOTIFICATION("notification"),
+    LINK("link"),
+    SHORTCUT("shortcut"),
+    ACTIVITY_LOG("activity_log"),
+    JETPACK_CONNECTION("jetpack_connection")
+}
+
 fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =
     track(stat = Stat.STATS_ACCESSED, site = site, properties = mutableMapOf(TAP_SOURCE_PROPERTY to tapSource))
 
