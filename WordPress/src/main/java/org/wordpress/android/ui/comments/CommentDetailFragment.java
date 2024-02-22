@@ -115,7 +115,6 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineStart;
 import kotlinx.coroutines.DelicateCoroutinesApi;
@@ -131,7 +130,6 @@ import kotlinx.coroutines.GlobalScope;
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
-@AndroidEntryPoint
 public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
         OnCollapseListener {
     private static final String KEY_MODE = "KEY_MODE";
