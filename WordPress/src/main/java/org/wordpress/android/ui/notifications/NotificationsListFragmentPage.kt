@@ -125,7 +125,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
         notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
             onNoteClicked = { noteId -> handleNoteClick(noteId) }
-            onNotesLoaded = { itemCount -> updateEmptyLayouts(itemCount) }
+            onNotesLoaded = {
+                itemCount -> updateEmptyLayouts(itemCount)
+                swipeToRefreshHelper?.isRefreshing = false
+            }
             viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .onEach(::handleInlineActionEvent)
                 .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -145,12 +148,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             notesAdapter.updateNote(it)
         }
 
-        if (tabPosition == All.ordinal) {
-            swipeToRefreshHelper?.isRefreshing = true
-            fetchRemoteNotes()
-        } else {
-            notesAdapter.reloadLocalNotes()
-        }
+        swipeToRefreshHelper?.isRefreshing = true
     }
 
     override fun onDestroyView() {
@@ -186,6 +184,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onResume()
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
+        notesAdapter.reloadLocalNotes()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -269,6 +268,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             swipeToRefreshHelper?.isRefreshing = false
             return
         }
+        swipeToRefreshHelper?.isRefreshing = true
         NotificationsUpdateServiceStarter.startService(activity)
     }
 
