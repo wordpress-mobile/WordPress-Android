@@ -26,15 +26,26 @@ public class ReaderEvents {
         throw new AssertionError();
     }
 
-    public static class FollowedTagsChanged {
+    public static class FollowedTagsFetched {
         private final boolean mDidSucceed;
+        private final boolean mDidChange;
 
-        public FollowedTagsChanged(boolean didSucceed) {
+        public FollowedTagsFetched(boolean didSucceed) {
             mDidSucceed = didSucceed;
+            mDidChange = true;
+        }
+
+        public FollowedTagsFetched(boolean didSucceed, boolean didChange) {
+            mDidSucceed = didSucceed;
+            mDidChange = didChange;
         }
 
         public boolean didSucceed() {
             return mDidSucceed;
+        }
+
+        public boolean didChange() {
+            return mDidChange;
         }
     }
 
