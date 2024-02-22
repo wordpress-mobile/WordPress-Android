@@ -1,6 +1,8 @@
 package org.wordpress.android.designsystem
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,8 +78,8 @@ fun ColorCard (colorName: String, color: Color) {
                 )
                 Text(
                     modifier = Modifier.padding(start = 36.dp, end = 64.dp),
-                    text = color.value.toHexString(),
-                    color = MaterialTheme.colorScheme.primaryContainer
+                    text = "#" + color.value.toHexString().uppercase().substring(0,8),
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
             Column(
@@ -92,8 +94,11 @@ fun ColorCard (colorName: String, color: Color) {
                 Box(
                     modifier = Modifier
                         .size(75.dp)
-                        .clip(CardDefaults.shape)
+                        .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
                         .background(color)
+                        .border(width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(5.dp))
                 )
             }
         }
@@ -111,15 +116,18 @@ fun ColorCardList(colorOptions: List<ColorOption>) {
         }
     }
 
-@Preview
+@Preview(name = "Light Mode")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Dark Mode"
+)
 @Composable
 fun DesignSystemColorsScreenPreview() {
-    val list: List<ColorOption> = listOf(
-        ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary),
-        ColorOption("Primary Background", MaterialTheme.colorScheme.primaryContainer)
-    )
-
     DesignSystemTheme {
+        val list: List<ColorOption> = listOf(
+            ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary)
+        )
         ColorCardList(list)
     }
 }
