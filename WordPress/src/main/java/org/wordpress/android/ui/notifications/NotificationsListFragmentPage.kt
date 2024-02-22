@@ -549,10 +549,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
                 isTappedFromPushNotification
             )
-            openNoteForReplyWithParams(detailIntent, activity)
-        }
-
-        private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
     }
