@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
@@ -59,13 +58,10 @@ class InsightsManagementMapper @Inject constructor(
         withContext(bgDispatcher) {
             val insightListItems = mutableListOf<InsightListItem>()
             insightListItems += Header(R.string.stats_insights_management_general)
-            if (BuildConfig.IS_JETPACK_APP &&
-                !trafficTabFeatureConfig.isEnabled() &&
-                !GENERAL_INSIGHTS.contains(TODAY_STATS)
-            ) {
+            if (!trafficTabFeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(TODAY_STATS)) {
                 GENERAL_INSIGHTS.add(TODAY_STATS)
             }
-            if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+            if (!GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                 GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
             }
             insightListItems += GENERAL_INSIGHTS.map { type ->
@@ -77,7 +73,7 @@ class InsightsManagementMapper @Inject constructor(
             }
             insightListItems += Header(R.string.stats_insights_management_activity)
 
-            if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
+            if (ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
                 // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
                 val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
                 ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
