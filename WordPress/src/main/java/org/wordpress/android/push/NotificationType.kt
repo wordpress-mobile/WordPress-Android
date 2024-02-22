@@ -6,7 +6,6 @@ enum class NotificationType {
     COMMENT_LIKE,
     AUTOMATTCHER,
     FOLLOW,
-    REBLOG,
     BADGE_RESET,
     NOTE_DELETE,
     TEST_NOTE,
