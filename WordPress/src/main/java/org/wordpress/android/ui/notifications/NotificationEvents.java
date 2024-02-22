@@ -62,4 +62,14 @@ public class NotificationEvents {
 
         public NotificationsRefreshError() {}
     }
+
+    public static class OnNoteCommentLikeChanged {
+        public final Note note;
+        public final boolean liked;
+
+        public OnNoteCommentLikeChanged(Note note, boolean liked) {
+            this.note = note;
+            this.liked = liked;
+        }
+    }
 }

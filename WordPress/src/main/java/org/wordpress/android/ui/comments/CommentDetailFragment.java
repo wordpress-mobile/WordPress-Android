@@ -27,7 +27,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
@@ -56,6 +55,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
+import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload;
 import org.wordpress.android.fluxc.store.CommentsStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -81,7 +81,6 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
-import org.wordpress.android.ui.notifications.NotificationsListViewModel;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -185,8 +184,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private ReaderIncludeCommentBoxBinding mReplyBinding = null;
     @Nullable private CommentActionFooterBinding mActionBinding = null;
 
-    private NotificationsListViewModel mNotificationsViewModel;
-
     /*
      * used when called from comment list
      */
@@ -249,7 +246,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         setHasOptionsMenu(true);
-        mNotificationsViewModel = new ViewModelProvider(this).get(NotificationsListViewModel.class);
     }
 
     @Override
@@ -1474,8 +1470,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 setModerateButtonForStatus(actionBinding, CommentStatus.APPROVED);
             }
         }
-        mNotificationsViewModel.likeComment(mNote, actionBinding.btnLike.isActivated());
-
+        mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
+                new RemoteLikeCommentPayload(site, comment, actionBinding.btnLike.isActivated()))
+        );
+        EventBus.getDefault().postSticky(new NotificationEvents
+                .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
         actionBinding.btnLike.announceForAccessibility(
                 getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
                         : R.string.comment_unliked_talkback)

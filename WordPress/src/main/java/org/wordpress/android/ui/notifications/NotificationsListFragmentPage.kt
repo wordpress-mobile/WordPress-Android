@@ -49,6 +49,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsCh
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshCompleted
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshError
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
+import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLikeChanged
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Comment
@@ -149,6 +150,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
 
         swipeToRefreshHelper?.isRefreshing = true
+        notesAdapter.reloadLocalNotes()
     }
 
     override fun onDestroyView() {
@@ -184,7 +186,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onResume()
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        notesAdapter.reloadLocalNotes()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -509,6 +510,15 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 hideNewNotificationsBar()
             }
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: OnNoteCommentLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note.apply { setLikedComment(event.liked) })
+        EventBus.getDefault().removeStickyEvent(OnNoteCommentLikeChanged::class.java)
     }
 
     companion object {
