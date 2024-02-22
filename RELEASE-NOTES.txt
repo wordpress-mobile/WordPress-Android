@@ -8,6 +8,7 @@
 -----
 * [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
 * [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
+* [*] [internal][WordPress-only] Updates Jetpack banners and badges copy for consistency [https://github.com/wordpress-mobile/WordPress-Android/pull/20123]
 
 24.2
 -----
