@@ -124,7 +124,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun configureYAxis(item: BlockListItem.BarChartItem) {
         val minYValue = 4f
-        val maxYValue = item.entries.maxByOrNull { it.value }!!.value
+        val maxYValue = item.entries.maxByOrNull { it.value }?.value ?: 0
 
         chart.axisLeft.apply {
             setDrawGridLines(false)
