@@ -114,10 +114,7 @@ fun ColorTitle(title: String) {
 @Composable
 fun DesignSystemColorsScreenPreview() {
     DesignSystemTheme {
-        val list: List<ColorOption> = listOf(
-            ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary)
-        )
-        ColorCardList(list)
+        DesignSystemColorsScreen()
     }
 }
 
