@@ -517,7 +517,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         if (!isAdded) {
             return
         }
-        notesAdapter.updateNote(event.note.apply { setLikedComment(event.liked) })
+        notesAdapter.updateNote(event.note)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)
