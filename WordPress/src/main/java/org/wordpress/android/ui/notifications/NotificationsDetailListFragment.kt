@@ -550,7 +550,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 // Check if this is a comment notification that has been replied to
                 // The block will not have a type, and its id will match the comment reply id in the Note.
                 (blockObject.type == null && note.commentReplyId == commentReplyId)
-            } else if (note.isFollowType || note.isLikeType || note.isReblogType) {
+            } else if (note.isFollowType || note.isLikeType) {
                 // User list notifications have a footer if they have 10 or more users in the body
                 // The last block will not have a type, so we can use that to determine if it is the footer
                 blockObject.type == null
