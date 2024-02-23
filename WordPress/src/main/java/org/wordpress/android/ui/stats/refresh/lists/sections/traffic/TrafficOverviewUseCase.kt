@@ -26,6 +26,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.ceil
@@ -47,22 +48,22 @@ class TrafficOverviewUseCase constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils
-) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
+) : BaseStatsUseCase<TrafficOverviewUseCase.TrafficOverviewUiModel, UiState>(
     StatsStore.TimeStatsType.OVERVIEW,
     mainDispatcher,
     backgroundDispatcher,
     UiState(),
     fetchParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity))
 ) {
-    // The granularity of the chart is one level lower than the current one, probably there's a better way to do this
-    private val trafficTabGranularity = when (statsGranularity) {
+    // The granularity of the chart is one level lower than the current one
+    private val lowerGranularity = when (statsGranularity) {
         StatsGranularity.WEEKS -> StatsGranularity.DAYS
         StatsGranularity.MONTHS -> StatsGranularity.WEEKS
         StatsGranularity.YEARS -> StatsGranularity.MONTHS
         else -> statsGranularity
     }
 
-    private val itemsToLoad = when (trafficTabGranularity) {
+    private val barCount = when (lowerGranularity) {
         StatsGranularity.DAYS -> 7
         StatsGranularity.WEEKS -> 5
         StatsGranularity.MONTHS -> 12
@@ -79,44 +80,116 @@ class TrafficOverviewUseCase constructor(
             )
         )
 
-    override suspend fun loadCachedData(): VisitsAndViewsModel? {
+    override suspend fun loadCachedData(): TrafficOverviewUiModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
         statsWidgetUpdaters.updateWeekViewsWidget(statsSiteProvider.siteModel.siteId)
         val cachedData = visitsAndViewsStore.getVisits(
             statsSiteProvider.siteModel,
-            trafficTabGranularity,
-            LimitMode.Top(itemsToLoad)
+            statsGranularity,
+            LimitMode.All
         )
-        if (cachedData != null) {
-            logIfIncorrectData(cachedData, trafficTabGranularity, statsSiteProvider.siteModel, false)
+        cachedData?.let {
+            logIfIncorrectData(it, statsGranularity, statsSiteProvider.siteModel, false)
             selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
         }
-        return cachedData
+
+        // Get lower granularity model for chart values
+        val lowerGranularityCachedData = if (statsGranularity != StatsGranularity.DAYS) {
+            val selectedDate = getLastDate(cachedData)
+            selectedDate?.let {
+                visitsAndViewsStore.getVisits(
+                    statsSiteProvider.siteModel,
+                    lowerGranularity,
+                    LimitMode.All,
+                    it
+                )
+            }
+        } else {
+            null
+        }
+
+        return if (cachedData != null &&
+            (statsGranularity == StatsGranularity.DAYS || lowerGranularityCachedData != null)
+        ) {
+            TrafficOverviewUiModel(cachedData, lowerGranularityCachedData)
+        } else {
+            null
+        }
     }
 
-    override suspend fun fetchRemoteData(forced: Boolean): State<VisitsAndViewsModel> {
-        val response = visitsAndViewsStore.fetchVisits(
-            statsSiteProvider.siteModel,
-            trafficTabGranularity,
-            LimitMode.Top(itemsToLoad),
-            forced
-        )
+    private fun getLastDate(model: VisitsAndViewsModel?): Date? {
+        selectedDateProvider.getSelectedDate(statsGranularity)?.let { return it }
+        val lastDateString = model?.dates?.lastOrNull()?.period
+        return lastDateString?.let { statsDateFormatter.parseStatsDate(statsGranularity, it) }
+    }
+
+    override suspend fun fetchRemoteData(forced: Boolean): State<TrafficOverviewUiModel> {
+        val response = fetchVisit(statsGranularity, OVERVIEW_ITEMS_TO_LOAD, forced)
         val model = response.model
-        val error = response.error
+
+        // Fetch lower granularity model for chart values
+        val lowerGranularityResponse = if (statsGranularity != StatsGranularity.DAYS) {
+            val selectedDate = getLastDate(model)
+            selectedDate?.let { fetchVisit(lowerGranularity, OVERVIEW_ITEMS_TO_LOAD, forced, it) }
+        } else {
+            null
+        }
+        val lowerGranularityModel = lowerGranularityResponse?.model
+
+        val error = getErrorMessage(response) ?: getErrorMessage(lowerGranularityResponse)
 
         return when {
             error != null -> {
                 selectedDateProvider.onDateLoadingFailed(statsGranularity)
-                State.Error(error.message ?: error.type.name)
+                State.Error(error)
             }
-            model != null && model.dates.isNotEmpty() -> {
-                logIfIncorrectData(model, trafficTabGranularity, statsSiteProvider.siteModel, true)
+
+            statsGranularity == StatsGranularity.DAYS && model != null && model.dates.isNotEmpty() -> {
                 selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
-                State.Data(model)
+                State.Data(TrafficOverviewUiModel(model))
             }
+
+            model != null &&
+                    model.dates.isNotEmpty() &&
+                    lowerGranularityModel != null &&
+                    lowerGranularityModel.dates.isNotEmpty() -> {
+                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
+                State.Data(TrafficOverviewUiModel(model, lowerGranularityModel))
+            }
+
             else -> {
                 selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
                 State.Empty()
+            }
+        }
+    }
+
+    private fun getErrorMessage(response: StatsStore.OnStatsFetched<VisitsAndViewsModel>?) =
+        response?.error?.message ?: response?.error?.type?.name
+
+    private suspend fun fetchVisit(
+        granularity: StatsGranularity,
+        quantity: Int,
+        forced: Boolean,
+        date: Date? = null
+    ) = date?.let {
+        visitsAndViewsStore.fetchVisits(
+            statsSiteProvider.siteModel,
+            granularity,
+            LimitMode.Top(quantity),
+            date,
+            forced
+        )
+    } ?: visitsAndViewsStore.fetchVisits(
+        statsSiteProvider.siteModel,
+        granularity,
+        LimitMode.Top(quantity),
+        forced
+    ).apply {
+        error?.let { return@apply }
+        model?.let {
+            if (it.dates.isNotEmpty()) {
+                logIfIncorrectData(it, granularity, statsSiteProvider.siteModel, true)
             }
         }
     }
@@ -154,33 +227,30 @@ class TrafficOverviewUseCase constructor(
     }
 
     override fun buildUiModel(
-        domainModel: VisitsAndViewsModel,
+        domainModel: TrafficOverviewUiModel,
         uiState: UiState
     ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
-            val dateFromProvider = selectedDateProvider.getSelectedDate(trafficTabGranularity)
-            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
+            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
             val availableDates = domainModel.dates.map {
-                statsDateFormatter.parseStatsDate(
-                    trafficTabGranularity,
-                    it.period
-                )
+                statsDateFormatter.parseStatsDate(statsGranularity, it.period)
             }
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-            selectedDateProvider.selectDate(
-                selectedDate,
-                availableDates.takeLast(visibleBarCount),
-                trafficTabGranularity
-            )
+            selectedDateProvider.selectDate(selectedDate, availableDates, statsGranularity)
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
             if (statsGranularity == StatsGranularity.DAYS) {
-                buildTodayCard(selectedItem,items)
+                buildTodayCard(selectedItem, items)
             } else {
-                buildGranularChart(domainModel, uiState, items, selectedItem)
+                buildGranularChart(
+                    domainModel.lowerGranularityDates.takeLast(barCount),
+                    uiState,
+                    items,
+                    selectedItem
+                )
             }
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
@@ -227,15 +297,15 @@ class TrafficOverviewUseCase constructor(
     }
 
     private fun buildGranularChart(
-        domainModel: VisitsAndViewsModel,
+        dates: List<VisitsAndViewsModel.PeriodData>,
         uiState: UiState,
         items: MutableList<BlockListItem>,
         selectedItem: VisitsAndViewsModel.PeriodData
     ) {
         items.addAll(
             trafficOverviewMapper.buildChart(
-                domainModel.dates,
-                trafficTabGranularity,
+                dates,
+                lowerGranularity,
                 this::onBarSelected,
                 this::onBarChartDrawn,
                 uiState.selectedPosition,
@@ -254,13 +324,13 @@ class TrafficOverviewUseCase constructor(
     private fun onBarSelected(period: String?) {
         analyticsTracker.trackGranular(
             AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
-            trafficTabGranularity
+            lowerGranularity
         )
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
             selectedDateProvider.selectDate(
                 selectedDate,
-                trafficTabGranularity
+                lowerGranularity
             )
         }
     }
@@ -268,7 +338,7 @@ class TrafficOverviewUseCase constructor(
     private fun onColumnSelected(position: Int) {
         analyticsTracker.trackGranular(
             AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
-            trafficTabGranularity
+            lowerGranularity
         )
         updateUiState { it.copy(selectedPosition = position) }
     }
@@ -278,6 +348,18 @@ class TrafficOverviewUseCase constructor(
     }
 
     data class UiState(val selectedPosition: Int = 0, val visibleBarCount: Int? = null)
+
+    data class TrafficOverviewUiModel(
+        val period: String,
+        val dates: List<VisitsAndViewsModel.PeriodData>,
+        val lowerGranularityDates: List<VisitsAndViewsModel.PeriodData>
+    ) {
+        constructor(model: VisitsAndViewsModel, lowerGranularityModel: VisitsAndViewsModel? = null) : this(
+            model.period,
+            model.dates,
+            lowerGranularityModel?.dates ?: listOf()
+        )
+    }
 
     class TrafficOverviewUseCaseFactory
     @Inject constructor(
