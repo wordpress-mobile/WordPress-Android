@@ -126,7 +126,8 @@ class StatsModule {
         managementNewsCardUseCase: ManagementNewsCardUseCase,
         actionCardGrowUseCase: ActionCardGrowUseCase,
         actionCardReminderUseCase: ActionCardReminderUseCase,
-        actionCardScheduleUseCase: ActionCardScheduleUseCase
+        actionCardScheduleUseCase: ActionCardScheduleUseCase,
+        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (BuildConfig.IS_JETPACK_APP) {
@@ -140,11 +141,15 @@ class StatsModule {
         } else {
             useCases.add(followerTotalsUseCase)
         }
+
+        if (!trafficTabFeatureConfig.isEnabled()) {
+            useCases.add(todayStatsUseCase)
+        }
+
         useCases.addAll(
             listOf(
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
-                todayStatsUseCase,
                 followersUseCaseFactory.build(BLOCK),
                 commentsUseCase,
                 mostPopularInsightsUseCase,

@@ -177,7 +177,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Tags are reloaded when FollowedTagsChanged event is received`() = testWithNonEmptyTags {
+    fun `Tags are reloaded when FollowedTagsFetched event is received`() = testWithNonEmptyTags {
         // Arrange
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {

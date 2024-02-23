@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
@@ -33,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.REMOVED
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -47,18 +47,21 @@ private val ACTIVITY_INSIGHTS = mutableListOf(
 private val GENERAL_INSIGHTS = mutableListOf(
     ALL_TIME_STATS,
     MOST_POPULAR_DAY_AND_HOUR,
-    ANNUAL_SITE_STATS,
-    TODAY_STATS
+    ANNUAL_SITE_STATS
 )
 
 class InsightsManagementMapper @Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 ) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
         withContext(bgDispatcher) {
             val insightListItems = mutableListOf<InsightListItem>()
             insightListItems += Header(R.string.stats_insights_management_general)
-            if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+            if (!trafficTabFeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(TODAY_STATS)) {
+                GENERAL_INSIGHTS.add(TODAY_STATS)
+            }
+            if (!GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                 GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
             }
             insightListItems += GENERAL_INSIGHTS.map { type ->
@@ -70,7 +73,7 @@ class InsightsManagementMapper @Inject constructor(
             }
             insightListItems += Header(R.string.stats_insights_management_activity)
 
-            if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
+            if (ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
                 // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
                 val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
                 ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
