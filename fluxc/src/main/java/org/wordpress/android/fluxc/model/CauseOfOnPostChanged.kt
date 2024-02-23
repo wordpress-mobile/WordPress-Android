@@ -10,7 +10,7 @@ sealed class CauseOfOnPostChanged {
     object FetchPosts : CauseOfOnPostChanged()
     object RemoveAllPosts : CauseOfOnPostChanged()
     class RemovePost(val localPostId: Int, val remotePostId: Long) : CauseOfOnPostChanged()
-    class UpdatePost(val localPostId: Int, val remotePostId: Long) : CauseOfOnPostChanged()
+    class UpdatePost(val localPostId: Int, val remotePostId: Long, val isLocalUpdate: Boolean) : CauseOfOnPostChanged()
     class RemoteAutoSavePost(val localPostId: Int, val remotePostId: Long) : CauseOfOnPostChanged()
     object FetchPostLikes : CauseOfOnPostChanged()
 }
