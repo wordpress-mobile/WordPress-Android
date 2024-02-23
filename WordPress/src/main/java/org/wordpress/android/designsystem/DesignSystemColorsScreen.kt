@@ -59,12 +59,12 @@ fun DesignSystemColorsScreen(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ColorCard (colorName: String, color: Color) {
-    Row (modifier = Modifier.padding(all = 8.dp)) {
+    Row (modifier = Modifier.padding(all = 3.dp)) {
         Box (Modifier.background(MaterialTheme.colorScheme.tertiaryContainer)) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(30.dp)
+                    .padding(15.dp)
                     .then(
                         Modifier
                             .fillMaxWidth()
@@ -72,13 +72,12 @@ fun ColorCard (colorName: String, color: Color) {
                     )
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(start = 36.dp, end = 64.dp),
+                    modifier = Modifier.padding(start = 25.dp, end = 40.dp),
                     text = colorName,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Text(
-                    modifier = Modifier.padding(start = 36.dp, end = 64.dp),
+                    modifier = Modifier.padding(start = 25.dp, end = 40.dp),
                     text = "#" + color.value.toHexString().uppercase().substring(0,8),
                     color = MaterialTheme.colorScheme.secondary
                 )
@@ -94,7 +93,7 @@ fun ColorCard (colorName: String, color: Color) {
             ) {
                 Box(
                     modifier = Modifier
-                        .size(75.dp)
+                        .size(45.dp)
                         .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
                         .background(color)
                         .border(width = 2.dp,
