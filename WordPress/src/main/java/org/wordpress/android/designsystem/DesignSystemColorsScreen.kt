@@ -60,17 +60,18 @@ fun DesignSystemColorsScreen(
 @Composable
 fun ColorCard (colorName: String, color: Color) {
     Row (modifier = Modifier.padding(all = 3.dp)) {
-        Box (Modifier.background(MaterialTheme.colorScheme.tertiaryContainer)) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+        Column{
+            Box(
                 modifier = Modifier
-                    .padding(15.dp)
-                    .then(
-                        Modifier
-                            .fillMaxWidth()
-                            .wrapContentSize(Alignment.TopCenter),
-                    )
-            ) {
+                    .size(45.dp)
+                    .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
+                    .background(color)
+                    .border(width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(5.dp))
+            )
+        }
+            Column {
                 Text(
                     modifier = Modifier.padding(start = 25.dp, end = 40.dp),
                     text = colorName,
@@ -82,26 +83,6 @@ fun ColorCard (colorName: String, color: Color) {
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .then(
-                        Modifier
-                            .fillMaxWidth()
-                            .wrapContentSize(Alignment.TopStart)
-                    )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(45.dp)
-                        .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                        .background(color)
-                        .border(width = 2.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(5.dp))
-                )
-            }
-        }
     }
 }
 @Composable
@@ -110,11 +91,7 @@ fun ColorCardList(colorOptions: List<ColorOption>) {
         ColorCard(colorOption.title, colorOption.color)
     }
 }
-    class ColorOption(var title: String, var color: Color) {
-        fun getInfo(): String {
-            return "$title ${color.value}"
-        }
-    }
+class ColorOption(var title: String, var color: Color)
 
 @Preview(name = "Light Mode")
 @Preview(
