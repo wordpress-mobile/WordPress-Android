@@ -22,6 +22,7 @@ class RemoteConfigProcessor(
     private val codeGenerator: CodeGenerator,
 ) : SymbolProcessor {
     /**
+     * In the case of this processor, we only one need round - generated files do not depend on each other or any other processor.
      * See: https://github.com/google/ksp/issues/797#issuecomment-1041127747
      * Also: https://github.com/google/ksp/blob/a0cd7774a7f65cec45a50ecc8960ef5e4d47fc21/examples/playground/test-processor/src/main/kotlin/TestProcessor.kt#L20
      */
