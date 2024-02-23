@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.BlockDiffCallback
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.COLUMNS_VALUE_CHANGED
+import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 
@@ -24,11 +25,17 @@ class TrafficFourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         item: BlockListItem.Columns,
         payloads: List<Any>
     ) {
-        val tabSelected = payloads.contains(BlockDiffCallback.BlockListPayload.SELECTED_COLUMN_CHANGED)
+        val tabSelected = payloads.contains(SELECTED_COLUMN_CHANGED)
+        val valuesChanged = payloads.contains(COLUMNS_VALUE_CHANGED)
         when {
             tabSelected -> {
                 columnLayouts.forEachIndexed { index, layout ->
                     layout.setSelection(item.selectedColumn == index)
+                }
+            }
+            valuesChanged -> {
+                columnLayouts.forEachIndexed { index, layout ->
+                    layout.value().text = item.columns[index].value
                 }
             }
             else -> {
@@ -39,6 +46,7 @@ class TrafficFourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                     }
                     val currentColumn = item.columns[index]
                     layout.key().setText(currentColumn.header)
+                    layout.value().text = currentColumn.value
                     layout.setSelection(item.selectedColumn == null || item.selectedColumn == index)
                     layout.contentDescription = currentColumn.contentDescription
                 }
@@ -48,9 +56,11 @@ class TrafficFourColumnsViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun LinearLayout.setSelection(isSelected: Boolean) {
         key().isSelected = isSelected
+        value().isSelected = isSelected
         selector().visibility = if (isSelected) View.VISIBLE else View.GONE
     }
 
     private fun LinearLayout.key(): TextView = this.findViewById(R.id.key)
+    private fun LinearLayout.value(): TextView = this.findViewById(R.id.value)
     private fun LinearLayout.selector(): View = this.findViewById(R.id.selector)
 }
