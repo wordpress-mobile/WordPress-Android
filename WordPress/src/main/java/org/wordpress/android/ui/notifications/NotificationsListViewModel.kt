@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
-import org.wordpress.android.models.Notification.PostNotification
+import org.wordpress.android.models.Notification
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
@@ -163,7 +163,7 @@ class NotificationsListViewModel @Inject constructor(
     }
 
     sealed class InlineActionEvent {
-        data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
+        data class SharePostButtonTapped(val notification: Notification.Like) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
         class LikePostButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
 

@@ -1,25 +1,19 @@
 package org.wordpress.android.models
 
-import org.wordpress.android.models.Notification.PostNotification.Like
-import org.wordpress.android.models.Notification.PostNotification.NewPost
 
 val Note.type
     get() = NoteType.from(rawType)
 
 sealed class Notification {
-    sealed class PostNotification: Notification() {
-        abstract val url: String
-        abstract val title: String
-        data class Like(override val url: String, override val title: String): PostNotification()
-        data class NewPost(override val url: String, override val title: String): PostNotification()
-    }
+    data class Like(val url: String, val title: String): Notification()
+    data object NewPost: Notification()
     data object Comment: Notification()
     data object Unknown: Notification()
 
     companion object {
         fun from(rawNote: Note) = when(rawNote.type) {
             NoteType.Like -> Like(url = rawNote.url, title = rawNote.title)
-            NoteType.NewPost -> NewPost(url= rawNote.url, title = rawNote.title)
+            NoteType.NewPost -> NewPost
             NoteType.Comment -> Comment
             else -> Unknown
         }
