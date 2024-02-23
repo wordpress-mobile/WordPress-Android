@@ -52,7 +52,7 @@ class TrafficOverviewUseCase constructor(
     mainDispatcher,
     backgroundDispatcher,
     UiState(),
-    uiUpdateParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity))
+    fetchParams = listOf(UseCaseParam.SelectedDateParam(statsGranularity))
 ) {
     // The granularity of the chart is one level lower than the current one, probably there's a better way to do this
     private val trafficTabGranularity = when (statsGranularity) {
