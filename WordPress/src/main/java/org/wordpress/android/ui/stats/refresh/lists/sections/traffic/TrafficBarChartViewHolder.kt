@@ -117,6 +117,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             this.description = description
 
             extraRightOffset = 8f
+            extraBottomOffset = 8f
 
             animateY(1000, Easing.EaseInSine)
         }
