@@ -78,14 +78,14 @@ class NoteViewHolder(
         when (notification) {
             Notification.Comment -> bindLikeCommentAction(note)
             is Notification.NewPost -> bindLikePostAction(note)
-            is Notification.Like -> bindShareAction(notification)
+            is Notification.PostLike -> bindShareAction(notification)
             is Notification.Unknown -> {
                 binding.action.isVisible = false
             }
         }
     }
 
-    private fun bindShareAction(notification: Notification.Like) {
+    private fun bindShareAction(notification: Notification.PostLike) {
         binding.action.setImageResource(R.drawable.block_share)
         val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
         ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
