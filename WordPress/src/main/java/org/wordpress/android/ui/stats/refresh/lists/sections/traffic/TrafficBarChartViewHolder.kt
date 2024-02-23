@@ -208,13 +208,11 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     private fun <T> takeEntriesWithinGraphWidth(
         count: Int,
         entries: List<T>
-    ): List<T> {
-        return if (count < entries.size) entries.subList(
-            entries.size - count,
-            entries.size
-        ) else {
-            entries
-        }
+    ): List<T> = if (count < entries.size) entries.subList(
+        entries.size - count,
+        entries.size
+    ) else {
+        entries
     }
 
     private fun BarChart.resetChart() {
@@ -226,13 +224,11 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         invalidate()
     }
 
-    private fun toBarEntry(bar: Bar, index: Int): BarEntry {
-        return BarEntry(
-            index.toFloat(),
-            bar.value.toFloat(),
-            bar.id
-        )
-    }
+    private fun toBarEntry(bar: Bar, index: Int): BarEntry = BarEntry(
+        index.toFloat(),
+        bar.value.toFloat(),
+        bar.id
+    )
 
     @Suppress("ReturnCount")
     private fun roundUp(input: Float): Float {
