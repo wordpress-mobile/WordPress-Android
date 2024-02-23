@@ -79,6 +79,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Value
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficBarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficFourColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActionCardViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActivityViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
@@ -146,7 +147,7 @@ class BlockListAdapter(
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
-            COLUMNS -> FourColumnsViewHolder(parent)
+            COLUMNS -> if (trafficTabEnabled) TrafficFourColumnsViewHolder(parent) else FourColumnsViewHolder(parent)
             CHIPS -> ChipsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
             BAR_CHART -> if (trafficTabEnabled) TrafficBarChartViewHolder(parent) else BarChartViewHolder(parent)
@@ -197,6 +198,7 @@ class BlockListAdapter(
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
+            is TrafficFourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is ChipsViewHolder -> holder.bind(item as Chips)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
