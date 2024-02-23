@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -31,36 +30,42 @@ fun DesignSystemColorsScreen(
 ) {
     LazyColumn(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(
             dimensionResource(id = R.dimen.reader_follow_sheet_button_margin_top)
         )
     ) {
         item {
-            val list: List<ColorOption> = listOf(
-                ColorOption("Primary Foreground", MaterialTheme.colorScheme.primary),
-                ColorOption("Primary Background", MaterialTheme.colorScheme.primaryContainer),
-                ColorOption("Secondary Foreground", MaterialTheme.colorScheme.secondary),
-                ColorOption("Secondary Background", MaterialTheme.colorScheme.secondaryContainer),
-                ColorOption("Tertiary Foreground", MaterialTheme.colorScheme.tertiary),
-                ColorOption("Tertiary Background", MaterialTheme.colorScheme.tertiaryContainer),
+            ColorTitle("Foreground")
+            val listForeground: List<ColorOption> = listOf(
+                ColorOption("Primary", MaterialTheme.colorScheme.primary),
+                ColorOption("Secondary", MaterialTheme.colorScheme.secondary),
+                ColorOption("Tertiary", MaterialTheme.colorScheme.tertiary),
                 ColorOption("Quartenary", MaterialTheme.colorScheme.quartenary),
                 ColorOption("Brand", MaterialTheme.colorScheme.brand),
-                ColorOption("Brand Background", MaterialTheme.colorScheme.brandContainer),
                 ColorOption("Error", MaterialTheme.colorScheme.error),
                 ColorOption("Warning", MaterialTheme.colorScheme.warning),
-                ColorOption("WP Foreground", MaterialTheme.colorScheme.wp),
-                ColorOption("WP Background", MaterialTheme.colorScheme.wpContainer),
+                ColorOption("WP", MaterialTheme.colorScheme.wp),
                 )
-            ColorCardList(list)
+            ColorCardList(listForeground)
+
+            ColorTitle("Background")
+            val listBackground: List<ColorOption> = listOf(
+                ColorOption("Primary", MaterialTheme.colorScheme.primaryContainer),
+                ColorOption("Secondary", MaterialTheme.colorScheme.secondaryContainer),
+                ColorOption("Tertiary", MaterialTheme.colorScheme.tertiaryContainer),
+                ColorOption("Brand", MaterialTheme.colorScheme.brandContainer),
+                ColorOption("WP", MaterialTheme.colorScheme.wpContainer),
+            )
+            ColorCardList(listBackground)
         }
     }
 }
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ColorCard (colorName: String, color: Color) {
-    Row (modifier = Modifier.padding(all = 3.dp)) {
-        Column{
+    Row (modifier = Modifier.padding(10.dp, 3.dp).fillMaxWidth()) {
+        Column {
             Box(
                 modifier = Modifier
                     .size(45.dp)
@@ -71,18 +76,18 @@ fun ColorCard (colorName: String, color: Color) {
                         shape = RoundedCornerShape(5.dp))
             )
         }
-            Column {
-                Text(
-                    modifier = Modifier.padding(start = 25.dp, end = 40.dp),
-                    text = colorName,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    modifier = Modifier.padding(start = 25.dp, end = 40.dp),
-                    text = "#" + color.value.toHexString().uppercase().substring(0,8),
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+        Column {
+            Text(
+                modifier = Modifier.padding(start = 25.dp, end = 40.dp),
+                text = colorName,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                modifier = Modifier.padding(start = 25.dp, end = 40.dp),
+                text = "#" + color.value.toHexString().uppercase().substring(0,8),
+                color = MaterialTheme.colorScheme.secondary
+            )
+        }
     }
 }
 @Composable
@@ -92,7 +97,14 @@ fun ColorCardList(colorOptions: List<ColorOption>) {
     }
 }
 class ColorOption(var title: String, var color: Color)
-
+@Composable
+fun ColorTitle(title: String) {
+    Text(
+        modifier = Modifier.padding(start = 10.dp, top = 10.dp, bottom = 10.dp),
+        text = title,
+        style = MaterialTheme.typography.titleMedium.copy(color = MaterialTheme.colorScheme.primary),
+    )
+}
 @Preview(name = "Light Mode")
 @Preview(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
