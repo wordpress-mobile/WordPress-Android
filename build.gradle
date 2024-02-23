@@ -9,6 +9,7 @@ plugins {
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
     id "org.jetbrains.kotlin.plugin.parcelize" apply false
+    id "com.google.devtools.ksp" apply false
 }
 
 ext {
@@ -43,7 +44,7 @@ ext {
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.2.3'
     androidxComposeBomVersion = '2023.10.00'
-    androidxComposeCompilerVersion = '1.5.3'
+    androidxComposeCompilerVersion = '1.5.9'
     androidxComposeNavigationVersion = '2.7.6'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'
