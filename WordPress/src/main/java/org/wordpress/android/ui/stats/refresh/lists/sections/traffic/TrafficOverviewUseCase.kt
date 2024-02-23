@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.traffic
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -22,19 +21,16 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.ceil
 
 const val OVERVIEW_ITEMS_TO_LOAD = 15
 
-@Suppress("LongParameterList", "MagicNumber")
-class TrafficOverviewUseCase constructor(
+@Suppress("LongParameterList")
+class TrafficOverviewUseCase(
     private val statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     private val selectedDateProvider: SelectedDateProvider,
@@ -45,7 +41,6 @@ class TrafficOverviewUseCase constructor(
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: WidgetUpdater.StatsWidgetUpdaters,
-    private val localeManagerWrapper: LocaleManagerWrapper,
     private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils
 ) : BaseStatsUseCase<TrafficOverviewUseCase.TrafficOverviewUiModel, UiState>(
@@ -88,10 +83,6 @@ class TrafficOverviewUseCase constructor(
             statsGranularity,
             LimitMode.All
         )
-        cachedData?.let {
-            logIfIncorrectData(it, statsGranularity, statsSiteProvider.siteModel, false)
-            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
-        }
 
         // Get lower granularity model for chart values
         val lowerGranularityCachedData = if (statsGranularity != StatsGranularity.DAYS) {
@@ -100,7 +91,7 @@ class TrafficOverviewUseCase constructor(
                 visitsAndViewsStore.getVisits(
                     statsSiteProvider.siteModel,
                     lowerGranularity,
-                    LimitMode.All,
+                    LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
                     it
                 )
             }
@@ -187,43 +178,6 @@ class TrafficOverviewUseCase constructor(
         forced
     ).apply {
         error?.let { return@apply }
-        model?.let {
-            if (it.dates.isNotEmpty()) {
-                logIfIncorrectData(it, granularity, statsSiteProvider.siteModel, true)
-            }
-        }
-    }
-
-    /**
-     * Track the incorrect data shown for some users
-     * see https://github.com/wordpress-mobile/WordPress-Android/issues/11412
-     */
-    private fun logIfIncorrectData(
-        model: VisitsAndViewsModel,
-        granularity: StatsGranularity,
-        site: SiteModel,
-        fetched: Boolean
-    ) {
-        model.dates.lastOrNull()?.let { lastDayData ->
-            val yesterday = localeManagerWrapper.getCurrentCalendar()
-            yesterday.add(Calendar.DAY_OF_YEAR, -1)
-            val lastDayDate = statsDateFormatter.parseStatsDate(granularity, lastDayData.period)
-            if (lastDayDate.before(yesterday.time)) {
-                val currentCalendar = localeManagerWrapper.getCurrentCalendar()
-                val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
-                analyticsTracker.track(
-                    AnalyticsTracker.Stat.STATS_OVERVIEW_ERROR,
-                    mapOf(
-                        "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
-                        "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                        "stats_age_in_days" to lastItemAge.toInt(),
-                        "is_jetpack_connected" to site.isJetpackConnected,
-                        "is_atomic" to site.isWPComAtomic,
-                        "action_source" to if (fetched) "remote" else "cached"
-                    )
-                )
-            }
-        }
     }
 
     override fun buildUiModel(
@@ -372,7 +326,6 @@ class TrafficOverviewUseCase constructor(
         private val visitsAndViewsStore: VisitsAndViewsStore,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: WidgetUpdater.StatsWidgetUpdaters,
-        private val localeManagerWrapper: LocaleManagerWrapper,
         private val resourceProvider: ResourceProvider,
         private val statsUtils: StatsUtils
     ) : GranularUseCaseFactory {
@@ -388,7 +341,6 @@ class TrafficOverviewUseCase constructor(
                 backgroundDispatcher,
                 analyticsTracker,
                 statsWidgetUpdaters,
-                localeManagerWrapper,
                 resourceProvider,
                 statsUtils
             )
