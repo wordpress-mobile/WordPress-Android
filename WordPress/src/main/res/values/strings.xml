@@ -1340,13 +1340,6 @@
     <!-- stats: search terms -->
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
 
-    <!-- stats: traffic -->
-    <string name="stats_traffic_change_higher">higher than the previous %1$s</string>
-    <string name="stats_traffic_change_lower">lower than the previous %1$s</string>
-    <string name="stats_traffic_change_weeks">7-days</string>
-    <string name="stats_traffic_change_months">month</string>
-    <string name="stats_traffic_change_years">year</string>
-
     <!-- Stats insights -->
     <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>

@@ -9,25 +9,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOver
 import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewMapper.SelectedType.Views
 import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewMapper.SelectedType.Visitors
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
-import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class TrafficOverviewMapper @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
-    private val resourceProvider: ResourceProvider,
     private val statsUtils: StatsUtils,
     private val contentDescriptionHelper: ContentDescriptionHelper
 ) {
-    private val units = listOf(
-        R.string.stats_views,
-        R.string.stats_visitors,
-        R.string.stats_likes,
-        R.string.stats_comments
-    )
-
     enum class SelectedType(val value: Int) {
         Views(0),
         Visitors(1),
@@ -36,60 +26,6 @@ class TrafficOverviewMapper @Inject constructor(
 
         companion object {
             fun valueOf(value: Int): SelectedType? = entries.find { it.value == value }
-        }
-    }
-
-    fun buildTitle(
-        selectedItem: VisitsAndViewsModel.PeriodData,
-        previousItem: VisitsAndViewsModel.PeriodData?,
-        selectedPosition: Int,
-        isLast: Boolean,
-        startValue: Int = MILLION,
-        statsGranularity: StatsGranularity = StatsGranularity.DAYS
-    ): BlockListItem.ValueItem {
-        val value = selectedItem.getValue(selectedPosition) ?: 0
-        val previousValue = previousItem?.getValue(selectedPosition)
-        val positive = value >= (previousValue ?: 0)
-        val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
-        val period = when (statsGranularity) {
-            StatsGranularity.WEEKS -> R.string.stats_traffic_change_weeks
-            StatsGranularity.MONTHS -> R.string.stats_traffic_change_months
-            StatsGranularity.YEARS -> R.string.stats_traffic_change_years
-            else -> R.string.stats_traffic_change_weeks
-        }
-        val unformattedChange = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = false)
-        val state = when {
-            isLast -> BlockListItem.ValueItem.State.NEUTRAL
-            positive -> BlockListItem.ValueItem.State.POSITIVE
-            else -> BlockListItem.ValueItem.State.NEGATIVE
-        }
-        return BlockListItem.ValueItem(
-            value = statsUtils.toFormattedString(value, startValue),
-            unit = units[selectedPosition],
-            isFirst = true,
-            change = change,
-            period = period,
-            state = state,
-            contentDescription = resourceProvider.getString(
-                R.string.stats_overview_content_description,
-                value,
-                resourceProvider.getString(units[selectedPosition]),
-                "",
-                statsDateFormatter.printGranularDate(selectedItem.period, statsGranularity),
-                unformattedChange ?: ""
-            )
-        )
-    }
-
-    private fun VisitsAndViewsModel.PeriodData.getValue(
-        selectedPosition: Int
-    ): Long? {
-        return when (SelectedType.valueOf(selectedPosition)) {
-            Views -> this.views
-            Visitors -> this.visitors
-            Likes -> this.likes
-            Comments -> this.comments
-            else -> null
         }
     }
 
