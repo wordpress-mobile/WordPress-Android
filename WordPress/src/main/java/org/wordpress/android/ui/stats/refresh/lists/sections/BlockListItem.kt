@@ -126,6 +126,7 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
+        val period: Int = 0,
         val state: State = POSITIVE,
         val contentDescription: String
     ) : BlockListItem(VALUE_ITEM) {

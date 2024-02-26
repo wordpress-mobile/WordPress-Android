@@ -78,6 +78,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficBarChartViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficFourColumnsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActionCardViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ActivityViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BarChartViewHolder
@@ -117,7 +119,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValueWi
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ValuesViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemViewHolder>() {
+class BlockListAdapter(
+    val imageManager: ImageManager,
+    private val trafficTabEnabled: Boolean
+) : Adapter<BlockListItemViewHolder>() {
     private var items: List<BlockListItem> = listOf()
     fun update(newItems: List<BlockListItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -142,10 +147,10 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             LIST_ITEM -> ListItemViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
-            COLUMNS -> FourColumnsViewHolder(parent)
+            COLUMNS -> if (trafficTabEnabled) TrafficFourColumnsViewHolder(parent) else FourColumnsViewHolder(parent)
             CHIPS -> ChipsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
-            BAR_CHART -> BarChartViewHolder(parent)
+            BAR_CHART -> if (trafficTabEnabled) TrafficBarChartViewHolder(parent) else BarChartViewHolder(parent)
             PIE_CHART -> PieChartViewHolder(parent)
             LINE_CHART -> LineChartViewHolder(parent)
             CHART_LEGEND -> ChartLegendViewHolder(parent)
@@ -193,9 +198,11 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ListItemViewHolder -> holder.bind(item as ListItem)
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
+            is TrafficFourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is ChipsViewHolder -> holder.bind(item as Chips)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
+            is TrafficBarChartViewHolder -> holder.bind(item as BarChartItem)
             is PieChartViewHolder -> holder.bind(item as PieChartItem)
             is LineChartViewHolder -> holder.bind(item as LineChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
