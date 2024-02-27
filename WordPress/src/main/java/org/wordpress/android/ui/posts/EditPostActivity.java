@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -382,6 +383,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean mHtmlModeMenuStateOn = false;
 
+    private FrameLayout mUpdatingPostArea;
+
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -558,12 +561,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         getOnBackPressedDispatcher().addCallback(this, callback);
 
         mDispatcher.register(this);
+
+        // initialise ViewModels
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
         mEditorBloggingPromptsViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(EditorBloggingPromptsViewModel.class);
         mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(EditorJetpackSocialViewModel.class);
+
         setContentView(R.layout.new_edit_post_activity);
 
         createEditShareMessageActivityResultLauncher();
@@ -614,7 +620,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Set up the action bar.
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
-
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -797,6 +802,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorJetpackSocialViewModel.start(mSite, mEditPostRepository);
 
         customizeToolbar();
+
+        mUpdatingPostArea = findViewById(R.id.updating);
+
+        // check if post content needs updating
+        mViewModel.checkIfUpdatedPostVersionExists(mEditPostRepository, mSite);
+    }
+
+    private void showUpdatingPostArea() {
+        mUpdatingPostArea.setVisibility(View.VISIBLE);
+    }
+
+    private void hideUpdatingPostArea() {
+        mUpdatingPostArea.setVisibility(View.GONE);
     }
 
     private void customizeToolbar() {
@@ -1010,6 +1028,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 final OpenSubscribeJetpackSocial action = (OpenSubscribeJetpackSocial) actionEvent;
                 WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
                         this, action.getUrl()
+                );
+            }
+        });
+
+        mViewModel.getOnPostUpdateUiVisible().observe(this, isVisible -> {
+            if (isVisible) {
+                showUpdatingPostArea();
+            } else {
+                hideUpdatingPostArea();
+            }
+        });
+
+        mViewModel.getOnPostUpdateResult().observe(this, isSuccess -> {
+            if (isSuccess) {
+                mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
+                refreshEditorContent();
+            } else {
+                ToastUtils.showToast(
+                        EditPostActivity.this,
+                        getString(R.string.editor_updating_post_failed),
+                        ToastUtils.Duration.SHORT
                 );
             }
         });
