@@ -230,6 +230,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);

@@ -40,7 +40,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploa
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleUndoButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleRedoButtonListener;
@@ -115,7 +114,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
-                    null, //todo
+                    null,
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,

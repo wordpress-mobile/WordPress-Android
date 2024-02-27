@@ -22,12 +22,9 @@ import org.wordpress.android.ui.mediapicker.MediaType.AUDIO
 import org.wordpress.android.ui.mediapicker.MediaType.DOCUMENT
 import org.wordpress.android.ui.mediapicker.MediaType.IMAGE
 import org.wordpress.android.ui.mediapicker.MediaType.VIDEO
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-class MediaPickerLauncher @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
-) {
+class MediaPickerLauncher @Inject constructor() {
     fun showFeaturedImagePicker(
         activity: Activity,
         site: SiteModel?,

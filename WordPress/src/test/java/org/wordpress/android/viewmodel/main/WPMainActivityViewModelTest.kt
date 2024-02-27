@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -55,7 +54,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
@@ -107,12 +105,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Mock
     private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit?>
-
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
-    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
 
     @Mock
     private lateinit var shouldAskPrivacyConsent: ShouldAskPrivacyConsent
@@ -176,8 +168,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
-            jetpackFeatureRemovalPhaseHelper,
-            siteUtilsWrapper,
             shouldAskPrivacyConsent,
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(

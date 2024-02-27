@@ -5,10 +5,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
@@ -25,9 +23,6 @@ import org.wordpress.android.util.image.ImageType.P2_BLAVATAR_ROUNDED_CORNERS
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteUtilsTest {
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
     @Test
     fun `onFreePlan returns true when site is on free plan`() {
         val site = SiteModel()
@@ -196,13 +191,5 @@ class SiteUtilsTest {
 
         val circularSiteImage = SiteUtils.getSiteImageType(false, CIRCULAR)
         assertThat(circularSiteImage).isEqualTo(BLAVATAR_CIRCULAR)
-    }
-
-    private fun initJetpackSite(): SiteModel {
-        return SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsJetpackInstalled(true)
-            setIsJetpackConnected(true)
-        }
     }
 }

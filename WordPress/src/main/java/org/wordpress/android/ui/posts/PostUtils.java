@@ -163,7 +163,9 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
-                    properties.put("editor_source", (shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
+                    properties.put("editor_source", (shouldShowGutenbergEditor(
+                            post.isLocalDraft(), post.getContent(), site) ? SiteUtils.GB_EDITOR_NAME
+                            : SiteUtils.AZTEC_EDITOR_NAME));
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,

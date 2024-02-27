@@ -70,7 +70,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
-import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager

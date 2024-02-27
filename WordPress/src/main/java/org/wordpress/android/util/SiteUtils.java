@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSi
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -33,7 +32,6 @@ public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_VIDEOPRESS_V5_JETPACK_VERSION = "8.5";
-    public static final String WP_STORIES_JETPACK_VERSION = "9.1";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";
     public static final String WP_INSTAGRAM_EMBED_JETPACK_VERSION = "9.0";

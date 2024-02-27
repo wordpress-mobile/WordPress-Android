@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
@@ -40,7 +39,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
@@ -68,8 +66,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
