@@ -143,9 +143,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
         startObserving()
 
-        val needsRequestLayout = false
         val siteModel = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
-        viewModel.start(siteModel, !needsRequestLayout)
+        viewModel.start(siteModel)
     }
 
     private fun PrepublishingAddCategoryFragmentBinding.startObserving() {
