@@ -71,9 +71,6 @@ fun ColorCard (colorName: String, color: Color) {
                     .size(45.dp)
                     .clip(shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
                     .background(color)
-                    .border(width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(5.dp))
             )
         }
         Column {
