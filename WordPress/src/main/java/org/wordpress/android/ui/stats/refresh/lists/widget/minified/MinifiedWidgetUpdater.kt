@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
+import org.wordpress.android.ui.stats.StatsTimeframe.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,7 +49,8 @@ class MinifiedWidgetUpdater
     private val statsUtils: StatsUtils,
     private val todayInsightsStore: TodayInsightsStore,
     private val widgetUtils: WidgetUtils,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
 ) : WidgetUpdater {
     private val coroutineScope = CoroutineScope(defaultDispatcher)
     override fun updateAppWidget(
@@ -74,9 +77,12 @@ class MinifiedWidgetUpdater
             views.setViewVisibility(R.id.widget_content, View.VISIBLE)
             views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
             views.setViewVisibility(R.id.widget_retry_button, View.GONE)
+
+            val timeframe = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+
             views.setOnClickPendingIntent(
                 R.id.widget_container,
-                widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {
