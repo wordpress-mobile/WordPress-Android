@@ -308,7 +308,7 @@ public class PostUtils {
      * Removes the VideoPress block tag from the given string.
      */
     public static String removeWPVideoPress(String str) {
-        return str.replaceAll("(?s)\\n?<!--\\swp:videopress/video?(.*?)wp:videopress/video\\s-->", "");
+        return str.replaceAll("(?s)\\n?<!--\\swp:video.*?(.*?)wp:video.*?\\s-->", "");
     }
 
     public static String getFormattedDate(PostModel post) {
