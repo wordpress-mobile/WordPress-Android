@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -86,6 +87,7 @@ fun ColorCard (colorName: String, color: Color) {
             )
         }
     }
+    Divider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
 }
 @Composable
 fun ColorCardList(colorOptions: List<ColorOption>) {
