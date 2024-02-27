@@ -4,7 +4,6 @@ import se.bjurr.violations.lib.model.SEVERITY
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.kapt"
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "io.sentry.android.gradle"
@@ -337,10 +336,6 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
-kapt {
-    // Enable to infer error types in stubs (see: https://kotlinlang.org/docs/kapt.html#non-existent-type-correction)
-    correctErrorTypes true
-}
 
 dependencies {
     implementation 'androidx.webkit:webkit:1.10.0'
@@ -453,7 +448,7 @@ dependencies {
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    ksp "com.github.bumptech.glide:ksp:$glideVersion"
     implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
@@ -467,9 +462,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
+    ksp "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
+    ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
     testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$automatticStoriesVersion"
 
@@ -526,7 +521,7 @@ dependencies {
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
+    kspAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
