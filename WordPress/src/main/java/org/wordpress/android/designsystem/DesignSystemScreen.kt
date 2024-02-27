@@ -12,6 +12,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +25,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 
@@ -56,16 +60,31 @@ fun StartDesignSystemPreview(){
         DesignSystem {}
     }
 }
+private fun getTitleForRoute(route: String): String {
+    return when (route) {
+        "Start" -> "Design System"
+        "Foundation" -> "Foundation"
+        "Components" -> "Components"
+        "Colors" -> "Colors"
+        else -> ""
+    }
+}
 
 @Composable
 fun DesignSystem(
     onBackTapped: () -> Unit
     ) {
     val navController: NavHostController = rememberNavController()
+    var actionBarTitle by remember { mutableStateOf("") }
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            actionBarTitle = getTitleForRoute(backStackEntry.destination.route.toString())
+        }
+    }
     Scaffold(
         topBar = {
             MainTopAppBar(
-                title = stringResource(R.string.preference_design_system),
+                title = actionBarTitle,
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = { onBackTapped() },
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
