@@ -219,12 +219,12 @@ public class UploadUtils {
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, post.isPage() ? R.string.editor_page_saved_locally_failed_media
                             : R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
-                         new View.OnClickListener() {
-                             @Override
-                             public void onClick(View v) {
-                                 ActivityLauncher.editPostOrPageForResult(activity, site, post);
-                             }
-                         }, sequencer);
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityLauncher.editPostOrPageForResult(activity, site, post);
+                        }
+                    }, sequencer);
             return;
         }
 
@@ -266,16 +266,16 @@ public class UploadUtils {
                 // if the post is publishable, we offer the PUBLISH button
                 if (uploadNotStarted) {
                     showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
-                                              R.string.button_publish,
-                                              publishPostListener, sequencer);
+                            R.string.button_publish,
+                            publishPostListener, sequencer);
                 } else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                         || UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(snackbarAttachView, R.string.editor_uploading_draft, sequencer);
                     } else {
                         showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                                                  R.string.button_publish,
-                                                  publishPostListener, sequencer);
+                                R.string.button_publish,
+                                publishPostListener, sequencer);
                     }
                 }
             } else {
@@ -286,7 +286,7 @@ public class UploadUtils {
                 showSnackbar(snackbarAttachView,
                         post.isPage() ? R.string.editor_page_saved_locally : R.string.editor_post_saved_locally,
                         R.string.button_publish,
-                             publishPostListener, sequencer);
+                        publishPostListener, sequencer);
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                     || UploadService.isPostUploadingOrQueued(post)) {
@@ -295,26 +295,26 @@ public class UploadUtils {
                 } else {
                     showSnackbarSuccessAction(snackbarAttachView,
                             post.isPage() ? R.string.editor_page_saved_online : R.string.editor_post_saved_online,
-                                              R.string.button_publish,
-                                              publishPostListener, sequencer);
+                            R.string.button_publish,
+                            publishPostListener, sequencer);
                 }
             }
         }
     }
 
     public static void showSnackbarError(View view, String message, int buttonTitleRes,
-                                          OnClickListener onClickListener, SnackbarSequencer sequencer) {
+                                         OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(
                         new Info(
-                             view,
-                             new UiStringText(message),
-                             K_SNACKBAR_WAIT_TIME_MS,
-                             true
+                                view,
+                                new UiStringText(message),
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
                         new Action(
-                             new UiStringRes(buttonTitleRes),
-                             onClickListener
+                                new UiStringRes(buttonTitleRes),
+                                onClickListener
                         ),
                         null,
                         null
@@ -610,7 +610,8 @@ public class UploadUtils {
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 writePostIntent.putExtra(WordPress.SITE, site);
                                 writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
-                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA,
+                                        mediaListToInsertInPost);
                                 activity.startActivity(writePostIntent);
                             }
                         }, sequencer);
