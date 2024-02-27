@@ -321,17 +321,13 @@ class WPMainActivityViewModel @Inject constructor(
         _fabUiState.value = newState
     }
 
-    fun getCreateContentMessageId(site: SiteModel?): Int {
-        return getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
-    }
-
-    private fun getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent) {
+    fun getCreateContentMessageId(site: SiteModel?): Int =
+        if (hasFullAccessToContent(site)) {
             R.string.create_post_page_fab_tooltip
         } else {
             R.string.create_post_page_fab_tooltip_contributors
         }
-    }
+
 
     private fun updateFeatureAnnouncements() {
         launch {

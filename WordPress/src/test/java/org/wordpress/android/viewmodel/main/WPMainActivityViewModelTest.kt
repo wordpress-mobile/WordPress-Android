@@ -411,15 +411,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
         assertThat(viewModel.createAction.value).isNull()
-        assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
-    }
-
-    @Test
-    fun `bottom sheet is visualized when user has partial access and has only 2 options`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
-        assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
     }
