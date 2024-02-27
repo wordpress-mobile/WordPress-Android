@@ -110,6 +110,10 @@ fun ReaderFilterChipGroup(
             )
         }
 
+        AnimatedVisibility(visible = isBlogChipVisible && isTagChipVisible) {
+            Spacer(Modifier.width(Margin.Medium.value))
+        }
+
         // blogs filter chip
         AnimatedVisibility(
             modifier = Modifier.clip(roundedShape),
@@ -122,10 +126,6 @@ fun ReaderFilterChipGroup(
                 isSelectedItem = isBlogSelected,
                 height = chipHeight,
             )
-        }
-
-        AnimatedVisibility(visible = isBlogChipVisible && isTagChipVisible) {
-            Spacer(Modifier.width(Margin.Medium.value))
         }
     }
 }
