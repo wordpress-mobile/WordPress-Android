@@ -180,6 +180,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     enum class EntryPoint {
         DISCOVER,
-        SETTINGS
+        SETTINGS,
     }
 }

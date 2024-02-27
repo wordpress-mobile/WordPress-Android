@@ -31,7 +31,7 @@ class RemoteFeatureConfigDefaultsBuilder(private val defaults: Map<String, Strin
             .build()
         return FileSpec.builder("org.wordpress.android.util.config", FILE_NAME)
             .addType(remoteConfigDefaults)
-            .addComment("Automatically generated file. DO NOT MODIFY")
+            .addFileComment("Automatically generated file. DO NOT MODIFY")
             .indent("    ")
             .build()
     }

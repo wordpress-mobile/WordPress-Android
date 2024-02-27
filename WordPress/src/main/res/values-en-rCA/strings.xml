@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-11-25 14:38:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.2
 Language: en_CA
 -->
 <resources>
@@ -56,7 +56,6 @@ Language: en_CA
     <string name="site_creation_domain_free_with_annual_plan">Free for the first year with annual paid plans</string>
     <string name="site_creation_plans_selection_title">Select a plan</string>
     <string name="reader_discover_recommended_header_new">You might like</string>
-    <string name="reader_label_followers_count_single">1 follower</string>
     <string name="reader_secondary_bookmark">Save</string>
     <string name="reader_secondary_bookmarked">Saved</string>
     <string name="gutenberg_native_blocks_nested_deeper_than_d_levels_may_not_render_properly_in_the_09df8c78">Blocks nested deeper than %d levels may not render properly in the mobile editor. For this reason, we recommend flattening the content by ungrouping the block or editing the block using the web editor.</string>
@@ -365,7 +364,6 @@ Language: en_CA
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="wp_jetpack_powered_phase_2">Get the Jetpack app</string>
-    <string name="my_site_blogging_prompt_card_attribution_dayone">From &lt;b&gt;DayOne&lt;/b&gt;</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -553,7 +551,6 @@ Language: en_CA
     <string name="quick_start_dialog_check_notifications_message_short">Select the %1$s Notifications tab %2$s to get updates on the go.</string>
     <string name="quick_start_dialog_upload_media_message_short_plus">Select %1$s plus %2$s to upload media. You can add it to your posts/pages from any device.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Use &lt;b&gt; Discover &lt;/b&gt; to find sites and tags. Try selecting %1$s Settings %2$s to add topics you like.</string>
     <string name="photo_picker_video_thumbnail_content_description">Video Thumbnail</string>
     <string name="stats_details_top_commentators">Top Commentators</string>
     <string name="quick_start_list_check_notification_subtitle">Get real-time updates from your pocket</string>
@@ -1053,7 +1050,6 @@ Language: en_CA
     <string name="jetpack_brute_force_allowlist_title">Always allowed IP addresses</string>
     <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="gutenberg_native_add_button_text">Add button text</string>
-    <string name="reader_title_interests">Follow topics</string>
     <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>
@@ -1365,8 +1361,6 @@ Language: en_CA
     <string name="hpp_choose_error">There was an error while selecting the theme.</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_find_your_connected_email">Find your connected email</string>
-    <string name="reader_discover_no_posts_button_text">Follow topics</string>
-    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="scan">Scan</string>
@@ -1405,7 +1399,6 @@ Language: en_CA
     <string name="login_prologue_title_first">Welcome to the world’s most popular website builder.</string>
     <string name="login_prologue_title_fifth">Follow your favourite sites and discover new blogs.</string>
     <string name="media_loading_failed">Media loading failed</string>
-    <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We are working hard to add more blocks with each release.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' is not fully-supported</string>
     <string name="gutenberg_native_help_button">Help button</string>
@@ -1426,7 +1419,6 @@ Language: en_CA
     <string name="media_insert_failed">Media insert failed.</string>
     <string name="reader_label_toolbar_back">Back</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">This referrer can\'t be marked as spam</string>
     <string name="stats_referrer_popup_menu_open_website">Open Website</string>
@@ -1582,7 +1574,6 @@ Language: en_CA
     <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
     <string name="gutenberg_native_remove_block">Remove block</string>
     <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
-    <string name="reader_title_tag_preview">Topic</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>
@@ -1622,8 +1613,6 @@ Language: en_CA
     <string name="ccpa_privacy_notice_read">Read CCPA privacy notice</string>
     <string name="publish_date">Publish Date</string>
     <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act (\"CCPA\") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
-    <string name="reader_label_choose_your_interests">Choose your topics</string>
-    <string name="reader_choose_interests_content_description">Choose your topics</string>
     <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="update_now">Update Now</string>
@@ -1658,7 +1647,6 @@ Language: en_CA
     <string name="page_cannot_set_homepage">To set Homepage enable \"Static Homepage\" in Site Settings</string>
     <string name="gutenberg_native_select_a_color">Select a colour</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
-    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
     <string name="insert_label_with_count">Insert %d</string>
     <string name="crop">crop</string>
@@ -1672,9 +1660,6 @@ Language: en_CA
     <string name="feature_announcement_dialog_label">What\'s New In %s</string>
     <string name="sitepicker_continue_flow">Continue</string>
     <string name="reader_reblog_error">Reblog failed</string>
-    <string name="reader_no_site_to_reblog_action">Manage Sites</string>
-    <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
-    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
     <string name="whats_new_in_version_title">What\'s New</string>
     <string name="comment_q_action_copied_url">Link address copied</string>
     <string name="copy_link_address">Copy link address</string>
@@ -1774,24 +1759,14 @@ Language: en_CA
     <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_add_new_stats_card">Add new stats card</string>
     <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
-    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
-    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
-    <string name="reader_title_subs">Manage Topics &amp; Sites</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from topics you follow</string>
     <string name="gutenberg_native_add_to_end">Add To End</string>
     <string name="gutenberg_native_add_to_beginning">Add To Beginning</string>
     <string name="gutenberg_native_add_block_before">Add Block Before</string>
     <string name="gutenberg_native_add_block_after">Add Block After</string>
-    <string name="reader_filter_empty_sites_action">Follow a site</string>
-    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
     <string name="gutenberg_native_replace_current_block">Replace Current Block</string>
-    <string name="reader_filter_empty_tags_action">Add a topic</string>
-    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a topic</string>
     <string name="reader_filter_cta">Filter</string>
-    <string name="reader_filter_main_title">Following</string>
     <string name="gutenberg_native_edit_video">Edit video</string>
     <string name="gutenberg_native_edit_media">Edit media</string>
     <string name="gutenberg_native_add_a_shortcode">Add a shortcode…</string>
@@ -1834,7 +1809,6 @@ Language: en_CA
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
-    <string name="reader_following_display_name">Following</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -1842,13 +1816,11 @@ Language: en_CA
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_save_for_later_display_name">Saved</string>
     <string name="reader_discover_display_name">Discover</string>
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
     <string name="suffix_1_000">%sK</string>
-    <string name="reader_filter_tags_title">Topics</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Library</string>
     <string name="gutenberg_native_unsupported">Unsupported</string>
     <string name="gutenberg_native_ungroup">Ungroup</string>
@@ -2329,7 +2301,6 @@ Language: en_CA
     <string name="pages_trashed">Trashed</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
-    <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
     <string name="page_parent_changed">Page parent has been changed</string>
     <string name="page_permanently_deleted">Page has been permanently deleted</string>
     <string name="page_moved_to_scheduled">Page has been scheduled</string>
@@ -2362,8 +2333,6 @@ Language: en_CA
     <string name="quick_start_button_negative">Not now</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="content_description_more">More</string>
-    <string name="reader_empty_followed_tags_title">No followed topics</string>
-    <string name="reader_empty_followed_tags_subtitle">Add topics here to find posts about your favourite topics</string>
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -2383,9 +2352,6 @@ Language: en_CA
     <string name="people_empty_list_filtered_users">No users yet</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
-    <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
-    <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
-    <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
@@ -2450,8 +2416,6 @@ Language: en_CA
     <string name="reader_followed_blog_notifications_this">this site</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Turn on site notifications</string>
-    <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_icon">Activity icon</string>
@@ -3029,7 +2993,6 @@ Language: en_CA
     <string name="confirm">Confirm</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
-    <string name="reader_hint_search_followed_sites">Search followed sites</string>
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
@@ -3129,7 +3092,6 @@ Language: en_CA
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
-    <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
     <string name="people">People</string>
     <string name="role">Role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
@@ -3344,7 +3306,6 @@ Language: en_CA
     <string name="reader_err_get_post_not_found">This post no longer exists</string>
     <string name="reader_err_get_post_not_authorized">You\'re not authorized to view this post</string>
     <string name="reader_err_get_post_generic">Unable to retrieve this post</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="media_edit_copy_url_toast">URL copied to clipboard</string>
     <string name="selected_theme">Selected Theme</string>
@@ -3389,8 +3350,6 @@ Language: en_CA
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_label_follow_count">%,d Followers</string>
-    <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="notifications_email_summary">Settings for notifications that are sent to the email tied to your account.</string>
@@ -3412,8 +3371,6 @@ Language: en_CA
     <string name="button_publish">Publish</string>
     <string name="post_trashed">Post sent to trash</string>
     <string name="button_trash">Trash</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">You are not authorized to access this site</string>
-    <string name="reader_toast_err_follow_blog_not_found">This site could not be found</string>
     <string name="undo">Undo</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
     <string name="stats_insights_best_ever">Best Views Ever</string>
@@ -3460,7 +3417,6 @@ Language: en_CA
     <string name="reader_label_new_posts">New posts</string>
     <string name="error_copy_to_clipboard">An error occurred while copying text to clipboard</string>
     <string name="post_uploading">Uploading post</string>
-    <string name="reader_empty_posts_in_blog">This site is empty</string>
     <string name="themes_fetching">Fetching themes…</string>
     <string name="stats_followers_months">%1$d months</string>
     <string name="stats_followers_a_year">A year</string>
@@ -3502,25 +3458,10 @@ Language: en_CA
     <string name="comment_reply_to_user">Reply to %s</string>
     <string name="comment_trashed">Comment trashed</string>
     <string name="signing_out">Logging out…</string>
-    <string name="reader_empty_posts_in_tag">No posts with this topic</string>
     <string name="help_and_support">Help &amp; Support</string>
     <string name="reader_toast_err_generic">Unable to perform this action</string>
-    <string name="reader_toast_err_block_blog">Unable to block this site</string>
-    <string name="reader_toast_blog_blocked">Posts from this site will no longer be shown</string>
-    <string name="reader_menu_block_blog">Block this site</string>
     <string name="update_verb">Update</string>
     <string name="schedule_verb">Schedule</string>
-    <string name="reader_page_followed_blogs">Followed sites</string>
-    <string name="reader_title_blog_preview">Reader Site</string>
-    <string name="reader_label_followed_blog">Site followed</string>
-    <string name="reader_toast_err_get_blog_info">Unable to show this site</string>
-    <string name="reader_toast_err_already_follow_blog">You already follow this site</string>
-    <string name="reader_toast_err_follow_blog">Unable to follow this site</string>
-    <string name="reader_toast_err_unfollow_blog">Unable to unfollow this site</string>
-    <string name="reader_empty_recommended_blogs">No recommended sites</string>
-    <string name="reader_page_followed_tags">Followed topics</string>
-    <string name="reader_hint_add_tag_or_url">Enter a URL or topic to follow</string>
-    <string name="reader_label_followers_count">%s followers</string>
     <string name="help">Help</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
@@ -3592,8 +3533,6 @@ Language: en_CA
     <string name="plugin_not_found">An error occurred when accessing this plugin</string>
     <string name="delete_post">Delete post?</string>
     <string name="delete_page">Delete page?</string>
-    <string name="reader_toast_err_add_tag">Unable to add this topic</string>
-    <string name="reader_toast_err_remove_tag">Unable to remove this topic</string>
     <string name="share_link">Share link</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_likes_you_and_multi">You and %,d others like this</string>
@@ -3609,7 +3548,6 @@ Language: en_CA
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="reader_btn_share">Share</string>
     <string name="reader_btn_follow">Follow</string>
-    <string name="reader_btn_unfollow">Following</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
     <string name="reader_label_added_tag">Added %s</string>
     <string name="reader_label_removed_tag">Removed %s</string>
@@ -3622,8 +3560,6 @@ Language: en_CA
     <string name="comments_empty_list">No comments yet</string>
     <string name="reader_view_reblog">Reblog</string>
     <string name="sign_up_label">Sign Up</string>
-    <string name="reader_toast_err_tag_exists">You already follow this topic</string>
-    <string name="reader_toast_err_tag_invalid">That isn\'t a valid topic</string>
     <string name="themes">Themes</string>
     <string name="media_gallery_type_squares">Squares</string>
     <string name="media_gallery_type_tiled">Tiled</string>

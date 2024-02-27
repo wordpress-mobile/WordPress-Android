@@ -14,6 +14,8 @@ dependencies {
     kapt "com.google.auto.service:auto-service:$googleAutoServiceVersion"
     implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
 
+    testImplementation "com.github.tschuchortdev:kotlin-compile-testing:1.5.0"
     testImplementation "junit:junit:$junitVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
 }

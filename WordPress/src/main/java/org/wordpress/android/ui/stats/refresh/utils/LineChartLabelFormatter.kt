@@ -10,7 +10,7 @@ class LineChartLabelFormatter @Inject constructor(
 ) : ValueFormatter() {
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
         val index = value.toInt()
-        return if (index < entries.size) {
+        return if (index in 0..entries.size) {
             entries[index].label
         } else {
             ""

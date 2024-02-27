@@ -1,8 +1,2 @@
-* [*] Block Editor: Fix missing custom color indicator for custom gradients [https://github.com/WordPress/gutenberg/pull/57605]
-* [**] Block Editor: Display a notice when a network connection is unavailable [https://github.com/WordPress/gutenberg/pull/56934]
-* [**] Block Editor: Image block media uploads display a custom error message when there is no internet connection [https://github.com/wordpress-mobile/WordPress-Android/pull/19878]
-* [**] Block Editor: Media uploads that failed due to lack of internet connectivity automatically retry once a connection is re-established [https://github.com/wordpress-mobile/WordPress-Android/pull/19803]
-* [*] [Jetpack-only] Added opening domain management from the Site Domain screen by tapping on the domain cards [https://github.com/wordpress-mobile/WordPress-Android/pull/19910]
-* [*] [Jetpack-only] Fix Prompt response posts not having one of the `dailyprompt` tags [https://github.com/wordpress-mobile/WordPress-Android/pull/19971]
-* [*] Reader: Fix the issue with icons displaying incorrectly in RTL languages. [https://github.com/wordpress-mobile/WordPress-Android/pull/19962]
-
+Log in to your site with Google credentials, physical devices, and third-party passkeys. Don’t worry, the site’s still locked down tighter than the Colonel’s secret recipe.
+We hid the menu icon on Stats screens so it’s only visible from the Insights tab. Ninja mode: activated.

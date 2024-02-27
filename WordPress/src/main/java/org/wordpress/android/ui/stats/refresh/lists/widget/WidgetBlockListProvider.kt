@@ -11,9 +11,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.StatsActivity
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 
 class WidgetBlockListProvider(val context: Context, val viewModel: WidgetBlockListViewModel, intent: Intent) :
     RemoteViewsFactory {
@@ -57,7 +57,7 @@ class WidgetBlockListProvider(val context: Context, val viewModel: WidgetBlockLi
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, uiModel.targetTimeframe)
-        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.STATS_WIDGET)
+        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
         rv.setOnClickFillInIntent(R.id.container, intent)
         return rv
     }

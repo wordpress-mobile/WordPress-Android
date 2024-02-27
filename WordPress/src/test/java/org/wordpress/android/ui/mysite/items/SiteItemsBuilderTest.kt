@@ -77,6 +77,7 @@ class SiteItemsBuilderTest {
     fun `adds all the items in the correct order`() {
         setupHeaders(
             addActivityLogItem = true,
+            addSiteMonitoringItem = true,
             addPlanItem = false,
             addPagesItem = true,
             addAdminItem = true,
@@ -109,6 +110,7 @@ class SiteItemsBuilderTest {
             ACTIVITY_ITEM,
             BACKUP_ITEM,
             SCAN_ITEM,
+            SITE_MONITORING_ITEM,
             EMPTY_HEADER,
             PEOPLE_ITEM,
             PLUGINS_ITEM,
@@ -230,6 +232,7 @@ class SiteItemsBuilderTest {
     @Suppress("ComplexMethod", "LongMethod")
     private fun setupHeaders(
         addActivityLogItem: Boolean = false,
+        addSiteMonitoringItem: Boolean = false,
         addPlanItem: Boolean = false,
         addPagesItem: Boolean = false,
         addAdminItem: Boolean = false,
@@ -268,6 +271,11 @@ class SiteItemsBuilderTest {
         if (addScanItem) {
             whenever(siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)).thenReturn(
                 SCAN_ITEM
+            )
+        }
+        if (addSiteMonitoringItem) {
+            whenever(siteListItemBuilder.buildSiteMonitoringItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                SITE_MONITORING_ITEM
             )
         }
         if (addPagesItem) {

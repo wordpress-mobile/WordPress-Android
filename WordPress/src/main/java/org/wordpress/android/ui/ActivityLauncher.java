@@ -115,6 +115,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
@@ -461,21 +462,23 @@ public class ActivityLauncher {
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site) {
-        viewStatsInNewStack(context, site, null);
-    }
-
-    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe) {
-        viewStatsInNewStack(context, site, statsTimeframe, null);
+    public static void viewStatsInNewStack(Context context, SiteModel site, @NonNull StatsLaunchedFrom launchedFrom) {
+        viewStatsInNewStack(context, site, null, launchedFrom);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
-                                           @Nullable String period) {
+                                           @NonNull StatsLaunchedFrom launchedFrom) {
+        viewStatsInNewStack(context, site, statsTimeframe, null, launchedFrom);
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
+                                           @Nullable String period, @NonNull StatsLaunchedFrom launchedFrom) {
         if (site == null) {
             handleMissingSite(context);
             return;
         }
-        runIntentOverMainActivityInNewStack(context, StatsActivity.buildIntent(context, site, statsTimeframe, period));
+        runIntentOverMainActivityInNewStack(context,
+                StatsActivity.buildIntent(context, site, statsTimeframe, period, launchedFrom));
     }
 
     private static void handleMissingSite(Context context) {
@@ -497,9 +500,11 @@ public class ActivityLauncher {
                                                                                   @Nullable StatsTimeframe timeframe,
                                                                                   @Nullable String period,
                                                                                   @Nullable NotificationType type,
+                                                                                  @NonNull
+                                                                                  StatsLaunchedFrom launchedFrom,
                                                                                   int requestCode, int flags) {
         return buildPendingIntentOverMainActivityInNewStack(context,
-                StatsActivity.buildIntent(context, site, timeframe, period, type), requestCode, flags);
+                StatsActivity.buildIntent(context, site, timeframe, period, launchedFrom, type), requestCode, flags);
     }
 
     private static PendingIntent buildPendingIntentOverMainActivityInNewStack(Context context, Intent intent,
@@ -546,7 +551,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStats(Context context, SiteModel site) {
+    public static void viewBlogStats(Context context, SiteModel site, @NonNull StatsLaunchedFrom from) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -554,14 +559,15 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            StatsActivity.start(context, site);
+            StatsActivity.start(context, site, from);
         }
     }
 
-    public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
+    public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                                 @NonNull StatsLaunchedFrom from) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -569,10 +575,10 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            StatsActivity.start(context, site, statsTimeframe);
+            StatsActivity.start(context, site, statsTimeframe, from);
         }
     }
 
@@ -596,7 +602,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site,
+                                                      @NonNull StatsLaunchedFrom launchedFrom) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -604,11 +611,11 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        StatsActivity.start(context, site);
+        StatsActivity.start(context, site, launchedFrom);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {

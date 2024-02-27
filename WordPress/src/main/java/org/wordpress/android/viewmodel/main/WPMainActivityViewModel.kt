@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -55,7 +54,6 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val SWITCH_TO_MY_SITE_DELAY = 500L
 private const val ONE_SITE = 1
 
 class WPMainActivityViewModel @Inject constructor(
@@ -112,11 +110,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    private val _startLoginFlow = MutableLiveData<Event<Unit>>()
-    val startLoginFlow: LiveData<Event<Unit>> = _startLoginFlow
-
-    private val _switchToMySite = MutableLiveData<Event<Unit>>()
-    val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
+    private val _switchToMeTab = MutableLiveData<Event<Unit>>()
+    val switchToMeTab: LiveData<Event<Unit>> = _switchToMeTab
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit?>()
     val onFeatureAnnouncementRequested: LiveData<Unit?> = _onFeatureAnnouncementRequested
@@ -290,11 +285,8 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
     }
 
-    fun onOpenLoginPage(mySitePosition: Int) = launch {
-        _startLoginFlow.value = Event(Unit)
-        appPrefsWrapper.setMainPageIndex(mySitePosition)
-        delay(SWITCH_TO_MY_SITE_DELAY)
-        _switchToMySite.value = Event(Unit)
+    fun onOpenLoginPage() = launch {
+        _switchToMeTab.value = Event(Unit)
     }
 
     fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {

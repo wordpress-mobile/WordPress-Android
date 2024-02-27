@@ -66,7 +66,6 @@ class UserFlagsProviderHelper @Inject constructor(
         DeletablePrefKey.RECENTLY_PICKED_SITE_IDS.name,
         UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH.name,
         UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN.name,
-        UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED.name,
         UndeletablePrefKey.SWIPE_TO_NAVIGATE_NOTIFICATIONS.name,
         UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER.name,
         UndeletablePrefKey.SHOULD_SHOW_STORAGE_WARNING.name,

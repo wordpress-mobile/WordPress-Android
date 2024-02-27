@@ -14,8 +14,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,6 +29,9 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      */
 
     private static final String URL = "url";
+
+    private static final String WEBVIEW_CHROMIUM_STATE = "WEBVIEW_CHROMIUM_STATE";
+    private static final int WEBVIEW_CHROMIUM_STATE_THRESHOLD = 300 * 1024; // 300 KB
 
     protected WebView mWebView;
 
@@ -84,8 +89,26 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * save the webView state with the bundle so it can be restored
      */
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         mWebView.saveState(outState);
+
+        // If the WebView state is too large, remove it from the bundle and track the error. This workaround is
+        // necessary since the Android system cannot handle large states without a crash.
+        // Note that Chromium `WebViewBrowserFragment` uses a similar workaround for this issue:
+        // https://source.chromium.org/chromium/chromium/src/+/27a9bbd3dcd7005ac9f3862dc2e356b557023de9
+        byte[] webViewState = outState.getByteArray(WEBVIEW_CHROMIUM_STATE);
+        if (webViewState != null && webViewState.length > WEBVIEW_CHROMIUM_STATE_THRESHOLD) {
+            outState.remove(WEBVIEW_CHROMIUM_STATE);
+
+            // Save the URL so it can be restored later
+            String url = mWebView.getUrl();
+            outState.putString(URL, url);
+
+            // Track the error to better understand the root of the issue
+            Map<String, String> properties = new HashMap<>();
+            properties.put(URL, url);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.WEBVIEW_TOO_LARGE_PAYLOAD_ERROR, properties);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -93,9 +116,16 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
      * restore the webView state saved above
      */
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mWebView.restoreState(savedInstanceState);
+        if (savedInstanceState.containsKey(WEBVIEW_CHROMIUM_STATE)) {
+            mWebView.restoreState(savedInstanceState);
+        } else {
+            String url = savedInstanceState.getString(URL);
+            if (url != null) {
+                mWebView.loadUrl(url);
+            }
+        }
     }
 
     @Override
