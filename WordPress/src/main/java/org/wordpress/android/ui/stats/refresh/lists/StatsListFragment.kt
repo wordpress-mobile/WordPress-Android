@@ -337,7 +337,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager)
+            adapter = StatsBlockAdapter(imageManager, statsTrafficTabFeatureConfig.isEnabled())
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter

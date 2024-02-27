@@ -17,7 +17,7 @@ public class ReaderSearchJobService extends JobService implements ServiceComplet
     private ReaderSearchLogic mReaderSearchLogic;
 
     @Override public boolean onStartJob(JobParameters params) {
-        if (params.getExtras() != null && params.getExtras().containsKey(ARG_QUERY)) {
+        if (params.getExtras() != null && params.getExtras().getString(ARG_QUERY) != null) {
             String query = params.getExtras().getString(ARG_QUERY);
             int offset = params.getExtras().getInt(ARG_OFFSET, 0);
             mReaderSearchLogic.startSearch(query, offset, params);

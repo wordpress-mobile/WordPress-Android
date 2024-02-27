@@ -11,10 +11,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
