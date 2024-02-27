@@ -1481,6 +1481,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             invalidateOptionsMenu();
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
+        } else {
+            savePostAndOptionallyFinish(true, false);
         }
 
         return true;
