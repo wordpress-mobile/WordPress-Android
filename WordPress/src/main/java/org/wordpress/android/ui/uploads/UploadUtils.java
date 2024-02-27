@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
@@ -194,13 +195,13 @@ public class UploadUtils {
                                                           SnackbarSequencer sequencer,
                                                           View.OnClickListener publishPostListener,
                                                           @Nullable OnPublishingCallback onPublishingCallback) {
-        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+        boolean hasChanges = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
             return;
         }
 
-        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivity.EXTRA_UPLOAD_NOT_STARTED, false);
+        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivityConstants.EXTRA_UPLOAD_NOT_STARTED, false);
         if (uploadNotStarted && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
@@ -214,7 +215,7 @@ public class UploadUtils {
             return;
         }
 
-        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
+        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, post.isPage() ? R.string.editor_page_saved_locally_failed_media
                             : R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
@@ -608,8 +609,8 @@ public class UploadUtils {
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 writePostIntent.putExtra(WordPress.SITE, site);
-                                writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-                                writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
                                 activity.startActivity(writePostIntent);
                             }
                         }, sequencer);
