@@ -11,10 +11,13 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.BLOCK_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.lists.BaseListUseCase
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsPostProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -28,6 +31,7 @@ class StatsDetailViewModel
     private val statsSiteProvider: StatsSiteProvider,
     private val statsPostProvider: StatsPostProvider,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
@@ -49,6 +53,11 @@ class StatsDetailViewModel
         postTitle: String,
         postUrl: String?
     ) {
+        analyticsTrackerWrapper.trackStatsAccessed(
+            statsSiteProvider.siteModel,
+            StatsLaunchedFrom.POSTS.value
+        )
+
         statsPostProvider.init(postId, postType, postTitle, postUrl)
 
         if (jetpackFeatureRemovalOverlayUtil.shouldShowFeatureSpecificJetpackOverlay(

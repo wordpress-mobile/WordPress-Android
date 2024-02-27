@@ -14,7 +14,10 @@ import org.wordpress.android.ui.stats.refresh.lists.viewholders.BlockListViewHol
 import org.wordpress.android.ui.stats.refresh.lists.viewholders.LoadingViewHolder
 import org.wordpress.android.util.image.ImageManager
 
-class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewHolder>() {
+class StatsBlockAdapter(
+    val imageManager: ImageManager,
+    private val trafficTabEnabled: Boolean
+) : Adapter<BaseStatsViewHolder>() {
     private var items: List<StatsBlock> = listOf()
 
     fun update(newItems: List<StatsBlock>) {
@@ -30,8 +33,8 @@ class StatsBlockAdapter(val imageManager: ImageManager) : Adapter<BaseStatsViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseStatsViewHolder {
         return when (values()[viewType]) {
-            SUCCESS, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager)
-            LOADING -> LoadingViewHolder(parent, imageManager)
+            SUCCESS, ERROR, EMPTY -> BlockListViewHolder(parent, imageManager, trafficTabEnabled)
+            LOADING -> LoadingViewHolder(parent, imageManager, trafficTabEnabled)
         }
     }
 

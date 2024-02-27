@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
@@ -70,7 +71,7 @@ import javax.inject.Inject;
  * followed tags and followed blogs
  */
 public class ReaderSubsActivity extends LocaleAwareActivity
-        implements ReaderTagAdapter.TagDeletedListener {
+        implements ReaderTagAdapter.TagDeletedListener, ReaderTagAdapter.TagAddedListener {
     private EditText mEditAdd;
     private FloatingActionButton mFabButton;
     private ReaderFollowButton mBtnAdd;
@@ -176,8 +177,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         boolean shouldRefreshSubscriptions = false;
         if (mPageAdapter != null) {
             final ReaderTagFragment readerTagFragment = mPageAdapter.getReaderTagFragment();
-            final ReaderBlogFragment readerBlogFragment = mPageAdapter.getReaderBlogFragment();
-            if (readerTagFragment != null && readerBlogFragment != null) {
+            if (readerTagFragment != null) {
                 shouldRefreshSubscriptions = readerTagFragment.hasChangedSelectedTags();
             }
         }
@@ -204,7 +204,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+    public void onEventMainThread(FollowedTagsFetched event) {
         AppLog.d(AppLog.T.READER, "reader subs > followed tags changed");
         getPageAdapter().refreshFollowedTagFragment();
     }
@@ -497,8 +497,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
             mLastAddedTagName = null;
         }
-        String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
+    }
+
+    @Override public void onTagAdded(@NonNull ReaderTag readerTag) {
+        mReaderTracker.trackTag(
+                AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                readerTag.getTagSlug(),
+                ReaderTracker.SOURCE_SETTINGS
+        );
     }
 
     /*

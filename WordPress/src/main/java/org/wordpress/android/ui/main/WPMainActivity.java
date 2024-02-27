@@ -134,6 +134,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -944,9 +945,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                     if (intent.hasExtra(ARG_STATS_TIMEFRAME)) {
                         ActivityLauncher.viewBlogStatsForTimeframe(this, getSelectedSite(),
-                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME));
+                                (StatsTimeframe) intent.getSerializableExtra(ARG_STATS_TIMEFRAME),
+                                StatsLaunchedFrom.LINK);
                     } else {
-                        ActivityLauncher.viewBlogStats(this, getSelectedSite());
+                        ActivityLauncher.viewBlogStats(this, getSelectedSite(), StatsLaunchedFrom.LINK);
                     }
                     break;
                 case ARG_PAGES:

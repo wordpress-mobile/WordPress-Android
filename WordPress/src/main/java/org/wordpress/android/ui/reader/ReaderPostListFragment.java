@@ -84,6 +84,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -640,7 +641,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
                                 SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
-                                visibleState.getCategories(),
+                                visibleState.getCategory(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
@@ -934,14 +935,16 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+    public void onEventMainThread(FollowedTagsFetched event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // reload the tag filter since tags have changed
-            reloadTags();
+            if (event.didChange()) {
+                // reload the tag filter since tags have changed or we just opened the fragment
+                reloadTags();
+            }
 
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
-            if (isPostAdapterEmpty()) {
+            if (isPostAdapterEmpty() && (ReaderBlogTable.hasFollowedBlogs() || !mHasUpdatedPosts)) {
                 updateCurrentTag();
             }
         }
@@ -1724,9 +1727,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // Ensure the default image is reset for empty views before applying logic
         mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
 
-        // TODO thomashortadev
-        //  try to quickly hack some way of making the button black
-
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -1940,7 +1940,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
-    }    /*
+    }
+
+    /*
      * called by post adapter when data has been loaded
      */
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
@@ -2333,7 +2335,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
-                        } else {
+                        } else if (!isPostAdapterEmpty()) {
                             hideEmptyView();
                         }
                     });

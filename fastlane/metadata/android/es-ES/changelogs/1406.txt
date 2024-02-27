@@ -1,5 +1,0 @@
-2.4.1:
-- Recibe avisos cuando estés trabajando desconectado.
-- Las subidas al bloque de imagen que se pausan cuando pierdes la conexión a Internet y se reanudan cuando vuelves a conectar.
-- Selecciona un gradiente personalizado en el editor y verás un indicador de color.
-- Las flechas de «adelante» y «atrás» ahora están correctamente para lectores de derecha a izquierda.

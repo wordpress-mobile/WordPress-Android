@@ -2488,6 +2488,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     false,
                     false,
                     false,
+                    false,
                     true,
                     false,
                     !isFreeWPCom,
@@ -2506,6 +2507,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 SiteUtils.supportsLayoutGridFeature(mSite),
                 SiteUtils.supportsTiledGalleryFeature(mSite),
                 SiteUtils.supportsVideoPressFeature(mSite),
+                SiteUtils.supportsVideoPressV5Feature(mSite, SiteUtils.WP_VIDEOPRESS_V5_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_FACEBOOK_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(mSite, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
@@ -3932,7 +3934,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void showVideoDurationLimitWarning(@NonNull String fileName) {
-        ToastUtils.showToast(this, R.string.error_media_video_duration_exceeds_limit, ToastUtils.Duration.LONG);
+        String message = getString(R.string.error_media_video_duration_exceeds_limit);
+        WPSnackbar.make(
+                findViewById(R.id.editor_activity),
+                message,
+                Snackbar.LENGTH_LONG
+        ).show();
     }
 
     @Override

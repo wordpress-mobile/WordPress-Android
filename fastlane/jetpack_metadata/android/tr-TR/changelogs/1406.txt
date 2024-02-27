@@ -1,7 +1,0 @@
-24.1:
-- Çevrimdışı çalışırken bildirim alın.
-- Görsel bloku yüklemeleri, internet bağlantısına göre duraklar/devam eder.
-- Düzenleyicide özel gradyan seçeneklerini görün.
-- İleri/geri okları, sağdan sola okuyucular için düzeltildi.
-- Günlük Konu Etiketleri düzgün çalışıyor.
-- Alan adlarını yönetmek için Site Alan Adı kartlarına dokunun.

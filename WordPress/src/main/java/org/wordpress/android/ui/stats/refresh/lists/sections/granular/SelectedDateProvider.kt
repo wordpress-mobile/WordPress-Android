@@ -8,15 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_FORWARD
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_BACKWARD
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.readListCompat
-import org.wordpress.android.util.filter
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,9 +37,7 @@ class SelectedDateProvider
 
     private val selectedDateChanged = MutableLiveData<GranularityChange?>()
 
-    fun granularSelectedDateChanged(statsGranularity: StatsGranularity): LiveData<GranularityChange?> {
-        return selectedDateChanged.filter { it?.selectedGranularity == statsGranularity }
-    }
+    fun granularSelectedDateChanged(): LiveData<GranularityChange?> = selectedDateChanged
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
         val selectedDate = getSelectedDateState(statsGranularity)
@@ -93,7 +90,7 @@ class SelectedDateProvider
     fun selectPreviousDate(statsGranularity: StatsGranularity) {
         val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithGranularity(STATS_PREVIOUS_DATE_TAPPED, statsGranularity)
+            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_BACKWARD, statsGranularity)
             updateSelectedDate(
                 selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()),
                 statsGranularity
@@ -104,7 +101,7 @@ class SelectedDateProvider
     fun selectNextDate(statsGranularity: StatsGranularity) {
         val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithGranularity(STATS_NEXT_DATE_TAPPED, statsGranularity)
+            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_FORWARD, statsGranularity)
             updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsGranularity)
         }
     }

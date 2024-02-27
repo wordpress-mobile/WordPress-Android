@@ -234,7 +234,7 @@ class SubFilterViewModel @Inject constructor(
         _bottomSheetUiState.value = Event(
             BottomSheetVisible(
                 UiStringRes(category.titleRes),
-                listOf(category) // TODO thomashortadev this should accept only a single category
+                category
             )
         )
         val source = when(category) {
@@ -393,7 +393,7 @@ class SubFilterViewModel @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+    fun onEventMainThread(event: ReaderEvents.FollowedTagsFetched) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
         loadSubFilters()
     }
