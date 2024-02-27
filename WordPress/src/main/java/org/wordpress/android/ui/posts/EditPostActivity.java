@@ -71,13 +71,13 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
-import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.editor.gutenberg.DialogVisibility;
 import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
+import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener;
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
+import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -260,6 +260,43 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_
 import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.MEDIA_ID_NO_FEATURED_IMAGE_SET;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.ACTION_REBLOG;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_ENTRY_POINT;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_HAS_CHANGES;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_HAS_FAILED_MEDIA;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_INSERT_MEDIA;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_IS_NEW_POST;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_IS_PAGE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_IS_QUICKPRESS;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_PAGE_CONTENT;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_PAGE_TEMPLATE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_PAGE_TITLE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_POST_REMOTE_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_PROMPT_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_RESTART_EDITOR;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_UPLOAD_NOT_STARTED;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_HTML_MODE_ON;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_IS_NEW_POST;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_MEDIA_CAPTURE_PATH;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_REDO;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_REVISION;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.STATE_KEY_UNDO;
+import static org.wordpress.android.ui.stories.StoryComposerActivity.STATE_KEY_EDITOR_SESSION_DATA;
 
 public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
@@ -280,46 +317,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         PrivateAtCookieProgressDialogOnDismissListener,
         ExceptionLogger,
         SiteSettingsInterface.SiteSettingsListener {
-    public static final String ACTION_REBLOG = "reblogAction";
-    public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
-    public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
-    public static final String EXTRA_IS_PAGE = "isPage";
-    public static final String EXTRA_IS_PROMO = "isPromo";
-    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
-    public static final String EXTRA_IS_LANDING_EDITOR = "isLandingEditor";
-    public static final String EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE = "isLandingEditorOpenedForNewSite";
-    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
-    public static final String EXTRA_UPLOAD_NOT_STARTED = "savedAsLocalDraft";
-    public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
-    public static final String EXTRA_HAS_CHANGES = "hasChanges";
-    public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
-    public static final String EXTRA_INSERT_MEDIA = "insertMedia";
-    public static final String EXTRA_IS_NEW_POST = "isNewPost";
-    public static final String EXTRA_REBLOG_POST_TITLE = "reblogPostTitle";
-    public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
-    public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
-    public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
-    public static final String EXTRA_PAGE_TITLE = "pageTitle";
-    public static final String EXTRA_PAGE_CONTENT = "pageContent";
-    public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
-    public static final String EXTRA_PROMPT_ID = "extraPromptId";
-    public static final String EXTRA_ENTRY_POINT = "extraEntryPoint";
-    private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
-    private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
-    private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
-    private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
-    private static final String STATE_KEY_POST_LOADING_STATE = "stateKeyPostLoadingState";
-    private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
-    private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
-    private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
-    private static final String STATE_KEY_REVISION = "stateKeyRevision";
-    private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
-    private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath";
-    private static final String STATE_KEY_UNDO = "stateKeyUndo";
-    private static final String STATE_KEY_REDO = "stateKeyRedo";
-
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
     private static final int PAGE_PUBLISH_SETTINGS = 2;
@@ -452,8 +449,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
 
     public static boolean checkToRestart(@NonNull Intent data) {
-        return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
-               && RestartEditorOptions.valueOf(data.getStringExtra(EditPostActivity.EXTRA_RESTART_EDITOR))
+        return data.hasExtra(EXTRA_RESTART_EDITOR)
+               && RestartEditorOptions.valueOf(data.getStringExtra(EXTRA_RESTART_EDITOR))
                   != RestartEditorOptions.NO_RESTART;
     }
 

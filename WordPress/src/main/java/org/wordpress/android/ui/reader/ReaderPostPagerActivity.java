@@ -54,6 +54,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -96,10 +97,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
-
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_OPEN_PAGE;
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
@@ -1075,13 +1076,13 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
                     return;
                 }
-                int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                int localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0);
                 final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                 final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
                 if (EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(data, ReaderPostPagerActivity.this, site,
-                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                            data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0));
 
                     // a restart will happen so, no need to continue here
                     break;
