@@ -305,7 +305,7 @@ public class PostUtils {
     }
 
     /**
-     * Removes the VideoPress block tag from the given string.
+     * Removes VideoPress references that occur in the VideoPress or video block from the given string.
      */
     public static String removeWPVideoPress(String str) {
         return str.replaceAll("(?s)\\n?<!--\\swp:video.*?(.*?)wp:video.*?\\s-->", "");
