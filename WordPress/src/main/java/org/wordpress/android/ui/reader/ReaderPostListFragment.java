@@ -1948,7 +1948,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() || !mHasUpdatedPosts) {
+            if (!isAdded() || (isEmpty && !mHasUpdatedPosts)) {
                 return;
             }
             if (isEmpty) {
@@ -2322,7 +2322,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     requireActivity().runOnUiThread(() -> updateCurrentTag());
                 } else {
                     requireActivity().runOnUiThread(() -> {
-                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
+                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.illustration_reader_empty);
