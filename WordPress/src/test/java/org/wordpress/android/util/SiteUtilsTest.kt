@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
@@ -176,59 +175,6 @@ class SiteUtilsTest {
         val isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(site)
 
         assertThat(isAccessedViaWPComRest).isTrue()
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns true when origin is wpcom rest`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
-        val site = SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsWPCom(true)
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
-        )
-
-        assertTrue(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns true when Jetpack site meets requirement`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
-        val site = initJetpackSite().apply {
-            jetpackVersion = SiteUtils.WP_STORIES_JETPACK_VERSION
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
-        )
-
-        assertTrue(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns false when Jetpack site does not meet requirement`() {
-        val site = initJetpackSite().apply {
-            jetpackVersion = (SiteUtils.WP_STORIES_JETPACK_VERSION.toFloat() - 1).toString()
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
-        )
-
-        assertFalse(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns false when Jetpack features are removed`() {
-        val site = SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsWPCom(true)
-        }
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(false)
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(
-        )
-
-        assertFalse(supportsStoriesFeature)
     }
 
     @Test

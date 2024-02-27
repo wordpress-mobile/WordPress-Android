@@ -78,7 +78,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), closeKeyboard = false)
+        viewModel.start(mock())
         viewModel.onBackButtonClicked()
 
         assertThat(event).isNull()
@@ -91,7 +91,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
             event = it
         }
 
-        viewModel.start(mock(), closeKeyboard = true)
+        viewModel.start(mock())
         viewModel.onBackButtonClicked()
 
         assertThat(event).isNotNull
