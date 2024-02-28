@@ -41,7 +41,6 @@ fun DesignSystemColorsScreen(
                 ColorOption("Primary", MaterialTheme.colorScheme.primary),
                 ColorOption("Secondary", MaterialTheme.colorScheme.secondary),
                 ColorOption("Tertiary", MaterialTheme.colorScheme.tertiary),
-                ColorOption("Quartenary", MaterialTheme.colorScheme.quartenary),
                 ColorOption("Brand", MaterialTheme.colorScheme.brand),
                 ColorOption("Error", MaterialTheme.colorScheme.error),
                 ColorOption("Warning", MaterialTheme.colorScheme.warning),
@@ -54,6 +53,7 @@ fun DesignSystemColorsScreen(
                 ColorOption("Primary", MaterialTheme.colorScheme.primaryContainer),
                 ColorOption("Secondary", MaterialTheme.colorScheme.secondaryContainer),
                 ColorOption("Tertiary", MaterialTheme.colorScheme.tertiaryContainer),
+                ColorOption("Quartenary", MaterialTheme.colorScheme.quartenaryContainer),
                 ColorOption("Brand", MaterialTheme.colorScheme.brandContainer),
                 ColorOption("WP", MaterialTheme.colorScheme.wpContainer),
             )

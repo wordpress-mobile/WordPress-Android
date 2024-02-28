@@ -90,7 +90,7 @@ data class ExtraColors(
     val wpContainer: Color,
     )
 @Suppress("UnusedReceiverParameter")
-val ColorScheme.quartenary
+val ColorScheme.quartenaryContainer
     @Composable
     @ReadOnlyComposable
     get() = localColors.current.quartenaryContainer
