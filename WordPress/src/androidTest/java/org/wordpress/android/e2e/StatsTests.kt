@@ -24,7 +24,7 @@ class StatsTests : BaseTest() {
     fun setUp() {
         // We're not running Stats tests for JP.
         // See https://github.com/wordpress-mobile/WordPress-Android/issues/18065
-        assumeTrue(!BuildConfig.IS_JETPACK_APP)
+        assumeTrue(BuildConfig.IS_JETPACK_APP)
         ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
@@ -39,7 +39,7 @@ class StatsTests : BaseTest() {
         }
     }
 
-    @Ignore("Will be taken care of in a future PR - scrollToPosts is not working")
+//    @Ignore("Will be taken care of in a future PR - scrollToPosts is not working")
     @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
