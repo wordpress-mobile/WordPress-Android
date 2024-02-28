@@ -200,30 +200,37 @@ class ReaderDiscoverLogic @Inject constructor(
     @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         var index = 0
-        val simplifiedJson = JSONArray()
+        val simplifiedJsonList = mutableListOf<JSONObject>()
+        var firstYouMayLikeCard: JSONObject? = null
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
-                            simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                            simplifiedJsonList.add(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
                         }
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
                     // We should not have an interests/tags card as the first element on Discover feed.
                     if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
+                        firstYouMayLikeCard = cardJson
                         continue
                     }
-                    simplifiedJson.put(index++, cardJson)
+                    simplifiedJsonList.add(index++, cardJson)
                 }
                 JSON_CARD_POST -> {
-                    simplifiedJson.put(index++, createSimplifiedPostJson(cardJson))
+                    simplifiedJsonList.add(index++, createSimplifiedPostJson(cardJson))
                 }
             }
         }
-        return simplifiedJson
+        // If we've received an interests/tags card as the first element, it should be displayed as the third card.
+        if (firstYouMayLikeCard != null) {
+            simplifiedJsonList.add(2, firstYouMayLikeCard)
+        }
+
+        return JSONArray(simplifiedJsonList)
     }
 
     /**
