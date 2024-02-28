@@ -61,7 +61,6 @@ import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -141,17 +140,8 @@ class StatsViewModel
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
         val timeframe = intent.getSerializableExtraCompat<StatsTimeframe>(StatsActivity.ARG_DESIRED_TIMEFRAME)
-        if (statsTrafficTabFeatureConfig.isEnabled()) {
-            if (timeframe == DAY || timeframe == WEEK || timeframe == MONTH || timeframe == YEAR) {
-                when (timeframe) {
-                    DAY -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.DAYS)
-                    WEEK -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.WEEKS)
-                    MONTH -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.MONTHS)
-                    YEAR -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.YEARS)
-                    else -> { /* Do nothing */}
-                }
-            }
-        }
+
+        if (statsTrafficTabFeatureConfig.isEnabled()) setupDeeplinkForTrafficTab(timeframe)
 
         return when (timeframe) {
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
@@ -160,6 +150,16 @@ class StatsViewModel
             MONTH -> StatsSection.MONTHS
             YEAR -> StatsSection.YEARS
             else -> null
+        }
+    }
+
+    private fun setupDeeplinkForTrafficTab(timeframe: StatsTimeframe?) {
+        when (timeframe) {
+            DAY -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.DAYS)
+            WEEK -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.WEEKS)
+            MONTH -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.MONTHS)
+            YEAR -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.YEARS)
+            else -> { /* Do nothing */ }
         }
     }
 
