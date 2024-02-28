@@ -47,20 +47,14 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
      * Add notes to the adapter and notify the change
      */
     fun addAll(notes: List<Note>) = coroutineScope.launch {
+        val currentSize: Int = filteredNotes.size
         val newNotes = buildFilteredNotesList(notes, currentFilter)
-        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = filteredNotes.size
-            override fun getNewListSize(): Int = newNotes.size
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                filteredNotes[oldItemPosition].id == newNotes[newItemPosition].id
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                filteredNotes[oldItemPosition].json.toString() == newNotes[newItemPosition].json.toString()
-        })
         filteredNotes.clear()
         filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
-            result.dispatchUpdatesTo(this@NotesAdapter)
+            notifyItemRangeRemoved(0, currentSize)
+            notifyItemRangeInserted(0, newNotes.size)
             onNotesLoaded(newNotes.size)
         }
     }
