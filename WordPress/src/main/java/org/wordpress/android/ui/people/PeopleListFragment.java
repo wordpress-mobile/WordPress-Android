@@ -43,7 +43,7 @@ import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFra
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -442,7 +442,7 @@ public class PeopleListFragment extends Fragment {
             final Person person = getPerson(position);
 
             if (person != null) {
-                String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
+                String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(person.getAvatarUrl(), mAvatarSz);
                 mImageManager.loadIntoCircle(peopleViewHolder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
                 peopleViewHolder.mTxtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {

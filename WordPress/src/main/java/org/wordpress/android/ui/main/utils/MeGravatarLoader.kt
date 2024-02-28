@@ -5,7 +5,7 @@ import android.widget.ImageView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType
@@ -58,6 +58,6 @@ class MeGravatarLoader @Inject constructor(
 
     fun constructGravatarUrl(rawAvatarUrl: String): String {
         val avatarSz = resourseProvider.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
-        return GravatarUtils.fixGravatarUrl(rawAvatarUrl, avatarSz)
+        return WPAvatarUtils.rewriteAvatarUrl(rawAvatarUrl, avatarSz)
     }
 }

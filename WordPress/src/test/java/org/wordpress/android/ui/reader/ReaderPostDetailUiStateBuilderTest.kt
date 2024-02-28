@@ -41,7 +41,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -91,7 +91,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     @Mock
-    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
 
     @Mock
     lateinit var threadedCommentsUtils: ThreadedCommentsUtils
@@ -122,7 +122,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
             htmlUtilsWrapper,
             htmlMessageUtils,
             dateTimeUtilsWrapper,
-            gravatarUtilsWrapper,
+            avatarUtilsWrapper,
             threadedCommentsUtils,
             resourceProvider
         )
@@ -305,7 +305,7 @@ class ReaderPostDetailUiStateBuilderTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.dateFromIso8601(anyString())).thenReturn(Date())
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
 
-        whenever(gravatarUtilsWrapper.fixGravatarUrl(anyString(), anyInt())).thenReturn("")
+        whenever(avatarUtilsWrapper.rewriteAvatarUrl(anyString(), anyInt())).thenReturn("")
 
         val comment = ReaderComment().apply {
             authorName = ""

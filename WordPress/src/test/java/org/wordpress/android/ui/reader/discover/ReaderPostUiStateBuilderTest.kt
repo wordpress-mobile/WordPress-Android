@@ -54,7 +54,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType
 import java.util.Date
@@ -73,7 +73,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     lateinit var urlUtilsWrapper: UrlUtilsWrapper
 
     @Mock
-    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
 
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
@@ -92,7 +92,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         builder = ReaderPostUiStateBuilder(
             accountStore,
             urlUtilsWrapper,
-            gravatarUtilsWrapper,
+            avatarUtilsWrapper,
             dateTimeUtilsWrapper,
             readerImageScannerProvider,
             readerUtilsWrapper,
@@ -100,7 +100,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             testDispatcher()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
-        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
+        whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
         val imageScanner: ReaderImageScanner = mock()
         whenever(readerImageScannerProvider.createReaderImageScanner(anyOrNull(), anyBoolean()))
             .thenReturn(imageScanner)
@@ -264,7 +264,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     fun `discover uses fixed avatar URL`() = test {
         // Arrange
         val post = createPost(isDiscoverPost = true)
-        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("12345")
+        whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("12345")
         // Act
         val uiState = mapPostToUiState(post)
         // Assert

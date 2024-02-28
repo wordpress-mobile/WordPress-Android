@@ -31,7 +31,7 @@ import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -183,7 +183,7 @@ public class PersonDetailFragment extends Fragment {
         Person person = loadPerson();
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
+            String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(person.getAvatarUrl(), avatarSz);
 
             mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
             mDisplayNameTextView.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));

@@ -9,7 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
-import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
@@ -33,7 +33,7 @@ class LikedItemViewHolder(
         this.name.text = authorName
         this.snippet.text = likedItem.postOrCommentText
 
-        val avatarUrl = GravatarUtils.fixGravatarUrl(
+        val avatarUrl = WPAvatarUtils.rewriteAvatarUrl(
             likedItem.authorAvatarUrl,
             rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
         )

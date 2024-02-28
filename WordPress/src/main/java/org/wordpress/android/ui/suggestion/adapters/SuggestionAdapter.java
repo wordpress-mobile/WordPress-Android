@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.suggestion.Suggestion;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -106,7 +106,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         Suggestion suggestion = getItem(position);
 
         if (suggestion != null) {
-            String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getAvatarUrl(), mAvatarSz);
+            String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(suggestion.getAvatarUrl(), mAvatarSz);
             mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
             String value = mPrefix + suggestion.getValue();
             holder.mValue.setText(value);

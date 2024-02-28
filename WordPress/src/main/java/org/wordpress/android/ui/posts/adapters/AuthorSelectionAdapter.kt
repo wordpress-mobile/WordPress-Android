@@ -15,7 +15,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.NO_PLACEHOLDER
@@ -122,7 +122,7 @@ class AuthorSelectionAdapter(context: Context) : BaseAdapter() {
                 }
                 is AuthorFilterListItemUIState.Me -> {
                     val avatarSize = image.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
-                    val url = GravatarUtils.fixGravatarUrl(state.avatarUrl, avatarSize)
+                    val url = WPAvatarUtils.rewriteAvatarUrl(state.avatarUrl ?: "", avatarSize)
                     imageManager.loadIntoCircle(image, NO_PLACEHOLDER, url)
                 }
             }

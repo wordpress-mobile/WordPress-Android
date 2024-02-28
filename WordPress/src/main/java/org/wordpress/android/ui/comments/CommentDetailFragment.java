@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
+import com.gravatar.GravatarUtilsKt;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -96,11 +97,11 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
@@ -814,9 +815,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
         if (comment.getAuthorProfileImageUrl() != null) {
-            avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
+            avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
         } else if (comment.getAuthorEmail() != null) {
-            avatarUrl = GravatarUtils.gravatarFromEmail(comment.getAuthorEmail(), avatarSz);
+            avatarUrl = GravatarUtilsKt.emailAddressToGravatarUrl(comment.getAuthorEmail(), avatarSz, null, null, null);
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 

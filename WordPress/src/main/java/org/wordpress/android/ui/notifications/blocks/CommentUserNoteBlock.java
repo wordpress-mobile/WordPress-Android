@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -116,7 +116,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private void setUserAvatar() {
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
+            imageUrl = WPAvatarUtils.rewriteAvatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             mNoteBlockHolder.mAvatarImageView.setContentDescription(
                     mContext.getString(R.string.profile_picture, getNoteText().toString())
             );
