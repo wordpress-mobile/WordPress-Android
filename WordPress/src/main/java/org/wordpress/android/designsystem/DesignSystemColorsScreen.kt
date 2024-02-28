@@ -53,7 +53,7 @@ fun DesignSystemColorsScreen(
                 ColorOption("Primary", MaterialTheme.colorScheme.primaryContainer),
                 ColorOption("Secondary", MaterialTheme.colorScheme.secondaryContainer),
                 ColorOption("Tertiary", MaterialTheme.colorScheme.tertiaryContainer),
-                ColorOption("Quartenary", MaterialTheme.colorScheme.quartenaryContainer),
+                ColorOption("Quaternary", MaterialTheme.colorScheme.quaternaryContainer),
                 ColorOption("Brand", MaterialTheme.colorScheme.brandContainer),
                 ColorOption("WP", MaterialTheme.colorScheme.wpContainer),
             )
