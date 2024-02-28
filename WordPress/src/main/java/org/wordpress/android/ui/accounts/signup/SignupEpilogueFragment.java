@@ -70,10 +70,10 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -95,6 +95,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
+
+import kotlin.Unit;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener, OnShownListener {
@@ -731,9 +733,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 startProgress(false);
                 mGravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
                         Objects.requireNonNull(mAccountStore.getAccessToken()),
-                        new GravatarApi.GravatarUploadListener() {
+                        new GravatarApi.GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 endProgress();
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                                 mPhotoUrl = WPAvatarUtils.rewriteAvatarUrl(mAccount.getAccount().getAvatarUrl(),
@@ -832,9 +834,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 mGravatarApi.uploadGravatar(file, mEmail, mToken,
-                        new GravatarApi.GravatarUploadListener() {
+                        new GravatarApi.GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                             }

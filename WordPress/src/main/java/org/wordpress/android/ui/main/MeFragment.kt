@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.gravatar.GravatarApi
-import com.gravatar.GravatarApi.GravatarUploadListener
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -666,8 +665,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
         binding?.showGravatarProgressBar(true)
         gravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
-            object : GravatarUploadListener {
-                override fun onSuccess() {
+            object : GravatarApi.GravatarListener<Unit> {
+                override fun onSuccess(response: Unit) {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
