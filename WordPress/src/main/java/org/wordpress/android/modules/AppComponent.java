@@ -159,6 +159,7 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
@@ -555,6 +556,8 @@ public interface AppComponent {
     void inject(StatsWeekWidget object);
 
     void inject(WeekViewsWidgetListProvider object);
+
+    void inject(WidgetBlockListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
 

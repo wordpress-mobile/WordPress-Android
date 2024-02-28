@@ -247,7 +247,6 @@ class TrafficListViewModel @Inject constructor(
                     BaseStatsUseCase.UseCaseMode.BLOCK
                 )
             }
-            statsUseCase.onCleared()
             statsUseCase = statsUseCase.clone(newUseCases) // Create new BaseListUseCase with updated useCases
             launch {
                 statsUseCase.loadData()

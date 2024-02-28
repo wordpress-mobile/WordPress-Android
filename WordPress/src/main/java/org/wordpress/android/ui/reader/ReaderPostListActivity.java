@@ -38,6 +38,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -316,13 +317,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 break;
             case RequestCodes.EDIT_POST:
                 if (resultCode == Activity.RESULT_OK && data != null && !isFinishing()) {
-                    int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                    int localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0);
                     final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                     final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
                     if (EditPostActivity.checkToRestart(data)) {
                         ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
-                                data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                                data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0));
                         // a restart will happen so, no need to continue here
                         return;
                     }
