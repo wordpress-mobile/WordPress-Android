@@ -121,9 +121,18 @@ class StatsViewModel
 
         val launchedFrom = intent.getSerializableExtraCompat<StatsLaunchedFrom>(StatsActivity.ARG_LAUNCHED_FROM)
         val initialTimeFrame = getInitialTimeFrame(intent)
+        val initialGranularity = intent.getSerializableExtraCompat<StatsGranularity>(StatsActivity.ARG_GRANULARITY)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
-        start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
+        start(
+            localSiteId,
+            launchedFrom,
+            initialTimeFrame,
+            initialSelectedPeriod,
+            restart,
+            notificationType,
+            initialGranularity
+        )
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -158,7 +167,8 @@ class StatsViewModel
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
         restart: Boolean,
-        notificationType: NotificationType?
+        notificationType: NotificationType?,
+        granularity: StatsGranularity? = null
     ) {
         if (restart) {
             selectedDateProvider.clear()
@@ -173,10 +183,11 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            granularity?.let { selectedTrafficGranularityManager.setSelectedTrafficGranularity(it) }
             updateSelectedSectionByTrafficTabFeatureConfig()
             trackSectionSelected(statsSectionManager.getSelectedSection())
 
-            val initialGranularity = initialSection?.toStatsGranularity()
+            val initialGranularity = granularity ?: initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }
