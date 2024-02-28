@@ -970,7 +970,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             refreshPosts();
         }
 
-        ReaderTracker.trackFollowedSitesCount(event.getTotalSubscriptions());
+        ReaderTracker.trackSubscribedSitesCount(event.getTotalSubscriptions());
     }
 
     @Override
