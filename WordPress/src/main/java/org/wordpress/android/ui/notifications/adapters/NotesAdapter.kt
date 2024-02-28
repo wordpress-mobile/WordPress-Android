@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -45,15 +46,13 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
     /**
      * Add notes to the adapter and notify the change
      */
+    @SuppressLint("NotifyDataSetChanged")
     fun addAll(notes: List<Note>) = coroutineScope.launch {
-        val currentSize: Int = filteredNotes.size
         val newNotes = buildFilteredNotesList(notes, currentFilter)
-
         filteredNotes.clear()
         filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
-            notifyItemRangeRemoved(0, currentSize)
-            notifyItemRangeInserted(0, newNotes.size)
+            notifyDataSetChanged()
             onNotesLoaded(newNotes.size)
         }
     }
