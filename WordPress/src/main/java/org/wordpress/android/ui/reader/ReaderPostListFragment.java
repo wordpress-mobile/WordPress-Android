@@ -2332,6 +2332,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                     R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
+                            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                            mActionableEmptyView.title.setVisibility(View.VISIBLE);
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
