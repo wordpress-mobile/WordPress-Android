@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -48,7 +49,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_QUICKPRESS;
 
 public class AnalyticsUtils {
     private static final String BLOG_ID_KEY = "blog_id";
@@ -109,7 +109,7 @@ public class AnalyticsUtils {
             // Post created from the media library
             normalizedSourceName = "media-library";
         }
-        if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
+        if (intent != null && intent.hasExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
         }

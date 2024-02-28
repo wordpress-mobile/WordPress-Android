@@ -141,6 +141,7 @@ class StatsViewModel
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
         return when (intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
+            StatsTimeframe.TRAFFIC -> StatsSection.TRAFFIC
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS

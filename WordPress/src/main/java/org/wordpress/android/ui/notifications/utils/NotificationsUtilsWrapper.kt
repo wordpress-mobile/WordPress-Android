@@ -6,6 +6,7 @@ import org.json.JSONObject
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
 import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.models.Note
 import org.wordpress.android.ui.notifications.blocks.NoteBlock
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -69,4 +70,6 @@ class NotificationsUtilsWrapper @Inject constructor(private val formattableConte
 
     fun mapJsonToFormattableContent(blockObject: JSONObject): FormattableContent = NotificationsUtils
         .mapJsonToFormattableContent(formattableContentMapper, blockObject)
+
+    fun getNoteById(noteId: String): Note? = NotificationsUtils.getNoteById(noteId)
 }

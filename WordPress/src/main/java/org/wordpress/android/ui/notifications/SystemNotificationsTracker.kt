@@ -23,7 +23,6 @@ import org.wordpress.android.push.NotificationType.POST_PUBLISHED
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
 import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
-import org.wordpress.android.push.NotificationType.REBLOG
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
@@ -87,7 +86,6 @@ class SystemNotificationsTracker
             COMMENT_LIKE -> COMMENT_LIKE_VALUE
             AUTOMATTCHER -> AUTOMATTCHER_VALUE
             FOLLOW -> FOLLOW_VALUE
-            REBLOG -> REBLOG_VALUE
             BADGE_RESET -> BADGE_RESET_VALUE
             NOTE_DELETE -> NOTE_DELETE_VALUE
             TEST_NOTE -> TEST_NOTE_VALUE
@@ -119,7 +117,6 @@ class SystemNotificationsTracker
         private const val COMMENT_LIKE_VALUE = "comment_like"
         private const val AUTOMATTCHER_VALUE = "automattcher"
         private const val FOLLOW_VALUE = "follow"
-        private const val REBLOG_VALUE = "reblog"
         private const val BADGE_RESET_VALUE = "badge_reset"
         private const val NOTE_DELETE_VALUE = "note_delete"
         private const val TEST_NOTE_VALUE = "test_note"

@@ -35,7 +35,6 @@ import org.wordpress.android.push.NotificationType.POST_PUBLISHED
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
 import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
-import org.wordpress.android.push.NotificationType.REBLOG
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
@@ -60,7 +59,6 @@ class SystemNotificationsTrackerTest {
         COMMENT_LIKE to "comment_like",
         AUTOMATTCHER to "automattcher",
         FOLLOW to "follow",
-        REBLOG to "reblog",
         BADGE_RESET to "badge_reset",
         NOTE_DELETE to "note_delete",
         TEST_NOTE to "test_note",
