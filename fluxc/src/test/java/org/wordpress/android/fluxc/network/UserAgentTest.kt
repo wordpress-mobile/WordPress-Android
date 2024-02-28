@@ -4,6 +4,7 @@ import android.webkit.WebSettings
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mockStatic
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.util.PackageUtils
@@ -19,8 +20,8 @@ class UserAgentTest {
 
     @Test
     fun testUserAgent() = withMockedPackageUtils {
-        mockStatic(WebSettings::class.java).use { settings ->
-            settings.`when`<Any> { WebSettings.getDefaultUserAgent(context) }.thenReturn(USER_AGENT)
+        mockStatic(WebSettings::class.java).use {
+            whenever(WebSettings.getDefaultUserAgent(context)).thenReturn(USER_AGENT)
             val result = UserAgent(context, APP_NAME)
             assertEquals("$USER_AGENT $APP_NAME/$APP_VERSION", result.toString())
         }
@@ -28,9 +29,8 @@ class UserAgentTest {
 
     @Test
     fun testDefaultUserAgentFailure() = withMockedPackageUtils {
-        mockStatic(WebSettings::class.java).use { settings ->
-            settings.`when`<Any> { WebSettings.getDefaultUserAgent(context) }
-                .thenThrow(RuntimeException(""))
+        mockStatic(WebSettings::class.java).use {
+            whenever(WebSettings.getDefaultUserAgent(context)).thenThrow(RuntimeException(""))
             val result = UserAgent(context, APP_NAME)
             assertEquals("$APP_NAME/$APP_VERSION", result.toString())
         }
@@ -38,7 +38,7 @@ class UserAgentTest {
 
     private fun withMockedPackageUtils(test: () -> Unit) {
         mockStatic(PackageUtils::class.java).use { utils ->
-            utils.`when`<Any> { PackageUtils.getVersionName(context) }.thenReturn(APP_VERSION)
+            whenever(PackageUtils.getVersionName(context)).thenReturn(APP_VERSION)
             test()
         }
     }
