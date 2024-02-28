@@ -199,7 +199,6 @@ class ReaderDiscoverLogic @Inject constructor(
      */
     @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
-        var index = 0
         val simplifiedJsonList = mutableListOf<JSONObject>()
         var firstYouMayLikeCard: JSONObject? = null
         for (i in 0 until cardsJsonArray.length()) {
@@ -208,7 +207,7 @@ class ReaderDiscoverLogic @Inject constructor(
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
-                            simplifiedJsonList.add(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                            simplifiedJsonList.add(createSimplifiedRecommendedBlogsCardJson(cardJson))
                         }
                     }
                 }
@@ -218,10 +217,10 @@ class ReaderDiscoverLogic @Inject constructor(
                         firstYouMayLikeCard = cardJson
                         continue
                     }
-                    simplifiedJsonList.add(index++, cardJson)
+                    simplifiedJsonList.add(cardJson)
                 }
                 JSON_CARD_POST -> {
-                    simplifiedJsonList.add(index++, createSimplifiedPostJson(cardJson))
+                    simplifiedJsonList.add(createSimplifiedPostJson(cardJson))
                 }
             }
         }
