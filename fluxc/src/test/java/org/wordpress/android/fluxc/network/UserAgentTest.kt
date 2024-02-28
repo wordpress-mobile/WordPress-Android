@@ -15,7 +15,7 @@ private const val APP_VERSION = "1.0"
 
 @RunWith(RobolectricTestRunner::class)
 class UserAgentTest {
-    private val context = RuntimeEnvironment.application.applicationContext
+    private val context = RuntimeEnvironment.getApplication().applicationContext
 
     @Test
     fun testUserAgent() = withMockedPackageUtils {
