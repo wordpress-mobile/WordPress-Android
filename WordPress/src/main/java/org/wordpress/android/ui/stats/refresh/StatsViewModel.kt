@@ -140,20 +140,7 @@ class StatsViewModel
     }
 
     private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        val timeframe = intent.getSerializableExtraCompat<StatsTimeframe>(StatsActivity.ARG_DESIRED_TIMEFRAME)
-        if (statsTrafficTabFeatureConfig.isEnabled()) {
-            if (timeframe == DAY || timeframe == WEEK || timeframe == MONTH || timeframe == YEAR) {
-                when (timeframe) {
-                    DAY -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.DAYS)
-                    WEEK -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.WEEKS)
-                    MONTH -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.MONTHS)
-                    YEAR -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.YEARS)
-                    else -> { /* Do nothing */}
-                }
-            }
-        }
-
-        return when (timeframe) {
+        return when (intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS
