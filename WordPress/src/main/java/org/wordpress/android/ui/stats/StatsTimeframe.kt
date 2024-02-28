@@ -8,5 +8,6 @@ enum class StatsTimeframe {
     DAY,
     WEEK,
     MONTH,
-    YEAR
+    YEAR,
+    TRAFFIC,
 }
