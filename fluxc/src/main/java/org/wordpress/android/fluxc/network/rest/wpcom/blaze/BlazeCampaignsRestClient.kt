@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.utils.extensions.putIfNotNull
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,14 +32,14 @@ class BlazeCampaignsRestClient @Inject constructor(
     acceptStrategy
 ) {
     companion object {
-        const val DEFAULT_LIMIT = 25
+        const val DEFAULT_ITEMS_LIMIT = 25 //Number of items to fetch in a single request
     }
 
     suspend fun fetchBlazeCampaigns(
         siteId: Long,
-        skip: Int = 0,
-        limit: Int = DEFAULT_LIMIT,
-        locale: String = Locale.getDefault().country,
+        skip: Int,
+        limit: Int,
+        locale: String,
         status: String? = null,
     ): BlazeCampaignsFetchedPayload<BlazeCampaignListResponse> {
         val url = "${WPCOMV2.sites.site(siteId).wordads.dsp.api.v1_1.campaigns}"
