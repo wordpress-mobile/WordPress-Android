@@ -34,9 +34,12 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    flavor = 'Vanilla'
+    build_type = 'Release'
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: flavor, buildType: build_type)
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
+    upload_gutenberg_sourcemaps(app: app, flavor: flavor, build_type: build_type, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
@@ -102,9 +105,12 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
+    flavor = 'Vanilla'
+    build_type = 'Release'
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: flavor, buildType: build_type)
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
+    upload_gutenberg_sourcemaps(app: app, flavor: flavor, build_type: build_type, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
@@ -217,6 +223,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'WordPress', version_name: version_name)
+    upload_gutenberg_sourcemaps(app: 'Wordpress', flavor: PROTOTYPE_BUILD_FLAVOR, build_type: PROTOTYPE_BUILD_TYPE, release_version: version_name)
   end
 
   #####################################################################################
@@ -240,6 +247,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'Jetpack', version_name: version_name)
+    upload_gutenberg_sourcemaps(app: 'Jetpack', flavor: PROTOTYPE_BUILD_FLAVOR, build_type: PROTOTYPE_BUILD_TYPE, release_version: version_name)
   end
 
   #####################################################################################
@@ -357,6 +365,49 @@ platform :android do
       branch = repo.revparse('HEAD')[0, 7]
 
       "#{branch}-#{commit}"
+    end
+  end
+
+  # Uploads the React Native JavaScript bundle and source map files.
+  # These files are provided by the Gutenberg Mobile library.
+  #
+  # @param [String] app App name, e.g. 'WordPress' or 'Jetpack'.
+  # @param [String] flavor Build flavor, e.g. 'Jalapeno' or 'Vanilla'.
+  # @param [String] build_type Build type, e.g. 'Debug' or 'Release'.
+  # @param [String] release_version Release version name to attach the files to in Sentry.
+  #
+  def upload_gutenberg_sourcemaps(app:, flavor:, build_type:, release_version:)
+    # Load Sentry properties
+    sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app, 'sentry.properties')
+    sentry_properties = JavaProperties.load(sentry_path)
+    sentry_token = sentry_properties[:"auth.token"]
+    project_slug = sentry_properties[:"defaults.project"]
+    org_slug = sentry_properties[:"defaults.org"]
+
+    # The bundle and source map files are extracted from merged assets location created after building the app.
+    # The format is: <app><flavor><build_type>
+    # E.g.: jetpackJalapenoDebug
+    assetPath = "#{app.downcase}#{flavor}#{build_type}"
+    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'intermediates','assets', assetPath)
+
+    Dir.mktmpdir do |sourcemaps_folder|
+      # It's important that the bundle and source map files have specific names, otherwise, Sentry 
+      # won't symbolicate the stack traces.
+      FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle'), File.join(sourcemaps_folder, 'index.android.bundle'))
+      FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle.map'), File.join(sourcemaps_folder, 'index.android.bundle.map'))
+
+      sentry_upload_sourcemap(
+        auth_token: sentry_token,
+        org_slug: org_slug,
+        project_slug: project_slug,
+        version: release_version,
+        # When the React native bundle is generated, the source map file references
+        # include the local machine path, with the `rewrite` and `strip_common_prefix` 
+        # options Sentry automatically strips this part.
+        rewrite: true,
+        strip_common_prefix: true,
+        sourcemap: sourcemaps_folder
+      )
     end
   end
 end
