@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import java.util.Date
+import kotlin.time.Duration.Companion.days
 
 data class ContentConfig(
     val imageUrl: String? = null,
@@ -54,3 +56,58 @@ data class BlazeCampaignsResponse(
         totalPages = totalPages
     )
 }
+
+data class BlazeCampaignListResponse(
+    @SerializedName("campaigns") val campaigns: List<BlazeCampaign>,
+    @SerializedName("skipped") val skipped: Int,
+    @SerializedName("total_count") val totalCount_: Int,
+) {
+    fun toCampaignsModel() = BlazeCampaignsModel(
+        campaigns = campaigns.map { it.toCampaignsModel() },
+        page = page,
+        totalItems = totalItems,
+        totalPages = totalPages
+    )
+}
+
+data class BlazeCampaign(
+    @SerializedName("id") val id: String,
+    @SerializedName("main_image") val image: CampaignImage = null,
+    @SerializedName("target_url") val targetUrl: String,
+    @SerializedName("text_snippet") val textSnippet: String,
+    @SerializedName("site_name") val siteName: String,
+    @SerializedName("clicks") val clicks: Long,
+    @SerializedName("impressions") val impressions: Long,
+    @SerializedName("spent_budget") val spentBudget: Double,
+    @SerializedName("total_budget") val totalBudget: Double,
+    @SerializedName("duration_days") val durationDays: Int,
+    @SerializedName("start_time") val startTime: String,
+    @SerializedName("target_urn") val targetUrn: String,
+    @SerializedName("status") val status: String,
+
+    ) {
+    fun toCampaignsModel(): BlazeCampaignModel {
+        val startDate = BlazeCampaignsUtils.stringToDate(startTime)
+        return BlazeCampaignModel(
+            campaignId = id.toInt(),
+            title = textSnippet,
+            imageUrl = image.url,
+            createdAt = startDate,
+            endDate = Date(startDate.time + durationDays.days.inWholeMilliseconds),
+            uiStatus = status,
+            budgetCents = -1,
+            impressions = impressions,
+            clicks = clicks,
+            targetUrn = targetUrn,
+            totalBudget = totalBudget,
+            spentBudget = spentBudget,
+        )
+    }
+}
+
+data class CampaignImage(
+    @SerializedName("height") val height: Float,
+    @SerializedName("width") val width: Float,
+    @SerializedName("mime_type") val mimeType: String,
+    @SerializedName("url") val url: String,
+)
