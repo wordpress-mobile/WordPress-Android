@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_FAILED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_PAUSED
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -279,16 +278,7 @@ class EditorMedia @Inject constructor(
         listener.onMediaUploadFailed(media.id.toString())
     }
 
-    fun onMediaUploadPaused(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
-        val properties: Map<String, Any?> = withContext(bgDispatcher) {
-            analyticsUtilsWrapper
-                .getMediaProperties(media.isVideo, null, media.filePath)
-                .also {
-                    it["error_type"] = error.type.name
-                }
-        }
-
-        analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_PAUSED, site, properties)
+    fun onMediaUploadPaused(listener: EditorMediaUploadListener, media: MediaModel) = launch {
         listener.onMediaUploadPaused(media.id.toString())
     }
 
