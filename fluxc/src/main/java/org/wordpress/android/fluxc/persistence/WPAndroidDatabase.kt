@@ -331,7 +331,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
                     execSQL("DROP TABLE IF EXISTS `BlazeCampaignsPagination`")
                     execSQL(
-                        "CREATE TABLE `BlazeCampaigns` (" +
+                        "CREATE TABLE IF NOT EXISTS `BlazeCampaigns` (" +
                             "`siteId` INTEGER NOT NULL, " +
                             "`campaignId` INTEGER NOT NULL, " +
                             "`title` TEXT NOT NULL, " +
@@ -341,19 +341,23 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`uiStatus` TEXT NOT NULL, " +
                             "`impressions` INTEGER NOT NULL, " +
                             "`clicks` INTEGER NOT NULL, " +
-                            "`targetUrn` INTEGER NOT NULL, " +
-                            "`totalBudget` TEXT NOT NULL, " +
-                            "`spentBudget` TEXT NOT NULL, " +
+                            "`targetUrn` TEXT, " +
+                            "`totalBudget` REAL NOT NULL, " +
+                            "`spentBudget` REAL NOT NULL, " +
                             "PRIMARY KEY (`siteId`, `campaignId`)" +
                             ")"
                     )
                     execSQL(
-                        "CREATE TABLE `BlazeCampaignsPagination` (" +
+                        "CREATE TABLE IF NOT EXISTS `BlazeCampaignsPagination` (" +
                             "`siteId` INTEGER NOT NULL, " +
                             "`skipped` INTEGER NOT NULL, " +
-                            "`totalItems` TEXT NOT NULL, " +
+                            "`totalItems` INTEGER NOT NULL, " +
                             "PRIMARY KEY (`siteId`)" +
                             ")"
+                    )
+                    execSQL(
+                        "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
+                                "ON `BlazeCampaigns` (`siteId`)"
                     )
                 }
             }
