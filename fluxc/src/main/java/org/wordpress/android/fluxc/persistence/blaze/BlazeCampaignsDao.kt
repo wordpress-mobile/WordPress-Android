@@ -9,22 +9,21 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModelNew
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModelNew
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
 import java.util.Date
 
 @Dao
 abstract class BlazeCampaignsDao {
     @Transaction
-    open suspend fun getCampaignsAndPaginationForSite(siteId: Long): BlazeCampaignsModel {
+    open suspend fun getCampaignsAndPaginationForSite(siteId: Long): BlazeCampaignsModelNew {
         val campaigns = getCampaigns(siteId)
         val pagination = getCampaignsPagination(siteId)
-        return BlazeCampaignsModel(
+        return BlazeCampaignsModelNew(
             campaigns = campaigns.map { it.toDomainModel() },
-            page = pagination?.page ?: 1,
-            totalItems = pagination?.totalItems ?: 0,
-            totalPages = pagination?.totalPages ?: 0
+            skipped = pagination?.skipped ?: 0,
+            totalItems = pagination?.totalItems ?: 25,
         )
     }
 
@@ -46,23 +45,23 @@ abstract class BlazeCampaignsDao {
     @Transaction
     open suspend fun insertCampaignsAndPageInfoForSite(
         siteId: Long,
-        domainModel: BlazeCampaignsModel
+        domainModel: BlazeCampaignsModelNew
     ) {
-        if (domainModel.page == 1) {
+        if (domainModel.skipped == 0) {
             clearBlazeCampaigns(siteId)
             clearBlazeCampaignsPagination(siteId)
-        } // Always clear both tables when inserting first page
+        } // Always clear both tables when inserting first set of elements
         insertCampaignsForSite(siteId, domainModel)
         insertCampaignsPaginationForSite(siteId, domainModel)
     }
 
-    private suspend fun insertCampaignsForSite(siteId: Long, domainModel: BlazeCampaignsModel) {
+    private suspend fun insertCampaignsForSite(siteId: Long, domainModel: BlazeCampaignsModelNew) {
         insert(domainModel.campaigns.map { BlazeCampaignEntity.fromDomainModel(siteId, it) })
     }
 
     private suspend fun insertCampaignsPaginationForSite(
         siteId: Long,
-        domainModel: BlazeCampaignsModel
+        domainModel: BlazeCampaignsModelNew
     ) {
         insert(BlazeCampaignsPaginationEntity.fromDomainModel(siteId, domainModel))
     }
@@ -99,28 +98,30 @@ abstract class BlazeCampaignsDao {
         val createdAt: Date,
         val endDate: Date?,
         val uiStatus: String,
-        val budgetCents: Long,
         val impressions: Long,
         val clicks: Long,
-        val targetUrn: String?
+        val targetUrn: String?,
+        val totalBudget: Double,
+        val spentBudget: Double
     ) {
-        fun toDomainModel() = BlazeCampaignModel(
+        fun toDomainModel() = BlazeCampaignModelNew(
             campaignId = campaignId,
             title = title,
             imageUrl = imageUrl,
             createdAt = createdAt,
             endDate = endDate,
             uiStatus = uiStatus,
-            budgetCents = budgetCents,
             impressions = impressions,
             clicks = clicks,
-            targetUrn = targetUrn
+            targetUrn = targetUrn,
+            totalBudget = totalBudget,
+            spentBudget = spentBudget
         )
 
         companion object {
             fun fromDomainModel(
                 siteId: Long,
-                campaign: BlazeCampaignModel
+                campaign: BlazeCampaignModelNew
             ) = BlazeCampaignEntity(
                 siteId = siteId,
                 campaignId = campaign.campaignId,
@@ -129,10 +130,11 @@ abstract class BlazeCampaignsDao {
                 createdAt = campaign.createdAt,
                 endDate = campaign.endDate,
                 uiStatus = campaign.uiStatus,
-                budgetCents = campaign.budgetCents,
                 impressions = campaign.impressions,
                 clicks = campaign.clicks,
-                targetUrn = campaign.targetUrn
+                targetUrn = campaign.targetUrn,
+                totalBudget = campaign.totalBudget,
+                spentBudget = campaign.spentBudget
             )
         }
     }
@@ -143,19 +145,17 @@ abstract class BlazeCampaignsDao {
     )
     data class BlazeCampaignsPaginationEntity(
         val siteId: Long,
-        val page: Int,
-        val totalItems: Int,
-        val totalPages: Int
+        val skipped: Int,
+        val totalItems: Int
     ) {
         companion object {
             fun fromDomainModel(
                 siteId: Long,
-                domainModel: BlazeCampaignsModel
+                domainModel: BlazeCampaignsModelNew
             ) = BlazeCampaignsPaginationEntity(
                 siteId = siteId,
-                page = domainModel.page,
+                skipped = domainModel.skipped,
                 totalItems = domainModel.totalItems,
-                totalPages = domainModel.totalPages
             )
         }
     }

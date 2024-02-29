@@ -19,6 +19,24 @@ data class BlazeCampaignModel(
     val budgetCents: Long,
     val impressions: Long,
     val clicks: Long,
+    val targetUrn: String?
+)
+
+data class BlazeCampaignsModelNew(
+    val campaigns: List<BlazeCampaignModelNew> = emptyList(),
+    val skipped: Int,
+    val totalItems: Int,
+)
+
+data class BlazeCampaignModelNew(
+    val campaignId: Int,
+    val title: String,
+    val imageUrl: String?,
+    val createdAt: Date,
+    val endDate: Date?,
+    val uiStatus: String,
+    val impressions: Long,
+    val clicks: Long,
     val targetUrn: String?,
     val totalBudget: Double,
     val spentBudget: Double,
