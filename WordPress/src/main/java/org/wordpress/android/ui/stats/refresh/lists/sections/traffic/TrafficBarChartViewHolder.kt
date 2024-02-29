@@ -131,6 +131,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawZeroLine(false)
             setDrawLabels(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
         }
 
         chart.axisRight.apply {
