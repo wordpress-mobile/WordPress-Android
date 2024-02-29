@@ -216,7 +216,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val storedGranularity = selectedTrafficGranularityManager.getSelectedTrafficGranularity()
         if (viewModelGranularity != storedGranularity) {
             // Coming from widget
-            binding?.initializeViews(null)
             (viewModel as? TrafficListViewModel)?.onGranularitySelected(storedGranularity)
         }
     }
