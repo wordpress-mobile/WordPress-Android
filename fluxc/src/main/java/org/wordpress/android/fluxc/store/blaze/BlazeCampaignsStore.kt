@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
@@ -43,6 +44,9 @@ class BlazeCampaignsStore @Inject constructor(
     suspend fun fetchBlazeCampaigns(
         site: SiteModel,
         skip: Int = 0,
+        limit: Int = DEFAULT_ITEMS_LIMIT,
+        locale: String = Locale.getDefault().country,
+        status: String? = null,
     ): BlazeCampaignsResult<BlazeCampaignsModel> {
         fun handlePayloadError(
             site: SiteModel,
@@ -79,7 +83,13 @@ class BlazeCampaignsStore @Inject constructor(
         }
 
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
-            val payload = blazeCampaignsRestClient.fetchBlazeCampaigns(site.siteId, skip)
+            val payload = blazeCampaignsRestClient.fetchBlazeCampaigns(
+                site.siteId,
+                skip,
+                limit,
+                locale,
+                status
+            )
             storeBlazeCampaigns(site, payload)
         }
     }
