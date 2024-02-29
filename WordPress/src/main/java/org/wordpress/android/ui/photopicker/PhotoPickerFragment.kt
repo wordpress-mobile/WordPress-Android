@@ -203,7 +203,6 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
                 ) {
                     isShowingActionMode = false
                 }
-                setupFab(uiState.fabUiModel)
                 setupPartialAccessPrompt(uiState.isPartialMediaAccessPromptVisible)
             }
         }
@@ -252,18 +251,6 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
             adapter.loadData(uiModel.items)
             recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun PhotoPickerFragmentBinding.setupFab(fabUiModel: PhotoPickerViewModel.FabUiModel) {
-        if (fabUiModel.show) {
-            wpStoriesTakePicture.visibility = View.VISIBLE
-            wpStoriesTakePicture.setOnClickListener {
-                fabUiModel.action()
-            }
-        } else {
-            wpStoriesTakePicture.visibility = View.GONE
         }
     }
 
