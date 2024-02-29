@@ -99,7 +99,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
         EditorThemeUpdateListener,
-        StorySaveMediaListener,
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
@@ -1385,52 +1384,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
-    }
-
-    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
-        mUploadingMediaProgressMax.put(localId, currentProgress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
-    }
-
-    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
-        mUploadingMediaProgressMax.remove(localId);
-        getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
-    }
-
-    @Override public void onMediaSaveProgress(String localId, float progress) {
-        mUploadingMediaProgressMax.put(localId, progress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
-    }
-
-    @Override public void onMediaSaveFailed(String localId) {
-        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
-        mFailedMediaIds.add(localId);
-        mUploadingMediaProgressMax.remove(localId);
-    }
-
-    @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
-        if (!success) {
-            mFailedMediaIds.add(storyFirstMediaId);
-        }
-        mUploadingMediaProgressMax.remove(storyFirstMediaId);
-        getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
-    }
-
-    @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
-        getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
-    }
-
-    @Override public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
-        mUploadingMediaProgressMax.remove(localId);
-        // this method may end up being called twice if the original FluxC OnMediaUploaded event was correctly caught
-        // when posted, and can be retriggered by StoriesEventListener in the case a Gutenberg instance is re-mounted
-        // while a Story media item upload is progressing. In any case, it's harmless (the second time the event
-        // arrives at Gutenberg it will simply not find the old ids in the blocks anymore and the event gets discarded)
-        getGutenbergContainerFragment().mediaFileUploadSucceeded(
-                Integer.parseInt(localId),
-                newUrl,
-                Integer.parseInt(remoteId)
-        );
     }
 
     @Override
