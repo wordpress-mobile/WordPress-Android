@@ -37,38 +37,37 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-    version = 27,
-    entities = [
-        BloggingReminders::class,
-        PlanOffer::class,
-        PlanOfferId::class,
-        PlanOfferFeature::class,
-        CommentEntity::class,
-        CardEntity::class,
-        BloggingPromptEntity::class,
-        FeatureFlag::class,
-        RemoteConfig::class,
-        JetpackCPConnectedSiteEntity::class,
-        DomainEntity::class,
-        BlazeCampaignEntity::class,
-        BlazeCampaignsPaginationEntity::class,
-        JetpackSocialEntity::class,
-        BlazeTargetingLanguageEntity::class,
-        BlazeTargetingDeviceEntity::class,
-        BlazeTargetingTopicEntity::class
-    ],
-    autoMigrations = [
-        AutoMigration(from = 11, to = 12),
-        AutoMigration(from = 12, to = 13),
-        AutoMigration(from = 13, to = 14),
-        AutoMigration(from = 16, to = 17),
-        AutoMigration(from = 17, to = 18),
-        AutoMigration(from = 22, to = 23),
-        AutoMigration(from = 23, to = 24),
-        AutoMigration(from = 24, to = 25),
-        AutoMigration(from = 25, to = 26, spec = AutoMigration25to26::class),
-        AutoMigration(from = 26, to = 27, spec = AutoMigration26to27::class)
-    ]
+        version = 27,
+        entities = [
+            BloggingReminders::class,
+            PlanOffer::class,
+            PlanOfferId::class,
+            PlanOfferFeature::class,
+            CommentEntity::class,
+            CardEntity::class,
+            BloggingPromptEntity::class,
+            FeatureFlag::class,
+            RemoteConfig::class,
+            JetpackCPConnectedSiteEntity::class,
+            DomainEntity::class,
+            BlazeCampaignEntity::class,
+            BlazeCampaignsPaginationEntity::class,
+            JetpackSocialEntity::class,
+            BlazeTargetingLanguageEntity::class,
+            BlazeTargetingDeviceEntity::class,
+            BlazeTargetingTopicEntity::class
+        ],
+        autoMigrations = [
+            AutoMigration(from = 11, to = 12),
+            AutoMigration(from = 12, to = 13),
+            AutoMigration(from = 13, to = 14),
+            AutoMigration(from = 16, to = 17),
+            AutoMigration(from = 17, to = 18),
+            AutoMigration(from = 22, to = 23),
+            AutoMigration(from = 23, to = 24),
+            AutoMigration(from = 24, to = 25),
+            AutoMigration(from = 25, to = 26, spec = AutoMigration25to26::class)
+        ]
 )
 @TypeConverters(
     value = [
@@ -109,18 +108,19 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             WPAndroidDatabase::class.java,
             WP_DB_NAME
         )
-            .fallbackToDestructiveMigration()
-            .addMigrations(MIGRATION_1_2)
-            .addMigrations(MIGRATION_2_3)
-            .addMigrations(MIGRATION_3_4)
-            .addMigrations(MIGRATION_5_6)
-            .addMigrations(MIGRATION_7_8)
-            .addMigrations(MIGRATION_14_15)
-            .addMigrations(MIGRATION_15_16)
-            .addMigrations(MIGRATION_18_19)
-            .addMigrations(MIGRATION_19_20)
-            .addMigrations(MIGRATION_20_21)
-            .build()
+                .fallbackToDestructiveMigration()
+                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_3_4)
+                .addMigrations(MIGRATION_5_6)
+                .addMigrations(MIGRATION_7_8)
+                .addMigrations(MIGRATION_14_15)
+                .addMigrations(MIGRATION_15_16)
+                .addMigrations(MIGRATION_18_19)
+                .addMigrations(MIGRATION_19_20)
+                .addMigrations(MIGRATION_20_21)
+                .addMigrations(MIGRATION_26_27)
+                .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -243,7 +243,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_14_15 = object : Migration(14, 15) {
+        val MIGRATION_14_15 = object : Migration(14,15){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
@@ -253,7 +253,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_15_16 = object : Migration(15, 16) {
+        val MIGRATION_15_16 = object : Migration(15,16){
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.apply {
                     execSQL(
@@ -268,20 +268,19 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 database.apply {
                     execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
                     execSQL("DELETE FROM `BlazeCampaignsPagination`")
-                    execSQL(
-                        "CREATE TABLE `BlazeCampaigns` (" +
-                            "`siteId` INTEGER NOT NULL, " +
-                            "`campaignId` INTEGER NOT NULL, " +
-                            "`title` TEXT NOT NULL, " +
-                            "`imageUrl` TEXT, " +
-                            "`startDate` TEXT NOT NULL, " +
-                            "`endDate` TEXT, " +
-                            "`uiStatus` TEXT NOT NULL, " +
-                            "`budgetCents` INTEGER NOT NULL, " +
-                            "`impressions` INTEGER NOT NULL, " +
-                            "`clicks` INTEGER NOT NULL, " +
-                            "PRIMARY KEY (`siteId`, `campaignId`)" +
-                            ")"
+                    execSQL("CREATE TABLE `BlazeCampaigns` (" +
+                        "`siteId` INTEGER NOT NULL, " +
+                        "`campaignId` INTEGER NOT NULL, " +
+                        "`title` TEXT NOT NULL, " +
+                        "`imageUrl` TEXT, " +
+                        "`startDate` TEXT NOT NULL, " +
+                        "`endDate` TEXT, " +
+                        "`uiStatus` TEXT NOT NULL, " +
+                        "`budgetCents` INTEGER NOT NULL, " +
+                        "`impressions` INTEGER NOT NULL, " +
+                        "`clicks` INTEGER NOT NULL, " +
+                        "PRIMARY KEY (`siteId`, `campaignId`)" +
+                        ")"
                     )
                     execSQL(
                         "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
@@ -296,8 +295,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 database.apply {
                     execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
                     execSQL("DELETE FROM `BlazeCampaignsPagination`")
-                    execSQL(
-                        "CREATE TABLE `BlazeCampaigns` (" +
+                    execSQL("CREATE TABLE `BlazeCampaigns` (" +
                             "`siteId` INTEGER NOT NULL, " +
                             "`campaignId` INTEGER NOT NULL, " +
                             "`title` TEXT NOT NULL, " +
@@ -313,7 +311,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     )
                     execSQL(
                         "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
-                            "ON `BlazeCampaigns` (`siteId`)"
+                                "ON `BlazeCampaigns` (`siteId`)"
                     )
                 }
             }
@@ -327,6 +325,39 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 }
             }
         }
+        val MIGRATION_26_27 = object : Migration(26, 27) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
+                    execSQL("DROP TABLE IF EXISTS `BlazeCampaignsPagination`")
+                    execSQL(
+                        "CREATE TABLE `BlazeCampaigns` (" +
+                            "`siteId` INTEGER NOT NULL, " +
+                            "`campaignId` INTEGER NOT NULL, " +
+                            "`title` TEXT NOT NULL, " +
+                            "`imageUrl` TEXT, " +
+                            "`createdAt` TEXT NOT NULL, " +
+                            "`endDate` TEXT, " +
+                            "`uiStatus` TEXT NOT NULL, " +
+                            "`impressions` INTEGER NOT NULL, " +
+                            "`clicks` INTEGER NOT NULL, " +
+                            "`targetUrn` INTEGER NOT NULL, " +
+                            "`totalBudget` TEXT NOT NULL, " +
+                            "`spentBudget` TEXT NOT NULL, " +
+                            "PRIMARY KEY (`siteId`, `campaignId`)" +
+                            ")"
+                    )
+                    execSQL(
+                        "CREATE TABLE `BlazeCampaignsPagination` (" +
+                            "`siteId` INTEGER NOT NULL, " +
+                            "`skipped` INTEGER NOT NULL, " +
+                            "`totalItems` TEXT NOT NULL, " +
+                            "PRIMARY KEY (`siteId`)" +
+                            ")"
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -334,9 +365,3 @@ abstract class WPAndroidDatabase : RoomDatabase() {
     DeleteTable(tableName = "BlazeAdSuggestions")
 )
 internal class AutoMigration25to26 : AutoMigrationSpec
-
-@DeleteTable.Entries(
-    DeleteTable(tableName = "BlazeCampaigns"),
-    DeleteTable(tableName = "BlazeCampaignsPagination")
-)
-internal class AutoMigration26to27 : AutoMigrationSpec
