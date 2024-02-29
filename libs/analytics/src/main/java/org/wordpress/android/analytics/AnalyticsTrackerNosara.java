@@ -1201,8 +1201,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_overview_type_tapped_comments";
             case STATS_OVERVIEW_TYPE_TAPPED_LIKES:
                 return "stats_overview_type_tapped_likes";
-            case STATS_OVERVIEW_TYPE_TAPPED:
-                return "stats_overview_type_tapped";
             case STATS_DETAIL_POST_TAPPED:
                 return "stats_detail_post_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
