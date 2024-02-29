@@ -39,6 +39,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TRAFFIC_BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
@@ -71,6 +72,7 @@ sealed class BlockListItem(val type: Type) {
         CHIPS,
         LINK,
         BAR_CHART,
+        TRAFFIC_BAR_CHART,
         PIE_CHART,
         LINE_CHART,
         CHART_LEGEND,
@@ -260,6 +262,20 @@ sealed class BlockListItem(val type: Type) {
         val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null,
         val entryContentDescriptions: List<String>
     ) : BlockListItem(BAR_CHART) {
+        data class Bar(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
+    data class TrafficBarChartItem(
+        val entries: List<Bar>,
+        val overlappingEntries: List<Bar>? = null,
+        val selectedItem: String? = null,
+        val onBarSelected: ((period: String?) -> Unit)? = null,
+        val onBarChartDrawn: ((visibleBarCount: Int) -> Unit)? = null,
+        val entryContentDescriptions: List<String>
+    ) : BlockListItem(TRAFFIC_BAR_CHART) {
         data class Bar(val label: String, val id: String, val value: Int)
 
         override val itemId: Int

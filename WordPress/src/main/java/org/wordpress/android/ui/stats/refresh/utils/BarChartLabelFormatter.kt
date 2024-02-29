@@ -2,7 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.formatter.ValueFormatter
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TrafficBarChartItem.Bar
 import javax.inject.Inject
 
 class BarChartLabelFormatter @Inject constructor(
