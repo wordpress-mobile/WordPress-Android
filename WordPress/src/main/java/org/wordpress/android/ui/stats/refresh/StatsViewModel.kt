@@ -183,7 +183,11 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
-            granularity?.let { selectedTrafficGranularityManager.setSelectedTrafficGranularity(it) }
+            granularity?.let {
+                if (it != selectedTrafficGranularityManager.getSelectedTrafficGranularity()) {
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(it)
+                }
+            }
             updateSelectedSectionByTrafficTabFeatureConfig()
             trackSectionSelected(statsSectionManager.getSelectedSection())
 
