@@ -131,6 +131,12 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawZeroLine(false)
             setDrawLabels(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
+            axisMaximum = if (maxYValue < minYValue) {
+                minYValue
+            } else {
+                roundUp(maxYValue.toFloat())
+            }
         }
 
         chart.axisRight.apply {
