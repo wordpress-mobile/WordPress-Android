@@ -1073,8 +1073,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_accessed";
             case STATS_ACCESS_ERROR:
                 return "stats_access_error";
-            case STATS_TRAFFIC_ACCESSED:
-                return "stats_traffic_accessed";
             case STATS_INSIGHTS_ACCESSED:
                 return "stats_insights_accessed";
             case STATS_INSIGHTS_MANAGEMENT_HINT_DISMISSED:
@@ -1099,6 +1097,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_insights_management_type_removed";
             case STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED:
                 return "stats_insights_management_type_reordered";
+            case STATS_PERIOD_ACCESSED:
+                return "stats_period_accessed";
             case STATS_PERIOD_DAYS_ACCESSED:
                 return "stats_period_accessed";
             case STATS_PERIOD_WEEKS_ACCESSED:
@@ -1109,10 +1109,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_period_accessed";
             case STATS_VIEW_ALL_ACCESSED:
                 return "stats_view_all_accessed";
-            case STATS_PREVIOUS_DATE_TAPPED:
-                return "stats_previous_date_tapped";
-            case STATS_NEXT_DATE_TAPPED:
-                return "stats_next_date_tapped";
+            case STATS_DATE_TAPPED_BACKWARD:
+                return "stats_date_tapped_backward";
+            case STATS_DATE_TAPPED_FORWARD:
+                return "stats_date_tapped_forward";
             case STATS_INSIGHTS_TOTAL_LIKES_GUIDE_TAPPED:
                 return "stats_insights_total_likes_guide_tapped";
             case STATS_INSIGHTS_ACTION_BLOGGING_REMINDERS_CONFIRMED:
@@ -1191,8 +1191,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_authors_view_post_tapped";
             case STATS_CLICKS_ITEM_TAPPED:
                 return "stats_clicks_item_tapped";
-            case STATS_SINGLE_POST_ACCESSED:
-                return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:
                 return "stats_bar_chart_tapped";
             case STATS_OVERVIEW_TYPE_TAPPED:
@@ -2695,6 +2693,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "dynamic_dashboard_card_hide_tapped";
             case DEEP_LINK_FAILED:
                 return "deep_link_failed";
+            case READER_DROPDOWN_MENU_OPENED:
+                return "reader_dropdown_menu_opened";
+            case READER_DROPDOWN_MENU_ITEM_TAPPED:
+                return "reader_dropdown_menu_item_tapped";
             case SITE_MONITORING_SCREEN_SHOWN:
                 return "site_monitoring_screen_shown";
             case OPENED_SITE_MONITORING:
@@ -2703,6 +2705,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_monitoring_tab_shown";
             case SITE_MONITORING_TAB_LOADING_ERROR:
                 return "site_monitoring_tab_loading_error";
+            case NOTIFICATION_MENU_TAPPED:
+                return "notification_menu_tapped";
+            case NOTIFICATIONS_MARK_ALL_READ_TAPPED:
+                return "notifications_mark_all_read_tapped";
+            case NOTIFICATIONS_INLINE_ACTION_TAPPED:
+                return "notifications_inline_action_tapped";
+            case WEBVIEW_TOO_LARGE_PAYLOAD_ERROR:
+                return "webview_too_large_payload_error";
         }
         return null;
     }

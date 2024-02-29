@@ -92,6 +92,7 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -121,6 +122,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
@@ -437,7 +439,7 @@ public class ActivityLauncher {
 
         Intent editorIntent = new Intent(context, EditPostActivity.class);
         editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -451,8 +453,8 @@ public class ActivityLauncher {
 
         Intent editorIntent = new Intent(context, EditPostActivity.class);
         editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, localPostId);
-        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, localPostId);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -492,30 +494,32 @@ public class ActivityLauncher {
         );
 
         Intent editorIntent = new Intent(activity, EditPostActivity.class);
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
-        editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, post.getTitle());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, post.getUrl());
+        editorIntent.setAction(EditPostActivityConstants.ACTION_REBLOG);
 
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
 
-    public static void viewStatsInNewStack(Context context, SiteModel site) {
-        viewStatsInNewStack(context, site, null);
-    }
-
-    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe) {
-        viewStatsInNewStack(context, site, statsTimeframe, null);
+    public static void viewStatsInNewStack(Context context, SiteModel site, @NonNull StatsLaunchedFrom launchedFrom) {
+        viewStatsInNewStack(context, site, null, launchedFrom);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
-                                           @Nullable String period) {
+                                           @NonNull StatsLaunchedFrom launchedFrom) {
+        viewStatsInNewStack(context, site, statsTimeframe, null, launchedFrom);
+    }
+
+    public static void viewStatsInNewStack(Context context, SiteModel site, @Nullable StatsTimeframe statsTimeframe,
+                                           @Nullable String period, @NonNull StatsLaunchedFrom launchedFrom) {
         if (site == null) {
             handleMissingSite(context);
             return;
         }
-        runIntentOverMainActivityInNewStack(context, StatsActivity.buildIntent(context, site, statsTimeframe, period));
+        runIntentOverMainActivityInNewStack(context,
+                StatsActivity.buildIntent(context, site, statsTimeframe, period, launchedFrom));
     }
 
     private static void handleMissingSite(Context context) {
@@ -537,9 +541,11 @@ public class ActivityLauncher {
                                                                                   @Nullable StatsTimeframe timeframe,
                                                                                   @Nullable String period,
                                                                                   @Nullable NotificationType type,
+                                                                                  @NonNull
+                                                                                  StatsLaunchedFrom launchedFrom,
                                                                                   int requestCode, int flags) {
         return buildPendingIntentOverMainActivityInNewStack(context,
-                StatsActivity.buildIntent(context, site, timeframe, period, type), requestCode, flags);
+                StatsActivity.buildIntent(context, site, timeframe, period, launchedFrom, type), requestCode, flags);
     }
 
     private static PendingIntent buildPendingIntentOverMainActivityInNewStack(Context context, Intent intent,
@@ -586,7 +592,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStats(Context context, SiteModel site) {
+    public static void viewBlogStats(Context context, SiteModel site, @NonNull StatsLaunchedFrom from) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -594,14 +600,15 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            StatsActivity.start(context, site);
+            StatsActivity.start(context, site, from);
         }
     }
 
-    public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe) {
+    public static void viewBlogStatsForTimeframe(Context context, SiteModel site, StatsTimeframe statsTimeframe,
+                                                 @NonNull StatsLaunchedFrom from) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -609,10 +616,10 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
         } else {
-            StatsActivity.start(context, site, statsTimeframe);
+            StatsActivity.start(context, site, statsTimeframe, from);
         }
     }
 
@@ -636,7 +643,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site,
+                                                      @NonNull StatsLaunchedFrom launchedFrom) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats.");
             AnalyticsTracker.track(
@@ -644,11 +652,11 @@ public class ActivityLauncher {
                     ActivityLauncher.class.getName(),
                     "NullPointerException",
                     "Failed to open Stats because of the null SiteModel"
-                                  );
+            );
             ToastUtils.showToast(context, R.string.stats_cannot_be_started, ToastUtils.Duration.SHORT);
             return;
         }
-        StatsActivity.start(context, site);
+        StatsActivity.start(context, site, launchedFrom);
     }
 
     public static void viewConnectJetpackForStats(Context context, SiteModel site) {
@@ -1012,11 +1020,11 @@ public class ActivityLauncher {
         }
 
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
-        intent.putExtra(EditPostActivity.EXTRA_ENTRY_POINT, entryPoint);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -1140,8 +1148,8 @@ public class ActivityLauncher {
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
-        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
 
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1160,16 +1168,16 @@ public class ActivityLauncher {
     public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
                                                 boolean isNewSite) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
         editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision, int requestCode) {
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
-        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
         fragment.startActivityForResult(intent, requestCode);
     }
 
@@ -1183,11 +1191,11 @@ public class ActivityLauncher {
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1201,11 +1209,11 @@ public class ActivityLauncher {
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }

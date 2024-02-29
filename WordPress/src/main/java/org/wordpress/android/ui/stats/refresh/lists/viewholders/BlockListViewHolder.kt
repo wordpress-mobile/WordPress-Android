@@ -10,7 +10,11 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.util.image.ImageManager
 
-open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager) : BaseStatsViewHolder(
+open class BlockListViewHolder(
+    parent: ViewGroup,
+    val imageManager: ImageManager,
+    private val trafficTabEnabled: Boolean
+) : BaseStatsViewHolder(
     parent,
     R.layout.stats_list_block
 ) {
@@ -19,7 +23,7 @@ open class BlockListViewHolder(parent: ViewGroup, val imageManager: ImageManager
         super.bind(statsType, items)
         list.isNestedScrollingEnabled = false
         if (list.adapter == null) {
-            val blockListAdapter = BlockListAdapter(imageManager)
+            val blockListAdapter = BlockListAdapter(imageManager, trafficTabEnabled)
             val layoutManager = WrappingLinearLayoutManager(
                 list.context,
                 LinearLayoutManager.VERTICAL,

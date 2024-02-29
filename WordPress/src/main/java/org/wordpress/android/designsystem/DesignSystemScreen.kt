@@ -1,6 +1,8 @@
 package org.wordpress.android.designsystem
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -37,7 +39,10 @@ fun SelectOptionButton(
     Button(
         onClick = onClick,
         modifier = modifier.widthIn(min = 250.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.brand,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
         Text(stringResource(labelResourceId))
     }
@@ -46,7 +51,9 @@ fun SelectOptionButton(
 @Preview
 @Composable
 fun StartDesignSystemPreview(){
-    DesignSystem {}
+    DesignSystemTheme(isSystemInDarkTheme()) {
+        DesignSystem {}
+    }
 }
 
 @Composable
@@ -60,18 +67,19 @@ fun DesignSystem(
                 title = stringResource(R.string.preference_design_system),
                 navigationIcon = NavigationIcons.BackIcon,
                 onNavigationIconClick = { onBackTapped() },
-                backgroundColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface,
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary,
             )
-        },
+        }
     ) { innerPadding ->
         NavHost(
+            modifier = Modifier.background(MaterialTheme.colorScheme.primaryContainer),
             navController = navController,
             startDestination = DesignSystemScreen.Start.name
         ) {
             composable(route = DesignSystemScreen.Start.name) {
                 DesignSystemStartScreen(
-                    onNextButtonClicked = {
+                    onButtonClicked = {
                         navController.navigate(it)
                     },
                     modifier = Modifier

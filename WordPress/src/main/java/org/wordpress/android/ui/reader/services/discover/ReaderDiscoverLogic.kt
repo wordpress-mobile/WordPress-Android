@@ -139,7 +139,7 @@ class ReaderDiscoverLogic @Inject constructor(
             insertBlogsIntoDb(cards.filterIsInstance<ReaderRecommendedBlogsCard>().map { it.blogs }.flatten())
 
             // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
+            val simplifiedCardsJson = createSimplifiedJson(fullCardsJson, taskType)
             insertCardsJsonIntoDb(simplifiedCardsJson)
 
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
@@ -198,28 +198,38 @@ class ReaderDiscoverLogic @Inject constructor(
      * as it's already stored in the db.
      */
     @Suppress("NestedBlockDepth")
-    private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
-        var index = 0
-        val simplifiedJson = JSONArray()
+    private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
+        val simplifiedJsonList = mutableListOf<JSONObject>()
+        var firstYouMayLikeCard: JSONObject? = null
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
-                            simplifiedJson.put(index++, createSimplifiedRecommendedBlogsCardJson(cardJson))
+                            simplifiedJsonList.add(createSimplifiedRecommendedBlogsCardJson(cardJson))
                         }
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    simplifiedJson.put(index++, cardJson)
+                    // We should not have an interests/tags card as the first element on Discover feed.
+                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
+                        firstYouMayLikeCard = cardJson
+                        continue
+                    }
+                    simplifiedJsonList.add(cardJson)
                 }
                 JSON_CARD_POST -> {
-                    simplifiedJson.put(index++, createSimplifiedPostJson(cardJson))
+                    simplifiedJsonList.add(createSimplifiedPostJson(cardJson))
                 }
             }
         }
-        return simplifiedJson
+        // If we've received an interests/tags card as the first element, it should be displayed as the third card.
+        if (firstYouMayLikeCard != null) {
+            simplifiedJsonList.add(2, firstYouMayLikeCard)
+        }
+
+        return JSONArray(simplifiedJsonList)
     }
 
     /**

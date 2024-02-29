@@ -1,6 +1,0 @@
-24.0:
-Pembaruan Editor Blok:
-- Keyboard perangkat tetap terlihat ketika menyunting blok teks
-- Layar bergulir otomatis ke blok yang baru disisipkan
-- Batalkan pemilihan blok dengan menekan tombol kembali pada perangkat
-- Bagikan berbagai jenis media ke aplikasi sekaligus tanpa crash

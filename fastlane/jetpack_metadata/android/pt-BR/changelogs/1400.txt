@@ -1,6 +1,0 @@
-24.0:
-- Adquira um plano do WordPress com um domínio gratuito no painel de domínios
-- O teclado do dispositivo não some ao editar blocos de texto
-- A tela do editor rola automaticamente para os blocos recém-inseridos
-- Desmarque blocos pressionando o botão de voltar do dispositivo
-- Compartilhe diferentes tipos de mídia no app de uma só vez sem falhas

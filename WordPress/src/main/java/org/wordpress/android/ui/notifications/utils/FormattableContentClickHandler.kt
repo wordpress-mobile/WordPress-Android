@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.ACT
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import org.wordpress.android.util.ToastUtils
@@ -117,7 +118,7 @@ class FormattableContentClickHandler @Inject constructor(
         if (rangeType == FormattableRangeType.FOLLOW) {
             ActivityLauncher.viewAllTabbedInsightsStats(activity, FOLLOWERS, 0, site.id)
         } else {
-            ActivityLauncher.viewBlogStats(activity, site)
+            ActivityLauncher.viewBlogStats(activity, site, StatsLaunchedFrom.ACTIVITY_LOG)
         }
     }
 

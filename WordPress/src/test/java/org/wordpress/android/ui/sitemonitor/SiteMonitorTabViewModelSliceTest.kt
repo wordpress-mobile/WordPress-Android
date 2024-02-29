@@ -31,9 +31,12 @@ class SiteMonitorTabViewModelSliceTest : BaseUnitTest() {
 
     val site = mock<SiteModel>()
 
+    val refreshStates = mutableListOf<Boolean>()
+
     @Before
     fun setUp() = test {
         viewModel = SiteMonitorTabViewModelSlice(
+            testDispatcher(),
             networkUtilsWrapper,
             accountStore,
             mapper,
@@ -117,6 +120,19 @@ class SiteMonitorTabViewModelSliceTest : BaseUnitTest() {
         viewModel.onWebViewError()
 
         assertThat(viewModel.uiState.value).isInstanceOf(SiteMonitorUiState.GenericError::class.java)
+    }
+
+    @Test
+    fun `given loaded  state, when refresh is invoked, then uiState loaded is posted`() = test {
+        viewModel.start(SiteMonitorType.METRICS, SiteMonitorTabItem.Metrics.urlTemplate, site)
+        advanceUntilIdle()
+        viewModel.onUrlLoaded()
+        viewModel.refreshData()
+
+        assertThat(viewModel.isRefreshing.value).isTrue()
+        advanceUntilIdle()
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteMonitorUiState.Prepared::class.java)
+        assertThat(viewModel.isRefreshing.value).isFalse()
     }
 
     companion object {
