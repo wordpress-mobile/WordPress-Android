@@ -6,10 +6,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -30,7 +28,6 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
@@ -49,9 +46,7 @@ import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.LandOnTheEditorFeatureConfig
-import org.wordpress.android.util.filter
 import org.wordpress.android.util.getEmailValidationMessage
-import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -140,16 +135,6 @@ class MySiteViewModel @Inject constructor(
     )
 
     private var shouldMarkUpdateSiteTitleTaskComplete = false
-
-    val state: LiveData<MySiteUiState> =
-        selectedSiteRepository.siteSelected.switchMap { _ ->
-            isSiteSelected = true
-            val result = MediatorLiveData<SiteIdToState>()
-
-            // We want to filter out the empty state where we have a site ID but site object is missing.
-            // Without this check there is an emission of a NoSites state even if we have the site
-            result.filter { it.siteId == null || it.state.site != null }.mapSafe { it.state }
-        }
 
     val uiModel: LiveData<State> = merge(
         siteInfoHeaderCardViewModelSlice.uiModel,
@@ -473,12 +458,6 @@ class MySiteViewModel @Inject constructor(
         val isMultiline: Boolean,
         val isInputEnabled: Boolean
     )
-
-    private data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
-        fun update(partialState: PartialState): SiteIdToState {
-            return this.copy(state = state.update(partialState))
-        }
-    }
 
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
