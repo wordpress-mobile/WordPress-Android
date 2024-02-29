@@ -420,7 +420,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         ).also {
                             if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
                                 val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
-                                it.setClickableSpan(range, note.type)
+                                it.setClickableSpan(range, note.rawType)
                             }
                         }
                     } else {
@@ -470,7 +470,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 }
                 var pingbackUrl: String? = null
                 val isPingback = isPingback(note)
-                if (bodyArray != null && bodyArray.length() > 0) {
+                if (bodyArray.length() > 0) {
                     pingbackUrl = addNotesBlock(note, noteList, bodyArray, isPingback)
                 }
                 if (isPingback) {
@@ -489,7 +489,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         private fun isPingback(note: Note): Boolean {
             var hasRangeOfTypeSite = false
             var hasRangeOfTypePost = false
-            val rangesArray = note.subject.optJSONArray("ranges")
+            val rangesArray = note.subject?.optJSONArray("ranges")
             if (rangesArray != null) {
                 for (i in 0 until rangesArray.length()) {
                     val rangeObject = rangesArray.optJSONObject(i) ?: continue
@@ -550,7 +550,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 // Check if this is a comment notification that has been replied to
                 // The block will not have a type, and its id will match the comment reply id in the Note.
                 (blockObject.type == null && note.commentReplyId == commentReplyId)
-            } else if (note.isFollowType || note.isLikeType || note.isReblogType) {
+            } else if (note.isFollowType || note.isLikeType) {
                 // User list notifications have a footer if they have 10 or more users in the body
                 // The last block will not have a type, so we can use that to determine if it is the footer
                 blockObject.type == null

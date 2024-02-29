@@ -182,6 +182,8 @@ class ReaderViewModel @Inject constructor(
 
     fun updateSelectedContent(selectedTag: ReaderTag) {
         getMenuItemFromReaderTag(selectedTag)?.let { newSelectedMenuItem ->
+            // Persist selected feed to app prefs
+            appPrefsWrapper.readerTopBarSelectedFeedItemId = newSelectedMenuItem.id
             // Update top bar UI state so menu is updated with new selected item
             _topBarUiState.value?.let {
                 _topBarUiState.value = it.copy(
@@ -311,27 +313,33 @@ class ReaderViewModel @Inject constructor(
             // if menu is exactly the same as before, don't update
             if (_topBarUiState.value?.menuItems == menuItems) return@withContext
 
-
-            // if there's already a selected item, use it, otherwise use the first item, also try to use the saved state
+            // choose selected item, either from current, saved state, or persisted, falling back to first item
             val savedStateSelectedId = savedInstanceState?.getString(KEY_TOP_BAR_UI_STATE_SELECTED_ITEM_ID)
+
+            val persistedSelectedId = appPrefsWrapper.readerTopBarSelectedFeedItemId
+
             val selectedItem = _topBarUiState.value?.selectedItem
                 ?: menuItems.filterSingleItems()
                     .let { singleItems ->
-                        singleItems.firstOrNull { it.id == savedStateSelectedId } ?: singleItems.first()
+                        singleItems.firstOrNull { it.id == savedStateSelectedId }
+                            ?: singleItems.firstOrNull { it.id == persistedSelectedId }
+                            ?: singleItems.first()
                     }
 
             // if there's a selected item and filter state, also use the filter state, also try to use the saved state
+            val savedStateFilterUiState = savedInstanceState
+                ?.let {
+                    BundleCompat.getParcelable(
+                        it,
+                        KEY_TOP_BAR_UI_STATE_FILTER_UI_STATE,
+                        TopBarUiState.FilterUiState::class.java
+                    )
+                }
+                ?.takeIf { selectedItem.id == savedStateSelectedId }
+
             val filterUiState = _topBarUiState.value?.filterUiState
                 ?.takeIf { _topBarUiState.value?.selectedItem != null }
-                ?: savedInstanceState
-                    ?.let {
-                        BundleCompat.getParcelable(
-                            it,
-                            KEY_TOP_BAR_UI_STATE_FILTER_UI_STATE,
-                            TopBarUiState.FilterUiState::class.java
-                        )
-                    }
-                    ?.takeIf { selectedItem.id == savedStateSelectedId }
+                ?: savedStateFilterUiState
 
             _topBarUiState.postValue(
                 TopBarUiState(

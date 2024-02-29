@@ -2705,6 +2705,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_monitoring_tab_shown";
             case SITE_MONITORING_TAB_LOADING_ERROR:
                 return "site_monitoring_tab_loading_error";
+            case NOTIFICATION_MENU_TAPPED:
+                return "notification_menu_tapped";
+            case NOTIFICATIONS_MARK_ALL_READ_TAPPED:
+                return "notifications_mark_all_read_tapped";
+            case NOTIFICATIONS_INLINE_ACTION_TAPPED:
+                return "notifications_inline_action_tapped";
             case WEBVIEW_TOO_LARGE_PAYLOAD_ERROR:
                 return "webview_too_large_payload_error";
         }

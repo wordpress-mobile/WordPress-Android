@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,10 +14,10 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
@@ -279,13 +278,6 @@ public class NotificationsUtils {
                     spannableStringBuilder
                             .setSpan(clickableSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-                    // Add additional styling if the range wants it
-                    if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
-                        StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
-                        spannableStringBuilder
-                                .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-
                     if (onNoteBlockTextClickListener != null && textView != null) {
                         textView.setLinksClickable(true);
                         textView.setMovementMethod(new NoteBlockLinkMovementMethod());
@@ -476,6 +468,11 @@ public class NotificationsUtils {
         }
 
         return false;
+    }
+
+    @Nullable
+    public static Note getNoteById(@Nullable String noteID) {
+        return NotificationsTable.getNoteById(noteID);
     }
 
     public static Note buildNoteObjectFromBundle(Bundle data) {

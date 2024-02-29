@@ -30,7 +30,7 @@ class ListScenarioUtils @Inject constructor(
     val notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) {
     fun mapLikeNoteToListScenario(note: Note, context: Context): ListScenario {
-        require(note.isLikeType) { "mapLikeNoteToListScenario > unexpected note type ${note.type}" }
+        require(note.isLikeType) { "mapLikeNoteToListScenario > unexpected note type ${note.rawType}" }
 
         val imageType = AVATAR_WITH_BACKGROUND
         val headerNoteBlock = HeaderNoteBlock(
