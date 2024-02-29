@@ -211,6 +211,7 @@ class OverviewUseCase constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun onColumnSelected(position: Int) {
         val event = when (position) {
             0 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VIEWS
