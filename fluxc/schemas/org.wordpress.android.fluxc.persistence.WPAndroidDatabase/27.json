@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 27,
-    "identityHash": "1bef3493281767ba25c003010c10a0e8",
+    "identityHash": "1612659906efd7bc0ccfaf91b68d50fd",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -676,7 +676,7 @@
       },
       {
         "tableName": "BlazeCampaigns",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `createdAt` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT, `totalBudget` TEXT, `spentBudget` TEXT, PRIMARY KEY(`siteId`, `campaignId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `createdAt` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT, `totalBudget` REAL NOT NULL, `spentBudget` REAL NOT NULL, PRIMARY KEY(`siteId`, `campaignId`))",
         "fields": [
           {
             "fieldPath": "siteId",
@@ -741,14 +741,14 @@
           {
             "fieldPath": "totalBudget",
             "columnName": "totalBudget",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "REAL",
+            "notNull": true
           },
           {
             "fieldPath": "spentBudget",
             "columnName": "spentBudget",
-            "affinity": "TEXT",
-            "notNull": false
+            "affinity": "REAL",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -971,7 +971,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1bef3493281767ba25c003010c10a0e8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1612659906efd7bc0ccfaf91b68d50fd')"
     ]
   }
 }
