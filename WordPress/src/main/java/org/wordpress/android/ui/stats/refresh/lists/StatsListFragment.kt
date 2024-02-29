@@ -159,16 +159,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 StatsGranularity.entries.map { getString(it.toNameResource()) }
             ).apply { setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item) }
 
-            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
-                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
-            )
-            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
-
             dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     with(StatsGranularity.entries[position]) {
                         selectedTrafficGranularityManager.setSelectedTrafficGranularity(this)
-                        (viewModel as TrafficListViewModel).onGranularitySelected(this)
                     }
                 }
 
@@ -275,6 +269,17 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
+        }
+
+        selectedTrafficGranularityManager.liveSelectedGranularity.observe(viewLifecycleOwner) {
+            // Manage the logic of granularity selection in the viewmodel
+            (viewModel as? TrafficListViewModel)?.onGranularitySelected(it)
+
+            // Manage the UI update of the new granularity selection
+            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
         }
     }
 
