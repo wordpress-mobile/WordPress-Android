@@ -96,9 +96,6 @@ class PhotoPickerViewModel @Inject constructor(
                 softAskRequest?.show == true,
             ),
             buildSoftAskView(softAskRequest),
-            FabUiModel(selectedIds.isNullOrEmpty()) {
-                clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO)
-            },
             buildActionModeUiModel(selectedIds),
             progressDialogModel ?: ProgressDialogUiModel.Hidden,
             showPartialAccessPrompt ?: false,
@@ -527,7 +524,6 @@ class PhotoPickerViewModel @Inject constructor(
         val photoListUiModel: PhotoListUiModel,
         val bottomBarUiModel: BottomBarUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
-        val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
         val progressDialogUiModel: ProgressDialogUiModel,
         val isPartialMediaAccessPromptVisible: Boolean,
