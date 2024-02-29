@@ -287,6 +287,9 @@ android {
         exclude '**/libjscexecutor.so'
         exclude '**/libfabricjni.so'
 
+        // Exclude React Native's JavaScript source map
+        exclude '**/*.bundle.map'
+
         // Avoid React Native's JNI duplicated classes
         pickFirst '**/libc++_shared.so'
         pickFirst '**/libfbjni.so'
