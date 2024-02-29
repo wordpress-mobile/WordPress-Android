@@ -22,8 +22,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.fluxc.store.QuickStartStore.Companion.QUICK_START_VIEW_SITE_LABEL
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -90,7 +88,6 @@ class MySiteViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
-    private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
     private val _onOpenJetpackInstallFullPluginOnboarding = SingleLiveEvent<Event<Unit>>()
     private val _onShowJetpackIndividualPluginOverlay = SingleLiveEvent<Event<Unit>>()
 
@@ -98,16 +95,8 @@ class MySiteViewModel @Inject constructor(
        as they're already built on site select. */
     private var isSiteSelected = false
 
-    val onScrollTo: LiveData<Event<Int>> = merge(
-        _activeTaskPosition.distinctUntilChanged(),
-        quickStartRepository.activeTask
-    ) { pair, activeTask ->
-        if (pair != null && activeTask != null && pair.first == activeTask) {
-            Event(pair.second)
-        } else {
-            null
-        }
-    }
+    val onScrollTo: MutableLiveData<Event<Int>> = MutableLiveData()
+
     val onSnackbarMessage = merge(
         _onSnackbarMessage,
         siteStoriesHandler.onSnackbar,
@@ -189,12 +178,6 @@ class MySiteViewModel @Inject constructor(
         accountDataViewModelSlice.initialize(viewModelScope)
     }
 
-    private fun getPositionOfQuickStartItem(
-        siteItems: List<MySiteCardAndItem>,
-    ): Int {
-        return siteItems.indexOfFirst { it.activeQuickStartItem }
-    }
-
     private fun shouldShowDashboard(site: SiteModel): Boolean {
         return buildConfigWrapper.isJetpackApp && site.isUsingWpComRestApi
     }
@@ -206,38 +189,8 @@ class MySiteViewModel @Inject constructor(
         )
     }
 
-    private fun scrollToQuickStartTaskIfNecessary(
-        quickStartTask: QuickStartTask,
-        position: Int
-    ) {
-        if (_activeTaskPosition.value?.first != quickStartTask && isValidQuickStartFocusPosition(
-                quickStartTask,
-                position
-            )
-        ) {
-            _activeTaskPosition.postValue(quickStartTask to position)
-        }
-    }
-
-    private fun isValidQuickStartFocusPosition(quickStartTask: QuickStartTask, position: Int): Boolean {
-        return if (position == LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM && isSiteHeaderQuickStartTask(quickStartTask)) {
-            true
-        } else {
-            position >= 0
-        }
-    }
-
-    private fun isSiteHeaderQuickStartTask(quickStartTask: QuickStartTask): Boolean {
-        return when (quickStartTask) {
-            QuickStartNewSiteTask.UPDATE_SITE_TITLE,
-            QuickStartNewSiteTask.UPLOAD_SITE_ICON,
-            quickStartRepository.quickStartType.getTaskFromString(QUICK_START_VIEW_SITE_LABEL) -> true
-
-            else -> false
-        }
-    }
-
     fun onQuickStartTaskCardClick(task: QuickStartTask) {
+        onScrollTo.postValue(Event(0))
         quickStartRepository.setActiveTask(task)
     }
 
@@ -528,7 +481,6 @@ class MySiteViewModel @Inject constructor(
     }
 
     companion object {
-        private const val LIST_INDEX_NO_ACTIVE_QUICK_START_ITEM = -1
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
         const val TAG_REMOVE_NEXT_STEPS_DIALOG = "TAG_REMOVE_NEXT_STEPS_DIALOG"

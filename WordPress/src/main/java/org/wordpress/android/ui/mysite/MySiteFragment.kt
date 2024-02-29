@@ -446,7 +446,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition == -1) {
                 quickStartScrollPosition = 0
             }
-            if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
+            recyclerView.scrollToPosition(quickStartScrollPosition)
         }
 
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
