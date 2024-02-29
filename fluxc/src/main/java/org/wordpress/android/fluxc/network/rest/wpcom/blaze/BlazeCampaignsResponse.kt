@@ -1,8 +1,12 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 
 import com.google.gson.annotations.SerializedName
+import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.store.Store.OnChangedError
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 
@@ -11,68 +15,71 @@ data class ContentConfig(
     val title: String,
 )
 
+data class BlazeCampaignsFetchedPayload<T>(
+    val response: T? = null
+) : Payload<BlazeCampaignsError>() {
+    constructor(error: BlazeCampaignsError) : this() {
+        this.error = error
+    }
+}
+
+class BlazeCampaignsError
+@JvmOverloads constructor(
+    val type: BlazeCampaignsErrorType,
+    val message: String? = null
+) : OnChangedError
+
+enum class BlazeCampaignsErrorType {
+    GENERIC_ERROR,
+    AUTHORIZATION_REQUIRED,
+    INVALID_RESPONSE,
+    API_ERROR,
+    TIMEOUT
+}
+
+fun WPComGsonNetworkError.toBlazeCampaignsError(): BlazeCampaignsError {
+    val type = when (type) {
+        GenericErrorType.TIMEOUT -> BlazeCampaignsErrorType.TIMEOUT
+        GenericErrorType.NO_CONNECTION,
+        GenericErrorType.SERVER_ERROR,
+        GenericErrorType.INVALID_SSL_CERTIFICATE,
+        GenericErrorType.NETWORK_ERROR -> BlazeCampaignsErrorType.API_ERROR
+
+        GenericErrorType.PARSE_ERROR,
+        GenericErrorType.NOT_FOUND,
+        GenericErrorType.CENSORED,
+        GenericErrorType.INVALID_RESPONSE -> BlazeCampaignsErrorType.INVALID_RESPONSE
+
+        GenericErrorType.HTTP_AUTH_ERROR,
+        GenericErrorType.AUTHORIZATION_REQUIRED,
+        GenericErrorType.NOT_AUTHENTICATED -> BlazeCampaignsErrorType.AUTHORIZATION_REQUIRED
+
+        GenericErrorType.UNKNOWN,
+        null -> BlazeCampaignsErrorType.GENERIC_ERROR
+    }
+    return BlazeCampaignsError(type, message)
+}
+
 data class CampaignStats(
     @SerializedName("impressions_total") val impressionsTotal: Long? = null,
     @SerializedName("clicks_total") val clicksTotal: Long? = null
 )
 
-data class Campaign(
-    @SerializedName("budget_cents") val budgetCents: Long? = null,
-    @SerializedName("campaign_id") val campaignId: Int? = null,
-    @SerializedName("content_config") val contentConfig: ContentConfig,
-    @SerializedName("content_image") val contentImage: String? = null,
-    @SerializedName("created_at") val createdAt: String,
-    @SerializedName("end_date") val endDate: String? = null,
-    @SerializedName("ui_status") val uiStatus: String,
-    @SerializedName("campaign_stats") val campaignStats: CampaignStats,
-    @SerializedName("target_urn") val targetUrn: String,
-) {
-    fun toCampaignsModel(): BlazeCampaignModel {
-        return BlazeCampaignModel(
-            campaignId = campaignId ?: 0,
-            title = contentConfig.title,
-            imageUrl = contentConfig.imageUrl,
-            createdAt = BlazeCampaignsUtils.stringToDate(createdAt),
-            endDate = endDate?.let { BlazeCampaignsUtils.stringToDate(it) },
-            uiStatus = uiStatus,
-            budgetCents = budgetCents ?: 0,
-            impressions = campaignStats.impressionsTotal ?: 0L,
-            clicks = campaignStats.clicksTotal ?: 0L,
-            targetUrn = targetUrn,
-        )
-    }
-}
-
-data class BlazeCampaignsResponse(
-    @SerializedName("campaigns") val campaigns: List<Campaign>,
-    @SerializedName("page") val page: Int,
-    @SerializedName("total_items") val totalItems: Int,
-    @SerializedName("total_pages") val totalPages: Int
-) {
-    fun toCampaignsModel() = BlazeCampaignsModel(
-        campaigns = campaigns.map { it.toCampaignsModel() },
-        page = page,
-        totalItems = totalItems,
-        totalPages = totalPages
-    )
-}
-
 data class BlazeCampaignListResponse(
     @SerializedName("campaigns") val campaigns: List<BlazeCampaign>,
     @SerializedName("skipped") val skipped: Int,
-    @SerializedName("total_count") val totalCount_: Int,
+    @SerializedName("total_count") val totalCount: Int,
 ) {
     fun toCampaignsModel() = BlazeCampaignsModel(
         campaigns = campaigns.map { it.toCampaignsModel() },
-        page = page,
-        totalItems = totalItems,
-        totalPages = totalPages
+        skipped = skipped,
+        totalItems = totalCount,
     )
 }
 
 data class BlazeCampaign(
     @SerializedName("id") val id: String,
-    @SerializedName("main_image") val image: CampaignImage = null,
+    @SerializedName("main_image") val image: CampaignImage,
     @SerializedName("target_url") val targetUrl: String,
     @SerializedName("text_snippet") val textSnippet: String,
     @SerializedName("site_name") val siteName: String,
@@ -95,7 +102,6 @@ data class BlazeCampaign(
             createdAt = startDate,
             endDate = Date(startDate.time + durationDays.days.inWholeMilliseconds),
             uiStatus = status,
-            budgetCents = -1,
             impressions = impressions,
             clicks = clicks,
             targetUrn = targetUrn,
