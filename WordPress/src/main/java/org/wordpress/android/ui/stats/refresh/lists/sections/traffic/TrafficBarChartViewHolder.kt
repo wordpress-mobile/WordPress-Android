@@ -82,7 +82,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun hasData(entries: List<Bar>) = entries.isNotEmpty() && entries.any { it.value > 0 }
 
-    private fun getData(item: BlockListItem.BarChartItem): List<IBarDataSet> {
+    private fun getData(item: BlockListItem.BarChartItem): IBarDataSet {
         val minColumnCount = 5
 
         val graphWidth = DisplayUtils.pxToDp(chart.context, chart.width)
@@ -97,10 +97,8 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             buildEmptyDataSet(chart.context, cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
-        val dataSets = mutableListOf<IBarDataSet>()
-        dataSets.add(dataSet)
 
-        return dataSets
+        return dataSet
     }
 
     private fun configureChartView() {
