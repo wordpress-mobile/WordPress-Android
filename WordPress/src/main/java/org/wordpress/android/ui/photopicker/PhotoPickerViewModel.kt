@@ -560,8 +560,6 @@ class PhotoPickerViewModel @Inject constructor(
         object Hidden : SoftAskViewUiModel()
     }
 
-    data class FabUiModel(val show: Boolean, val action: () -> Unit)
-
     sealed class ActionModeUiModel {
         data class Visible(
             val actionModeTitle: UiString? = null,
