@@ -44,7 +44,7 @@ class BlazeCampaignsStore @Inject constructor(
         site: SiteModel,
         skip: Int = 0,
         limit: Int = DEFAULT_ITEMS_LIMIT,
-        locale: String = Locale.getDefault().country,
+        locale: String = Locale.getDefault().language,
         status: String? = null,
     ): BlazeCampaignsResult<BlazeCampaignsModel> {
         fun handlePayloadError(

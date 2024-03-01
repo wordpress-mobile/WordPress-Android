@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
@@ -25,16 +26,16 @@ import org.wordpress.android.fluxc.model.blaze.BlazeTargetingDevice
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLanguage
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingLocation
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingTopic
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaign
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.Campaign
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignStats
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.ContentConfig
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignImage
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
@@ -49,77 +50,78 @@ import kotlin.time.Duration.Companion.days
 const val SITE_ID = 1L
 
 /* Campaign */
-const val CAMPAIGN_ID = 1
-const val TITLE = "title"
-const val IMAGE_URL = "imageUrl"
-const val CREATED_AT = "2023-06-02T00:00:00.000Z"
-const val END_DATE = "2023-06-02T00:00:00.000Z"
-const val UI_STATUS = "rejected"
-const val BUDGET_CENTS = 5000L
-const val IMPRESSIONS = 0L
-const val CLICKS = 0L
+private const val CAMPAIGN_ID = "1234"
+private const val TITLE = "title"
+private const val IMAGE_URL = "imageUrl"
+private const val CREATED_AT = "2023-06-02T00:00:00.000Z"
+private const val END_DATE = "2023-06-12T00:00:00.000Z" // Considering duration of 10 days
+private const val DURATION_IN_DAYS = 10
+private const val UI_STATUS = "rejected"
+private const val IMPRESSIONS = 0L
+private const val CLICKS = 0L
+private const val TOTAL_BUDGET = 100.0
+private const val SPENT_BUDGET = 0.0
+private const val TARGET_URN = "urn:wpcom:post:199247490:9"
 
-const val PAGE = 1
-const val TOTAL_ITEMS = 1
-const val TOTAL_PAGES = 1
+private const val SKIP = 0
+private const val TOTAL_ITEMS = 1
 
-private val CONTENT_CONFIG_RESPONSE = ContentConfig(
-    title = TITLE,
-    imageUrl = IMAGE_URL
+private val CAMPAIGN_IMAGE = CampaignImage(
+    height = 100f,
+    width = 100f,
+    mimeType = "image/jpeg",
+    url = IMAGE_URL
 )
 
-private val CONTENT_CAMPAIGN_STATS = CampaignStats(
-    impressionsTotal = 0,
-    clicksTotal = 0
+private val CAMPAIGN_RESPONSE = BlazeCampaign(
+    id = CAMPAIGN_ID,
+    image = CAMPAIGN_IMAGE,
+    targetUrl = "https://example.com",
+    textSnippet = TITLE,
+    siteName = "siteName",
+    clicks = CLICKS,
+    impressions = IMPRESSIONS,
+    spentBudget = SPENT_BUDGET,
+    totalBudget = TOTAL_BUDGET,
+    durationDays = DURATION_IN_DAYS,
+    startTime = CREATED_AT,
+    targetUrn = TARGET_URN,
+    status = UI_STATUS
 )
 
-private val CAMPAIGN_RESPONSE = Campaign(
-    campaignId = CAMPAIGN_ID,
-    createdAt = CREATED_AT,
-    endDate = END_DATE,
-    budgetCents = BUDGET_CENTS,
-    uiStatus = UI_STATUS,
-    contentConfig = CONTENT_CONFIG_RESPONSE,
-    campaignStats = CONTENT_CAMPAIGN_STATS,
-    targetUrn = "urn:wpcom:post:199247490:9"
-)
-
-private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
+private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignListResponse(
     campaigns = listOf(CAMPAIGN_RESPONSE),
-    page = PAGE,
-    totalItems = TOTAL_ITEMS,
-    totalPages = TOTAL_PAGES
+    skipped = SKIP,
+    totalCount = TOTAL_ITEMS,
 )
 
-private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignEntity(
+private val BLAZE_CAMPAIGN_ENTITY = BlazeCampaignEntity(
     siteId = SITE_ID,
-    campaignId = CAMPAIGN_ID,
+    campaignId = CAMPAIGN_ID.toInt(),
     title = TITLE,
     imageUrl = IMAGE_URL,
     createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
     endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
     uiStatus = UI_STATUS,
-    budgetCents = BUDGET_CENTS,
     impressions = IMPRESSIONS,
     clicks = CLICKS,
-    targetUrn = "urn:wpcom:post:199247490:9"
+    targetUrn = TARGET_URN,
+    totalBudget = TOTAL_BUDGET,
+    spentBudget = SPENT_BUDGET
 )
 private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
-    campaigns = listOf(BLAZE_CAMPAIGN_MODEL.toDomainModel()),
-    page = PAGE,
+    campaigns = listOf(BLAZE_CAMPAIGN_ENTITY.toDomainModel()),
+    skipped = SKIP,
     totalItems = TOTAL_ITEMS,
-    totalPages = TOTAL_PAGES
 )
 
-private val NO_RESULTS_BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
-    campaigns = listOf(),
-    page = 1,
-    totalItems = 0,
-    totalPages = 0
+private val NO_RESULTS_BLAZE_CAMPAIGNS_MODEL = BLAZE_CAMPAIGNS_MODEL.copy(
+    campaigns = emptyList(),
+    totalItems = 0
 )
 
 class BlazeCampaignsStoreTest {
-    private val restClient: BlazeCampaignsRestClient = mock()
+    private val blazeCampaignsRestClient: BlazeCampaignsRestClient = mock()
     private val creationRestClient: BlazeCreationRestClient = mock()
     private val blazeCampaignsDao: BlazeCampaignsDao = mock()
     private val blazeTargetingDao: BlazeTargetingDao = mock()
@@ -133,7 +135,7 @@ class BlazeCampaignsStoreTest {
     @Before
     fun setUp() {
         store = BlazeCampaignsStore(
-            campaignsRestClient = restClient,
+            blazeCampaignsRestClient = blazeCampaignsRestClient,
             creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,
@@ -145,9 +147,13 @@ class BlazeCampaignsStoreTest {
     fun `given success, when fetch blaze campaigns is triggered, then values are inserted`() =
         test {
             val payload = BlazeCampaignsFetchedPayload(successResponse)
-            whenever(restClient.fetchBlazeCampaigns(siteModel, PAGE)).thenReturn(payload)
+            whenever(
+                blazeCampaignsRestClient.fetchBlazeCampaigns(
+                    siteModel.siteId, SKIP, DEFAULT_ITEMS_LIMIT, "en", null
+                )
+            ).thenReturn(payload)
 
-            store.fetchBlazeCampaigns(siteModel, PAGE)
+            store.fetchBlazeCampaigns(siteModel, SKIP)
 
             verify(blazeCampaignsDao).insertCampaignsAndPageInfoForSite(
                 SITE_ID,
@@ -158,7 +164,11 @@ class BlazeCampaignsStoreTest {
     @Test
     fun `given error, when fetch blaze campaigns is triggered, then error result is returned`() =
         test {
-            whenever(restClient.fetchBlazeCampaigns(any(), any())).thenReturn(
+            whenever(
+                blazeCampaignsRestClient.fetchBlazeCampaigns(
+                    any(), any(), any(), any(),  eq(null)
+                )
+            ).thenReturn(
                 BlazeCampaignsFetchedPayload(errorResponse)
             )
             val result = store.fetchBlazeCampaigns(siteModel)
@@ -179,29 +189,30 @@ class BlazeCampaignsStoreTest {
 
         assertThat(result).isNotNull
         assertThat(result.campaigns).isEmpty()
-        assertEquals(result.page, 1)
-        assertEquals(result.totalPages, 0)
+        assertEquals(result.skipped, 0)
         assertEquals(result.totalItems, 0)
     }
 
     @Test
     fun `given matched site, when get recent is triggered, then campaign is returned`() = test {
         whenever(blazeCampaignsDao.getMostRecentCampaignForSite(SITE_ID)).thenReturn(
-            BLAZE_CAMPAIGN_MODEL
+            BLAZE_CAMPAIGN_ENTITY
         )
 
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
         assertThat(result).isNotNull
-        assertEquals(result?.campaignId, CAMPAIGN_ID)
+        assertEquals(result?.campaignId, CAMPAIGN_ID.toInt())
         assertEquals(result?.title, TITLE)
         assertEquals(result?.imageUrl, IMAGE_URL)
         assertEquals(result?.createdAt, BlazeCampaignsUtils.stringToDate(CREATED_AT))
         assertEquals(result?.endDate, BlazeCampaignsUtils.stringToDate(END_DATE))
         assertEquals(result?.uiStatus, UI_STATUS)
-        assertEquals(result?.budgetCents, BUDGET_CENTS)
         assertEquals(result?.impressions, IMPRESSIONS)
         assertEquals(result?.clicks, CLICKS)
+        assertEquals(result?.targetUrn, TARGET_URN)
+        assertEquals(result?.totalBudget, TOTAL_BUDGET)
+        assertEquals(result?.spentBudget, SPENT_BUDGET)
     }
 
     @Test
@@ -446,16 +457,20 @@ class BlazeCampaignsStoreTest {
     @Test
     fun `when creating a campaign, then persist it to the DB and return result`() = test {
         val campaign = BlazeCampaignModel(
-            campaignId = CAMPAIGN_ID,
+            campaignId = CAMPAIGN_ID.toInt(),
             title = TITLE,
             imageUrl = IMAGE_URL,
             createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-            endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
+            endDate = Date(
+                BlazeCampaignsUtils.stringToDate(CREATED_AT).time
+                    + DURATION_IN_DAYS.days.inWholeMilliseconds
+            ),
             uiStatus = UI_STATUS,
-            budgetCents = BUDGET_CENTS,
             impressions = IMPRESSIONS,
             clicks = CLICKS,
-            targetUrn = "urn:wpcom:post:199247490:9"
+            targetUrn = TARGET_URN,
+            totalBudget = TOTAL_BUDGET,
+            spentBudget = SPENT_BUDGET,
         )
 
         whenever(creationRestClient.createCampaign(any(), any())).thenReturn(
