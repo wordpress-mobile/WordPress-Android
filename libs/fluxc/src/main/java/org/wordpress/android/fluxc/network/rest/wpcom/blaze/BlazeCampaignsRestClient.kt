@@ -11,7 +11,7 @@ class BlazeCampaignsRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
 ) {
     companion object {
-        const val DEFAULT_ITEMS_LIMIT = 25 //Number of items to fetch in a single request
+        const val DEFAULT_ITEMS_LIMIT = 25 // Number of items to fetch in a single request
     }
 
     suspend fun fetchBlazeCampaigns(
