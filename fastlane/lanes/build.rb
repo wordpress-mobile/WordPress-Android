@@ -377,22 +377,21 @@ platform :android do
   # @param [String] release_version Release version name to attach the files to in Sentry.
   #
   def upload_gutenberg_sourcemaps(app:, flavor:, build_type:, release_version:)
-    # Load Sentry properties
+    # Load Sentry properties
     sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
-    sentry_token = sentry_properties[:"auth.token"]
-    project_slug = sentry_properties[:"defaults.project"]
-    org_slug = sentry_properties[:"defaults.org"]
+    sentry_token = sentry_properties[:'auth.token']
+    project_slug = sentry_properties[:'defaults.project']
+    org_slug = sentry_properties[:'defaults.org']
 
     # The bundle and source map files are extracted from merged assets location created after building the app.
     # The format is: <app><flavor><build_type>
     # E.g.: jetpackJalapenoDebug
-    assetPath = "#{app.downcase}#{flavor}#{build_type}"
-    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'intermediates','assets', assetPath)
+    build_asset_folder_name = "#{app.downcase}#{flavor}#{build_type}"
+    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'intermediates', 'assets', build_asset_folder_name)
 
     Dir.mktmpdir do |sourcemaps_folder|
-      # It's important that the bundle and source map files have specific names, otherwise, Sentry 
-      # won't symbolicate the stack traces.
+      # It's important that the bundle and source map files have specific names, otherwise, Sentry won't symbolicate the stack traces.
       FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle'), File.join(sourcemaps_folder, 'index.android.bundle'))
       FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle.map'), File.join(sourcemaps_folder, 'index.android.bundle.map'))
 
@@ -401,9 +400,9 @@ platform :android do
         org_slug: org_slug,
         project_slug: project_slug,
         version: release_version,
-        # When the React native bundle is generated, the source map file references
-        # include the local machine path, with the `rewrite` and `strip_common_prefix` 
-        # options Sentry automatically strips this part.
+        # When the React native bundle is generated, the source map file references include the local machine path, with the `rewrite` and
+        # `strip_common_prefix` include the local machine path, with the `rewrite` and `strip_common_prefix` options Sentry automatically
+        # strips this part.
         rewrite: true,
         strip_common_prefix: true,
         sourcemap: sourcemaps_folder
