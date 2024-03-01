@@ -69,15 +69,18 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun BarChart.draw(item: BlockListItem.BarChartItem): Int {
         resetChart()
+        val dataSet = getData(item)
+        val dataSets = mutableListOf<IBarDataSet>()
+        dataSets.add(dataSet)
 
-        data = BarData(getData(item))
+        data = BarData(dataSets)
 
         configureChartView()
         configureYAxis(item)
         configureXAxis(item)
 
         invalidate()
-        return data.dataSets[0].entryCount
+        return dataSet.entryCount
     }
 
     private fun hasData(entries: List<Bar>) = entries.isNotEmpty() && entries.any { it.value > 0 }
