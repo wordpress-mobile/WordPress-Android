@@ -2,6 +2,7 @@
 
 24.4
 -----
+[***] [Jetpack-only] Stats: Introducing Traffic tab, delivering improved graphs, and combining Days/Weeks/Months/Years tabs into one, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/19942]
 [***] [Jetpack-only] Improved Notifications experience with richer UI elements and interactions [https://github.com/wordpress-mobile/WordPress-Android/pull/20072]
 * [**] [Jetpack-only] Block editor: Introduce VideoPress v5 support, to fix issues using video block with dotcom and Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6634]
 * [*] Block editor: Prevent crash when autoscrolling to blocks [https://github.com/WordPress/gutenberg/pull/59110]
