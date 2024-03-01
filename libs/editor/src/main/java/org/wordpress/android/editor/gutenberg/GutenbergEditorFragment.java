@@ -62,7 +62,9 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.LogExceptionCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
+import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergJsException;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -76,6 +78,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOpt
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentInterrupted;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnDidLogExceptionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestEmbedFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
@@ -603,6 +606,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
 
+                new OnDidLogExceptionListener() {
+                    @Override public void didLogException(GutenbergJsException exception,
+                                                          LogExceptionCallback onLogExceptionCallback) {
+                        AppLog.d(T.EDITOR, "Gutenberg JS Exception in GB editor fragment");
+                        onLogExceptionCallback.onLogException(true);
+                    }
+                },
                 GutenbergUtils.isDarkMode(getActivity()));
 
         // request dependency injection. Do this after setting min/max dimensions
