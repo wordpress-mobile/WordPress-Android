@@ -10,11 +10,6 @@ import org.wordpress.android.fluxc.store.Store.OnChangedError
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 
-data class ContentConfig(
-    val imageUrl: String? = null,
-    val title: String,
-)
-
 data class BlazeCampaignsFetchedPayload<T>(
     val response: T? = null
 ) : Payload<BlazeCampaignsError>() {
