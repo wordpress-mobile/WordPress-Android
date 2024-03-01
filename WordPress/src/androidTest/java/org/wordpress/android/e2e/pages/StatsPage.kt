@@ -168,7 +168,7 @@ class StatsPage {
         Espresso.onView(Matchers.allOf(
             ViewMatchers.withTagValue(Matchers.`is`(section.name))
         )).perform(
-            RecyclerViewActions.scrollToPosition<ViewHolder>(viewholderPosition) // This works
+            RecyclerViewActions.scrollToPosition<ViewHolder>(viewholderPosition)
         )
         WPSupportUtils.idleFor(2000)
     }
