@@ -10,8 +10,8 @@ class FetchCampaignListUseCase @Inject constructor(
     private val mapper: CampaignListingUIModelMapper
 ) {
     @Suppress("ReturnCount")
-    suspend fun execute(site: SiteModel, page: Int): Result<NetworkError, List<CampaignModel>> {
-        val result = store.fetchBlazeCampaigns(site, page)
+    suspend fun execute(site: SiteModel, skip: Int): Result<NetworkError, List<CampaignModel>> {
+        val result = store.fetchBlazeCampaigns(site, skip)
         if (result.isError || result.model == null) return Result.Failure(GenericError)
         val campaigns = result.model!!.campaigns
         if (campaigns.isEmpty()) return Result.Failure(NoCampaigns)

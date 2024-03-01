@@ -50,7 +50,7 @@ class CampaignListingViewModel @Inject constructor(
     private val _onSelectedSiteMissing = MutableLiveData<Unit>()
     val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
 
-    private var page = 1
+    private var skip = 0
     private var limitPerPage: Int = 10
     private var isLastPage: Boolean = false
 
@@ -79,7 +79,7 @@ class CampaignListingViewModel @Inject constructor(
         if (networkUtilsWrapper.isNetworkAvailable().not()) {
             showNoNetworkError()
         } else {
-            when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+            when (val campaignResult = fetchCampaignListUseCase.execute(site, skip)) {
                 is Result.Success -> showCampaigns(campaignResult.value)
                 is Result.Failure -> {
                     when (campaignResult.value) {
@@ -119,7 +119,7 @@ class CampaignListingViewModel @Inject constructor(
                 (_uiState.value as CampaignListingUiState.Success).pagingDetails.loadingNext.not() &&
                 isLastPage.not()
             ) {
-                page++
+                skip += limitPerPage
                 showLoadingMore()
                 fetchMoreCampaigns()
             }
@@ -131,7 +131,7 @@ class CampaignListingViewModel @Inject constructor(
             disableLoadingMore()
             showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
         } else {
-            when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+            when (val campaignResult = fetchCampaignListUseCase.execute(site, skip)) {
                 is Result.Success -> {
                     val currentUiState = _uiState.value as CampaignListingUiState.Success
                     isLastPage = campaignResult.value.isEmpty() || campaignResult.value.size < limitPerPage
@@ -180,14 +180,14 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     fun refreshCampaigns() {
-        page = 1
+        skip = 0
         launch {
             _refresh.postValue(true)
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _refresh.postValue(false)
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
             } else {
-                when (val campaignResult = fetchCampaignListUseCase.execute(site, page)) {
+                when (val campaignResult = fetchCampaignListUseCase.execute(site, skip)) {
                     is Result.Success -> {
                         _refresh.postValue(false)
                         isLastPage = false
