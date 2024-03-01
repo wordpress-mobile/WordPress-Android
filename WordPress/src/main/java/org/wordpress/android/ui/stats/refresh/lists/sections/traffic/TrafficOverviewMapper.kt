@@ -95,7 +95,7 @@ class TrafficOverviewMapper @Inject constructor(
                 Comments -> it.comments
                 else -> 0L
             }
-            BlockListItem.BarChartItem.Bar(
+            BlockListItem.TrafficBarChartItem.Bar(
                 statsDateFormatter.printTrafficGranularDate(it.period, statsGranularity),
                 it.period,
                 value.toInt()
@@ -111,13 +111,13 @@ class TrafficOverviewMapper @Inject constructor(
             else -> R.string.stats_views
         }
 
-        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getTrafficBarChartEntryContentDescriptions(
             entryType,
             chartItems
         )
 
         result.add(
-            BlockListItem.BarChartItem(
+            BlockListItem.TrafficBarChartItem(
                 chartItems,
                 selectedItem = selectedItemPeriod,
                 onBarSelected = onBarSelected,

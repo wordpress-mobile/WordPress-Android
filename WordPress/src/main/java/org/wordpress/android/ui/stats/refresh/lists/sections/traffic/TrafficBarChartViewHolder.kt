@@ -18,7 +18,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TrafficBarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.BlockListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.utils.BarChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.BarChartLabelFormatter
@@ -35,7 +35,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private lateinit var accessibilityHelper: BarChartAccessibilityHelper
 
-    fun bind(item: BlockListItem.BarChartItem) {
+    fun bind(item: BlockListItem.TrafficBarChartItem) {
         chart.setNoDataText("")
         coroutineScope.launch {
             delay(50)
@@ -67,7 +67,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun BarChart.draw(item: BlockListItem.BarChartItem): Int {
+    private fun BarChart.draw(item: BlockListItem.TrafficBarChartItem): Int {
         resetChart()
         val dataSet = getData(item)
         val dataSets = mutableListOf<IBarDataSet>()
@@ -85,7 +85,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun hasData(entries: List<Bar>) = entries.isNotEmpty() && entries.any { it.value > 0 }
 
-    private fun getData(item: BlockListItem.BarChartItem): IBarDataSet {
+    private fun getData(item: BlockListItem.TrafficBarChartItem): IBarDataSet {
         val minColumnCount = 5
 
         val graphWidth = DisplayUtils.pxToDp(chart.context, chart.width)
@@ -123,7 +123,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun configureYAxis(item: BlockListItem.BarChartItem) {
+    private fun configureYAxis(item: BlockListItem.TrafficBarChartItem) {
         val minYValue = 4f
         val maxYValue = item.entries.maxByOrNull { it.value }?.value ?: 0
 
@@ -132,6 +132,12 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawZeroLine(false)
             setDrawLabels(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
+            axisMaximum = if (maxYValue < minYValue) {
+                minYValue
+            } else {
+                roundUp(maxYValue.toFloat())
+            }
         }
 
         chart.axisRight.apply {
@@ -140,7 +146,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawTopYLabelEntry(true)
             setDrawZeroLine(false)
             setDrawAxisLine(true)
-            granularity = 1f
             axisMinimum = 0f
             axisMaximum = if (maxYValue < minYValue) {
                 minYValue
@@ -155,9 +160,8 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun configureXAxis(item: BlockListItem.BarChartItem) {
+    private fun configureXAxis(item: BlockListItem.TrafficBarChartItem) {
         chart.xAxis.apply {
-            granularity = 1f
             setDrawAxisLine(false)
             setDrawGridLines(false)
 

@@ -7,6 +7,7 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.StatsTimeframe.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.StatsActivity
@@ -73,6 +74,9 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
         val timeframe = if (trafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        if (trafficTabFeatureConfig.isEnabled()) {
+            intent.putExtra(StatsActivity.ARG_GRANULARITY, StatsGranularity.WEEKS)
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, timeframe)

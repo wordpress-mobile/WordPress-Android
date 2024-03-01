@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -53,12 +54,13 @@ class WeekViewsWidgetUpdater @Inject constructor(
         val hasAccessToken = accountStore.hasAccessToken()
         val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         val timeframe = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        val granularity = if (statsTrafficTabFeatureConfig.isEnabled()) StatsGranularity.WEEKS else null
         if (networkAvailable && hasAccessToken && siteModel != null) {
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
                 views.setOnClickPendingIntent(
                     R.id.widget_title_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe)
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe, granularity)
                 )
             }
             widgetUtils.showList(
