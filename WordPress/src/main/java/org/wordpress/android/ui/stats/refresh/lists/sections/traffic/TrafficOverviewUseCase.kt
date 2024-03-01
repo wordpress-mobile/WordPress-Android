@@ -282,7 +282,7 @@ class TrafficOverviewUseCase(
             lowerGranularity
         )
         if (period != null && period != "empty") {
-            val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
+            val selectedDate = statsDateFormatter.parseStatsDate(lowerGranularity, period)
             selectedDateProvider.selectDate(
                 selectedDate,
                 lowerGranularity
