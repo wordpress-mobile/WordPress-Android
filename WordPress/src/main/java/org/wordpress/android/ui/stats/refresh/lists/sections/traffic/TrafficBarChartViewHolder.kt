@@ -77,7 +77,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         configureXAxis(item)
 
         invalidate()
-        return data.dataSets.size
+        return data.dataSets[0].entryCount
     }
 
     private fun hasData(entries: List<Bar>) = entries.isNotEmpty() && entries.any { it.value > 0 }
