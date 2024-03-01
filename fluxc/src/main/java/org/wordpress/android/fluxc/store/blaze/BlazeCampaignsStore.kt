@@ -40,7 +40,6 @@ class BlazeCampaignsStore @Inject constructor(
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
 ) {
-
     suspend fun fetchBlazeCampaigns(
         site: SiteModel,
         skip: Int = 0,
