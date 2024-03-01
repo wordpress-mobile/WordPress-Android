@@ -131,6 +131,12 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawZeroLine(false)
             setDrawLabels(false)
             setDrawAxisLine(false)
+            axisMinimum = 0f
+            axisMaximum = if (maxYValue < minYValue) {
+                minYValue
+            } else {
+                roundUp(maxYValue.toFloat())
+            }
         }
 
         chart.axisRight.apply {
@@ -139,7 +145,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawTopYLabelEntry(true)
             setDrawZeroLine(false)
             setDrawAxisLine(true)
-            granularity = 1f
             axisMinimum = 0f
             axisMaximum = if (maxYValue < minYValue) {
                 minYValue
@@ -156,7 +161,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun configureXAxis(item: BlockListItem.BarChartItem) {
         chart.xAxis.apply {
-            granularity = 1f
             setDrawAxisLine(false)
             setDrawGridLines(false)
 
