@@ -118,8 +118,9 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
+        val timeframe = intent.getSerializableExtraCompat<StatsTimeframe>(StatsActivity.ARG_DESIRED_TIMEFRAME)
         val launchedFrom = intent.getSerializableExtraCompat<StatsLaunchedFrom>(StatsActivity.ARG_LAUNCHED_FROM)
-        val initialTimeFrame = getInitialTimeFrame(intent)
+        val initialTimeFrame = getInitialTimeFrame(timeframe, launchedFrom)
         val initialGranularity = intent.getSerializableExtraCompat<StatsGranularity>(StatsActivity.ARG_GRANULARITY)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
@@ -147,10 +148,10 @@ class StatsViewModel
         }
     }
 
-    private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        val timeframe = intent.getSerializableExtraCompat<StatsTimeframe>(StatsActivity.ARG_DESIRED_TIMEFRAME)
-
-        if (statsTrafficTabFeatureConfig.isEnabled()) setupDeeplinkForTrafficTab(timeframe)
+    private fun getInitialTimeFrame(timeframe: StatsTimeframe?, launchedFrom: StatsLaunchedFrom?): StatsSection? {
+        if (statsTrafficTabFeatureConfig.isEnabled() && launchedFrom == StatsLaunchedFrom.LINK) {
+            setupDeeplinkForTrafficTab(timeframe)
+        }
 
         return when (timeframe) {
             StatsTimeframe.TRAFFIC -> StatsSection.TRAFFIC
@@ -196,7 +197,11 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
-            granularity?.let { selectedTrafficGranularityManager.setSelectedTrafficGranularity(it) }
+            granularity?.let {
+                if (it != selectedTrafficGranularityManager.getSelectedTrafficGranularity()) {
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(it)
+                }
+            }
             updateSelectedSectionByTrafficTabFeatureConfig()
             trackSectionSelected(statsSectionManager.getSelectedSection())
 
