@@ -403,7 +403,6 @@ class PhotoPickerViewModel @Inject constructor(
             items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_stock_media)) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA)
             })
-            // only show GIF picker from Tenor if this is NOT the WPStories picker
             items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.GIF)
             })
