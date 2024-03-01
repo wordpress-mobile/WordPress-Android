@@ -54,7 +54,7 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
         val siteModel = mock<SiteModel>()
         val page = 1
         whenever(store.fetchBlazeCampaigns(siteModel, page)).thenReturn(BlazeCampaignsStore.BlazeCampaignsResult(
-            BlazeCampaignsModel(emptyList(),1,0,1)
+            BlazeCampaignsModel(campaigns = emptyList(), skipped = 0, totalItems = 1,)
         ))
 
         val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
@@ -68,7 +68,7 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
         val siteModel = mock<SiteModel>()
         val page = 1
         whenever(store.fetchBlazeCampaigns(siteModel, page)).thenReturn(BlazeCampaignsStore.BlazeCampaignsResult(
-            BlazeCampaignsModel(mock(),1,0,1)
+            BlazeCampaignsModel(campaigns = emptyList(), skipped = 0, totalItems = 1,)
         ))
         whenever(mapper.mapToCampaignModels(any())).thenReturn(mock())
 
