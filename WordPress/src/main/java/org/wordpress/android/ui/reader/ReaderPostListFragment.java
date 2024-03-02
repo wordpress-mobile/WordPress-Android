@@ -84,6 +84,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -117,6 +118,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
+import org.wordpress.android.ui.reader.utils.DateProvider;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -934,16 +936,27 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+    public void onEventMainThread(FollowedTagsFetched event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // reload the tag filter since tags have changed
-            reloadTags();
+            if (event.didChange()) {
+                // reload the tag filter since tags have changed or we just opened the fragment
+                reloadTags();
+            }
 
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
-            if (isPostAdapterEmpty()) {
+            if (isPostAdapterEmpty() && (ReaderBlogTable.hasFollowedBlogs() || !mHasUpdatedPosts)) {
                 updateCurrentTag();
             }
+        }
+
+        // Check last time we've bumped tags followed analytics for this user,
+        // and bumping again if > 1 hrs
+        long tagsUpdatedTimestamp = AppPrefs.getReaderAnalyticsCountTagsTimestamp();
+        long now = new DateProvider().getCurrentDate().getTime();
+        if (now - tagsUpdatedTimestamp > 1000 * 60 * 60) { // 1 hr
+            ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
+            AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
         }
     }
 
@@ -956,6 +969,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
+
+        ReaderTracker.trackSubscribedSitesCount(event.getTotalSubscriptions());
     }
 
     @Override
@@ -1724,9 +1739,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // Ensure the default image is reset for empty views before applying logic
         mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
 
-        // TODO thomashortadev
-        //  try to quickly hack some way of making the button black
-
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -1940,13 +1952,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
-    }    /*
+    }
+
+    /*
      * called by post adapter when data has been loaded
      */
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() || !mHasUpdatedPosts) {
+            if (!isAdded() || (isEmpty && !mHasUpdatedPosts)) {
                 return;
             }
             if (isEmpty) {
@@ -2320,7 +2334,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     requireActivity().runOnUiThread(() -> updateCurrentTag());
                 } else {
                     requireActivity().runOnUiThread(() -> {
-                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
+                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.illustration_reader_empty);
@@ -2330,10 +2344,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                     R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
+                            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                            mActionableEmptyView.title.setVisibility(View.VISIBLE);
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
-                        } else {
+                        } else if (!isPostAdapterEmpty()) {
                             hideEmptyView();
                         }
                     });

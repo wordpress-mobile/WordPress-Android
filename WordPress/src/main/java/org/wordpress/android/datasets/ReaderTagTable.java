@@ -232,6 +232,10 @@ public class ReaderTagTable {
         return getTagsOfType(ReaderTagType.BOOKMARKED);
     }
 
+    public static ReaderTagList getDiscoverPostCardsTags() {
+        return getTagsOfType(ReaderTagType.DISCOVER_POST_CARDS);
+    }
+
     private static ReaderTagList getTagsOfType(ReaderTagType tagType) {
         String[] args = {Integer.toString(tagType.toInt())};
         Cursor c = ReaderDatabase.getReadableDb()

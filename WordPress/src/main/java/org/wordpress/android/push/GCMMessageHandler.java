@@ -32,6 +32,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -74,15 +75,14 @@ public class GCMMessageHandler {
 
     private static final String PUSH_ARG_TYPE = "type";
     private static final String PUSH_ARG_USER = "user";
-    private static final String PUSH_ARG_TITLE = "title";
-    private static final String PUSH_ARG_MSG = "msg";
+    protected static final String PUSH_ARG_TITLE = "title";
+    protected static final String PUSH_ARG_MSG = "msg";
 
-    private static final String PUSH_TYPE_COMMENT = "c";
+    protected static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
     private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
     private static final String PUSH_TYPE_AUTOMATTCHER = "automattcher";
     private static final String PUSH_TYPE_FOLLOW = "follow";
-    private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
@@ -100,9 +100,10 @@ public class GCMMessageHandler {
     private final ArrayMap<Integer, Bundle> mActiveNotificationsMap;
     private final NotificationHelper mNotificationHelper;
 
-    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker) {
+    @Inject GCMMessageHandler(SystemNotificationsTracker systemNotificationsTracker,
+                              NotificationsUtilsWrapper notificationsUtilsWrapper) {
         mActiveNotificationsMap = new ArrayMap<>();
-        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker);
+        mNotificationHelper = new NotificationHelper(this, systemNotificationsTracker, notificationsUtilsWrapper);
     }
 
     synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
@@ -117,13 +118,6 @@ public class GCMMessageHandler {
                     return;
                 }
             }
-        }
-    }
-
-    public synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context) {
-        if (mActiveNotificationsMap.size() > 0) {
-            Bundle remainingNote = mActiveNotificationsMap.values().iterator().next();
-            mNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
     }
 
@@ -278,10 +272,14 @@ public class GCMMessageHandler {
         private GCMMessageHandler mGCMMessageHandler;
         private SystemNotificationsTracker mSystemNotificationsTracker;
 
+        private NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+
         NotificationHelper(GCMMessageHandler gCMMessageHandler,
-                           SystemNotificationsTracker systemNotificationsTracker) {
+                           SystemNotificationsTracker systemNotificationsTracker,
+                           NotificationsUtilsWrapper notificationsUtilsWrapper) {
             mGCMMessageHandler = gCMMessageHandler;
             mSystemNotificationsTracker = systemNotificationsTracker;
+            mNotificationsUtilsWrapper = notificationsUtilsWrapper;
         }
 
         void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
@@ -354,11 +352,8 @@ public class GCMMessageHandler {
 
             String noteType = StringUtils.notNullStr(data.getString(PUSH_ARG_TYPE));
 
-            String title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
-            if (title == null) {
-                title = context.getString(R.string.app_name);
-            }
-            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            String title = getNotificationTitle(data, noteType, context.getString(R.string.app_name));
+            String message = getNotificationMessage(data, noteType);
 
             /*
              * if this has the same note_id as the previous notification, and the previous notification
@@ -421,6 +416,45 @@ public class GCMMessageHandler {
             );
         }
 
+        @NonNull
+        protected String getNotificationTitle(@NonNull Bundle data,
+                                              @NonNull String noteType,
+                                              @NonNull String defaultTitle) {
+            String title;
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            } else {
+                title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
+            }
+            if (title == null) {
+                return defaultTitle;
+            }
+            return title;
+        }
+
+        @NonNull
+        protected String getNotificationMessage(@NonNull Bundle data, @NonNull String noteType) {
+            if (noteType.equals(PUSH_TYPE_COMMENT)) {
+                String noteId = data.getString(PUSH_ARG_NOTE_ID);
+                if (noteId != null) {
+                    Note note = mNotificationsUtilsWrapper.getNoteById(noteId);
+                    if (note != null) {
+                        String summary = note.getCommentSubject();
+                        if (!TextUtils.isEmpty(summary)) {
+                            return summary;
+                        }
+                    }
+                }
+            }
+
+            // Not a comment or the comment content was not retrieved
+            String message = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_MSG));
+            if (message == null) {
+                return "";
+            }
+            return message;
+        }
+
         private void showNotificationForNoteData(Context context, Bundle noteData, NotificationCompat.Builder builder) {
             String noteType = StringUtils.notNullStr(noteData.getString(PUSH_ARG_TYPE));
             String wpcomNoteID = noteData.getString(PUSH_ARG_NOTE_ID, "");
@@ -481,7 +515,7 @@ public class GCMMessageHandler {
                 } else {
                     // else offer REPLY / LIKE actions
                     // LIKE can only be enabled for wp.com sites, so if this is a Jetpack site don't enable LIKEs
-                    if (note.canLike()) {
+                    if (note.canLikeComment()) {
                         addCommentLikeActionForCommentNotification(context, builder, noteId);
                     }
                 }
@@ -714,8 +748,6 @@ public class GCMMessageHandler {
                     return NotificationType.AUTOMATTCHER;
                 case PUSH_TYPE_FOLLOW:
                     return NotificationType.FOLLOW;
-                case PUSH_TYPE_REBLOG:
-                    return NotificationType.REBLOG;
                 case PUSH_TYPE_PUSH_AUTH:
                     return NotificationType.AUTHENTICATION;
                 case PUSH_TYPE_BADGE_RESET:
@@ -1069,7 +1101,6 @@ public class GCMMessageHandler {
                 case PUSH_TYPE_COMMENT_LIKE:
                 case PUSH_TYPE_AUTOMATTCHER:
                 case PUSH_TYPE_FOLLOW:
-                case PUSH_TYPE_REBLOG:
                     return true;
                 default:
                     return false;

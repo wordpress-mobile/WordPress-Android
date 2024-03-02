@@ -5,7 +5,7 @@ import android.app.Activity;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;

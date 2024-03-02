@@ -49,7 +49,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
@@ -59,7 +59,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
-import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
@@ -297,7 +297,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.checkAndStartQuickStart(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(
-                        EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                        EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
                     )
                 )
             }
@@ -611,7 +611,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
             activity,
             action.site,
-            StatsActivity.StatsLaunchedFrom.QUICK_ACTIONS
+            StatsLaunchedFrom.QUICK_ACTIONS
         )
 
         is SiteNavigationAction.ConnectJetpackForStats ->
@@ -678,7 +678,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             requireActivity(),
             action.site,
             StatsTimeframe.INSIGHTS,
-            StatsActivity.StatsLaunchedFrom.TODAY_STATS_CARD
+            StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
         is SiteNavigationAction.OpenExternalUrl ->

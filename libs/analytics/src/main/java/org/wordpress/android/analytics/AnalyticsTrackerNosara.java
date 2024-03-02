@@ -717,6 +717,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_saved_post_opened";
             case READER_SITE_SHARED:
                 return "reader_site_shared";
+            case READER_FOLLOWING_FETCHED:
+                return "reader_following_fetched";
             case EDITOR_CREATED_POST:
                 return "editor_post_created";
             case EDITOR_SAVED_DRAFT:
@@ -1191,12 +1193,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_authors_view_post_tapped";
             case STATS_CLICKS_ITEM_TAPPED:
                 return "stats_clicks_item_tapped";
-            case STATS_SINGLE_POST_ACCESSED:
-                return "stats_single_post_accessed";
             case STATS_TAPPED_BAR_CHART:
                 return "stats_bar_chart_tapped";
-            case STATS_OVERVIEW_TYPE_TAPPED:
-                return "stats_overview_type_tapped";
+            case STATS_OVERVIEW_TYPE_TAPPED_VIEWS:
+                return "stats_overview_type_tapped_views";
+            case STATS_OVERVIEW_TYPE_TAPPED_VISITORS:
+                return "stats_overview_type_tapped_visitors";
+            case STATS_OVERVIEW_TYPE_TAPPED_COMMENTS:
+                return "stats_overview_type_tapped_comments";
+            case STATS_OVERVIEW_TYPE_TAPPED_LIKES:
+                return "stats_overview_type_tapped_likes";
             case STATS_DETAIL_POST_TAPPED:
                 return "stats_detail_post_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
@@ -2707,6 +2713,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_monitoring_tab_shown";
             case SITE_MONITORING_TAB_LOADING_ERROR:
                 return "site_monitoring_tab_loading_error";
+            case NOTIFICATION_MENU_TAPPED:
+                return "notification_menu_tapped";
+            case NOTIFICATIONS_MARK_ALL_READ_TAPPED:
+                return "notifications_mark_all_read_tapped";
+            case NOTIFICATIONS_INLINE_ACTION_TAPPED:
+                return "notifications_inline_action_tapped";
             case WEBVIEW_TOO_LARGE_PAYLOAD_ERROR:
                 return "webview_too_large_payload_error";
         }
