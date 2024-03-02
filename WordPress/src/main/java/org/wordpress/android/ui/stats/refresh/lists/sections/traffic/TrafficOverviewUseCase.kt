@@ -170,7 +170,8 @@ class TrafficOverviewUseCase(
             granularity,
             LimitMode.Top(quantity),
             date,
-            forced
+            forced,
+            false
         )
     } ?: visitsAndViewsStore.fetchVisits(
         statsSiteProvider.siteModel,
