@@ -1,0 +1,2 @@
+24.3:
+Du kannst dich bei deiner WordPress-Website mit Google-Anmeldedaten, physischen Geräten und anderen Drittanbieter-Passkeys anmelden. Keine Sorge, deine Website ist immer noch besser geschützt als das geheimste Geheimrezept.
