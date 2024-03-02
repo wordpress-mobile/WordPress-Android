@@ -98,30 +98,30 @@ class UiModelMapper
         return if (!allFailing && (overviewHasData || !overviewIsFailing)) {
             if (useCaseModels.isNotEmpty()) {
                 UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
-                    if ((useCaseModel.type == overViewType) && useCaseModel.data != null) {
-                        StatsBlock.Success(useCaseModel.type, useCaseModel.data)
-                    } else {
-                        when (useCaseModel.state) {
-                            SUCCESS -> StatsBlock.Success(useCaseModel.type, useCaseModel.data ?: listOf())
-                            ERROR -> useCaseModel.stateData?.let {
-                                StatsBlock.Error(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                                )
-                            }
-                            LOADING -> useCaseModel.stateData?.let {
-                                StatsBlock.Loading(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                                )
-                            }
-                            EMPTY -> useCaseModel.stateData?.let {
-                                StatsBlock.EmptyBlock(
-                                    useCaseModel.type,
-                                    useCaseModel.stateData
-                                )
-                            }
+                    when {
+                        useCaseModel.type == overViewType && useCaseModel.data != null -> StatsBlock.Success(
+                            useCaseModel.type,
+                            useCaseModel.data
+                        )
+
+                        useCaseModel.state == SUCCESS -> StatsBlock.Success(
+                            useCaseModel.type,
+                            useCaseModel.data ?: listOf()
+                        )
+
+                        useCaseModel.state == LOADING -> useCaseModel.stateData?.let {
+                            StatsBlock.Loading(useCaseModel.type, useCaseModel.stateData)
                         }
+
+                        useCaseModel.state == ERROR -> useCaseModel.stateData?.let {
+                            StatsBlock.Error(useCaseModel.type, useCaseModel.stateData)
+                        }
+
+                        useCaseModel.state == EMPTY -> useCaseModel.stateData?.let {
+                            StatsBlock.EmptyBlock(useCaseModel.type, useCaseModel.stateData)
+                        }
+
+                        else -> null
                     }
                 })
             } else {
