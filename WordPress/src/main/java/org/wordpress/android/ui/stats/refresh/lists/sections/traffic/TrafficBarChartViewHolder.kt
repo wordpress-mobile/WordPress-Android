@@ -43,11 +43,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             if (hasData(item.entries)) {
                 chart.post {
                     val cutContentDescriptions = takeEntriesWithinGraphWidth(barCount, item.entryContentDescriptions)
-                    accessibilityHelper = BarChartAccessibilityHelper(
-                        chart,
-                        contentDescriptions = cutContentDescriptions,
-                        accessibilityEvent = accessibilityEvent
-                    )
+                    accessibilityHelper = BarChartAccessibilityHelper(chart, cutContentDescriptions)
 
                     ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
                 }
