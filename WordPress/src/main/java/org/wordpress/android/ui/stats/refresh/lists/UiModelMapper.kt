@@ -99,6 +99,10 @@ class UiModelMapper
             if (useCaseModels.isNotEmpty()) {
                 UiModel.Success(useCaseModels.mapNotNull { useCaseModel ->
                     when {
+                        useCaseModel.state == LOADING -> useCaseModel.stateData?.let {
+                            StatsBlock.Loading(useCaseModel.type, useCaseModel.stateData)
+                        }
+
                         useCaseModel.type == overViewType && useCaseModel.data != null -> StatsBlock.Success(
                             useCaseModel.type,
                             useCaseModel.data
@@ -108,10 +112,6 @@ class UiModelMapper
                             useCaseModel.type,
                             useCaseModel.data ?: listOf()
                         )
-
-                        useCaseModel.state == LOADING -> useCaseModel.stateData?.let {
-                            StatsBlock.Loading(useCaseModel.type, useCaseModel.stateData)
-                        }
 
                         useCaseModel.state == ERROR -> useCaseModel.stateData?.let {
                             StatsBlock.Error(useCaseModel.type, useCaseModel.stateData)
