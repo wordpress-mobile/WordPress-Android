@@ -1,0 +1,2 @@
+24.3:
+Google kimlik bilgilerini, fiziksel cihazları ve diğer üçüncü taraf güvenlik anahtarlarını kullanarak WordPress web sitenizde oturum açabilirsiniz. Endişelenmeyin, siteniz hala Coca Cola'nın gizli formülünden bile daha güvendedir.
