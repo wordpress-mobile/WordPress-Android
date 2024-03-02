@@ -157,7 +157,9 @@ abstract class StatsListViewModel(
     }
 
     fun start() {
-        if (!isInitialized) {
+        if (isInitialized) {
+            mutableUiSourceAdded.call()
+        } else {
             isInitialized = true
             setUiLiveData()
             launch {
