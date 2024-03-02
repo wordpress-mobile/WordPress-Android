@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
@@ -60,6 +62,7 @@ import kotlin.coroutines.CoroutineContext
 
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
+const val ONE_HOUR_MILLIS = 1000 * 60 * 60
 
 @Suppress("ForbiddenComment")
 class ReaderViewModel @Inject constructor(
@@ -220,6 +223,30 @@ class ReaderViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsFetched) {
         loadTabs()
+
+        // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
+        val now = DateProvider().getCurrentDate().time
+        val shouldBumpAnalytics = event.didChange()
+                || ( now - AppPrefs.getReaderAnalyticsCountTagsTimestamp() > ONE_HOUR_MILLIS)
+
+        if (shouldBumpAnalytics) {
+            readerTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size)
+            AppPrefs.setReaderAnalyticsCountTagsTimestamp(DateProvider().getCurrentDate().time)
+        }
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(threadMode = MAIN)
+    fun onSubscribedSitesUpdated(event: ReaderEvents.FollowedBlogsFetched) {
+        // Determine if analytics should be bumped either due to sites changed or time elapsed since last bump
+        val now = DateProvider().getCurrentDate().time
+        val shouldBumpAnalytics = event.didChange()
+                || (now - AppPrefs.getReaderAnalyticsCountSitesTimestamp() > ONE_HOUR_MILLIS)
+
+        if (shouldBumpAnalytics) {
+            readerTracker.trackSubscribedSitesCount(event.totalSubscriptions)
+            AppPrefs.setReaderAnalyticsCountSitesTimestamp(DateProvider().getCurrentDate().time)
+        }
     }
 
     fun onScreenInForeground() {

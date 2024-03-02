@@ -61,13 +61,19 @@ public class ReaderEvents {
         }
     }
 
-    public static class FollowedBlogsChanged {
+    public static class FollowedBlogsFetched {
         private final int mTotalSubscriptions;
+        private final boolean mDidChange;
+
+        public boolean didChange() {
+            return mDidChange;
+        }
         public int getTotalSubscriptions() {
             return mTotalSubscriptions;
         }
-        public FollowedBlogsChanged(int totalSubscriptions) {
+        public FollowedBlogsFetched(int totalSubscriptions, boolean didChange) {
             mTotalSubscriptions = totalSubscriptions;
+            mDidChange = didChange;
         }
     }
 
