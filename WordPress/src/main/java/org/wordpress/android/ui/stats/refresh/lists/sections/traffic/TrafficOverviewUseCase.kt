@@ -19,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -269,14 +268,7 @@ class TrafficOverviewUseCase(
         selectedItem: VisitsAndViewsModel.PeriodData
     ) {
         items.addAll(
-            trafficOverviewMapper.buildChart(
-                dates,
-                lowerGranularity,
-                this::onBarSelected,
-                this::onBarChartDrawn,
-                uiState.selectedPosition,
-                selectedItem.period
-            )
+            trafficOverviewMapper.buildChart(dates, lowerGranularity, this::onBarChartDrawn, uiState.selectedPosition)
         )
         items.add(
             trafficOverviewMapper.buildColumns(
@@ -285,20 +277,6 @@ class TrafficOverviewUseCase(
                 uiState.selectedPosition
             )
         )
-    }
-
-    private fun onBarSelected(period: String?) {
-        analyticsTracker.trackGranular(
-            AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
-            lowerGranularity
-        )
-        if (period != null && period != "empty") {
-            val selectedDate = statsDateFormatter.parseStatsDate(lowerGranularity, period)
-            selectedDateProvider.selectDate(
-                selectedDate,
-                lowerGranularity
-            )
-        }
     }
 
     @Suppress("MagicNumber")
