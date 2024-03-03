@@ -223,7 +223,6 @@ class ReaderViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsFetched) {
         loadTabs()
-
         // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
         val shouldBumpAnalytics = event.didChange()
