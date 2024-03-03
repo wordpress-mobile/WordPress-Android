@@ -35,7 +35,7 @@ class VisitsAndViewsStore
     suspend fun fetchVisits(
         site: SiteModel,
         granularity: StatsGranularity,
-        limitMode: LimitMode.Top,
+        limitMode: Top,
         forced: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val dateWithTimeZone = statsUtils.getFormattedDate(
@@ -83,11 +83,13 @@ class VisitsAndViewsStore
     suspend fun fetchVisits(
         site: SiteModel,
         granularity: StatsGranularity,
-        limitMode: LimitMode.Top,
+        limitMode: Top,
         date: Date,
-        forced: Boolean = false
+        forced: Boolean = false,
+        normalizeTimezone: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
-        val dateWithTimeZone = statsUtils.getFormattedDate(date, SiteUtils.getNormalizedTimezone(site.timezone))
+        val timezone = if (normalizeTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
         logProgress(granularity, "Site timezone: ${site.timezone}")
         try {
             logProgress(granularity, "Current date: ${currentTimeProvider.currentDate()}")
