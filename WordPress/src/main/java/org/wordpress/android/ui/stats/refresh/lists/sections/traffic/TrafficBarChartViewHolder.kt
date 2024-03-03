@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -119,7 +118,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
             extraRightOffset = 8f
 
-            animateY(1000, Easing.EaseInSine)
+            animateY(250)
         }
     }
 
