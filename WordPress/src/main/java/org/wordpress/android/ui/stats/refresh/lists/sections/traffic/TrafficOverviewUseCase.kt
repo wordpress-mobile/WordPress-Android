@@ -23,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -110,19 +109,9 @@ class TrafficOverviewUseCase(
     }
 
     private fun getLastDate(model: VisitsAndViewsModel?): Date? {
-        selectedDateProvider.getSelectedDate(statsGranularity)?.let { return dateWithoutHour(it) }
-
+        selectedDateProvider.getSelectedDate(statsGranularity)?.let { return it }
         val lastDateString = model?.dates?.lastOrNull()?.period
-        return lastDateString?.let { dateWithoutHour(statsDateFormatter.parseStatsDate(statsGranularity, it)) }
-    }
-
-    // Remove the hour and minute from the date to avoid fetching incorrect dates caused by timezone differences
-    private fun dateWithoutHour(date: Date): Date {
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        return calendar.time
+        return lastDateString?.let { statsDateFormatter.parseStatsDate(statsGranularity, it) }
     }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<TrafficOverviewUiModel> {
@@ -180,7 +169,8 @@ class TrafficOverviewUseCase(
             granularity,
             LimitMode.Top(quantity),
             date,
-            forced
+            forced,
+            false
         )
     } ?: visitsAndViewsStore.fetchVisits(
         statsSiteProvider.siteModel,
