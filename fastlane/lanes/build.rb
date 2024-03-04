@@ -400,9 +400,8 @@ platform :android do
         org_slug: org_slug,
         project_slug: project_slug,
         version: release_version,
-        # When the React native bundle is generated, the source map file references include the local machine path, with the `rewrite` and
-        # `strip_common_prefix` include the local machine path, with the `rewrite` and `strip_common_prefix` options Sentry automatically
-        # strips this part.
+        # When the React native bundle is generated, the source map file references include the local machine path;
+        # With the `rewrite` and `strip_common_prefix` options, Sentry automatically strips this part.
         rewrite: true,
         strip_common_prefix: true,
         sourcemap: sourcemaps_folder
