@@ -129,7 +129,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }
 
-        verify(fetchCampaignListUseCase, never()).execute(siteModel,skip = 0)
+        verify(fetchCampaignListUseCase, never()).execute(siteModel,offset = 0)
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, null))
     }
 
@@ -145,7 +145,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }
 
-        verify(fetchCampaignListUseCase, never()).execute(siteModel,skip = 0)
+        verify(fetchCampaignListUseCase, never()).execute(siteModel,offset = 0)
         assertThat(result.last()).isEqualTo(BlazeCardUpdate(true, campaignInDb))
     }
 
@@ -155,7 +155,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         val result = mutableListOf<BlazeCardUpdate>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(fetchCampaignListUseCase.execute(siteModel,skip = 0)).thenReturn(Result.Failure(GenericError))
+        whenever(fetchCampaignListUseCase.execute(siteModel,offset = 0)).thenReturn(Result.Failure(GenericError))
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }
@@ -171,7 +171,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         val campaignInDb = mock<BlazeCampaignModel>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(fetchCampaignListUseCase.execute(siteModel,skip = 0)).thenReturn(Result.Success(mock()))
+        whenever(fetchCampaignListUseCase.execute(siteModel,offset = 0)).thenReturn(Result.Success(mock()))
         whenever(mostRecentCampaignUseCase.execute(siteModel)).thenReturn(Result.Success(campaignInDb))
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)

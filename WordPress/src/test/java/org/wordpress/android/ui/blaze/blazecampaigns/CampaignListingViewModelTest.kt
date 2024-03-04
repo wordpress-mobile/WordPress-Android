@@ -132,7 +132,7 @@ class CampaignListingViewModelTest : BaseUnitTest() {
         val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
-        whenever(fetchCampaignListUseCase.execute(siteModel, o)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, offset = 0)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
