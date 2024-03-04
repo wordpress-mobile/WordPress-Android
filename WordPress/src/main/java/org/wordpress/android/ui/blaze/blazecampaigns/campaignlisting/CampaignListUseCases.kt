@@ -18,12 +18,17 @@ class FetchCampaignListUseCase @Inject constructor(
         site: SiteModel,
         offset: Int,
         pageSize: Int = PAGE_SIZE
-    ): Result<NetworkError, List<CampaignModel>> {
+    ): Result<NetworkResult, FetchedCampaignsResult> {
         val result = store.fetchBlazeCampaigns(site = site, offset = offset, perPage = pageSize)
-        if (result.isError || result.model == null) return Result.Failure(GenericError)
+        if (result.isError || result.model == null) return Result.Failure(GenericResult)
         val campaigns = result.model!!.campaigns
         if (campaigns.isEmpty()) return Result.Failure(NoCampaigns)
-        return Result.Success(mapper.mapToCampaignModels(campaigns))
+        return Result.Success(
+            FetchedCampaignsResult(
+                campaigns = mapper.mapToCampaignModels(campaigns),
+                totalItems = result.model!!.totalItems
+            )
+        )
     }
 }
 
@@ -38,8 +43,13 @@ class GetCampaignListFromDbUseCase @Inject constructor(
     }
 }
 
-sealed interface NetworkError
+data class FetchedCampaignsResult(
+    val campaigns: List<CampaignModel>,
+    val totalItems: Int
+)
 
-object GenericError : NetworkError
+sealed interface NetworkResult
 
-object NoCampaigns : NetworkError
+object GenericResult : NetworkResult
+
+object NoCampaigns : NetworkResult

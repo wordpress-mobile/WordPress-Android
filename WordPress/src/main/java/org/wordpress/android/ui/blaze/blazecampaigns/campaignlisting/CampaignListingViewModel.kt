@@ -79,10 +79,10 @@ class CampaignListingViewModel @Inject constructor(
             showNoNetworkError()
         } else {
             when (val campaignResult = fetchCampaignListUseCase.execute(site, offset)) {
-                is Result.Success -> showCampaigns(campaignResult.value)
+                is Result.Success -> showCampaigns(campaignResult.value.campaigns)
                 is Result.Failure -> {
                     when (campaignResult.value) {
-                        is GenericError -> showGenericError()
+                        is GenericResult -> showGenericError()
                         is NoCampaigns -> showNoCampaigns()
                     }
                 }
@@ -118,7 +118,6 @@ class CampaignListingViewModel @Inject constructor(
                 (_uiState.value as CampaignListingUiState.Success).pagingDetails.loadingNext.not() &&
                 isLastPage.not()
             ) {
-                offset += limitPerPage
                 showLoadingMore()
                 fetchMoreCampaigns()
             }
@@ -133,13 +132,15 @@ class CampaignListingViewModel @Inject constructor(
             when (val campaignResult = fetchCampaignListUseCase.execute(site, offset)) {
                 is Result.Success -> {
                     val currentUiState = _uiState.value as CampaignListingUiState.Success
-                    isLastPage = campaignResult.value.isEmpty() || campaignResult.value.size < limitPerPage
-                    showCampaigns(currentUiState.campaigns + campaignResult.value)
+                    val allCampaigns = currentUiState.campaigns + campaignResult.value.campaigns
+                    isLastPage = allCampaigns.size >= campaignResult.value.totalItems
+                    offset += allCampaigns.size
+                    showCampaigns(allCampaigns)
                 }
 
                 is Result.Failure -> {
                     when (campaignResult.value) {
-                        is GenericError -> {
+                        is GenericResult -> {
                             disableLoadingMore()
                             showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
                         }
@@ -179,23 +180,23 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     fun refreshCampaigns() {
-        offset = 0
         launch {
             _refresh.postValue(true)
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 _refresh.postValue(false)
                 showSnackBar(R.string.campaign_listing_page_error_refresh_no_network_available)
             } else {
+                offset = 0
                 when (val campaignResult = fetchCampaignListUseCase.execute(site, offset)) {
                     is Result.Success -> {
                         _refresh.postValue(false)
                         isLastPage = false
-                        showCampaigns(campaignResult.value)
+                        showCampaigns(campaignResult.value.campaigns)
                     }
 
                     is Result.Failure -> {
                         when (campaignResult.value) {
-                            is GenericError -> {
+                            is GenericResult -> {
                                 _refresh.postValue(false)
                                 showSnackBar(R.string.campaign_listing_page_error_refresh_could_not_fetch_campaigns)
                             }
