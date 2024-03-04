@@ -4798,4 +4798,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Super Fast Media Upload QRCodeMediaLink -->
     <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Autoplay may cause usability issues for some users.</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit video</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. Empty</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
 </resources>

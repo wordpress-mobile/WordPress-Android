@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.5
+-----
+
+
 24.4
 -----
 * [***] [Jetpack-only] Improved Notifications experience with richer UI elements and interactions [https://github.com/wordpress-mobile/WordPress-Android/pull/20072]
