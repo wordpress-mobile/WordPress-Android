@@ -14,8 +14,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
@@ -23,13 +21,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.O
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import javax.inject.Inject
@@ -51,9 +48,7 @@ class OverviewUseCase constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val localeManagerWrapper: LocaleManagerWrapper,
-    private val resourceProvider: ResourceProvider,
-    private val statsUtils: StatsUtils,
-    private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val resourceProvider: ResourceProvider
 ) : BaseStatsUseCase<VisitsAndViewsModel, UiState>(
     OVERVIEW,
     mainDispatcher,
@@ -149,120 +144,6 @@ class OverviewUseCase constructor(
         domainModel: VisitsAndViewsModel,
         uiState: UiState
     ): List<BlockListItem> {
-        return if (trafficTabFeatureConfig.isEnabled()) {
-            buildTrafficOverview(domainModel, uiState)
-        } else {
-            buildGranularOverview(domainModel, uiState)
-        }
-    }
-
-    private fun buildTrafficOverview(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
-        val items = mutableListOf<BlockListItem>()
-        if (domainModel.dates.isNotEmpty()) {
-            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleBarCount = uiState.visibleBarCount ?: domainModel.dates.size
-            val availableDates = domainModel.dates.map {
-                statsDateFormatter.parseStatsDate(
-                    statsGranularity,
-                    it.period
-                )
-            }
-            val selectedDate = dateFromProvider ?: availableDates.last()
-            val index = availableDates.indexOf(selectedDate)
-
-            selectedDateProvider.selectDate(
-                selectedDate,
-                availableDates.takeLast(visibleBarCount),
-                statsGranularity
-            )
-            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
-            val previousItem = domainModel.dates.getOrNull(domainModel.dates.indexOf(selectedItem) - 1)
-
-            if (statsGranularity == StatsGranularity.DAYS) {
-                buildTodayCard(selectedItem,items)
-            } else {
-                buildGranularChart(domainModel, uiState, items, selectedItem, previousItem)
-            }
-        } else {
-            selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
-        }
-        return items
-    }
-
-    private fun buildTodayCard(
-        selectedItem: VisitsAndViewsModel.PeriodData?,
-        items: MutableList<BlockListItem>
-    ) {
-        val views = selectedItem?.views ?: 0
-        val visitors = selectedItem?.visitors ?: 0
-        val likes = selectedItem?.likes ?: 0
-        val comments = selectedItem?.comments ?: 0
-
-        items.add(BlockListItem.Title(R.string.stats_timeframe_today))
-        items.add(
-            QuickScanItem(
-                Column(
-                    R.string.stats_views,
-                    statsUtils.toFormattedString(views)
-                ),
-                Column(
-                    R.string.stats_visitors,
-                    statsUtils.toFormattedString(visitors)
-                )
-            )
-        )
-
-        items.add(
-            QuickScanItem(
-                Column(
-                    R.string.stats_likes,
-                    statsUtils.toFormattedString(likes)
-                ),
-                Column(
-                    R.string.stats_comments,
-                    statsUtils.toFormattedString(comments)
-                )
-            )
-        )
-    }
-
-    private fun buildGranularChart(
-        domainModel: VisitsAndViewsModel,
-        uiState: UiState,
-        items: MutableList<BlockListItem>,
-        selectedItem: VisitsAndViewsModel.PeriodData,
-        previousItem: VisitsAndViewsModel.PeriodData?
-    ) {
-        items.add(
-            overviewMapper.buildTitle(
-                selectedItem,
-                previousItem,
-                uiState.selectedPosition,
-                isLast = selectedItem == domainModel.dates.last(),
-                statsGranularity = statsGranularity
-            )
-        )
-        items.addAll(
-            overviewMapper.buildChart(
-                domainModel.dates,
-                statsGranularity,
-                this::onBarSelected,
-                this::onBarChartDrawn,
-                uiState.selectedPosition,
-                selectedItem.period
-            )
-        )
-        items.add(
-            overviewMapper.buildColumns(
-                selectedItem,
-                this::onColumnSelected,
-                uiState.selectedPosition
-            )
-        )
-    }
-
-    private fun buildGranularOverview(domainModel: VisitsAndViewsModel, uiState: UiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
         if (domainModel.dates.isNotEmpty()) {
             val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
@@ -330,11 +211,16 @@ class OverviewUseCase constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun onColumnSelected(position: Int) {
-        analyticsTracker.trackGranular(
-            AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
-            statsGranularity
-        )
+        val event = when (position) {
+            0 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VIEWS
+            1 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VISITORS
+            2 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_LIKES
+            3 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_COMMENTS
+            else -> null
+        }
+        event?.let { analyticsTracker.trackWithGranularity(it, statsGranularity) }
         updateUiState { it.copy(selectedPosition = position) }
     }
 
@@ -356,9 +242,7 @@ class OverviewUseCase constructor(
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
         private val localeManagerWrapper: LocaleManagerWrapper,
-        private val resourceProvider: ResourceProvider,
-        private val statsUtils: StatsUtils,
-        private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+        private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
             OverviewUseCase(
@@ -373,9 +257,7 @@ class OverviewUseCase constructor(
                 analyticsTracker,
                 statsWidgetUpdaters,
                 localeManagerWrapper,
-                resourceProvider,
-                statsUtils,
-                trafficTabFeatureConfig
+                resourceProvider
             )
     }
 }

@@ -118,6 +118,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
+import org.wordpress.android.ui.reader.utils.DateProvider;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -948,6 +949,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 updateCurrentTag();
             }
         }
+
+        // Check last time we've bumped tags followed analytics for this user,
+        // and bumping again if > 1 hrs
+        long tagsUpdatedTimestamp = AppPrefs.getReaderAnalyticsCountTagsTimestamp();
+        long now = new DateProvider().getCurrentDate().getTime();
+        if (now - tagsUpdatedTimestamp > 1000 * 60 * 60) { // 1 hr
+            ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
+            AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -959,6 +969,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
+
+        ReaderTracker.trackSubscribedSitesCount(event.getTotalSubscriptions());
     }
 
     @Override
@@ -1948,7 +1960,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() || !mHasUpdatedPosts) {
+            if (!isAdded() || (isEmpty && !mHasUpdatedPosts)) {
                 return;
             }
             if (isEmpty) {
@@ -2322,7 +2334,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     requireActivity().runOnUiThread(() -> updateCurrentTag());
                 } else {
                     requireActivity().runOnUiThread(() -> {
-                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
+                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.illustration_reader_empty);
@@ -2332,6 +2344,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                     R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
+                            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                            mActionableEmptyView.title.setVisibility(View.VISIBLE);
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();

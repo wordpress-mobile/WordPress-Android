@@ -11,12 +11,17 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Inject
 
 const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
 
 class SelectedSectionManager
-@Inject constructor(private val sharedPrefs: SharedPreferences) {
+@Inject constructor(
+    private val sharedPrefs: SharedPreferences,
+    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+) {
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     val liveSelectedSection: LiveData<StatsSection>
         get() {
@@ -28,7 +33,8 @@ class SelectedSectionManager
         }
 
     fun getSelectedSection(): StatsSection {
-        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, INSIGHTS.name)
+        val defaultValue = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, defaultValue.name)
         return value?.let { StatsSection.valueOf(value) } ?: INSIGHTS
     }
 

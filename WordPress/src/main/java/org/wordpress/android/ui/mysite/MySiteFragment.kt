@@ -49,7 +49,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
@@ -256,9 +256,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
             RequestCodes.STORIES_PHOTO_PICKER,
-            RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.handleStoriesPhotoPickerResult(data)
-            }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -297,7 +294,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.checkAndStartQuickStart(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(
-                        EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                        EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
                     )
                 )
             }
@@ -618,21 +615,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is SiteNavigationAction.AddNewStory ->
-            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaIds.toLongArray()
-        )
-        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaUris.toTypedArray()
-        )
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
             activity,
             action.site

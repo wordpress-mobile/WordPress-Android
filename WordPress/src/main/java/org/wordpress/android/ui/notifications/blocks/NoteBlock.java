@@ -251,7 +251,7 @@ public class NoteBlock {
                             });
                         } else {
                             noteBlockHolder.getTextView().setTextSize(28);
-                            TypefaceSpan typefaceSpan = new TypefaceSpan("serif");
+                            TypefaceSpan typefaceSpan = new TypefaceSpan("sans-serif");
                             noteText.setSpan(typefaceSpan, 0, noteText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }

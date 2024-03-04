@@ -149,7 +149,7 @@ class MySitesPage {
         val statsButton = Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withText(R.string.stats),
-                ViewMatchers.withId(R.id.my_site_item_primary_text)
+                ViewMatchers.withId(R.id.quick_link_item)
             )
         )
         WPSupportUtils.clickOn(statsButton)
@@ -158,7 +158,7 @@ class MySitesPage {
         WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout)
 
         // Wait for the stats to load
-        WPSupportUtils.idleFor(8000)
+        WPSupportUtils.idleFor(4000)
         return StatsPage()
     }
 

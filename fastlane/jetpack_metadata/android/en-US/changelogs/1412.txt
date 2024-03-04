@@ -1,0 +1,2 @@
+Log in to your site with Google credentials, physical devices, and third-party passkeys. Don’t worry, the site’s still locked down tighter than the Colonel’s secret recipe.
+We hid the menu icon on Stats screens so it’s only visible from the Insights tab. Ninja mode: activated.

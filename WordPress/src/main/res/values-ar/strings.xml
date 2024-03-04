@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 13:54:08+0000
+Translation-Revision-Date: 2024-02-21 22:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ar
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">الموقع غير موجود. تحقق من تسجيلك الدخول إلى الحساب الصحيح.</string>
+    <string name="gravatar_info_sync_done_button">تم</string>
+    <string name="gravatar_info_sync_message">قد تستغرق مزامنة التحديثات مع ملفك الشخصي على جرافتار بعض الوقت.</string>
+    <string name="gravatar_info_learn_more_link">ما المقصود بخدمة جرافتار؟</string>
+    <string name="gravatar_info_description">سيؤدي أيضًا تحديث الأفاتار الخاص بك واسمك والمعلومات حولك هنا إلى تحديثها عبر كل المواقع التي تستخدم ملفات جرافتار الشخصية.</string>
+    <string name="gravatar_info_title">يكون ملفك الشخصي على ووردبريس.كوم مدعومًا من خدمة جرافتار</string>
     <string name="error_media_could_not_share_media_from_device">يتعذر تحميل الوسائط للمشاركة. يرجى التحقق من صلاحيات التطبيق\n        أو استخدم مكتبة وسائط التطبيق.</string>
     <string name="site_monitoring_cannot_be_started">يتعذر علينا فتح مراقبة الموقع في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_monitoring_tab_title_web_server_logs">سجلات خادم الويب</string>

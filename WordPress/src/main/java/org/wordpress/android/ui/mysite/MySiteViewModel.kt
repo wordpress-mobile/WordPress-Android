@@ -2,7 +2,6 @@
 
 package org.wordpress.android.ui.mysite
 
-import android.content.Intent
 import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -20,8 +19,8 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.ActivityCardModel
+import org.wordpress.android.fluxc.model.dashboard.CardModel.DynamicCardsModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
@@ -35,7 +34,6 @@ import org.wordpress.android.localcontentmigration.ContentMigrationAnalyticsTrac
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureCollectionOverlaySource.FEATURE_CARD
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -125,7 +123,6 @@ class MySiteViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val siteStoriesHandler: SiteStoriesHandler,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartCardBuilder: QuickStartCardBuilder,
@@ -206,7 +203,6 @@ class MySiteViewModel @Inject constructor(
     }
     val onSnackbarMessage = merge(
         _onSnackbarMessage,
-        siteStoriesHandler.onSnackbar,
         quickStartRepository.onSnackbar,
         siteItemsViewModelSlice.onSnackbarMessage,
         bloggingPromptCardViewModelSlice.onSnackbarMessage,
@@ -221,7 +217,6 @@ class MySiteViewModel @Inject constructor(
 
     val onNavigation = merge(
         _onNavigation,
-        siteStoriesHandler.onNavigation,
         blazeCardViewModelSlice.onNavigation,
         pagesCardViewModelSlice.onNavigation,
         todaysStatsViewModelSlice.onNavigation,
@@ -781,17 +776,10 @@ class MySiteViewModel @Inject constructor(
 
     override fun onCleared() {
         siteIconUploadHandler.clear()
-        siteStoriesHandler.clear()
         quickStartRepository.clear()
         mySiteSourceManager.clear()
         dispatcher.unregister(this)
         super.onCleared()
-    }
-
-    fun handleStoriesPhotoPickerResult(data: Intent) {
-        selectedSiteRepository.getSelectedSite()?.let {
-            siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
-        }
     }
 
     fun onSitePicked() {

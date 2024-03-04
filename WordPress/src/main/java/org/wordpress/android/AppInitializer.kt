@@ -39,12 +39,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
-import com.wordpress.stories.compose.NotificationTrackerProvider
-import com.wordpress.stories.compose.frame.StoryNotificationType
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_SUCCESS
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -76,7 +70,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
-import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
@@ -93,7 +86,6 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -172,9 +164,6 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorTracker: ImageEditorTracker
 
     @Inject
-    lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
-
-    @Inject
     lateinit var crashLogging: CrashLogging
 
     @Inject
@@ -233,8 +222,6 @@ class AppInitializer @Inject constructor(
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
-    lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
-        private set
 
     @Suppress("DEPRECATION")
     private lateinit var credentialsClient: GoogleApiClient
@@ -367,10 +354,6 @@ class AppInitializer @Inject constructor(
 
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
-
-        storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
-        storyMediaSaveUploadBridge.init(application)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(storyMediaSaveUploadBridge)
 
         exPlat.forceRefresh()
 
@@ -966,29 +949,6 @@ class AppInitializer @Inject constructor(
                 // getBitmapCache
                 WordPress.getBitmapCache().evictAll()
             }
-        }
-    }
-
-    inner class StoryNotificationTrackerProvider : NotificationTrackerProvider {
-        private fun translateNotificationTypes(storyNotificationType: StoryNotificationType): NotificationType {
-            return when (storyNotificationType) {
-                STORY_SAVE_SUCCESS -> NotificationType.STORY_SAVE_SUCCESS
-                STORY_SAVE_ERROR -> NotificationType.STORY_SAVE_ERROR
-                STORY_FRAME_SAVE_SUCCESS -> NotificationType.STORY_FRAME_SAVE_SUCCESS
-                STORY_FRAME_SAVE_ERROR -> NotificationType.STORY_FRAME_SAVE_ERROR
-            }
-        }
-
-        override fun trackShownNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackTappedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackDismissedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType))
         }
     }
 

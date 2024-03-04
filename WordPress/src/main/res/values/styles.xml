@@ -48,6 +48,8 @@
         <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/neutral_5</item>
         <item name="wpColorLoginPrologueBg">@color/blue_0</item>
+        <item name="wpColorTextPrimary">?attr/wpColorOnSurfaceHigh</item>
+        <item name="wpColorTextSecondary">@color/text_secondary</item>
 
         <item name="grColorInfoBanner">@color/gravatar_info_banner</item>
         <item name="grColorSyncBanner">@color/gravatar_sync_info_banner</item>
@@ -211,12 +213,6 @@
 
     <style name="WordPress.Media.Preview" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
-    </style>
-
-    <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:immersive">true</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -628,6 +624,28 @@
     <style name="DialogAnimations">
         <item name="android:windowEnterAnimation">@anim/activity_slide_in_from_right</item>
         <item name="android:windowExitAnimation">@anim/activity_slide_out_to_right</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.NotificationItemTitle" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium_large</item>
+        <item name="android:textColor">?attr/wpColorTextPrimary</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.NotificationItemContent" parent="WordPress.TextAppearance.NotificationItemTitle">
+        <item name="android:textColor">?attr/wpColorTextSecondary</item>
+    </style>
+
+    <style name="NotificationsAvatarDouble">
+        <item name="android:layout_width">@dimen/avatar_sz_small</item>
+        <item name="android:layout_height">@dimen/avatar_sz_small</item>
+        <item name="android:padding">@dimen/avatar_background_padding</item>
+        <item name="android:background">@drawable/bg_oval_surface</item>
+        <item name="android:foreground">@drawable/post_detail_avatar_internal_border</item>
+    </style>
+
+    <style name="NotificationsAvatarTriple" parent="NotificationsAvatarDouble">
+        <item name="android:layout_width">@dimen/avatar_sz_extra_medium_with_padding</item>
+        <item name="android:layout_height">@dimen/avatar_sz_extra_medium_with_padding</item>
     </style>
 
     <style name="MyProfileRow">
