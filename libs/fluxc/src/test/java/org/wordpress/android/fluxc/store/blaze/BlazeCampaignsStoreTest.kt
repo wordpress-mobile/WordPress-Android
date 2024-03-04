@@ -54,7 +54,6 @@ private const val CAMPAIGN_ID = "1234"
 private const val TITLE = "title"
 private const val IMAGE_URL = "imageUrl"
 private const val CREATED_AT = "2023-06-02T00:00:00.000Z"
-private const val END_DATE = "2023-06-12T00:00:00.000Z" // Considering duration of 10 days
 private const val DURATION_IN_DAYS = 10
 private const val UI_STATUS = "rejected"
 private const val IMPRESSIONS = 0L
@@ -97,11 +96,11 @@ private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignListResponse(
 
 private val BLAZE_CAMPAIGN_ENTITY = BlazeCampaignEntity(
     siteId = SITE_ID,
-    campaignId = CAMPAIGN_ID.toInt(),
+    campaignId = CAMPAIGN_ID,
     title = TITLE,
     imageUrl = IMAGE_URL,
     startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-    durationInDays = BlazeCampaignsUtils.stringToDate(END_DATE),
+    durationInDays = DURATION_IN_DAYS,
     uiStatus = UI_STATUS,
     impressions = IMPRESSIONS,
     clicks = CLICKS,
@@ -202,11 +201,11 @@ class BlazeCampaignsStoreTest {
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
         assertThat(result).isNotNull
-        assertEquals(result?.campaignId, CAMPAIGN_ID.toInt())
+        assertEquals(result?.campaignId, CAMPAIGN_ID)
         assertEquals(result?.title, TITLE)
         assertEquals(result?.imageUrl, IMAGE_URL)
         assertEquals(result?.startTime, BlazeCampaignsUtils.stringToDate(CREATED_AT))
-        assertEquals(result?.durationInDays, BlazeCampaignsUtils.stringToDate(END_DATE))
+        assertEquals(result?.durationInDays, DURATION_IN_DAYS)
         assertEquals(result?.uiStatus, UI_STATUS)
         assertEquals(result?.impressions, IMPRESSIONS)
         assertEquals(result?.clicks, CLICKS)
@@ -457,14 +456,11 @@ class BlazeCampaignsStoreTest {
     @Test
     fun `when creating a campaign, then persist it to the DB and return result`() = test {
         val campaign = BlazeCampaignModel(
-            campaignId = CAMPAIGN_ID.toInt(),
+            campaignId = CAMPAIGN_ID,
             title = TITLE,
             imageUrl = IMAGE_URL,
             startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-            durationInDays = Date(
-                BlazeCampaignsUtils.stringToDate(CREATED_AT).time
-                    + DURATION_IN_DAYS.days.inWholeMilliseconds
-            ),
+            durationInDays = DURATION_IN_DAYS,
             uiStatus = UI_STATUS,
             impressions = IMPRESSIONS,
             clicks = CLICKS,
