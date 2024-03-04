@@ -81,7 +81,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 
@@ -358,14 +357,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnReattachMediaUploadQueryListener() {
                     @Override
                     public void onQueryCurrentProgressForUploadingMedia() {
-                        updateFailedMediaState();
-                        updateMediaProgress();
-                    }
-                },
-                new OnReattachMediaSavingQueryListener() {
-                    @Override public void onQueryCurrentProgressForSavingMedia() {
-                        // TODO: probably go through mFailedMediaIds, and see if any block in the post content
-                        // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
                         updateFailedMediaState();
                         updateMediaProgress();
                     }
