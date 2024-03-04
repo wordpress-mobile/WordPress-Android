@@ -9,7 +9,7 @@ data class BlazeCampaignsModel(
 )
 
 data class BlazeCampaignModel(
-    val campaignId: Int,
+    val campaignId: String,
     val title: String,
     val imageUrl: String?,
     val createdAt: Date,
