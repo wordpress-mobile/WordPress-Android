@@ -11,13 +11,13 @@ class BlazeCampaignsRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
 ) {
     companion object {
-        const val DEFAULT_ITEMS_LIMIT = 25 // Number of items to fetch in a single request
+        const val DEFAULT_PER_PAGE = 25 // Number of items to fetch in a single request
     }
 
     suspend fun fetchBlazeCampaigns(
         siteId: Long,
-        skip: Int,
-        limit: Int,
+        offset: Int,
+        perPage: Int,
         locale: String,
         status: String? = null,
     ): BlazeCampaignsFetchedPayload<BlazeCampaignListResponse> {
@@ -26,8 +26,8 @@ class BlazeCampaignsRestClient @Inject constructor(
             url = url,
             params = mutableMapOf(
                 "site_id" to siteId.toString(),
-                "skip" to skip.toString(),
-                "limit" to limit.toString(),
+                "skip" to offset.toString(),
+                "limit" to perPage.toString(),
                 "locale" to locale
             ).putIfNotNull("status" to status),
             clazz = BlazeCampaignListResponse::class.java
