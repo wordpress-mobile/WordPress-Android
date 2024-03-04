@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignImage
@@ -135,7 +135,7 @@ class BlazeCampaignsStoreTest {
     @Before
     fun setUp() {
         store = BlazeCampaignsStore(
-            blazeCampaignsRestClient = blazeCampaignsRestClient,
+            campaignsRestClient = blazeCampaignsRestClient,
             creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,
@@ -149,7 +149,7 @@ class BlazeCampaignsStoreTest {
             val payload = BlazeCampaignsFetchedPayload(successResponse)
             whenever(
                 blazeCampaignsRestClient.fetchBlazeCampaigns(
-                    siteModel.siteId, SKIP, DEFAULT_ITEMS_LIMIT, "en", null
+                    siteModel.siteId, SKIP, DEFAULT_PER_PAGE, "en", null
                 )
             ).thenReturn(payload)
 

@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 
@@ -53,7 +53,7 @@ class BlazeCampaignsRestClientTest {
         val response = getResponseFromJsonString(json)
         initFetchBlazeCampaigns(data = response)
 
-        restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+        restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertEquals(
             urlCaptor.firstValue,
@@ -67,7 +67,7 @@ class BlazeCampaignsRestClientTest {
             val json = UnitTestUtils.getStringFromResourceFile(javaClass, SUCCESS_JSON)
             initFetchBlazeCampaigns(data = getResponseFromJsonString(json))
 
-            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
             assertSuccess(successResponse, result)
         }
 
@@ -75,7 +75,7 @@ class BlazeCampaignsRestClientTest {
     fun `given timeout, when blaze campaigns is requested, then return timeout error`() = test {
         initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(TIMEOUT)))
 
-        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertError(BlazeCampaignsErrorType.TIMEOUT, result)
     }
@@ -84,7 +84,7 @@ class BlazeCampaignsRestClientTest {
     fun `given network error, when blaze campaigns is requested, then return api error`() = test {
         initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
-        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertError(BlazeCampaignsErrorType.API_ERROR, result)
     }
@@ -94,7 +94,7 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(INVALID_RESPONSE)))
 
-            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.INVALID_RESPONSE, result)
         }
@@ -104,7 +104,7 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(NOT_AUTHENTICATED)))
 
-            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.AUTHORIZATION_REQUIRED, result)
         }
@@ -114,7 +114,7 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(UNKNOWN)))
 
-            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_ITEMS_LIMIT, DEFAULT_LOCALE)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.GENERIC_ERROR, result)
         }
