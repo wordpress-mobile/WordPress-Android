@@ -38,7 +38,6 @@ repositories {
             includeGroup "org.wordpress.gutenberg-mobile"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
-            includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
         }
     }

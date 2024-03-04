@@ -96,9 +96,6 @@ class PhotoPickerViewModel @Inject constructor(
                 softAskRequest?.show == true,
             ),
             buildSoftAskView(softAskRequest),
-            FabUiModel(selectedIds.isNullOrEmpty()) {
-                clickIcon(PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO)
-            },
             buildActionModeUiModel(selectedIds),
             progressDialogModel ?: ProgressDialogUiModel.Hidden,
             showPartialAccessPrompt ?: false,
@@ -406,7 +403,6 @@ class PhotoPickerViewModel @Inject constructor(
             items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_stock_media)) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA)
             })
-            // only show GIF picker from Tenor if this is NOT the WPStories picker
             items.add(PopupMenuUiModel.PopupMenuItem(UiStringRes(R.string.photo_picker_gif)) {
                 clickIcon(PhotoPickerFragment.PhotoPickerIcon.GIF)
             })
@@ -527,7 +523,6 @@ class PhotoPickerViewModel @Inject constructor(
         val photoListUiModel: PhotoListUiModel,
         val bottomBarUiModel: BottomBarUiModel,
         val softAskViewUiModel: SoftAskViewUiModel,
-        val fabUiModel: FabUiModel,
         val actionModeUiModel: ActionModeUiModel,
         val progressDialogUiModel: ProgressDialogUiModel,
         val isPartialMediaAccessPromptVisible: Boolean,
@@ -563,8 +558,6 @@ class PhotoPickerViewModel @Inject constructor(
 
         object Hidden : SoftAskViewUiModel()
     }
-
-    data class FabUiModel(val show: Boolean, val action: () -> Unit)
 
     sealed class ActionModeUiModel {
         data class Visible(
