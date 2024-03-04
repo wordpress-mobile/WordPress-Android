@@ -65,7 +65,7 @@ class BlazeCampaignsDaoTest {
         var observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
         assertEquals(observedStatus.campaigns.size, 1)
 
-        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
+        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
         dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
 
         observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
@@ -86,7 +86,7 @@ class BlazeCampaignsDaoTest {
         var observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
         assertEquals(observedStatus.campaigns.size, 1)
 
-        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
+        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
         dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
 
         observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
@@ -150,11 +150,11 @@ class BlazeCampaignsDaoTest {
     private companion object {
         const val SITE_ID = 1234L
         const val SECONDARY_TITLE = "secondary title"
-        const val CAMPAIGN_ID = 1234
+        const val CAMPAIGN_ID = "1234"
         const val TITLE = "title"
         const val IMAGE_URL = "imageUrl"
         const val CREATED_AT = "2023-06-02T00:00:00.000Z"
-        const val END_DATE = "2023-06-02T00:00:00.000Z"
+        const val DURATION_DAYS = 4
         const val UI_STATUS = "rejected"
         const val IMPRESSIONS = 0L
         const val CLICKS = 0L
@@ -170,7 +170,7 @@ class BlazeCampaignsDaoTest {
             title = TITLE,
             imageUrl = IMAGE_URL,
             startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-            durationInDays = BlazeCampaignsUtils.stringToDate(END_DATE),
+            durationInDays = DURATION_DAYS,
             uiStatus = UI_STATUS,
             impressions = IMPRESSIONS,
             clicks = CLICKS,
