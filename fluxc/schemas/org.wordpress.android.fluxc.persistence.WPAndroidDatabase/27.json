@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 27,
-    "identityHash": "1612659906efd7bc0ccfaf91b68d50fd",
+    "identityHash": "c279cc31cc1eedfa0a35d3cbefe64327",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -676,7 +676,7 @@
       },
       {
         "tableName": "BlazeCampaigns",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` INTEGER NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `createdAt` TEXT NOT NULL, `endDate` TEXT, `uiStatus` TEXT NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT, `totalBudget` REAL NOT NULL, `spentBudget` REAL NOT NULL, PRIMARY KEY(`siteId`, `campaignId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `campaignId` TEXT NOT NULL, `title` TEXT NOT NULL, `imageUrl` TEXT, `startTime` TEXT NOT NULL, `durationInDays` INTEGER NOT NULL, `uiStatus` TEXT NOT NULL, `impressions` INTEGER NOT NULL, `clicks` INTEGER NOT NULL, `targetUrn` TEXT, `totalBudget` REAL NOT NULL, `spentBudget` REAL NOT NULL, PRIMARY KEY(`siteId`, `campaignId`))",
         "fields": [
           {
             "fieldPath": "siteId",
@@ -687,7 +687,7 @@
           {
             "fieldPath": "campaignId",
             "columnName": "campaignId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -703,16 +703,16 @@
             "notNull": false
           },
           {
-            "fieldPath": "createdAt",
-            "columnName": "createdAt",
+            "fieldPath": "startTime",
+            "columnName": "startTime",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "endDate",
-            "columnName": "endDate",
-            "affinity": "TEXT",
-            "notNull": false
+            "fieldPath": "durationInDays",
+            "columnName": "durationInDays",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "uiStatus",
@@ -971,7 +971,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1612659906efd7bc0ccfaf91b68d50fd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c279cc31cc1eedfa0a35d3cbefe64327')"
     ]
   }
 }

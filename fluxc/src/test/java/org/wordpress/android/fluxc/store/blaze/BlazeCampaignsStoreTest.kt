@@ -100,8 +100,8 @@ private val BLAZE_CAMPAIGN_ENTITY = BlazeCampaignEntity(
     campaignId = CAMPAIGN_ID.toInt(),
     title = TITLE,
     imageUrl = IMAGE_URL,
-    createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-    endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
+    startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
+    durationInDays = BlazeCampaignsUtils.stringToDate(END_DATE),
     uiStatus = UI_STATUS,
     impressions = IMPRESSIONS,
     clicks = CLICKS,
@@ -205,8 +205,8 @@ class BlazeCampaignsStoreTest {
         assertEquals(result?.campaignId, CAMPAIGN_ID.toInt())
         assertEquals(result?.title, TITLE)
         assertEquals(result?.imageUrl, IMAGE_URL)
-        assertEquals(result?.createdAt, BlazeCampaignsUtils.stringToDate(CREATED_AT))
-        assertEquals(result?.endDate, BlazeCampaignsUtils.stringToDate(END_DATE))
+        assertEquals(result?.startTime, BlazeCampaignsUtils.stringToDate(CREATED_AT))
+        assertEquals(result?.durationInDays, BlazeCampaignsUtils.stringToDate(END_DATE))
         assertEquals(result?.uiStatus, UI_STATUS)
         assertEquals(result?.impressions, IMPRESSIONS)
         assertEquals(result?.clicks, CLICKS)
@@ -460,8 +460,8 @@ class BlazeCampaignsStoreTest {
             campaignId = CAMPAIGN_ID.toInt(),
             title = TITLE,
             imageUrl = IMAGE_URL,
-            createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-            endDate = Date(
+            startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
+            durationInDays = Date(
                 BlazeCampaignsUtils.stringToDate(CREATED_AT).time
                     + DURATION_IN_DAYS.days.inWholeMilliseconds
             ),

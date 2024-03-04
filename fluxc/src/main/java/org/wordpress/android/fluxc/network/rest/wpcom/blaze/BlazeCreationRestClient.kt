@@ -493,8 +493,8 @@ private data class BlazeCampaignCreationNetworkResponse(
     @Suppress("MagicNumber")
     fun toDomainModel(): BlazeCampaignModel = BlazeCampaignModel(
         targetUrn = targetUrn,
-        createdAt = Date(), // Set to current date, as the API does not return the actual creation date
-        endDate = Date(BlazeCampaignsUtils.stringToDate(startTime).time + durationDays.days.inWholeMilliseconds),
+        startTime = Date(), // Set to current date, as the API does not return the actual creation date
+        durationInDays = durationDays,
         imageUrl = mainImage.url,
         uiStatus = status,
         // TODO revisit this when the API returns the actual values to confirm the format of IDs
