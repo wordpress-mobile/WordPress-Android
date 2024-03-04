@@ -336,8 +336,8 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`campaignId` TEXT NOT NULL, " +
                             "`title` TEXT NOT NULL, " +
                             "`imageUrl` TEXT, " +
-                            "`createdAt` TEXT NOT NULL, " +
-                            "`endDate` TEXT, " +
+                            "`startTime` TEXT NOT NULL, " +
+                            "`durationInDays` INTEGER NOT NULL, " +
                             "`uiStatus` TEXT NOT NULL, " +
                             "`impressions` INTEGER NOT NULL, " +
                             "`clicks` INTEGER NOT NULL, " +

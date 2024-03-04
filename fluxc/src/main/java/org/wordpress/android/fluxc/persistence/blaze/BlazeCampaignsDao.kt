@@ -28,19 +28,19 @@ abstract class BlazeCampaignsDao {
         )
     }
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
     abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
     abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
 
     @Query("SELECT * from BlazeCampaignsPagination WHERE `siteId` = :siteId")
     abstract fun getCampaignsPagination(siteId: Long): BlazeCampaignsPaginationEntity?
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC LIMIT 1")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
     abstract fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignEntity?
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY createdAt DESC LIMIT 1")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
     abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
 
     @Transaction
@@ -96,8 +96,8 @@ abstract class BlazeCampaignsDao {
         val campaignId: String,
         val title: String,
         val imageUrl: String?,
-        val createdAt: Date,
-        val endDate: Date?,
+        val startTime: Date,
+        val durationInDays: Int,
         val uiStatus: String,
         val impressions: Long,
         val clicks: Long,
@@ -109,8 +109,8 @@ abstract class BlazeCampaignsDao {
             campaignId = campaignId,
             title = title,
             imageUrl = imageUrl,
-            createdAt = createdAt,
-            endDate = endDate,
+            startTime = startTime,
+            durationInDays = durationInDays,
             uiStatus = uiStatus,
             impressions = impressions,
             clicks = clicks,
@@ -128,8 +128,8 @@ abstract class BlazeCampaignsDao {
                 campaignId = campaign.campaignId,
                 title = campaign.title,
                 imageUrl = campaign.imageUrl,
-                createdAt = campaign.createdAt,
-                endDate = campaign.endDate,
+                startTime = campaign.startTime,
+                durationInDays = campaign.durationInDays,
                 uiStatus = campaign.uiStatus,
                 impressions = campaign.impressions,
                 clicks = campaign.clicks,
