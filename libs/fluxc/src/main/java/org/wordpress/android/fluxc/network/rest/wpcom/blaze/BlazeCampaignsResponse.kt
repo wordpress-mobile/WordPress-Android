@@ -7,8 +7,6 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.store.Store.OnChangedError
-import java.util.Date
-import kotlin.time.Duration.Companion.days
 
 data class BlazeCampaignsFetchedPayload<T>(
     val response: T? = null
@@ -94,8 +92,8 @@ data class BlazeCampaign(
             campaignId = id,
             title = textSnippet,
             imageUrl = image.url,
-            createdAt = startDate,
-            endDate = Date(startDate.time + durationDays.days.inWholeMilliseconds),
+            startTime = startDate,
+            durationInDays = durationDays,
             uiStatus = status,
             impressions = impressions,
             clicks = clicks,
