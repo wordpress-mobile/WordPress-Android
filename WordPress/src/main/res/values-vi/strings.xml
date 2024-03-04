@@ -1016,6 +1016,8 @@ Language: vi_VN
     <string name="mlp_choose_layout_subtitle">Bắt đầu bằng cách chọn một trong những bố cục cho sẵn. Hoặc tạo một trang trống.</string>
     <string name="mlp_choose_layout_title">Chọn bố cục</string>
     <string name="prepublishing_nudges_story_title_hint">Đặt tựa đề story</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Tạo bài viết hoặc story</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Tạo bài viết, trang hoặc story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Chọn từ thiết bị</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>

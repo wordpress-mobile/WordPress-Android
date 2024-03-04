@@ -1647,6 +1647,8 @@ Language: en_GB
     <string name="mlp_choose_layout_subtitle">Get started by choosing from a wide variety of pre-made page layouts. Or just start with a blank page.</string>
     <string name="mlp_choose_layout_title">Choose a layout</string>
     <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page, or story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Choose from device</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>

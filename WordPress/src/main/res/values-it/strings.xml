@@ -1639,6 +1639,8 @@ Language: it
     <string name="mlp_choose_layout_subtitle">Inizia scegliendo tra un\'ampia varietà di layout di pagina già pronti. Altrimenti, inizia semplicemente con una pagina bianca.</string>
     <string name="mlp_choose_layout_title">Scegli un layout</string>
     <string name="prepublishing_nudges_story_title_hint">Dai un titolo alla tua storia</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crea un articolo o una storia</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Crea un articolo, una pagina o una storia</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tocca %1$s Crea. %2$s Quindi, seleziona &lt;b&gt;Articolo del blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Scegli da dispositivo</string>
     <string name="my_site_bottom_sheet_add_story">Articolo della storia</string>

@@ -1401,6 +1401,8 @@ Language: lv
     <string name="dialog_discard_story_ok_button">Izmest</string>
     <string name="story_saving_untitled">Bez nosaukuma</string>
     <string name="dialog_discard_errored_page_message">Šis slaids vēl nav saglabāts. Dzēšot šo slaidu, tiks zaudēti visi veiktie labojumi.</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Izveidojiet ziņu, lapu vai stāstu</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Izveidojiet ziņu vai stāstu</string>
     <string name="prepublishing_nudges_story_title_hint">Piešķiriet savam stāstam nosaukumu</string>
     <string name="mlp_choose_layout_title">Izvēlieties izkārtojumu</string>
     <string name="mlp_choose_layout_subtitle">Sāciet, izvēloties no dažādiem iepriekš sagatavotiem lapu izkārtojumiem. Vai vienkārši sāciet ar tukšu lapu.</string>

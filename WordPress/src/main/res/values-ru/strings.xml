@@ -1646,6 +1646,8 @@ Language: ru
     <string name="mlp_choose_layout_subtitle">Начните с выбора заранее подготовленных вариантов макета, или начните с пустой страницы.</string>
     <string name="mlp_choose_layout_title">Выберите макет</string>
     <string name="prepublishing_nudges_story_title_hint">Назовите вашу историю</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Создать запись или страницу</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Создать запись, страницу или историю</string>
     <string name="quick_start_dialog_create_new_post_message_short">Нажмите %1$s Создать. %2$s Затем выберите &lt;b&gt;Запись блога&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Выбрать с устройства</string>
     <string name="my_site_bottom_sheet_add_story">История</string>

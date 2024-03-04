@@ -1647,6 +1647,8 @@ Language: de
     <string name="mlp_choose_layout_subtitle">Beginne mit der Auswahl eines der vielen vorgefertigten Seitenlayouts. Oder beginne einfach mit einer leeren Seite.</string>
     <string name="mlp_choose_layout_title">Layout auswählen</string>
     <string name="prepublishing_nudges_story_title_hint">Gib deiner Website einen Titel</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Erstelle einen Beitrag oder eine Story</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Erstelle einen Beitrag, eine Seite oder eine Story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tippe auf %1$s Erstellen. %2$s Wähle anschließend &lt;b&gt;Blogbeitrag&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Von Gerät auswählen</string>
     <string name="my_site_bottom_sheet_add_story">Story-Beitrag</string>

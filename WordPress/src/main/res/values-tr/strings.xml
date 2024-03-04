@@ -1642,6 +1642,8 @@ Language: tr
     <string name="mlp_choose_layout_subtitle">Önceden hazırlanmış çeşitli sayfa düzenleri arasından seçim yaparak başlayın. Veya boş bir sayfayla başlayın.</string>
     <string name="mlp_choose_layout_title">Bir düzen seç</string>
     <string name="prepublishing_nudges_story_title_hint">Öykünüze bir başlık koyun</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Bir yazı veya öykü oluştur</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Bir yazı, sayfa veya öykü oluştur</string>
     <string name="quick_start_dialog_create_new_post_message_short">%1$s Oluştur\'a dokunun. %2$s Ardından &lt;b&gt;Blog yayını&lt;/b&gt;\'nı seçin</string>
     <string name="photo_picker_choose_file">Cihazdan seç</string>
     <string name="my_site_bottom_sheet_add_story">Öykü yayını</string>

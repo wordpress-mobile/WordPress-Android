@@ -1046,6 +1046,8 @@ Language: pl
     <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
     <string name="label_share_to">Udostępnij na</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
     <string name="label_control_saving">Zapisywanie</string>
     <string name="label_saved_icon">Zapisano</string>
     <string name="label_control_retry">Spróbuj ponownie</string>

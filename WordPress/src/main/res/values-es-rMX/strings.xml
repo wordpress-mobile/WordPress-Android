@@ -301,6 +301,8 @@ Language: es_MX
     <string name="label_retry_icon">Reintentar</string>
     <string name="label_frame_image">Diapositiva</string>
     <string name="mlp_choose_layout_subtitle">Empieza eligiendo entre una amplia variedad de layouts de página prefabricados. O simplemente empieza con una página en blanco.</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Crear una entrada, página o historia</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crear una entrada o historia</string>
     <string name="mlp_choose_layout_title">Elegir un layout</string>
     <string name="error_media_quota_exceeded">Cuota de almacenamiento superada</string>
     <string name="error_media_quota_exceeded_toast">No se puede subir el archivo.\nSe ha superado la cuota de almacenamiento.</string>

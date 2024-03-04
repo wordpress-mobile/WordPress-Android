@@ -243,6 +243,8 @@ Language: ku_TR
     <string name="mlp_create_page">Rûpelekê biafirîne</string>
     <string name="mlp_create_blank_page">Rûpeleke vala biafirîne</string>
     <string name="prepublishing_nudges_story_title_hint">Sernavekî bide çîroka xwe</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Şandî an jî çîrokekê biafirîne</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Şandî, rûpel an jî çîrokekê biafirîne</string>
     <string name="capture_button_alt">Bigire</string>
     <string name="label_share_to">Parve bike bi:</string>
     <string name="quick_start_dialog_create_new_post_message_short">Li %1$s Biafirîne\'yê bitikîne. %2$s Piştre&lt;b&gt;Şandiya Blogê&lt;/b&gt; hilbijêre</string>

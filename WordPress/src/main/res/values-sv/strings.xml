@@ -1647,6 +1647,8 @@ Language: sv_SE
     <string name="mlp_choose_layout_subtitle">Kom igång genom att välja någon av alla förberedda sidlayouter. Eller börja helt enkelt med en tom sida.</string>
     <string name="mlp_choose_layout_title">Välj en layout</string>
     <string name="prepublishing_nudges_story_title_hint">Ge din berättelse en rubrik</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Skapa ett inlägg eller en berättelse</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Skapa ett inlägg, en sida eller en berättelse</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tryck på %1$s Skapa. %2$s Välj sedan &lt;b&gt;Blogginlägg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Välj från enheten</string>
     <string name="my_site_bottom_sheet_add_story">Berättelseinlägg</string>

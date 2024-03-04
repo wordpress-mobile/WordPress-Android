@@ -1636,6 +1636,8 @@ Language: id
     <string name="mlp_choose_layout_subtitle">Mulai dengan memilih satu tata letak halaman yang siap digunakan. Atau mulai dengan halaman kosong.</string>
     <string name="mlp_choose_layout_title">Pilih tata letak</string>
     <string name="prepublishing_nudges_story_title_hint">Beri judul pada cerita Anda</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Buat pos atau cerita</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">Buat pos, halaman, atau cerita</string>
     <string name="quick_start_dialog_create_new_post_message_short">Ketuk %1$s Buat. %2$s Lalu pilih &lt;b&gt;Pos blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Pilih dari perangkat</string>
     <string name="my_site_bottom_sheet_add_story">Pos cerita</string>
