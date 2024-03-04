@@ -93,7 +93,7 @@ abstract class BlazeCampaignsDao {
     @TypeConverters(BlazeCampaignsDateConverter::class)
     data class BlazeCampaignEntity(
         val siteId: Long,
-        val campaignId: Int,
+        val campaignId: String,
         val title: String,
         val imageUrl: String?,
         val createdAt: Date,

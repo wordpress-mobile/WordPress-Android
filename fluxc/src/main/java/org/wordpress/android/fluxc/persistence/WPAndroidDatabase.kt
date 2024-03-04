@@ -333,7 +333,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                     execSQL(
                         "CREATE TABLE IF NOT EXISTS `BlazeCampaigns` (" +
                             "`siteId` INTEGER NOT NULL, " +
-                            "`campaignId` INTEGER NOT NULL, " +
+                            "`campaignId` TEXT NOT NULL, " +
                             "`title` TEXT NOT NULL, " +
                             "`imageUrl` TEXT, " +
                             "`createdAt` TEXT NOT NULL, " +

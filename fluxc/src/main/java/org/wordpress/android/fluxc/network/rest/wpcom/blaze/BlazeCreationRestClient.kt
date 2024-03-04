@@ -498,7 +498,7 @@ private data class BlazeCampaignCreationNetworkResponse(
         imageUrl = mainImage.url,
         uiStatus = status,
         // TODO revisit this when the API returns the actual values to confirm the format of IDs
-        campaignId = id.substringAfter("campaign-").toIntOrNull() ?: 0,
+        campaignId = id.substringAfter("campaign-"),
         clicks = 0L,
         impressions = 0L,
         title = siteName,

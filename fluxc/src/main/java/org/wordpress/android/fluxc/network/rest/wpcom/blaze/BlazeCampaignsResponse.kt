@@ -91,7 +91,7 @@ data class BlazeCampaign(
     fun toCampaignsModel(): BlazeCampaignModel {
         val startDate = BlazeCampaignsUtils.stringToDate(startTime)
         return BlazeCampaignModel(
-            campaignId = id.toInt(),
+            campaignId = id,
             title = textSnippet,
             imageUrl = image.url,
             createdAt = startDate,
