@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 11:54:08+0000
+Translation-Revision-Date: 2024-02-20 10:41:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: sv_SE
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Webbplats hittades inte. Kontrollera att du är inloggad på rätt konto.</string>
+    <string name="gravatar_info_sync_done_button">Klar</string>
+    <string name="gravatar_info_sync_message">Uppdateringar kan ta lite tid att synkronisera med din Gravatar-profil.</string>
+    <string name="gravatar_info_learn_more_link">Vad är Gravatar?</string>
+    <string name="gravatar_info_description">Om du uppdaterar din profilbild, ditt namn och informationen ”Om” här kommer det också att uppdateras på alla webbplatser som använder Gravatar-profiler.</string>
+    <string name="gravatar_info_title">Din WordPress.com-profil drivs med Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Det gick inte att ladda media för delning. Kontrollera appens behörigheter\n        eller använd appens mediabibliotek.</string>
     <string name="site_monitoring_cannot_be_started">Vi kan inte öppna webbplatsövervakning för tillfället. Försök igen senare</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webbserverloggar</string>

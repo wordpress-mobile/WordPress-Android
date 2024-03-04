@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-15 08:54:10+0000
+Translation-Revision-Date: 2024-02-22 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ko_KR
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">사이트를 찾을 수 없습니다. 올바른 계정에 로그인했는지 확인하세요.</string>
+    <string name="gravatar_info_sync_done_button">완료</string>
+    <string name="gravatar_info_sync_message">업데이트 내용이 그라바타 프로필과 동기화되려면 시간이 조금 걸릴 수 있습니다.</string>
+    <string name="gravatar_info_learn_more_link">그라바타가 무엇인가요?</string>
+    <string name="gravatar_info_description">아바타, 이름 및 소개 정보를 업데이트하면 그라바타 프로필을 사용하는 모든 사이트에서도 업데이트됩니다.</string>
+    <string name="gravatar_info_title">워드프레스닷컴 프로필이 그라바타에서 제공됩니다.</string>
     <string name="error_media_could_not_share_media_from_device">공유할 미디어를 로드할 수 없습니다. 앱의 권한을 확인하거나\n        앱의 미디어 라이브러리를 사용하세요.</string>
     <string name="site_monitoring_cannot_be_started">지금은 사이트 모니터링을 열 수 없습니다. 나중에 다시 시도하세요.</string>
     <string name="site_monitoring_tab_title_web_server_logs">웹 서버 로그</string>

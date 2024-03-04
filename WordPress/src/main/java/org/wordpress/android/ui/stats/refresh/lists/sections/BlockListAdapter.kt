@@ -8,6 +8,7 @@ import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload
 import org.wordpress.android.ui.stats.refresh.BlockDiffCallback.BlockListPayload.TAB_CHANGED
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ActivityItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TrafficBarChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BigTitle
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ChartLegendsBlue
@@ -41,6 +42,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TRAFFIC_BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
@@ -150,7 +152,8 @@ class BlockListAdapter(
             COLUMNS -> if (trafficTabEnabled) TrafficFourColumnsViewHolder(parent) else FourColumnsViewHolder(parent)
             CHIPS -> ChipsViewHolder(parent)
             LINK -> LinkViewHolder(parent)
-            BAR_CHART -> if (trafficTabEnabled) TrafficBarChartViewHolder(parent) else BarChartViewHolder(parent)
+            BAR_CHART -> BarChartViewHolder(parent)
+            TRAFFIC_BAR_CHART -> TrafficBarChartViewHolder(parent)
             PIE_CHART -> PieChartViewHolder(parent)
             LINE_CHART -> LineChartViewHolder(parent)
             CHART_LEGEND -> ChartLegendViewHolder(parent)
@@ -202,7 +205,7 @@ class BlockListAdapter(
             is ChipsViewHolder -> holder.bind(item as Chips)
             is LinkViewHolder -> holder.bind(item as Link)
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
-            is TrafficBarChartViewHolder -> holder.bind(item as BarChartItem)
+            is TrafficBarChartViewHolder -> holder.bind(item as TrafficBarChartItem)
             is PieChartViewHolder -> holder.bind(item as PieChartItem)
             is LineChartViewHolder -> holder.bind(item as LineChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)

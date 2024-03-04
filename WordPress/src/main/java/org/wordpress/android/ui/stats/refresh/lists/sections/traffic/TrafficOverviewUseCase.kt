@@ -19,7 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -169,7 +169,8 @@ class TrafficOverviewUseCase(
             granularity,
             LimitMode.Top(quantity),
             date,
-            forced
+            forced,
+            false
         )
     } ?: visitsAndViewsStore.fetchVisits(
         statsSiteProvider.siteModel,
@@ -257,14 +258,7 @@ class TrafficOverviewUseCase(
         selectedItem: VisitsAndViewsModel.PeriodData
     ) {
         items.addAll(
-            trafficOverviewMapper.buildChart(
-                dates,
-                lowerGranularity,
-                this::onBarSelected,
-                this::onBarChartDrawn,
-                uiState.selectedPosition,
-                selectedItem.period
-            )
+            trafficOverviewMapper.buildChart(dates, lowerGranularity, this::onBarChartDrawn, uiState.selectedPosition)
         )
         items.add(
             trafficOverviewMapper.buildColumns(
@@ -275,25 +269,16 @@ class TrafficOverviewUseCase(
         )
     }
 
-    private fun onBarSelected(period: String?) {
-        analyticsTracker.trackGranular(
-            AnalyticsTracker.Stat.STATS_OVERVIEW_BAR_CHART_TAPPED,
-            lowerGranularity
-        )
-        if (period != null && period != "empty") {
-            val selectedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
-            selectedDateProvider.selectDate(
-                selectedDate,
-                lowerGranularity
-            )
-        }
-    }
-
+    @Suppress("MagicNumber")
     private fun onColumnSelected(position: Int) {
-        analyticsTracker.trackGranular(
-            AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
-            lowerGranularity
-        )
+        val event = when (position) {
+            0 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VIEWS
+            1 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VISITORS
+            2 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_LIKES
+            3 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_COMMENTS
+            else -> null
+        }
+        event?.let { analyticsTracker.trackWithGranularity(it, statsGranularity) }
         updateUiState { it.copy(selectedPosition = position) }
     }
 

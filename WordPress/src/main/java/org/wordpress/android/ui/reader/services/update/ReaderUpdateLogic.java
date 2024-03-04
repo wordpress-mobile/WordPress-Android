@@ -335,9 +335,10 @@ public class ReaderUpdateLogic {
                     // changed if the server list doesn't have the same blogs as the local list
                     // (ie: a blog has been followed/unfollowed since local was last updated)
                     if (!localBlogs.hasSameBlogs(serverBlogs)) {
+                        final int totalSites = jsonObject == null ? 0 : jsonObject.optInt("total_subscriptions", 0);
                         ReaderPostTable.updateFollowedStatus();
                         AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                        EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
+                        EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged(totalSites));
                     }
                 }
 

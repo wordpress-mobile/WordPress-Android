@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-15 23:54:08+0000
+Translation-Revision-Date: 2024-02-22 13:54:10+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ru
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Сайт не найден. Убедитесь в том, что выполнили вход в нужную учётную запись.</string>
+    <string name="gravatar_info_sync_done_button">Готово</string>
+    <string name="gravatar_info_sync_message">Синхронизация обновлений с вашим профилем Gravatar может занять некоторое время.</string>
+    <string name="gravatar_info_learn_more_link">Что такое Gravatar?</string>
+    <string name="gravatar_info_description">Если вы обновите свой аватар, имя пользователя и личные данные на этом сайте, всё это будет автоматически обновлено на других сайтах, где используются профили Gravatar.</string>
+    <string name="gravatar_info_title">Ваш профиль WordPress.com создан при поддержке Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Не удалось загрузить медиафайл для публикации в соцсетях. Проверьте разрешения приложения\n        или воспользуйтесь библиотекой файлов приложения.</string>
     <string name="site_monitoring_cannot_be_started">Не удалось открыть страницу мониторинга сайтов. Повторите попытку позже</string>
     <string name="site_monitoring_tab_title_web_server_logs">Журналы веб-сервера</string>

@@ -1,0 +1,3 @@
+24.3:
+Google kimlik bilgileri, fiziksel cihazlar ve diğer üçüncü taraf güvenlik anahtarlarıyla sitenizde oturum açın. Endişelenmeyin, site hala Coca Cola'nın gizli formülünden bile daha güvendedir.
+Yalnızca İçgörüler sekmesinden görünmesi için İstatistikler ekranın menü simgesini gizledik. Ninja modu: etkinleştirildi.

@@ -64,7 +64,7 @@ private val paletteDarkScheme = darkColorScheme(
     )
 
 private val extraPaletteLight = ExtraColors(
-    quartenaryContainer = DesignSystemAppColor.Gray30,
+    quaternaryContainer = DesignSystemAppColor.Gray30,
     brand = DesignSystemAppColor.Green,
     brandContainer = DesignSystemAppColor.Green,
     warning = DesignSystemAppColor.Orange,
@@ -73,7 +73,7 @@ private val extraPaletteLight = ExtraColors(
     )
 
 private val extraPaletteDark = ExtraColors(
-    quartenaryContainer = DesignSystemAppColor.Gray60,
+    quaternaryContainer = DesignSystemAppColor.Gray60,
     brand = DesignSystemAppColor.Green10,
     brandContainer = DesignSystemAppColor.Green20,
     warning = DesignSystemAppColor.Orange10,
@@ -82,7 +82,7 @@ private val extraPaletteDark = ExtraColors(
     )
 
 data class ExtraColors(
-    val quartenaryContainer: Color,
+    val quaternaryContainer: Color,
     val brand: Color,
     val brandContainer: Color,
     val warning: Color,
@@ -90,10 +90,10 @@ data class ExtraColors(
     val wpContainer: Color,
     )
 @Suppress("UnusedReceiverParameter")
-val ColorScheme.quartenary
+val ColorScheme.quaternaryContainer
     @Composable
     @ReadOnlyComposable
-    get() = localColors.current.quartenaryContainer
+    get() = localColors.current.quaternaryContainer
 
 @Suppress("UnusedReceiverParameter")
 val ColorScheme.brand

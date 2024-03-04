@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-16 18:16:58+0000
+Translation-Revision-Date: 2024-02-22 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: nl
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Site niet gevonden. Controleer of je op het juiste account bent ingelogd.</string>
+    <string name="gravatar_info_sync_done_button">Gereed</string>
+    <string name="gravatar_info_sync_message">Het kan even duren voordat updates met je Gravatar-profiel worden gesynchroniseerd.</string>
+    <string name="gravatar_info_description">Als je je avatar, naam en beschrijving hier aanpast, worden deze ook bijgewerkt op alle sites waarop het Gravatar-profiel wordt gebruikt.</string>
+    <string name="gravatar_info_title">Je WordPress.com-profiel wordt mogelijk gemaakt door Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Unable to load the media for sharing. Controleer de bestandsrechten.\n        or use the app\'s media library.</string>
     <string name="site_monitoring_cannot_be_started">We kunnen momenteel geen media openen. Probeer het later opnieuw</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>

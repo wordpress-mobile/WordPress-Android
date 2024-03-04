@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
@@ -79,10 +80,11 @@ class MinifiedWidgetUpdater
             views.setViewVisibility(R.id.widget_retry_button, View.GONE)
 
             val timeframe = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+            val granularity = if (statsTrafficTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
 
             views.setOnClickPendingIntent(
                 R.id.widget_container,
-                widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe)
+                widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe, granularity)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {

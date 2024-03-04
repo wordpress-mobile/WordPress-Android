@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 19:54:08+0000
+Translation-Revision-Date: 2024-02-21 08:24:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: es
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Sitio no encontrado. Comprueba que has iniciado sesión con la cuenta correcta.</string>
+    <string name="gravatar_info_sync_done_button">Hecho</string>
+    <string name="gravatar_info_sync_message">Las actualizaciones pueden tardar algún tiempo en sincronizarse con tu perfil de Gravatar.</string>
+    <string name="gravatar_info_learn_more_link">¿Qué es Gravatar?</string>
+    <string name="gravatar_info_description">Si actualizas aquí tu avatar, nombre e información sobre ti, también se actualizarán en todos los sitios que utilicen perfiles Gravatar.</string>
+    <string name="gravatar_info_title">Tu perfil de WordPress.com funciona con Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">No se pueden cargar los medios para compartir. Comprueba los permisos de la aplicación\n        o utiliza la biblioteca de medios.</string>
     <string name="site_monitoring_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_monitoring_tab_title_web_server_logs">Registros del servidor webs</string>

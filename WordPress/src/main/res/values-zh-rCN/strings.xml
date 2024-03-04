@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-15 14:54:08+0000
+Translation-Revision-Date: 2024-02-22 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: zh_CN
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">未找到站点。 检查您是否已登录到正确的账户。</string>
+    <string name="gravatar_info_sync_done_button">完成</string>
+    <string name="gravatar_info_sync_message">更新的内容可能需要一段时间才能与您的 Gravatar 个人资料同步。</string>
+    <string name="gravatar_info_learn_more_link">什么是 Gravatar？</string>
+    <string name="gravatar_info_description">您在此对头像、名称和简介信息做出的更新也将更新到所有使用 Gravatar 个人资料的站点。</string>
+    <string name="gravatar_info_title">您的 WordPress.com 个人资料由 Gravatar 提供技术支持</string>
     <string name="error_media_could_not_share_media_from_device">无法加载媒体以进行共享。 请检查此应用程序的权限\n        或使用此应用程序的媒体库。</string>
     <string name="site_monitoring_cannot_be_started">我们现在无法打开站点监控。 请稍后再试</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web 服务器日志</string>

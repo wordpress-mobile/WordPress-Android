@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 15:54:08+0000
+Translation-Revision-Date: 2024-02-22 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: he_IL
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
+    <string name="gravatar_info_sync_done_button">סיימנו</string>
+    <string name="gravatar_info_sync_message">ייתכן שיידרש קצת זמן לסנכרון העדכונים האלה בפרופיל שלך ב-Gravatar.</string>
+    <string name="gravatar_info_learn_more_link">מה זה Gravatar?</string>
+    <string name="gravatar_info_description">עדכון של תמונת הפרופיל, השם והמידע עליך כאן יעדכן את הפרטים בכל האתרים שמשתמשים בפרופילים של Gravatar.</string>
+    <string name="gravatar_info_title">הפרופיל שלך ב-WordPress.com מופעל באמצעות Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">לא ניתן לטעון את המדיה לשיתוף. יש לבדוק את ההרשאות שניתנו לאפליקציה\n        או להשתמש בספריית המדיה של האפליקציה.</string>
     <string name="site_monitoring_cannot_be_started">אין לנו אפשרות לפתוח את ניטור האתר כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="site_monitoring_tab_title_web_server_logs">קובצי יומן של שרתי אינטרנט</string>

@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-14 09:54:08+0000
+Translation-Revision-Date: 2024-02-27 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: id
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
+    <string name="gravatar_info_sync_done_button">Selesai</string>
+    <string name="gravatar_info_sync_message">Mungkin perlu beberapa saat sampai perubahan tersinkron dengan profil Gravatar Anda.</string>
+    <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
+    <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
+    <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
     <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>
@@ -96,6 +102,7 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_text_two">Poskan tanggapan Anda.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Dapatkan prompt baru untuk menginspirasi Anda setiap hari.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>

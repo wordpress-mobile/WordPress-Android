@@ -52,7 +52,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     protected var statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    protected var dateSelector: StatsDateSelector?,
+    var dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
     actionCardHandler: ActionCardHandler? = null
@@ -157,7 +157,9 @@ abstract class StatsListViewModel(
     }
 
     fun start() {
-        if (!isInitialized) {
+        if (isInitialized) {
+            mutableUiSourceAdded.call()
+        } else {
             isInitialized = true
             setUiLiveData()
             launch {

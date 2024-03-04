@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWi
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -210,11 +211,16 @@ class OverviewUseCase constructor(
         }
     }
 
+    @Suppress("MagicNumber")
     private fun onColumnSelected(position: Int) {
-        analyticsTracker.trackGranular(
-            AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED,
-            statsGranularity
-        )
+        val event = when (position) {
+            0 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VIEWS
+            1 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_VISITORS
+            2 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_LIKES
+            3 -> AnalyticsTracker.Stat.STATS_OVERVIEW_TYPE_TAPPED_COMMENTS
+            else -> null
+        }
+        event?.let { analyticsTracker.trackWithGranularity(it, statsGranularity) }
         updateUiState { it.copy(selectedPosition = position) }
     }
 
