@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorT
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
@@ -35,15 +35,15 @@ import javax.inject.Singleton
 @Singleton
 class BlazeCampaignsStore @Inject constructor(
     private val creationRestClient: BlazeCreationRestClient,
-    private val blazeCampaignsRestClient: BlazeCampaignsRestClient,
+    private val campaignsRestClient: BlazeCampaignsRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchBlazeCampaigns(
         site: SiteModel,
-        skip: Int = 0,
-        limit: Int = DEFAULT_ITEMS_LIMIT,
+        offset: Int = 0,
+        perPage: Int = DEFAULT_PER_PAGE,
         locale: String = Locale.getDefault().language,
         status: String? = null,
     ): BlazeCampaignsResult<BlazeCampaignsModel> {
@@ -82,10 +82,10 @@ class BlazeCampaignsStore @Inject constructor(
         }
 
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
-            val payload = blazeCampaignsRestClient.fetchBlazeCampaigns(
+            val payload = campaignsRestClient.fetchBlazeCampaigns(
                 site.siteId,
-                skip,
-                limit,
+                offset,
+                perPage,
                 locale,
                 status
             )

@@ -11,7 +11,7 @@ import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_ITEMS_LIMIT
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
 import java.util.Date
 
@@ -24,7 +24,7 @@ abstract class BlazeCampaignsDao {
         return BlazeCampaignsModel(
             campaigns = campaigns.map { it.toDomainModel() },
             skipped = pagination?.skipped ?: 0,
-            totalItems = pagination?.totalItems ?: DEFAULT_ITEMS_LIMIT,
+            totalItems = pagination?.totalItems ?: DEFAULT_PER_PAGE,
         )
     }
 
