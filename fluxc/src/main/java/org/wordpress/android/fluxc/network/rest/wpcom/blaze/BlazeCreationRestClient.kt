@@ -250,7 +250,7 @@ class BlazeCreationRestClient @Inject constructor(
             status = "pending",
             targetUrn = "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
             startTime = dateFormatter.format(request.startDate),
-            durationDays = (request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds,
+            durationDays = ((request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds).toInt(),
             totalBudget = request.budget,
             siteName = request.tagLine,
             textSnippet = request.description,
@@ -474,7 +474,7 @@ private data class BlazeCampaignCreationNetworkResponse(
     @SerializedName("start_time")
     val startTime: String,
     @SerializedName("duration_days")
-    val durationDays: Long,
+    val durationDays: Int,
     @SerializedName("total_budget")
     val totalBudget: Double,
     @SerializedName("site_name")
