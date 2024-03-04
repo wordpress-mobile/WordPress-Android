@@ -139,7 +139,6 @@ import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
-import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -187,7 +186,6 @@ import javax.inject.Inject;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
@@ -720,9 +718,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_PAGE:
                 case CREATE_NEW_PAGE_FROM_PAGES_CARD:
                     triggerCreatePageFlow(createAction);
-                    break;
-                case CREATE_NEW_STORY:
-                    handleNewStoryAction();
                     break;
                 case ANSWER_BLOGGING_PROMPT:
                 case NO_ACTION:
@@ -1302,25 +1297,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
     }
 
-    private void handleNewStoryAction() {
-        if (!mSiteStore.hasSite()) {
-            // No site yet - Move to My Sites fragment that shows the create new site screen
-            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-            return;
-        }
-
-        SiteModel selectedSite = getSelectedSite();
-        if (selectedSite != null) {
-            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            if (AppPrefs.shouldShowStoriesIntro()) {
-                StoriesIntroDialogFragment.newInstance(selectedSite)
-                                          .show(getSupportFragmentManager(), StoriesIntroDialogFragment.TAG);
-            } else {
-                mMediaPickerLauncher.showStoriesPhotoPickerForResultAndTrack(this, selectedSite);
-            }
-        }
-    }
-
     private void trackLastVisiblePage(@NonNull final PageType pageType) {
         switch (pageType) {
             case MY_SITE:
@@ -1410,17 +1386,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                 mReviewViewModel.onPublishingPost(isFirstTimePublishing);
                             }
                     );
-                }
-                break;
-            case RequestCodes.CREATE_STORY:
-                SiteModel selectedSite = getSelectedSite();
-                if (selectedSite != null) {
-                    boolean isNewStory = data == null || data.getStringExtra(ARG_STORY_BLOCK_ID) == null;
-                    mBloggingRemindersViewModel.onPublishingPost(
-                            selectedSite.getId(),
-                            isNewStory
-                    );
-                    mReviewViewModel.onPublishingPost(isNewStory);
                 }
                 break;
             case RequestCodes.CREATE_SITE:

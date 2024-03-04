@@ -269,9 +269,6 @@ public class AppPrefs {
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
 
-        // Used to indicate whether or not the stories intro screen must be shown
-        SHOULD_SHOW_STORIES_INTRO,
-
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
 
@@ -1215,14 +1212,6 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
         }
-    }
-
-    public static void setShouldShowStoriesIntro(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
-    }
-
-    public static boolean shouldShowStoriesIntro() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {

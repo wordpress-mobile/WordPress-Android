@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import com.android.volley.RequestQueue
 import dagger.hilt.EntryPoints
-import org.wordpress.android.AppInitializer.StoryNotificationTrackerProvider
 import org.wordpress.android.fluxc.tools.FluxCImageLoader
 import org.wordpress.android.modules.AppComponent
 
@@ -13,9 +12,6 @@ import org.wordpress.android.modules.AppComponent
  * application. Containing public static variables and methods to be accessed by other classes.
  */
 abstract class WordPress : Application() {
-    val storyNotificationTrackerProvider: StoryNotificationTrackerProvider
-        get() = initializer().storyNotificationTrackerProvider
-
     abstract fun initializer(): AppInitializer
 
     fun component(): AppComponent = EntryPoints.get(this, AppComponent::class.java)

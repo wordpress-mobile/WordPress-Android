@@ -60,7 +60,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     @Test
     fun `when viewModel is started updateToolbarTitle is called with the add category title`() {
         val toolbarTitleUiState = init().toolbarTitleUiState
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
 
         val title: UiStringRes? = toolbarTitleUiState[0] as UiStringRes
 
@@ -71,7 +71,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     @Test
     fun `when viewModel is started submit button is visible and not enabled`() {
         val uiStates = init().uiStates
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
 
         assertThat(uiStates[0].submitButtonUiState.enabled).isEqualTo(false)
         assertThat(uiStates[0].submitButtonUiState.visibility).isEqualTo(true)
@@ -81,7 +81,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when onSubmitClicked and there is no network a toast message is shown `() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
         val snackbarMsgs = init().snackbarMsgs
-        viewModel.start(siteModel, true)
+        viewModel.start(siteModel)
         val newCategory = "Animals"
         viewModel.categoryNameUpdated(newCategory)
         viewModel.onSubmitButtonClick()
@@ -91,7 +91,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
 
     @Test
     fun `getSiteCategories is invoked on start`() {
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
 
         verify(getCategoriesUseCase, times(1)).getSiteCategories(siteModel)
     }
@@ -100,7 +100,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when started category levels are loaded properly`() {
         val uiStates = init().uiStates
         val categoriesSize = siteCategoriesList().size
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
 
         // +1 is for the TopLevel
         assertThat(uiStates[0].categories.size).isEqualTo(categoriesSize + 1)
@@ -111,7 +111,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when text is entered into category name field submit button is enabled`() {
         val newCategory = "Animals"
         val uiStates = init().uiStates
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
         viewModel.categoryNameUpdated(newCategory)
 
         assertThat(uiStates[1].submitButtonUiState.enabled).isEqualTo(true)
@@ -121,7 +121,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when selected parent category the selected position is updated `() {
         val uiStates = init().uiStates
         val newSelectedPosition = 3
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
         viewModel.parentCategorySelected(newSelectedPosition)
 
         assertThat(uiStates[1].selectedParentCategoryPosition).isEqualTo(newSelectedPosition)
@@ -131,7 +131,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when category is entered the uiState is updated `() {
         val newCategory = "Animals"
         val uiStates = init().uiStates
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
         viewModel.categoryNameUpdated(newCategory)
 
         assertThat(uiStates[1].categoryName).isEqualTo(newCategory)
@@ -141,7 +141,7 @@ class PrepublishingAddCategoryViewModelTest : BaseUnitTest() {
     fun `when submit button clicked with changes navigateBack is called`() {
         val navigateBack = init().navigateBack
         val newCategory = "Animals"
-        viewModel.start(siteModel, false)
+        viewModel.start(siteModel)
         viewModel.categoryNameUpdated(newCategory)
         viewModel.onSubmitButtonClick()
 
