@@ -104,7 +104,7 @@ sealed class SiteNavigationAction {
     data class OpenCampaignListingPage(val campaignListingPageSource: CampaignListingPageSource) :
         SiteNavigationAction()
 
-    data class OpenCampaignDetailPage(val campaignId: Int, val campaignDetailPageSource: CampaignDetailPageSource) :
+    data class OpenCampaignDetailPage(val campaignId: String, val campaignDetailPageSource: CampaignDetailPageSource) :
         SiteNavigationAction()
 
     object OpenDashboardPersonalization : SiteNavigationAction()

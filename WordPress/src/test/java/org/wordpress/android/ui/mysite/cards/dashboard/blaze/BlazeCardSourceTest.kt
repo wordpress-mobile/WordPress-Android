@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.FetchCampaignListUseCase
-import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GenericError
+import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.GenericResult
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BlazeCardUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.blaze.BlazeCardSource
@@ -155,7 +155,7 @@ class BlazeCardSourceTest : BaseUnitTest() {
         val result = mutableListOf<BlazeCardUpdate>()
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(fetchCampaignListUseCase.execute(siteModel,offset = 0)).thenReturn(Result.Failure(GenericError))
+        whenever(fetchCampaignListUseCase.execute(siteModel,offset = 0)).thenReturn(Result.Failure(GenericResult))
 
         blazeCardSource.build(testScope(), SITE_LOCAL_ID)
             .observeForever { it?.let { result.add(it) } }

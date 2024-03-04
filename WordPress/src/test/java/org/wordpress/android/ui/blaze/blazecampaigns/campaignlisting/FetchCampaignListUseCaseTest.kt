@@ -46,7 +46,7 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
         val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
 
         assertThat(actualResult is Result.Failure).isTrue
-        assertThat((actualResult as Result.Failure).value).isEqualTo(GenericError)
+        assertThat((actualResult as Result.Failure).value).isEqualTo(GenericResult)
     }
 
     @Test

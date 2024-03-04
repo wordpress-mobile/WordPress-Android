@@ -168,7 +168,7 @@ class CampaignListingViewModel @Inject constructor(
     }
 
     private fun onCampaignClicked(campaignModel: CampaignModel) {
-        _navigation.postValue(Event(CampaignListingNavigation.CampaignDetailPage(campaignModel.id.toInt())))
+        _navigation.postValue(Event(CampaignListingNavigation.CampaignDetailPage(campaignModel.id)))
     }
 
     private fun showNoCampaigns() {
@@ -223,7 +223,7 @@ enum class CampaignListingPageSource(val trackingName: String) {
 
 sealed class CampaignListingNavigation {
     data class CampaignDetailPage(
-        val campaignId: Int,
+        val campaignId: String,
         val campaignDetailPageSource: CampaignDetailPageSource = CampaignDetailPageSource.CAMPAIGN_LISTING_PAGE
     ) : CampaignListingNavigation()
 
