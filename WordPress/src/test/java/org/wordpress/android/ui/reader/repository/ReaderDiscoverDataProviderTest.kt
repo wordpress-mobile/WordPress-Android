@@ -251,7 +251,8 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
         // Act
         dataProvider.onFollowedTagsFetched(
             FollowedTagsFetched(
-                true
+                true,
+                10
             )
         )
         // Assert

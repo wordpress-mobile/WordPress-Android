@@ -193,7 +193,9 @@ public class ReaderUpdateLogic {
                     // broadcast the fact that there are changes
                     didChangeFollowedTags = true;
                 }
-                EventBus.getDefault().post(new FollowedTagsFetched(true, didChangeFollowedTags));
+                EventBus.getDefault().post(new FollowedTagsFetched(true,
+                        ReaderTagTable.getFollowedTags().size(),
+                        didChangeFollowedTags));
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);

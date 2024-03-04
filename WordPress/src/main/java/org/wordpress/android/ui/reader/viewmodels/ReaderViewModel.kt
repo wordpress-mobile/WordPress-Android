@@ -18,7 +18,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -54,6 +53,7 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.distinct
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -226,11 +226,11 @@ class ReaderViewModel @Inject constructor(
         // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
         val shouldBumpAnalytics = event.didChange()
-                || ( now - AppPrefs.getReaderAnalyticsCountTagsTimestamp() > ONE_HOUR_MILLIS)
+                || ( now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
 
         if (shouldBumpAnalytics) {
-            readerTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size)
-            AppPrefs.setReaderAnalyticsCountTagsTimestamp(DateProvider().getCurrentDate().time)
+            readerTracker.trackFollowedTagsCount(event.totalTags)
+            appPrefsWrapper.readerAnalyticsCountTagsTimestamp = DateProvider().getCurrentDate().time
         }
     }
 
