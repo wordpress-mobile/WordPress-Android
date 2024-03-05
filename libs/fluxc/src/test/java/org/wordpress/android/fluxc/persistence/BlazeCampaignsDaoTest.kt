@@ -42,69 +42,69 @@ class BlazeCampaignsDaoTest {
     fun `when insert followed by update, then updated campaign is returned`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
+        dao.insertCampaigns(SITE_ID, model)
 
         // then
-        var observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertThat(observedStatus).isEqualTo(BLAZE_CAMPAIGNS_MODEL)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertThat(observedStatus).isEqualTo(listOf(BLAZE_CAMPAIGN_MODEL))
 
         // when
         model = model.copy(campaigns = model.campaigns.map { it.copy(title = SECONDARY_TITLE) })
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
+        dao.insertCampaigns(SITE_ID, model)
 
         // then
-        observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertThat(observedStatus.campaigns[0].title).isEqualTo(SECONDARY_TITLE)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertThat(observedStatus[0].title).isEqualTo(SECONDARY_TITLE)
     }
 
     @Test
     fun `when insert of first items batch, then db is cleared before insert`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
-        var observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertEquals(observedStatus.campaigns.size, 1)
+        dao.insertCampaigns(SITE_ID, model)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
 
         model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
+        dao.insertCampaigns(SITE_ID, model)
 
-        observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertEquals(observedStatus.campaigns.size, 2)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 2)
 
         // then
         model = model.copy(skipped = 0)
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
-        observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertEquals(observedStatus.campaigns.size, 1)
+        dao.insertCampaigns(SITE_ID, model)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
     }
 
     @Test
     fun `when insert second batch of items, then db is not cleared`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
-        var observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertEquals(observedStatus.campaigns.size, 1)
+        dao.insertCampaigns(SITE_ID, model)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
 
         model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
-        dao.insertCampaignsAndPageInfoForSite(SITE_ID, model)
+        dao.insertCampaigns(SITE_ID, model)
 
-        observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
-        assertEquals(observedStatus.campaigns.size, 2)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 2)
     }
 
     @Test
     fun `when clear is requested, then all rows are deleted for site`(): Unit = runBlocking {
         // when
         val model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(1, model)
-        dao.insertCampaignsAndPageInfoForSite(2, model)
-        dao.insertCampaignsAndPageInfoForSite(3, model)
+        dao.insertCampaigns(1, model)
+        dao.insertCampaigns(2, model)
+        dao.insertCampaigns(3, model)
 
-        dao.clear(1)
-        assertEmptyResult(dao.getCampaignsAndPaginationForSite(1).campaigns)
-        assertNotEmptyResult(dao.getCampaignsAndPaginationForSite(2).campaigns)
-        assertNotEmptyResult(dao.getCampaignsAndPaginationForSite(3).campaigns)
+        dao.clearBlazeCampaigns(1)
+        assertEmptyResult(dao.getCachedCampaigns(1))
+        assertNotEmptyResult(dao.getCachedCampaigns(2))
+        assertNotEmptyResult(dao.getCachedCampaigns(3))
     }
 
     @Test
@@ -113,10 +113,10 @@ class BlazeCampaignsDaoTest {
         val emptyList = emptyList<BlazeCampaignModel>()
 
         // then
-        val observedStatus = dao.getCampaignsAndPaginationForSite(SITE_ID)
+        val observedStatus = dao.getCachedCampaigns(SITE_ID)
 
         // when
-        assertThat(observedStatus.campaigns).isEqualTo(emptyList)
+        assertThat(observedStatus).isEqualTo(emptyList)
     }
 
     @Test

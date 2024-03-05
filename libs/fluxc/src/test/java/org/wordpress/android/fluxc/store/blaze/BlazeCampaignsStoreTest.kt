@@ -114,11 +114,6 @@ private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
     totalItems = TOTAL_ITEMS,
 )
 
-private val NO_RESULTS_BLAZE_CAMPAIGNS_MODEL = BLAZE_CAMPAIGNS_MODEL.copy(
-    campaigns = emptyList(),
-    totalItems = 0
-)
-
 class BlazeCampaignsStoreTest {
     private val blazeCampaignsRestClient: BlazeCampaignsRestClient = mock()
     private val creationRestClient: BlazeCreationRestClient = mock()
@@ -154,7 +149,7 @@ class BlazeCampaignsStoreTest {
 
             store.fetchBlazeCampaigns(siteModel, SKIP)
 
-            verify(blazeCampaignsDao).insertCampaignsAndPageInfoForSite(
+            verify(blazeCampaignsDao).insertCampaigns(
                 SITE_ID,
                 BLAZE_CAMPAIGNS_MODEL
             )
@@ -180,16 +175,12 @@ class BlazeCampaignsStoreTest {
 
     @Test
     fun `given unmatched site, when get is triggered, then empty campaigns list returned`() = test {
-        whenever(blazeCampaignsDao.getCampaignsAndPaginationForSite(SITE_ID)).thenReturn(
-            NO_RESULTS_BLAZE_CAMPAIGNS_MODEL
-        )
+        whenever(blazeCampaignsDao.getCachedCampaigns(SITE_ID)).thenReturn(emptyList())
 
-        val result = store.getBlazeCampaigns(siteModel)
+        val campaigns = store.getBlazeCampaigns(siteModel)
 
-        assertThat(result).isNotNull
-        assertThat(result.campaigns).isEmpty()
-        assertEquals(result.skipped, 0)
-        assertEquals(result.totalItems, 0)
+        assertThat(campaigns).isNotNull
+        assertThat(campaigns).isEmpty()
     }
 
     @Test

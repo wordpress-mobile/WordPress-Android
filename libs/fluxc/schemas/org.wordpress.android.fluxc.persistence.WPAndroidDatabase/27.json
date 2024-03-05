@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 27,
-    "identityHash": "c279cc31cc1eedfa0a35d3cbefe64327",
+    "identityHash": "9ed90319e18e6bba1c0dc43a3ec1499e",
     "entities": [
       {
         "tableName": "BloggingReminders",
@@ -772,38 +772,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "BlazeCampaignsPagination",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteId` INTEGER NOT NULL, `skipped` INTEGER NOT NULL, `totalItems` INTEGER NOT NULL, PRIMARY KEY(`siteId`))",
-        "fields": [
-          {
-            "fieldPath": "siteId",
-            "columnName": "siteId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "skipped",
-            "columnName": "skipped",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "totalItems",
-            "columnName": "totalItems",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "siteId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "JetpackSocial",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`siteLocalId` INTEGER NOT NULL, `isShareLimitEnabled` INTEGER NOT NULL, `toBePublicizedCount` INTEGER NOT NULL, `shareLimit` INTEGER NOT NULL, `publicizedCount` INTEGER NOT NULL, `sharedPostsCount` INTEGER NOT NULL, `sharesRemaining` INTEGER NOT NULL, `isEnhancedPublishingEnabled` INTEGER NOT NULL, `isSocialImageGeneratorEnabled` INTEGER NOT NULL, PRIMARY KEY(`siteLocalId`))",
         "fields": [
@@ -971,7 +939,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c279cc31cc1eedfa0a35d3cbefe64327')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ed90319e18e6bba1c0dc43a3ec1499e')"
     ]
   }
 }
