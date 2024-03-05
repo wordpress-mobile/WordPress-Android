@@ -82,10 +82,8 @@ class TrafficOverviewMapper @Inject constructor(
     fun buildChart(
         dates: List<VisitsAndViewsModel.PeriodData>,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit,
         onBarChartDrawn: (visibleBarCount: Int) -> Unit,
-        selectedType: Int,
-        selectedItemPeriod: String
+        selectedType: Int
     ): List<BlockListItem> {
         val chartItems = dates.map {
             val value = when (SelectedType.valueOf(selectedType)) {
@@ -95,7 +93,7 @@ class TrafficOverviewMapper @Inject constructor(
                 Comments -> it.comments
                 else -> 0L
             }
-            BlockListItem.BarChartItem.Bar(
+            BlockListItem.TrafficBarChartItem.Bar(
                 statsDateFormatter.printTrafficGranularDate(it.period, statsGranularity),
                 it.period,
                 value.toInt()
@@ -111,20 +109,12 @@ class TrafficOverviewMapper @Inject constructor(
             else -> R.string.stats_views
         }
 
-        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+        val contentDescriptions = statsUtils.getTrafficBarChartEntryContentDescriptions(
             entryType,
             chartItems
         )
 
-        result.add(
-            BlockListItem.BarChartItem(
-                chartItems,
-                selectedItem = selectedItemPeriod,
-                onBarSelected = onBarSelected,
-                onBarChartDrawn = onBarChartDrawn,
-                entryContentDescriptions = contentDescriptions
-            )
-        )
+        result.add(BlockListItem.TrafficBarChartItem(chartItems, onBarChartDrawn, contentDescriptions))
         return result
     }
 }

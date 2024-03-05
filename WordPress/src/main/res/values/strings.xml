@@ -3466,9 +3466,6 @@
     <string name="create_page_fab_tooltip">Create a page</string>
     <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
-    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
-
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
@@ -3641,83 +3638,9 @@
     <string name="hpp_recommended_default_vertical">Blogging</string>
     <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
 
-    <!-- Stories -->
-    <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
-    <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
-    <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
-    <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
-    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
-    <string name="capture_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Capture</string>
-    <string name="flip_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Flip camera</string>
-    <string name="flash_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Flash</string>
-    <string name="stickers_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Stickers</string>
-    <string name="text_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Text</string>
-    <string name="sound_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Sound</string>
-    <string name="label_control_flip_camera" tools:ignore="UnusedResources" a8c-src-lib="stories">Flip</string>
-    <string name="label_control_flash" tools:ignore="UnusedResources" a8c-src-lib="stories">Flash</string>
-    <string name="label_control_saving" tools:ignore="UnusedResources" a8c-src-lib="stories">Saving</string>
-    <string name="label_control_saved" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved</string>
-    <string name="label_control_retry" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry</string>
-    <string name="label_snackbar_loop_frame_saved" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved to photos</string>
-    <string name="label_snackbar_share" tools:ignore="UnusedResources" a8c-src-lib="stories">SHARE</string>
-    <string name="label_share_to" tools:ignore="UnusedResources" a8c-src-lib="stories">Share to</string>
     <string name="label_close_button">Close</string>
-    <string name="label_saved_icon" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved</string>
-    <string name="label_retry_icon" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry</string>
-    <string name="label_frame_image" tools:ignore="UnusedResources" a8c-src-lib="stories">Slide</string>
-    <string name="label_frame_unselected_border" tools:ignore="UnusedResources" a8c-src-lib="stories">unselected</string>
-    <string name="label_frame_selected_border" tools:ignore="UnusedResources" a8c-src-lib="stories">selected</string>
-    <string name="label_frame_errored" tools:ignore="UnusedResources" a8c-src-lib="stories">errored</string>
-    <string name="label_text_alignment_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Change text alignment</string>
-    <string name="label_text_color_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Change text color</string>
-    <string name="dialog_discard_page_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete story slide?</string>
-    <string name="dialog_discard_page_message" tools:ignore="UnusedResources" a8c-src-lib="stories">This slide will be removed from your story.</string>
-    <string name="dialog_discard_errored_page_message" tools:ignore="UnusedResources" a8c-src-lib="stories">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
-    <string name="dialog_discard_page_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete</string>
-    <string name="dialog_discard_story_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard story post?</string>
-    <string name="dialog_discard_story_message" tools:ignore="UnusedResources" a8c-src-lib="stories">Your story post will not be saved as a draft.</string>
-    <string name="dialog_discard_story_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard</string>
-    <string name="pref_camera_selection" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">pref_camera_selection</string>
-    <string name="pref_flash_mode_selection" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">pref_flash_mode_selection</string>
-    <string name="story_saving_untitled" tools:ignore="UnusedResources" a8c-src-lib="stories">Untitled</string>
-    <string name="story_saving_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Saving "%1$s"…</string>
-    <string name="story_saving_title_several" tools:ignore="UnusedResources" a8c-src-lib="stories">several stories</string>
-    <string name="story_saving_subtitle_frames_remaining_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">1 slide remaining</string>
-    <string name="story_saving_subtitle_frames_remaining_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">%1$d slides remaining</string>
-    <string name="story_saving_snackbar_started">Uploading "%1$s"…</string>
-    <string name="story_saving_snackbar_finished_successfully" tools:ignore="UnusedResources" a8c-src-lib="stories">"%1$s" published</string>
-    <string name="story_saving_snackbar_finished_with_error">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_message_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">1 slide requires action</string>
-    <string name="story_saving_failed_message_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">%1$d slides require action</string>
-    <string name="story_saving_failed_quick_action_manage">Manage</string>
-    <string name="dialog_story_saving_error_title_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to save 1 slide</string>
-    <string name="dialog_story_saving_error_title_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to save %1$d slides</string>
-    <string name="dialog_story_saving_error_message" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry saving or delete the slides, then try publishing your story again.</string>
-    <string name="dialog_insufficient_device_storage_error_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Insufficient device storage</string>
-    <string name="dialog_insufficient_device_storage_error_message" tools:ignore="UnusedResources" a8c-src-lib="stories">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">View Storage</string>
-    <string name="toast_story_page_not_found" tools:ignore="UnusedResources" a8c-src-lib="stories">Couldn\'t find Story slide</string>
-    <string name="toast_capture_operation_in_progress" tools:ignore="UnusedResources" a8c-src-lib="stories">Operation in progress, try again</string>
-    <string name="toast_error_saving_image" tools:ignore="UnusedResources" a8c-src-lib="stories">Error saving image</string>
-    <string name="toast_error_saving_video" tools:ignore="UnusedResources" a8c-src-lib="stories">Video could not be saved</string>
     <string name="camera_error" tools:ignore="UnusedResources">This device doesn\'t support Camera2 API.</string>
     <string name="toast_error_playing_video" tools:ignore="UnusedResources">An error occurred while playing your video</string>
-
-    <!-- Intro to Stories screen -->
-    <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
-    <string name="stories_intro_image_caption_first">How to create a story post</string>
-    <string name="stories_intro_image_caption_second">Example story title</string>
-    <string name="stories_intro_title_first">Now stories are for everyone</string>
-    <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
-    <string name="stories_intro_title_second">Story posts don\'t disappear</string>
-    <string name="stories_intro_description_second">They\’re published as a new blog post on your site so your audience never misses out on a thing.</string>
-    <string name="stories_intro_create_story_post_label">Create Story Post</string>
 
     <!-- Gutenberg Native -->
     <!-- translators: %1$s: Select control font size name e.g. Small, %2$s: Select control font size e.g. 12px -->
@@ -4082,21 +4005,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">You can edit this block using the web version of the editor.</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">You can rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it above or below other blocks.</string>
 
-    <string name="toast_capture_operation_permission_needed" tools:ignore="UnusedResources" a8c-src-lib="stories">You need to grant the app audio recording permission in order to record video</string>
-    <string name="typeface_label_nunito" tools:ignore="UnusedResources" a8c-src-lib="stories">Casual</string>
-    <string name="typeface_label_libre_baskerville" tools:ignore="UnusedResources" a8c-src-lib="stories">Classic</string>
-    <string name="typeface_label_oswald" tools:ignore="UnusedResources" a8c-src-lib="stories">Strong</string>
-    <string name="typeface_label_pacifico" tools:ignore="UnusedResources" a8c-src-lib="stories">Playful</string>
-    <string name="typeface_label_space_mono" tools:ignore="UnusedResources" a8c-src-lib="stories">Modern</string>
-    <string name="typeface_label_shrikhand" tools:ignore="UnusedResources" a8c-src-lib="stories">Bold</string>
-    <string name="delete_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete</string>
-    <string name="label_next_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Next</string>
     <string name="label_done_button">Done</string>
-    <string name="dialog_discard_story_title_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard changes?</string>
-    <string name="dialog_discard_story_message_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Any changes made will not be saved.</string>
-    <string name="dialog_discard_story_ok_button_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard</string>
-    <string name="color_picker_label_text" tools:ignore="UnusedResources" a8c-src-lib="stories">Text</string>
-    <string name="color_picker_label_background" tools:ignore="UnusedResources" a8c-src-lib="stories">Background</string>
 
     <!-- Jetpack backup download -->
     <string name="backup_download">Backup Download</string>
@@ -4142,7 +4051,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
 
     <string name="jetpack_icon_content_description">icon</string>
-    <string name="label_control_upload" tools:ignore="UnusedResources" a8c-src-lib="stories">Upload</string>
 
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
@@ -4555,7 +4463,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
 
 
     <!-- Deep Linking Activity Aliases -->
@@ -4891,4 +4798,8 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Super Fast Media Upload QRCodeMediaLink -->
     <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Autoplay may cause usability issues for some users.</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit video</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. Empty</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
 </resources>

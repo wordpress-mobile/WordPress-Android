@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -20,11 +19,8 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
-import org.wordpress.android.ui.stories.StoryRepositoryWrapper
-import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
@@ -35,24 +31,17 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val THROTTLE_DELAY = 500L
-
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val storyRepositoryWrapper: StoryRepositoryWrapper,
-    private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
     private lateinit var editPostRepository: EditPostRepository
-
-    private val _storyTitleUiState = MutableLiveData<StoryTitleUiState>()
-    val storyTitleUiState: LiveData<StoryTitleUiState> = _storyTitleUiState
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
@@ -76,35 +65,25 @@ class PrepublishingHomeViewModel @Inject constructor(
         }
     }
 
-    fun start(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
+    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         this.editPostRepository = editPostRepository
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site, isStoryPost)
+        setupHomeUiState(editPostRepository, site)
     }
 
     private fun setupHomeUiState(
         editPostRepository: EditPostRepository,
-        site: SiteModel,
-        isStoryPost: Boolean
+        site: SiteModel
     ) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
-            if (isStoryPost) {
-                _storyTitleUiState.postValue(StoryTitleUiState(
-                    storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
-                    storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
-                ) { storyTitle ->
-                    onStoryTitleChanged(storyTitle)
-                })
-            } else {
-                add(
-                    HeaderUiState(
-                        UiStringText(site.name),
-                        StringUtils.notNullStr(site.iconUrl)
-                    )
+            add(
+                HeaderUiState(
+                    UiStringText(site.name),
+                    StringUtils.notNullStr(site.iconUrl)
                 )
-            }
+            )
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
                 showPublicPost(editPostRepository)
@@ -212,17 +191,6 @@ class PrepublishingHomeViewModel @Inject constructor(
                 onNavigationActionClicked = ::onActionClicked
             )
         )
-    }
-
-    private fun onStoryTitleChanged(storyTitle: String) {
-        updateStoryTitleJob?.cancel()
-        updateStoryTitleJob = launch(bgDispatcher) {
-            // there's a delay here since every single character change event triggers onStoryTitleChanged
-            // and without a delay we would have multiple save operations being triggered unnecessarily.
-            delay(THROTTLE_DELAY)
-            storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
-            updateStoryPostTitleUseCase.updateStoryTitle(storyTitle, editPostRepository)
-        }
     }
 
     private suspend fun waitForStoryTitleJobAndSubmit(publishPost: PublishPost) {

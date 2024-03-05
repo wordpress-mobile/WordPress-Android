@@ -1,11 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 11:45:42+0000
+Translation-Revision-Date: 2024-02-26 12:01:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: sq_AL
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Sajti s’u gjet. Kontrolloni nëse keni bërë hyrjen te llogaria e saktë.</string>
+    <string name="gravatar_info_sync_done_button">U bë</string>
+    <string name="gravatar_info_sync_message">Përditësimet mund të duan ca kohë të njëkohësohen në profilin tuaj Gravatar.</string>
+    <string name="gravatar_info_learn_more_link">Ç’është Gravatar-i?</string>
+    <string name="gravatar_info_description">Përditësimi i gravatarit, emrit dhe hollësive tuaja këtu, do t’i përditësojë ato nëpër krejt sajtet që përdorin profile Gravatar.</string>
+    <string name="gravatar_info_title">Profili juaj WordPress.com furnizohet nga Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">S’arrihet të ngarkohet media për ndarje me të tjerë. Ju lutemi, kontrolloni lejet e aplikacionit\n        ose përdorni mediatekën e aplikacionit.</string>
+    <string name="site_monitoring_cannot_be_started">S’i hapim dot mbikëqyrje sajti tani. Ju lutemi, riprovoni më vonë</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Regjistra Shërbyesi</string>
+    <string name="site_monitoring_tab_title_php_logs">Regjistra PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Statistika</string>
+    <string name="site_monitoring">Mbikëqyrje Sajti</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Përdorni &lt;b&gt;Zbuloni&lt;/b&gt;, që të gjeni sajte dhe etiketa. Provoni të përzgjidhni &lt;b&gt;Pajtime&lt;/b&gt;, që të shihni lëndë ku jeni pajtuar dhe të administroni pajtimet tuaja.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Kaloni te pajtime</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogjet ku jeni pajtuar s’kanë postuar gjë tani së fundi</string>
+    <string name="reader_no_followed_blogs_description_subs">Pajtohuni te blogje në Zbuloni, ose kërkoni për një blog që ju pëlqen tashmë.</string>
+    <string name="reader_no_recommended_blogs_title">S’ka blogje të rekomanduar</string>
+    <string name="reader_no_followed_tags_title">S’ka etiketa me pajtime</string>
+    <string name="reader_no_posts_with_this_tag">S’ka postime me këtë etiketë</string>
+    <string name="reader_toast_err_unable_to_block_blog">S’arrihet të bllokohet ky blog</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Postimet prej këtij blogu s’do të shfaqen më</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">S’arrihet të shpajtoheni nga blogu</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">S’jeni i autorizuar të hyni në këtë blog</string>
+    <string name="reader_toast_err_unable_to_follow_blog">S’arrihet të pajtoheni te ky blogu</string>
+    <string name="reader_toast_err_already_follow_this_blog">Jeni tashmë i pajtuar te ky blog</string>
+    <string name="reader_toast_err_show_blog">S’arrihet të shfaqet ky blog</string>
+    <string name="reader_toast_err_tag_already_subscribed">Jeni i pajtuar tashmë te kjo etiketë</string>
+    <string name="reader_label_choose_interests">Zgjidhni ç’ju intereson</string>
+    <string name="reader_label_subscribers_count_single">1 pajtimtar</string>
+    <string name="reader_label_subscribers_count">%s pajtimtarë</string>
+    <string name="reader_label_subscribe_count">%,d Pajtimtarë</string>
+    <string name="reader_label_blog_subscribed">U pajtuat në blog</string>
+    <string name="reader_hint_search_subscribed_blogs">Kërkoni te blogje të pajtuar</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Jepni një URL, ose një etiketë ku të pajtohet</string>
+    <string name="reader_btn_subscribed">I pajtuar</string>
+    <string name="reader_btn_subscribe">Pajtohuni</string>
+    <string name="reader_menu_block_this_blog">Bllokoje këtë blog</string>
+    <string name="reader_menu_tags_and_blogs">Përpunoni etiketa dhe blogje</string>
+    <string name="reader_page_followed_blogs_title">Blogje me pajtime</string>
+    <string name="reader_page_followed_tags_title">Etiketa me pajtime</string>
+    <string name="reader_title_tags">Ndiqni etiketa</string>
+    <string name="reader_activity_title_manage_tags_blogs">Administroni Etiketa &amp; Blogje</string>
+    <string name="reader_activity_title_tag_preview">Etiketë</string>
+    <string name="reader_activity_title_blog_preview">Blog Lexuesi</string>
+    <string name="reader_subscribed_display_name">I pajtuar</string>
+    <string name="reader_filter_chip_tag_other">%d Etiketa</string>
+    <string name="reader_filter_chip_tag_one">1 Etiketë</string>
+    <string name="reader_filter_chip_tag_zero">0 Etiketa</string>
+    <string name="reader_filter_chip_blog_other">%d Blogje</string>
+    <string name="reader_filter_chip_blog_one">1 Blog</string>
+    <string name="reader_filter_chip_blog_zero">0 Blogje</string>
+    <string name="reader_dropdown_menu_lists">Lista</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">Të pëlqyer</string>
+    <string name="reader_dropdown_menu_saved">Të ruajtur</string>
+    <string name="reader_dropdown_menu_subscriptions">Pajtime</string>
+    <string name="reader_dropdown_menu_discover">Zbuloni</string>
+    <string name="reader_search_content_description">Kërko</string>
+    <string name="reader_discover_no_posts_button_tags_text">Pajtohuni te etiketa</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">Provoni të pajtoheni në më tepër etiketa, për të zgjeruar kërkimin</string>
+    <string name="reader_discover_empty_subtitle_subscribe">Që të zbuloni blogje të rinj, pajtohuni te etiketa</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogje ku të pajtoheni</string>
+    <string name="reader_filter_empty_tags_action_subscribe">Pajtohuni te një etiketë</string>
+    <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
+    <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
+    <string name="reader_filter_empty_tags_list_text">Pajtohuni te një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
+    <string name="reader_filter_empty_tags_list_title">Pa etiketa</string>
+    <string name="reader_filter_empty_blogs_list_text">Pajtohuni në blogje te Zbuloni dhe do të shihni këtu postimet e tyre më të reja. Ose kërkoni për një blog që ju pëlqen tashmë.</string>
+    <string name="reader_filter_empty_blogs_list_title">S’ka pajtime në blog</string>
+    <string name="reader_filter_empty_blogs_action">Pajtohuni te një blog</string>
+    <string name="reader_filter_empty_tags_list_subscribe">Mund të pajtoheni te postime lidhur me një subjekt të caktuar, duke dhënë një etiketë</string>
+    <string name="reader_filter_empty_blogs_list">Shihni postimet më të reja prej blogjesh ku jeni pajtuar</string>
+    <string name="reader_filter_by_tag_title">Filtroji sipas etiketash</string>
+    <string name="reader_filter_by_blog_title">Filtroji sipas blogjesh</string>
+    <string name="stats_timeframe_by_year">Sipas vitesh</string>
+    <string name="stats_timeframe_by_month">Sipas muajsh</string>
+    <string name="stats_timeframe_by_week">Sipas javësh</string>
+    <string name="stats_timeframe_by_day">Sipas ditësh</string>
     <string name="gutenberg_native_waiting_for_connection">Po pritet për lidhje</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Punim i Palidhur</string>
@@ -40,7 +118,7 @@ Language: sq_AL
     <string name="barcode_scanning_alert_dialog_permanently_denied_cta_label">Kaloni te rregullimet</string>
     <string name="barcode_scanning_alert_dialog_dismiss_label">Anuloje</string>
     <string name="barcode_scanning_alert_dialog_rationale_cta_label">Akordoje</string>
-    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Keni mohuar përgjithmonë leje Kamerës. Është e domosdoshme për të skanuar kodin me vija. Ju lutemi, aktivizojeni që prej rregullimeve të aplikacionit.</string>
+    <string name="barcode_scanning_alert_dialog_permanently_denied_message">Keni mohuar përgjithmonë leje Kamerës. Është e domosdoshme për të skanuar kodin me vija. Ju lutemi, aktivizojeni që prej rregullimeve të aplikacionit</string>
     <string name="barcode_scanning_alert_dialog_rationale_message">Që të skanohet kodi me vija, lypsen leje mbi kamerën</string>
     <string name="barcode_scanning_alert_dialog_title">Akordoni Leje Mbi Kameran</string>
     <string name="barcode_scanning_camera_permission_denied">Që të skanohet kodi me vija, lypsen leje mbi kamerën.</string>
@@ -76,7 +154,7 @@ Language: sq_AL
     <string name="personalization_screen_tab_shortcuts_active_shortcuts">Shkurtore Aktive</string>
     <string name="personalization_screen_shortcuts_tab_title">Shkurtore</string>
     <string name="personalization_screen_cards_tab_title">Skeda</string>
-    <string name="purchase_domain_screen_discount_notice">*Një përkatësi falas për një vit përfshihet me krejt planet vjetorë me pagesë</string>
+    <string name="purchase_domain_screen_discount_notice">*Një përkatësi falas për një vit përfshihet me krejt planet vjetorë me pagesë.</string>
     <string name="purchase_domain_screen_existing_domain_card_button">Zgjidhni Sajt</string>
     <string name="purchase_domain_screen_existing_domain_card_description">Përdoreni me një sajt që keni filluar tashmë.</string>
     <string name="purchase_domain_screen_existing_domain_card_title">Sajt WordPress.com ekzistues</string>
@@ -123,7 +201,7 @@ Language: sq_AL
     <string name="personalization_screen_draft_posts_card_description">Postimet tuaja skicë së fundi.</string>
     <string name="personalization_screen_draft_posts_card_title">Skica postimesh</string>
     <string name="personalization_screen_stats_card_description">Parje, Vizitorë dhe pëlqime</string>
-    <string name="personalization_screen_tab_cards_footer_cards">Skedat mund të shfaqin lëndë të ndryshme, në varësi të asaj që po ndodh me sajtin tuaj.</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Skedat mund të shfaqin lëndë të ndryshme, në varësi të asaj që po ndodh me sajtin tuaj</string>
     <string name="personalization_screen_tab_cards_description">Shtoni ose fshihni Karta</string>
     <string name="personalization_screen_title"> Personalizoni skedën krye</string>
     <string name="personalize_card_content_description">Prekeni, që të personalizoni skedën tuaj krye</string>
@@ -421,7 +499,7 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistikat tuaja po kalojnë te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Kaloni në aplikacionin e ri Jetpack</string>
     <string name="blogging_prompts_list_error_network_subtitle">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
-    <string name="blogging_prompts_list_error_network_title">S’arrihet të ngarkohet kjo lëndë këtë çast.</string>
+    <string name="blogging_prompts_list_error_network_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Pati një gabim në ngarkim cytjesh.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hëm</string>
     <string name="blogging_prompts_list_no_prompts">Ende pa cytje</string>
@@ -1073,7 +1151,7 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_to_edit_placeholder_text">Që të përpunoni tekstin e vendmbajtëses, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_edit_label_text">Që të përpunoni tekstin e etiketës, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_edit_button_text">Që të përpunoni tekstin e butonit, prekeni dyfish</string>
-    <string name="gutenberg_native_double_tap_to_change_unit">Që të ndryshoni njësinë, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_change_unit">që të ndryshoni njësinë, prekeni dyfish</string>
     <string name="gutenberg_native_current_placeholder_text_is">Teksti i tanishëm i vendmbajtëses është</string>
     <string name="gutenberg_native_clear_search">Spastroje kërkimin</string>
     <string name="gutenberg_native_cancel_search">Anuloje kërkimin</string>
@@ -1645,6 +1723,7 @@ Language: sq_AL
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Shpjere te Skica</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Postimet e shpënë në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e këtij postimi në “skicë”, që të mund të merreni me të?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Të kalohet postimi te Skicat?</string>
+    <string name="reader_choose_interests_tags_content_description">Zgjidhni etiketat tuaja</string>
     <string name="reader_btn_done">U bë</string>
     <string name="reader_btn_select_few_interests">Që të vazhdohet, përzgjidhni ndoca</string>
     <string name="post_status_post_published">Të botuar</string>
@@ -1700,6 +1779,9 @@ Language: sq_AL
     <string name="site_picker_ask_site_select">S’u përzgjodh dot sajt. Ju lutemi, riprovoni.</string>
     <string name="sitepicker_continue_flow">Vazhdo</string>
     <string name="reader_reblog_error">Riblogimi dështoi</string>
+    <string name="reader_no_blog_to_reblog_action">Administroni Blogje</string>
+    <string name="reader_no_blog_to_reblog_detail">Pasi të krijoni një blog WordPress.com, mund të riblogoni në sajtin tuaj lëndën që doni.</string>
+    <string name="reader_no_blog_to_reblog_title">S’ka blogje WordPress.com</string>
     <string name="whats_new_in_version_title">Ç’ka të Re</string>
     <string name="comment_q_action_copied_url">Adresa e lidhjes u kopjua</string>
     <string name="copy_link_address">Kopjo adresë lidhjeje</string>
@@ -1799,13 +1881,17 @@ Language: sq_AL
     <string name="stats_management_screen_title">Shtoni Kartë të Re</string>
     <string name="stats_management_add_new_stats_card">Shtoni kartë të re statistikash</string>
     <string name="reader_self_hosted_select_filter">Përdorni butonin e filtrave që të gjeni postime rreth subjektesh specifike</string>
+    <string name="reader_bottom_sheet_select_content_description">Përzgjidhni një Etiketë ose Blog, Dritare Flluskë</string>
     <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Hyni te WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Që të shihni postimet më të reja në etiketat te të cilat jeni pajtuar, bëni hyrjen te llogaria juaj në WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Bëni hyrjen te llogaria juaj në WordPress.com që të shihni postimet më të reja prej blogjesh ku jepni pajtuar</string>
     <string name="gutenberg_native_replace_current_block">Zëvendëso Bllokun e Tanishëm</string>
     <string name="gutenberg_native_add_to_end">Shtoje Në Fund</string>
     <string name="gutenberg_native_add_to_beginning">Shtoje Në Fillim</string>
     <string name="gutenberg_native_add_block_before">Shtoje Përpara Bllokut</string>
     <string name="gutenberg_native_add_block_after">Shtoje Pas Bllokut</string>
+    <string name="reader_filter_empty_tags_add_action">Shtoni një etiketë</string>
     <string name="reader_filter_cta">Filtër</string>
     <string name="gutenberg_native_video_caption_s">Legjendë videoje. %s</string>
     <string name="gutenberg_native_edit_video">Përpunoni videon</string>
@@ -2343,6 +2429,7 @@ Language: sq_AL
     <string name="login_error_sms_throttled">Provuam shumë herë t’ju dërgonin një kod verifikimi SMS — bëni ca pushim, dhe kërkoni një të ri pas ndonjë minute.</string>
     <string name="login_error_email_not_found_v2">S’ka llogari WordPress.com që përputhet me këtë llogari Google.</string>
     <string name="site_picker_remove_site_empty">S’u gjetën sajte me përputhje për kërkimin tuaj</string>
+    <string name="reader_no_followed_blogs_search_title">S’ka blogje që përputhen me kërkimin tuaj</string>
     <string name="page_parent_changed">Faqja mëmë është ndryshuar</string>
     <string name="page_permanently_deleted">Faqja është fshirë përgjithmonë</string>
     <string name="page_moved_to_scheduled">Faqja është planifikuar për botim</string>
@@ -2375,6 +2462,7 @@ Language: sq_AL
     <string name="quick_start_button_negative">Jo tani</string>
     <string name="content_description_more">Më tepër</string>
     <string name="my_site_create_new_site_title">S’keni ende ndonjë sajt</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Shtoni këtu etiketa që të gjeni postime rreth temave tuaja të parapëlqyera</string>
     <string name="login_to_to_connect_jetpack">Bëni hyrjen te llogaria WordPress.com që përdorët për t’ia përshoqëruar Jetpack-ut.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>
@@ -2394,6 +2482,7 @@ Language: sq_AL
     <string name="people_empty_list_filtered_users">Ende pa përdorues</string>
     <string name="reader_empty_posts_liked_description">Postimet që pëlqeni do të shfaqen këtu</string>
     <string name="reader_empty_posts_liked_title">Ende pa pëlqyer gjë</string>
+    <string name="reader_no_followed_blogs_button_discover">Zbuloni blogje</string>
     <string name="notifications_empty_likes">Ende pa pëlqime</string>
     <string name="notifications_empty_followers">Ende pa ndjekës</string>
     <string name="activity_log_limited_content_on_free_plan">Meqë jeni nën një plan falas, do të shihni akte të kufizuara në veprimtarinë tuaj.</string>
@@ -2458,6 +2547,8 @@ Language: sq_AL
     <string name="reader_followed_blog_notifications_this">këtë sajt</string>
     <string name="reader_followed_blog_notifications_action">Aktivizoji</string>
     <string name="reader_followed_blog_notifications">Aktivizo njoftime për %1$s%2$s%3$s?</string>
+    <string name="reader_btn_blog_notifications_on">Aktivizoni njoftime blogjesh</string>
+    <string name="reader_btn_blog_notifications_off">Çaktivizoni njoftime blogjesh</string>
     <string name="activity_log_jetpack_icon">Ikonë Jetpack</string>
     <string name="activity_log_event">Veprimtari</string>
     <string name="activity_log_icon">Ikonë veprimtarie</string>
@@ -3140,6 +3231,7 @@ Language: sq_AL
     <string name="person_remove_confirmation_title">Hiqe %1$s</string>
     <string name="role">Rol</string>
     <string name="people">Persona</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Blogjet në këtë listë s’kanë postuar gjë tani së fundi</string>
     <string name="error_remove_user">S’u hoq dot përdoruesi</string>
     <string name="error_update_role">S’u përditësua dot rol përdoruesi</string>
     <string name="error_fetch_viewers_list">S’u morën dot shikues sajti</string>
@@ -3417,6 +3509,7 @@ Language: sq_AL
     <string name="button_view">Shiheni</string>
     <string name="button_publish">Botojeni</string>
     <string name="button_edit">Përpunojeni</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Ky blog s’u gjet dot</string>
     <string name="undo">Zhbëje</string>
     <string name="push_auth_expired">Kërkesa skadoi. Hyni te WordPress.com që të riprovoni.</string>
     <string name="ignore">Shpërfille</string>
@@ -3460,6 +3553,7 @@ Language: sq_AL
     <string name="posts_fetching">Po sillen postimet…</string>
     <string name="media_fetching">Po sillet media…</string>
     <string name="logs_copied_to_clipboard">Regjistrat e aplikacionit u kopjuan te e papastra</string>
+    <string name="reader_no_posts_in_blog">Ky blog është i zbrazët</string>
     <string name="reader_label_new_posts">Postime të reja</string>
     <string name="error_copy_to_clipboard">Ndodhi një gabim gjatë kopjimit të tekstit te e papastra</string>
     <string name="post_uploading">Po ngarkohet postimi</string>
@@ -3533,6 +3627,8 @@ Language: sq_AL
     <string name="blog_not_found">Ndodhi një gabim gjatë hyrjes te ky blog</string>
     <string name="gallery_error">S’u mor dot objekti media</string>
     <string name="no_network_message">S’ka rrjet gati</string>
+    <string name="reader_toast_err_removing_tag">S’arrihet të hiqet kjo etiketë</string>
+    <string name="reader_toast_err_adding_tag">S’arrihet të shtohet kjo etiketë</string>
     <string name="reader_title_applog">Regjistër aplikacioni</string>
     <string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
     <string name="error_blog_hidden">Ky blog është i fshehur dhe s’u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>
@@ -3594,6 +3690,7 @@ Language: sq_AL
     <string name="reader_toast_err_url_intent">S’arrin të hapë %s</string>
     <string name="reader_toast_err_view_image">S’arrin të shihet figura</string>
     <string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
+    <string name="reader_toast_err_tag_not_valid">Kjo s’është etiketë e vlefshme</string>
     <string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
     <string name="reader_likes_only_you">E pëlqeni</string>
     <string name="reader_likes_one">Kjo i pëlqen një personi</string>

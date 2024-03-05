@@ -1,0 +1,2 @@
+24.3:
+Je kan bij je WordPress-website inloggen met behulp van Google-inloggegevens, fysieke apparaten en andere sleutels van derden. Geen zorgen, je site is nog steeds beter beveiligd dan het geheime recept van KFC.

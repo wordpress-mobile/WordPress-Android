@@ -71,6 +71,8 @@ public class AppPrefs {
         READER_TAG_TYPE,
         READER_TAG_WAS_FOLLOWING,
 
+        READER_ANALYTICS_COUNT_TAGS_TIMESTAMP,
+
         // currently active tab on the main Reader screen when the user is in Reader
         READER_ACTIVE_TAB,
 
@@ -266,9 +268,6 @@ public class AppPrefs {
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
-
-        // Used to indicate whether or not the stories intro screen must be shown
-        SHOULD_SHOW_STORIES_INTRO,
 
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
@@ -1162,6 +1161,14 @@ public class AppPrefs {
         setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
     }
 
+    public static long getReaderAnalyticsCountTagsTimestamp() {
+        return getLong(DeletablePrefKey.READER_ANALYTICS_COUNT_TAGS_TIMESTAMP, -1);
+    }
+
+    public static void setReaderAnalyticsCountTagsTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_TAGS_TIMESTAMP, timestamp);
+    }
+
     public static long getReaderCssUpdatedTimestamp() {
         return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
     }
@@ -1205,14 +1212,6 @@ public class AppPrefs {
         } else {
             setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
         }
-    }
-
-    public static void setShouldShowStoriesIntro(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
-    }
-
-    public static boolean shouldShowStoriesIntro() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {

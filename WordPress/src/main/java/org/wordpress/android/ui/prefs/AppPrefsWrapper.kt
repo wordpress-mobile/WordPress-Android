@@ -75,10 +75,6 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
 
-    var shouldShowStoriesIntro: Boolean
-        get() = AppPrefs.shouldShowStoriesIntro()
-        set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
-
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
         set(shouldSchedule) = AppPrefs.setShouldScheduleCreateSiteNotification(shouldSchedule)

@@ -1,12 +1,15 @@
 package org.wordpress.android.e2e.pages
 
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsVisitsData
 
@@ -31,37 +34,37 @@ class StatsPage {
     }
 
     fun scrollToPosts(): StatsPage {
-        scrollToCard("Posts and Pages")
+        scrollToCard(1, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToReferrers(): StatsPage {
-        scrollToCard("Referrers")
+        scrollToCard(2, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToClicks(): StatsPage {
-        scrollToCard("Clicks")
+        scrollToCard(3, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToAuthors(): StatsPage {
-        scrollToCard("Authors")
+        scrollToCard(4, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToCountries(): StatsPage {
-        scrollToCard("Countries")
+        scrollToCard(5, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToVideos(): StatsPage {
-        scrollToCard("Videos")
+        scrollToCard(7, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
     fun scrollToFileDownloads(): StatsPage {
-        scrollToCard("File downloads")
+        scrollToCard(8, StatsListViewModel.StatsSection.DAYS)
         return this
     }
 
@@ -96,7 +99,7 @@ class StatsPage {
                 )
             )
         )
-        cardStructure.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+        cardStructure.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         return this
     }
 
@@ -121,7 +124,7 @@ class StatsPage {
                     )
                 )
             )
-            cardStructure.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()))
+            cardStructure.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         }
     }
 
@@ -160,15 +163,14 @@ class StatsPage {
         return this
     }
 
-    private fun scrollToCard(cardHeader: String) {
-        val card = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.isDescendantOfA(visibleCoordinatorLayout),
-                ViewMatchers.withId(R.id.stats_block_list),
-                ViewMatchers.hasDescendant(ViewMatchers.withText(cardHeader))
-            )
+    private fun scrollToCard(viewholderPosition: Int, section: StatsListViewModel.StatsSection) {
+        WPSupportUtils.idleFor(2000)
+        Espresso.onView(Matchers.allOf(
+            ViewMatchers.withTagValue(Matchers.`is`(section.name))
+        )).perform(
+            RecyclerViewActions.scrollToPosition<ViewHolder>(viewholderPosition)
         )
-        WPSupportUtils.scrollIntoView(R.id.statsPager, card, 0.5.toFloat())
+        WPSupportUtils.idleFor(2000)
     }
 
     companion object {

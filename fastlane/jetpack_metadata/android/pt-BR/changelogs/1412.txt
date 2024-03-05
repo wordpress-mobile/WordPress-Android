@@ -1,0 +1,3 @@
+24.3:
+Faça login no seu site com credenciais do Google, dispositivos físicos e chaves de acesso de terceiros. Não se preocupe, o site continua mais protegido do que uma receita secreta de família.
+Nós ocultamos o ícone de menu na tela Estatísticas para que ele só seja visível na guia Informações. Modo ninja: ativado.

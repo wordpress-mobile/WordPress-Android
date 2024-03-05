@@ -13,7 +13,6 @@ sealed class MainActionListItem {
         CREATE_NEW_PAGE,
         CREATE_NEW_PAGE_FROM_PAGES_CARD,
         CREATE_NEW_POST,
-        CREATE_NEW_STORY,
         ANSWER_BLOGGING_PROMPT
     }
 

@@ -1,0 +1,3 @@
+24.3:
+Accede a tu sitio con las credenciales de Google, dispositivos físicos y contraseñas de terceros. No te preocupes, el sitio sigue igual de seguro o más que la fórmula secreta de la Coca-Cola.
+Hemos escondido el icono de menú en la pantalla de estadísticas, y ahora solo está visible en la pestaña de detalles. Modo Ninja: activado.
