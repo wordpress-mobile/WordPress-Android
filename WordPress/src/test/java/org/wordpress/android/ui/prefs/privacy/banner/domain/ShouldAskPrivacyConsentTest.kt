@@ -52,7 +52,7 @@ class ShouldAskPrivacyConsentTest: BaseUnitTest() {
     fun `it does not show the banner for non-GDPR countries`() = test {
         // Given
         whenever(appPrefs.savedPrivacyBannerSettings).thenReturn(false)
-        whenever(geoRepository.isGdprComplianceRequired()).thenReturn(false)
+        whenever(geoRepository.isPrivacyPolicyComplianceRequired()).thenReturn(false)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         // When
@@ -66,7 +66,7 @@ class ShouldAskPrivacyConsentTest: BaseUnitTest() {
     fun `it does show the banner for GDPR countries`() = test {
         // Given
         whenever(appPrefs.savedPrivacyBannerSettings).thenReturn(false)
-        whenever(geoRepository.isGdprComplianceRequired()).thenReturn(true)
+        whenever(geoRepository.isPrivacyPolicyComplianceRequired()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
 
         // When
@@ -82,7 +82,7 @@ class ShouldAskPrivacyConsentTest: BaseUnitTest() {
 
         // Given
         whenever(appPrefs.savedPrivacyBannerSettings).thenReturn(false)
-        whenever(geoRepository.isGdprComplianceRequired()).thenReturn(true)
+        whenever(geoRepository.isPrivacyPolicyComplianceRequired()).thenReturn(true)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(site.origin).thenReturn(SiteModel.ORIGIN_WPAPI)
