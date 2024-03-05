@@ -36,12 +36,11 @@ class VisitsAndViewsStore
         site: SiteModel,
         granularity: StatsGranularity,
         limitMode: Top,
-        forced: Boolean = false
+        forced: Boolean = false,
+        useSiteTimezone: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
-        val dateWithTimeZone = statsUtils.getFormattedDate(
-                currentTimeProvider.currentDate(),
-                SiteUtils.getNormalizedTimezone(site.timezone)
-        )
+        val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val dateWithTimeZone = statsUtils.getFormattedDate(currentTimeProvider.currentDate(), timezone)
         logProgress(granularity, "Site timezone: ${site.timezone}")
         try {
             logProgress(granularity, "Current date: ${currentTimeProvider.currentDate()}")
@@ -135,12 +134,11 @@ class VisitsAndViewsStore
     fun getVisits(
         site: SiteModel,
         granularity: StatsGranularity,
-        limitMode: LimitMode
+        limitMode: LimitMode,
+        useSiteTimezone: Boolean = false
     ): VisitsAndViewsModel? {
-        val dateWithTimeZone = statsUtils.getFormattedDate(
-                currentTimeProvider.currentDate(),
-                SiteUtils.getNormalizedTimezone(site.timezone)
-        )
+        val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val dateWithTimeZone = statsUtils.getFormattedDate(currentTimeProvider.currentDate(), timezone)
         return getVisits(site, granularity, limitMode, dateWithTimeZone)
     }
 
@@ -148,9 +146,11 @@ class VisitsAndViewsStore
         site: SiteModel,
         granularity: StatsGranularity,
         limitMode: Top,
-        date: Date
+        date: Date,
+        useSiteTimezone: Boolean = false
     ): VisitsAndViewsModel? {
-        val dateWithTimeZone = statsUtils.getFormattedDate(date, SiteUtils.getNormalizedTimezone(site.timezone))
+        val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
         return getVisits(site, granularity, limitMode, dateWithTimeZone)
     }
 
