@@ -35,9 +35,9 @@ class StatsTests : BaseTest() {
             Espresso.pressBack()
         }
     }
-    
+
     @Test
-    fun e2eAllDayStatsLoad() {
+    fun e2eAllDayStatsLoad() { // Test for loading all day stats
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
         val postsList: List<StatsKeyValueData> = StatsMocksReader().readDayTopPostsToList()
         val referrersList: List<StatsKeyValueData> = StatsMocksReader().readDayTopReferrersToList()
