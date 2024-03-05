@@ -222,6 +222,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -426,6 +427,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
+    @Inject SyncPublishingFeatureConfig mSyncPublishingFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -806,7 +808,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mUpdatingPostArea = findViewById(R.id.updating);
 
         // check if post content needs updating
-        mViewModel.checkIfUpdatedPostVersionExists(mEditPostRepository, mSite);
+       if (mSyncPublishingFeatureConfig.isEnabled()) {
+           mViewModel.checkIfUpdatedPostVersionExists(mEditPostRepository, mSite);
+       }
     }
 
     private void showUpdatingPostArea() {
