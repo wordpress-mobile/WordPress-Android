@@ -158,6 +158,7 @@ android {
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
+        buildConfigField "boolean", "SYNC_PUBLISHING", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
