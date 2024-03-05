@@ -210,13 +210,17 @@ class ReaderDiscoverLogic @Inject constructor(
         var firstRecommendationCard: JSONObject? = null
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
-            when (cardJson.getString(JSON_CARD_TYPE)) {
+            // We should not have a recommended blogs or interests/tags card as the first element on Discover feed.
+            val cardType = cardJson.optString(JSON_CARD_TYPE, "")
+            val isCardTypeRecommendation =
+                cardType == JSON_CARD_RECOMMENDED_BLOGS || cardType == JSON_CARD_INTERESTS_YOU_MAY_LIKE
+            val isFirstPage = discoverTasks == REQUEST_FIRST_PAGE
+            if (i == 0 && isFirstPage && isCardTypeRecommendation) {
+                firstRecommendationCard = cardJson
+                continue
+            }
+            when (cardType) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
-                    // We should not have an recommended blogs card as the first element on Discover feed.
-                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
-                        firstRecommendationCard = cardJson
-                        continue
-                    }
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
                             simplifiedJsonList.add(createSimplifiedRecommendedBlogsCardJson(cardJson))
@@ -224,11 +228,6 @@ class ReaderDiscoverLogic @Inject constructor(
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    // We should not have an interests/tags card as the first element on Discover feed.
-                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
-                        firstRecommendationCard = cardJson
-                        continue
-                    }
                     simplifiedJsonList.add(cardJson)
                 }
                 JSON_CARD_POST -> {
@@ -236,7 +235,8 @@ class ReaderDiscoverLogic @Inject constructor(
                 }
             }
         }
-        // If we've received a recommended tags or blogs card as the first element, it should be displayed as the third card.
+        // If we've received a recommended tags or blogs card as the first element,
+        // it should be displayed as the third card.
         if (firstRecommendationCard != null) {
             simplifiedJsonList.add(2, firstRecommendationCard)
         }
