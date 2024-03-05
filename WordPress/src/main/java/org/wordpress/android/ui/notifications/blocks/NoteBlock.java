@@ -160,10 +160,16 @@ public class NoteBlock {
         // Note image
         if (hasImageMediaItem()) {
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
+
+            // for large 2x images, request a 1x thumbnail to display while the full image loads
+            String thumbnailUrl = null;
+            if (getNoteMediaItem().getUrl() != null && getNoteMediaItem().getUrl().endsWith("-2x.png")) {
+                thumbnailUrl = getNoteMediaItem().getUrl().replace("-2x.png", "-1x.png");
+            }
+
             // Request image, and animate it when loaded
-            mImageManager
-                    .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
-                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), ScaleType.CENTER, null,
+            mImageManager.loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
+                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), ScaleType.CENTER, thumbnailUrl,
                             new ImageManager.RequestListener<Drawable>() {
                                 @Override
                                 public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
