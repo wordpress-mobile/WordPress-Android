@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-31 09:54:08+0000
+Translation-Revision-Date: 2024-02-22 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: zh_CN
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">未找到站点。 检查您是否已登录到正确的账户。</string>
+    <string name="gravatar_info_sync_done_button">完成</string>
+    <string name="gravatar_info_sync_message">更新的内容可能需要一段时间才能与您的 Gravatar 个人资料同步。</string>
+    <string name="gravatar_info_learn_more_link">什么是 Gravatar？</string>
+    <string name="gravatar_info_description">您在此对头像、名称和简介信息做出的更新也将更新到所有使用 Gravatar 个人资料的站点。</string>
+    <string name="gravatar_info_title">您的 WordPress.com 个人资料由 Gravatar 提供技术支持</string>
+    <string name="error_media_could_not_share_media_from_device">无法加载媒体以进行共享。 请检查此应用程序的权限\n        或使用此应用程序的媒体库。</string>
+    <string name="site_monitoring_cannot_be_started">我们现在无法打开站点监控。 请稍后再试</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web 服务器日志</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP 日志</string>
+    <string name="site_monitoring_tab_title_metrics">指标</string>
+    <string name="site_monitoring">站点监控</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">使用“&lt;b&gt;发现&lt;/b&gt;”查找站点和标签。 尝试选择“&lt;b&gt;订阅&lt;/b&gt;”，以查看订阅的内容，并管理您的订阅。</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">前往“订阅”</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">您订阅的博客最近未发布任何内容</string>
+    <string name="reader_no_followed_blogs_description_subs">在“搜索”中订阅博客，或者搜索一个您已点赞过的博客。</string>
+    <string name="reader_no_recommended_blogs_title">无推荐博客</string>
+    <string name="reader_no_followed_tags_title">无订阅的标签</string>
+    <string name="reader_no_posts_with_this_tag">无包含此标签的文章</string>
+    <string name="reader_toast_err_unable_to_block_blog">无法阻止此博客</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">此博客中的文章不会再显示</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">无法退订博客</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">您无权访问此博客</string>
+    <string name="reader_toast_err_unable_to_follow_blog">无法订阅此博客</string>
+    <string name="reader_toast_err_already_follow_this_blog">您已订阅此博客</string>
+    <string name="reader_toast_err_show_blog">无法显示此博客</string>
+    <string name="reader_toast_err_tag_already_subscribed">您已订阅此标签</string>
+    <string name="reader_label_choose_interests">选择您的兴趣</string>
+    <string name="reader_label_subscribers_count_single">1 位订阅者</string>
+    <string name="reader_label_subscribers_count">%s 位订阅者</string>
+    <string name="reader_label_subscribe_count">%,d 位订阅者</string>
+    <string name="reader_label_blog_subscribed">已订阅博客</string>
+    <string name="reader_hint_search_subscribed_blogs">搜索已订阅的博客</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">输入要订阅的 URL 或标签</string>
+    <string name="reader_btn_subscribed">已订阅</string>
+    <string name="reader_btn_subscribe">订阅</string>
+    <string name="reader_menu_block_this_blog">阻止此博客</string>
+    <string name="reader_menu_tags_and_blogs">编辑标签和博客</string>
+    <string name="reader_page_followed_blogs_title">已订阅的博客</string>
+    <string name="reader_page_followed_tags_title">已订阅的标签</string>
+    <string name="reader_title_tags">关注标签</string>
+    <string name="reader_activity_title_manage_tags_blogs">管理标签和博客</string>
+    <string name="reader_activity_title_tag_preview">标签</string>
+    <string name="reader_activity_title_blog_preview">读者博客</string>
+    <string name="reader_subscribed_display_name">已订阅</string>
+    <string name="reader_filter_chip_tag_other">%d 个标签</string>
+    <string name="reader_filter_chip_tag_one">1 个标签</string>
+    <string name="reader_filter_chip_tag_zero">0 个标签</string>
+    <string name="reader_filter_chip_blog_other">%d 个博客</string>
+    <string name="reader_filter_chip_blog_one">1 个博客</string>
+    <string name="reader_filter_chip_blog_zero">0 个博客</string>
+    <string name="reader_dropdown_menu_lists">列表</string>
+    <string name="reader_dropdown_menu_liked">已点赞</string>
+    <string name="reader_dropdown_menu_saved">已保存</string>
+    <string name="reader_dropdown_menu_subscriptions">订阅</string>
+    <string name="reader_dropdown_menu_discover">发现</string>
+    <string name="reader_search_content_description">搜索</string>
+    <string name="reader_discover_no_posts_button_tags_text">订阅标签</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">尝试订阅更多标签，以扩大搜索范围</string>
+    <string name="reader_discover_empty_subtitle_subscribe">订阅标签以发现新的博客</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">要订阅的博客</string>
+    <string name="reader_filter_empty_tags_action_subscribe">订阅一个标签</string>
+    <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
+    <string name="reader_filter_empty_blogs_action_search">搜索博客</string>
+    <string name="reader_filter_empty_tags_list_text">订阅一个标签，您就能在此处看到该标签下的最佳文章。</string>
+    <string name="reader_filter_empty_tags_list_title">无标签</string>
+    <string name="reader_filter_empty_blogs_list_text">在“发现”中订阅博客，您就能在此处看到他们的最新文章。 或者搜索一个您已点赞过的博客。</string>
+    <string name="reader_filter_empty_blogs_list_title">无博客订阅</string>
+    <string name="reader_filter_empty_blogs_action">订阅博客</string>
+    <string name="reader_filter_empty_tags_list_subscribe">您可以通过添加标签的方式来订阅特定主题的文章</string>
+    <string name="reader_filter_empty_blogs_list">查看您所订阅的博客的最新文章</string>
+    <string name="reader_filter_by_tag_title">按标签筛选</string>
+    <string name="reader_filter_by_blog_title">按博客筛选</string>
+    <string name="stats_timeframe_by_year">按年</string>
+    <string name="stats_timeframe_by_month">按月</string>
+    <string name="stats_timeframe_by_week">按周</string>
+    <string name="stats_timeframe_by_day">按天</string>
     <string name="gutenberg_native_waiting_for_connection">正在等待连接</string>
     <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">离线工作</string>
@@ -1643,6 +1720,7 @@ Language: zh_CN
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">移动到草稿</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">无法编辑已放入回收站的文章。 您想将此文章的状态更改为“草稿”，以便您可以进行编辑？</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">将文章移动到“草稿”？</string>
+    <string name="reader_choose_interests_tags_content_description">选择您的标签</string>
     <string name="reader_btn_done">完成</string>
     <string name="reader_btn_select_few_interests">选择一些以继续</string>
     <string name="post_status_post_published">已发布</string>
@@ -1698,6 +1776,9 @@ Language: zh_CN
     <string name="site_picker_ask_site_select">无法选择站点。请再试一次。</string>
     <string name="sitepicker_continue_flow">继续</string>
     <string name="reader_reblog_error">转载失败</string>
+    <string name="reader_no_blog_to_reblog_action">管理博客</string>
+    <string name="reader_no_blog_to_reblog_detail">创建 WordPress.com 博客之后，您可以将喜欢的内容转载到您自己的站点。</string>
+    <string name="reader_no_blog_to_reblog_title">无可用的 WordPress.com 博客</string>
     <string name="whats_new_in_version_title">新变化</string>
     <string name="comment_q_action_copied_url">链接地址已复制</string>
     <string name="copy_link_address">复制链接地址</string>
@@ -1796,13 +1877,17 @@ Language: zh_CN
     <string name="stats_management_screen_title">添加新卡片</string>
     <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
     <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
+    <string name="reader_bottom_sheet_select_content_description">选择标签或博客，弹出窗口</string>
     <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">登录 WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">登录 WordPress.com 以查看您所订阅的标签下的最新文章</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">登录 WordPress.com 以查看您所订阅的博客的最新文章</string>
     <string name="gutenberg_native_replace_current_block">替换现有区块</string>
     <string name="gutenberg_native_add_to_end">添加到结尾</string>
     <string name="gutenberg_native_add_to_beginning">添加到开始</string>
     <string name="gutenberg_native_add_block_before">在之前添加区块</string>
     <string name="gutenberg_native_add_block_after">在之后添加区块</string>
+    <string name="reader_filter_empty_tags_add_action">添加标签</string>
     <string name="reader_filter_cta">过滤器</string>
     <string name="gutenberg_native_video_caption_s">视频说明。%s</string>
     <string name="gutenberg_native_edit_video">编辑视频</string>
@@ -2339,6 +2424,7 @@ Language: zh_CN
     <string name="login_error_sms_throttled">尝试发送短信验证码的次数太多了 - 休息一下，在一分钟后再申请新的短信验证码。</string>
     <string name="login_error_email_not_found_v2">没有与此 Google 账户匹配的 WordPress.com 账户。</string>
     <string name="site_picker_remove_site_empty">没有与您的搜索匹配的站点</string>
+    <string name="reader_no_followed_blogs_search_title">没有与您的搜索匹配的博客</string>
     <string name="page_parent_changed">已更改父页面</string>
     <string name="page_permanently_deleted">已永久删除页面</string>
     <string name="page_moved_to_scheduled">已预发布页面</string>
@@ -2370,6 +2456,7 @@ Language: zh_CN
     <string name="quick_start_button_negative">现在不行</string>
     <string name="content_description_more">更多</string>
     <string name="my_site_create_new_site_title">您没有任何站点</string>
+    <string name="reader_empty_subscribed_tags_subtitle">在此处添加标签，以查找有关您喜爱的主题的文章</string>
     <string name="login_to_to_connect_jetpack">登录用于关联 Jetpack 的 WordPress.com 账户。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack 常见问题解答</string>
@@ -2389,6 +2476,7 @@ Language: zh_CN
     <string name="people_empty_list_filtered_users">尚无用户</string>
     <string name="reader_empty_posts_liked_description">您喜欢的文章会显示在这里</string>
     <string name="reader_empty_posts_liked_title">暂无喜欢</string>
+    <string name="reader_no_followed_blogs_button_discover">发现博客</string>
     <string name="notifications_empty_likes">尚无喜欢</string>
     <string name="notifications_empty_followers">尚无粉丝</string>
     <string name="activity_log_limited_content_on_free_plan">由于您使用的是免费套餐，因此您的活动中显示有限的事件。</string>
@@ -2453,6 +2541,8 @@ Language: zh_CN
     <string name="reader_followed_blog_notifications_this">此站点</string>
     <string name="reader_followed_blog_notifications_action">启用</string>
     <string name="reader_followed_blog_notifications">是否为 %1$s%2$s%3$s 启用通知？</string>
+    <string name="reader_btn_blog_notifications_on">开启博客通知</string>
+    <string name="reader_btn_blog_notifications_off">关闭博客通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 图标</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活动图标</string>
@@ -3132,6 +3222,7 @@ Language: zh_CN
     <string name="person_remove_confirmation_title">删除 %1$s</string>
     <string name="role">角色</string>
     <string name="people">人员</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">此列表中的博客最近未发布任何内容</string>
     <string name="error_remove_user">无法删除用户</string>
     <string name="error_update_role">无法更新用户角色</string>
     <string name="error_fetch_viewers_list">无法获取站点查看数</string>
@@ -3409,6 +3500,7 @@ Language: zh_CN
     <string name="button_view">查看</string>
     <string name="button_publish">发布</string>
     <string name="button_edit">编辑</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">找不到此博客</string>
     <string name="undo">撤消</string>
     <string name="push_auth_expired">请求已过期。请登录 WordPress.com 再试一次。</string>
     <string name="ignore">忽略</string>
@@ -3452,6 +3544,7 @@ Language: zh_CN
     <string name="posts_fetching">正在获取文章…</string>
     <string name="media_fetching">正在获取媒体…</string>
     <string name="logs_copied_to_clipboard">已将应用程序日志复制到剪贴板</string>
+    <string name="reader_no_posts_in_blog">此博客没有任何内容</string>
     <string name="reader_label_new_posts">新文章</string>
     <string name="error_copy_to_clipboard">复制文本到剪贴板时出错</string>
     <string name="post_uploading">正在上传文章</string>
@@ -3525,6 +3618,8 @@ Language: zh_CN
     <string name="blog_not_found">抱歉，尝试访问该博客时发生错误</string>
     <string name="gallery_error">抱歉,无法从图库检索该媒体对象</string>
     <string name="no_network_message">没用可用的网络</string>
+    <string name="reader_toast_err_removing_tag">无法删除此标签</string>
+    <string name="reader_toast_err_adding_tag">无法添加此标签</string>
     <string name="reader_title_applog">程序日志</string>
     <string name="fatal_db_error">创建程序数据库时出错，请重新安装程序.</string>
     <string name="error_blog_hidden">这个博客是隐藏的，无法加载。在设置中重新启用它并再次尝试。</string>
@@ -3586,6 +3681,7 @@ Language: zh_CN
     <string name="reader_toast_err_url_intent">无法打开 %s</string>
     <string name="reader_toast_err_view_image">无法查看图片</string>
     <string name="reader_toast_err_share_intent">无法分享</string>
+    <string name="reader_toast_err_tag_not_valid">该标签无效</string>
     <string name="reader_toast_err_comment_failed">无法发表评论</string>
     <string name="reader_likes_only_you">您喜欢了</string>
     <string name="reader_likes_one">1人喜欢了</string>

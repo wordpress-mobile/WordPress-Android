@@ -146,9 +146,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var siteIconUploadHandler: SiteIconUploadHandler
 
     @Mock
-    lateinit var siteStoriesHandler: SiteStoriesHandler
-
-    @Mock
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
@@ -443,7 +440,6 @@ class MySiteViewModelTest : BaseUnitTest() {
             accountStore,
             selectedSiteRepository,
             siteIconUploadHandler,
-            siteStoriesHandler,
             displayUtilsWrapper,
             quickStartRepository,
             quickStartCardBuilder,

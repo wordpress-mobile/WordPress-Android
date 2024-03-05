@@ -1,11 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 09:54:08+0000
+Translation-Revision-Date: 2024-02-22 09:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ja_JP
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
+    <string name="gravatar_info_sync_done_button">完了</string>
+    <string name="gravatar_info_sync_message">Gravatar プロフィールと更新内容が同期されるのに時間がかかる場合があります。</string>
+    <string name="gravatar_info_learn_more_link">Gravatar とは</string>
+    <string name="gravatar_info_description">自分のアバター、名前、概要情報をこちらで更新すると、Gravatar プロフィールを使用するすべてのサイトにも更新が反映されます。</string>
+    <string name="gravatar_info_title">WordPress.com のプロフィールでは Gravatar を活用できます</string>
+    <string name="error_media_could_not_share_media_from_device">シェアするメディアを読み込めませんでした。 アプリの権限を確認するか\n        アプリのメディアライブラリをお使いください。</string>
+    <string name="site_monitoring_cannot_be_started">現在、サイトのモニタリングを開けません。 後でもう一度お試しください</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web サーバーログ</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP ログ</string>
+    <string name="site_monitoring_tab_title_metrics">メトリクス</string>
+    <string name="site_monitoring">サイトのモニタリング</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">サイトやタグを探すには、&lt;b&gt;「ディスカバー」&lt;/b&gt;を使います。 &lt;b&gt;「サブスクリプション」&lt;/b&gt; を選択して購読しているコンテンツを表示し、サブスクリプションを管理します。</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">サブスクリプションに移動</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">購読しているブログには、最近の投稿はありません</string>
+    <string name="reader_no_followed_blogs_description_subs">「ディスカバー」でブログを購読するか、すでに気に入っているブログを検索します。</string>
+    <string name="reader_no_recommended_blogs_title">おすすめのブログはありません</string>
+    <string name="reader_no_followed_tags_title">購読しているタグはありません</string>
+    <string name="reader_no_posts_with_this_tag">このタグを使った投稿はありません</string>
+    <string name="reader_toast_err_unable_to_block_blog">このブログをブロックできませんでした</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">このブログからの投稿は今後表示されません</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">ブログの購読解除ができません</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">このブログにアクセスする権限がありません</string>
+    <string name="reader_toast_err_unable_to_follow_blog">このブログを購読できません</string>
+    <string name="reader_toast_err_already_follow_this_blog">このブログをすでに購読済みです</string>
+    <string name="reader_toast_err_show_blog">このブログを表示できません</string>
+    <string name="reader_toast_err_tag_already_subscribed">このタグをすでに購読済みです</string>
+    <string name="reader_label_choose_interests">関心のあるものを選択</string>
+    <string name="reader_label_subscribers_count_single">1人の購読者</string>
+    <string name="reader_label_subscribers_count">%s人の購読者</string>
+    <string name="reader_label_subscribe_count">%,d人の購読者</string>
+    <string name="reader_label_blog_subscribed">購読済みのブログ</string>
+    <string name="reader_hint_search_subscribed_blogs">購読済みのブログを検索</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">購読する URL またはタグを入力</string>
+    <string name="reader_btn_subscribed">購読済み</string>
+    <string name="reader_btn_subscribe">購読</string>
+    <string name="reader_menu_block_this_blog">このブログをブロック</string>
+    <string name="reader_menu_tags_and_blogs">タグとブログを編集</string>
+    <string name="reader_page_followed_blogs_title">購読済みのブログ</string>
+    <string name="reader_page_followed_tags_title">購読済みのタグ</string>
+    <string name="reader_title_tags">タグをフォロー</string>
+    <string name="reader_activity_title_manage_tags_blogs">タグとブログを管理</string>
+    <string name="reader_activity_title_tag_preview">タグ</string>
+    <string name="reader_activity_title_blog_preview">Reader ブログ</string>
+    <string name="reader_subscribed_display_name">購読済み</string>
+    <string name="reader_filter_chip_tag_other">%d個のタグ</string>
+    <string name="reader_filter_chip_tag_one">1個のタグ</string>
+    <string name="reader_filter_chip_tag_zero">0個のタグ</string>
+    <string name="reader_filter_chip_blog_other">%d件のブログ</string>
+    <string name="reader_filter_chip_blog_one">1件のブログ</string>
+    <string name="reader_filter_chip_blog_zero">0件のブログ</string>
+    <string name="reader_dropdown_menu_lists">リスト</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">いいね済み</string>
+    <string name="reader_dropdown_menu_saved">保存済み</string>
+    <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
+    <string name="reader_dropdown_menu_discover">ディスカバー</string>
+    <string name="reader_search_content_description">検索</string>
+    <string name="reader_discover_no_posts_button_tags_text">タグを購読</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">もっと多くのタグを購読して、検索を広げてみてください</string>
+    <string name="reader_discover_empty_subtitle_subscribe">タグを購読して新しいブログを見つける</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">購読するブログ</string>
+    <string name="reader_filter_empty_tags_action_subscribe">タグを購読</string>
+    <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
+    <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
+    <string name="reader_filter_empty_tags_list_text">タグを購読すると、そのタグで最適の投稿がこちらに表示されます。</string>
+    <string name="reader_filter_empty_tags_list_title">タグなし</string>
+    <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
+    <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>
+    <string name="reader_filter_empty_blogs_action">ブログを購読</string>
+    <string name="reader_filter_empty_tags_list_subscribe">タグを追加することで、特定の内容に関する投稿を購読できます</string>
+    <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
+    <string name="reader_filter_by_tag_title">タグで絞り込む</string>
+    <string name="reader_filter_by_blog_title">ブログで絞り込む</string>
+    <string name="stats_timeframe_by_year">年別</string>
+    <string name="stats_timeframe_by_month">月別</string>
+    <string name="stats_timeframe_by_week">週別</string>
+    <string name="stats_timeframe_by_day">日別</string>
     <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
     <string name="stats_traffic">トラフィック</string>
     <string name="gutenberg_native_working_offline">オフラインで作業</string>
@@ -1646,6 +1724,7 @@ Language: ja_JP
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">下書きに移動</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">ゴミ箱にある投稿は編集できません。この投稿のステータスを「下書き」に戻して編集しますか ?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">投稿を下書きに移動しますか ?</string>
+    <string name="reader_choose_interests_tags_content_description">タグを選択</string>
     <string name="reader_btn_done">終了</string>
     <string name="reader_btn_select_few_interests">選択して続ける</string>
     <string name="post_status_post_published">公開済み</string>
@@ -1701,6 +1780,9 @@ Language: ja_JP
     <string name="site_picker_ask_site_select">サイトを選択できませんでした。もう一度お試しください。</string>
     <string name="sitepicker_continue_flow">次へ</string>
     <string name="reader_reblog_error">リブログに失敗しました</string>
+    <string name="reader_no_blog_to_reblog_action">ブログを管理</string>
+    <string name="reader_no_blog_to_reblog_detail">WordPress.com ブログの作成後は、お気に入りのコンテンツを自分のサイトにリブログできます。</string>
+    <string name="reader_no_blog_to_reblog_title">利用可能な WordPress.com ブログはありません</string>
     <string name="whats_new_in_version_title">新機能</string>
     <string name="comment_q_action_copied_url">リンクアドレスをコピーしました</string>
     <string name="copy_link_address">リンクアドレスをコピー</string>
@@ -1800,13 +1882,17 @@ Language: ja_JP
     <string name="stats_management_screen_title">新しいカードを追加</string>
     <string name="stats_management_add_new_stats_card">新しい統計カードを追加</string>
     <string name="reader_self_hosted_select_filter">フィルターボタンを使って指定トピックの投稿を検索</string>
+    <string name="reader_bottom_sheet_select_content_description">タグまたはブログを選択 (ポップアップウィンドウ)</string>
     <string name="reader_btn_remove_filter_content_description">現在のフィルターを削除</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com にログイン</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">WordPress.com にログインし、購読中のタグの最新投稿をチェック</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">WordPress.com にログインし、購読中のブログの最新投稿をチェック</string>
     <string name="gutenberg_native_replace_current_block">現在のブロックを置き換え</string>
     <string name="gutenberg_native_add_to_end">末尾に追加</string>
     <string name="gutenberg_native_add_to_beginning">先頭に追加</string>
     <string name="gutenberg_native_add_block_before">前にブロックを追加</string>
     <string name="gutenberg_native_add_block_after">後にブロックを追加</string>
+    <string name="reader_filter_empty_tags_add_action">タグを追加</string>
     <string name="reader_filter_cta">フィルター</string>
     <string name="gutenberg_native_video_caption_s">動画の見出しです。%s</string>
     <string name="gutenberg_native_edit_video">動画を編集</string>
@@ -2344,6 +2430,7 @@ Language: ja_JP
     <string name="login_error_sms_throttled">SMS 認証コードの送信試行回数が多すぎます。しばらくしてから、新しい認証コードをリクエストしてください。</string>
     <string name="login_error_email_not_found_v2">この Google アカウントに一致する WordPress.com アカウントはありません。</string>
     <string name="site_picker_remove_site_empty">検索に一致するサイトはありません</string>
+    <string name="reader_no_followed_blogs_search_title">検索に一致するブログがありません</string>
     <string name="page_parent_changed">ページの親が変更されました</string>
     <string name="page_permanently_deleted">ページは完全に削除されました</string>
     <string name="page_moved_to_scheduled">ページが予約されました</string>
@@ -2376,6 +2463,7 @@ Language: ja_JP
     <string name="quick_start_button_negative">後で</string>
     <string name="content_description_more">もっと見る</string>
     <string name="my_site_create_new_site_title">サイトがありません</string>
+    <string name="reader_empty_subscribed_tags_subtitle">ここでタグを追加して、お気に入りのトピックに関する投稿を検索します</string>
     <string name="login_to_to_connect_jetpack">Jetpack を接続するのに使用した WordPress.com アカウントにログインします。</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack よくある質問</string>
@@ -2395,6 +2483,7 @@ Language: ja_JP
     <string name="people_empty_list_filtered_users">ユーザーはまだいません</string>
     <string name="reader_empty_posts_liked_description">お気に入りの投稿はここに表示されます</string>
     <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
+    <string name="reader_no_followed_blogs_button_discover">ブログを検索</string>
     <string name="notifications_empty_likes">新しい「いいね」はまだついていません</string>
     <string name="notifications_empty_followers">フォロワーはまだいません</string>
     <string name="activity_log_limited_content_on_free_plan">無料プランをご利用のため、アクティビティで確認できるイベントは限られています。</string>
@@ -2459,6 +2548,8 @@ Language: ja_JP
     <string name="reader_followed_blog_notifications_this">このサイト</string>
     <string name="reader_followed_blog_notifications_action">有効化する</string>
     <string name="reader_followed_blog_notifications">%1$s%2$s%3$s の通知を有効にしますか ?</string>
+    <string name="reader_btn_blog_notifications_on">ブログ通知を有効化</string>
+    <string name="reader_btn_blog_notifications_off">ブログ通知を無効化</string>
     <string name="activity_log_jetpack_icon">Jetpack アイコン</string>
     <string name="activity_log_event">イベント</string>
     <string name="activity_log_icon">アクティビティアイコン</string>
@@ -3141,6 +3232,7 @@ Language: ja_JP
     <string name="person_remove_confirmation_title">%1$s を削除</string>
     <string name="role">権限グループ</string>
     <string name="people">人</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">このリスト内のブログには最近の投稿がありません</string>
     <string name="error_remove_user">ユーザーを削除できませんでした</string>
     <string name="error_update_role">ユーザー権限グループを更新できませんでした</string>
     <string name="error_fetch_viewers_list">サイト閲覧者を取得できませんでした</string>
@@ -3418,6 +3510,7 @@ Language: ja_JP
     <string name="button_view">表示</string>
     <string name="button_publish">公開</string>
     <string name="button_edit">編集</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">このブログは見つかりませんでした</string>
     <string name="undo">元に戻す</string>
     <string name="push_auth_expired">リクエストの有効期限が切れています。もう一度試すには WordPress.com にログインしてください。</string>
     <string name="ignore">無視</string>
@@ -3461,6 +3554,7 @@ Language: ja_JP
     <string name="posts_fetching">投稿を取得中…</string>
     <string name="media_fetching">メディアを取得中…</string>
     <string name="logs_copied_to_clipboard">アプリケーションログをクリップボードにコピーしました</string>
+    <string name="reader_no_posts_in_blog">このブログは空です</string>
     <string name="reader_label_new_posts">新規投稿</string>
     <string name="error_copy_to_clipboard">テキストをクリップボードにコピーする際にエラーが発生しました</string>
     <string name="post_uploading">投稿をアップロード中</string>
@@ -3534,6 +3628,8 @@ Language: ja_JP
     <string name="blog_not_found">このブログにアクセスする際にエラーが発生しました</string>
     <string name="gallery_error">メディア項目を読み込めませんでした</string>
     <string name="no_network_message">利用可能なネットワークがありません</string>
+    <string name="reader_toast_err_removing_tag">このタグを削除できません</string>
+    <string name="reader_toast_err_adding_tag">このタグを追加できません</string>
     <string name="reader_title_applog">アプリケーションログ</string>
     <string name="fatal_db_error">アプリのデータベースを作成する際にエラーが発生しました。アプリをもう一度インストールしてみてください。</string>
     <string name="error_blog_hidden">このブログは非表示になっており読み込めません。設定画面から再有効化してもう一度お試しください。</string>
@@ -3595,6 +3691,7 @@ Language: ja_JP
     <string name="reader_toast_err_url_intent">%sを開けませんでした</string>
     <string name="reader_toast_err_view_image">画像を表示できません</string>
     <string name="reader_toast_err_share_intent">共有に失敗しました</string>
+    <string name="reader_toast_err_tag_not_valid">有効なタグではありません</string>
     <string name="reader_toast_err_comment_failed">コメントを投稿できませんでした</string>
     <string name="reader_likes_only_you">「いいね」をつけました</string>
     <string name="reader_likes_one">1人がいいねをつけました</string>

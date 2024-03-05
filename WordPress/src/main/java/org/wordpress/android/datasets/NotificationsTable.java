@@ -6,6 +6,7 @@ import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONException;
@@ -77,10 +78,10 @@ public class NotificationsTable {
     }
 
     private static boolean putNote(Note note, boolean checkBeforeInsert) {
-        String rawNote = prepareNote(note.getId(), note.getJSON().toString());
+        String rawNote = prepareNote(note.getId(), note.getJson().toString());
 
         ContentValues values = new ContentValues();
-        values.put("type", note.getType());
+        values.put("type", note.getRawType());
         values.put("timestamp", note.getTimestamp());
         values.put("raw_note_data", rawNote);
 
@@ -124,7 +125,7 @@ public class NotificationsTable {
         return noteSrc;
     }
 
-    public static void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
+    public static void saveNotes(@NonNull List<Note> notes, boolean clearBeforeSaving) {
         getDb().beginTransaction();
         try {
             if (clearBeforeSaving) {
@@ -142,7 +143,7 @@ public class NotificationsTable {
         }
     }
 
-    public static boolean saveNote(Note note) {
+    public static boolean saveNote(@NonNull Note note) {
         getDb().beginTransaction();
         boolean saved = false;
         try {

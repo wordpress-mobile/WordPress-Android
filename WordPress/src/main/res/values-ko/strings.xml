@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 09:54:07+0000
+Translation-Revision-Date: 2024-02-22 11:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ko_KR
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">사이트를 찾을 수 없습니다. 올바른 계정에 로그인했는지 확인하세요.</string>
+    <string name="gravatar_info_sync_done_button">완료</string>
+    <string name="gravatar_info_sync_message">업데이트 내용이 그라바타 프로필과 동기화되려면 시간이 조금 걸릴 수 있습니다.</string>
+    <string name="gravatar_info_learn_more_link">그라바타가 무엇인가요?</string>
+    <string name="gravatar_info_description">아바타, 이름 및 소개 정보를 업데이트하면 그라바타 프로필을 사용하는 모든 사이트에서도 업데이트됩니다.</string>
+    <string name="gravatar_info_title">워드프레스닷컴 프로필이 그라바타에서 제공됩니다.</string>
+    <string name="error_media_could_not_share_media_from_device">공유할 미디어를 로드할 수 없습니다. 앱의 권한을 확인하거나\n        앱의 미디어 라이브러리를 사용하세요.</string>
+    <string name="site_monitoring_cannot_be_started">지금은 사이트 모니터링을 열 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="site_monitoring_tab_title_web_server_logs">웹 서버 로그</string>
+    <string name="site_monitoring_tab_title_php_logs">PHP 로그</string>
+    <string name="site_monitoring_tab_title_metrics">지표</string>
+    <string name="site_monitoring">사이트 모니터링</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">사이트와 태그를 찾으려면 &lt;b&gt;발견&lt;/b&gt;을 사용하세요. 구독한 콘텐츠를 보고 구독을 관리하려면 &lt;b&gt;구독&lt;/b&gt;을 선택해 보세요.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">구독으로 이동</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">구독하는 블로그에 최근 발행된 내용이 없습니다.</string>
+    <string name="reader_no_followed_blogs_description_subs">발견에서 블로그를 구독하거나 이미 좋아하는 블로그를 검색하세요.</string>
+    <string name="reader_no_recommended_blogs_title">추천 블로그 없음</string>
+    <string name="reader_no_followed_tags_title">구독한 태그 없음</string>
+    <string name="reader_no_posts_with_this_tag">이 태그가 지정된 글 없음</string>
+    <string name="reader_toast_err_unable_to_block_blog">이 블로그를 차단할 수 없음</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">이 블로그의 글은 이제 표시되지 않음</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">블로그 구독을 취소할 수 없음</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">이 블로그에 접근할 권한이 없습니다.</string>
+    <string name="reader_toast_err_unable_to_follow_blog">이 블로그를 구독할 수 없음</string>
+    <string name="reader_toast_err_already_follow_this_blog">이 블로그를 이미 구독하고 있음</string>
+    <string name="reader_toast_err_show_blog">이 블로그를 표시할 수 없음</string>
+    <string name="reader_toast_err_tag_already_subscribed">이 태그를 이미 구독하고 있음</string>
+    <string name="reader_label_choose_interests">관심사 선택</string>
+    <string name="reader_label_subscribers_count_single">구독자 1명</string>
+    <string name="reader_label_subscribers_count">구독자 %s명</string>
+    <string name="reader_label_subscribe_count">구독자 %,d명</string>
+    <string name="reader_label_blog_subscribed">구독하는 블로그</string>
+    <string name="reader_hint_search_subscribed_blogs">구독하는 블로그 검색</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">구독할 블로그의 URL 또는 태그 입력</string>
+    <string name="reader_btn_subscribed">구독됨</string>
+    <string name="reader_btn_subscribe">구독</string>
+    <string name="reader_menu_block_this_blog">이 블로그 차단</string>
+    <string name="reader_menu_tags_and_blogs">태그 및 블로그 편집</string>
+    <string name="reader_page_followed_blogs_title">구독한 블로그</string>
+    <string name="reader_page_followed_tags_title">구독한 태그</string>
+    <string name="reader_title_tags">태그 팔로우</string>
+    <string name="reader_activity_title_manage_tags_blogs">블로그 및 블로그 관리</string>
+    <string name="reader_activity_title_tag_preview">태그</string>
+    <string name="reader_activity_title_blog_preview">리더 블로그</string>
+    <string name="reader_subscribed_display_name">구독됨</string>
+    <string name="reader_filter_chip_tag_other">태그 %d개</string>
+    <string name="reader_filter_chip_tag_one">태그 1개</string>
+    <string name="reader_filter_chip_tag_zero">태그 0개</string>
+    <string name="reader_filter_chip_blog_other">블로그 %d개</string>
+    <string name="reader_filter_chip_blog_one">블로그 1개</string>
+    <string name="reader_filter_chip_blog_zero">블로그 0개</string>
+    <string name="reader_dropdown_menu_lists">목록</string>
+    <string name="reader_dropdown_menu_liked">좋아함</string>
+    <string name="reader_dropdown_menu_saved">저장됨</string>
+    <string name="reader_dropdown_menu_subscriptions">구독</string>
+    <string name="reader_dropdown_menu_discover">발견</string>
+    <string name="reader_search_content_description">검색</string>
+    <string name="reader_discover_no_posts_button_tags_text">태그 구독</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">추가 태그를 구독하여 검색 범위 확대하기</string>
+    <string name="reader_discover_empty_subtitle_subscribe">태그를 구독하여 새 블로그 발견하기</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>
+    <string name="reader_filter_empty_tags_action_subscribe">태그 구독</string>
+    <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
+    <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
+    <string name="reader_filter_empty_tags_list_text">태그를 구독하면 여기에서 인기 글을 확인할 수 있습니다.</string>
+    <string name="reader_filter_empty_tags_list_title">태그 없음</string>
+    <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
+    <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>
+    <string name="reader_filter_empty_blogs_action">블로그 구독</string>
+    <string name="reader_filter_empty_tags_list_subscribe">태그를 추가하여 특정 주제의 글을 구독할 수 있습니다</string>
+    <string name="reader_filter_empty_blogs_list">구독하는 블로그의 최신 글 확인</string>
+    <string name="reader_filter_by_tag_title">태그로 필터링</string>
+    <string name="reader_filter_by_blog_title">블로그로 필터링</string>
+    <string name="stats_timeframe_by_year">연도 기준</string>
+    <string name="stats_timeframe_by_month">월 기준</string>
+    <string name="stats_timeframe_by_week">주 기준</string>
+    <string name="stats_timeframe_by_day">일 기준</string>
     <string name="gutenberg_native_waiting_for_connection">연결 대기 중</string>
     <string name="stats_traffic">트래픽</string>
     <string name="gutenberg_native_working_offline">오프라인 작업 중</string>
@@ -1647,6 +1724,7 @@ Language: ko_KR
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">초안으로 이동하기</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">휴지통에 있는 글은 편집할 수 없습니다. 이 글의 상태를 “초안”으로 변경하여 작업할 수 있기를 원하십니까?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">글을 초안으로 옮깁니까?</string>
+    <string name="reader_choose_interests_tags_content_description">태그 선택</string>
     <string name="reader_btn_done">완료</string>
     <string name="reader_btn_select_few_interests">계속하기 위해 몇 가지 더 선택하기</string>
     <string name="post_status_post_published">발행됨</string>
@@ -1702,6 +1780,9 @@ Language: ko_KR
     <string name="site_picker_ask_site_select">사이트를 선택할 수 없습니다. 다시 시도해 보시기 바랍니다.</string>
     <string name="sitepicker_continue_flow">계속</string>
     <string name="reader_reblog_error">리블로그에 실패하였습니다</string>
+    <string name="reader_no_blog_to_reblog_action">블로그 관리</string>
+    <string name="reader_no_blog_to_reblog_detail">워드프레스닷컴 블로그를 생성하면 좋아하는 콘텐츠를 자신의 블로그에 리블로그할 수 있습니다.</string>
+    <string name="reader_no_blog_to_reblog_title">이용 가능한 워드프레스닷컴 블로그 없음</string>
     <string name="whats_new_in_version_title">새로운 기능</string>
     <string name="comment_q_action_copied_url">링크 주소가 복사되었습니다</string>
     <string name="copy_link_address">링크 주소 복사</string>
@@ -1800,13 +1881,17 @@ Language: ko_KR
     <string name="stats_management_screen_title">새 카드 추가</string>
     <string name="stats_management_add_new_stats_card">새 스탯 카드 추가</string>
     <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
+    <string name="reader_bottom_sheet_select_content_description">태그 또는 블로그, 팝업 창 선택</string>
     <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">워드프레스닷컴에 로그인하여 구독하는 태그의 최신 글 확인</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">워드프레스닷컴에 로그인하여 구독하는 블로그의 최신 글 확인</string>
     <string name="gutenberg_native_replace_current_block">현재 블록 대체하기</string>
     <string name="gutenberg_native_add_to_end">끝에 추가하기</string>
     <string name="gutenberg_native_add_to_beginning">처음에 추가하기</string>
     <string name="gutenberg_native_add_block_before">이전에 블록 추가</string>
     <string name="gutenberg_native_add_block_after">다음에 블록 추가</string>
+    <string name="reader_filter_empty_tags_add_action">태그 추가</string>
     <string name="reader_filter_cta">필터</string>
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
@@ -2343,6 +2428,7 @@ Language: ko_KR
     <string name="login_error_sms_throttled">SMS 확인 코드를 보내려는 시도가 너무 많았습니다. 잠시 후 다시 요청하세요.</string>
     <string name="login_error_email_not_found_v2">이 Google 계정과 일치하는 워드프레스닷컴 계정이 없습니다.</string>
     <string name="site_picker_remove_site_empty">검색어와 일치하는 사이트 없음</string>
+    <string name="reader_no_followed_blogs_search_title">검색과 일치하는 블로그 없음</string>
     <string name="page_parent_changed">페이지 상위 항목이 변경되었습니다.</string>
     <string name="page_permanently_deleted">페이지가 영구적으로 삭제되었습니다.</string>
     <string name="page_moved_to_scheduled">페이지가 예약되었습니다.</string>
@@ -2375,6 +2461,7 @@ Language: ko_KR
     <string name="quick_start_button_negative">지금 안 함</string>
     <string name="content_description_more">더 보기</string>
     <string name="my_site_create_new_site_title">사이트가 없습니다</string>
+    <string name="reader_empty_subscribed_tags_subtitle">즐겨 찾는 주제에 대한 글을 찾으려면 여기에 태그 추가</string>
     <string name="login_to_to_connect_jetpack">젯팩에 연결하는 데 사용한 워드프레스닷컴 계정으로 로그인하세요.</string>
     <string name="jetpack">젯팩</string>
     <string name="stats_jetpack_connection_faq">젯팩 자주 찾는 질문</string>
@@ -2394,6 +2481,7 @@ Language: ko_KR
     <string name="people_empty_list_filtered_users">아직 사용자 없음</string>
     <string name="reader_empty_posts_liked_description">좋아요를 누른 글이 여기에 표시됩니다.</string>
     <string name="reader_empty_posts_liked_title">좋아요 없음</string>
+    <string name="reader_no_followed_blogs_button_discover">블로그 발견</string>
     <string name="notifications_empty_likes">아직 좋아요가 없음</string>
     <string name="notifications_empty_followers">아직 팔로워 없음</string>
     <string name="activity_log_limited_content_on_free_plan">무료 요금제 사용자이므로 활동에 제한된 이벤트가 표시됩니다.</string>
@@ -2458,6 +2546,8 @@ Language: ko_KR
     <string name="reader_followed_blog_notifications_this">이 사이트</string>
     <string name="reader_followed_blog_notifications_action">활성화</string>
     <string name="reader_followed_blog_notifications">%1$s%2$s%3$s에 대한 알림을 활성화하시겠습니까?</string>
+    <string name="reader_btn_blog_notifications_on">블로그 알림 켜기</string>
+    <string name="reader_btn_blog_notifications_off">블로그 알림 끄기</string>
     <string name="activity_log_jetpack_icon">젯팩 아이콘</string>
     <string name="activity_log_event">이벤트</string>
     <string name="activity_log_icon">활동 아이콘</string>
@@ -3137,6 +3227,7 @@ Language: ko_KR
     <string name="person_remove_confirmation_title">%1$s 제거</string>
     <string name="role">역할</string>
     <string name="people">사람</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">이 목록의 블로그에 최근 작성된 글 없음</string>
     <string name="error_remove_user">사용자를 제거할 수 없습니다.</string>
     <string name="error_update_role">사용자 역할을 업데이트할 수 없습니다.</string>
     <string name="error_fetch_viewers_list">사이트 사용자를 가져올 수 없습니다.</string>
@@ -3414,6 +3505,7 @@ Language: ko_KR
     <string name="button_view">보기</string>
     <string name="button_publish">발행</string>
     <string name="button_edit">편집</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">이 블로그를 찾을 수 없음</string>
     <string name="undo">실행 취소</string>
     <string name="push_auth_expired">요청이 만료되었습니다. 다시 시도하려면 WordPress.com에 로그인하십시요.</string>
     <string name="ignore">무시</string>
@@ -3457,6 +3549,7 @@ Language: ko_KR
     <string name="posts_fetching">글을 가져오는 중…</string>
     <string name="media_fetching">미디어를 가져오는 중…</string>
     <string name="logs_copied_to_clipboard">애플리케이션 로그가 클립보드에 복사되었습니다.</string>
+    <string name="reader_no_posts_in_blog">이 블로그는 비어 있음</string>
     <string name="reader_label_new_posts">새 게시물</string>
     <string name="error_copy_to_clipboard">텍스트를 클립보드에 복사하는 동안 오류가 발생했습니다.</string>
     <string name="post_uploading">업로드</string>
@@ -3530,6 +3623,8 @@ Language: ko_KR
     <string name="blog_not_found">블로그에 접속하는 동안 에러가 발생하였습니다.</string>
     <string name="gallery_error">미디어 항목을 로드 할 수 없습니다.</string>
     <string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
+    <string name="reader_toast_err_removing_tag">이 태그를 제거할 수 없음</string>
+    <string name="reader_toast_err_adding_tag">이 태그를 추가할 수 없음</string>
     <string name="reader_title_applog">응용 프로그램 로그</string>
     <string name="fatal_db_error">앱 데이터베이스를 생성하는 동안 에러가 발생했습니다. 앱을 다시 설치하시기 바랍니다.</string>
     <string name="error_blog_hidden">이 블로그는 비공개 설정이되어 로드 할 수 없습니다. 설정 화면에서 다시 활성하고 다시 시도하십시오.</string>
@@ -3591,6 +3686,7 @@ Language: ko_KR
     <string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
     <string name="reader_toast_err_view_image">이미지를 표시 할 수 없습니다</string>
     <string name="reader_toast_err_share_intent">공유에 실패</string>
+    <string name="reader_toast_err_tag_not_valid">유효한 태그가 아님</string>
     <string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
     <string name="reader_likes_only_you">\"좋아요\"를 클릭 했습니다</string>
     <string name="reader_likes_one">1명이 \"좋아요\"를 달았습니다</string>

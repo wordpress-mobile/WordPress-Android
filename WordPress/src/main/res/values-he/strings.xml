@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-30 13:54:12+0000
+Translation-Revision-Date: 2024-02-22 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: he_IL
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
+    <string name="gravatar_info_sync_done_button">סיימנו</string>
+    <string name="gravatar_info_sync_message">ייתכן שיידרש קצת זמן לסנכרון העדכונים האלה בפרופיל שלך ב-Gravatar.</string>
+    <string name="gravatar_info_learn_more_link">מה זה Gravatar?</string>
+    <string name="gravatar_info_description">עדכון של תמונת הפרופיל, השם והמידע עליך כאן יעדכן את הפרטים בכל האתרים שמשתמשים בפרופילים של Gravatar.</string>
+    <string name="gravatar_info_title">הפרופיל שלך ב-WordPress.com מופעל באמצעות Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">לא ניתן לטעון את המדיה לשיתוף. יש לבדוק את ההרשאות שניתנו לאפליקציה\n        או להשתמש בספריית המדיה של האפליקציה.</string>
+    <string name="site_monitoring_cannot_be_started">אין לנו אפשרות לפתוח את ניטור האתר כעת. יש לנסות שוב מאוחר יותר</string>
+    <string name="site_monitoring_tab_title_web_server_logs">קובצי יומן של שרתי אינטרנט</string>
+    <string name="site_monitoring_tab_title_php_logs">קובצי יומן של PHP</string>
+    <string name="site_monitoring_tab_title_metrics">מדדים</string>
+    <string name="site_monitoring">ניטור האתר</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">יש להשתמש באפשרות &lt;b&gt;היכרות&lt;/b&gt; כדי לחפש אתרים ותגיות. כדאי לבחור את האפשרות &lt;b&gt;מינויים&lt;/b&gt; כדי לראות תוכן שנרשמת אליו ולנהל את המינויים שלך.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">לעבור למינויים</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">הבלוגים שנרשמת אליהם לא פרסמו תוכן לאחרונה</string>
+    <string name="reader_no_followed_blogs_description_subs">אפשר להירשם לעדכונים מבלוגים דרך \'היכרות\' או לחפש בלוג שכבר מצא חן בעיניך.</string>
+    <string name="reader_no_recommended_blogs_title">אין בלוגים מומלצים</string>
+    <string name="reader_no_followed_tags_title">אין תגיות שנרשמת לקבלת עדכונים מהן</string>
+    <string name="reader_no_posts_with_this_tag">אין פוסטים עם התגית הזו</string>
+    <string name="reader_toast_err_unable_to_block_blog">לא ניתן לחסום את הבלוג הזה</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">פוסטים מהבלוג הזה לא יוצגו עוד</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">אין אפשרות לבטל את ההרשמה לעדכונים מהבלוג</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">אין לך הרשאה לגשת לבלוג זה</string>
+    <string name="reader_toast_err_unable_to_follow_blog">לא ניתן להירשם לעדכונים מהבלוג הזה</string>
+    <string name="reader_toast_err_already_follow_this_blog">כבר נרשמת לעדכונים מבלוג זה</string>
+    <string name="reader_toast_err_show_blog">לא ניתן להציג בלוג זה</string>
+    <string name="reader_toast_err_tag_already_subscribed">כבר נרשמת לקבלת עדכונים מתגית זו</string>
+    <string name="reader_label_choose_interests">לבחור את תחומי העניין שלך</string>
+    <string name="reader_label_subscribers_count_single">מנוי אחד</string>
+    <string name="reader_label_subscribers_count">%s מנויים</string>
+    <string name="reader_label_subscribe_count">%,d מנויים</string>
+    <string name="reader_label_blog_subscribed">הבלוג רשום לעדכונים</string>
+    <string name="reader_hint_search_subscribed_blogs">לחפש בלוגים שרשומים לעדכונים</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">יש להזין כתובת URL או תגית שברצונך להירשם לעדכונים מהן</string>
+    <string name="reader_btn_subscribed">רשום לעדכונים</string>
+    <string name="reader_btn_subscribe">להירשם לעדכונים</string>
+    <string name="reader_menu_block_this_blog">לחסום את הבלוג הזה</string>
+    <string name="reader_menu_tags_and_blogs">לערוך תגיות ובלוגים</string>
+    <string name="reader_page_followed_blogs_title">בלוגים שרשומים לעדכונים</string>
+    <string name="reader_page_followed_tags_title">תגיות שרשומות לעדכונים</string>
+    <string name="reader_title_tags">לעקוב אחרי תגיות</string>
+    <string name="reader_activity_title_manage_tags_blogs">לנהל תגיות ובלוגים</string>
+    <string name="reader_activity_title_tag_preview">תגית</string>
+    <string name="reader_activity_title_blog_preview">בלוג של Reader</string>
+    <string name="reader_subscribed_display_name">רשום לעדכונים</string>
+    <string name="reader_filter_chip_tag_other">%d תגיות</string>
+    <string name="reader_filter_chip_tag_one">תגית אחת</string>
+    <string name="reader_filter_chip_tag_zero">אפס תגיות</string>
+    <string name="reader_filter_chip_blog_other">%d בלוגים</string>
+    <string name="reader_filter_chip_blog_one">בלוג אחד</string>
+    <string name="reader_filter_chip_blog_zero">אפס בלוגים</string>
+    <string name="reader_dropdown_menu_lists">רשימות</string>
+    <string name="reader_dropdown_menu_liked">קיבל לייק</string>
+    <string name="reader_dropdown_menu_saved">נשמר</string>
+    <string name="reader_dropdown_menu_subscriptions">מינויים</string>
+    <string name="reader_dropdown_menu_discover">היכרות</string>
+    <string name="reader_search_content_description">חיפוש</string>
+    <string name="reader_discover_no_posts_button_tags_text">להירשם לעדכונים מתגיות</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">כדאי להירשם לתגיות נוספות כדי להרחיב את החיפוש</string>
+    <string name="reader_discover_empty_subtitle_subscribe">להירשם לעדכונים מתגיות כדי להיחשף לבלוגים חדשים</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">בלוגים שכדאי להירשם לעדכונים מהם</string>
+    <string name="reader_filter_empty_tags_action_subscribe">להירשם לעדכונים מתגית</string>
+    <string name="reader_filter_empty_tags_action_suggested">תגיות מומלצות</string>
+    <string name="reader_filter_empty_blogs_action_search">לחפש בלוג</string>
+    <string name="reader_filter_empty_tags_list_text">ניתן להירשם לקבלת עדכונים מתגית והפוסטים המומלצים עם התגית הזאת יוצגו כאן.</string>
+    <string name="reader_filter_empty_tags_list_title">ללא תגיות</string>
+    <string name="reader_filter_empty_blogs_list_text">ניתן להירשם לעדכונים מבלוגים במקטע \'היכרות\' כדי להציג את הפוסטים האחרונים שלהם כאן. לחלופין, אפשר לחפש בלוג שכבר מצא חן בעיניך.</string>
+    <string name="reader_filter_empty_blogs_list_title">אין מינויים לבלוגים</string>
+    <string name="reader_filter_empty_blogs_action">להירשם לעדכונים מבלוג</string>
+    <string name="reader_filter_empty_tags_list_subscribe">אפשר להירשם לעדכונים מפוסטים לגבי נושא מסוים על ידי הוספת תגית</string>
+    <string name="reader_filter_empty_blogs_list">ניתן לראות את הפוסטים החדשים ביותר מבלוגים שנרשמת לעדכונים מהם</string>
+    <string name="reader_filter_by_tag_title">לסנן לפי תגית</string>
+    <string name="reader_filter_by_blog_title">לסנן לפי בלוג</string>
+    <string name="stats_timeframe_by_year">לפי שנה</string>
+    <string name="stats_timeframe_by_month">לפי חודש</string>
+    <string name="stats_timeframe_by_week">לפי שבוע</string>
+    <string name="stats_timeframe_by_day">לפי יום</string>
     <string name="gutenberg_native_waiting_for_connection">ממתין לחיבור</string>
     <string name="stats_traffic">תעבורה</string>
     <string name="gutenberg_native_working_offline">עבודה במצב לא מקוון</string>
@@ -30,6 +107,7 @@ Language: he_IL
     <string name="bloganuary_dashboard_nudge_overlay_text_two">מזמינים אותם לפרסם את תשובתך.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">כך תגיע אליך מדי יום הצעת כתיבה חדשה שתיתן לך השראה.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">אנו מזמינים אותך להצטרף לאתגר הכתיבה שלנו שיימשך חודש שלם</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">לאורך כל חודש ינואר יתקבלו מ-Bloganuary הצעות כתיבה יומיות בבלוג. זהו האתגר הקהילתי שלנו לביסוס הרגלי פרסום בבלוג לשנה החדשה.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת דפדפן האינטרנט.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">מסיבה זו מומלץ \'לשטח\' את התוכן על ידי ביטול הקבצת הבלוק או לערוך את הבלוק בעזרת עורך האינטרנט.</string>
@@ -1644,6 +1722,7 @@ Language: he_IL
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">להעביר לטיוטות</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
+    <string name="reader_choose_interests_tags_content_description">לבחור את התגיות שלך</string>
     <string name="reader_btn_done">סיימתי</string>
     <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
     <string name="post_status_post_published">פורסם</string>
@@ -1699,6 +1778,9 @@ Language: he_IL
     <string name="site_picker_ask_site_select">לא ניתן היה לבחור אתר. יש לנסות שוב.</string>
     <string name="sitepicker_continue_flow">המשך</string>
     <string name="reader_reblog_error">הפרסום החדש בבלוג נכשל</string>
+    <string name="reader_no_blog_to_reblog_action">לנהל בלוגים</string>
+    <string name="reader_no_blog_to_reblog_detail">לאחר יצירת בלוג ב-WordPress.com, אפשר לפרסם מחדש בבלוג את התוכן שברצונך להציג באתר שלך.</string>
+    <string name="reader_no_blog_to_reblog_title">אין בלוגים זמינים של WordPress.com</string>
     <string name="whats_new_in_version_title">מה חדש</string>
     <string name="comment_q_action_copied_url">כתובת הקישור הועתקה</string>
     <string name="copy_link_address">להעתיק את הכתובת של הקישור</string>
@@ -1797,13 +1879,17 @@ Language: he_IL
     <string name="stats_management_screen_title">להוסיף כרטיס חדש</string>
     <string name="stats_management_add_new_stats_card">להוסיף כרטיס חדש של נתונים סטטיסטיים</string>
     <string name="reader_self_hosted_select_filter">להשתמש בכפתור הסינון לחיפוש פוסטים בנושאים מסוימים</string>
+    <string name="reader_bottom_sheet_select_content_description">יש לבחור \'תגית\' או \'בלוג\', חלון קופץ</string>
     <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">התחברות ל-WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מתגיות שנרשמת לקבלת עדכונים מהן</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">יש להתחבר ל-WordPress.com כדי להציג את הפוסטים האחרונים מבלוגים שנרשמת לקבלת עדכונים מהם</string>
     <string name="gutenberg_native_replace_current_block">יש להחליף את הבלוק הנוכחי</string>
     <string name="gutenberg_native_add_to_end">הוספה לסוף</string>
     <string name="gutenberg_native_add_to_beginning">הוספה להתחלה</string>
     <string name="gutenberg_native_add_block_before">הוספת בלוק לפני</string>
     <string name="gutenberg_native_add_block_after">הוספת בלוק לאחר</string>
+    <string name="reader_filter_empty_tags_add_action">להוסיף תגית</string>
     <string name="reader_filter_cta">מסנן</string>
     <string name="gutenberg_native_video_caption_s">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_edit_video">לערוך וידאו</string>
@@ -2340,6 +2426,7 @@ Language: he_IL
     <string name="login_error_sms_throttled">ביצענו יותר מדי ניסיונות לשלוח קוד אימות בהודעת טקסט - אנחנו ממליצים להמתין רגע ולנסות שוב עוד דקה.</string>
     <string name="login_error_email_not_found_v2">אין חשבון WordPress.com שתואם לחשבון Google זה.</string>
     <string name="site_picker_remove_site_empty">לא נמצאו אתרים שתואמים לחיפוש שלך</string>
+    <string name="reader_no_followed_blogs_search_title">לא נמצאו בלוגים שמתאימים לחיפוש שלך</string>
     <string name="page_parent_changed">ההורה של העמוד השתנה</string>
     <string name="page_permanently_deleted">העמוד נמחק לצמיתות</string>
     <string name="page_moved_to_scheduled">הפרסום של העמוד תוזמן</string>
@@ -2372,6 +2459,7 @@ Language: he_IL
     <string name="quick_start_button_negative">לא עכשיו</string>
     <string name="content_description_more">עוד</string>
     <string name="my_site_create_new_site_title">אין לך עוד אתרים</string>
+    <string name="reader_empty_subscribed_tags_subtitle">ניתן להוסיף כאן תגיות כדי למצוא פוסטים על הנושאים המועדפים עליך</string>
     <string name="login_to_to_connect_jetpack">יש להיכנס לחשבון WordPress.com שדרכו חיברת את Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">שאלות נפוצות בנושא Jetpack</string>
@@ -2391,6 +2479,7 @@ Language: he_IL
     <string name="people_empty_list_filtered_users">עדיין אין משתמשים</string>
     <string name="reader_empty_posts_liked_description">כאן יופיעו פוסטים שסימנת ב\'לייק\'</string>
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
+    <string name="reader_no_followed_blogs_button_discover">להכיר בלוגים</string>
     <string name="notifications_empty_likes">עדיין אין לייקים</string>
     <string name="notifications_empty_followers">עדיין אין עוקבים</string>
     <string name="activity_log_limited_content_on_free_plan">מאחר שנרשמת לתוכנית החינמית, מספר האירועים שיוצגו בפעילות שלך מוגבל.</string>
@@ -2455,6 +2544,8 @@ Language: he_IL
     <string name="reader_followed_blog_notifications_this">האתר הזה</string>
     <string name="reader_followed_blog_notifications_action">הפעלה</string>
     <string name="reader_followed_blog_notifications">האם להפעיל התראות עבור %1$s%2$s%3$s?</string>
+    <string name="reader_btn_blog_notifications_on">להפעיל הודעות מהבלוג</string>
+    <string name="reader_btn_blog_notifications_off">להשבית הודעות מהבלוג</string>
     <string name="activity_log_jetpack_icon">סמל Jetpack</string>
     <string name="activity_log_event">אירוע</string>
     <string name="activity_log_icon">סמל פעילות</string>
@@ -3136,6 +3227,7 @@ Language: he_IL
     <string name="person_remove_confirmation_title">הסרת %1$s</string>
     <string name="role">תפקיד</string>
     <string name="people">אנשים</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">הבלוגים ברשימה זו לא פרסמו דבר בזמן האחרון</string>
     <string name="error_remove_user">לא ניתן היה להסיר משתמש</string>
     <string name="error_update_role">לא הצלחנו לעדכן תפקיד משתמש</string>
     <string name="error_fetch_viewers_list">לא הצלחנו לאחזר את משתמשי האתר</string>
@@ -3413,6 +3505,7 @@ Language: he_IL
     <string name="button_view">הצגה</string>
     <string name="button_publish">פרסום</string>
     <string name="button_edit">עריכה</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">לא ניתן היה למצוא את הבלוג הזה</string>
     <string name="undo">ביטול פעולה אחרונה</string>
     <string name="push_auth_expired">פג תוקף הבקשה. יש להיכנס לוורדפרס.קום כדי לנסות שוב.</string>
     <string name="ignore">להתעלם</string>
@@ -3456,6 +3549,7 @@ Language: he_IL
     <string name="posts_fetching">מביא פוסטים…</string>
     <string name="media_fetching">מביא מדיה…</string>
     <string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
+    <string name="reader_no_posts_in_blog">הבלוג הזה ריק</string>
     <string name="reader_label_new_posts">פוסטים חדשים</string>
     <string name="error_copy_to_clipboard">אירעה שגיאה בעת העתקת הטקסט אל ה-clipboard</string>
     <string name="post_uploading">מעלה פוסט</string>
@@ -3529,6 +3623,8 @@ Language: he_IL
     <string name="blog_not_found">אירעה שגיאה בזמן הגישה לאתר זה</string>
     <string name="gallery_error">לא ניתן היה לאחזר את פריט המדיה</string>
     <string name="no_network_message">אין רשת זמינה</string>
+    <string name="reader_toast_err_removing_tag">לא ניתן להסיר תגית זו</string>
+    <string name="reader_toast_err_adding_tag">לא ניתן להוסיף תגית זו</string>
     <string name="reader_title_applog">יומן יישום</string>
     <string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
     <string name="error_blog_hidden">זה אתר סמוי ולא ניתן לטעון אותו. אפשר אותו שוב בהגדרות ונסה שנית.</string>
@@ -3590,6 +3686,7 @@ Language: he_IL
     <string name="reader_toast_err_url_intent">לא ניתן לפתוח את %s</string>
     <string name="reader_toast_err_view_image">לא ניתן להציג תמונה</string>
     <string name="reader_toast_err_share_intent">לא ניתן לשתף</string>
+    <string name="reader_toast_err_tag_not_valid">זו לא תגית תקפה</string>
     <string name="reader_toast_err_comment_failed">לא ניתן לפרסם את תגובתך</string>
     <string name="reader_likes_only_you">אתה אוהב את זה</string>
     <string name="reader_likes_one">אדם אחד אוהב את זה</string>

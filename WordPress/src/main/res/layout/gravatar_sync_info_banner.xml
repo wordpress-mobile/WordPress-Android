@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gravatar_sync_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_wordpress_gravatar_sync_info"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_extra_small_large"
+    android:paddingStart="@dimen/margin_extra_small_large"
+    android:paddingTop="@dimen/margin_extra_small_large"
+    android:visibility="visible"
+    tools:ignore="RtlSymmetry"
+    tools:visibility="visible">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/gravatar_sync_button"
+        style="@style/OverlayMigrationHelperText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gravatar_info_sync_done_button"
+        android:textColor="@color/jetpack_green_50"
+        android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_external_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/gravatar_sync_message"
+        style="@style/MyProfileLabel"
+        android:layout_width="0dp"
+        android:text="@string/gravatar_info_sync_message"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/gravatar_sync_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 09:54:08+0000
+Translation-Revision-Date: 2024-02-27 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: id
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Situs tidak ditemukan. Pastikan Anda login ke akun yang dimaksud.</string>
+    <string name="gravatar_info_sync_done_button">Selesai</string>
+    <string name="gravatar_info_sync_message">Mungkin perlu beberapa saat sampai perubahan tersinkron dengan profil Gravatar Anda.</string>
+    <string name="gravatar_info_learn_more_link">Apa itu Gravatar?</string>
+    <string name="gravatar_info_description">Jika avatar, nama, dan deskripsi tentang Anda di sini diubah, perubahan tersebut juga akan muncul di semua situs yang menggunakan profil Gravatar.</string>
+    <string name="gravatar_info_title">Profil WordPress.com Anda kini berbasis Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
+    <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>
+    <string name="site_monitoring">Pemantauan Situs</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gunakan &lt;b&gt;Temukan&lt;/b&gt; untuk menemukan situs dan tag. Coba pilih &lt;b&gt;Langganan&lt;/b&gt; untuk melihat konten langganan dan mengelola langganan Anda.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">Buka langganan</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blog langganan Anda belum mengeposkan apa pun akhir-akhir ini</string>
+    <string name="reader_no_followed_blogs_description_subs">Langganan blog di Temukan atau cari blog yang sudah Anda sukai.</string>
+    <string name="reader_no_recommended_blogs_title">Tidak ada blog rekomendasi</string>
+    <string name="reader_no_followed_tags_title">Tidak ada tag langganan</string>
+    <string name="reader_toast_err_unable_to_block_blog">Tidak dapat memblokir blog ini</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">Pos dari blog ini tidak akan ditampilkan lagi</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">Tidak dapat berhenti berlangganan blog</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">Anda tidak memiliki izin untuk mengakses blog ini</string>
+    <string name="reader_toast_err_unable_to_follow_blog">Tidak dapat berlangganan blog ini</string>
+    <string name="reader_toast_err_already_follow_this_blog">Anda sudah berlangganan blog ini</string>
+    <string name="reader_toast_err_show_blog">Tidak dapat menampilkan blog ini</string>
+    <string name="reader_toast_err_tag_already_subscribed">Anda telah berlangganan tag ini</string>
+    <string name="reader_label_subscribers_count_single">1 pelanggan</string>
+    <string name="reader_label_subscribers_count">%s pelanggan</string>
+    <string name="reader_label_subscribe_count">%,d Pelanggan</string>
+    <string name="reader_label_blog_subscribed">Blog langganan</string>
+    <string name="reader_hint_search_subscribed_blogs">Cari blog langganan</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">Masukkan URL atau tag untuk dijadikan langganan</string>
+    <string name="reader_btn_subscribed">Telah berlangganan</string>
+    <string name="reader_btn_subscribe">Berlangganan</string>
+    <string name="reader_menu_tags_and_blogs">Sunting tag dan blog</string>
+    <string name="reader_page_followed_blogs_title">Telah berlangganan blog</string>
+    <string name="reader_page_followed_tags_title">Telah berlangganan tag</string>
+    <string name="reader_title_tags">Ikuti tag</string>
+    <string name="reader_activity_title_manage_tags_blogs">Kelola Tag &amp; Blog</string>
+    <string name="reader_activity_title_blog_preview">Blog Pembaca</string>
+    <string name="reader_subscribed_display_name">Telah berlangganan</string>
+    <string name="reader_filter_chip_tag_other">%d Tag</string>
+    <string name="reader_filter_chip_tag_one">1 Tag</string>
+    <string name="reader_filter_chip_tag_zero">0 Tag</string>
+    <string name="reader_filter_chip_blog_other">%d Blog</string>
+    <string name="reader_filter_chip_blog_one">1 Blog</string>
+    <string name="reader_filter_chip_blog_zero">0 Blog</string>
+    <string name="reader_dropdown_menu_lists">Daftar</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_liked">Disukai</string>
+    <string name="reader_dropdown_menu_saved">Disimpan</string>
+    <string name="reader_dropdown_menu_subscriptions">Langganan</string>
+    <string name="reader_dropdown_menu_discover">Temukan</string>
+    <string name="reader_search_content_description">Pencarian</string>
+    <string name="reader_discover_no_posts_button_tags_text">Berlangganan tag</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">Coba berlangganan lebih banyak tag untuk memperluas pencarian</string>
+    <string name="reader_discover_empty_subtitle_subscribe">Langganan tag untuk menemukan blog baru</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">Blog untuk dijadikan langganan</string>
+    <string name="reader_filter_empty_tags_action_subscribe">Berlangganan tag</string>
+    <string name="reader_filter_empty_tags_action_suggested">Tag yang diusulkan</string>
+    <string name="reader_filter_empty_blogs_action_search">Cari blog</string>
+    <string name="reader_filter_empty_tags_list_text">Berlangganan tag dan Anda akan dapat melihat pos terbaik dari tag tersebut di sini.</string>
+    <string name="reader_filter_empty_tags_list_title">Tidak ada tag</string>
+    <string name="reader_filter_empty_blogs_list_text">Berlangganan blog di Temukan dan Anda akan melihat pos terbarunya di sini. Atau, cari blog yang sudah Anda sukai.</string>
+    <string name="reader_filter_empty_blogs_list_title">Tidak ada langganan blog</string>
+    <string name="reader_filter_empty_blogs_action">Berlangganan blog</string>
+    <string name="reader_filter_empty_tags_list_subscribe">Anda dapat berlangganan pos dengan subjek tertentu dengan menambahkan tag</string>
+    <string name="reader_filter_empty_blogs_list">Lihat pos terbaru dari blog langganan Anda</string>
+    <string name="reader_filter_by_tag_title">Saring berdasarkan tag</string>
+    <string name="reader_filter_by_blog_title">Saring berdasarkan blog</string>
+    <string name="stats_timeframe_by_year">Menurut tahun</string>
+    <string name="stats_timeframe_by_month">Menurut bulan</string>
+    <string name="stats_timeframe_by_week">Menurut minggu</string>
+    <string name="stats_timeframe_by_day">Menurut hari</string>
     <string name="gutenberg_native_waiting_for_connection">Menunggu koneksi</string>
     <string name="stats_traffic">Lalu lintas</string>
     <string name="gutenberg_native_working_offline">Bekerja secara Offline</string>
@@ -30,6 +102,7 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_text_two">Poskan tanggapan Anda.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">Dapatkan prompt baru untuk menginspirasi Anda setiap hari.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
@@ -1647,6 +1720,7 @@ Language: id
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Pindahkan ke Konsep</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">Pos yang dibuang tidak dapat disunting. Apakah Anda ingin mengubah status pos ini menjadi \"konsep\" sehingga Anda dapat menyuntingnya?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
+    <string name="reader_choose_interests_tags_content_description">Pilih tag Anda</string>
     <string name="reader_btn_done">Selesai</string>
     <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
     <string name="post_status_post_published">Dipublikasikan</string>
@@ -1702,6 +1776,9 @@ Language: id
     <string name="site_picker_ask_site_select">Tidak dapat memilih situs. Coba lagi.</string>
     <string name="sitepicker_continue_flow">Lanjutkan</string>
     <string name="reader_reblog_error">Reblog gagal</string>
+    <string name="reader_no_blog_to_reblog_action">Kelola Blog</string>
+    <string name="reader_no_blog_to_reblog_detail">Setelah membuat blog WordPress.com, Anda dapat me-reblog konten yang disukai ke situs Anda sendiri.</string>
+    <string name="reader_no_blog_to_reblog_title">Tidak ada blog WordPress.com yang tersedia</string>
     <string name="whats_new_in_version_title">Apa yang Baru</string>
     <string name="comment_q_action_copied_url">Alamat tautan disalin</string>
     <string name="copy_link_address">Salin alamat tautan</string>
@@ -1801,13 +1878,17 @@ Language: id
     <string name="stats_management_screen_title">Tambahkan Kartu Baru</string>
     <string name="stats_management_add_new_stats_card">Tambahkan kartu statistik baru</string>
     <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
+    <string name="reader_bottom_sheet_select_content_description">Pilih Tag atau Blog, Jendela Pop Up</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Login ke WordPress.com</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">Login ke WordPress.com untuk melihat pos terbaru dari tag langganan Anda</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Login ke WordPress.com untuk melihat pos terbaru dari blog langganan Anda</string>
     <string name="gutenberg_native_replace_current_block">Ganti Blok Saat Ini</string>
     <string name="gutenberg_native_add_to_end">Tambahkan ke Akhir</string>
     <string name="gutenberg_native_add_to_beginning">Tambahkan ke Awal</string>
     <string name="gutenberg_native_add_block_before">Tambahkan Blok Sebelum</string>
     <string name="gutenberg_native_add_block_after">Tambahkan Blok Setelah</string>
+    <string name="reader_filter_empty_tags_add_action">Tambahkan tag</string>
     <string name="reader_filter_cta">Penyaring</string>
     <string name="gutenberg_native_video_caption_s">Keterangan video. %s</string>
     <string name="gutenberg_native_edit_video">Sunting video</string>
@@ -2345,6 +2426,7 @@ Language: id
     <string name="login_error_sms_throttled">Kami terlalu banyak melakukan upaya pengiriman kode verifikasi SMS. Tunggu sebentar, dan minta kode yang baru beberapa saat lagi.</string>
     <string name="login_error_email_not_found_v2">Tidak ada akun WordPress.com yang cocok dengan akun Google ini.</string>
     <string name="site_picker_remove_site_empty">Tidak ada situs yang cocok dengan pencarian Anda</string>
+    <string name="reader_no_followed_blogs_search_title">Tidak ada blog yang cocok dengan pencarian Anda</string>
     <string name="page_parent_changed">Induk halaman telah diubah</string>
     <string name="page_permanently_deleted">Halaman telah dihapus permanen</string>
     <string name="page_moved_to_scheduled">Halaman telah dijadwalkan</string>
@@ -2377,6 +2459,7 @@ Language: id
     <string name="quick_start_button_negative">Jangan sekarang</string>
     <string name="content_description_more">Lainnya</string>
     <string name="my_site_create_new_site_title">Anda belum memiliki situs</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Tambahkan tag di sini untuk menemukan pos tentang topik favorit Anda</string>
     <string name="login_to_to_connect_jetpack">Login ke akun WordPress.com yang Anda gunakan untuk menghubungkan Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -2396,6 +2479,7 @@ Language: id
     <string name="people_empty_list_filtered_users">Belum ada pengguna</string>
     <string name="reader_empty_posts_liked_description">Pos yang Anda sukai akan ditampilkan di sini</string>
     <string name="reader_empty_posts_liked_title">Belum ada yang menyukai</string>
+    <string name="reader_no_followed_blogs_button_discover">Temukan blog</string>
     <string name="notifications_empty_likes">Belum ada suka</string>
     <string name="notifications_empty_followers">Belum ada pengikut</string>
     <string name="activity_log_limited_content_on_free_plan">Karena menggunakan paket gratis, Anda akan melihat sedikit kejadian di aktivitas Anda.</string>
@@ -2460,6 +2544,8 @@ Language: id
     <string name="reader_followed_blog_notifications_this">situs ini</string>
     <string name="reader_followed_blog_notifications_action">Aktifkan</string>
     <string name="reader_followed_blog_notifications">Aktifkan pemberitahuan untuk %1$s%2$s%3$s?</string>
+    <string name="reader_btn_blog_notifications_on">Aktifkan pemberitahuan blog</string>
+    <string name="reader_btn_blog_notifications_off">Nonaktifkan pemberitahuan blog</string>
     <string name="activity_log_jetpack_icon">Ikon Jetpack</string>
     <string name="activity_log_event">Peristiwa</string>
     <string name="activity_log_icon">Ikon aktivitas</string>
@@ -3138,6 +3224,7 @@ Language: id
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
     <string name="role">Peran</string>
     <string name="people">Pengguna</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Blog dalam daftar ini belum mengeposkan apa-apa akhir-akhir ini</string>
     <string name="error_remove_user">Tidak dapat menghapus pengguna</string>
     <string name="error_update_role">Tidak dapat memperbarui peran pengguna</string>
     <string name="error_fetch_viewers_list">Gagal menampilkan pengunjung situs</string>
@@ -3415,6 +3502,7 @@ Language: id
     <string name="button_view">Lihat</string>
     <string name="button_publish">Terbitkan</string>
     <string name="button_edit">Sunting</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Blog ini tidak dapat ditemukan</string>
     <string name="undo">Urungkan</string>
     <string name="push_auth_expired">Permintaan sudah kadaluwarsa. Log in ke WordPress.com untuk mencoba lagi.</string>
     <string name="ignore">Abaikan</string>
@@ -3458,6 +3546,7 @@ Language: id
     <string name="posts_fetching">Memuat pos…</string>
     <string name="media_fetching">Memuat media…</string>
     <string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
+    <string name="reader_no_posts_in_blog">Blog ini kosong</string>
     <string name="reader_label_new_posts">Pos baru</string>
     <string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
     <string name="post_uploading">Mengunggah pos</string>
@@ -3531,6 +3620,8 @@ Language: id
     <string name="blog_not_found">Terjadi kekeliruan ketika mengakses blog ini</string>
     <string name="gallery_error">Item media gagal diambil</string>
     <string name="no_network_message">Tidak ada jaringan yang tersedia</string>
+    <string name="reader_toast_err_removing_tag">Tidak bisa menghapus tag ini</string>
+    <string name="reader_toast_err_adding_tag">Tidak bisa menambahkan tag ini</string>
     <string name="reader_title_applog">Log aplikasi</string>
     <string name="fatal_db_error">Terjadi gagal ketika membuat basis data app. Coba instal ulang app.</string>
     <string name="error_blog_hidden">Blog ini tersembunyi dan tak bisa dimuat. Aktifkan lagi melalui pengaturan dan coba lagi.</string>
@@ -3592,6 +3683,7 @@ Language: id
     <string name="reader_toast_err_url_intent">Tidak bisa  membuka %s</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat gambar</string>
     <string name="reader_toast_err_share_intent">Tidak dapat membagikan</string>
+    <string name="reader_toast_err_tag_not_valid">Tag ini tidak valid</string>
     <string name="reader_toast_err_comment_failed">Tidak bisa menambahkan komentar anda</string>
     <string name="reader_likes_only_you">Anda menyukai ini</string>
     <string name="reader_likes_one">Satu orang menyukai ini</string>
