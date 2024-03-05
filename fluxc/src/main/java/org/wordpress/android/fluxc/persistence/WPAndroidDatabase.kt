@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignsPaginationEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -51,7 +50,6 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             JetpackCPConnectedSiteEntity::class,
             DomainEntity::class,
             BlazeCampaignEntity::class,
-            BlazeCampaignsPaginationEntity::class,
             JetpackSocialEntity::class,
             BlazeTargetingLanguageEntity::class,
             BlazeTargetingDeviceEntity::class,
@@ -345,14 +343,6 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                             "`totalBudget` REAL NOT NULL, " +
                             "`spentBudget` REAL NOT NULL, " +
                             "PRIMARY KEY (`siteId`, `campaignId`)" +
-                            ")"
-                    )
-                    execSQL(
-                        "CREATE TABLE IF NOT EXISTS `BlazeCampaignsPagination` (" +
-                            "`siteId` INTEGER NOT NULL, " +
-                            "`skipped` INTEGER NOT NULL, " +
-                            "`totalItems` INTEGER NOT NULL, " +
-                            "PRIMARY KEY (`siteId`)" +
                             ")"
                     )
                     execSQL(

@@ -11,21 +11,15 @@ import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
 import java.util.Date
 
 @Dao
 abstract class BlazeCampaignsDao {
     @Transaction
-    open suspend fun getCampaignsAndPaginationForSite(siteId: Long): BlazeCampaignsModel {
+    open suspend fun getCachedCampaigns(siteId: Long): List<BlazeCampaignModel> {
         val campaigns = getCampaigns(siteId)
-        val pagination = getCampaignsPagination(siteId)
-        return BlazeCampaignsModel(
-            campaigns = campaigns.map { it.toDomainModel() },
-            skipped = pagination?.skipped ?: 0,
-            totalItems = pagination?.totalItems ?: DEFAULT_PER_PAGE,
-        )
+        return campaigns.map { it.toDomainModel() }
     }
 
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
@@ -34,9 +28,6 @@ abstract class BlazeCampaignsDao {
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
     abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
 
-    @Query("SELECT * from BlazeCampaignsPagination WHERE `siteId` = :siteId")
-    abstract fun getCampaignsPagination(siteId: Long): BlazeCampaignsPaginationEntity?
-
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
     abstract fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignEntity?
 
@@ -44,46 +35,18 @@ abstract class BlazeCampaignsDao {
     abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
 
     @Transaction
-    open suspend fun insertCampaignsAndPageInfoForSite(
-        siteId: Long,
-        domainModel: BlazeCampaignsModel
-    ) {
+    open suspend fun insertCampaigns(siteId: Long, domainModel: BlazeCampaignsModel) {
         if (domainModel.skipped == 0) {
             clearBlazeCampaigns(siteId)
-            clearBlazeCampaignsPagination(siteId)
-        } // Always clear both tables when inserting first set of elements
-        insertCampaignsForSite(siteId, domainModel)
-        insertCampaignsPaginationForSite(siteId, domainModel)
-    }
-
-    private suspend fun insertCampaignsForSite(siteId: Long, domainModel: BlazeCampaignsModel) {
+        }
         insert(domainModel.campaigns.map { BlazeCampaignEntity.fromDomainModel(siteId, it) })
-    }
-
-    private suspend fun insertCampaignsPaginationForSite(
-        siteId: Long,
-        domainModel: BlazeCampaignsModel
-    ) {
-        insert(BlazeCampaignsPaginationEntity.fromDomainModel(siteId, domainModel))
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(campaigns: List<BlazeCampaignEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insert(campaigns: BlazeCampaignsPaginationEntity)
-
-    @Transaction
-    open fun clear(siteId: Long) {
-        clearBlazeCampaigns(siteId)
-        clearBlazeCampaignsPagination(siteId)
-    }
-
     @Query("DELETE FROM BlazeCampaigns where siteId = :siteId")
     abstract fun clearBlazeCampaigns(siteId: Long)
-
-    @Query("DELETE FROM BlazeCampaignsPagination where siteId = :siteId")
-    abstract fun clearBlazeCampaignsPagination(siteId: Long)
 
     @Entity(
         tableName = "BlazeCampaigns",
@@ -136,27 +99,6 @@ abstract class BlazeCampaignsDao {
                 targetUrn = campaign.targetUrn,
                 totalBudget = campaign.totalBudget,
                 spentBudget = campaign.spentBudget
-            )
-        }
-    }
-
-    @Entity(
-        tableName = "BlazeCampaignsPagination",
-        primaryKeys = ["siteId"]
-    )
-    data class BlazeCampaignsPaginationEntity(
-        val siteId: Long,
-        val skipped: Int,
-        val totalItems: Int
-    ) {
-        companion object {
-            fun fromDomainModel(
-                siteId: Long,
-                domainModel: BlazeCampaignsModel
-            ) = BlazeCampaignsPaginationEntity(
-                siteId = siteId,
-                skipped = domainModel.skipped,
-                totalItems = domainModel.totalItems,
             )
         }
     }

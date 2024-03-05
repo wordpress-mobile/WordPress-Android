@@ -52,7 +52,7 @@ class BlazeCampaignsStore @Inject constructor(
             error: BlazeCampaignsError
         ): BlazeCampaignsResult<BlazeCampaignsModel> = when (error.type) {
             AUTHORIZATION_REQUIRED -> {
-                campaignsDao.clear(site.siteId)
+                campaignsDao.clearBlazeCampaigns(site.siteId)
                 BlazeCampaignsResult()
             }
 
@@ -65,7 +65,7 @@ class BlazeCampaignsStore @Inject constructor(
             response: BlazeCampaignListResponse
         ): BlazeCampaignsResult<BlazeCampaignsModel> = try {
             val blazeCampaignsModel = response.toCampaignsModel()
-            campaignsDao.insertCampaignsAndPageInfoForSite(site.siteId, blazeCampaignsModel)
+            campaignsDao.insertCampaigns(site.siteId, blazeCampaignsModel)
             BlazeCampaignsResult(blazeCampaignsModel)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.API, "Error storing blaze campaigns", e)
@@ -93,9 +93,9 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    suspend fun getBlazeCampaigns(site: SiteModel): BlazeCampaignsModel {
+    suspend fun getBlazeCampaigns(site: SiteModel): List<BlazeCampaignModel> {
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "get blaze campaigns") {
-            campaignsDao.getCampaignsAndPaginationForSite(site.siteId)
+            campaignsDao.getCachedCampaigns(site.siteId)
         }
     }
 
