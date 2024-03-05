@@ -15,9 +15,13 @@ class GeoRepository @Inject constructor(
         wpComGeoRestClient.fetchCountryCode().map { it.orEmpty() }
     }
 
-    suspend fun isGdprComplianceRequired() = fetchCountryCode().fold(
+    /**
+     * @return true if the user is in a country where privacy policy compliance is required.
+     * Includes GDPR countries and the US.
+     */
+    suspend fun isPrivacyPolicyComplianceRequired() = fetchCountryCode().fold(
         onSuccess = { countryCode ->
-            countryCode.uppercase() in GDPR_COUNTRY_CODES
+            countryCode.uppercase() in (GDPR_COUNTRY_CODES + US_COUNTRY_CODE)
         },
         onFailure = {
             false
@@ -63,5 +67,7 @@ class GeoRepository @Inject constructor(
             "LI", // Liechtenstein
             "NO", // Norway
         )
+
+        private const val US_COUNTRY_CODE = "US" // United States
     }
 }
