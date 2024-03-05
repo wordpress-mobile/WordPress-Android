@@ -37,9 +37,9 @@ class GetCampaignListFromDbUseCase @Inject constructor(
     private val mapper: CampaignListingUIModelMapper
 ) {
     suspend fun execute(site: SiteModel): Result<NoCampaigns, List<CampaignModel>> {
-        val result = store.getBlazeCampaigns(site)
-        if (result.campaigns.isEmpty()) return Result.Failure(NoCampaigns)
-        return Result.Success(mapper.mapToCampaignModels(result.campaigns))
+        val campaigns = store.getBlazeCampaigns(site)
+        if (campaigns.isEmpty()) return Result.Failure(NoCampaigns)
+        return Result.Success(mapper.mapToCampaignModels(campaigns))
     }
 }
 
