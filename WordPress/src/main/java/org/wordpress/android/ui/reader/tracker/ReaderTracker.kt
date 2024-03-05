@@ -399,6 +399,21 @@ class ReaderTracker @Inject constructor(
         }
     }
 
+    private fun trackFollowedCount(type: String, numberOfItems: Int) {
+        val props: MutableMap<String, String> = HashMap()
+        props["type"] = type
+        props["count"] = numberOfItems.toString()
+        AnalyticsTracker.track(Stat.READER_FOLLOWING_FETCHED, props)
+    }
+
+    fun trackFollowedTagsCount(numberOfItems: Int) {
+        trackFollowedCount("tags", numberOfItems)
+    }
+
+    fun trackSubscribedSitesCount(numberOfItems: Int) {
+        trackFollowedCount("sites", numberOfItems)
+    }
+
     /* HELPER */
 
     @JvmOverloads
@@ -464,23 +479,6 @@ class ReaderTracker @Inject constructor(
                 TAG_KEY to tag
             )
             AnalyticsTracker.track(stat, properties)
-        }
-
-        private fun trackFollowedCount(type: String, numberOfItems: Int) {
-            val props: MutableMap<String, String> = HashMap()
-            props["type"] = type
-            props["count"] = numberOfItems.toString()
-            AnalyticsTracker.track(Stat.READER_FOLLOWING_FETCHED, props)
-        }
-
-        @JvmStatic
-        fun trackFollowedTagsCount(numberOfItems: Int) {
-            trackFollowedCount("tags", numberOfItems)
-        }
-
-        @JvmStatic
-        fun trackSubscribedSitesCount(numberOfItems: Int) {
-            trackFollowedCount("sites", numberOfItems)
         }
 
         fun isUserProfileSource(source: String): Boolean {

@@ -23,7 +23,7 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
@@ -193,7 +193,9 @@ public class ReaderUpdateLogic {
                     // broadcast the fact that there are changes
                     didChangeFollowedTags = true;
                 }
-                EventBus.getDefault().post(new FollowedTagsFetched(true, didChangeFollowedTags));
+                EventBus.getDefault().post(new FollowedTagsFetched(true,
+                        ReaderTagTable.getFollowedTags().size(),
+                        didChangeFollowedTags));
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);
@@ -327,6 +329,9 @@ public class ReaderUpdateLogic {
                 // but it's better to keep it separate since we aim to remove this check as soon as possible.
                 removeDuplicateBlogs(serverBlogs);
 
+                boolean sitesSubscribedChanged = false;
+                final int totalSites = jsonObject == null ? 0 : jsonObject.optInt("total_subscriptions", 0);
+
                 if (!localBlogs.isSameList(serverBlogs)) {
                     // always update the list of followed blogs if there are *any* changes between
                     // server and local (including subscription count, description, etc.)
@@ -335,13 +340,12 @@ public class ReaderUpdateLogic {
                     // changed if the server list doesn't have the same blogs as the local list
                     // (ie: a blog has been followed/unfollowed since local was last updated)
                     if (!localBlogs.hasSameBlogs(serverBlogs)) {
-                        final int totalSites = jsonObject == null ? 0 : jsonObject.optInt("total_subscriptions", 0);
                         ReaderPostTable.updateFollowedStatus();
                         AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                        EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged(totalSites));
+                        sitesSubscribedChanged = true;
                     }
                 }
-
+                EventBus.getDefault().post(new FollowedBlogsFetched(totalSites, sitesSubscribedChanged));
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
             }
         }.start();
