@@ -37,7 +37,7 @@ class VisitsAndViewsStore
         granularity: StatsGranularity,
         limitMode: Top,
         forced: Boolean = false,
-        useSiteTimezone: Boolean = false
+        useSiteTimezone: Boolean = true
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(currentTimeProvider.currentDate(), timezone)
@@ -85,7 +85,7 @@ class VisitsAndViewsStore
         limitMode: Top,
         date: Date,
         forced: Boolean = false,
-        useSiteTimezone: Boolean = false
+        useSiteTimezone: Boolean = true
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
@@ -135,7 +135,7 @@ class VisitsAndViewsStore
         site: SiteModel,
         granularity: StatsGranularity,
         limitMode: LimitMode,
-        useSiteTimezone: Boolean = false
+        useSiteTimezone: Boolean = true
     ): VisitsAndViewsModel? {
         val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(currentTimeProvider.currentDate(), timezone)
@@ -147,7 +147,7 @@ class VisitsAndViewsStore
         granularity: StatsGranularity,
         limitMode: Top,
         date: Date,
-        useSiteTimezone: Boolean = false
+        useSiteTimezone: Boolean = true
     ): VisitsAndViewsModel? {
         val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
