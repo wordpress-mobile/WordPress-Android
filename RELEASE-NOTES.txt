@@ -2,7 +2,7 @@
 
 24.5
 -----
-
+* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
 
 24.4
 -----
