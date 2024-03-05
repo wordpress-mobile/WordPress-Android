@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.config.ReaderDiscoverNewEndpointFeatureConfig
 import javax.inject.Inject
 
 /**
@@ -57,6 +58,7 @@ class ReaderDiscoverLogic @Inject constructor(
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val readerDiscoverNewEndpointFeatureConfig: ReaderDiscoverNewEndpointFeatureConfig,
 ) {
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -116,8 +118,7 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            // TODO feature flag
-            val endpoint = if (true) {
+            val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
                 "read/streams/discover"
             } else {
                 "read/tags/cards"
