@@ -229,7 +229,7 @@ class ReaderViewModel @Inject constructor(
 
         if (shouldBumpAnalytics) {
             readerTracker.trackFollowedTagsCount(event.totalTags)
-            appPrefsWrapper.readerAnalyticsCountTagsTimestamp = DateProvider().getCurrentDate().time
+            appPrefsWrapper.readerAnalyticsCountTagsTimestamp = now
         }
     }
 
@@ -243,7 +243,7 @@ class ReaderViewModel @Inject constructor(
 
         if (shouldBumpAnalytics) {
             readerTracker.trackSubscribedSitesCount(event.totalSubscriptions)
-            AppPrefs.setReaderAnalyticsCountSitesTimestamp(DateProvider().getCurrentDate().time)
+            AppPrefs.setReaderAnalyticsCountSitesTimestamp(now)
         }
     }
 
