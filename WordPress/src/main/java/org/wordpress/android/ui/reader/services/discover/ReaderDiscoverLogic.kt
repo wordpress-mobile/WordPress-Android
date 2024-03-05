@@ -206,11 +206,16 @@ class ReaderDiscoverLogic @Inject constructor(
     @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         val simplifiedJsonList = mutableListOf<JSONObject>()
-        var firstYouMayLikeCard: JSONObject? = null
+        var firstRecommendationCard: JSONObject? = null
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
+                    // We should not have an recommended blogs card as the first element on Discover feed.
+                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
+                        firstRecommendationCard = cardJson
+                        continue
+                    }
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
                             simplifiedJsonList.add(createSimplifiedRecommendedBlogsCardJson(cardJson))
@@ -220,7 +225,7 @@ class ReaderDiscoverLogic @Inject constructor(
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
                     // We should not have an interests/tags card as the first element on Discover feed.
                     if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
-                        firstYouMayLikeCard = cardJson
+                        firstRecommendationCard = cardJson
                         continue
                     }
                     simplifiedJsonList.add(cardJson)
@@ -230,9 +235,9 @@ class ReaderDiscoverLogic @Inject constructor(
                 }
             }
         }
-        // If we've received an interests/tags card as the first element, it should be displayed as the third card.
-        if (firstYouMayLikeCard != null) {
-            simplifiedJsonList.add(2, firstYouMayLikeCard)
+        // If we've received a recommended tags or blogs card as the first element, it should be displayed as the third card.
+        if (firstRecommendationCard != null) {
+            simplifiedJsonList.add(2, firstRecommendationCard)
         }
 
         return JSONArray(simplifiedJsonList)
