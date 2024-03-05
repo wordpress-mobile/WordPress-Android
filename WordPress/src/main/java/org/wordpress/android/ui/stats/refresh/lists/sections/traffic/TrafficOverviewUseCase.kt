@@ -81,7 +81,8 @@ class TrafficOverviewUseCase(
         val cachedData = visitsAndViewsStore.getVisits(
             statsSiteProvider.siteModel,
             statsGranularity,
-            LimitMode.All
+            LimitMode.All,
+            false
         )
 
         // Get lower granularity model for chart values
@@ -92,7 +93,8 @@ class TrafficOverviewUseCase(
                     statsSiteProvider.siteModel,
                     lowerGranularity,
                     LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
-                    it
+                    it,
+                    false
                 )
             }
         } else {
@@ -176,7 +178,8 @@ class TrafficOverviewUseCase(
         statsSiteProvider.siteModel,
         granularity,
         LimitMode.Top(quantity),
-        forced
+        forced,
+        false
     ).apply {
         error?.let { return@apply }
     }
