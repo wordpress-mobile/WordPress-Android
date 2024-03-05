@@ -116,7 +116,13 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
+            // TODO feature flag
+            val endpoint = if (true) {
+                "read/streams/discover"
+            } else {
+                "read/tags/cards"
+            }
+            WordPress.getRestClientUtilsV2()[endpoint, params, null, listener, errorListener]
         }
     }
 
