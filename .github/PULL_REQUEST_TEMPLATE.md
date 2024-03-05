@@ -28,7 +28,6 @@ Fixes #
 
 - [ ] I have completed the Regression Notes.
 - [ ] I have considered adding accessibility improvements for my changes.
-- [ ] I have tested areas of impact using the [testing checklist](../docs/TestingChecklist.md).
 - [ ] I have considered if this change warrants user-facing release notes and have added them to `RELEASE-NOTES.txt` if necessary.
 
 -----
