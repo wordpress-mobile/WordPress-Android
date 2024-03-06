@@ -242,7 +242,7 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    private static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
+    public static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
                                                           TextView textView,
                                                           boolean isFooter,
                                                           final Function1<NoteBlockClickableSpan, Unit>
