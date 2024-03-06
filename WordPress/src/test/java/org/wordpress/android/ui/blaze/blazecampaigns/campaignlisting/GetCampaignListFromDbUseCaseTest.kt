@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 
 @ExperimentalCoroutinesApi
