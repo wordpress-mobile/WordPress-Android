@@ -39,7 +39,7 @@ class CampaignListingUIModelMapperTest : BaseUnitTest() {
         impressions = 1,
         clicks = 1,
         targetUrn = null,
-        totalBudget = 0.0,
+        totalBudget = 1.0,
         spentBudget = 0.0,
     )
 
