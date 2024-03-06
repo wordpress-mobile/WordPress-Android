@@ -20,7 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,11 +36,9 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.BloggingPromptsResult
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -57,7 +54,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 import java.util.Date
@@ -111,12 +107,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var openBloggingPromptsOnboardingObserver: Observer<Unit?>
 
     @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
-    @Mock
-    private lateinit var siteUtilsWrapper: SiteUtilsWrapper
-
-    @Mock
     private lateinit var shouldAskPrivacyConsent: ShouldAskPrivacyConsent
 
     private val featureAnnouncement = FeatureAnnouncement(
@@ -165,7 +155,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
         whenever(shouldAskPrivacyConsent()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
@@ -179,8 +168,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
-            jetpackFeatureRemovalPhaseHelper,
-            siteUtilsWrapper,
             shouldAskPrivacyConsent,
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -319,15 +306,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet action is new story when new story is tapped`() {
-        viewModel.start(site = initSite(hasFullAccessToContent = true))
-        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_STORY } as CreateAction
-        assertThat(action).isNotNull
-        action.onClickAction?.invoke(CREATE_NEW_STORY)
-        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_STORY)
-    }
-
-    @Test
     fun `bottom sheet does not show prompt card when prompts feature is not active`() = test {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         startViewModelWithDefaultParameters()
@@ -423,7 +401,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Test
     fun `new post action is triggered from FAB when no full access to content if stories unavailable`() {
         startViewModelWithDefaultParameters()
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(false)
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false, isWpcomOrJpSite = false))
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
@@ -433,15 +410,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     fun `bottom sheet is visualized when user has full access to content and has all 3 options`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true))
-        assertThat(viewModel.createAction.value).isNull()
-        assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
-        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
-    }
-
-    @Test
-    fun `bottom sheet is visualized when user has partial access and has only 2 options`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = false))
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isTrue
@@ -456,24 +424,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.onOpenLoginPage()
 
         assertThat(switchTabTriggered).isTrue
-    }
-
-    @Test
-    fun `onResume set expected content message when user has full access to content`() {
-        startViewModelWithDefaultParameters()
-        resumeViewModelWithDefaultParameters()
-        assertThat(fabUiState!!.CreateContentMessageId)
-            .isEqualTo(R.string.create_post_page_fab_tooltip_stories_enabled)
-    }
-
-    @Test
-    fun `onResume set expected content message when user has not full access to content`() {
-        startViewModelWithDefaultParameters()
-        whenever(siteUtilsWrapper.supportsStoriesFeature(any(), any())).thenReturn(true)
-        viewModel.onResume(site = initSite(hasFullAccessToContent = false), isOnMySitePageWithValidSite = true)
-
-        assertThat(fabUiState!!.CreateContentMessageId)
-            .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_enabled)
     }
 
     @Test
@@ -655,7 +605,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
         val expectedOrder = listOf(
             NO_ACTION,
-            CREATE_NEW_STORY,
             CREATE_NEW_POST,
             CREATE_NEW_PAGE
         )

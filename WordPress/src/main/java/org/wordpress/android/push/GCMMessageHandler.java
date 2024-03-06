@@ -83,7 +83,6 @@ public class GCMMessageHandler {
     private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
     private static final String PUSH_TYPE_AUTOMATTCHER = "automattcher";
     private static final String PUSH_TYPE_FOLLOW = "follow";
-    private static final String PUSH_TYPE_REBLOG = "reblog";
     private static final String PUSH_TYPE_PUSH_AUTH = "push_auth";
     private static final String PUSH_TYPE_BADGE_RESET = "badge-reset";
     private static final String PUSH_TYPE_NOTE_DELETE = "note-delete";
@@ -749,8 +748,6 @@ public class GCMMessageHandler {
                     return NotificationType.AUTOMATTCHER;
                 case PUSH_TYPE_FOLLOW:
                     return NotificationType.FOLLOW;
-                case PUSH_TYPE_REBLOG:
-                    return NotificationType.REBLOG;
                 case PUSH_TYPE_PUSH_AUTH:
                     return NotificationType.AUTHENTICATION;
                 case PUSH_TYPE_BADGE_RESET:
@@ -1104,7 +1101,6 @@ public class GCMMessageHandler {
                 case PUSH_TYPE_COMMENT_LIKE:
                 case PUSH_TYPE_AUTOMATTCHER:
                 case PUSH_TYPE_FOLLOW:
-                case PUSH_TYPE_REBLOG:
                     return true;
                 default:
                     return false;

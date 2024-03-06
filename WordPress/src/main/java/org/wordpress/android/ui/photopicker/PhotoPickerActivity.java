@@ -258,13 +258,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void launchWPStoriesCamera() {
-        Intent intent = new Intent()
-                .putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
     private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
@@ -289,12 +282,12 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                             switch (queueImageResult) {
                                 case FILE_NOT_FOUND:
                                     Toast.makeText(getApplicationContext(),
-                                            R.string.file_not_found, Toast.LENGTH_SHORT)
+                                                 R.string.file_not_found, Toast.LENGTH_SHORT)
                                          .show();
                                     break;
                                 case INVALID_POST_ID:
                                     Toast.makeText(getApplicationContext(),
-                                            R.string.error_generic, Toast.LENGTH_SHORT)
+                                                 R.string.error_generic, Toast.LENGTH_SHORT)
                                          .show();
                                     break;
                                 case SUCCESS:
@@ -319,24 +312,19 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
         if (mediaIds != null && mediaIds.size() > 0) {
-            if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
-                // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
-                getPickerFragment().mediaIdsSelectedFromWPMediaPicker(mediaIds);
-            } else {
-                // if user chose a featured image, track image picked event
-                if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
-                    mFeaturedImageHelper.trackFeaturedImageEvent(
-                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
-                            mLocalPostId
-                    );
-                }
-
-                Intent data = new Intent()
-                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_ID, mediaIds.get(0))
-                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
-                setResult(RESULT_OK, data);
-                finish();
+            // if user chose a featured image, track image picked event
+            if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+                mFeaturedImageHelper.trackFeaturedImageEvent(
+                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED_POST_SETTINGS,
+                        mLocalPostId
+                );
             }
+
+            Intent data = new Intent()
+                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_ID, mediaIds.get(0))
+                    .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
+            setResult(RESULT_OK, data);
+            finish();
         } else {
             throw new IllegalArgumentException("call to doMediaIdsSelected with null or empty mediaIds array");
         }
@@ -366,9 +354,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case STOCK_MEDIA:
                 launchStockMediaPicker();
-                break;
-            case WP_STORIES_CAPTURE:
-                launchWPStoriesCamera();
                 break;
         }
     }

@@ -53,6 +53,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUn
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Companion.KEY_TAB_POSITION
 import org.wordpress.android.ui.notifications.adapters.Filter
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
@@ -159,11 +160,19 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 connectJetpack.visibility = View.GONE
                 tabLayout.visibility = View.VISIBLE
                 viewPager.visibility = View.VISIBLE
+                fetchRemoteNotes()
             }
             setSelectedTab(lastTabPosition)
             setNotificationPermissionWarning()
         }
         viewModel.onResume()
+    }
+
+    private fun fetchRemoteNotes() {
+        if (!isAdded) {
+            return
+        }
+        NotificationsUpdateServiceStarter.startService(activity)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

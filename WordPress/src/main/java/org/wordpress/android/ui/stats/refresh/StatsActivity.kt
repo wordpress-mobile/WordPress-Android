@@ -15,6 +15,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.JetpackBrandingUtils
 import javax.inject.Inject
@@ -62,6 +63,7 @@ class StatsActivity : LocaleAwareActivity() {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
         const val ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM"
         const val ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME"
+        const val ARG_GRANULARITY = "ARG_GRANULARITY"
 
         @JvmStatic
         @JvmOverloads
@@ -89,17 +91,5 @@ class StatsActivity : LocaleAwareActivity() {
             putExtra(ARG_LAUNCHED_FROM, launchedFrom)
             notificationType?.let { putExtra(ARG_NOTIFICATION_TYPE, it) }
         }
-    }
-
-    enum class StatsLaunchedFrom(val value: String) {
-        QUICK_ACTIONS("quick_actions"),
-        TODAY_STATS_CARD("today_stats_card"),
-        ROW("row"),
-        WIDGET("widget"),
-        NOTIFICATION("notification"),
-        LINK("link"),
-        SHORTCUT("shortcut"),
-        ACTIVITY_LOG("activity_log"),
-        JETPACK_CONNECTION("jetpack_connection")
     }
 }

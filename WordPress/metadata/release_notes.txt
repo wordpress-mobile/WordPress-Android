@@ -1,2 +1,5 @@
-* [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
+* [**] [internal] Removed the Stories from the codebase [https://github.com/wordpress-mobile/WordPress-Android/pull/20016]
+* [*] Block editor: Prevent crash when autoscrolling to blocks [https://github.com/WordPress/gutenberg/pull/59110]
+* [*] Block editor: Remove opacity change when images are being uploaded [https://github.com/WordPress/gutenberg/pull/59264]
+* [*] Block editor: Media & Text blocks correctly show an error message when the attached video upload fails [https://github.com/WordPress/gutenberg/pull/59288]
 

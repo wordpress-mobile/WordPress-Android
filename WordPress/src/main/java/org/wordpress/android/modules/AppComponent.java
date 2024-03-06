@@ -159,6 +159,7 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
+import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.AllTimeWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.alltime.StatsAllTimeWidget;
@@ -172,8 +173,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.StatsWeekWidget
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekViewsWidgetListProvider;
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListProviderFactory;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
-import org.wordpress.android.ui.stories.StoryComposerActivity;
-import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -457,11 +456,6 @@ public interface AppComponent {
     void inject(FeatureAnnouncementDialogFragment object);
 
     void inject(FeatureAnnouncementListAdapter object);
-
-    void inject(StoryComposerActivity object);
-
-    void inject(StoriesIntroDialogFragment object);
-
     void inject(ReaderDiscoverFragment object);
 
     void inject(ReaderSearchActivity object);
@@ -555,6 +549,8 @@ public interface AppComponent {
     void inject(StatsWeekWidget object);
 
     void inject(WeekViewsWidgetListProvider object);
+
+    void inject(WidgetBlockListProvider object);
 
     void inject(WeekWidgetBlockListProviderFactory object);
 

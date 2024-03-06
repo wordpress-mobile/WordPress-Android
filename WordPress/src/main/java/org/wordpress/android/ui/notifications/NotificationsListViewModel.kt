@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
-import org.greenrobot.eventbus.EventBus
-import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -15,18 +14,20 @@ import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
-import org.wordpress.android.models.Notification.PostNotification
+import org.wordpress.android.models.Notification.PostLike
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsChanged
-import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLikeChanged
+import org.wordpress.android.ui.notifications.utils.NotificationsActionsWrapper
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -44,6 +45,9 @@ class NotificationsListViewModel @Inject constructor(
     private val commentStore: CommentsStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val notificationsTableWrapper: NotificationsTableWrapper,
+    private val notificationsActionsWrapper: NotificationsActionsWrapper,
+    private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore
 ) : ScopedViewModel(bgDispatcher) {
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
@@ -81,12 +85,12 @@ class NotificationsListViewModel @Inject constructor(
         notes.filter { it.isUnread }
             .map {
                 gcmMessageHandler.removeNotificationWithNoteIdFromSystemBar(context, it.id)
-                NotificationsActions.markNoteAsRead(it)
+                notificationsActionsWrapper.markNoteAsRead(it)
                 it.setRead()
                 it
             }.takeIf { it.isNotEmpty() }?.let {
-                NotificationsTable.saveNotes(it, false)
-                EventBus.getDefault().post(NotificationsChanged())
+                notificationsTableWrapper.saveNotes(it, false)
+                eventBusWrapper.post(NotificationsChanged())
             }
     }
 
@@ -97,9 +101,11 @@ class NotificationsListViewModel @Inject constructor(
         }
         note.setLikedComment(liked)
         _updatedNote.postValue(note)
+        // for updating the UI in other tabs
+        eventBusWrapper.postSticky(OnNoteCommentLikeChanged(note, liked))
         val result = commentStore.likeComment(site, note.commentId, null, liked)
         if (result.isError.not()) {
-            NotificationsTable.saveNote(note)
+            notificationsTableWrapper.saveNote(note)
         }
     }
 
@@ -136,6 +142,8 @@ class NotificationsListViewModel @Inject constructor(
     fun likePost(note: Note, liked: Boolean) = launch {
         note.setLikedPost(liked)
         _updatedNote.postValue(note)
+        // for updating the UI in other tabs
+        eventBusWrapper.postSticky(NotificationEvents.OnNotePostLikeChanged(note, liked))
         val post = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), true)
         readerPostActionsWrapper.performLikeActionRemote(
             post = post,
@@ -145,7 +153,7 @@ class NotificationsListViewModel @Inject constructor(
             wpComUserId = accountStore.account.userId
         ) { success ->
             if (success) {
-                NotificationsTable.saveNote(note)
+                notificationsTableWrapper.saveNote(note)
                 if (post == null) {
                     // sync post from server
                     readerPostActionsWrapper.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
@@ -155,7 +163,7 @@ class NotificationsListViewModel @Inject constructor(
     }
 
     sealed class InlineActionEvent {
-        data class SharePostButtonTapped(val notification: PostNotification) : InlineActionEvent()
+        data class SharePostButtonTapped(val notification: PostLike) : InlineActionEvent()
         class LikeCommentButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
         class LikePostButtonTapped(val note: Note, val liked: Boolean) : InlineActionEvent()
 

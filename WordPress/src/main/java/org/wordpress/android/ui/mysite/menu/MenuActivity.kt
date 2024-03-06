@@ -64,7 +64,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
-import org.wordpress.android.ui.stats.refresh.StatsActivity
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
@@ -147,7 +147,7 @@ class MenuActivity : AppCompatActivity() {
             is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
                 this,
                 action.site,
-                StatsActivity.StatsLaunchedFrom.ROW
+                StatsLaunchedFrom.ROW
             )
 
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
@@ -425,7 +425,7 @@ fun MySiteListItemPreviewWithSecondaryImage() {
         MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Plans"),
-            secondaryIcon = R.drawable.ic_story_icon_24dp,
+            secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
             showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },

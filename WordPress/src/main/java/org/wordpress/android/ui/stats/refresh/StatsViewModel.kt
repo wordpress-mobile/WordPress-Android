@@ -37,7 +37,6 @@ import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.stats.refresh.StatsModuleActivateRequestState.Success
@@ -47,6 +46,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.toStatsGranularity
 import org.wordpress.android.ui.stats.refresh.utils.trackStatsAccessed
@@ -61,7 +61,6 @@ import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import java.io.Serializable
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -119,11 +118,21 @@ class StatsViewModel
     fun start(intent: Intent, restart: Boolean = false) {
         val localSiteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, 0)
 
+        val timeframe = intent.getSerializableExtraCompat<StatsTimeframe>(StatsActivity.ARG_DESIRED_TIMEFRAME)
         val launchedFrom = intent.getSerializableExtraCompat<StatsLaunchedFrom>(StatsActivity.ARG_LAUNCHED_FROM)
-        val initialTimeFrame = getInitialTimeFrame(intent)
+        val initialTimeFrame = getInitialTimeFrame(timeframe, launchedFrom)
+        val initialGranularity = intent.getSerializableExtraCompat<StatsGranularity>(StatsActivity.ARG_GRANULARITY)
         val initialSelectedPeriod = intent.getStringExtra(StatsActivity.INITIAL_SELECTED_PERIOD_KEY)
         val notificationType = intent.getSerializableExtraCompat<NotificationType>(ARG_NOTIFICATION_TYPE)
-        start(localSiteId, launchedFrom, initialTimeFrame, initialSelectedPeriod, restart, notificationType)
+        start(
+            localSiteId,
+            launchedFrom,
+            initialTimeFrame,
+            initialSelectedPeriod,
+            restart,
+            notificationType,
+            initialGranularity
+        )
     }
 
     fun onSaveInstanceState(outState: Bundle) {
@@ -139,14 +148,29 @@ class StatsViewModel
         }
     }
 
-    private fun getInitialTimeFrame(intent: Intent): StatsSection? {
-        return when (intent.getSerializableExtraCompat<Serializable>(StatsActivity.ARG_DESIRED_TIMEFRAME)) {
+    private fun getInitialTimeFrame(timeframe: StatsTimeframe?, launchedFrom: StatsLaunchedFrom?): StatsSection? {
+        if (statsTrafficTabFeatureConfig.isEnabled() && launchedFrom == StatsLaunchedFrom.LINK) {
+            setupDeeplinkForTrafficTab(timeframe)
+        }
+
+        return when (timeframe) {
+            StatsTimeframe.TRAFFIC -> StatsSection.TRAFFIC
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS
             MONTH -> StatsSection.MONTHS
             YEAR -> StatsSection.YEARS
             else -> null
+        }
+    }
+
+    private fun setupDeeplinkForTrafficTab(timeframe: StatsTimeframe?) {
+        when (timeframe) {
+            DAY -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.DAYS)
+            WEEK -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.WEEKS)
+            MONTH -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.MONTHS)
+            YEAR -> selectedTrafficGranularityManager.setSelectedTrafficGranularity(StatsGranularity.YEARS)
+            else -> { /* Do nothing */ }
         }
     }
 
@@ -157,7 +181,8 @@ class StatsViewModel
         initialSection: StatsSection?,
         initialSelectedPeriod: String?,
         restart: Boolean,
-        notificationType: NotificationType?
+        notificationType: NotificationType?,
+        granularity: StatsGranularity? = null
     ) {
         if (restart) {
             selectedDateProvider.clear()
@@ -172,10 +197,15 @@ class StatsViewModel
             )
 
             initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            granularity?.let {
+                if (it != selectedTrafficGranularityManager.getSelectedTrafficGranularity()) {
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(it)
+                }
+            }
             updateSelectedSectionByTrafficTabFeatureConfig()
             trackSectionSelected(statsSectionManager.getSelectedSection())
 
-            val initialGranularity = initialSection?.toStatsGranularity()
+            val initialGranularity = granularity ?: initialSection?.toStatsGranularity()
             if (initialGranularity != null && initialSelectedPeriod != null) {
                 selectedDateProvider.setInitialSelectedPeriod(initialGranularity, initialSelectedPeriod)
             }

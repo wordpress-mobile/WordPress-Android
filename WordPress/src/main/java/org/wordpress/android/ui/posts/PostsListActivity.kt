@@ -25,7 +25,6 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,7 +34,6 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -55,7 +53,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.review.ReviewViewModel
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -120,9 +117,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var mediaPickerLauncher: MediaPickerLauncher
-
-    @Inject
-    internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
@@ -281,7 +275,6 @@ class PostsListActivity : LocaleAwareActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    mediaPickerLauncher,
                     blazeFeatureUtils
                 )
             }
@@ -316,8 +309,7 @@ class PostsListActivity : LocaleAwareActivity(),
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
                     site = site,
-                    isPage = editPostRepository.isPage,
-                    isStoryPost = false
+                    isPage = editPostRepository.isPage
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
@@ -461,7 +453,7 @@ class PostsListActivity : LocaleAwareActivity(),
                 if (data != null && EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data, this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
 
                     // a restart will happen so, no need to continue here
@@ -473,26 +465,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()
-            }
-
-            requestCode == RequestCodes.PHOTO_PICKER &&
-                    resultCode == Activity.RESULT_OK &&
-                    data != null -> {
-                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                    data,
-                    this,
-                    site,
-                    STORY_FROM_POSTS_LIST
-                )
-            }
-
-            requestCode == RequestCodes.CREATE_STORY -> {
-                val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
-                bloggingRemindersViewModel.onPublishingPost(
-                    site.id,
-                    isNewStory
-                )
-                reviewViewModel.onPublishingPost(isNewStory)
             }
         }
     }

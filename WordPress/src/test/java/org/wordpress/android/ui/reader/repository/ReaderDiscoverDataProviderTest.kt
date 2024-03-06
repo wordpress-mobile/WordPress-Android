@@ -16,7 +16,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
-import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
@@ -249,7 +249,12 @@ class ReaderDiscoverDataProviderTest : BaseUnitTest() {
     @Test
     fun `when followed tags change the discover feed gets refreshed`() = test {
         // Act
-        dataProvider.onFollowedTagsChanged(FollowedTagsChanged(true))
+        dataProvider.onFollowedTagsFetched(
+            FollowedTagsFetched(
+                true,
+                10
+            )
+        )
         // Assert
         verify(fetchDiscoverCardsUseCase).fetch(REQUEST_FIRST_PAGE)
     }

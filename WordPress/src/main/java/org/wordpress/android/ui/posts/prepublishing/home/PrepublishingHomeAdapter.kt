@@ -9,7 +9,6 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
-import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeViewHolder.PrepublishingSocialItemViewHolder
@@ -71,8 +70,6 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
             is HomeUiState -> VIEW_TYPE_HOME_ITEM
             is ButtonUiState -> VIEW_TYPE_SUBMIT_BUTTON
             is SocialUiState -> VIEW_TYPE_SOCIAL_ITEM
-            is StoryTitleUiState ->
-                throw IllegalStateException("StoryTitleUiState is not supported by the PrepublishingHomeAdapter")
         }
     }
 

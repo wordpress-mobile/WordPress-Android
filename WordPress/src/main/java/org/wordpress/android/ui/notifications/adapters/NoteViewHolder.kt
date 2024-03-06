@@ -75,15 +75,15 @@ class NoteViewHolder(
     fun bindInlineActions(note: Note) = Notification.from(note).let { notification ->
         when (notification) {
             Notification.Comment -> bindLikeCommentAction(note)
-            is Notification.PostNotification.NewPost -> bindLikePostAction(note)
-            is Notification.PostNotification -> bindShareAction(notification)
+            is Notification.NewPost -> bindLikePostAction(note)
+            is Notification.PostLike -> bindShareAction(notification)
             is Notification.Unknown -> {
                 binding.action.isVisible = false
             }
         }
     }
 
-    private fun bindShareAction(notification: Notification.PostNotification) {
+    private fun bindShareAction(notification: Notification.PostLike) {
         binding.action.setImageResource(R.drawable.block_share)
         val color = binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
         ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
@@ -95,6 +95,7 @@ class NoteViewHolder(
                 )
             }
         }
+        binding.action.contentDescription = binding.root.context.getString(R.string.share_action)
     }
 
     private fun bindLikePostAction(note: Note) {
@@ -134,6 +135,8 @@ class NoteViewHolder(
         val color = if (liked) binding.root.context.getColor(R.color.inline_action_filled)
         else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
         ImageViewCompat.setImageTintList(binding.action, ColorStateList.valueOf(color))
+        binding.action.contentDescription =
+            binding.root.context.getString(if (liked) R.string.mnu_comment_liked else R.string.reader_label_like)
     }
 
     @StringRes

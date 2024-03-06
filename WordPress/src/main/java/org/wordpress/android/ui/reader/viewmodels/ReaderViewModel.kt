@@ -31,6 +31,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.reader.ReaderEvents
@@ -60,6 +61,7 @@ import kotlin.coroutines.CoroutineContext
 
 const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
+const val ONE_HOUR_MILLIS = 1000 * 60 * 60
 
 @Suppress("ForbiddenComment")
 class ReaderViewModel @Inject constructor(
@@ -135,7 +137,8 @@ class ReaderViewModel @Inject constructor(
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
-    private fun loadTabs(savedInstanceState: Bundle? = null) {
+    @JvmOverloads
+    fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {
@@ -181,6 +184,8 @@ class ReaderViewModel @Inject constructor(
 
     fun updateSelectedContent(selectedTag: ReaderTag) {
         getMenuItemFromReaderTag(selectedTag)?.let { newSelectedMenuItem ->
+            // Persist selected feed to app prefs
+            appPrefsWrapper.readerTopBarSelectedFeedItemId = newSelectedMenuItem.id
             // Update top bar UI state so menu is updated with new selected item
             _topBarUiState.value?.let {
                 _topBarUiState.value = it.copy(
@@ -215,8 +220,31 @@ class ReaderViewModel @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = MAIN)
-    fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
+    fun onTagsUpdated(event: ReaderEvents.FollowedTagsFetched) {
         loadTabs()
+        // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
+        val now = DateProvider().getCurrentDate().time
+        val shouldBumpAnalytics = event.didChange()
+                || ( now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
+
+        if (shouldBumpAnalytics) {
+            readerTracker.trackFollowedTagsCount(event.totalTags)
+            appPrefsWrapper.readerAnalyticsCountTagsTimestamp = now
+        }
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(threadMode = MAIN)
+    fun onSubscribedSitesUpdated(event: ReaderEvents.FollowedBlogsFetched) {
+        // Determine if analytics should be bumped either due to sites changed or time elapsed since last bump
+        val now = DateProvider().getCurrentDate().time
+        val shouldBumpAnalytics = event.didChange()
+                || (now - AppPrefs.getReaderAnalyticsCountSitesTimestamp() > ONE_HOUR_MILLIS)
+
+        if (shouldBumpAnalytics) {
+            readerTracker.trackSubscribedSitesCount(event.totalSubscriptions)
+            AppPrefs.setReaderAnalyticsCountSitesTimestamp(now)
+        }
     }
 
     fun onScreenInForeground() {
@@ -310,27 +338,33 @@ class ReaderViewModel @Inject constructor(
             // if menu is exactly the same as before, don't update
             if (_topBarUiState.value?.menuItems == menuItems) return@withContext
 
-
-            // if there's already a selected item, use it, otherwise use the first item, also try to use the saved state
+            // choose selected item, either from current, saved state, or persisted, falling back to first item
             val savedStateSelectedId = savedInstanceState?.getString(KEY_TOP_BAR_UI_STATE_SELECTED_ITEM_ID)
+
+            val persistedSelectedId = appPrefsWrapper.readerTopBarSelectedFeedItemId
+
             val selectedItem = _topBarUiState.value?.selectedItem
                 ?: menuItems.filterSingleItems()
                     .let { singleItems ->
-                        singleItems.firstOrNull { it.id == savedStateSelectedId } ?: singleItems.first()
+                        singleItems.firstOrNull { it.id == savedStateSelectedId }
+                            ?: singleItems.firstOrNull { it.id == persistedSelectedId }
+                            ?: singleItems.first()
                     }
 
             // if there's a selected item and filter state, also use the filter state, also try to use the saved state
+            val savedStateFilterUiState = savedInstanceState
+                ?.let {
+                    BundleCompat.getParcelable(
+                        it,
+                        KEY_TOP_BAR_UI_STATE_FILTER_UI_STATE,
+                        TopBarUiState.FilterUiState::class.java
+                    )
+                }
+                ?.takeIf { selectedItem.id == savedStateSelectedId }
+
             val filterUiState = _topBarUiState.value?.filterUiState
                 ?.takeIf { _topBarUiState.value?.selectedItem != null }
-                ?: savedInstanceState
-                    ?.let {
-                        BundleCompat.getParcelable(
-                            it,
-                            KEY_TOP_BAR_UI_STATE_FILTER_UI_STATE,
-                            TopBarUiState.FilterUiState::class.java
-                        )
-                    }
-                    ?.takeIf { selectedItem.id == savedStateSelectedId }
+                ?: savedStateFilterUiState
 
             _topBarUiState.postValue(
                 TopBarUiState(

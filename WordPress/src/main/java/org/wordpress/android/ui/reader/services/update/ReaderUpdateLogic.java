@@ -23,7 +23,8 @@ import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
-import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
@@ -122,24 +123,21 @@ public class ReaderUpdateLogic {
                             .get("read/menu", params, null, listener, errorListener);
     }
 
-    private boolean displayNameUpdateWasNeeded(ReaderTagList serverTopics) {
-        boolean updateDone = false;
-
+    /**
+     * Update the display names of the default tags (such as Subscribed and Discover) in the serverTopics list.
+     *
+     * @param serverTopics The list of default tags.
+     */
+    private void updateDisplayNamesIfNeeded(@NonNull ReaderTagList serverTopics) {
         for (ReaderTag tag : serverTopics) {
-            String tagNameBefore = tag.getTagDisplayName();
             if (tag.isFollowedSites()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_subscribed_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isDiscover()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_discover_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             } else if (tag.isPostsILike()) {
                 tag.setTagDisplayName(mContext.getString(R.string.reader_my_likes_display_name));
-                if (!tagNameBefore.equals(tag.getTagDisplayName())) updateDone = true;
             }
         }
-
-        return updateDone;
     }
 
     private void handleUpdateTagsResponse(final JSONObject jsonObject) {
@@ -151,7 +149,7 @@ public class ReaderUpdateLogic {
                 ReaderTagList serverTopics = new ReaderTagList();
                 serverTopics.addAll(parseTags(jsonObject, "default", ReaderTagType.DEFAULT));
 
-                boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
+                updateDisplayNamesIfNeeded(serverTopics);
 
                 serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
 
@@ -176,13 +174,11 @@ public class ReaderUpdateLogic {
                 localTopics.addAll(ReaderTagTable.getFollowedTags());
                 localTopics.addAll(ReaderTagTable.getBookmarkTags());
                 localTopics.addAll(ReaderTagTable.getCustomListTags());
+                localTopics.addAll(ReaderTagTable.getDiscoverPostCardsTags());
 
-                if (
-                        !localTopics.isSameList(serverTopics)
-                        || displayNameUpdateWasNeeded
-                ) {
-                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
-                                              + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
+                boolean didChangeFollowedTags = false;
+                if (!localTopics.isSameList(serverTopics)) {
+                    AppLog.d(AppLog.T.READER, "reader service > followed topics changed");
 
                     if (!mAccountStore.hasAccessToken()) {
                         // Do not delete locally saved tags for logged out user
@@ -195,8 +191,11 @@ public class ReaderUpdateLogic {
                         ReaderTagTable.replaceTags(serverTopics);
                     }
                     // broadcast the fact that there are changes
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+                    didChangeFollowedTags = true;
                 }
+                EventBus.getDefault().post(new FollowedTagsFetched(true,
+                        ReaderTagTable.getFollowedTags().size(),
+                        didChangeFollowedTags));
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);
@@ -330,6 +329,9 @@ public class ReaderUpdateLogic {
                 // but it's better to keep it separate since we aim to remove this check as soon as possible.
                 removeDuplicateBlogs(serverBlogs);
 
+                boolean sitesSubscribedChanged = false;
+                final int totalSites = jsonObject == null ? 0 : jsonObject.optInt("total_subscriptions", 0);
+
                 if (!localBlogs.isSameList(serverBlogs)) {
                     // always update the list of followed blogs if there are *any* changes between
                     // server and local (including subscription count, description, etc.)
@@ -340,10 +342,10 @@ public class ReaderUpdateLogic {
                     if (!localBlogs.hasSameBlogs(serverBlogs)) {
                         ReaderPostTable.updateFollowedStatus();
                         AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
-                        EventBus.getDefault().post(new ReaderEvents.FollowedBlogsChanged());
+                        sitesSubscribedChanged = true;
                     }
                 }
-
+                EventBus.getDefault().post(new FollowedBlogsFetched(totalSites, sitesSubscribedChanged));
                 taskCompleted(UpdateTask.FOLLOWED_BLOGS);
             }
         }.start();

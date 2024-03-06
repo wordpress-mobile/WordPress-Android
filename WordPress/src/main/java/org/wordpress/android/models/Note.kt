@@ -198,8 +198,6 @@ class Note {
         get() = isTypeRaw(NOTE_LIKE_TYPE)
     val isCommentLikeType: Boolean
         get() = isTypeRaw(NOTE_COMMENT_LIKE_TYPE)
-    val isReblogType: Boolean
-        get() = isTypeRaw(NOTE_REBLOG_TYPE)
     val isViewMilestoneType: Boolean
         get() = isTypeRaw(NOTE_VIEW_MILESTONE)
     val isCommentReplyType: Boolean
@@ -208,7 +206,7 @@ class Note {
         // Returns true if the user has replied to this comment note
         get() = isCommentType && !TextUtils.isEmpty(commentSubjectNoticon)
     val isUserList: Boolean
-        get() = isLikeType || isFollowType || isReblogType
+        get() = isLikeType || isFollowType
     val isUnread: Boolean // Parsing every time since it may change
         get() = queryJSON("read", 0) != 1
     val timestamp: Long
@@ -364,7 +362,6 @@ class Note {
         const val NOTE_COMMENT_TYPE = "comment"
         const val NOTE_MATCHER_TYPE = "automattcher"
         const val NOTE_COMMENT_LIKE_TYPE = "comment_like"
-        const val NOTE_REBLOG_TYPE = "reblog"
         const val NOTE_NEW_POST_TYPE = "new_post"
         const val NOTE_VIEW_MILESTONE = "view_milestone"
         const val NOTE_UNKNOWN_TYPE = "unknown"
