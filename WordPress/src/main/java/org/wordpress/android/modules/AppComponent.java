@@ -62,6 +62,7 @@ import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.adapters.NoteViewHolder;
+import org.wordpress.android.ui.notifications.adapters.NotificationDetailFragmentAdapter;
 import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraftsReceiver;
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
@@ -344,6 +345,8 @@ public interface AppComponent {
     void inject(NotesAdapter object);
 
     void inject(NoteViewHolder object);
+
+    void inject(NotificationDetailFragmentAdapter object);
 
     void inject(ThemeBrowserFragment object);
 

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.notifications;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,11 +37,10 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailFragment;
-import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
 import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
+import org.wordpress.android.ui.notifications.adapters.NotificationDetailFragmentAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -66,7 +62,7 @@ import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
-import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.widgets.WPViewPagerTransformer2;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,7 +99,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Nullable private String mNoteId;
     private boolean mIsTappedOnNotification;
 
-    @Nullable private ViewPager.OnPageChangeListener mOnPageChangeListener;
+    @Nullable private ViewPager2.OnPageChangeCallback mOnPageChangeListener;
     @Nullable private NotificationDetailFragmentAdapter mAdapter;
 
     @Nullable private NotificationsDetailActivityBinding mBinding = null;
@@ -155,8 +151,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         // set up the viewpager and adapter for lateral navigation
         if (mBinding != null) {
-            mBinding.viewpager.setPageTransformer(false,
-                    new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+            mBinding.viewpager.setPageTransformer(
+                    new WPViewPagerTransformer2(WPViewPagerTransformer2.TransformType.SLIDE_OVER));
         }
 
         Note note = NotificationsTable.getNoteById(mNoteId);
@@ -199,7 +195,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         // if it is, then replace the dataset with the new one.
         // If not, just let it be.
         if (mAdapter != null) {
-            Note currentNote = mAdapter.getNoteWithId(mNoteId);
+            Note currentNote = mAdapter.getNoteById(mNoteId);
             if (note.equalsTimeAndLength(currentNote)) {
                 return;
             }
@@ -233,24 +229,21 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     private void resetOnPageChangeListener() {
         if (mOnPageChangeListener != null) {
             if (mBinding != null) {
-                mBinding.viewpager.removeOnPageChangeListener(mOnPageChangeListener);
+                mBinding.viewpager.registerOnPageChangeCallback(mOnPageChangeListener);
             }
         } else {
-            mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
+            mOnPageChangeListener = new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
+                    super.onPageSelected(position);
                     if (mBinding != null && mAdapter != null) {
-                        Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
+                        Fragment fragment = mAdapter.createFragment(mBinding.viewpager.getCurrentItem());
                         boolean hideToolbar = (fragment instanceof ReaderPostDetailFragment);
                         showHideToolbar(hideToolbar);
 
                         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SWIPE_PAGE_CHANGED);
                         // change the action bar title for the current note
-                        Note currentNote = mAdapter.getNoteAtPosition(position);
+                        Note currentNote = mAdapter.getNoteByTabPosition(position);
                         if (currentNote != null) {
                             setActionBarTitleForNote(currentNote);
                             mViewModel.markNoteAsRead(NotificationsDetailActivity.this,
@@ -261,14 +254,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         }
                     }
                 }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-                }
             };
         }
         if (mBinding != null) {
-            mBinding.viewpager.addOnPageChangeListener(mOnPageChangeListener);
+            mBinding.viewpager.unregisterOnPageChangeCallback(mOnPageChangeListener);
         }
     }
 
@@ -320,7 +309,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         EventBus.getDefault().register(this);
         // If the user hasn't used swipe yet and if the adapter is initialised and have at least 2 notifications,
         // show a hint to promote swipe usage on the ViewPager
-        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getCount() > 1) {
+        if (!AppPrefs.isNotificationsSwipeToNavigateShown() && mAdapter != null && mAdapter.getItemCount() > 1) {
             if (mBinding != null) {
                 WPSwipeSnackbar.show(mBinding.viewpager);
                 AppPrefs.setNotificationsSwipeToNavigateShown(true);
@@ -380,7 +369,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         // apply filter to the list so we show the same items that the list show vertically, but horizontally
         ArrayList<Note> filteredNotes = NotesAdapter.buildFilteredNotesList(notes, filter);
 
-        adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
+        adapter = new NotificationDetailFragmentAdapter(this, filteredNotes,
+                getSupportFragmentManager(), getLifecycle());
 
         if (mBinding != null) {
             mBinding.viewpager.setAdapter(adapter);
@@ -388,54 +378,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
 
         return adapter;
-    }
-
-    /**
-     * Tries to pick the correct fragment detail type for a given note
-     * Defaults to NotificationDetailListFragment
-     */
-    @NonNull
-    @SuppressWarnings("deprecation")
-    private Fragment getDetailFragmentForNote(@NonNull Note note) {
-        Fragment fragment;
-        if (note.isCommentType()) {
-            // show comment detail for comment notifications
-            boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
-                    false);
-            fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
-
-            if (isInstantReply) {
-                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
-            }
-        } else if (note.isAutomattcherType()) {
-            // show reader post detail for automattchers about posts - note that comment
-            // automattchers are handled by note.isCommentType() above
-            boolean isPost = (note.getSiteId() != 0 && note.getPostId() != 0 && note.getCommentId() == 0);
-            if (isPost) {
-                fragment = ReaderPostDetailFragment.Companion.newInstance(
-                        note.getSiteId(),
-                        note.getPostId()
-                );
-            } else {
-                fragment = NotificationsDetailListFragment.newInstance(note.getId());
-            }
-        } else if (note.isNewPostType()) {
-            fragment = ReaderPostDetailFragment.Companion.newInstance(
-                    note.getSiteId(),
-                    note.getPostId()
-            );
-        } else {
-            if (mLikesEnhancementsFeatureConfig.isEnabled() && note.isLikeType()) {
-                fragment = EngagedPeopleListFragment.newInstance(
-                        mListScenarioUtils.mapLikeNoteToListScenario(note, this)
-                );
-            } else {
-                fragment = NotificationsDetailListFragment.newInstance(note.getId());
-            }
-        }
-
-        return fragment;
     }
 
     public void showBlogPreviewActivity(long siteId, @Nullable Boolean isFollowed) {
@@ -589,7 +531,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     @Override
     public void onPositiveClicked(@NonNull String instanceTag) {
         if (mBinding != null && mAdapter != null) {
-            Fragment fragment = mAdapter.getItem(mBinding.viewpager.getCurrentItem());
+            Fragment fragment = mAdapter.createFragment(mBinding.viewpager.getCurrentItem());
             if (fragment instanceof BasicFragmentDialog.BasicDialogPositiveClickInterface) {
                 ((BasicDialogPositiveClickInterface) fragment).onPositiveClicked(instanceTag);
             }
@@ -600,76 +542,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     public void onScrollableViewInitialized(int containerId) {
         if (mBinding != null) {
             AppBarLayoutExtensionsKt.setLiftOnScrollTargetViewIdAndRequestLayout(mBinding.appbarMain, containerId);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
-        private final ArrayList<Note> mNoteList;
-
-        @SuppressWarnings("unchecked")
-        NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
-            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-            mNoteList = (ArrayList<Note>) notes.clone();
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return getDetailFragmentForNote(mNoteList.get(position));
-        }
-
-        @Override
-        public int getCount() {
-            return mNoteList.size();
-        }
-
-        @Override
-        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
-            // work around "Fragment no longer exists for key" Android bug
-            // by catching the IllegalStateException
-            // https://code.google.com/p/android/issues/detail?id=42601
-            try {
-                AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter restoreState");
-                super.restoreState(state, loader);
-            } catch (IllegalStateException e) {
-                AppLog.e(AppLog.T.NOTIFS, e);
-            }
-        }
-
-        @Nullable
-        @Override
-        public Parcelable saveState() {
-            AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter saveState");
-            Bundle bundle = (Bundle) super.saveState();
-            if (bundle == null) {
-                bundle = new Bundle();
-            }
-            // This is a possible solution to https://github.com/wordpress-mobile/WordPress-Android/issues/5456
-            // See https://issuetracker.google.com/issues/37103380#comment77 for more details
-            bundle.putParcelableArray("states", null);
-            return bundle;
-        }
-
-        boolean isValidPosition(int position) {
-            return (position >= 0 && position < getCount());
-        }
-
-        private Note getNoteAtPosition(int position) {
-            if (isValidPosition(position)) {
-                return mNoteList.get(position);
-            } else {
-                return null;
-            }
-        }
-
-        private Note getNoteWithId(String id) {
-            for (Note note : mNoteList) {
-                if (note.getId().equalsIgnoreCase(id)) {
-                    return note;
-                }
-            }
-            return null;
         }
     }
 }

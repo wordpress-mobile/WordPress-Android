@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -42,10 +45,25 @@ public class WPSwipeSnackbar {
         return show(viewPager, arrows);
     }
 
+    public static Snackbar show(@NonNull ViewPager2 viewPager) {
+        SwipeArrows arrows;
+        RecyclerView.Adapter adapter = viewPager.getAdapter();
+        if (adapter == null || adapter.getItemCount() <= 1) {
+            arrows = SwipeArrows.NONE;
+        } else if (viewPager.getCurrentItem() == 0) {
+            arrows = SwipeArrows.RIGHT;
+        } else if (viewPager.getCurrentItem() == (adapter.getItemCount() - 1)) {
+            arrows = SwipeArrows.LEFT;
+        } else {
+            arrows = SwipeArrows.BOTH;
+        }
+        return show(viewPager, arrows);
+    }
+
     // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
     @SuppressLint("WrongConstant")
-    private static Snackbar show(@NonNull ViewPager viewPager, @NonNull SwipeArrows arrows) {
-        Context context = viewPager.getContext();
+    private static Snackbar show(@NonNull View view, @NonNull SwipeArrows arrows) {
+        Context context = view.getContext();
         String swipeText = context.getResources().getString(R.string.swipe_for_more);
         String arrowLeft = context.getResources().getString(R.string.previous_button);
         String arrowRight = context.getResources().getString(R.string.next_button);
@@ -66,7 +84,7 @@ public class WPSwipeSnackbar {
                 break;
         }
 
-        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
+        Snackbar snackbar = Snackbar.make(view, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
         centerSnackbarText(snackbar);
         snackbar.show();
 
