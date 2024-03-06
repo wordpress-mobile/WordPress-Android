@@ -86,9 +86,9 @@ class VisitsAndViewsStore
         limitMode: Top,
         date: Date,
         forced: Boolean = false,
-        useSiteTimezone: Boolean = true
+        applySiteTimezone: Boolean = true
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
-        val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val timezone = if (applySiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
         logProgress(granularity, "Site timezone: ${site.timezone}")
         try {
@@ -149,9 +149,9 @@ class VisitsAndViewsStore
         granularity: StatsGranularity,
         limitMode: Top,
         date: Date,
-        useSiteTimezone: Boolean = true
+        applySiteTimezone: Boolean = true
     ): VisitsAndViewsModel? {
-        val timezone = if (useSiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
+        val timezone = if (applySiteTimezone) SiteUtils.getNormalizedTimezone(site.timezone) else null
         val dateWithTimeZone = statsUtils.getFormattedDate(date, timezone)
         return getVisits(site, granularity, limitMode, dateWithTimeZone)
     }
