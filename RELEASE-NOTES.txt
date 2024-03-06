@@ -3,6 +3,7 @@
 24.5
 -----
 * [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
+* [*] [Jetpack-only] Fixes broken links on some notifications [https://github.com/wordpress-mobile/WordPress-Android/pull/20417]
 
 24.4
 -----
