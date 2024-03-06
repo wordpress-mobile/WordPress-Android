@@ -2,7 +2,6 @@ package org.wordpress.android.mocks;
 
 import android.content.res.AssetManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.github.tomakehurst.wiremock.common.BinaryFile;
 import com.github.tomakehurst.wiremock.common.FileSource;
@@ -28,10 +27,10 @@ public class AssetFileSource implements FileSource {
     private final AssetManager mAssetManager;
     private final String mPath;
 
-    private static String FEATURES_PATH = MOCKS_PATH + "/" + "mappings" + "/" + "wpcom/features";
-    static String DEFAULT_FEATURE_FILE = "feature-flags.json";
+    private static final String FEATURES_PATH = MOCKS_PATH + "/" + "mappings" + "/" + "wpcom/features";
+    static final String DEFAULT_FEATURE_FILE = "feature-flags.json";
 
-    final String featureFile;
+    private final String mFeatureFile;
 
     public AssetFileSource(AssetManager assetManager, final String featureFile) {
         this(assetManager, MOCKS_PATH, featureFile);
@@ -41,9 +40,9 @@ public class AssetFileSource implements FileSource {
         mAssetManager = assetManager;
         mPath = path;
         if (TextUtils.isEmpty(featureFile)) {
-            this.featureFile = DEFAULT_FEATURE_FILE;
+            this.mFeatureFile = DEFAULT_FEATURE_FILE;
         } else {
-            this.featureFile = featureFile;
+            this.mFeatureFile = featureFile;
         }
     }
 
@@ -59,7 +58,7 @@ public class AssetFileSource implements FileSource {
     }
 
     @Override public FileSource child(String subDirectoryName) {
-        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName, featureFile);
+        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName, mFeatureFile);
     }
 
     @Override public String getPath() {
@@ -118,9 +117,7 @@ public class AssetFileSource implements FileSource {
     }
 
     boolean skipAddingFile(final String root, final String fileName) {
-        Log.d("BLOOP", "Skipping file ("+ root + ", " + fileName + "): " + (root.equals(FEATURES_PATH) && !featureFile.equals(fileName)));
-        return root.equals(FEATURES_PATH) && !featureFile.equals(fileName);
-//        return false;
+        return root.equals(FEATURES_PATH) && !mFeatureFile.equals(fileName);
     }
 
     private List<TextFile> toTextFileList(List<String> filePaths) {

@@ -80,11 +80,13 @@ public class BaseTest {
      *
      * @param wireMockFeatureFileName the wiremock feature flag file to use for this specific test.
      */
-    public BaseTest (@Nullable final String wireMockFeatureFileName) {
+    public BaseTest(@Nullable final String wireMockFeatureFileName) {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
-                         .fileSource(new AssetFileSource(instrumentation.getContext().getAssets(), wireMockFeatureFileName))
+                         .fileSource(
+                             new AssetFileSource(instrumentation.getContext().getAssets(), wireMockFeatureFileName)
+                         )
 
                          .extensions(new ResponseTemplateTransformer(true, new HashMap<String, Helper>() {
                              {

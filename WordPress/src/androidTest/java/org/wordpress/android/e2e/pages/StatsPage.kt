@@ -14,6 +14,24 @@ import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsVisitsData
 
 class StatsPage {
+    /**
+     * Matcher to check that the right tabs exist.
+     */
+    fun hasNewStatTabs(): StatsPage {
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout)),
+                ViewMatchers.withText("Traffic")
+            )
+        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(
+            Matchers.allOf(
+                ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.tabLayout)),
+                ViewMatchers.withText("Insights")
+            )
+        ).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        return this
+    }
     fun openDayStats(): StatsPage {
         val daysStatsTab = Espresso.onView(
             Matchers.allOf(
