@@ -442,6 +442,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
 
+    private final Handler mHideUpdatingPostAreaHandler = new Handler(Looper.getMainLooper());
+    private Runnable mHideUpdatingPostAreaRunnable;
+    private long mUpdatingPostStartTime = 0L;
+    private static final long MIN_UPDATING_POST_DISPLAY_TIME = 2000L; // Minimum display time in milliseconds
+
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EXTRA_RESTART_EDITOR)
                && RestartEditorOptions.valueOf(data.getStringExtra(EXTRA_RESTART_EDITOR))
@@ -812,13 +817,38 @@ public class EditPostActivity extends LocaleAwareActivity implements
            mViewModel.checkIfUpdatedPostVersionExists(mEditPostRepository, mSite);
        }
     }
-
     private void showUpdatingPostArea() {
         mUpdatingPostArea.setVisibility(View.VISIBLE);
+        mUpdatingPostStartTime = System.currentTimeMillis();
+        // Cancel any pending hide operations to avoid conflicts
+        if (mHideUpdatingPostAreaRunnable != null) {
+            mHideUpdatingPostAreaHandler.removeCallbacks(mHideUpdatingPostAreaRunnable);
+        }
     }
 
     private void hideUpdatingPostArea() {
-        mUpdatingPostArea.setVisibility(View.GONE);
+        long elapsedTime = System.currentTimeMillis() - mUpdatingPostStartTime;
+        long delay = MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime;
+
+        if (delay > 0) {
+            // Delay hiding the view if the elapsed time is less than the minimum display time
+            hideUpdatingPostAreaWithDelay(delay);
+        } else {
+            // Hide the view immediately if the minimum display time has been met or exceeded
+            mUpdatingPostArea.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideUpdatingPostAreaWithDelay(long delay) {
+        // Define the runnable only once or ensure it's the same instance if it's already defined
+        if (mHideUpdatingPostAreaRunnable == null) {
+            mHideUpdatingPostAreaRunnable = () -> {
+                if (mUpdatingPostArea != null) {
+                    mUpdatingPostArea.setVisibility(View.GONE);
+                }
+            };
+        }
+        mHideUpdatingPostAreaHandler.postDelayed(mHideUpdatingPostAreaRunnable, delay);
     }
 
     private void customizeToolbar() {
@@ -1136,6 +1166,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
+        }
+
+        if (mHideUpdatingPostAreaHandler != null && mHideUpdatingPostAreaRunnable != null) {
+            mHideUpdatingPostAreaHandler.removeCallbacks(mHideUpdatingPostAreaRunnable);
         }
     }
 
