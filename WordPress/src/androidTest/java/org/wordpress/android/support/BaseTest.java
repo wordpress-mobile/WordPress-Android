@@ -2,6 +2,7 @@ package org.wordpress.android.support;
 
 import android.app.Instrumentation;
 
+import androidx.annotation.Nullable;
 import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -70,12 +71,21 @@ public class BaseTest {
     @Rule(order = 4)
     public WireMockRule wireMockRule;
 
-    {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+    public BaseTest() {
+        this(null);
+    }
 
+    /**
+     * Constructor
+     *
+     * @param wireMockFeatureFileName the wiremock feature flag file to use for this specific test.
+     */
+    public BaseTest (@Nullable final String wireMockFeatureFileName) {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
-                         .fileSource(new AssetFileSource(instrumentation.getContext().getAssets()))
+                         .fileSource(new AssetFileSource(instrumentation.getContext().getAssets(), wireMockFeatureFileName))
+
                          .extensions(new ResponseTemplateTransformer(true, new HashMap<String, Helper>() {
                              {
                                  put("fnow", new UnlocalizedDateHelper());

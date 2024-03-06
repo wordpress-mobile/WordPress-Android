@@ -1,6 +1,8 @@
 package org.wordpress.android.mocks;
 
 import android.content.res.AssetManager;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.github.tomakehurst.wiremock.common.BinaryFile;
 import com.github.tomakehurst.wiremock.common.FileSource;
@@ -21,18 +23,28 @@ import static com.google.common.collect.Lists.newArrayList;
  * WireMock has no Android specific behaviour so we must implement asset loading here.
  */
 public class AssetFileSource implements FileSource {
-    private static final String MOCKS_PATH = "mocks";
+    static final String MOCKS_PATH = "mocks";
 
     private final AssetManager mAssetManager;
     private final String mPath;
 
-    public AssetFileSource(AssetManager assetManager) {
-        this(assetManager, MOCKS_PATH);
+    private static String FEATURES_PATH = MOCKS_PATH + "/" + "mappings" + "/" + "wpcom/features";
+    static String DEFAULT_FEATURE_FILE = "feature-flags.json";
+
+    final String featureFile;
+
+    public AssetFileSource(AssetManager assetManager, final String featureFile) {
+        this(assetManager, MOCKS_PATH, featureFile);
     }
 
-    public AssetFileSource(AssetManager assetManager, String path) {
+    public AssetFileSource(AssetManager assetManager, String path, String featureFile) {
         mAssetManager = assetManager;
         mPath = path;
+        if (TextUtils.isEmpty(featureFile)) {
+            this.featureFile = DEFAULT_FEATURE_FILE;
+        } else {
+            this.featureFile = featureFile;
+        }
     }
 
     @Override public BinaryFile getBinaryFileNamed(String name) {
@@ -47,7 +59,7 @@ public class AssetFileSource implements FileSource {
     }
 
     @Override public FileSource child(String subDirectoryName) {
-        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName);
+        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName, featureFile);
     }
 
     @Override public String getPath() {
@@ -95,12 +107,20 @@ public class AssetFileSource implements FileSource {
                 if (isDirectory(path)) {
                     recursivelyAddFilePathsToList(path, filePaths);
                 } else {
-                    filePaths.add(path);
+                    if (!this.skipAddingFile(root, name)) {
+                        filePaths.add(path);
+                    }
                 }
             }
         } catch (IOException e) {
             // Ignore this
         }
+    }
+
+    boolean skipAddingFile(final String root, final String fileName) {
+        Log.d("BLOOP", "Skipping file ("+ root + ", " + fileName + "): " + (root.equals(FEATURES_PATH) && !featureFile.equals(fileName)));
+        return root.equals(FEATURES_PATH) && !featureFile.equals(fileName);
+//        return false;
     }
 
     private List<TextFile> toTextFileList(List<String> filePaths) {
