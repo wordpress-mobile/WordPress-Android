@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
 import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -262,6 +263,9 @@ public class NotificationsUtils {
         List<FormattableRange> rangesArray = formattableContent.getRanges();
         if (rangesArray != null) {
             for (FormattableRange range : rangesArray) {
+                // Skip ranges with UNKNOWN type and no URL since they are not actionable
+                if (range.rangeType() == FormattableRangeType.UNKNOWN && TextUtils.isEmpty(range.getUrl())) continue;
+
                 NoteBlockClickableSpan clickableSpan =
                         new NoteBlockClickableSpan(range, shouldLink, isFooter) {
                     @Override
