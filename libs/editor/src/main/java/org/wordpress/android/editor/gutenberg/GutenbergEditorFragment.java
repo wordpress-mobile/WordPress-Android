@@ -33,6 +33,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.automattic.android.tracks.crashlogging.JsException;
+import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
+import com.automattic.android.tracks.crashlogging.JsExceptionStackTraceElement;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -64,7 +67,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.LogExceptionCallback;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergEmbedWebViewActivity;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergJsException;
+import org.wordpress.mobile.WPAndroidGlue.GutenbergJsException;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
@@ -93,9 +96,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
 
@@ -607,8 +612,36 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
 
                 new OnLogExceptionListener() {
-                    @Override public void onLogException(GutenbergJsException exception, LogExceptionCallback onLogExceptionCallback) {
+                    @Override public void onLogException(GutenbergJsException exception,
+                                                         LogExceptionCallback logExceptionCallback) {
+                        List<JsExceptionStackTraceElement> stackTraceElements = exception.getStackTrace().stream().map(
+                                stackTrace -> {
+                                    return new JsExceptionStackTraceElement(
+                                            stackTrace.getFileName(),
+                                            stackTrace.getLineNumber(),
+                                            stackTrace.getColNumber(),
+                                            stackTrace.getFunction()
+                                    );
+                                }).collect(Collectors.toList());
 
+                        JsException jsException = new JsException(
+                                exception.getType(),
+                                exception.getMessage(),
+                                stackTraceElements,
+                                exception.getContext(),
+                                exception.getTags(),
+                                exception.isHandled(),
+                                exception.getHandledBy()
+                        );
+
+                        JsExceptionCallback callback = new JsExceptionCallback() {
+                            @Override
+                            public void onReportSent(boolean success) {
+                               logExceptionCallback.onLogException(success);
+                            }
+                        };
+
+                       mEditorFragmentListener.onLogJsException(jsException, callback);
                     }
                 },
 

@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.automattic.android.tracks.crashlogging.JsException;
+import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -238,6 +240,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onToggleRedo(boolean isDisabled);
 
         void onBackHandlerButton();
+
+        void onLogJsException(JsException jsException, JsExceptionCallback onSendJsException);
     }
 
     /**
