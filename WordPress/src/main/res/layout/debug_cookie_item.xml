@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:padding="@dimen/margin_medium"
-        android:src="@drawable/ic_delete_black_24dp"
+        android:src="@drawable/ic_trash_grey_dark_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -250,14 +250,6 @@
                 android:value=".ui.posts.PostsListActivity" />
         </activity>
 
-        <!-- Story composer activity -->
-        <activity
-            android:name=".ui.stories.StoryComposerActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/WordPress.Stories.Immersive">
-        </activity>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"

@@ -84,6 +84,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -952,9 +953,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+    public void onEventMainThread(FollowedBlogsFetched event) {
         // refresh posts if user is viewing "Followed Sites"
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+        if (event.didChange()
+            && getPostListType() == ReaderPostListType.TAG_FOLLOWED
             && hasCurrentTag()
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();

@@ -63,6 +63,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
+    var readerAnalyticsCountTagsTimestamp: Long
+        get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
+        set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
+
     var readerCssUpdatedTimestamp: Long
         get() = AppPrefs.getReaderCssUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
@@ -74,10 +78,6 @@ class AppPrefsWrapper @Inject constructor() {
     var readerTopBarSelectedFeedItemId: String?
         get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
         set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
-
-    var shouldShowStoriesIntro: Boolean
-        get() = AppPrefs.shouldShowStoriesIntro()
-        set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
 
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()

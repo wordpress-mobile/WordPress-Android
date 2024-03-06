@@ -1,9 +1,16 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.5
+-----
+* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
+* [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
+
 24.4
 -----
-[***] [Jetpack-only] Improved Notifications experience with richer UI elements and interactions [https://github.com/wordpress-mobile/WordPress-Android/pull/20072]
+* [***] [Jetpack-only] Improved Notifications experience with richer UI elements and interactions [https://github.com/wordpress-mobile/WordPress-Android/pull/20072]
 * [**] [Jetpack-only] Block editor: Introduce VideoPress v5 support, to fix issues using video block with dotcom and Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6634]
+* [**] [internal] Removed the Stories from the codebase [https://github.com/wordpress-mobile/WordPress-Android/pull/20016]
+* [***] [Jetpack-only] Stats: Introducing Traffic tab, delivering improved graphs, and combining Days/Weeks/Months/Years tabs into one, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/19942]
 * [*] Block editor: Prevent crash when autoscrolling to blocks [https://github.com/WordPress/gutenberg/pull/59110]
 * [*] Block editor: Remove opacity change when images are being uploaded [https://github.com/WordPress/gutenberg/pull/59264]
 * [*] Block editor: Media & Text blocks correctly show an error message when the attached video upload fails [https://github.com/WordPress/gutenberg/pull/59288]
@@ -12,6 +19,7 @@
 -----
 * [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
 * [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
+* [*] [internal][WordPress-only] Updates Jetpack banners and badges copy for consistency [https://github.com/wordpress-mobile/WordPress-Android/pull/20123]
 
 24.2
 -----

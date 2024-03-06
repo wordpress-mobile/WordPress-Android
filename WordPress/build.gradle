@@ -38,7 +38,6 @@ repositories {
             includeGroup "org.wordpress.gutenberg-mobile"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
-            includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
         }
     }
@@ -378,11 +377,6 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
-    implementation ("$gradle.ext.storiesAndroidPath:$automatticStoriesVersion") {
-        exclude group: 'androidx.navigation', module: 'navigation-fragment-ktx'
-        exclude group: 'androidx.navigation', module: 'navigation-ui-ktx'
-    }
-    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
     implementation("$gradle.ext.tracksBinaryPath") {
         version {
@@ -472,8 +466,6 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
-
-    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$automatticStoriesVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'

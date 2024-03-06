@@ -29,15 +29,18 @@ public class ReaderEvents {
     public static class FollowedTagsFetched {
         private final boolean mDidSucceed;
         private final boolean mDidChange;
+        private final int mTotalTags;
 
-        public FollowedTagsFetched(boolean didSucceed) {
+        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed) {
             mDidSucceed = didSucceed;
             mDidChange = true;
+            mTotalTags = tagsFollowed;
         }
 
-        public FollowedTagsFetched(boolean didSucceed, boolean didChange) {
+        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed, boolean didChange) {
             mDidSucceed = didSucceed;
             mDidChange = didChange;
+            mTotalTags = tagsFollowed;
         }
 
         public boolean didSucceed() {
@@ -46,6 +49,9 @@ public class ReaderEvents {
 
         public boolean didChange() {
             return mDidChange;
+        }
+        public int getTotalTags() {
+            return mTotalTags;
         }
     }
 
@@ -61,7 +67,20 @@ public class ReaderEvents {
         }
     }
 
-    public static class FollowedBlogsChanged {
+    public static class FollowedBlogsFetched {
+        private final int mTotalSubscriptions;
+        private final boolean mDidChange;
+
+        public boolean didChange() {
+            return mDidChange;
+        }
+        public int getTotalSubscriptions() {
+            return mTotalSubscriptions;
+        }
+        public FollowedBlogsFetched(int totalSubscriptions, boolean didChange) {
+            mTotalSubscriptions = totalSubscriptions;
+            mDidChange = didChange;
+        }
     }
 
     public static class InterestTagsFetchEnded {

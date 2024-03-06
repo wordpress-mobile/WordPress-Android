@@ -10,7 +10,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_D
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_GIF_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_STOCK_LIBRARY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_MEDIA
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_SEARCH_COLLAPSED
@@ -80,10 +79,6 @@ class MediaPickerTracker
 
     fun trackIconClick(icon: MediaPickerIcon, mediaPickerSetup: MediaPickerSetup) {
         when (icon) {
-            is MediaPickerIcon.WpStoriesCapture -> analyticsTrackerWrapper.track(
-                MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE,
-                mediaPickerSetup.toProperties()
-            )
             is MediaPickerIcon.ChooseFromAndroidDevice -> analyticsTrackerWrapper.track(
                 MEDIA_PICKER_OPEN_DEVICE_LIBRARY,
                 mediaPickerSetup.toProperties()

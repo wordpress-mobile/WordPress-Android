@@ -1,2 +1,6 @@
-Log in to your site with Google credentials, physical devices, and third-party passkeys. Don’t worry, the site’s still locked down tighter than the Colonel’s secret recipe.
-We hid the menu icon on Stats screens so it’s only visible from the Insights tab. Ninja mode: activated.
+- Added a new Traffic tab on the Stats screen
+- Upgraded the Notifications design
+- Introduced video block support for VideoPress v5
+- Fixed a crash caused by block editor auto-scrolling
+- Provided an error message for video upload failure
+- Removed image transparency during upload
