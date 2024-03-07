@@ -52,6 +52,7 @@ interface PostImmutableModel {
     val autoShareId: Long
     val publicizeSkipConnectionsJson: String
     val publicizeSkipConnectionsList: List<PublicizeSkipConnection>
+    val dbTimestamp: Long
 
     fun hasFeaturedImage(): Boolean
 

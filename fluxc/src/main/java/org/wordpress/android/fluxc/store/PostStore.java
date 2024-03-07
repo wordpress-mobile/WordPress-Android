@@ -1055,7 +1055,12 @@ public class PostStore extends Store {
 
         if (payload.isError()) {
             OnPostChanged event = new OnPostChanged(
-                    new CauseOfOnPostChanged.UpdatePost(payload.post.getId(), payload.post.getRemotePostId()), 0);
+                    new CauseOfOnPostChanged.UpdatePost(
+                            payload.post.getId(),
+                            payload.post.getRemotePostId(),
+                            false),
+                    0
+            );
             event.error = payload.error;
             emitChange(event);
         } else {
@@ -1122,12 +1127,16 @@ public class PostStore extends Store {
         }
     }
 
-    private void updatePost(PostModel post, boolean changeLocalDate) {
-        if (changeLocalDate) {
+    private void updatePost(PostModel post, boolean isLocalUpdate) {
+        if (isLocalUpdate) {
             post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
         }
         int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
-        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(
+                post.getId(),
+                post.getRemotePostId(),
+                isLocalUpdate
+        );
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
