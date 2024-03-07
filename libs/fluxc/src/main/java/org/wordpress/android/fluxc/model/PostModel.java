@@ -109,6 +109,9 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
     // JSON - an array of PublicizeSkipConnection objects representing publicize skip connections
     @Column private String mPublicizeSkipConnectionsJson;
 
+    // keeps a timestamp that represents when this post was added in the db
+    @Column private long mDbTimestamp;
+
     public PostModel() {}
 
     @Override
@@ -543,6 +546,14 @@ public class PostModel extends Payload<BaseNetworkError> implements Cloneable, I
 
     public void setAutoShareMessage(String autoShareMessage) {
         mAutoShareMessage = autoShareMessage;
+    }
+
+    public void setDbTimestamp(long timestamp) {
+        mDbTimestamp = timestamp;
+    }
+    @Override
+    public long getDbTimestamp() {
+        return mDbTimestamp;
     }
 
     @Override

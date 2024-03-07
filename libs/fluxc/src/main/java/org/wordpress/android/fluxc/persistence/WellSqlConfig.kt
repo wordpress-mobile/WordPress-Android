@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 199
+        return 200
     }
 
     override fun getDbName(): String {
@@ -2000,6 +2000,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 198 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS WCOrderStatsModel")
                     db.execSQL("DROP TABLE IF EXISTS WCVisitorStatsModel")
+                }
+                199 -> migrate(version) {
+                    db.execSQL("ALTER TABLE PostModel ADD DB_TIMESTAMP INTEGER")
                 }
             }
         }
