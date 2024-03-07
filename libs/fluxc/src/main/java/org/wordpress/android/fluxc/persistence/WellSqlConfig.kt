@@ -2001,7 +2001,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DROP TABLE IF EXISTS WCOrderStatsModel")
                     db.execSQL("DROP TABLE IF EXISTS WCVisitorStatsModel")
                 }
-                200 -> migrate(version) {
+                199 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD DB_TIMESTAMP INTEGER")
                 }
             }
