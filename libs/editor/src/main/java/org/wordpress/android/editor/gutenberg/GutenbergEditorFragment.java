@@ -1377,6 +1377,27 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().updateTheme(editorTheme);
     }
 
+    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
+        mUploadingMediaProgressMax.put(localId, currentProgress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
+    }
+
+    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
+        mUploadingMediaProgressMax.remove(localId);
+        getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
+    }
+
+    @Override public void onMediaSaveProgress(String localId, float progress) {
+        mUploadingMediaProgressMax.put(localId, progress);
+        getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
+    }
+
+    @Override public void onMediaSaveFailed(String localId) {
+        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
+        mFailedMediaIds.add(localId);
+        mUploadingMediaProgressMax.remove(localId);
+    }
+
     @Override
     public void showNotice(String message) {
         getGutenbergContainerFragment().showNotice(message);
