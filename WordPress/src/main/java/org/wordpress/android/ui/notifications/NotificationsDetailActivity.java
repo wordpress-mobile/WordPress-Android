@@ -15,6 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.comments.CommentActions;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
+import org.wordpress.android.ui.notifications.adapters.Filter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.StatsViewType;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -66,6 +69,7 @@ import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,6 +90,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogPositiveClickInterface, ScrollableViewInitializedListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";
+
+    private NotificationsListViewModel mViewModel;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -108,6 +114,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(AppLog.T.NOTIFS, "Creating NotificationsDetailActivity");
 
+        mViewModel = new ViewModelProvider(this).get(NotificationsListViewModel.class);
         mBinding = NotificationsDetailActivityBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -198,9 +205,9 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             }
         }
 
-        NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
+        Filter filter = Filter.ALL;
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-            filter = (NotesAdapter.FILTERS) getIntent()
+            filter = (Filter) getIntent()
                     .getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
 
@@ -210,14 +217,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         // set title
         setActionBarTitleForNote(note);
-        markNoteAsRead(note);
+        mViewModel.markNoteAsRead(this, Collections.singletonList(note));
 
         // If `note.getTimestamp()` is not the most recent seen note, the server will discard the value.
         NotificationsActions.updateSeenTimestamp(note);
 
         // analytics tracking
         Map<String, String> properties = new HashMap<>();
-        properties.put("notification_type", note.getType());
+        properties.put("notification_type", note.getRawType());
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_OPENED_NOTIFICATION_DETAILS, properties);
 
         setProgressVisible(false);
@@ -246,7 +253,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                         Note currentNote = mAdapter.getNoteAtPosition(position);
                         if (currentNote != null) {
                             setActionBarTitleForNote(currentNote);
-                            markNoteAsRead(currentNote);
+                            mViewModel.markNoteAsRead(NotificationsDetailActivity.this,
+                                    Collections.singletonList(currentNote));
                             NotificationsActions.updateSeenTimestamp(currentNote);
                             // track subsequent comment note views
                             trackCommentNote(currentNote);
@@ -332,23 +340,12 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         finish();
     }
 
-    private void markNoteAsRead(Note note) {
-        mGCMMessageHandler.removeNotificationWithNoteIdFromSystemBar(this, note.getId());
-        // mark the note as read if it's unread
-        if (note.isUnread()) {
-            NotificationsActions.markNoteAsRead(note);
-            note.setRead();
-            NotificationsTable.saveNote(note);
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
-        }
-    }
-
     private void setActionBarTitleForNote(Note note) {
         if (getSupportActionBar() != null) {
             String title = note.getTitle();
             if (TextUtils.isEmpty(title)) {
                 // set a default title if title is not set within the note
-                switch (note.getType()) {
+                switch (note.getRawType()) {
                     case NOTE_FOLLOW_TYPE:
                         title = getString(R.string.follows);
                         break;
@@ -376,13 +373,13 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     private NotificationDetailFragmentAdapter buildNoteListAdapterAndSetPosition(Note note,
-                                                                                 NotesAdapter.FILTERS filter) {
+                                                                                 Filter filter) {
         NotificationDetailFragmentAdapter adapter;
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
-        ArrayList<Note> filteredNotes = new ArrayList<>();
 
         // apply filter to the list so we show the same items that the list show vertically, but horizontally
-        NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
+        ArrayList<Note> filteredNotes = NotesAdapter.buildFilteredNotesList(notes, filter);
+
         adapter = new NotificationDetailFragmentAdapter(getSupportFragmentManager(), filteredNotes);
 
         if (mBinding != null) {
@@ -504,7 +501,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             ActivityLauncher.viewAllTabbedInsightsStats(this, StatsViewType.FOLLOWERS, 0,
                     site.getId());
         } else {
-            ActivityLauncher.viewBlogStats(this, site);
+            ActivityLauncher.viewBlogStats(this, site, StatsLaunchedFrom.NOTIFICATION);
         }
     }
 

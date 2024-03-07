@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: th
 -->
 <resources>
@@ -85,7 +85,6 @@ Language: th
     <string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
     <string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
     <string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
     <string name="selected_theme">ธีมที่เลือก</string>
     <string name="could_not_load_theme">ไม่สามารถโหลดธีม</string>
@@ -226,7 +225,6 @@ Language: th
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
-    <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
     <string name="help">ช่วยเหลือ</string>
     <string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
     <string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
@@ -312,7 +310,6 @@ Language: th
     <string name="reader_label_removed_tag">ลบ %s แล้ว</string>
     <string name="reader_btn_share">แบ่งปัน</string>
     <string name="reader_btn_follow">ติดตาม</string>
-    <string name="reader_btn_unfollow">กำลังติดตาม</string>
     <string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
     <string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
     <string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น…</string>

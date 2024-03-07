@@ -16,6 +16,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
@@ -75,6 +76,7 @@ class WeeklyRoundupNotifier @Inject constructor(
                     WEEK,
                     data.period,
                     WEEKLY_ROUNDUP,
+                    StatsLaunchedFrom.NOTIFICATION,
                     notificationId,
                     FLAG_CANCEL_CURRENT or FLAG_IMMUTABLE
                 )

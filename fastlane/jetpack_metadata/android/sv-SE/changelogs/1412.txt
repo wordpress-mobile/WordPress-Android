@@ -1,0 +1,3 @@
+24.3:
+Logga in på din webbplats med Google-autentiseringsuppgifter, fysiska enheter och säkerhetsnycklar från tredje part. Oroa dig inte, webbplatsen är fortfarande säkrare än ditt hemligaste svampställe.
+Vi har dolt menyikonen på statistikskärmarna så att den endast är synlig via fliken Insikter. Ninjaläge: aktiverat.

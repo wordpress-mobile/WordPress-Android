@@ -699,7 +699,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun buildLikersUiState(updateLikesState: GetLikesState?): TrainOfFacesUiState {
-        val (likers, numLikes, iLiked) = getLikersEssentials(updateLikesState)
+        val (likers, numLikes) = getLikersEssentials(updateLikesState)
 
         val showLoading = updateLikesState is Loading
         var showEmptyState = false
@@ -717,7 +717,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         } ?: false
 
         val engageItemsList = if (showLikeFacesTrainContainer) {
-            likers + getLikersFacesText(showEmptyState, numLikes, iLiked)
+            likers + getLikersFacesText(showEmptyState, numLikes)
         } else {
             listOf()
         }
@@ -750,56 +750,25 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     @Suppress("LongMethod")
-    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int): List<TrainOfAvatarsItem> {
         @AttrRes val labelColor = R.attr.wpColorOnSurfaceMedium
         return when {
             showEmptyState -> {
                 listOf()
             }
-            numLikes == 1 && iLiked -> {
+            numLikes == 1 -> {
                 TrailingLabelTextItem(
                     UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_title_singular)
                     ),
                     labelColor
                 ).toList()
             }
-            numLikes == 2 && iLiked -> {
+            numLikes > 1 -> {
                 TrailingLabelTextItem(
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_you_plus_one_like_text
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes > 2 && iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_you_plus_others_like_text,
-                            numLikes - 1
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes == 1 && !iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_one_blogger_likes_text
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes > 1 && !iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_others_like_text,
+                            R.string.like_title_plural,
                             numLikes
                         )
                     ),

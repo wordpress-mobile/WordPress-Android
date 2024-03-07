@@ -1,6 +1,7 @@
 package org.wordpress.android.processor
 
 import com.google.auto.service.AutoService
+import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asTypeName
 import org.wordpress.android.annotation.Experiment
@@ -26,6 +27,7 @@ import javax.tools.Diagnostic.Kind
     "org.wordpress.android.annotation.RemoteFieldDefaultGenerater"
 )
 class RemoteConfigProcessor : AbstractProcessor() {
+    @OptIn(DelicateKotlinPoetApi::class)
     @Suppress("DEPRECATION")
     override fun process(p0: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
         val experiments = roundEnvironment?.getElementsAnnotatedWith(Experiment::class.java)?.map { element ->

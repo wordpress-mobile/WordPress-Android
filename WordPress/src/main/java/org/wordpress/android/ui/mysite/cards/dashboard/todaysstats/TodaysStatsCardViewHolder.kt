@@ -44,6 +44,7 @@ class TodaysStatsCardViewHolder(
         uiHelpers.setTextOrHide(viewsCount, card.views)
         uiHelpers.setTextOrHide(visitorsCount, card.visitors)
         uiHelpers.setTextOrHide(likesCount, card.likes)
+        uiHelpers.setTextOrHide(commentsCount, card.comments)
         uiHelpers.setTextOrHide(getMoreViewsMessage, card.message?.text)
         card.message?.links?.let { getMoreViewsMessage.updateLink(it) }
         mySiteTodaysStatCard.setOnClickListener {

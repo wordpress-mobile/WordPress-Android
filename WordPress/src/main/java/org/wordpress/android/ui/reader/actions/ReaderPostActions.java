@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -82,43 +83,52 @@ public class ReaderPostActions {
         return true;
     }
 
-    public static void performLikeActionRemote(final ReaderPost post,
+    public static void performLikeActionRemote(@Nullable final ReaderPost post,
                                                final boolean isAskingToLike,
                                                final long wpComUserId,
-                                               final ActionListener actionListener) {
+                                               @Nullable final ActionListener actionListener) {
+        if (post != null) {
+            performLikeActionRemote(post, post.blogId, post.postId, isAskingToLike, wpComUserId, actionListener);
+        }
+    }
+
+    public static void performLikeActionRemote(
+            @Nullable final ReaderPost post,
+            final long blogId,
+            final long postId,
+            final boolean isAskingToLike,
+            final long wpComUserId,
+            @Nullable final ActionListener actionListener
+    ) {
         final String actionName = isAskingToLike ? "like" : "unlike";
-        String path = "sites/" + post.blogId + "/posts/" + post.postId + "/likes/";
+        String path = "sites/" + blogId + "/posts/" + postId + "/likes/";
         if (isAskingToLike) {
             path += "new";
         } else {
             path += "mine/delete";
         }
 
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                AppLog.d(T.READER, String.format("post %s succeeded", actionName));
-                if (actionListener != null) {
-                    ReaderActions.callActionListener(actionListener, true);
-                }
+        com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
+            AppLog.d(T.READER, String.format("post %s succeeded", actionName));
+            if (actionListener != null) {
+                ReaderActions.callActionListener(actionListener, true);
             }
         };
 
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                String error = VolleyUtils.errStringFromVolleyError(volleyError);
-                if (TextUtils.isEmpty(error)) {
-                    AppLog.w(T.READER, String.format("post %s failed", actionName));
-                } else {
-                    AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
-                }
-                AppLog.e(T.READER, volleyError);
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            String error = VolleyUtils.errStringFromVolleyError(volleyError);
+            if (TextUtils.isEmpty(error)) {
+                AppLog.w(T.READER, String.format("post %s failed", actionName));
+            } else {
+                AppLog.w(T.READER, String.format("post %s failed (%s)", actionName, error));
+            }
+            AppLog.e(T.READER, volleyError);
+            if (post != null) {
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
-                ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
-                if (actionListener != null) {
-                    ReaderActions.callActionListener(actionListener, false);
-                }
+            }
+            ReaderLikeTable.setCurrentUserLikesPost(postId, blogId, isAskingToLike, wpComUserId);
+            if (actionListener != null) {
+                ReaderActions.callActionListener(actionListener, false);
             }
         };
 

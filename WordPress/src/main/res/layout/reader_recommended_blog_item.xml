@@ -97,7 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
-        android:contentDescription="@string/reader_btn_follow"
+        android:contentDescription="@string/reader_btn_subscribe"
         app:layout_constraintBottom_toBottomOf="@id/site_url"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintTop_toTopOf="@id/site_name" />

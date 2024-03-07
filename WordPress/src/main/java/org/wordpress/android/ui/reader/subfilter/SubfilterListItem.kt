@@ -11,9 +11,11 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.UrlUtils
 
 sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = false) {
     open var isSelected: Boolean = false
+    open var isClearingFilter: Boolean = false
     open val onClickAction: ((filter: SubfilterListItem) -> Unit)? = null
     open val label: UiString? = null
 
@@ -52,6 +54,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
     @Suppress("DataClassShouldBeImmutable")
     data class SiteAll(
         override var isSelected: Boolean = false,
+        override var isClearingFilter: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit
     ) : SubfilterListItem(SITE_ALL) {
         override val label: UiString = UiStringRes(R.string.reader_filter_cta)
@@ -66,7 +69,8 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
         override val label: UiString = if (blog.name.isNotEmpty()) {
             UiStringText(blog.name)
         } else {
-            UiStringRes(R.string.reader_untitled_post)
+            if (blog.url.isNotEmpty()) UiStringText(UrlUtils.getHost(blog.url))
+            else UiStringRes(R.string.reader_untitled_post)
         }
         val showUnseenCount: Boolean = blog.numUnseenPosts > 0
         val unseenCount: Int = blog.numUnseenPosts

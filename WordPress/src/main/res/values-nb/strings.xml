@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: nb_NO
 -->
 <resources>
@@ -21,7 +21,6 @@ Language: nb_NO
     <string name="quick_start_list_upload_media_title">Last opp fotografier eller videoer</string>
     <string name="quick_start_dialog_check_notifications_title">Sjekk dine varsler</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover">Bruk &lt;b&gt; Oppdag &lt;/b&gt; for å finne nettsteder og stikkord.</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_settings">Bruk &lt;b&gt; Oppdag &lt;/b&gt; for å finne nettsteder og stikkord. Prøv å velge %1$s Innstillinger %2$s for å legge til emner du liker.</string>
     <string name="photo_picker_video_thumbnail_content_description">Miniatyrbilde for video</string>
     <string name="stats_details_top_commentators">Toppkommentatorer</string>
     <string name="stats_published_years_ago">Publisert for %1$d år siden</string>
@@ -162,7 +161,6 @@ Language: nb_NO
     <string name="comment_edit_comment">Kommentar</string>
     <string name="comment_edit_user_name">Navn</string>
     <string name="comment_edit_menu_done">Ferdig</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">Domener</string>
     <string name="gutenberg_native_selected_s">Valgt: %s</string>
     <string name="create_site_notification_create_site_action">Opprett netsted</string>
@@ -225,7 +223,6 @@ Language: nb_NO
     <string name="gutenberg_native_search_settings">Søkeinnstillinger</string>
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid er tillatt</string>
     <string name="site_settings_denylist_title">Ikke tillatte kommentarer</string>
-    <string name="reader_title_interests">Følg emner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avvis</string>
     <string name="activity_log_backup_download_notice_download_action">Last ned</string>
     <string name="invite_links_expire_date">Utløper %1$s</string>
@@ -339,7 +336,6 @@ Language: nb_NO
     <string name="label_done_button">Fullført</string>
     <string name="label_next_button">Neste</string>
     <string name="delete_button_alt">Slett</string>
-    <string name="reader_discover_no_posts_button_text">Følg emner</string>
     <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
@@ -359,12 +355,10 @@ Language: nb_NO
     <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
     <string name="login_prologue_second_subtitle_one">Å bli inspirert</string>
     <string name="login_prologue_title_fifth">Følg dine favorittnettsteder og oppdag nye blogger.</string>
-    <string name="reader_discover_recommended_blogs_header">Nettsteder å følge</string>
     <string name="gutenberg_native_choose_images">Velg bilder</string>
     <string name="mlp_notice_page_created">Side opprettet</string>
     <string name="reader_label_toolbar_back">Tilbake</string>
     <string name="reader_discover_empty_button_text">Kom i gang</string>
-    <string name="reader_discover_empty_subtitle">Følg emner for å oppdage nye blogger</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
     <string name="stats_referrer_popup_unmark_as_spam">Merk som ikke spam</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Merk som spam</string>
@@ -491,7 +485,6 @@ Language: nb_NO
     <string name="gutenberg_native_block_duplicated">Blokk duplisert</string>
     <string name="gutenberg_native_block_cut">Blokk kuttet</string>
     <string name="gutenberg_native_block_copied">Blokk kopiert</string>
-    <string name="reader_title_tag_preview">Emne</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
     <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
@@ -517,8 +510,6 @@ Language: nb_NO
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">Avbryt</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
-    <string name="reader_label_choose_your_interests">Velg dine emner</string>
-    <string name="reader_choose_interests_content_description">Velg dine emner</string>
     <string name="reader_btn_done">Utført</string>
     <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
     <string name="post_status_post_published">Publisert</string>
@@ -546,7 +537,6 @@ Language: nb_NO
     <string name="page_homepage_successfully_updated">Hjemmeside oppdatert</string>
     <string name="gutenberg_native_select_a_color">Velg en farge</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
-    <string name="reader_empty_followed_blogs_description">Når du følger nettsteder vil du se innholdet her</string>
     <string name="feature_announcement_find_out_mode">Finn ut mer</string>
     <string name="insert_label_with_count">Sett inn %d</string>
     <string name="crop">klipp</string>
@@ -558,7 +548,6 @@ Language: nb_NO
     <string name="site_picker_ask_site_select">Kunne ikke velge nettstedet. Vennligst forsøk igjen.</string>
     <string name="sitepicker_continue_flow">Fortsett</string>
     <string name="reader_reblog_error">Reblogging mislyktes</string>
-    <string name="reader_no_site_to_reblog_action">Behandle nettsteder</string>
     <string name="whats_new_in_version_title">Hva som er nytt</string>
     <string name="comment_q_action_copied_url">Lenkeadressen kopiert</string>
     <string name="copy_link_address">Kopier lenkeadesse</string>
@@ -648,22 +637,13 @@ Language: nb_NO
     <string name="stats_insights_management_general">Generelt</string>
     <string name="stats_management_screen_title">Legg til nytt kort</string>
     <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
-    <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
-    <string name="reader_title_subs">Behandle emner og nettsteder</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
-    <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra emner du følger</string>
-    <string name="reader_filter_self_hosted_empty_sites_list">Logg inn på WordPress.com for å se siste innlegg fra nettsteder du følger</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
     <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>
     <string name="gutenberg_native_add_block_before">Legg til blokk foran</string>
     <string name="gutenberg_native_add_block_after">Legg til blokk etter</string>
-    <string name="reader_filter_empty_tags_action">Legg til et emne</string>
-    <string name="reader_filter_empty_sites_action">Følg et nettsted</string>
-    <string name="reader_filter_empty_tags_list">Du kan følge innlegg om et spesifikt emne ved å legge til et emne</string>
-    <string name="reader_filter_empty_sites_list">Se de siste innleggene fra nettsteder du følger</string>
-    <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
     <string name="gutenberg_native_edit_media">Rediger media</string>
@@ -701,12 +681,9 @@ Language: nb_NO
     <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="enter_credentials_for_site">Logg inn med din innlggingsinformasjon fra nettstedet %1$s</string>
     <string name="my_site_bottom_sheet_add_page">Nettstedsside</string>
-    <string name="reader_following_display_name">Følger</string>
     <string name="reader_my_likes_display_name">Likinger</string>
     <string name="reader_discover_display_name">Oppdag</string>
     <string name="reader_save_for_later_display_name">Lagret</string>
-    <string name="reader_filter_tags_title">Emner</string>
-    <string name="reader_filter_sites_title">Nettsteder</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
@@ -894,8 +871,6 @@ Language: nb_NO
     <string name="post_list_search_nothing_found">Ingen innlegg passer til ditt søk.</string>
     <string name="post_list_search_prompt">Søk innlegg</string>
     <string name="domains_suggestions_intro_description">Dette er hvor folk vil finne deg på internett,</string>
-    <string name="domains_suggestions_intro_title">Velg et premium domenenavn</string>
-    <string name="my_site_custom_domain_name">Alle WordPress.com-pakker inkluderer et eget domenenavn. Registrer ditt gratis premium domenenavn nå.</string>
     <string name="stats_widget_minified_name">På et øyeblikk</string>
     <string name="stats_widget_today_insights_name">I dag</string>
     <string name="stats_widget_all_time_insights_name">Til all tid</string>
@@ -1189,7 +1164,6 @@ Language: nb_NO
     <string name="login_error_sms_throttled">Vi har gjort for mange forsøk på å sende en verifiseringskode via SMS — ta en pause og be om en ny om et minutt.</string>
     <string name="login_error_email_not_found_v2">Det er ingen WordPress.com-konto som passer til denne Google-kontoen.</string>
     <string name="site_picker_remove_site_empty">Ingen nettsteder passer med ditt søk</string>
-    <string name="reader_empty_followed_blogs_search_title">Ingen nettsteder passer med ditt søk</string>
     <string name="page_parent_changed">Siden forelder har blitt endret</string>
     <string name="page_permanently_deleted">Siden er permanent slettet</string>
     <string name="page_moved_to_scheduled">Siden har blitt planlagt publisert</string>
@@ -1220,8 +1194,6 @@ Language: nb_NO
     <string name="quick_start_button_negative">Ikke nå</string>
     <string name="content_description_more">Mer</string>
     <string name="my_site_create_new_site_title">Du har ingen nettsteder</string>
-    <string name="reader_empty_followed_tags_title">Ingen fulgte emner</string>
-    <string name="reader_empty_followed_tags_subtitle">Legg til emner for å finne innlegg om dine favoritt-emner</string>
     <string name="login_to_to_connect_jetpack">Logg inn på dem WordPres.com-kontoen du brukte til koble til Jetpack.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Jetpack FAQ</string>
@@ -1241,9 +1213,6 @@ Language: nb_NO
     <string name="people_empty_list_filtered_users">Ingen brukere ennå</string>
     <string name="reader_empty_posts_liked_description">Innlegg du liker vil dukke opp her</string>
     <string name="reader_empty_posts_liked_title">Ingen likt ennå</string>
-    <string name="reader_empty_followed_blogs_button_followed">Gå til fulgte</string>
-    <string name="reader_empty_followed_blogs_button_discover">Oppdag nettsteder</string>
-    <string name="reader_empty_followed_blogs_title">Ingen fulgte nettsteder</string>
     <string name="notifications_empty_likes">Ingen likinger ennå</string>
     <string name="notifications_empty_followers">Ingen følgere ennå</string>
     <string name="activity_log_limited_content_on_free_plan">Siden du ikke har et abonnement vil du bare se et begrenset antall handelser i din aktivitet.</string>
@@ -1307,8 +1276,6 @@ Language: nb_NO
     <string name="reader_followed_blog_notifications_this">dette nettstedet</string>
     <string name="reader_followed_blog_notifications_action">Aktiver</string>
     <string name="reader_followed_blog_notifications">Aktiver varsler for %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Skru på varsler for nettstedet</string>
-    <string name="reader_btn_notifications_off">Skru av varsler for nettstedet</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
     <string name="activity_log_event">Hendelse</string>
     <string name="activity_log_icon">Aktivtitetsikon</string>
@@ -1859,7 +1826,6 @@ Language: nb_NO
     <string name="confirm">Bekreft</string>
     <string name="xmlrpc_endpoint_forbidden_error">Klarte ikke å koble til. Vi mottok en 403-feil når vi prøvde å få tilgang til ditt nettsteds XMLRPC-sluttpunkt.\nAppen behøver det for å kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
     <string name="xmlrpc_post_blocked_error">Klarte ikke å koble til. Verten din blokkerer POST-forespørsler, og appen trenger den for\nå kunne kommunisere med nettstedet ditt. Kontakt verten din for å løse dette problemet.</string>
-    <string name="reader_hint_search_followed_sites">Søk i fulgte nettsteder</string>
     <string name="pending_draft_one_generic">Ikke la den henge og slenge! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_month">Ikke la den daffe rundt! \'%1$s\' venter på å bli publisert.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' er fortsatt et utkast. Husk på å publisere den!</string>
@@ -1961,7 +1927,6 @@ Language: nb_NO
     <string name="person_remove_confirmation_title">Fjern %1$s</string>
     <string name="role">Rolle</string>
     <string name="people">Folk</string>
-    <string name="reader_empty_posts_in_custom_list">Nettstedene på denne listen har ikke lagt ut noe i det siste</string>
     <string name="error_remove_user">Klarte ikke å fjerne brukeren</string>
     <string name="error_update_role">Klarte ikke å oppdatere brukerrollen</string>
     <string name="error_fetch_viewers_list">Klarte ikke å hente inn sideleserne</string>
@@ -2174,7 +2139,6 @@ Language: nb_NO
     <string name="reader_err_get_post_not_found">Dette innlegget finnes ikke lenger</string>
     <string name="reader_err_get_post_not_authorized">Du er ikke autorisert til å vise dette innlegget</string>
     <string name="reader_err_get_post_generic">Klarte ikke å hente inn dette innlegget</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Nettstedene du følger har ikke lagt ut noe i det siste</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Ingen nylige innlegg</string>
     <string name="media_edit_copy_url_toast">Nettadressen ble kopiert til utklippstavlen</string>
     <string name="selected_theme">Valgt tema</string>
@@ -2219,8 +2183,6 @@ Language: nb_NO
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_label_follow_count">%,d følgere</string>
-    <string name="reader_menu_tags">Rediger emner og nettsteder</string>
     <string name="reader_title_post_detail">Leser-innlegg</string>
     <string name="notifications_push_summary">Innstillinger for notifikasjoner som dukker opp på din enhet.</string>
     <string name="notifications_email_summary">Innstillinger for notifikasjoner som sendes til din kontotilknyttede E-postadresse.</string>
@@ -2242,8 +2204,6 @@ Language: nb_NO
     <string name="button_view">Vis</string>
     <string name="button_publish">Publiser</string>
     <string name="button_edit">Rediger</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Du har ikke tillatelse til å få adgang til dette nettstedet</string>
-    <string name="reader_toast_err_follow_blog_not_found">Dette nettstdet ble ikke funnet</string>
     <string name="undo">Angre</string>
     <string name="push_auth_expired">Forespørselen har utløpt. Logg inn på WordPress.com og prøv igjen.</string>
     <string name="ignore">Ignorer</string>
@@ -2287,7 +2247,6 @@ Language: nb_NO
     <string name="posts_fetching">Henter innlegg …</string>
     <string name="media_fetching">Henter media …</string>
     <string name="logs_copied_to_clipboard">App-loggbøker har blitt kopiert til utklippstavlen</string>
-    <string name="reader_empty_posts_in_blog">Dette nettstedet er tomt</string>
     <string name="reader_label_new_posts">Nye innlegg</string>
     <string name="error_copy_to_clipboard">En feil oppstod under kopiering av tekst til utklippstavlen</string>
     <string name="post_uploading">Laster opp innlegg</string>
@@ -2315,7 +2274,6 @@ Language: nb_NO
     <string name="cab_selected">%d valgt</string>
     <string name="browse_our_faq_button">Bla gjennom vår FAQ</string>
     <string name="reader_empty_comments">Ingen kommentarer enda</string>
-    <string name="reader_empty_posts_in_tag">Ingen innlegg om dette emnet</string>
     <string name="reader_label_like">Liker</string>
     <string name="reader_label_view_original">Vis den opprinnelige artikkelen</string>
     <string name="reader_label_comments_closed">Kommentarer er lukket</string>
@@ -2335,21 +2293,8 @@ Language: nb_NO
     <string name="posts_empty_list">Ingen innlegg er her ennå. Hvorfor ikke lage en?</string>
     <string name="signing_out">Logger av …</string>
     <string name="reader_toast_err_generic">Kan ikke gjøre dette</string>
-    <string name="reader_toast_err_block_blog">Kan ikke blokkere dette nettstedet</string>
-    <string name="reader_toast_blog_blocked">Innlegg fra dette nettstedet vil ikke lenger bli vist</string>
-    <string name="reader_menu_block_blog">Blokkér dette nettstedet</string>
     <string name="schedule_verb">Publiser</string>
     <string name="update_verb">Oppdater</string>
-    <string name="reader_empty_recommended_blogs">Ingen anbefalte nettsteder</string>
-    <string name="reader_toast_err_unfollow_blog">Klarte ikke å avfølge dette nettstedet</string>
-    <string name="reader_toast_err_follow_blog">Klarte ikke å følge dette nettstedet</string>
-    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette nettstedet</string>
-    <string name="reader_toast_err_get_blog_info">Klarte ikke å vise dette nettstedet</string>
-    <string name="reader_label_followed_blog">Nettstdedet ble fulgt</string>
-    <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et emne å følge</string>
-    <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
-    <string name="reader_page_followed_tags">Fulgte emner</string>
-    <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL-sertifikat</string>
     <string name="help">Hjelp</string>
@@ -2375,8 +2320,6 @@ Language: nb_NO
     <string name="blog_not_found">En feil oppstod under å få tilgang til denne bloggen</string>
     <string name="gallery_error">Mediegjenstanden kunne ikke bli hentet inn</string>
     <string name="no_network_message">Ingen nettverkstilgang er tilgjengelig</string>
-    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emnet</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke legge til dette emnet</string>
     <string name="reader_title_applog">Applikasjonsloggen</string>
     <string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
     <string name="error_blog_hidden">Bloggen er skjult og kunne ikke bli lastet inn. Aktiver den igjen i innstillingene og prøv igjen.</string>
@@ -2437,15 +2380,12 @@ Language: nb_NO
     <string name="reader_toast_err_url_intent">Klarte ikke å åpne %s</string>
     <string name="reader_toast_err_view_image">Klarte ikke å vise bilde</string>
     <string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
-    <string name="reader_toast_err_tag_invalid">Det var ikke et gyldig emne</string>
-    <string name="reader_toast_err_tag_exists">Du følger allerede dette emnet</string>
     <string name="reader_toast_err_comment_failed">Klarte ikke å poste kommentaren din</string>
     <string name="reader_likes_only_you">Du liker dette</string>
     <string name="reader_likes_one">En person liker dette</string>
     <string name="reader_label_removed_tag">Fjernet %s</string>
     <string name="reader_label_added_tag">La til %s</string>
     <string name="reader_hint_comment_on_comment">Svar på kommentar …</string>
-    <string name="reader_btn_unfollow">Følger</string>
     <string name="reader_btn_follow">Følg</string>
     <string name="reader_btn_share">Del</string>
     <string name="reader_view_reblog">Reblogg</string>

@@ -149,7 +149,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (blogInfo.hasName()) {
                         blogHolder.mTxtTitle.setText(blogInfo.getName());
                     } else {
-                        blogHolder.mTxtTitle.setText(R.string.reader_untitled_post);
+                        blogHolder.mTxtTitle.setText(UrlUtils.getHost(blogInfo.getUrl()));
                     }
                     if (blogInfo.hasUrl()) {
                         blogHolder.mTxtUrl.setText(UrlUtils.getHost(blogInfo.getUrl()));
@@ -226,8 +226,8 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final ActionListener listener = succeeded -> {
             followButton.setEnabled(true);
             if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                        : R.string.reader_toast_err_unfollow_blog;
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_unable_to_follow_blog
+                        : R.string.reader_toast_err_unable_to_unfollow_blog;
                 ToastUtils.showToast(context, errResId);
                 followButton.setIsFollowed(!isAskingToFollow);
                 blog.isFollowing = !isAskingToFollow;

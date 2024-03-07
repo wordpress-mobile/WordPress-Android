@@ -8,21 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_NEXT_DATE_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PREVIOUS_DATE_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_FORWARD
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_DATE_TAPPED_BACKWARD
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
-import org.wordpress.android.ui.stats.refresh.utils.toStatsSection
-import org.wordpress.android.ui.stats.refresh.utils.trackWithSection
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.extensions.readListCompat
 import org.wordpress.android.util.extensions.getParcelableCompat
-import org.wordpress.android.util.filter
+import org.wordpress.android.util.extensions.readListCompat
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,121 +29,98 @@ class SelectedDateProvider
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     private val mutableDates = mutableMapOf(
-        DAYS to SelectedDate(loading = true),
-        WEEKS to SelectedDate(loading = true),
-        MONTHS to SelectedDate(loading = true),
-        YEARS to SelectedDate(loading = true)
+        StatsGranularity.DAYS to SelectedDate(loading = true),
+        StatsGranularity.WEEKS to SelectedDate(loading = true),
+        StatsGranularity.MONTHS to SelectedDate(loading = true),
+        StatsGranularity.YEARS to SelectedDate(loading = true)
     )
 
-    private val selectedDateChanged = MutableLiveData<SectionChange?>()
+    private val selectedDateChanged = MutableLiveData<GranularityChange?>()
 
-    fun granularSelectedDateChanged(statsSection: StatsSection): LiveData<SectionChange?> {
-        return selectedDateChanged.filter { it?.selectedSection == statsSection }
-    }
-
-    fun selectDate(date: Date, statsSection: StatsSection) {
-        val selectedDate = getSelectedDateState(statsSection)
-        updateSelectedDate(selectedDate.copy(dateValue = date), statsSection)
-    }
+    fun granularSelectedDateChanged(): LiveData<GranularityChange?> = selectedDateChanged
 
     fun selectDate(date: Date, statsGranularity: StatsGranularity) {
-        selectDate(date, statsGranularity.toStatsSection())
+        val selectedDate = getSelectedDateState(statsGranularity)
+        updateSelectedDate(selectedDate.copy(dateValue = date), statsGranularity)
     }
 
-    fun selectDate(updatedDate: Date, availableDates: List<Date>, statsSection: StatsSection) {
-        val selectedDate = getSelectedDateState(statsSection)
+    fun selectDate(updatedDate: Date, availableDates: List<Date>, statsGranularity: StatsGranularity) {
+        val selectedDate = getSelectedDateState(statsGranularity)
         if (selectedDate.dateValue != updatedDate || selectedDate.availableDates != availableDates) {
             updateSelectedDate(
                 selectedDate.copy(dateValue = updatedDate, availableDates = availableDates),
-                statsSection
+                statsGranularity
             )
         }
     }
 
-    fun selectDate(updatedDate: Date, availableDates: List<Date>, statsGranularity: StatsGranularity) {
-        selectDate(updatedDate, availableDates, statsGranularity.toStatsSection())
-    }
-
-    fun updateSelectedDate(selectedDate: SelectedDate, statsSection: StatsSection) {
-        val currentDate = mutableDates[statsSection]
-        mutableDates[statsSection] = selectedDate
+    fun updateSelectedDate(selectedDate: SelectedDate, statsGranularity: StatsGranularity) {
+        val currentDate = mutableDates[statsGranularity]
+        mutableDates[statsGranularity] = selectedDate
         if (selectedDate != currentDate) {
-            selectedDateChanged.postValue(SectionChange(statsSection))
+            selectedDateChanged.postValue(GranularityChange(statsGranularity))
         }
     }
 
     fun setInitialSelectedPeriod(statsGranularity: StatsGranularity, period: String) {
         val updatedDate = statsDateFormatter.parseStatsDate(statsGranularity, period)
         val selectedDate = getSelectedDateState(statsGranularity)
-        updateSelectedDate(selectedDate.copy(dateValue = updatedDate), statsGranularity.toStatsSection())
+        updateSelectedDate(selectedDate.copy(dateValue = updatedDate), statsGranularity)
     }
 
     fun getSelectedDate(statsGranularity: StatsGranularity): Date? {
-        return getSelectedDate(statsGranularity.toStatsSection())
-    }
-
-    fun getSelectedDate(statsSection: StatsSection): Date? {
-        return getSelectedDateState(statsSection).dateValue
+        return getSelectedDateState(statsGranularity).dateValue
     }
 
     fun getSelectedDateState(statsGranularity: StatsGranularity): SelectedDate {
-        return getSelectedDateState(statsGranularity.toStatsSection())
+        return mutableDates[statsGranularity] ?: SelectedDate(loading = true)
     }
 
-    fun getSelectedDateState(statsSection: StatsSection): SelectedDate {
-        return mutableDates[statsSection] ?: SelectedDate(loading = true)
-    }
-
-    fun hasPreviousDate(statsSection: StatsSection): Boolean {
-        val selectedDate = getSelectedDateState(statsSection)
+    fun hasPreviousDate(statsGranularity: StatsGranularity): Boolean {
+        val selectedDate = getSelectedDateState(statsGranularity)
         return selectedDate.hasData() && selectedDate.getDateIndex() > 0
     }
 
-    fun hasNextDate(statsSection: StatsSection): Boolean {
-        val selectedDate = getSelectedDateState(statsSection)
+    fun hasNextDate(statsGranularity: StatsGranularity): Boolean {
+        val selectedDate = getSelectedDateState(statsGranularity)
         return selectedDate.hasData() &&
                 selectedDate.getDateIndex() < selectedDate.availableDates.size - 1
     }
 
-    fun selectPreviousDate(statsSection: StatsSection) {
-        val selectedDateState = getSelectedDateState(statsSection)
+    fun selectPreviousDate(statsGranularity: StatsGranularity) {
+        val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithSection(STATS_PREVIOUS_DATE_TAPPED, statsSection)
-            updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()), statsSection)
+            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_BACKWARD, statsGranularity)
+            updateSelectedDate(
+                selectedDateState.copy(dateValue = selectedDateState.getPreviousDate()),
+                statsGranularity
+            )
         }
     }
 
-    fun selectNextDate(statsSection: StatsSection) {
-        val selectedDateState = getSelectedDateState(statsSection)
+    fun selectNextDate(statsGranularity: StatsGranularity) {
+        val selectedDateState = getSelectedDateState(statsGranularity)
         if (selectedDateState.hasData()) {
-            analyticsTrackerWrapper.trackWithSection(STATS_NEXT_DATE_TAPPED, statsSection)
-            updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsSection)
+            analyticsTrackerWrapper.trackWithGranularity(STATS_DATE_TAPPED_FORWARD, statsGranularity)
+            updateSelectedDate(selectedDateState.copy(dateValue = selectedDateState.getNextDate()), statsGranularity)
         }
     }
 
     fun onDateLoadingFailed(statsGranularity: StatsGranularity) {
-        onDateLoadingFailed(statsGranularity.toStatsSection())
-    }
-
-    fun onDateLoadingFailed(statsSection: StatsSection) {
-        val selectedDate = getSelectedDateState(statsSection)
+        val selectedDate = getSelectedDateState(statsGranularity)
         if (selectedDate.dateValue != null && !selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = true, loading = false), statsSection)
+            updateSelectedDate(selectedDate.copy(error = true, loading = false), statsGranularity)
         } else if (selectedDate.dateValue == null) {
-            updateSelectedDate(SelectedDate(error = true, loading = false), statsSection)
+            updateSelectedDate(SelectedDate(error = true, loading = false), statsGranularity)
         }
     }
 
     fun onDateLoadingSucceeded(statsGranularity: StatsGranularity) {
-        onDateLoadingSucceeded(statsGranularity.toStatsSection())
-    }
-
-    fun onDateLoadingSucceeded(statsSection: StatsSection) {
-        val selectedDate = getSelectedDateState(statsSection)
+        val selectedDate = getSelectedDateState(statsGranularity)
         if (selectedDate.dateValue != null && selectedDate.error) {
-            updateSelectedDate(selectedDate.copy(error = false, loading = false), statsSection)
+            updateSelectedDate(selectedDate.copy(error = false, loading = false), statsGranularity)
         } else if (selectedDate.dateValue == null) {
-            updateSelectedDate(SelectedDate(error = false, loading = false), statsSection)
+            updateSelectedDate(SelectedDate(error = false, loading = false), statsGranularity)
         }
     }
 
@@ -161,8 +131,8 @@ class SelectedDateProvider
         selectedDateChanged.value = null
     }
 
-    fun clear(statsSection: StatsSection) {
-        mutableDates[statsSection] = SelectedDate(loading = true)
+    fun clear(statsGranularity: StatsGranularity) {
+        mutableDates[statsGranularity] = SelectedDate(loading = true)
         selectedDateChanged.value = null
     }
 
@@ -173,7 +143,12 @@ class SelectedDateProvider
     }
 
     fun onRestoreInstanceState(savedState: Bundle) {
-        for (period in listOf(DAYS, WEEKS, MONTHS, YEARS)) {
+        for (period in listOf(
+            StatsGranularity.DAYS,
+            StatsGranularity.WEEKS,
+            StatsGranularity.MONTHS,
+            StatsGranularity.YEARS
+        )) {
             val selectedDate = savedState.getParcelableCompat<SelectedDate>(buildStateKey(period))
             if (selectedDate != null) {
                 mutableDates[period] = selectedDate
@@ -181,7 +156,7 @@ class SelectedDateProvider
         }
     }
 
-    private fun buildStateKey(key: StatsSection) = SELECTED_DATE_STATE_KEY + key
+    private fun buildStateKey(key: StatsGranularity) = SELECTED_DATE_STATE_KEY + key
 
     @Parcelize
     @SuppressLint("ParcelCreator")
@@ -241,5 +216,5 @@ class SelectedDateProvider
         }
     }
 
-    data class SectionChange(val selectedSection: StatsSection)
+    data class GranularityChange(val selectedGranularity: StatsGranularity)
 }

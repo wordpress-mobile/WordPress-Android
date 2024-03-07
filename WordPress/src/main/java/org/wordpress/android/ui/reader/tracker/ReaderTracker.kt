@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.tracker
 import android.net.Uri
 import androidx.annotation.MainThread
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -374,6 +375,43 @@ class ReaderTracker @Inject constructor(
         railcarJson: String
     ) {
         analyticsUtilsWrapper.trackRailcarRender(railcarJson)
+    }
+
+    fun trackDropdownMenuOpened() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DROPDOWN_MENU_OPENED)
+    }
+
+    fun trackDropdownMenuItemTapped(readerTag: ReaderTag) {
+        when {
+            readerTag.isDiscover -> "discover"
+            readerTag.isFollowedSites -> "following"
+            readerTag.isBookmarked -> "saved"
+            readerTag.isPostsILike -> "liked"
+            readerTag.isA8C -> "a8c"
+            readerTag.isListTopic -> "list"
+            readerTag.isP2 -> "p2"
+            else -> null
+        }?.let { trackingId ->
+            analyticsTrackerWrapper.track(
+                stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+                properties = mapOf("id" to trackingId)
+            )
+        }
+    }
+
+    private fun trackFollowedCount(type: String, numberOfItems: Int) {
+        val props: MutableMap<String, String> = HashMap()
+        props["type"] = type
+        props["count"] = numberOfItems.toString()
+        AnalyticsTracker.track(Stat.READER_FOLLOWING_FETCHED, props)
+    }
+
+    fun trackFollowedTagsCount(numberOfItems: Int) {
+        trackFollowedCount("tags", numberOfItems)
+    }
+
+    fun trackSubscribedSitesCount(numberOfItems: Int) {
+        trackFollowedCount("sites", numberOfItems)
     }
 
     /* HELPER */

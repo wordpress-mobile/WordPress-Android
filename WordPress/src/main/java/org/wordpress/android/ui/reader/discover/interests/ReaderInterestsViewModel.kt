@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
@@ -92,7 +93,9 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun checkAndLoadInterests(userTags: ReaderTagList) {
-        if (userTags.isEmpty()) {
+        // since new users have the dailyprompt tag followed by default, we need to ignore them when
+        // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
+        if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
             loadInterests(userTags)
         } else {
             parentViewModel?.onCloseReaderInterests()
@@ -165,8 +168,6 @@ class ReaderInterestsViewModel @Inject constructor(
                     )
                 )
             )
-
-            parentViewModel?.completeQuickStartFollowSiteTaskIfNeeded()
         }
     }
 

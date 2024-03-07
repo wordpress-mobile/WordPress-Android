@@ -131,9 +131,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             when (it) {
                 is DiscoverUiState.ContentUiState -> {
                     (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
-                    if (it.scrollToTop) {
-                        recyclerView.scrollToPosition(0)
-                    }
                 }
                 is DiscoverUiState.EmptyUiState -> {
                     uiHelpers.setTextOrHide(actionableEmptyView.title, it.titleResId)
@@ -153,9 +150,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             ptrLayout.isEnabled = it.swipeToRefreshEnabled
             ptrLayout.isRefreshing = it.reloadProgressVisibility
         }
+        viewModel.scrollToTopEvent.observeEvent(viewLifecycleOwner) { recyclerView.scrollToPosition(0) }
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
-        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, { it.addWebViewCachingFragment() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner) { it.addWebViewCachingFragment() }
         viewModel.start(parentViewModel)
     }
 

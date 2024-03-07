@@ -1354,7 +1354,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canLike(@NonNull SiteModel site) {
-        return mEnabledActions.contains(EnabledActions.ACTION_LIKE)
+        return mEnabledActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
                && SiteUtils.isAccessedViaWPComRest(site);
     }
 
@@ -1387,7 +1387,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
          * this user made on someone else's blog
          */
         if (note != null) {
-            mEnabledActions = note.getEnabledActions();
+            mEnabledActions = note.getEnabledCommentActions();
         }
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
@@ -1471,6 +1471,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
                 new RemoteLikeCommentPayload(site, comment, actionBinding.btnLike.isActivated()))
         );
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents
+                    .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
+        }
+
         actionBinding.btnLike.announceForAccessibility(
                 getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
                         : R.string.comment_unliked_talkback)

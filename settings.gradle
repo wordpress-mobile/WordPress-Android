@@ -2,11 +2,11 @@ pluginManagement {
     gradle.ext.kotlinVersion = '1.9.10'
     gradle.ext.agpVersion = '8.1.0'
     gradle.ext.googleServicesVersion = '4.3.15'
-    gradle.ext.navigationVersion = '2.5.3'
-    gradle.ext.sentryVersion = '3.5.0'
-    gradle.ext.daggerVersion = "2.46.1"
+    gradle.ext.navigationVersion = '2.7.7'
+    gradle.ext.sentryVersion = '3.14.0'
+    gradle.ext.daggerVersion = "2.50"
     gradle.ext.detektVersion = '1.23.0'
-    gradle.ext.violationCommentsVersion = '1.67'
+    gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '2.0.3'
     gradle.ext.koverVersion = '0.7.5'
 
@@ -26,6 +26,7 @@ pluginManagement {
         id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version gradle.ext.violationCommentsVersion
         id 'com.automattic.android.measure-builds' version gradle.ext.measureBuildsVersion
         id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
+        id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
     }
     repositories {
         maven {
@@ -37,14 +38,6 @@ pluginManagement {
         }
         gradlePluginPortal()
         google()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            // TODO: Remove this when 'dagger.hilt' starts supporting Plugin Marker Artifacts
-            if (requested.id.id == 'dagger.hilt.android.plugin') {
-                useModule("com.google.dagger:hilt-android-gradle-plugin:$gradle.ext.daggerVersion")
-            }
-        }
     }
 }
 
