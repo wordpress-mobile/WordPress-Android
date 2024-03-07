@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.IPostFreshnessChecker
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
@@ -49,7 +50,8 @@ class StorePostViewModel
     private val uploadService: UploadServiceFacade,
     private val savePostToDbUseCase: SavePostToDbUseCase,
     private val networkUtils: NetworkUtilsWrapper,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val postFreshnessChecker: IPostFreshnessChecker
 ) : ScopedViewModel(uiCoroutineDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
@@ -206,7 +208,7 @@ class StorePostViewModel
         editPostRepository.getPost()?.let { postModel ->
             if (!postModel.isLocalDraft
                     && !postModel.isLocallyChanged
-                    && postUtils.shouldRefreshPost(postModel)) {
+                    && postFreshnessChecker.shouldRefreshPost(postModel)) {
                 _onPostUpdateUiVisible.postValue(true)
                 val payload = RemotePostPayload(editPostRepository.getEditablePost(), site)
                 dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))

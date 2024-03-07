@@ -27,8 +27,6 @@ class PostSettingsUtilsTest : BaseUnitTest() {
 
     @Mock
     lateinit var dateProvider: DateProvider
-    @Mock
-    lateinit var postFreshnessCheckerImpl: IPostFreshnessChecker
     private lateinit var postSettingsUtils: PostSettingsUtils
     private lateinit var postUtilsWrapper: PostUtilsWrapper
 
@@ -39,7 +37,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        postUtilsWrapper = PostUtilsWrapper(dateProvider, postFreshnessCheckerImpl)
+        postUtilsWrapper = PostUtilsWrapper(dateProvider)
         postSettingsUtils = PostSettingsUtils(resourceProvider, mStatsDateUtils, postUtilsWrapper)
         whenever(mStatsDateUtils.formatDateTime(any())).thenReturn(formattedDate)
         whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateUTCFromIso8601(currentDate))

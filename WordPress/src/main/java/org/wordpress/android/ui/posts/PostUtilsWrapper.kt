@@ -18,8 +18,7 @@ import javax.inject.Inject
 @Reusable
 class PostUtilsWrapper
 @Inject constructor(
-    private val dateProvider: DateProvider,
-    private val postFreshnessChecker: IPostFreshnessChecker
+    private val dateProvider: DateProvider
 ) {
     fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
@@ -55,7 +54,4 @@ class PostUtilsWrapper
 
     fun shouldPublishImmediatelyOptionBeAvailable(status: PostStatus?) =
         PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
-
-    fun shouldRefreshPost(post: PostImmutableModel) : Boolean =
-        postFreshnessChecker.shouldRefreshPost(post)
 }
