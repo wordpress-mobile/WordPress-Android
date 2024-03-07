@@ -15,7 +15,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import java.util.Date
 
 @ExperimentalCoroutinesApi
@@ -29,8 +28,6 @@ class StatsDateSelectorTest : BaseUnitTest() {
     @Mock
     lateinit var siteProvider: StatsSiteProvider
 
-    @Mock
-    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     private val selectedDate = Date(0)
     private val selectedDateLabel = "Jan 1"
     private val statsGranularity = StatsGranularity.DAYS
@@ -52,13 +49,11 @@ class StatsDateSelectorTest : BaseUnitTest() {
             statsDateFormatter,
             siteProvider,
             statsGranularity,
-            false,
-            statsTrafficTabFeatureConfig
+            false
         )
         whenever(selectedDateProvider.getSelectedDate(statsGranularity)).thenReturn(selectedDate)
         whenever(statsDateFormatter.printGranularDate(selectedDate, statsGranularity)).thenReturn(selectedDateLabel)
         whenever(statsDateFormatter.printGranularDate(updatedDate, statsGranularity)).thenReturn(updatedLabel)
-        whenever(statsTrafficTabFeatureConfig.isEnabled()).thenReturn(true)
     }
 
     @Test
