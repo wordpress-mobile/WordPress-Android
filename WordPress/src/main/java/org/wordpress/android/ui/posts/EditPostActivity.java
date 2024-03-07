@@ -78,8 +78,6 @@ import org.wordpress.android.editor.gutenberg.GutenbergNetworkConnectionListener
 import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.gutenberg.GutenbergWebViewAuthorizationData;
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
-import org.wordpress.android.editor.gutenberg.StorySaveMediaListener;
-import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
@@ -2219,13 +2217,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return true;
             }, (postModel, result) -> {
                 if (result == Updated.INSTANCE) {
-                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish, false);
+                    ActivityFinishState activityFinishState = savePostOnline(isFirstTimePublish);
                     Log.e("PostUpload", "uploadPost: " + activityFinishState);
-                    if(activityFinishState == ActivityFinishState.NETWORK_ERROR) {
+                    if (activityFinishState == ActivityFinishState.NETWORK_ERROR) {
                         mViewModel.hideSavingProgressDialog();
                         mPublishingViewModel.onPostUploadError();
-                    }
-                    else mPublishingViewModel.onPostUploadInProgress(postModel);
+                    } else mPublishingViewModel.onPostUploadInProgress(postModel);
 //                    mViewModel.finish(activityFinishState);
                 }
                 return null;
