@@ -313,7 +313,7 @@ public class ReaderUpdateLogic {
             }
         };
 
-        AppLog.d(AppLog.T.READER, "reader service > updating followed blogs");
+        AppLog.d(AppLog.T.READER, "reader service > updating followed blogs. Page requested: " + page);
         // request using ?meta=site,feed to get extra info
         WordPress.getRestClientUtilsV1_2()
                  .get("read/following/mine?number=100&page=" + page + "&meta=site%2Cfeed", listener, errorListener);
@@ -351,7 +351,8 @@ public class ReaderUpdateLogic {
                         // (ie: a blog has been followed/unfollowed since local was last updated)
                         if (!localBlogs.hasSameBlogs(serverBlogs)) {
                             ReaderPostTable.updateFollowedStatus();
-                            AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed");
+                            AppLog.i(AppLog.T.READER, "reader blogs service > followed blogs changed: "
+                                                      + totalSites);
                             sitesSubscribedChanged = true;
                         }
                     }
