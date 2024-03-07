@@ -68,7 +68,7 @@ public class PostSqlUtils {
         }
         int numberOfDeletedRows = 0;
         if (postResult.isEmpty()) {
-            // insert
+            // insert post
             post.setDbTimestamp(System.currentTimeMillis());
             WellSql.insert(post).asSingleTransaction(true).execute();
             return 1;
