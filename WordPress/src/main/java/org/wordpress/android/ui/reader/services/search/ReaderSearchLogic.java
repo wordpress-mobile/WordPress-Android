@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.services.search;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -24,7 +26,7 @@ public class ReaderSearchLogic {
         mCompletionListener = listener;
     }
 
-    public void startSearch(final String query, final int offset, Object companion) {
+    public void startSearch(@NonNull final String query, final int offset, Object companion) {
         mListenerCompanion = companion;
         String path = "read/search?q="
                       + UrlUtils.urlEncode(query)

@@ -38,6 +38,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -104,7 +105,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
             toolbar.setNavigationOnClickListener(view -> finish());
 
             if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
-                setTitle(R.string.reader_title_blog_preview);
+                setTitle(R.string.reader_activity_title_blog_preview);
                 if (savedInstanceState == null) {
                     long blogId = getIntent().getLongExtra(ReaderConstants.ARG_BLOG_ID, 0);
                     long feedId = getIntent().getLongExtra(ReaderConstants.ARG_FEED_ID, 0);
@@ -119,7 +120,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                     mSiteId = savedInstanceState.getLong(ReaderConstants.KEY_SITE_ID);
                 }
             } else if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
-                setTitle(R.string.reader_title_tag_preview);
+                setTitle(R.string.reader_activity_title_tag_preview);
                 ReaderTag tag = (ReaderTag) getIntent().getSerializableExtra(ReaderConstants.ARG_TAG);
                 if (tag != null && savedInstanceState == null) {
                     showListFragmentForTag(tag, mPostListType);
@@ -290,7 +291,7 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
 
         String title = ReaderBlogTable.getFeedName(feedId);
         if (title.isEmpty()) {
-            title = getString(R.string.reader_title_blog_preview);
+            title = getString(R.string.reader_activity_title_blog_preview);
         }
         setTitle(title);
     }
@@ -316,13 +317,13 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 break;
             case RequestCodes.EDIT_POST:
                 if (resultCode == Activity.RESULT_OK && data != null && !isFinishing()) {
-                    int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                    int localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0);
                     final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                     final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
                     if (EditPostActivity.checkToRestart(data)) {
                         ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
-                                data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                                data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0));
                         // a restart will happen so, no need to continue here
                         return;
                     }

@@ -39,12 +39,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
-import com.wordpress.stories.compose.NotificationTrackerProvider
-import com.wordpress.stories.compose.frame.StoryNotificationType
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_SUCCESS
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -76,7 +70,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
-import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
@@ -93,7 +86,6 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -172,9 +164,6 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorTracker: ImageEditorTracker
 
     @Inject
-    lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
-
-    @Inject
     lateinit var crashLogging: CrashLogging
 
     @Inject
@@ -233,8 +222,6 @@ class AppInitializer @Inject constructor(
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
-    lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
-        private set
 
     @Suppress("DEPRECATION")
     private lateinit var credentialsClient: GoogleApiClient
@@ -368,10 +355,6 @@ class AppInitializer @Inject constructor(
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
 
-        storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
-        storyMediaSaveUploadBridge.init(application)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(storyMediaSaveUploadBridge)
-
         exPlat.forceRefresh()
 
         debugCookieManager.sync()
@@ -464,65 +447,78 @@ class AppInitializer @Inject constructor(
         credentialsClient.connect()
     }
 
-    private fun createNotificationChannelsOnSdk26() {
+    private fun createNotificationChannelsOnSdk26(
+        normal: Boolean = true,
+        important: Boolean = true,
+        reminder: Boolean = true,
+        transient: Boolean = true,
+        weeklyRoundup: Boolean = true
+    ) {
         // create Notification channels introduced in Android Oreo
         if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
-            // Create the NORMAL channel (used for likes, comments, replies, etc.)
-            val normalChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_normal_id),
-                application.getString(R.string.notification_channel_general_title),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             val notificationManager = application.getSystemService(
                 Context.NOTIFICATION_SERVICE
             ) as NotificationManager
-            notificationManager.createNotificationChannel(normalChannel)
+            if (normal) {
+                // Create the NORMAL channel (used for likes, comments, replies, etc.)
+                val normalChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_normal_id),
+                    application.getString(R.string.notification_channel_general_title),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
 
-            // Create the IMPORTANT channel (used for 2fa auth, for example)
-            val importantChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_important_id),
-                application.getString(R.string.notification_channel_important_title),
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(importantChannel)
-
-            // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
-            val reminderChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_reminder_id),
-                application.getString(R.string.notification_channel_reminder_title),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(reminderChannel)
-
-            // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
-            // or media upload)
-            val transientChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_transient_id),
-                application.getString(R.string.notification_channel_transient_title),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            transientChannel.setSound(null, null)
-            transientChannel.enableVibration(false)
-            transientChannel.enableLights(false)
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(transientChannel)
-
-            // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
-            val weeklyRoundupChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_weekly_roundup_id),
-                application.getString(R.string.notification_channel_weekly_roundup_title),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            // Register the channel with the system; you can't change the importance or other notification behaviors
-            // after this
-            notificationManager.createNotificationChannel(weeklyRoundupChannel)
+                notificationManager.createNotificationChannel(normalChannel)
+            }
+            if (important) {
+                // Create the IMPORTANT channel (used for 2fa auth, for example)
+                val importantChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_important_id),
+                    application.getString(R.string.notification_channel_important_title),
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(importantChannel)
+            }
+            if (reminder) {
+                // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
+                val reminderChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_reminder_id),
+                    application.getString(R.string.notification_channel_reminder_title),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(reminderChannel)
+            }
+            if (transient) {
+                // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
+                // or media upload)
+                val transientChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_transient_id),
+                    application.getString(R.string.notification_channel_transient_title),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                transientChannel.setSound(null, null)
+                transientChannel.enableVibration(false)
+                transientChannel.enableLights(false)
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(transientChannel)
+            }
+            if (weeklyRoundup) {
+                // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
+                val weeklyRoundupChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_weekly_roundup_id),
+                    application.getString(R.string.notification_channel_weekly_roundup_title),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+                // Register the channel with the system; you can't change the importance or other notification behaviors
+                // after this
+                notificationManager.createNotificationChannel(weeklyRoundupChannel)
+            }
         }
     }
 
@@ -956,34 +952,20 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    inner class StoryNotificationTrackerProvider : NotificationTrackerProvider {
-        private fun translateNotificationTypes(storyNotificationType: StoryNotificationType): NotificationType {
-            return when (storyNotificationType) {
-                STORY_SAVE_SUCCESS -> NotificationType.STORY_SAVE_SUCCESS
-                STORY_SAVE_ERROR -> NotificationType.STORY_SAVE_ERROR
-                STORY_FRAME_SAVE_SUCCESS -> NotificationType.STORY_FRAME_SAVE_SUCCESS
-                STORY_FRAME_SAVE_ERROR -> NotificationType.STORY_FRAME_SAVE_ERROR
-            }
-        }
-
-        override fun trackShownNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackTappedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackDismissedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType))
-        }
-    }
-
     private fun updateNotificationSettings() {
-        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
             NotificationsUtils.cancelAllNotifications(application)
-        else
+            // Only create the transient notification channel to handle upload notifications
+            createNotificationChannelsOnSdk26(
+                normal = false,
+                important = false,
+                reminder = false,
+                transient = true,
+                weeklyRoundup = false,
+            )
+        } else {
             createNotificationChannelsOnSdk26()
+        }
     }
 
     companion object {

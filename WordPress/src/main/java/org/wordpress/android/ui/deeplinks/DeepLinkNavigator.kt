@@ -27,7 +27,9 @@ import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ShowS
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.StartCreateSiteFlow
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.ViewPostInReader
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.DEEP_LINK
+import org.wordpress.android.ui.sitemonitor.SiteMonitorType
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.util.UriWrapper
 import javax.inject.Inject
 
@@ -60,12 +62,20 @@ class DeepLinkNavigator
                 activity,
                 navigateAction.statsTimeframe
             )
-            is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(activity, navigateAction.site)
+
+            is OpenStatsForSite -> ActivityLauncher.viewStatsInNewStack(
+                activity,
+                navigateAction.site,
+                StatsLaunchedFrom.LINK
+            )
+
             is OpenStatsForSiteAndTimeframe -> ActivityLauncher.viewStatsInNewStack(
                 activity,
                 navigateAction.site,
-                navigateAction.statsTimeframe
+                navigateAction.statsTimeframe,
+                StatsLaunchedFrom.LINK
             )
+
             OpenReader -> ActivityLauncher.viewReaderInNewStack(activity)
             is OpenInReader -> ActivityLauncher.viewPostDeeplinkInNewStack(activity, navigateAction.uri.uri)
             is ViewPostInReader -> ActivityLauncher.viewReaderPostDetailInNewStack(
@@ -91,6 +101,15 @@ class DeepLinkNavigator
                 navigateAction.site
             )
             NavigateAction.DomainManagement -> ActivityLauncher.openDomainManagement(activity)
+            is NavigateAction.OpenSiteMonitoringForSite -> activityNavigator.openSiteMonitoringInNewStack(
+                activity,
+                navigateAction.site,
+                navigateAction.siteMonitorType
+            )
+            is NavigateAction.OpenMySiteWithMessage -> activityNavigator.openMySiteWithMessageInNewStack(
+                activity,
+                navigateAction.message
+            )
         }
         if (navigateAction != LoginForResult) {
             activity.finish()
@@ -126,5 +145,8 @@ class DeepLinkNavigator
         object OpenMedia : NavigateAction()
         data class OpenMediaPickerForSite(val site: SiteModel) : NavigateAction()
         object DomainManagement : NavigateAction()
+        data class OpenSiteMonitoringForSite(val site: SiteModel?, val siteMonitorType: SiteMonitorType) :
+            NavigateAction()
+        data class OpenMySiteWithMessage(val message: Int) : NavigateAction()
     }
 }

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2024-01-07 08:57:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: sk
 -->
 <resources>
@@ -20,7 +20,6 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
     <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
-    <string name="reader_filter_empty_tags_action">Pridať tému</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="scheduled_for">Naplánované na: %s</string>
@@ -147,7 +146,6 @@ Language: sk
     <string name="login_error_sms_throttled">Vynaložili sme veľké úsilie, aby sme odoslali cez SMS overovací kód - skús opätovne neskôr.</string>
     <string name="login_error_email_not_found_v2">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
     <string name="site_picker_remove_site_empty">Žiadna webová stránka nezodpovedá vyhľadávaniu.</string>
-    <string name="reader_empty_followed_blogs_search_title">Žiadna webová stránka nezodpovedá vášmu vyhľadávaniu.</string>
     <string name="page_parent_changed">Strana predlohy sa zmenila</string>
     <string name="page_moved_to_draft">Stránka bola presunutá do Koncepty</string>
     <string name="top_level">Najvyššia úroveň</string>
@@ -177,8 +175,6 @@ Language: sk
     <string name="quick_start_button_negative">Teraz nie</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="content_description_more">Viac</string>
-    <string name="reader_empty_followed_tags_title">Žiadne sledované témy</string>
-    <string name="reader_empty_followed_tags_subtitle">Pridajte témy a nájdite články vašich obľúbených témach</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
@@ -198,9 +194,6 @@ Language: sk
     <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
-    <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
-    <string name="reader_empty_followed_blogs_button_discover">Objavte webové stránky</string>
-    <string name="reader_empty_followed_blogs_title">Žiadne sledované webové stránky</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
     <string name="activity_log_limited_content_on_free_plan">Keďže máte voľný plán, uvidíte vo svojich aktivitách obmedzené udalosti.</string>
@@ -265,8 +258,6 @@ Language: sk
     <string name="reader_followed_blog_notifications_this">Táto webová stránka</string>
     <string name="reader_followed_blog_notifications_action">Oprávnenie</string>
     <string name="reader_followed_blog_notifications">Umožniť upozornenia pre %1$s%2$s%3$s?</string>
-    <string name="reader_btn_notifications_on">Zapnúť upozornenia webovej stránky</string>
-    <string name="reader_btn_notifications_off">Vypnúť upozornenia webovej stránky</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
     <string name="activity_log_event">Udalosť</string>
     <string name="activity_log_icon">Ikonka aktivity</string>
@@ -847,7 +838,6 @@ Language: sk
     <string name="confirm">Potvrdiť</string>
     <string name="xmlrpc_endpoint_forbidden_error">Nepodarilo sa pripojiť. Došlo k chybe 403, keď ste sa snažili dostať na webovú stránku XMLRPC koncový bod. Aplikácia ho vyžaduje, aby mohla komunikovať s vašou webovou stránkou. Kontaktujte svojho hosta, aby vyriešil problém.</string>
     <string name="xmlrpc_post_blocked_error">Nemožno pripojiť. Váš hostiteľ blokuje žiadosti ČLÁNOK. Aplikácia potrebuje to potrebuje na komunikáciu s vašou webovou stránkou. Kontaktujte hostiteľa, aby vyriešil tento problém.</string>
-    <string name="reader_hint_search_followed_sites">Hľadajte sledované webové stránky</string>
     <string name="pending_draft_one_generic">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_month">Nečakajte! %1$s\' čaká na zverejnenie.</string>
     <string name="pending_draft_one_week_2">%1$s\' zostáva ako koncept. Pripomenúť na zverjnenie!</string>
@@ -949,7 +939,6 @@ Language: sk
     <string name="person_remove_confirmation_title">Odstrániť %1$s</string>
     <string name="people">Ľudia</string>
     <string name="role">Rola</string>
-    <string name="reader_empty_posts_in_custom_list">Webové stránky v tomto zozname neuverejnili v poslednej dobe nič</string>
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
     <string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
     <string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>
@@ -1162,7 +1151,6 @@ Language: sk
     <string name="reader_err_get_post_not_found">Tento článok už neexistuje</string>
     <string name="reader_err_get_post_not_authorized">Nie ste autorizovaný na prezeranie tohto článku</string>
     <string name="reader_err_get_post_generic">Nemožno načítať tento článok</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Žiadne nové články</string>
     <string name="media_edit_copy_url_toast">URL adresa skopírovaná do schránky</string>
     <string name="selected_theme">Zvolená téma</string>
@@ -1202,10 +1190,8 @@ Language: sk
     <string name="reader_discover_attribution_author">Pôvodne publikované autorom %s</string>
     <string name="reader_discover_attribution_author_and_blog">Pôvodne publikované autorom %1$s v %2$s</string>
     <string name="reader_short_like_count_multi">počet lajkov: %s</string>
-    <string name="reader_label_follow_count">počet sledujúcich: %,d</string>
     <string name="reader_short_like_count_one">1 lajk</string>
     <string name="reader_short_like_count_none">lajk</string>
-    <string name="reader_menu_tags">Upraviť témy a webové stránky</string>
     <string name="reader_title_post_detail">Článok čítačky</string>
     <string name="notifications_push_summary">Nastavenia upozornení zobrazujúcich sa na vašom zariadení.</string>
     <string name="notifications_email_summary">Nastavenia upozornení odosielaných na e-mail, ktorý je spojený s vašim účtom.</string>
@@ -1227,8 +1213,6 @@ Language: sk
     <string name="button_view">Zobraziť</string>
     <string name="button_publish">Zverejniť</string>
     <string name="post_trashed">Článok presunutý do koša</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnenie na prístup na túto webovú stránku</string>
-    <string name="reader_toast_err_follow_blog_not_found">Táto webová stránka sa nenašla</string>
     <string name="undo">Zrušiť zmenu</string>
     <string name="push_auth_expired">Platnosť požiadavky uplynula. Prihláste sa na stránku WordPress.com a skúste to znova.</string>
     <string name="stats_insights_best_ever">Najlepšie zobrazenia</string>
@@ -1275,7 +1259,6 @@ Language: sk
     <string name="reader_label_new_posts">Nové príspevky</string>
     <string name="logs_copied_to_clipboard">Záznamy aplikácie boli skopírované do schránky</string>
     <string name="post_uploading">Nahrávanie príspevku</string>
-    <string name="reader_empty_posts_in_blog">Táto webová stránka je prázdna</string>
     <string name="themes_fetching">Načítavajú sa témy</string>
     <string name="stats_followers_a_month">Mesiac</string>
     <string name="stats_followers_an_hour_ago">Pred hodinou</string>
@@ -1318,24 +1301,9 @@ Language: sk
     <string name="reader_label_like">Lajk</string>
     <string name="mnu_comment_liked">Lajknuté</string>
     <string name="signing_out">Odhlasovanie…</string>
-    <string name="reader_empty_posts_in_tag">Neexistuje žiadny príspevok s touto témou</string>
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
-    <string name="reader_toast_blog_blocked">Príspevky z tejto webovej stránky sa už nebudú zobrazovať</string>
-    <string name="reader_toast_err_block_blog">Nepodarilo sa zablokovať túto webovú stránku</string>
-    <string name="reader_menu_block_blog">Blokovať túto webovú stránku</string>
     <string name="update_verb">Aktualizovať</string>
     <string name="schedule_verb">Rozvrh</string>
-    <string name="reader_page_followed_blogs">Sledované webové stránky</string>
-    <string name="reader_toast_err_unfollow_blog">Nepodarilo sa zrušiť sledovanie tejto webovej stránky</string>
-    <string name="reader_label_followed_blog">Sledovaná webová stránka</string>
-    <string name="reader_toast_err_already_follow_blog">Túto webovú stránku už sledujete</string>
-    <string name="reader_toast_err_get_blog_info">Nepodarilo sa zobraziť túto webovú stránku</string>
-    <string name="reader_toast_err_follow_blog">Nepodarilo sa sledovať túto webovú stránku</string>
-    <string name="reader_empty_recommended_blogs">Žiadne odporúčané webové stránky</string>
-    <string name="reader_title_blog_preview">Webová stránka čítačky</string>
-    <string name="reader_page_followed_tags">Sledované témy</string>
-    <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo tému, ktorú chcete sledovať</string>
-    <string name="reader_label_followers_count">%s odberateľov</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
@@ -1407,8 +1375,6 @@ Language: sk
     <string name="file_not_found">Nepodarilo sa nájsť súbor na nahrávanie. Bol odstránený alebo presunutý?</string>
     <string name="delete_page">Vymazať stránku?</string>
     <string name="delete_post">Vymazať príspevok?</string>
-    <string name="reader_toast_err_add_tag">Túto tému nie je možné pridať</string>
-    <string name="reader_toast_err_remove_tag">Túto tému nie je možné odstrániť</string>
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
@@ -1427,15 +1393,12 @@ Language: sk
     <string name="reader_toast_err_share_intent">Nie je možné zdieľať</string>
     <string name="reader_toast_err_view_image">Nie je možné zobraziť obrázok</string>
     <string name="reader_btn_follow">Sledovať</string>
-    <string name="reader_btn_unfollow">Sledujem</string>
     <string name="reader_untitled_post">(bez názvu)</string>
     <string name="reader_likes_only_you">Páči sa vám to</string>
     <string name="reader_label_added_tag">pridané: %s</string>
     <string name="reader_likes_one">Jeden lajk</string>
     <string name="reader_hint_comment_on_comment">Odpovedajte na komentár…</string>
     <string name="comments_empty_list">Zatiaľ žiadne komentáre</string>
-    <string name="reader_toast_err_tag_exists">Túto tému už sledujete</string>
-    <string name="reader_toast_err_tag_invalid">Toto nie je platná téma</string>
     <string name="themes">Témy</string>
     <string name="stats_timeframe_days">Dní</string>
     <string name="stats_timeframe_weeks">Týždňov</string>

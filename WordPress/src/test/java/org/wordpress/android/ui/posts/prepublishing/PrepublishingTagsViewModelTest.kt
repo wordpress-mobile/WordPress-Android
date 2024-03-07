@@ -72,26 +72,13 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when viewModel is started with closeKeyboard=false then dismissKeyboard is not called when tapping back`() {
-        var event: Event<Unit>? = null
-        viewModel.dismissKeyboard.observeForever {
-            event = it
-        }
-
-        viewModel.start(mock(), closeKeyboard = false)
-        viewModel.onBackButtonClicked()
-
-        assertThat(event).isNull()
-    }
-
-    @Test
     fun `when viewModel is started with closeKeyboard=true then dismissKeyboard is called when tapping back`() {
         var event: Event<Unit>? = null
         viewModel.dismissKeyboard.observeForever {
             event = it
         }
 
-        viewModel.start(mock(), closeKeyboard = true)
+        viewModel.start(mock())
         viewModel.onBackButtonClicked()
 
         assertThat(event).isNotNull

@@ -7,8 +7,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import org.wordpress.android.Result
 import org.wordpress.android.R
+import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -47,12 +47,20 @@ class CampaignListingViewModel @Inject constructor(
     private val _snackbar = MutableSharedFlow<String>()
     val snackBar = _snackbar.asSharedFlow()
 
+    private val _onSelectedSiteMissing = MutableLiveData<Unit>()
+    val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
+
     private var page = 1
     private var limitPerPage: Int = 10
     private var isLastPage: Boolean = false
 
     fun start(campaignListingPageSource: CampaignListingPageSource) {
-        this.site = selectedSiteRepository.getSelectedSite()!!
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _onSelectedSiteMissing.value = Unit
+            return
+        }
+        this.site = site
         blazeFeatureUtils.trackCampaignListingPageShown(campaignListingPageSource)
         loadCampaigns()
     }

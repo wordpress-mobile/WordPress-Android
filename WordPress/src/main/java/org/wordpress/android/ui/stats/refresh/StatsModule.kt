@@ -62,11 +62,15 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewUseCase.TrafficOverviewUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
 const val INSIGHTS_USE_CASE = "InsightsUseCase"
+const val TRAFFIC_USE_CASE = "TrafficStatsUseCase"
 const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
@@ -81,6 +85,7 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val TRAFFIC_USE_CASE_FACTORIES = "TrafficUseCaseFactories"
 
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
@@ -123,7 +128,8 @@ class StatsModule {
         managementNewsCardUseCase: ManagementNewsCardUseCase,
         actionCardGrowUseCase: ActionCardGrowUseCase,
         actionCardReminderUseCase: ActionCardReminderUseCase,
-        actionCardScheduleUseCase: ActionCardScheduleUseCase
+        actionCardScheduleUseCase: ActionCardScheduleUseCase,
+        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (BuildConfig.IS_JETPACK_APP) {
@@ -137,11 +143,15 @@ class StatsModule {
         } else {
             useCases.add(followerTotalsUseCase)
         }
+
+        if (!trafficTabFeatureConfig.isEnabled()) {
+            useCases.add(todayStatsUseCase)
+        }
+
         useCases.addAll(
             listOf(
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
-                todayStatsUseCase,
                 followersUseCaseFactory.build(BLOCK),
                 commentsUseCase,
                 mostPopularInsightsUseCase,
@@ -201,7 +211,7 @@ class StatsModule {
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory,
         overviewUseCaseFactory: OverviewUseCaseFactory,
-        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory
+        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory,
     ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
             postsAndPagesUseCaseFactory,
@@ -212,7 +222,7 @@ class StatsModule {
             searchTermsUseCaseFactory,
             authorsUseCaseFactory,
             overviewUseCaseFactory,
-            fileDownloadsUseCaseFactory
+            fileDownloadsUseCaseFactory,
         )
     }
 
@@ -262,6 +272,66 @@ class StatsModule {
             useCases,
             { statsStore.getInsightTypes(it) },
             uiModelMapper::mapInsights
+        )
+    }
+
+    /**
+     * Provides a list of use case factories that build use cases for the Traffic stats screen based on the given
+     * granularity (Day, Week, Month, Year).
+     */
+    @Provides
+    @Singleton
+    @Named(TRAFFIC_USE_CASE_FACTORIES)
+    @Suppress("LongParameterList")
+    fun provideTrafficUseCaseFactories(
+        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
+        referrersUseCaseFactory: ReferrersUseCaseFactory,
+        clicksUseCaseFactory: ClicksUseCaseFactory,
+        countryViewsUseCaseFactory: CountryViewsUseCaseFactory,
+        videoPlaysUseCaseFactory: VideoPlaysUseCaseFactory,
+        searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
+        authorsUseCaseFactory: AuthorsUseCaseFactory,
+        trafficOverviewUseCaseFactory: TrafficOverviewUseCaseFactory,
+        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory
+    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
+        return listOf(
+            postsAndPagesUseCaseFactory,
+            referrersUseCaseFactory,
+            clicksUseCaseFactory,
+            countryViewsUseCaseFactory,
+            videoPlaysUseCaseFactory,
+            searchTermsUseCaseFactory,
+            authorsUseCaseFactory,
+            trafficOverviewUseCaseFactory,
+            fileDownloadsUseCaseFactory
+        )
+    }
+
+    /**
+     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Named(TRAFFIC_USE_CASE)
+    @Suppress("LongParameterList")
+    fun provideTrafficUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(TRAFFIC_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCasesFactories.map {
+                it.build(selectedTrafficGranularityManager.getSelectedTrafficGranularity(), BLOCK)
+            },
+            { statsStore.getTimeStatsTypes(it) },
+            uiModelMapper::mapTimeStats
         )
     }
 
@@ -374,20 +444,30 @@ class StatsModule {
     @Provides
     @Singleton
     @Named(LIST_STATS_USE_CASES)
+    @Suppress("LongParameterList")
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
+        @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
-        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase
+        @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
+        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
-        return mapOf(
-            StatsSection.INSIGHTS to insightsUseCase,
-            StatsSection.DAYS to dayStatsUseCase,
-            StatsSection.WEEKS to weekStatsUseCase,
-            StatsSection.MONTHS to monthStatsUseCase,
-            StatsSection.YEARS to yearStatsUseCase
-        )
+        return if (trafficTabFeatureConfig.isEnabled()) {
+            mapOf(
+                StatsSection.TRAFFIC to trafficUseCase,
+                StatsSection.INSIGHTS to insightsUseCase
+            )
+        } else {
+            mapOf(
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.DAYS to dayStatsUseCase,
+                StatsSection.WEEKS to weekStatsUseCase,
+                StatsSection.MONTHS to monthStatsUseCase,
+                StatsSection.YEARS to yearStatsUseCase
+            )
+        }
     }
 
     /**

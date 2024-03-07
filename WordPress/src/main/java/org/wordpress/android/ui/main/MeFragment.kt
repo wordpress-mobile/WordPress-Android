@@ -37,6 +37,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
 import org.wordpress.android.databinding.MeFragmentBinding
+import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -199,6 +200,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
+        learnMoreAtGravatar.setOnClickListener {
+            ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
+        }
+        gravatarSyncView.gravatarSyncButton.setOnClickListener {
+            gravatarSyncView.gravatarSyncContainer.visibility = View.GONE
+        }
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
 
@@ -207,6 +214,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             debugSettingsDivider.isVisible = true
             rowDebugSettings.setOnClickListener {
                 requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
+            }
+            rowDesignSystem.isVisible = true
+            designSystemDivider.isVisible = true
+            rowDesignSystem.setOnClickListener {
+                requireContext().startActivity(Intent(requireContext(), DesignSystemActivity::class.java))
             }
         }
 
@@ -685,6 +697,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         if (event.success) {
             AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
             binding?.loadAvatar(event.filePath)
+            binding?.gravatarSyncView?.gravatarSyncContainer?.visibility = View.VISIBLE
         } else {
             ToastUtils.showToast(
                 activity,
@@ -703,6 +716,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
+        private const val GRAVATAR_URL = "https://www.gravatar.com";
         fun newInstance(): MeFragment {
             return MeFragment()
         }

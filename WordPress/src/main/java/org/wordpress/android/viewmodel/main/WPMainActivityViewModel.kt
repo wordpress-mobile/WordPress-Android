@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -20,14 +19,12 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -42,7 +39,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
-import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
@@ -56,7 +52,6 @@ import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val SWITCH_TO_MY_SITE_DELAY = 500L
 private const val ONE_SITE = 1
 
 class WPMainActivityViewModel @Inject constructor(
@@ -71,8 +66,6 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val siteUtilsWrapper: SiteUtilsWrapper,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -113,11 +106,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    private val _startLoginFlow = MutableLiveData<Event<Unit>>()
-    val startLoginFlow: LiveData<Event<Unit>> = _startLoginFlow
-
-    private val _switchToMySite = MutableLiveData<Event<Unit>>()
-    val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
+    private val _switchToMeTab = MutableLiveData<Event<Unit>>()
+    val switchToMeTab: LiveData<Event<Unit>> = _switchToMeTab
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit?>()
     val onFeatureAnnouncementRequested: LiveData<Unit?> = _onFeatureAnnouncementRequested
@@ -204,16 +194,6 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = null
             )
         )
-        if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            actionsList.add(
-                CreateAction(
-                    actionType = CREATE_NEW_STORY,
-                    iconRes = R.drawable.ic_story_icon_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_story,
-                    onClickAction = ::onCreateActionClicked
-                )
-            )
-        }
         actionsList.add(
             CreateAction(
                 actionType = CREATE_NEW_POST,
@@ -277,11 +257,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
-        if (siteUtilsWrapper.supportsStoriesFeature(
-            site,
-            jetpackFeatureRemovalPhaseHelper) ||
-            hasFullAccessToContent(site)
-        ) {
+        if (hasFullAccessToContent(site)) {
             launch {
                 // The user has at least two create options available for this site (pages and/or story posts),
                 // so we should show a bottom sheet.
@@ -305,11 +281,8 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(showFab, site)
     }
 
-    fun onOpenLoginPage(mySitePosition: Int) = launch {
-        _startLoginFlow.value = Event(Unit)
-        appPrefsWrapper.setMainPageIndex(mySitePosition)
-        delay(SWITCH_TO_MY_SITE_DELAY)
-        _switchToMySite.value = Event(Unit)
+    fun onOpenLoginPage() = launch {
+        _switchToMeTab.value = Event(Unit)
     }
 
     fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
@@ -348,30 +321,13 @@ class WPMainActivityViewModel @Inject constructor(
         _fabUiState.value = newState
     }
 
-    fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (siteUtilsWrapper.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)) {
-            getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent(site))
-        } else {
-            getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent(site))
-        }
-    }
-
-    // create_post_page_fab_tooltip_stories_feature_flag_on
-    private fun getCreateContentMessageIdStoriesFlagOn(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent) {
-            R.string.create_post_page_fab_tooltip_stories_enabled
-        } else {
-            R.string.create_post_page_fab_tooltip_contributors_stories_enabled
-        }
-    }
-
-    private fun getCreateContentMessageIdStoriesFlagOff(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent) {
+    fun getCreateContentMessageId(site: SiteModel?): Int =
+        if (hasFullAccessToContent(site)) {
             R.string.create_post_page_fab_tooltip
         } else {
             R.string.create_post_page_fab_tooltip_contributors
         }
-    }
+
 
     private fun updateFeatureAnnouncements() {
         launch {

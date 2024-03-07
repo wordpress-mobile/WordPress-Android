@@ -338,8 +338,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderActions.ActionListener listener = succeeded -> {
             if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
-                        : R.string.reader_toast_err_remove_tag;
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
+                        : R.string.reader_toast_err_removing_tag;
                 ToastUtils.showToast(context, errResId);
             } else {
                 if (isAskingToFollow) {

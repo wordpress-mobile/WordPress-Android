@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: es_CL
 -->
 <resources>
@@ -203,7 +203,6 @@ Language: es_CL
     <string name="login_error_sms_throttled">Hemos intentado demasiadas veces enviarte un código de verificación de SMS: Tómate un descanso y solicita uno nuevo en un minuto.</string>
     <string name="login_error_email_not_found_v2">No hay ninguna cuenta WordPress.com que coincida con esta cuenta de Google.</string>
     <string name="site_picker_remove_site_empty">No hay sitios que coincidan con tu búsqueda</string>
-    <string name="reader_empty_followed_blogs_search_title">No hay sitios que coincidan con tu búsqueda</string>
     <string name="page_parent_changed">Se ha cambiado la página padre</string>
     <string name="page_permanently_deleted">La página se ha eliminado permanentemente</string>
     <string name="page_moved_to_scheduled">La página se ha programado</string>
@@ -249,9 +248,6 @@ Language: es_CL
     <string name="people_empty_list_filtered_users">Aún sin usuarios</string>
     <string name="reader_empty_posts_liked_description">Los posts que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Aún no te gusta algo</string>
-    <string name="reader_empty_followed_blogs_button_followed">Ir a siguiendo</string>
-    <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
-    <string name="reader_empty_followed_blogs_title">Sin sitios seguidos</string>
     <string name="activity_log_limited_content_on_free_plan">Ya que estás en un plan gratuito, verás eventos limitados en tu actividad.</string>
     <string name="notifications_empty_followers">Aún sin seguidores</string>
     <string name="notifications_empty_likes">Aún no hay “me gusta”</string>
@@ -321,8 +317,6 @@ Language: es_CL
     <string name="preference_privacy_settings">Opciones de privacidad</string>
     <string name="privacy_policy_learn_more_caption">Esta información nos ayuda a mejorar nuestros productos, hacer marketing más relevante para ti, personalizar tu experiencia en WordPress.com, y más, como se detalla en nuestra política de privacidad.</string>
     <string name="privacy_policy_read">Leer la política de privacidad</string>
-    <string name="reader_btn_notifications_off">Desactivar notificaciones del sitio</string>
-    <string name="reader_btn_notifications_on">Activar notificaciones de sitio</string>
     <string name="reader_followed_blog_notifications">¿Habilitar notificaciones para %1$s%2$s%3$s?</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de rastreo, incluyendo algunas de terceras partes. Lee acerca de estos y cómo controlarlos.</string>
     <string name="third_party_policy_learn_more_header">Política de Terceras Partes</string>
@@ -864,7 +858,6 @@ Language: es_CL
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se puede conectar. Recibimos un error 403 cuando intentamos conectarnos\n        al endpoint XMLRPC de tu sitio. La APP lo necesita para comunicarse con tu sitio. Contacta a tu hosting\n        para solucionarlo.</string>
     <string name="xmlrpc_post_blocked_error">No se puede conectar. Tu host está bloqueando las solicitudes POST, y la aplicación\n        Lo necesita para comunicarse con tu sitio. Contacta a tu host para resolver este problema.</string>
-    <string name="reader_hint_search_followed_sites">Buscar sitios seguidos</string>
     <string name="pending_draft_one_generic">¡no lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_month">¡No lo dejes colgado! \'%1$s\' está a la espera de ser publicado.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' sigue siendo un borrador. ¡Recuerda publicarlo!</string>
@@ -962,7 +955,6 @@ Language: es_CL
     <string name="person_remove_confirmation_title">Quitar %1$s</string>
     <string name="role">Función</string>
     <string name="people">Gente</string>
-    <string name="reader_empty_posts_in_custom_list">Los sitios de esta lista no han publicado nada recientemente</string>
     <string name="error_remove_user">No se pudo quitar el usuario</string>
     <string name="error_update_role">No se pudo actualizar el rol del usuario</string>
     <string name="error_fetch_viewers_list">No se pudo recuperar los espectadores del sitio</string>
@@ -1167,7 +1159,6 @@ Language: es_CL
     <string name="reader_err_get_post_not_found">Esta entrada ya no existe</string>
     <string name="reader_err_get_post_not_authorized">No estás autorizado para ver esta entrada</string>
     <string name="reader_err_get_post_generic">No fue posible cargar esta entrada</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Los sitios que sigues no han publicado nada recientemente</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Entradas recientes</string>
     <string name="media_edit_copy_url_toast">URL copiada en el portapapeles</string>
     <string name="selected_theme">Tema Seleccionado</string>
@@ -1233,8 +1224,6 @@ Language: es_CL
     <string name="button_view">Ver</string>
     <string name="button_edit">Editar</string>
     <string name="button_publish">Publicar</string>
-    <string name="reader_toast_err_follow_blog_not_authorized">No está autorizado para acceder a este sitio</string>
-    <string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar este sitio</string>
     <string name="undo">Deshacer</string>
     <string name="push_auth_expired">La solicitud ha expirado. Inicia sesión en WordPress.com para intentarlo de nuevo.</string>
     <string name="ignore">Ignorar</string>
@@ -1278,7 +1267,6 @@ Language: es_CL
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
-    <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="post_uploading">Subiendo entrada</string>
     <string name="themes_fetching">Obteniendo temas…</string>
     <string name="stats_followers_months">%1$d meses</string>
@@ -1322,19 +1310,8 @@ Language: es_CL
     <string name="error_publish_empty_post">No se puede publicar una entrada vacía</string>
     <string name="browse_our_faq_button">Revisa nuestras Preguntas Más Frecuentes</string>
     <string name="reader_toast_err_generic">No es posible realizar esta acción</string>
-    <string name="reader_menu_block_blog">Bloquear este sitio</string>
-    <string name="reader_toast_blog_blocked">Los mensajes de este sitio ya no se mostrarán</string>
-    <string name="reader_toast_err_block_blog">No se pudo bloquear este sitio</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programación</string>
-    <string name="reader_page_followed_blogs">Sitios que sigues</string>
-    <string name="reader_empty_recommended_blogs">No hay sitios recomendados</string>
-    <string name="reader_toast_err_unfollow_blog">No se puede dejar de seguir a este sitio</string>
-    <string name="reader_toast_err_follow_blog">No se puede seguir este sitio</string>
-    <string name="reader_toast_err_already_follow_blog">Ya sigues a este sitio</string>
-    <string name="reader_toast_err_get_blog_info">No se puede mostrar este sitio</string>
-    <string name="reader_label_followed_blog">Sitio seguido</string>
-    <string name="reader_title_blog_preview">Lector del Sitio</string>
     <string name="help">Ayuda</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
@@ -1419,7 +1396,6 @@ Language: es_CL
     <string name="empty_list_default">Esta lista esta vacía</string>
     <string name="reader_btn_share">Compartir</string>
     <string name="reader_btn_follow">Seguir</string>
-    <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_label_removed_tag">Eliminado %s</string>
     <string name="reader_likes_one">A una persona le gusta esto</string>
     <string name="reader_likes_only_you">Te gusta esto</string>

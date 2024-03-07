@@ -9,10 +9,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.StatsType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
@@ -22,8 +22,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.PackageUtils
 import org.wordpress.android.util.combineMap
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapAsync
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.util.mergeNotNull
 import org.wordpress.android.viewmodel.Event
@@ -140,11 +140,20 @@ class BaseListUseCase(
         data.value = null
     }
 
-    suspend fun onDateChanged(selectedSection: StatsSection) {
-        onParamChanged(UseCaseParam.SelectedDateParam(selectedSection))
+    suspend fun onDateChanged(selectedGranularity: StatsGranularity) {
+        onParamChanged(UseCaseParam.SelectedDateParam(selectedGranularity))
     }
 
     fun onListSelected() {
         mutableListSelected.call()
     }
+
+    fun clone(newUseCases: List<BaseStatsUseCase<*, *>>) = BaseListUseCase(
+        bgDispatcher,
+        mainDispatcher,
+        statsSiteProvider,
+        newUseCases,
+        getStatsTypes,
+        mapUiModel
+    )
 }

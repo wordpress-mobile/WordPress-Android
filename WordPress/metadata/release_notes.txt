@@ -1,5 +1,5 @@
-Block Editor updates:
-- Device keyboard remains when editing text blocks
-- Screen auto-scrolls to newly inserted blocks
-- Unselect blocks by pressing your device’s back button
-- Share different media types to the app at once without crashing
+We made a few changes to the block editor.
+
+- The app won’t crash anymore when the editor auto-scrolls down to a block.
+- You’ll now see an error message when a video fails to upload to media and text blocks.
+- Images no longer appear partly transparent while they’re being uploaded.

@@ -61,6 +61,7 @@ import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalCommentsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalFollowersDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.TrafficListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.WeeksListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.YearsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel;
@@ -71,8 +72,6 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
-import org.wordpress.android.ui.stories.StoryComposerViewModel;
-import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
 import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
@@ -157,6 +156,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(InsightsListViewModel.class)
     abstract ViewModel insightsTabViewModel(InsightsListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(TrafficListViewModel.class)
+    abstract ViewModel trafficTabViewModel(TrafficListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -352,16 +356,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingPublishSettingsViewModel.class)
     abstract ViewModel prepublishingPublishSettingsViewModel(PrepublishingPublishSettingsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StoryComposerViewModel.class)
-    abstract ViewModel storyComposerViewModel(StoryComposerViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StoriesIntroViewModel.class)
-    abstract ViewModel storiesIntroViewModel(StoriesIntroViewModel viewModel);
 
     @Binds
     @IntoMap

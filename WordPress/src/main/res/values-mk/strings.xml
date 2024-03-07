@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: mk
 -->
 <resources>
@@ -133,7 +133,6 @@ Language: mk
     <string name="reader_toast_err_share_intent">Неможе да се сподели</string>
     <string name="reader_toast_err_view_image">Неможе да се види сликата</string>
     <string name="reader_toast_err_url_intent">Неможе да се отвори %s</string>
-    <string name="reader_btn_unfollow">Следење</string>
     <string name="reader_label_added_tag">Додадено %s</string>
     <string name="reader_likes_one">На едно лице му се допаѓа ова</string>
     <string name="reader_likes_only_you">На тебе ти се допаѓа ова</string>

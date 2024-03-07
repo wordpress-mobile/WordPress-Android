@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?colorSurface"
+    app:cardCornerRadius="@dimen/notifications_popup_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_mark_all_as_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/notifications_item_action_padding"
+            android:paddingEnd="@dimen/notifications_item_action_padding_end"
+            android:paddingStart="@dimen/notifications_item_action_padding"
+            android:paddingVertical="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_action_mark_all_as_read"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large"
+            app:drawableStartCompat="@drawable/ic_check_24px"
+            app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/notifications_item_action_padding"
+            android:paddingEnd="@dimen/notifications_item_action_padding_end"
+            android:paddingStart="@dimen/notifications_item_action_padding"
+            android:paddingVertical="@dimen/notifications_item_action_padding"
+            android:text="@string/notification_settings"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large"
+            app:drawableStartCompat="@drawable/ic_cog_white_24dp"
+            app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:background="@color/grey_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_mark_all_as_read" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+

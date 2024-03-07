@@ -118,7 +118,7 @@ class DeviceListBuilder(
                 null
             }
         }
-        addPage(mediaType, result, deviceMediaList.next)
+        addPage(mediaType, result, if (result.isEmpty()) null else deviceMediaList.next)
         return cache[mediaType]
     }
 

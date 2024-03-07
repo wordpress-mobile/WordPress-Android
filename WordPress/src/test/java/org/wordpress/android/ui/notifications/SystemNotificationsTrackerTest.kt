@@ -35,11 +35,6 @@ import org.wordpress.android.push.NotificationType.POST_PUBLISHED
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
 import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
-import org.wordpress.android.push.NotificationType.REBLOG
-import org.wordpress.android.push.NotificationType.STORY_FRAME_SAVE_ERROR
-import org.wordpress.android.push.NotificationType.STORY_FRAME_SAVE_SUCCESS
-import org.wordpress.android.push.NotificationType.STORY_SAVE_ERROR
-import org.wordpress.android.push.NotificationType.STORY_SAVE_SUCCESS
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
 import org.wordpress.android.push.NotificationType.WEEKLY_ROUNDUP
@@ -64,7 +59,6 @@ class SystemNotificationsTrackerTest {
         COMMENT_LIKE to "comment_like",
         AUTOMATTCHER to "automattcher",
         FOLLOW to "follow",
-        REBLOG to "reblog",
         BADGE_RESET to "badge_reset",
         NOTE_DELETE to "note_delete",
         TEST_NOTE to "test_note",
@@ -79,10 +73,6 @@ class SystemNotificationsTrackerTest {
         MEDIA_UPLOAD_SUCCESS to "media_upload_success",
         MEDIA_UPLOAD_ERROR to "media_upload_error",
         POST_PUBLISHED to "post_published",
-        STORY_SAVE_SUCCESS to "story_save_success",
-        STORY_SAVE_ERROR to "story_save_error",
-        STORY_FRAME_SAVE_SUCCESS to "story_frame_save_success",
-        STORY_FRAME_SAVE_ERROR to "story_frame_save_error",
         PENDING_DRAFTS to "pending_draft",
         ZENDESK to "zendesk_message",
         BLOGGING_REMINDERS to "blogging_reminders",

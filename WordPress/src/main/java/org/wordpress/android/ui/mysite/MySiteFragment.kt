@@ -49,7 +49,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
@@ -59,6 +59,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.TitleSubtitleSnackbarSpannable
@@ -255,9 +256,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
             RequestCodes.STORIES_PHOTO_PICKER,
-            RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.handleStoriesPhotoPickerResult(data)
-            }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -296,7 +294,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 viewModel.checkAndStartQuickStart(
                     data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(
-                        EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                        EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
                     )
                 )
             }
@@ -607,26 +605,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             action.quickStartEvent
         )
         is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(activity, action.site)
-        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+        is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
+            activity,
+            action.site,
+            StatsLaunchedFrom.QUICK_ACTIONS
+        )
+
         is SiteNavigationAction.ConnectJetpackForStats ->
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is SiteNavigationAction.AddNewStory ->
-            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaIds.toLongArray()
-        )
-        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaUris.toTypedArray()
-        )
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
             activity,
             action.site
@@ -667,8 +655,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.DRAFTS)
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
-        is SiteNavigationAction.OpenStatsInsights ->
-            ActivityLauncher.viewBlogStatsForTimeframe(requireActivity(), action.site, StatsTimeframe.INSIGHTS)
+
+        is SiteNavigationAction.OpenStatsInsights -> ActivityLauncher.viewBlogStatsForTimeframe(
+            requireActivity(),
+            action.site,
+            StatsTimeframe.INSIGHTS,
+            StatsLaunchedFrom.TODAY_STATS_CARD
+        )
+
         is SiteNavigationAction.OpenExternalUrl ->
             ActivityLauncher.openUrlExternal(requireActivity(), action.url)
         is SiteNavigationAction.OpenUrlInWebView ->
@@ -726,6 +720,11 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 .newInstance(action.isPromptsEnabled)
                 .show(requireActivity().supportFragmentManager, BloganuaryNudgeLearnMoreOverlayFragment.TAG)
         }
+
+        is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(
+            requireActivity(),
+            action.site
+        )
     }
 
     private fun handleNavigation(action: BloggingPromptCardNavigationAction) {

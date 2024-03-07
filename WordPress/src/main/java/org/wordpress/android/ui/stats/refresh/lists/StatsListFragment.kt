@@ -6,6 +6,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
@@ -24,9 +27,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.E
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Error
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel.Success
 import org.wordpress.android.ui.stats.refresh.lists.detail.DetailListViewModel
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
+import org.wordpress.android.ui.stats.refresh.utils.toNameResource
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -48,6 +54,13 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
     @Inject
     lateinit var navigator: StatsNavigator
+
+    @Inject
+    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+
+    @Inject
+    lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
+
     private lateinit var viewModel: StatsListViewModel
     private lateinit var statsSection: StatsSection
 
@@ -68,15 +81,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
     }
 
-    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         statsSection = arguments?.getSerializableCompat(LIST_TYPE)
             ?: activity?.intent?.getSerializableExtraCompat(LIST_TYPE)
                     ?: StatsSection.INSIGHTS
-
-        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -118,6 +128,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
 
         this@StatsListFragment.layoutManager = layoutManager
+        this.recyclerView.tag = statsSection.name
         recyclerView.layoutManager = this@StatsListFragment.layoutManager
         recyclerView.addItemDecoration(
             StatsListItemDecoration(
@@ -141,6 +152,26 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 }
             }
         })
+
+        if (statsTrafficTabFeatureConfig.isEnabled()) {
+            dateSelector.granularitySpinner.adapter = ArrayAdapter(
+                requireContext(),
+                R.layout.filter_spinner_item,
+                StatsGranularity.entries.map { getString(it.toNameResource()) }
+            ).apply { setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item) }
+
+            dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    with(StatsGranularity.entries[position]) {
+                        selectedTrafficGranularityManager.setSelectedTrafficGranularity(this)
+                    }
+                }
+
+                @Suppress("EmptyFunctionBlock")
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        }
 
         dateSelector.nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
@@ -171,6 +202,12 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        @Suppress("DEPRECATION")
+        setHasOptionsMenu(statsSection == StatsSection.INSIGHTS)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -183,8 +220,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.TOTAL_LIKES_DETAIL -> TotalLikesDetailListViewModel::class.java
             StatsSection.TOTAL_COMMENTS_DETAIL -> TotalCommentsDetailListViewModel::class.java
             StatsSection.TOTAL_FOLLOWERS_DETAIL -> TotalFollowersDetailListViewModel::class.java
+            StatsSection.TRAFFIC -> TrafficListViewModel::class.java
             StatsSection.ANNUAL_STATS,
-            StatsSection.TRAFFIC -> DaysListViewModel::class.java // Replace with TrafficListViewModel
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java
@@ -199,8 +236,15 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(viewLifecycleOwner) {
-            showUiModel(it)
+        viewModel.uiSourceRemoved.observe(viewLifecycleOwner) {
+            viewModel.uiModel.removeObservers(viewLifecycleOwner)
+            viewModel.navigationTarget.removeObservers(viewLifecycleOwner)
+            viewModel.listSelected.removeObservers(viewLifecycleOwner)
+            viewModel.scrollToNewCard.removeObservers(viewLifecycleOwner)
+        }
+
+        viewModel.uiSourceAdded.observe(viewLifecycleOwner) {
+            observeUiChanges(activity)
         }
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
@@ -212,18 +256,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         }
 
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
-            navigator.navigate(activity, target)
-        }
-
-        viewModel.selectedDate.observe(viewLifecycleOwner) { event ->
+        viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
-                viewModel.onDateChanged(event.selectedSection)
+                viewModel.onDateChanged(event.selectedGranularity)
             }
-        }
-
-        viewModel.listSelected.observe(viewLifecycleOwner) {
-            viewModel.onListSelected()
         }
 
         viewModel.typesChanged.observeEvent(viewLifecycleOwner) {
@@ -235,6 +271,27 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         }
+
+        selectedTrafficGranularityManager.liveSelectedGranularity.observe(viewLifecycleOwner) {
+            // Manage the logic of granularity selection in the viewmodel
+            (viewModel as? TrafficListViewModel)?.onGranularitySelected(it)
+
+            // Manage the UI update of the new granularity selection
+            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
+        }
+    }
+
+    private fun StatsListFragmentBinding.observeUiChanges(activity: FragmentActivity) {
+        viewModel.uiModel.observe(viewLifecycleOwner) {
+            showUiModel(it)
+        }
+
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target -> navigator.navigate(activity, target) }
+
+        viewModel.listSelected.observe(viewLifecycleOwner) { viewModel.onListSelected() }
 
         viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner) {
             (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
@@ -286,7 +343,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
 
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager)
+            adapter = StatsBlockAdapter(imageManager, statsTrafficTabFeatureConfig.isEnabled())
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
@@ -295,6 +352,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val layoutManager = recyclerView.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
+        recyclerView.scrollToPosition(0)
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }

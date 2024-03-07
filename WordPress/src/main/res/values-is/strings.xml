@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.0-beta.3
 Language: is
 -->
 <resources>
@@ -47,7 +47,6 @@ Language: is
     <string name="retry">Reyna aftur</string>
     <string name="confirm">Staðfesta</string>
     <string name="xmlrpc_post_blocked_error">Gat ekki tengst. Vefþjónninn þinn lokar á POST fyrirspurnir og forritið þarfnast þeirra\n        til þess að eiga í samskiptum við vefinn þinn. Hafðu samband við hýsingaraðila til þess að leysa úr þessu vandamáli.</string>
-    <string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
     <string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
     <string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>
@@ -143,7 +142,6 @@ Language: is
     <string name="person_remove_confirmation_title">Fjarlægja %1$s</string>
     <string name="people">Fólk</string>
     <string name="role">Hlutverk</string>
-    <string name="reader_empty_posts_in_custom_list">Vefirnir á þessum lista hafa ekki birt neitt efni nýlega</string>
     <string name="error_remove_user">Gat ekki fjarlægt notanda</string>
     <string name="error_fetch_viewers_list">Gat ekki sótt vefgesti</string>
     <string name="error_update_role">Gat ekki uppfært hlutverk notanda</string>
@@ -341,7 +339,6 @@ Language: is
     <string name="reader_err_get_post_not_found">Þessi færsla er ekki lengur til.</string>
     <string name="reader_err_get_post_not_authorized">Þú hefur ekki heimild til að skoða þessa færslu</string>
     <string name="reader_err_get_post_generic">Gat ekki sótt þessa færslu</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Vefirnir sem þú fylgir hafa ekki birt neitt efni nýlega</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Engar nýlegar færslur</string>
     <string name="selected_theme">Valið þema</string>
     <string name="could_not_load_theme">Gat ekki hlaðið þema</string>
@@ -483,7 +480,6 @@ Language: is
     <string name="reader_toast_err_generic">Gat ekki framkvæmt þessa aðgerð</string>
     <string name="update_verb">Uppfæra</string>
     <string name="schedule_verb">Tímaáætla</string>
-    <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
     <string name="help">Hjálp</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>
     <string name="ssl_certificate_ask_trust">Ef þú getur vanalega tengst þessum vef án vandræða, þá gæti þessi villa þýtt að einhver er að reyna að þykjast vera vefurinn og þú ættir ekki að halda áfram. Viltu treysta þessu skírteini samt sem áður?</string>
@@ -562,7 +558,6 @@ Language: is
     <string name="reader_untitled_post">(Án titils)</string>
     <string name="reader_label_added_tag">Bætti við %s</string>
     <string name="reader_btn_follow">Fylgja</string>
-    <string name="reader_btn_unfollow">Fylgja</string>
     <string name="reader_likes_only_you">Þér líkar þessi færsla</string>
     <string name="reader_btn_share">Deila</string>
     <string name="empty_list_default">Þessi listi er tómur</string>

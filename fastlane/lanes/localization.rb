@@ -120,7 +120,7 @@ platform :android do
       }
       # Add entries for `screenshot_*.txt` files as well
       Dir.glob('screenshot_*.txt', base: metadata_folder).sort.each do |screenshot_file|
-        key = "play_store_#{File.basename(screenshot_file, '.txt')}".to_sym
+        key = :"play_store_#{File.basename(screenshot_file, '.txt')}"
         files[key] = File.join(metadata_folder, screenshot_file)
       end
 
@@ -264,13 +264,6 @@ platform :android do
       strings_file_path: 'WordPressLoginFlow/src/main/res/values/strings.xml',
       exclusions: ['default_web_client_id'],
       source_id: 'login'
-    },
-    {
-      name: 'Stories Library',
-      import_key: 'automatticStoriesVersion',
-      repository: 'Automattic/stories-android',
-      strings_file_path: 'stories/src/main/res/values/strings.xml',
-      source_id: 'stories'
     },
     {
       name: 'About Library',
