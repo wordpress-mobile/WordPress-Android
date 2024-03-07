@@ -378,7 +378,7 @@ platform :android do
   #
   def upload_gutenberg_sourcemaps(app:, flavor:, build_type:, release_version:)
     # Load Sentry properties
-    sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app, 'sentry.properties')
+    sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
     sentry_token = sentry_properties[:'auth.token']
     project_slug = sentry_properties[:'defaults.project']
