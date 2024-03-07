@@ -393,16 +393,18 @@ class SubFilterViewModel @Inject constructor(
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
+    fun onEventMainThread(event: ReaderEvents.FollowedTagsFetched) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
         loadSubFilters()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
-        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-        loadSubFilters()
+    fun onEventMainThread(event: ReaderEvents.FollowedBlogsFetched) {
+        if(event.didChange()) {
+            AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+            loadSubFilters()
+        }
     }
 
     override fun onCleared() {

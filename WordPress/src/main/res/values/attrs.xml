@@ -10,6 +10,8 @@
     <attr name="wpColorAppBar" format="reference|color" />
     <attr name="wpColorOnSurfaceMedium" format="reference|color" />
     <attr name="wpColorOnSurfaceHigh" format="reference|color" />
+    <attr name="wpColorTextPrimary" format="reference|color" />
+    <attr name="wpColorTextSecondary" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
     <attr name="wpColorWarningLight" format="reference|color" />
@@ -21,6 +23,10 @@
     <!-- Gutenberg colors-->
     <attr name="colorGutenbergDivider" format="reference|color" />
     <attr name="colorGutenbergBackground" format="reference|color" />
+
+    <!-- Gravatar colors -->
+    <attr name="grColorInfoBanner" format="reference|color" />
+    <attr name="grColorSyncBanner" format="reference|color" />
 
     <!-- Modal layout picker colors-->
     <attr name="layoutPickerBackground" format="reference|color" />

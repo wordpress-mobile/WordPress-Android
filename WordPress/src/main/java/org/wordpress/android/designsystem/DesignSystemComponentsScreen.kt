@@ -1,5 +1,6 @@
 package org.wordpress.android.designsystem
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -33,13 +34,20 @@ fun DesignSystemComponentsScreen(
     }
 }
 
-@Preview
+@Preview(name = "Light Mode")
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
+    name = "Dark Mode"
+)
 @Composable
 fun StartDesignSystemComponentsScreenPreview(){
-    DesignSystemComponentsScreen(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.button_container_shadow_height))
-    )
+    DesignSystemTheme {
+        DesignSystemComponentsScreen(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.button_container_shadow_height))
+        )
+    }
 }
 

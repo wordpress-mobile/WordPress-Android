@@ -84,6 +84,8 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -934,14 +936,16 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
+    public void onEventMainThread(FollowedTagsFetched event) {
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            // reload the tag filter since tags have changed
-            reloadTags();
+            if (event.didChange()) {
+                // reload the tag filter since tags have changed or we just opened the fragment
+                reloadTags();
+            }
 
             // update the current tag if the list fragment is empty - this will happen if
             // the tag table was previously empty (ie: first run)
-            if (isPostAdapterEmpty()) {
+            if (isPostAdapterEmpty() && (ReaderBlogTable.hasFollowedBlogs() || !mHasUpdatedPosts)) {
                 updateCurrentTag();
             }
         }
@@ -949,9 +953,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+    public void onEventMainThread(FollowedBlogsFetched event) {
         // refresh posts if user is viewing "Followed Sites"
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+        if (event.didChange()
+            && getPostListType() == ReaderPostListType.TAG_FOLLOWED
             && hasCurrentTag()
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
@@ -1724,9 +1729,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         // Ensure the default image is reset for empty views before applying logic
         mActionableEmptyView.image.setImageResource(R.drawable.illustration_reader_empty);
 
-        // TODO thomashortadev
-        //  try to quickly hack some way of making the button black
-
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -1940,13 +1942,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
-    }    /*
+    }
+
+    /*
      * called by post adapter when data has been loaded
      */
     private final ReaderInterfaces.DataLoadedListener mDataLoadedListener = new ReaderInterfaces.DataLoadedListener() {
         @Override
         public void onDataLoaded(boolean isEmpty) {
-            if (!isAdded() || !mHasUpdatedPosts) {
+            if (!isAdded() || (isEmpty && !mHasUpdatedPosts)) {
                 return;
             }
             if (isEmpty) {
@@ -2320,7 +2324,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     requireActivity().runOnUiThread(() -> updateCurrentTag());
                 } else {
                     requireActivity().runOnUiThread(() -> {
-                        if ((isBookmarksList()) && isPostAdapterEmpty() && isAdded()) {
+                        if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
                                     R.drawable.illustration_reader_empty);
@@ -2330,10 +2334,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                     R.drawable.illustration_reader_empty);
                             mActionableEmptyView.title.setText(
                                     getString(R.string.reader_empty_blogs_posts_in_custom_list));
+                            mActionableEmptyView.image.setVisibility(View.VISIBLE);
+                            mActionableEmptyView.title.setVisibility(View.VISIBLE);
                             mActionableEmptyView.button.setVisibility(View.GONE);
                             mActionableEmptyView.subtitle.setVisibility(View.GONE);
                             showEmptyView();
-                        } else {
+                        } else if (!isPostAdapterEmpty()) {
                             hideEmptyView();
                         }
                     });

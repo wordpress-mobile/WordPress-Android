@@ -1,11 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-24 22:54:08+0000
+Translation-Revision-Date: 2024-02-21 22:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: ar
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">الموقع غير موجود. تحقق من تسجيلك الدخول إلى الحساب الصحيح.</string>
+    <string name="gravatar_info_sync_done_button">تم</string>
+    <string name="gravatar_info_sync_message">قد تستغرق مزامنة التحديثات مع ملفك الشخصي على جرافتار بعض الوقت.</string>
+    <string name="gravatar_info_learn_more_link">ما المقصود بخدمة جرافتار؟</string>
+    <string name="gravatar_info_description">سيؤدي أيضًا تحديث الأفاتار الخاص بك واسمك والمعلومات حولك هنا إلى تحديثها عبر كل المواقع التي تستخدم ملفات جرافتار الشخصية.</string>
+    <string name="gravatar_info_title">يكون ملفك الشخصي على ووردبريس.كوم مدعومًا من خدمة جرافتار</string>
+    <string name="error_media_could_not_share_media_from_device">يتعذر تحميل الوسائط للمشاركة. يرجى التحقق من صلاحيات التطبيق\n        أو استخدم مكتبة وسائط التطبيق.</string>
+    <string name="site_monitoring_cannot_be_started">يتعذر علينا فتح مراقبة الموقع في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="site_monitoring_tab_title_web_server_logs">سجلات خادم الويب</string>
+    <string name="site_monitoring_tab_title_php_logs">سجلات PHP</string>
+    <string name="site_monitoring_tab_title_metrics">المقاييس</string>
+    <string name="site_monitoring">مراقبة الموقع</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">استخدم &lt;b&gt;الاكتشاف&lt;/b&gt; للعثور على المواقع والوسوم. يمكنك محاولة تحديد &lt;b&gt;الاشتراكات&lt;/b&gt; لعرض المحتوى الذي تم الاشتراك فيه وإدارة اشتراكاتك.</string>
+    <string name="reader_empty_followed_blogs_button_subscriptions">الانتقال إلى الاشتراكات</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">لم تنشر المدونات التي اشتركتَ فيها أي شيء مؤخرًا</string>
+    <string name="reader_no_followed_blogs_description_subs">اشترك في المدونات ضمن \"اكتشاف\" أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
+    <string name="reader_no_followed_tags_title">لا توجد وسوم تم الاشتراك فيها</string>
+    <string name="reader_no_posts_with_this_tag">لا توجد تدوينات تحمل هذا الوسم</string>
+    <string name="reader_toast_err_unable_to_block_blog">يتعذر حظر هذه المدونة</string>
+    <string name="reader_toast_posts_from_this_blog_blocked">لن تظهر التدوينات الواردة من هذه المدونة بعد الآن</string>
+    <string name="reader_toast_err_unable_to_unfollow_blog">يتعذر إلغاء الاشتراك من المدونة</string>
+    <string name="reader_toast_err_follow_not_authorized_to_access_blog">لا يخوَّل لك الوصول إلى هذه المدونة</string>
+    <string name="reader_toast_err_unable_to_follow_blog">يتعذر الاشتراك في هذه المدونة</string>
+    <string name="reader_no_recommended_blogs_title">لا توجد مدونات موصى بها</string>
+    <string name="reader_toast_err_already_follow_this_blog">لقد اشتركت في هذه المدونة بالفعل</string>
+    <string name="reader_toast_err_show_blog">يتعذر إظهار هذه المدونة</string>
+    <string name="reader_toast_err_tag_already_subscribed">أنت مشترك بالفعل في هذه المدونة</string>
+    <string name="reader_label_choose_interests">اختيار اهتماماتك</string>
+    <string name="reader_label_subscribers_count_single">مشترك واحد</string>
+    <string name="reader_label_subscribers_count">%s من المشتركين</string>
+    <string name="reader_label_subscribe_count">%,d من المشتركين</string>
+    <string name="reader_label_blog_subscribed">تم الاشتراك في المدونة</string>
+    <string name="reader_hint_search_subscribed_blogs">البحث عن المدونات التي تم الاشتراك فيها</string>
+    <string name="reader_hint_add_tag_or_url_subscribe">إدخال عنوان URL أو وسم للاشتراك فيها</string>
+    <string name="reader_btn_subscribed">مشترك</string>
+    <string name="reader_btn_subscribe">اشترك</string>
+    <string name="reader_menu_block_this_blog">حظر هذه المدونة</string>
+    <string name="reader_menu_tags_and_blogs">تحرير الوسوم والمدونات</string>
+    <string name="reader_page_followed_blogs_title">المدونات التي تم الاشتراك فيها</string>
+    <string name="reader_page_followed_tags_title">الوسوم التي تم الاشتراك فيها</string>
+    <string name="reader_title_tags">اتباع الوسوم</string>
+    <string name="reader_activity_title_manage_tags_blogs">إدارة الوسوم والمدونات</string>
+    <string name="reader_activity_title_tag_preview">الوسم</string>
+    <string name="reader_activity_title_blog_preview">مدونة القارئ</string>
+    <string name="reader_subscribed_display_name">مشترك</string>
+    <string name="reader_filter_chip_tag_other">%d من الوسوم</string>
+    <string name="reader_filter_chip_tag_one">وسم واحد</string>
+    <string name="reader_filter_chip_tag_zero">لا توجد وسوم</string>
+    <string name="reader_filter_chip_blog_other">%d من المدونات</string>
+    <string name="reader_filter_chip_blog_one">مدونة واحدة</string>
+    <string name="reader_filter_chip_blog_zero">لا توجد مدونات</string>
+    <string name="reader_dropdown_menu_lists">القوائم</string>
+    <string name="reader_dropdown_menu_liked">أعجبني</string>
+    <string name="reader_dropdown_menu_saved">تم الحفظ</string>
+    <string name="reader_dropdown_menu_subscriptions">الاشتراكات</string>
+    <string name="reader_dropdown_menu_discover">اكتشاف</string>
+    <string name="reader_search_content_description">البحث</string>
+    <string name="reader_discover_no_posts_button_tags_text">الاشتراك في الوسوم</string>
+    <string name="reader_discover_no_posts_subscribe_subtitle">محاولة الاشتراك في مزيد من الوسوم لتوسيع نطاق البحث</string>
+    <string name="reader_discover_empty_subtitle_subscribe">الاشتراك في الوسوم لاكتشاف مدونات جديدة</string>
+    <string name="reader_discover_recommended_blogs_to_subscribe_header">المدونات المطلوب الاشتراك فيها</string>
+    <string name="reader_filter_empty_tags_action_subscribe">الاشتراك في وسم</string>
+    <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
+    <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
+    <string name="reader_filter_empty_tags_list_text">اشترك في وسم وستتمكن من الاطلاع على أفضل التدوينات الواردة منه هنا.</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_filter_empty_tags_list_title">لا توجد وسوم</string>
+    <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
+    <string name="reader_filter_empty_blogs_list_title">لا توجد اشتراكات في المدونة</string>
+    <string name="reader_filter_empty_blogs_action">الاشتراك في المدونة</string>
+    <string name="reader_filter_empty_tags_list_subscribe">يمكنك الاشتراك في التدوينات الموجودة حول موضوع معيَّن عن طريق إضافة وسم</string>
+    <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
+    <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
+    <string name="stats_timeframe_by_year">حسب العام</string>
+    <string name="stats_timeframe_by_month">حسب الشهر</string>
+    <string name="stats_timeframe_by_week">حسب الأسبوع</string>
+    <string name="stats_timeframe_by_day">حسب اليوم</string>
     <string name="gutenberg_native_waiting_for_connection">انتظار الاتصال</string>
     <string name="stats_traffic">حركة المرور</string>
     <string name="gutenberg_native_working_offline">العمل من دون اتصال بالإنترنت</string>
@@ -1652,6 +1729,7 @@ Language: ar
     <string name="ccpa_privacy_notice_read">قراءة إشعار الخصوصية لقانون خصوصية المستهلك في كاليفورنيا</string>
     <string name="ccpa_privacy_notice_caption">يتطلب قانون خصوصية المستهلك في كاليفورنيا (\"CCPA\") منا تزويد سكان كاليفورنيا ببعض المعلومات الإضافية حول تصنيفات المعلومات الشخصية التي نقوم بتجميعها ومشاركتها، مع تحديد المصدر الذي نحصل على تلك المعلومات الشخصية منه، وكيف نستخدمها ولماذا.</string>
     <string name="post_status_post_scheduled">مجدولة</string>
+    <string name="reader_choose_interests_tags_content_description">اختيار وسومك</string>
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
     <string name="update_now">قم بالتحديث الآن</string>
@@ -1707,6 +1785,9 @@ Language: ar
     <string name="button_insert">إدراج</string>
     <string name="continue_label">المتابعة</string>
     <string name="copy_text">نسخ</string>
+    <string name="reader_no_blog_to_reblog_action">إدارة المدونات</string>
+    <string name="reader_no_blog_to_reblog_title">لا توجد مدونات على ووردبريس.كوم متاحة</string>
+    <string name="reader_no_blog_to_reblog_detail">بمجرد إنشاء مدونة على ووردبريس.كوم، يمكنك إعادة تدوين المحتوى الذي أعجبك على موقعك الخاص.</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
@@ -1800,11 +1881,15 @@ Language: ar
     <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
+    <string name="reader_bottom_sheet_select_content_description">تحديد وسم أو مدونة، نافذة منبثقة</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">تسجيل الدخول إلى ووردبريس.كوم للاطلاع على أحدث التدوينات الواردة من المدونات التي اشتركت فيها</string>
+    <string name="reader_filter_self_hosted_empty_tags_list">تسجيل الدخول إلى ووردبريس.كوم للاطلاع على أحدث التدوينات الواردة من الوسوم التي اشتركت فيها</string>
     <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
     <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
     <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
     <string name="gutenberg_native_add_block_before">إضافة مكوّن قبل</string>
     <string name="gutenberg_native_add_block_after">إضافة مكوّن بعد</string>
+    <string name="reader_filter_empty_tags_add_action">إضافة وسم</string>
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
@@ -2342,6 +2427,7 @@ Language: ar
     <string name="site_picker_remove_site_empty">لا تتطابق أي مواقع مع بحثك</string>
     <string name="page_parent_changed">تم تغيير أصل الصفحة</string>
     <string name="login_error_email_not_found_v2">لا يتطابق أي حساب على WordPress.com مع حساب Google هذا.</string>
+    <string name="reader_no_followed_blogs_search_title">لا توجد تدوينات مطابقة لبحثك</string>
     <string name="page_permanently_deleted">تم حذف الصفحة نهائيًّا</string>
     <string name="page_moved_to_scheduled">تمت جدولة الصفحة</string>
     <string name="page_moved_to_published">تم نشر الصفحة</string>
@@ -2372,6 +2458,7 @@ Language: ar
     <string name="quick_start_button_negative">ليس الآن</string>
     <string name="my_site_create_new_site_title">ليس لديك أي مواقع</string>
     <string name="content_description_more">المزيد</string>
+    <string name="reader_empty_subscribed_tags_subtitle">إضافة وسوم هنا للعثور على التدوينات المتعلقة بالموضوعات التي تفضِّلها</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">الأسئلة الشائعة عن Jetpack</string>
     <string name="login_to_to_connect_jetpack">سجّل الدخول إلى حساب WordPress.com الذي تستخدمه للاتصال بـ Jetpack.</string>
@@ -2391,6 +2478,7 @@ Language: ar
     <string name="people_empty_list_filtered_followers">لا متابِعون حتى الآن</string>
     <string name="people_empty_list_filtered_users">لا يوجد مستخدمين حتى الآن</string>
     <string name="reader_empty_posts_liked_title">لا توجد إعجابات حتى الآن</string>
+    <string name="reader_no_followed_blogs_button_discover">اكتشاف المدونات</string>
     <string name="notifications_empty_followers">لا متابعين حتى الآن</string>
     <string name="notifications_empty_likes">لا توجد إعجابات حتى الآن</string>
     <string name="activity_log_limited_content_on_free_plan">نظرًا لأنك مشترك في الخطة المجانية، سترى أحداثًا محدودة في سجل نشاطك.</string>
@@ -2468,6 +2556,8 @@ Language: ar
     <string name="preference_collect_information">جمع المعلومات</string>
     <string name="cookie_policy_learn_more_caption">شارك المعلومات مع أداة التحليلات لدينا حول استخدامك الخدمات أثناء تسجيل الدخول إلى حساب WordPress.com الخاص بك.</string>
     <string name="privacy_policy_learn_more_caption">تساعدنا هذه المعلومات على تحسين منتجاتنا، وجعل التسويق أكثر ملاءمة لك، وتخصيص تجربة WordPress.com، والمزيد كما يرد بالتفصيل في سياسة الخصوصية لدينا.</string>
+    <string name="reader_btn_blog_notifications_on">تشغيل التنبيهات في المدونة</string>
+    <string name="reader_btn_blog_notifications_off">إيقاف تشغيل التنبيهات في المدونة</string>
     <string name="post_submitted">تم إرسال المقالة</string>
     <string name="plugin_install_site_ineligible_site_graylisted">تتطلب ميزة المكوّن الإضافي أن يكون الموقع في وضع جيد.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">تتطلب ميزة المكوّن الإضافي ربط اشترك النطاق الأساسي بهذا المستخدم.</string>
@@ -3133,6 +3223,7 @@ Language: ar
     <string name="person_remove_confirmation_title">إزالة %1$s</string>
     <string name="people">أشخاص</string>
     <string name="role">الدور</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">لم تنشر المدونات الموجودة في هذه القائمة أي شيء مؤخرًا</string>
     <string name="error_remove_user">تعذرت إزالة المستخدم</string>
     <string name="error_fetch_viewers_list">تعذر استرداد مستخدمي الموقع</string>
     <string name="error_update_role">تعذر تحديث دور المستخدم</string>
@@ -3410,6 +3501,7 @@ Language: ar
     <string name="button_view">عرض</string>
     <string name="button_edit">تحرير</string>
     <string name="button_publish">نشر</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">تعذر العثور على هذه المدونة</string>
     <string name="undo">تراجع</string>
     <string name="push_auth_expired">انتهت صلاحية الطلب. سجِّل الدخول إلى WordPress.com للمحاولة مرة أخرى.</string>
     <string name="stats_insights_best_ever">المشاهدات الأفضل على الإطلاق</string>
@@ -3456,6 +3548,7 @@ Language: ar
     <string name="reader_label_new_posts">مقالات جديدة</string>
     <string name="error_copy_to_clipboard">حدث خطأ أثناء نسخ النص إلى الحافظة</string>
     <string name="post_uploading">جاري رفع المقالة</string>
+    <string name="reader_no_posts_in_blog">هذه المدونة فارغة</string>
     <string name="stats_followers_months">%1$d من الشهور</string>
     <string name="stats_followers_a_year">كل عام</string>
     <string name="stats_followers_years">%1$d من السنوات</string>
@@ -3572,6 +3665,8 @@ Language: ar
     <string name="comment_status_trash">محذوف</string>
     <string name="http_authorization_required">التخويل مطلوب</string>
     <string name="comment_status_approved">تمّت الموافقة</string>
+    <string name="reader_toast_err_removing_tag">تتعذر إزالة هذا الوسم</string>
+    <string name="reader_toast_err_adding_tag">تتعذر إضافة هذا الوسم</string>
     <string name="share_link">رابط المشاركة</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
@@ -3599,6 +3694,7 @@ Language: ar
     <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="reader_view_reblog">إعادة التدوين</string>
     <string name="sign_up_label">التسجيل</string>
+    <string name="reader_toast_err_tag_not_valid">هذا الوسم غير صالح</string>
     <string name="themes">القوالب</string>
     <string name="media_edit_title_text">العنوان</string>
     <string name="media_edit_description_text">الوصف</string>

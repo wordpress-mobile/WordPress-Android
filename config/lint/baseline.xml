@@ -1058,17 +1058,6 @@
     </issue>
 
     <issue
-        id="UseAppTint"
-        message="Must use `app:tint` instead of `android:tint`"
-        errorLine1="        android:tint=&quot;?attr/colorOnSurface&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/stories_intro_dialog_fragment.xml"
-            line="128"
-            column="9"/>
-    </issue>
-
-    <issue
         id="UseCompatLoadingForDrawables"
         message="Use `ResourcesCompat.getDrawable()`"
         errorLine1="        Drawable gifOverlay = getResources().getDrawable(R.drawable.gif_overlay_vector);"

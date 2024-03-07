@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-07 08:07:30+0000
+Translation-Revision-Date: 2024-02-25 18:55:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0-beta.3
 Language: de
 -->
 <resources>
+    <string name="qrcode_media_deeplink_error">Die Website wurde nicht gefunden. Überprüfe, ob du im richtigen Konto angemeldet bist.</string>
+    <string name="gravatar_info_sync_done_button">Fertig</string>
+    <string name="gravatar_info_sync_message">Die Synchronisierung deines Gravatar-Profils mit den neuesten Updates kann einige Zeit in Anspruch nehmen.</string>
+    <string name="gravatar_info_learn_more_link">Was ist Gravatar?</string>
+    <string name="gravatar_info_description">Wenn du hier deinen Avatar, Namen und deine Informationen über dich aktualisierst, werden sie auch auf allen Websites aktualisiert, die Gravatar-Profile nutzen.</string>
+    <string name="gravatar_info_title">Dein WordPress.com-Profil wird unterstützt von Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">Die Medien können nicht zum Teilen geladen werden. Bitte überprüfe die Berechtigungen der App\n    oder verwende die Mediathek der App.</string>
     <string name="site_monitoring_cannot_be_started">Wir können die Website-Überwachung im Moment nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webserver-Protokolle</string>
     <string name="site_monitoring_tab_title_php_logs">PHP-Protokolle</string>
@@ -3779,7 +3786,7 @@ Language: de
     <string name="error">Fehler</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
-    <string name="notification_settings">Benachrichtigungs-Einstellungen</string>
+    <string name="notification_settings">Benachrichtigungseinstellungen</string>
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>

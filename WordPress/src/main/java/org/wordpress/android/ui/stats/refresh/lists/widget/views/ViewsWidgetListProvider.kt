@@ -8,13 +8,15 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.StatsActivity.Companion.INITIAL_SELECTED_PERIOD_KEY
-import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
@@ -23,6 +25,10 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
 
     @Inject
     lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
+
+    @Inject
+    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+
     private val isWideView: Boolean = intent.getBooleanExtra(IS_WIDE_VIEW_KEY, true)
     private val colorMode = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
@@ -85,12 +91,14 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
             rv.setViewVisibility(R.id.negative_change, View.GONE)
         }
         rv.setTextViewText(R.id.value, uiModel.value)
+        val granularity = if (trafficTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, uiModel.period)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.DAY)
-        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.STATS_WIDGET)
+        intent.putExtra(StatsActivity.ARG_GRANULARITY, granularity)
+        intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
         rv.setOnClickFillInIntent(R.id.container, intent)
         return rv
     }

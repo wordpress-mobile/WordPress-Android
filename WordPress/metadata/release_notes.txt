@@ -1,2 +1,5 @@
-* [**] Fix editor crash occurring on large posts [https://github.com/wordpress-mobile/WordPress-Android/pull/20046]
-* [**] Prevent images from temporarily disappearing when uploading media [https://github.com/WordPress/gutenberg/pull/57869]
+We made a few changes to the block editor.
+
+- The app won’t crash anymore when the editor auto-scrolls down to a block.
+- You’ll now see an error message when a video fails to upload to media and text blocks.
+- Images no longer appear partly transparent while they’re being uploaded.

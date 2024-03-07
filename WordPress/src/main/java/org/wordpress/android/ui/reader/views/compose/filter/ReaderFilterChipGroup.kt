@@ -65,23 +65,10 @@ fun ReaderFilterChipGroup(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val isBlogSelected = selectedItem?.type == ReaderFilterType.BLOG
         val isTagSelected = selectedItem?.type == ReaderFilterType.TAG
-        val isBlogChipVisible = showBlogsFilter && (selectedItem == null || isBlogSelected)
+        val isBlogSelected = selectedItem?.type == ReaderFilterType.BLOG
         val isTagChipVisible = showTagsFilter && (selectedItem == null || isTagSelected)
-
-        val blogChipText: UiString = remember(selectedItem, blogsFilterCount) {
-            if (isBlogSelected) {
-                selectedItem?.text ?: UiString.UiStringText("")
-            } else {
-                UiString.UiStringPluralRes(
-                    zeroRes = R.string.reader_filter_chip_blog_zero,
-                    oneRes = R.string.reader_filter_chip_blog_one,
-                    otherRes = R.string.reader_filter_chip_blog_other,
-                    count = blogsFilterCount,
-                )
-            }
-        }
+        val isBlogChipVisible = showBlogsFilter && (selectedItem == null || isBlogSelected)
 
         val tagChipText: UiString = remember(selectedItem, tagsFilterCount) {
             if (isTagSelected) {
@@ -96,22 +83,17 @@ fun ReaderFilterChipGroup(
             }
         }
 
-        // blogs filter chip
-        AnimatedVisibility(
-            modifier = Modifier.clip(roundedShape),
-            visible = isBlogChipVisible,
-        ) {
-            ReaderFilterChip(
-                text = blogChipText,
-                onClick = if (isBlogSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.BLOG) }),
-                onDismissClick = if (isBlogSelected) onSelectedItemDismissClick else null,
-                isSelectedItem = isBlogSelected,
-                height = chipHeight,
-            )
-        }
-
-        AnimatedVisibility(visible = isBlogChipVisible && isTagChipVisible) {
-            Spacer(Modifier.width(Margin.Medium.value))
+        val blogChipText: UiString = remember(selectedItem, blogsFilterCount) {
+            if (isBlogSelected) {
+                selectedItem?.text ?: UiString.UiStringText("")
+            } else {
+                UiString.UiStringPluralRes(
+                    zeroRes = R.string.reader_filter_chip_blog_zero,
+                    oneRes = R.string.reader_filter_chip_blog_one,
+                    otherRes = R.string.reader_filter_chip_blog_other,
+                    count = blogsFilterCount,
+                )
+            }
         }
 
         // tags filter chip
@@ -124,6 +106,24 @@ fun ReaderFilterChipGroup(
                 onClick = if (isTagSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.TAG) }),
                 onDismissClick = if (isTagSelected) onSelectedItemDismissClick else null,
                 isSelectedItem = isTagSelected,
+                height = chipHeight,
+            )
+        }
+
+        AnimatedVisibility(visible = isBlogChipVisible && isTagChipVisible) {
+            Spacer(Modifier.width(Margin.Medium.value))
+        }
+
+        // blogs filter chip
+        AnimatedVisibility(
+            modifier = Modifier.clip(roundedShape),
+            visible = isBlogChipVisible,
+        ) {
+            ReaderFilterChip(
+                text = blogChipText,
+                onClick = if (isBlogSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.BLOG) }),
+                onDismissClick = if (isBlogSelected) onSelectedItemDismissClick else null,
+                isSelectedItem = isBlogSelected,
                 height = chipHeight,
             )
         }
