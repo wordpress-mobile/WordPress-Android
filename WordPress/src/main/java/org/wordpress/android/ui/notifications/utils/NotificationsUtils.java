@@ -17,6 +17,7 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
@@ -216,10 +217,13 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                  TextView textView,
-                                                  final Function1<FormattableRange, Unit> clickHandler,
-                                                  boolean isFooter) {
+    @NonNull
+    static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            @Nullable final Function1<FormattableRange, Unit> clickHandler,
+            boolean isFooter
+    ) {
         Function1<NoteBlockClickableSpan, Unit> clickListener =
                 clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
                     @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
@@ -242,11 +246,14 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    public static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                          TextView textView,
-                                                          boolean isFooter,
-                                                          final Function1<NoteBlockClickableSpan, Unit>
-                                                                  onNoteBlockTextClickListener) {
+    @NonNull
+    public static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            boolean isFooter,
+            @Nullable final Function1<NoteBlockClickableSpan, Unit>
+                    onNoteBlockTextClickListener
+    ) {
         if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
