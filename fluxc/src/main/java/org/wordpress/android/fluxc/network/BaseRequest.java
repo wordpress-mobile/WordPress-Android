@@ -136,6 +136,9 @@ public abstract class BaseRequest<T> extends Request<T> {
         }
 
         public String getCombinedErrorMessage() {
+            if (volleyError == null) {
+                return message != null ? message : "";
+            }
             String volleyErrorMessage = volleyError.getMessage();
             if (volleyErrorMessage == null || volleyErrorMessage.isEmpty()) {
                 return message != null ? message : "";
