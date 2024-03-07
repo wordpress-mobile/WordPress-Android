@@ -225,11 +225,9 @@ public class NotificationsUtils {
             boolean isFooter
     ) {
         Function1<NoteBlockClickableSpan, Unit> clickListener =
-                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
-                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
-                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
-                        return null;
-                    }
+                clickHandler != null ? noteBlockClickableSpan -> {
+                    clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                    return null;
                 } : null;
         return getSpannableContentForRanges(formattableContent,
                 textView,
