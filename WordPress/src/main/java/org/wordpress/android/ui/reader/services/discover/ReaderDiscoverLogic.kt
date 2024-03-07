@@ -208,13 +208,13 @@ class ReaderDiscoverLogic @Inject constructor(
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         val simplifiedJsonList = mutableListOf<JSONObject>()
         var firstRecommendationCard: JSONObject? = null
+        val isFirstPage = discoverTasks == REQUEST_FIRST_PAGE
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             // We should not have a recommended blogs or interests/tags card as the first element on Discover feed.
             val cardType = cardJson.optString(JSON_CARD_TYPE, "")
             val isCardTypeRecommendation =
                 cardType == JSON_CARD_RECOMMENDED_BLOGS || cardType == JSON_CARD_INTERESTS_YOU_MAY_LIKE
-            val isFirstPage = discoverTasks == REQUEST_FIRST_PAGE
             if (i == 0 && isFirstPage && isCardTypeRecommendation) {
                 firstRecommendationCard = cardJson
                 continue
