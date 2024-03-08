@@ -77,7 +77,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
     }
     @Test
     fun `given valid campaignId and pageSource, when start is called, then trackCampaignDetailsOpened is called`() {
-        viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+        viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
         verify(blazeFeatureUtils).trackCampaignDetailsOpened(any())
     }
@@ -89,7 +89,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         val uiState = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
         testWithData(actionEvents, uiState) {
-            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+            viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
             assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.GenericError::class.java)
         }
@@ -102,7 +102,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         val uiState = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
         testWithData(actionEvents, uiState) {
-            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+            viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
             assertThat(uiState.last()).isInstanceOf(CampaignDetailUiState.GenericError::class.java)
         }
@@ -122,7 +122,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         val uiStates = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
         testWithData(actionEvents, uiStates) {
-            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+            viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
             assertThat(uiStates.last()).isInstanceOf(CampaignDetailUiState.Prepared::class.java)
         }
@@ -135,7 +135,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         val uiStates = mutableListOf<CampaignDetailUiState>()
         val actionEvents = mutableListOf<BlazeActionEvent>()
         testWithData(actionEvents, uiStates) {
-            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+            viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
             assertThat(uiStates.first()).isInstanceOf(CampaignDetailUiState.Preparing::class.java)
         }
@@ -177,7 +177,7 @@ class CampaignDetailViewModelTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         testWithData(actionEvents, uiStates) {
-            viewModel.start(1, CampaignDetailPageSource.DASHBOARD_CARD)
+            viewModel.start(campaignId = "1", CampaignDetailPageSource.DASHBOARD_CARD)
 
             val uiState = uiStates.last()
             assertThat(uiState).isInstanceOf(CampaignDetailUiState.NoNetworkError::class.java)
