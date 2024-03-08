@@ -8,12 +8,13 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazeTargetingParameters
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignListResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsError
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsFetchedPayload
-import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
@@ -33,22 +34,25 @@ import javax.inject.Singleton
 
 @Singleton
 class BlazeCampaignsStore @Inject constructor(
-    private val campaignsRestClient: BlazeCampaignsRestClient,
     private val creationRestClient: BlazeCreationRestClient,
+    private val campaignsRestClient: BlazeCampaignsRestClient,
     private val campaignsDao: BlazeCampaignsDao,
     private val targetingDao: BlazeTargetingDao,
     private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchBlazeCampaigns(
         site: SiteModel,
-        page: Int = 1
+        offset: Int = 0,
+        perPage: Int = DEFAULT_PER_PAGE,
+        locale: String = Locale.getDefault().language,
+        status: String? = null,
     ): BlazeCampaignsResult<BlazeCampaignsModel> {
         fun handlePayloadError(
             site: SiteModel,
             error: BlazeCampaignsError
         ): BlazeCampaignsResult<BlazeCampaignsModel> = when (error.type) {
             AUTHORIZATION_REQUIRED -> {
-                campaignsDao.clear(site.siteId)
+                campaignsDao.clearBlazeCampaigns(site.siteId)
                 BlazeCampaignsResult()
             }
 
@@ -58,10 +62,10 @@ class BlazeCampaignsStore @Inject constructor(
         @Suppress("TooGenericExceptionCaught", "SwallowedException")
         suspend fun handlePayloadResponse(
             site: SiteModel,
-            response: BlazeCampaignsResponse
+            response: BlazeCampaignListResponse
         ): BlazeCampaignsResult<BlazeCampaignsModel> = try {
             val blazeCampaignsModel = response.toCampaignsModel()
-            campaignsDao.insertCampaignsAndPageInfoForSite(site.siteId, blazeCampaignsModel)
+            campaignsDao.insertCampaigns(site.siteId, blazeCampaignsModel)
             BlazeCampaignsResult(blazeCampaignsModel)
         } catch (e: Exception) {
             AppLog.e(AppLog.T.API, "Error storing blaze campaigns", e)
@@ -70,7 +74,7 @@ class BlazeCampaignsStore @Inject constructor(
 
         suspend fun storeBlazeCampaigns(
             site: SiteModel,
-            payload: BlazeCampaignsFetchedPayload<BlazeCampaignsResponse>
+            payload: BlazeCampaignsFetchedPayload<BlazeCampaignListResponse>
         ): BlazeCampaignsResult<BlazeCampaignsModel> = when {
             payload.isError -> handlePayloadError(site, payload.error)
             payload.response != null -> handlePayloadResponse(site, payload.response)
@@ -78,14 +82,20 @@ class BlazeCampaignsStore @Inject constructor(
         }
 
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch blaze campaigns") {
-            val payload = campaignsRestClient.fetchBlazeCampaigns(site, page)
+            val payload = campaignsRestClient.fetchBlazeCampaigns(
+                site.siteId,
+                offset,
+                perPage,
+                locale,
+                status
+            )
             storeBlazeCampaigns(site, payload)
         }
     }
 
-    suspend fun getBlazeCampaigns(site: SiteModel): BlazeCampaignsModel {
+    suspend fun getBlazeCampaigns(site: SiteModel): List<BlazeCampaignModel> {
         return coroutineEngine.withDefaultContext(AppLog.T.API, this, "get blaze campaigns") {
-            campaignsDao.getCampaignsAndPaginationForSite(site.siteId)
+            campaignsDao.getCachedCampaigns(site.siteId)
         }
     }
 
@@ -178,7 +188,8 @@ class BlazeCampaignsStore @Inject constructor(
 
     fun observeBlazeTargetingLanguages(
         locale: String = Locale.getDefault().language
-    ) = targetingDao.observeLanguages(locale).map { languages -> languages.map { it.toDomainModel() } }
+    ) = targetingDao.observeLanguages(locale)
+        .map { languages -> languages.map { it.toDomainModel() } }
 
     suspend fun fetchBlazeTargetingDevices(
         site: SiteModel,
@@ -275,7 +286,14 @@ class BlazeCampaignsStore @Inject constructor(
                 payload.isError -> BlazeResult(BlazeError(payload.error))
                 payload.data == null -> BlazeResult(BlazeError(type = GenericErrorType.UNKNOWN))
                 else -> {
-                    campaignsDao.insert(listOf(BlazeCampaignEntity.fromDomainModel(site.siteId, payload.data)))
+                    campaignsDao.insert(
+                        listOf(
+                            BlazeCampaignEntity.fromDomainModel(
+                                site.siteId,
+                                payload.data
+                            )
+                        )
+                    )
                     BlazeResult(payload.data)
                 }
             }
