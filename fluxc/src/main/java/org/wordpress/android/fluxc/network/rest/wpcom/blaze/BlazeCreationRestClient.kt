@@ -250,7 +250,7 @@ class BlazeCreationRestClient @Inject constructor(
             status = "pending",
             targetUrn = "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
             startTime = dateFormatter.format(request.startDate),
-            durationDays = (request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds,
+            durationDays = ((request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds).toInt(),
             totalBudget = request.budget,
             siteName = request.tagLine,
             textSnippet = request.description,
@@ -474,7 +474,7 @@ private data class BlazeCampaignCreationNetworkResponse(
     @SerializedName("start_time")
     val startTime: String,
     @SerializedName("duration_days")
-    val durationDays: Long,
+    val durationDays: Int,
     @SerializedName("total_budget")
     val totalBudget: Double,
     @SerializedName("site_name")
@@ -493,16 +493,16 @@ private data class BlazeCampaignCreationNetworkResponse(
     @Suppress("MagicNumber")
     fun toDomainModel(): BlazeCampaignModel = BlazeCampaignModel(
         targetUrn = targetUrn,
-        createdAt = Date(), // Set to current date, as the API does not return the actual creation date
-        endDate = Date(BlazeCampaignsUtils.stringToDate(startTime).time + durationDays.days.inWholeMilliseconds),
+        startTime = Date(), // Set to current date, as the API does not return the actual creation date
+        durationInDays = durationDays,
         imageUrl = mainImage.url,
-        budgetCents = (totalBudget * 100).toLong(),
         uiStatus = status,
         // TODO revisit this when the API returns the actual values to confirm the format of IDs
-        campaignId = id.substringAfter("campaign-").toIntOrNull() ?: 0,
+        campaignId = id.substringAfter("campaign-"),
         clicks = 0L,
         impressions = 0L,
-        title = siteName
+        title = siteName,
+        totalBudget = totalBudget,
+        spentBudget = 0.0
     )
 }
-
