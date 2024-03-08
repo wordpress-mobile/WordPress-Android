@@ -23,6 +23,12 @@ public class WPComThemeResponse {
         @Nullable public WPComThemeMobileFriendlyTaxonomy[] theme_mobile_friendly;
     }
 
+    public static class WPComThemeTier {
+        @Nullable public String slug;
+        @Nullable public String feature;
+        @Nullable public String platform;
+    }
+
     @NonNull public String id;
     @Nullable public String slug;
     @Nullable public String stylesheet;
@@ -38,4 +44,5 @@ public class WPComThemeResponse {
     @Nullable public String download_uri;
     @Nullable public String price;
     @Nullable public WPComThemeTaxonomies taxonomies;
+    @Nullable public WPComThemeTier theme_tier;
 }

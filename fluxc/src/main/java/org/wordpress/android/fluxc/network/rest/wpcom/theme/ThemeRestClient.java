@@ -229,7 +229,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
 
     @NonNull
     private static ThemeModel createThemeFromWPComResponse(@NonNull WPComThemeResponse response) {
-        boolean free = TextUtils.isEmpty(response.price);
+        boolean free = response.theme_tier == null || response.theme_tier.slug == null
+                       || response.theme_tier.slug.equalsIgnoreCase("free");
         String priceText = null;
         if (!free) {
             priceText = response.price;
