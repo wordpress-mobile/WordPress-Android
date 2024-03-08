@@ -4,20 +4,20 @@ import java.util.Date
 
 data class BlazeCampaignsModel(
     val campaigns: List<BlazeCampaignModel> = emptyList(),
-    val page: Int,
+    val skipped: Int,
     val totalItems: Int,
-    val totalPages: Int
 )
 
 data class BlazeCampaignModel(
-    val campaignId: Int,
+    val campaignId: String,
     val title: String,
     val imageUrl: String?,
-    val createdAt: Date,
-    val endDate: Date?,
+    val startTime: Date,
+    val durationInDays: Int,
     val uiStatus: String,
-    val budgetCents: Long,
     val impressions: Long,
     val clicks: Long,
     val targetUrn: String?,
+    val totalBudget: Double,
+    val spentBudget: Double,
 )
