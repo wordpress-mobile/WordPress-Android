@@ -80,9 +80,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 
@@ -100,7 +98,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
         IHistoryListener,
         EditorThemeUpdateListener,
-        StorySaveMediaListener,
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
@@ -110,9 +107,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_GUTENBERG_WEB_VIEW_AUTH_DATA = "param_gutenberg_web_view_auth_data";
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
-    private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
-    public static final String ARG_STORY_BLOCK_ID = "story_block_id";
-    public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
     public static final String ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH = "story_block_original_hash";
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
     public static final String ARG_FEATURED_IMAGE_ID = "featured_image_id";
@@ -142,7 +136,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private Runnable mInvalidateOptionsRunnable;
 
     private LiveTextWatcher mTextWatcher = new LiveTextWatcher();
-    private int mStoryBlockEditRequestCode;
 
     // pointer (to the Gutenberg container fragment) that outlives this fragment's Android lifecycle. The retained
     //  fragment can be alive and accessible even before it gets attached to an activity.
@@ -170,12 +163,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
-                                                      int storyBlockEditRequestCode,
                                                       boolean jetpackFeaturesEnabled) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
-        args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
         args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
@@ -237,6 +228,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
@@ -245,7 +237,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (getArguments() != null) {
             mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-            mStoryBlockEditRequestCode = getArguments().getInt(ARG_STORY_EDITOR_REQUEST_CODE);
         }
 
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
@@ -370,14 +361,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         updateMediaProgress();
                     }
                 },
-                new OnReattachMediaSavingQueryListener() {
-                    @Override public void onQueryCurrentProgressForSavingMedia() {
-                        // TODO: probably go through mFailedMediaIds, and see if any block in the post content
-                        // has these mediaFIleIds. If there's a match, mark such a block in FAILED state.
-                        updateFailedMediaState();
-                        updateMediaProgress();
-                    }
-                },
                 new OnSetFeaturedImageListener() {
                     @Override
                     public void onSetFeaturedImageButtonClicked(int mediaId) {
@@ -470,75 +453,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override public void showXpostSuggestions(Consumer<String> onResult) {
                         mEditorFragmentListener.showXpostSuggestions(onResult);
-                    }
-                },
-                new OnMediaFilesCollectionBasedBlockEditorListener() {
-                    @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
-                        // let's first calculate the hash on this mediaFiles array, this will let us
-                        // identify the block later when we need to replace it as we come back from the Story
-                        // composer
-                        mExternallyEditedBlockOriginalHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
-
-                        // now pass the signal up to the EditorFragmentListener
-                        mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
-                    }
-
-                    @Override public void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> {
-                                showCancelMediaCollectionUploadDialog(mediaFiles);
-                            });
-                        }
-                    }
-
-                    @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> {
-                                showRetryMediaCollectionUploadDialog(mediaFiles);
-                            });
-                        }
-                    }
-
-                    @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(() -> {
-                                showCancelMediaCollectionSaveDialog(mediaFiles);
-                            });
-                        }
-                    }
-
-                    @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
-                        if (mStoryBlockReplacedSignalWait) {
-                            // in case we were expecting a fresh block replacement sync signal, let the fragment
-                            // listener know so it can process all of the pending block save / update / upload events
-                            mStoryBlockReplacedSignalWait = false;
-                            mExternallyEditedBlockOriginalHash = null;
-                            mEditorFragmentListener.onReplaceStoryEditedBlockActionReceived();
-                        } else {
-                            // caclulate the hash to verify whether this is the block that needs to get replaced
-                            // this is important given we could be receiving a request to sync from a different Story
-                            // block in the same Post otherwise
-                            String calculatedHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
-                            if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null
-                                && mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
-                                if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
-                                    // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
-                                    // new block to signal a replaceBlockSync to us again after loading, calling this
-                                    // very callback method again
-                                    mStoryBlockReplacedSignalWait = true;
-                                    // this call needs to be made right before `replaceStoryEditedBlock()`
-                                    mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
-                                    getGutenbergContainerFragment()
-                                            .replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
-                                } else {
-                                    // TODO handle / log error here, or maybe just skip it
-                                }
-                            } else {
-                                // no op
-                                // the arrays don't match means we're getting a signal to sync a different Story block,
-                                // other than the one that was actually edited. Just skip it.
-                            }
-                        }
                     }
                 },
                 new OnFocalPointPickerTooltipShownEventListener() {
@@ -729,18 +643,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 trackWebViewClosed("save");
             } else {
                 trackWebViewClosed("dismiss");
-            }
-        } else if (requestCode == mStoryBlockEditRequestCode) {
-            if (resultCode == Activity.RESULT_OK) {
-                // handle edited block content, also keep edited block content to handle later if Gutenberg not
-                // mounted right now
-                String blockId = data.getStringExtra(ARG_STORY_BLOCK_ID);
-                mUpdatedStoryBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
-                getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
-                // TODO maybe we need to track something here?
-            } else {
-                // TODO maybe we need to track something here?
-                mExternallyEditedBlockOriginalHash = null;
             }
         }
     }
@@ -993,7 +895,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new DialogInterface.OnClickListener() {
                     @SuppressWarnings("unchecked")
                     public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onCancelUploadForMediaCollection(mediaFiles);
                         // now signal Gutenberg upload failed, and remove the mediaIds from our tracking map
                         for (Object mediaFile : mediaFiles) {
                             // this conversion is needed to strip off decimals that can come from RN when using int as
@@ -1013,46 +914,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 dialog.dismiss();
             }
         });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    @UiThread
-    private void showRetryMediaCollectionUploadDialog(ArrayList<Object> mediaFiles) {
-        // Display 'retry upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(getString(R.string.retry_failed_upload_title));
-        builder.setPositiveButton(R.string.retry_failed_upload_yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mEditorFragmentListener.onRetryUploadForMediaCollection(mediaFiles);
-                        dialog.dismiss();
-                    }
-                });
-
-        builder.setNegativeButton(R.string.dialog_button_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    @UiThread
-    private void showCancelMediaCollectionSaveDialog(ArrayList<Object> mediaFiles) {
-        // Display 'cancel upload' dialog
-        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
-        builder.setTitle(getString(R.string.stop_save_dialog_title));
-        builder.setMessage(getString(R.string.stop_save_dialog_message));
-        builder.setPositiveButton(R.string.stop_save_dialog_ok_button,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -1514,52 +1375,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
         getGutenbergContainerFragment().updateTheme(editorTheme);
-    }
-
-    @Override public void onMediaSaveReattached(String localId, float currentProgress) {
-        mUploadingMediaProgressMax.put(localId, currentProgress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(localId, currentProgress);
-    }
-
-    @Override public void onMediaSaveSucceeded(String localId, String mediaUrl) {
-        mUploadingMediaProgressMax.remove(localId);
-        getGutenbergContainerFragment().mediaFileSaveSucceeded(localId, mediaUrl);
-    }
-
-    @Override public void onMediaSaveProgress(String localId, float progress) {
-        mUploadingMediaProgressMax.put(localId, progress);
-        getGutenbergContainerFragment().mediaFileSaveProgress(localId, progress);
-    }
-
-    @Override public void onMediaSaveFailed(String localId) {
-        getGutenbergContainerFragment().mediaFileSaveFailed(localId);
-        mFailedMediaIds.add(localId);
-        mUploadingMediaProgressMax.remove(localId);
-    }
-
-    @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
-        if (!success) {
-            mFailedMediaIds.add(storyFirstMediaId);
-        }
-        mUploadingMediaProgressMax.remove(storyFirstMediaId);
-        getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
-    }
-
-    @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
-        getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
-    }
-
-    @Override public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
-        mUploadingMediaProgressMax.remove(localId);
-        // this method may end up being called twice if the original FluxC OnMediaUploaded event was correctly caught
-        // when posted, and can be retriggered by StoriesEventListener in the case a Gutenberg instance is re-mounted
-        // while a Story media item upload is progressing. In any case, it's harmless (the second time the event
-        // arrives at Gutenberg it will simply not find the old ids in the blocks anymore and the event gets discarded)
-        getGutenbergContainerFragment().mediaFileUploadSucceeded(
-                Integer.parseInt(localId),
-                newUrl,
-                Integer.parseInt(remoteId)
-        );
     }
 
     @Override

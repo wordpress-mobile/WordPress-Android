@@ -256,9 +256,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
             RequestCodes.STORIES_PHOTO_PICKER,
-            RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.handleStoriesPhotoPickerResult(data)
-            }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -618,21 +615,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is SiteNavigationAction.AddNewStory ->
-            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaIds.toLongArray()
-        )
-        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaUris.toTypedArray()
-        )
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
             activity,
             action.site

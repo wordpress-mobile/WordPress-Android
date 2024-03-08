@@ -128,6 +128,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
 
         this@StatsListFragment.layoutManager = layoutManager
+        this.recyclerView.tag = statsSection.name
         recyclerView.layoutManager = this@StatsListFragment.layoutManager
         recyclerView.addItemDecoration(
             StatsListItemDecoration(

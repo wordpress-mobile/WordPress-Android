@@ -39,10 +39,10 @@ fun PreviewDrawButton() {
                 Color.Gray,
                 shape = RoundedCornerShape(6.dp)
             ),
-        drawableLeft = Drawable(R.drawable.ic_story_icon_24dp),
-        drawableRight = Drawable(R.drawable.ic_story_icon_24dp),
-        drawableTop = Drawable(R.drawable.ic_story_icon_24dp),
-        drawableBottom = Drawable(R.drawable.ic_story_icon_24dp),
+        drawableLeft = Drawable(R.drawable.ic_pages_white_24dp),
+        drawableRight = Drawable(R.drawable.ic_pages_white_24dp),
+        drawableTop = Drawable(R.drawable.ic_pages_white_24dp),
+        drawableBottom = Drawable(R.drawable.ic_pages_white_24dp),
         button = Button(text = UiString.UiStringText("Button Text")),
         onClick = {}
     )

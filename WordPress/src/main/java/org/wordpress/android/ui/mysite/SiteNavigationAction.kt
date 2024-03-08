@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.annotation.StringRes
-import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
@@ -45,24 +43,6 @@ sealed class SiteNavigationAction {
     object StartWPComLoginForJetpackStats : SiteNavigationAction()
     data class OpenStats(val site: SiteModel) : SiteNavigationAction()
     data class ConnectJetpackForStats(val site: SiteModel) : SiteNavigationAction()
-    data class OpenStories(val site: SiteModel, val event: StorySaveResult) : SiteNavigationAction()
-    data class AddNewStory(
-        val site: SiteModel,
-        val source: PagePostCreationSourcesDetail
-    ) : SiteNavigationAction()
-
-    data class AddNewStoryWithMediaIds(
-        val site: SiteModel,
-        val source: PagePostCreationSourcesDetail,
-        val mediaIds: List<Long>
-    ) : SiteNavigationAction()
-
-    data class AddNewStoryWithMediaUris(
-        val site: SiteModel,
-        val source: PagePostCreationSourcesDetail,
-        val mediaUris: List<String>
-    ) : SiteNavigationAction()
-
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
     data class OpenPaidDomainSearch(val site: SiteModel) : SiteNavigationAction()
     data class OpenFreeDomainSearch(val site: SiteModel) : SiteNavigationAction()

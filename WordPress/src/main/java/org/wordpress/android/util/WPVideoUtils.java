@@ -2,17 +2,9 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.media.MediaCodecInfo;
-import android.util.Size;
 
 import androidx.annotation.NonNull;
 
-import com.daasuu.mp4compose.FillMode;
-import com.daasuu.mp4compose.VideoFormatMimeType;
-import com.daasuu.mp4compose.composer.ComposerInterface;
-import com.daasuu.mp4compose.composer.ComposerProvider;
-import com.daasuu.mp4compose.composer.ComposerUseCase.CompressVideo;
-import com.daasuu.mp4compose.composer.Listener;
-import com.daasuu.mp4compose.composer.Mp4ComposerBasic;
 
 import org.m4m.AudioFormat;
 import org.m4m.MediaComposer;
@@ -113,57 +105,6 @@ public class WPVideoUtils {
         }
 
         return mediaComposer;
-    }
-
-    // TODO: this should replace the equivalent function used for m4m lib once we fully introduce the Mp4Composer lib
-    public static ComposerInterface getVideoOptimizationComposer(@NonNull String inputFile,
-                                                                 @NonNull String outFile,
-                                                                 @NonNull Listener listener,
-                                                                 int width, int bitrate) {
-        // NOTE: the parameters here (namely the AVC format type, IFrameInterval, the audio bitrate
-        // and the CodecProfileLevel) have been selected based on what we had already as fixed parameters
-        // in the original implementation that was using the media for mobile lib.
-        // Two improvements could be:
-        // - Investigate if the parameters set is already optimal and can be improved
-        // - Expose them as parameters so that they can be eventually changed by some external logic
-        ComposerInterface composer = ComposerProvider.INSTANCE.getComposerForUseCase(new CompressVideo(
-                inputFile,
-                outFile,
-                VideoFormatMimeType.AVC,
-                bitrate * 1024,
-                2,
-                96 * 1024,
-                MediaCodecInfo.CodecProfileLevel.AACObjectLC,
-                true
-        ));
-
-        Size srvVideoResolution = ((Mp4ComposerBasic) composer).getSrcVideoResolution();
-
-        if (srvVideoResolution == null) {
-            AppLog.w(AppLog.T.MEDIA, "Could not rescue source video resolution");
-            return null;
-        }
-
-        if (srvVideoResolution.getWidth() < width) {
-            AppLog.w(AppLog.T.MEDIA, "Input file width is lower than than " + width + ". Keeping the original file");
-            return null;
-        }
-        if (srvVideoResolution.getHeight() == 0) {
-            AppLog.w(AppLog.T.MEDIA, "Input file height is unknown. Can't calculate the correct "
-                                     + "ratio for resizing. Keeping the original file");
-            return null;
-        }
-
-        // Calculate the height keeping the correct aspect ratio
-        float percentage = (float) width / srvVideoResolution.getWidth();
-        float proportionateHeight = srvVideoResolution.getHeight() * percentage;
-        int height = (int) Math.rint(proportionateHeight);
-
-        composer.size(new Size(width, height))
-                .fillMode(FillMode.PRESERVE_ASPECT_FIT)
-                .listener(listener);
-
-        return composer;
     }
 
     private static void configureVideoEncoderWithDefaults(MediaComposer mediaComposer, int width, int height,

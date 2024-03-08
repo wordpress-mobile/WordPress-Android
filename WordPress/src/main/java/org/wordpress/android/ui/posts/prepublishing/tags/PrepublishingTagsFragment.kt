@@ -57,13 +57,11 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
-        const val NEEDS_REQUEST_LAYOUT = "prepublishing_tags_fragment_needs_request_layout"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
+        fun newInstance(site: SiteModel): PrepublishingTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
-                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
             return PrepublishingTagsFragment().apply { arguments = bundle }
         }
@@ -86,14 +84,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         }
     }
 
-    override fun onResume() {
-        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
-        if (needsRequestLayout) {
-            requireActivity().getWindow().getDecorView().requestLayout()
-        }
-        super.onResume()
-    }
-
     private fun PrepublishingTagsFragmentBinding.initViewModel() {
         viewModel = ViewModelProvider(this@PrepublishingTagsFragment, viewModelFactory)
             .get(PrepublishingTagsViewModel::class.java)
@@ -110,8 +100,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             prepublishingToolbar.toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
-        viewModel.start(getEditPostRepository(), !needsRequestLayout)
+        viewModel.start(getEditPostRepository())
     }
 
     private fun getEditPostRepository(): EditPostRepository {

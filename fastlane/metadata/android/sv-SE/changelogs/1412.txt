@@ -1,0 +1,2 @@
+24.3:
+Du kan logga in på din WordPress-webbplats med Google-autentiseringsuppgifter, fysiska enheter och säkerhetsnycklar från tredje part. Oroa dig inte, webbplatsen är fortfarande säkrare än ditt hemligaste svampställe.

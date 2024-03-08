@@ -1639,10 +1639,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_open_stock_library";
             case MEDIA_PICKER_OPEN_GIF_LIBRARY:
                 return "media_picker_open_gif_library";
-            case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
-                return "media_picker_stories_capture_opened";
-            case MEDIA_PICKER_OPEN_FOR_STORIES:
-                return "media_picker_open_for_stories";
             case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
@@ -1994,28 +1990,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_shown";
             case MEDIA_EDITOR_USED:
                 return "media_editor_used";
-            case STORY_SAVE_SUCCESSFUL:
-                return "story_save_successful";
-            case STORY_SAVE_ERROR:
-                return "story_save_error";
-            case STORY_POST_SAVE_LOCALLY:
-                return "story_post_save_locally";
-            case STORY_POST_SAVE_REMOTELY:
-                return "story_post_save_remotely";
-            case STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED:
-                return "story_post_error_snackbar_manage_tapped";
-            case STORY_POST_PUBLISH_TAPPED:
-                return "story_post_publish_tapped";
-            case STORY_TEXT_CHANGED:
-                return "story_text_changed";
-            case STORY_INTRO_SHOWN:
-                return "story_intro_shown";
-            case STORY_INTRO_DISMISSED:
-                return "story_intro_dismissed";
-            case STORY_INTRO_CREATE_STORY_BUTTON_TAPPED:
-                return "story_intro_create_story_button_tapped";
-            case STORY_BLOCK_ADD_MEDIA_TAPPED:
-                return "story_block_add_media_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
