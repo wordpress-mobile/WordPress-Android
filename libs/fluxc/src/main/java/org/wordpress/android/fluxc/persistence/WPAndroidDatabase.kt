@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.persistence.PlanOffersDao.PlanOfferId
 import org.wordpress.android.fluxc.persistence.RemoteConfigDao.RemoteConfig
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignsPaginationEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -37,7 +36,7 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao
 import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.JetpackSocialEntity
 
 @Database(
-        version = 26,
+        version = 27,
         entities = [
             BloggingReminders::class,
             PlanOffer::class,
@@ -51,7 +50,6 @@ import org.wordpress.android.fluxc.persistence.jetpacksocial.JetpackSocialDao.Je
             JetpackCPConnectedSiteEntity::class,
             DomainEntity::class,
             BlazeCampaignEntity::class,
-            BlazeCampaignsPaginationEntity::class,
             JetpackSocialEntity::class,
             BlazeTargetingLanguageEntity::class,
             BlazeTargetingDeviceEntity::class,
@@ -119,6 +117,7 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 .addMigrations(MIGRATION_18_19)
                 .addMigrations(MIGRATION_19_20)
                 .addMigrations(MIGRATION_20_21)
+                .addMigrations(MIGRATION_26_27)
                 .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -320,6 +319,35 @@ abstract class WPAndroidDatabase : RoomDatabase() {
                 database.apply {
                     execSQL(
                         "ALTER TABLE `BlazeCampaigns` ADD COLUMN `targetUrn` TEXT"
+                    )
+                }
+            }
+        }
+        val MIGRATION_26_27 = object : Migration(26, 27) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.apply {
+                    execSQL("DROP TABLE IF EXISTS `BlazeCampaigns`")
+                    execSQL("DROP TABLE IF EXISTS `BlazeCampaignsPagination`")
+                    execSQL(
+                        "CREATE TABLE IF NOT EXISTS `BlazeCampaigns` (" +
+                            "`siteId` INTEGER NOT NULL, " +
+                            "`campaignId` TEXT NOT NULL, " +
+                            "`title` TEXT NOT NULL, " +
+                            "`imageUrl` TEXT, " +
+                            "`startTime` TEXT NOT NULL, " +
+                            "`durationInDays` INTEGER NOT NULL, " +
+                            "`uiStatus` TEXT NOT NULL, " +
+                            "`impressions` INTEGER NOT NULL, " +
+                            "`clicks` INTEGER NOT NULL, " +
+                            "`targetUrn` TEXT, " +
+                            "`totalBudget` REAL NOT NULL, " +
+                            "`spentBudget` REAL NOT NULL, " +
+                            "PRIMARY KEY (`siteId`, `campaignId`)" +
+                            ")"
+                    )
+                    execSQL(
+                        "CREATE INDEX IF NOT EXISTS `index_BlazeCampaigns_siteId` " +
+                                "ON `BlazeCampaigns` (`siteId`)"
                     )
                 }
             }

@@ -1,13 +1,11 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 
-import com.android.volley.RequestQueue
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
@@ -15,62 +13,24 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.AcceptHeaderStrategy
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NOT_AUTHENTICATED
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
-import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
+import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestClient.Companion.DEFAULT_PER_PAGE
 import org.wordpress.android.fluxc.test
 import kotlin.test.assertEquals
 
-private val CONTENT_CONFIG_RESPONSE = ContentConfig(
-    title = "Brand new post - do not approve",
-    imageUrl = "https://imageurl"
-)
-
-private val CONTENT_CAMPAIGN_STATS = CampaignStats(
-    impressionsTotal = 1,
-    clicksTotal = 1
-)
-
-private val CAMPAIGN_RESPONSE = Campaign(
-    campaignId = 1,
-    createdAt = "2023-06-02T00:00:00.000Z",
-    endDate = "2023-06-02T00:00:00.000Z",
-    budgetCents = 1000,
-    contentImage = "undefined",
-    uiStatus = "rejected",
-    contentConfig = CONTENT_CONFIG_RESPONSE,
-    campaignStats = CONTENT_CAMPAIGN_STATS,
-    targetUrn = "urn:wpcom:post:199247490:9"
-)
-
-private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignsResponse(
-    campaigns = listOf(CAMPAIGN_RESPONSE),
-    page = 1,
-    totalItems = 1,
-    totalPages = 1
-)
-
 @RunWith(MockitoJUnitRunner::class)
 class BlazeCampaignsRestClientTest {
-    @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
-    @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var requestQueue: RequestQueue
-    @Mock private lateinit var accessToken: AccessToken
-    @Mock private lateinit var userAgent: UserAgent
-    @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var acceptHeaderStrategy: AcceptHeaderStrategy.JsonAcceptHeader
+    private val wpComNetwork: WPComNetwork = mock()
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
@@ -84,16 +44,7 @@ class BlazeCampaignsRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        restClient = BlazeCampaignsRestClient(
-            wpComGsonRequestBuilder,
-            dispatcher,
-            null,
-            requestQueue,
-            accessToken,
-            userAgent,
-            acceptHeaderStrategy
-        )
-        whenever(site.siteId).thenReturn(siteId)
+        restClient = BlazeCampaignsRestClient(wpComNetwork)
     }
 
     @Test
@@ -102,11 +53,11 @@ class BlazeCampaignsRestClientTest {
         val response = getResponseFromJsonString(json)
         initFetchBlazeCampaigns(data = response)
 
-        restClient.fetchBlazeCampaigns(site)
+        restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertEquals(
             urlCaptor.firstValue,
-            "${API_SITE_PATH}/${site.siteId}/$API_AUTH_BLAZE_CAMPAIGNS_PATH/${site.siteId}"
+            WPCOMV2.sites.site(siteId).wordads.dsp.api.v1_1.campaigns.url
         )
     }
 
@@ -116,7 +67,7 @@ class BlazeCampaignsRestClientTest {
             val json = UnitTestUtils.getStringFromResourceFile(javaClass, SUCCESS_JSON)
             initFetchBlazeCampaigns(data = getResponseFromJsonString(json))
 
-            val result = restClient.fetchBlazeCampaigns(site)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
             assertSuccess(successResponse, result)
         }
 
@@ -124,7 +75,7 @@ class BlazeCampaignsRestClientTest {
     fun `given timeout, when blaze campaigns is requested, then return timeout error`() = test {
         initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(TIMEOUT)))
 
-        val result = restClient.fetchBlazeCampaigns(site)
+        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertError(BlazeCampaignsErrorType.TIMEOUT, result)
     }
@@ -133,7 +84,7 @@ class BlazeCampaignsRestClientTest {
     fun `given network error, when blaze campaigns is requested, then return api error`() = test {
         initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
 
-        val result = restClient.fetchBlazeCampaigns(site)
+        val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
         assertError(BlazeCampaignsErrorType.API_ERROR, result)
     }
@@ -143,7 +94,7 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(INVALID_RESPONSE)))
 
-            val result = restClient.fetchBlazeCampaigns(site)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.INVALID_RESPONSE, result)
         }
@@ -153,7 +104,7 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(NOT_AUTHENTICATED)))
 
-            val result = restClient.fetchBlazeCampaigns(site)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.AUTHORIZATION_REQUIRED, result)
         }
@@ -163,13 +114,13 @@ class BlazeCampaignsRestClientTest {
         test {
             initFetchBlazeCampaigns(error = WPComGsonNetworkError(BaseNetworkError(UNKNOWN)))
 
-            val result = restClient.fetchBlazeCampaigns(site)
+            val result = restClient.fetchBlazeCampaigns(siteId, SKIP, DEFAULT_PER_PAGE, DEFAULT_LOCALE)
 
             assertError(BlazeCampaignsErrorType.GENERIC_ERROR, result)
         }
 
     private suspend fun initFetchBlazeCampaigns(
-        data: BlazeCampaignsResponse? = null,
+        data: BlazeCampaignListResponse? = null,
         error: WPComGsonNetworkError? = null
     ) {
         val nonNullData = data ?: mock()
@@ -180,35 +131,33 @@ class BlazeCampaignsRestClientTest {
         }
 
         whenever(
-            wpComGsonRequestBuilder.syncGetRequest(
-                eq(restClient),
-                urlCaptor.capture(),
-                paramsCaptor.capture(),
-                eq(BlazeCampaignsResponse::class.java),
-                eq(false),
-                any(),
-                eq(false)
+            wpComNetwork.executeGetGsonRequest(
+                url = urlCaptor.capture(),
+                clazz = eq(BlazeCampaignListResponse::class.java),
+                params = paramsCaptor.capture(),
+                enableCaching = eq(false),
+                cacheTimeToLive = any(),
+                forced = eq(false)
             )
         ).thenReturn(response)
     }
 
     @Suppress("SameParameterValue")
     private fun assertSuccess(
-        expected: BlazeCampaignsResponse,
-        actual: BlazeCampaignsFetchedPayload<BlazeCampaignsResponse>
+        expected: BlazeCampaignListResponse,
+        actual: BlazeCampaignsFetchedPayload<BlazeCampaignListResponse>
     ) {
         with(actual) {
             Assert.assertFalse(isError)
-            Assert.assertEquals(expected.page, actual.response?.page)
-            Assert.assertEquals(expected.totalItems, actual.response?.totalItems)
-            Assert.assertEquals(expected.totalPages, actual.response?.totalPages)
+            Assert.assertEquals(expected.skipped, actual.response?.skipped)
+            Assert.assertEquals(expected.totalCount, actual.response?.totalCount)
             Assert.assertEquals(expected.campaigns, actual.response?.campaigns)
         }
     }
 
     private fun assertError(
         expected: BlazeCampaignsErrorType,
-        actual: BlazeCampaignsFetchedPayload<BlazeCampaignsResponse>
+        actual: BlazeCampaignsFetchedPayload<BlazeCampaignListResponse>
     ) {
         with(actual) {
             Assert.assertTrue(isError)
@@ -217,16 +166,56 @@ class BlazeCampaignsRestClientTest {
         }
     }
 
-    private fun getResponseFromJsonString(json: String): BlazeCampaignsResponse {
-        val responseType = object : TypeToken<BlazeCampaignsResponse>() {}.type
+    private fun getResponseFromJsonString(json: String): BlazeCampaignListResponse {
+        val responseType = object : TypeToken<BlazeCampaignListResponse>() {}.type
         return GsonBuilder()
-            .create().fromJson(json, responseType) as BlazeCampaignsResponse
+            .create().fromJson(json, responseType) as BlazeCampaignListResponse
     }
 
-    companion object {
-        private const val API_BASE_PATH = "https://public-api.wordpress.com/wpcom/v2"
-        private const val API_SITE_PATH = "$API_BASE_PATH/sites"
-        private const val API_AUTH_BLAZE_CAMPAIGNS_PATH = "wordads/dsp/api/v1/search/campaigns/site"
-        private const val SUCCESS_JSON = "wp/blaze/blaze-campaigns.json"
+    private companion object {
+        const val SUCCESS_JSON = "wp/blaze/blaze-campaigns.json"
+        const val CAMPAIGN_ID = "1234"
+        const val TITLE = "title"
+        const val IMAGE_URL = "imageUrl"
+        const val CREATED_AT = "2023-06-02T00:00:00.000Z"
+        const val DURATION_IN_DAYS = 10
+        const val UI_STATUS = "rejected"
+        const val IMPRESSIONS = 0L
+        const val CLICKS = 0L
+        const val TOTAL_BUDGET = 100.0
+        const val SPENT_BUDGET = 0.0
+
+        const val SKIP = 0
+        const val TOTAL_ITEMS = 1
+        const val DEFAULT_LOCALE = "en"
+
+        val CAMPAIGN_IMAGE = CampaignImage(
+            height = 100f,
+            width = 100f,
+            mimeType = "image/jpeg",
+            url = IMAGE_URL
+        )
+
+        val CAMPAIGN_RESPONSE = BlazeCampaign(
+            id = CAMPAIGN_ID,
+            image = CAMPAIGN_IMAGE,
+            targetUrl = "https://example.com",
+            textSnippet = TITLE,
+            siteName = "siteName",
+            clicks = CLICKS,
+            impressions = IMPRESSIONS,
+            spentBudget = SPENT_BUDGET,
+            totalBudget = TOTAL_BUDGET,
+            durationDays = DURATION_IN_DAYS,
+            startTime = CREATED_AT,
+            targetUrn = "urn:wpcom:post:199247490:9",
+            status = UI_STATUS
+        )
+
+        val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignListResponse(
+            campaigns = listOf(CAMPAIGN_RESPONSE),
+            skipped = SKIP,
+            totalCount = TOTAL_ITEMS,
+        )
     }
 }
