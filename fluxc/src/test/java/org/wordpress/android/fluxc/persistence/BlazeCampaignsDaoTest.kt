@@ -14,39 +14,8 @@ import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsUtils
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
-import org.wordpress.android.fluxc.store.blaze.BUDGET_CENTS
-import org.wordpress.android.fluxc.store.blaze.CAMPAIGN_ID
-import org.wordpress.android.fluxc.store.blaze.CLICKS
-import org.wordpress.android.fluxc.store.blaze.CREATED_AT
-import org.wordpress.android.fluxc.store.blaze.END_DATE
-import org.wordpress.android.fluxc.store.blaze.IMAGE_URL
-import org.wordpress.android.fluxc.store.blaze.IMPRESSIONS
-import org.wordpress.android.fluxc.store.blaze.PAGE
-import org.wordpress.android.fluxc.store.blaze.TITLE
-import org.wordpress.android.fluxc.store.blaze.TOTAL_ITEMS
-import org.wordpress.android.fluxc.store.blaze.TOTAL_PAGES
-import org.wordpress.android.fluxc.store.blaze.UI_STATUS
 import java.io.IOException
 import kotlin.test.assertEquals
-
-private val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
-    campaignId = CAMPAIGN_ID,
-    title = TITLE,
-    imageUrl = IMAGE_URL,
-    createdAt = BlazeCampaignsUtils.stringToDate(CREATED_AT),
-    endDate = BlazeCampaignsUtils.stringToDate(END_DATE),
-    uiStatus = UI_STATUS,
-    budgetCents = BUDGET_CENTS,
-    impressions = IMPRESSIONS,
-    clicks = CLICKS,
-    targetUrn = "urn:wpcom:post:199247490:9"
-)
-private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
-    campaigns = listOf(BLAZE_CAMPAIGN_MODEL),
-    page = PAGE,
-    totalItems = TOTAL_ITEMS,
-    totalPages = TOTAL_PAGES
-)
 
 @ExperimentalCoroutinesApi
 @RunWith(RobolectricTestRunner::class)
@@ -73,69 +42,69 @@ class BlazeCampaignsDaoTest {
     fun `when insert followed by update, then updated campaign is returned`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
+        dao.insertCampaigns(SITE_ID, model)
 
         // then
-        var observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertThat(observedStatus).isEqualTo(BLAZE_CAMPAIGNS_MODEL)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertThat(observedStatus).isEqualTo(listOf(BLAZE_CAMPAIGN_MODEL))
 
         // when
-        model = model.copy(campaigns = model.campaigns.map { it.copy(title = secondaryTitle) })
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
+        model = model.copy(campaigns = model.campaigns.map { it.copy(title = SECONDARY_TITLE) })
+        dao.insertCampaigns(SITE_ID, model)
 
         // then
-        observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertThat(observedStatus.campaigns[0].title).isEqualTo(secondaryTitle)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertThat(observedStatus[0].title).isEqualTo(SECONDARY_TITLE)
     }
 
     @Test
-    fun `when insert of page 1, then db is cleared before insert`(): Unit = runBlocking {
+    fun `when insert of first items batch, then db is cleared before insert`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
-        var observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertEquals(observedStatus.campaigns.size, 1)
+        dao.insertCampaigns(SITE_ID, model)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
 
-        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
+        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
+        dao.insertCampaigns(SITE_ID, model)
 
-        observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertEquals(observedStatus.campaigns.size, 2)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 2)
 
         // then
-        model = model.copy(page = 1)
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
-        observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertEquals(observedStatus.campaigns.size, 1)
+        model = model.copy(skipped = 0)
+        dao.insertCampaigns(SITE_ID, model)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
     }
 
     @Test
-    fun `when insert of page 2, then db is not cleared`(): Unit = runBlocking {
+    fun `when insert second batch of items, then db is not cleared`(): Unit = runBlocking {
         // when
         var model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
-        var observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertEquals(observedStatus.campaigns.size, 1)
+        dao.insertCampaigns(SITE_ID, model)
+        var observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 1)
 
-        model = model.copy(page = 2, campaigns = model.campaigns.map { it.copy(campaignId = 2) })
-        dao.insertCampaignsAndPageInfoForSite(defaultSiteId, model)
+        model = model.copy(skipped = 1, campaigns = model.campaigns.map { it.copy(campaignId = "2") })
+        dao.insertCampaigns(SITE_ID, model)
 
-        observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
-        assertEquals(observedStatus.campaigns.size, 2)
+        observedStatus = dao.getCachedCampaigns(SITE_ID)
+        assertEquals(observedStatus.size, 2)
     }
 
     @Test
     fun `when clear is requested, then all rows are deleted for site`(): Unit = runBlocking {
         // when
         val model = BLAZE_CAMPAIGNS_MODEL
-        dao.insertCampaignsAndPageInfoForSite(1, model)
-        dao.insertCampaignsAndPageInfoForSite(2, model)
-        dao.insertCampaignsAndPageInfoForSite(3, model)
+        dao.insertCampaigns(1, model)
+        dao.insertCampaigns(2, model)
+        dao.insertCampaigns(3, model)
 
-        dao.clear(1)
-        assertEmptyResult(dao.getCampaignsAndPaginationForSite(1).campaigns)
-        assertNotEmptyResult(dao.getCampaignsAndPaginationForSite(2).campaigns)
-        assertNotEmptyResult(dao.getCampaignsAndPaginationForSite(3).campaigns)
+        dao.clearBlazeCampaigns(1)
+        assertEmptyResult(dao.getCachedCampaigns(1))
+        assertNotEmptyResult(dao.getCachedCampaigns(2))
+        assertNotEmptyResult(dao.getCachedCampaigns(3))
     }
 
     @Test
@@ -144,16 +113,16 @@ class BlazeCampaignsDaoTest {
         val emptyList = emptyList<BlazeCampaignModel>()
 
         // then
-        val observedStatus = dao.getCampaignsAndPaginationForSite(defaultSiteId)
+        val observedStatus = dao.getCachedCampaigns(SITE_ID)
 
         // when
-        assertThat(observedStatus.campaigns).isEqualTo(emptyList)
+        assertThat(observedStatus).isEqualTo(emptyList)
     }
 
     @Test
     fun `given no site, when recent campaign req, then null returned `(): Unit = runBlocking {
         // then
-        val observedStatus = dao.getMostRecentCampaignForSite(defaultSiteId)
+        val observedStatus = dao.getMostRecentCampaignForSite(SITE_ID)
 
         // when
         assertThat(observedStatus).isNull()
@@ -162,7 +131,7 @@ class BlazeCampaignsDaoTest {
     @Test
     fun `given no site, when campaign list req, then empty list is return `(): Unit = runBlocking {
         // then
-        val observedStatus = dao.getCampaigns(defaultSiteId)
+        val observedStatus = dao.getCampaigns(SITE_ID)
 
         // when
         assertThat(observedStatus).isEmpty()
@@ -178,8 +147,41 @@ class BlazeCampaignsDaoTest {
         assertThat(campaigns).isNotEmpty
     }
 
-    companion object {
-        private const val defaultSiteId = 1234L
-        private const val secondaryTitle = "secondary title"
+    private companion object {
+        const val SITE_ID = 1234L
+        const val SECONDARY_TITLE = "secondary title"
+        const val CAMPAIGN_ID = "1234"
+        const val TITLE = "title"
+        const val IMAGE_URL = "imageUrl"
+        const val CREATED_AT = "2023-06-02T00:00:00.000Z"
+        const val DURATION_DAYS = 4
+        const val UI_STATUS = "rejected"
+        const val IMPRESSIONS = 0L
+        const val CLICKS = 0L
+        const val TOTAL_BUDGET = 100.0
+        const val SPENT_BUDGET = 0.0
+        const val TARGET_URN = "urn:wpcom:post:199247490:9"
+
+        const val SKIP = 0
+        const val TOTAL_ITEMS = 1
+
+        val BLAZE_CAMPAIGN_MODEL = BlazeCampaignModel(
+            campaignId = CAMPAIGN_ID,
+            title = TITLE,
+            imageUrl = IMAGE_URL,
+            startTime = BlazeCampaignsUtils.stringToDate(CREATED_AT),
+            durationInDays = DURATION_DAYS,
+            uiStatus = UI_STATUS,
+            impressions = IMPRESSIONS,
+            clicks = CLICKS,
+            targetUrn = TARGET_URN,
+            totalBudget = TOTAL_BUDGET,
+            spentBudget = SPENT_BUDGET,
+        )
+        val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
+            campaigns = listOf(BLAZE_CAMPAIGN_MODEL),
+            skipped = SKIP,
+            totalItems = TOTAL_ITEMS,
+        )
     }
 }
