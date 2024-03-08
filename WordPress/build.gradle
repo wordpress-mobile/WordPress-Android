@@ -275,6 +275,7 @@ android {
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
         baseline file("${project.rootDir}/config/lint/baseline.xml")
         enable += 'UnknownNullness'
+        disable 'ObsoleteLintCustomCheck'
     }
 
     packagingOptions {

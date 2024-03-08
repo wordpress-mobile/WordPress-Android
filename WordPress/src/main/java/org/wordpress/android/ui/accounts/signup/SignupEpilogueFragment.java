@@ -96,6 +96,9 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
 
+import kotlin.Unit;
+
+
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener, OnShownListener {
     private EditText mEditTextDisplayName;
@@ -731,9 +734,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 startProgress(false);
                 mGravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
                         Objects.requireNonNull(mAccountStore.getAccessToken()),
-                        new GravatarApi.GravatarUploadListener() {
+                        new GravatarApi.GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 endProgress();
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
@@ -832,9 +835,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 mGravatarApi.uploadGravatar(file, mEmail, mToken,
-                        new GravatarApi.GravatarUploadListener() {
+                        new GravatarApi.GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                             }

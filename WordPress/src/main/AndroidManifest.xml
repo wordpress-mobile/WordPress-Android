@@ -761,12 +761,6 @@
             android:theme="@style/WordPress.NoActionBar"
             tools:ignore="LockedOrientationActivity"/>
 
-        <!-- Lib activities-->
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:label="@string/edit_photo_screen_title"
-            android:theme="@style/WordPress.NoActionBar"/>
-
         <activity
             android:name=".ui.posts.JetpackSecuritySettingsActivity"
             android:theme="@style/WordPress.NoActionBar"/>

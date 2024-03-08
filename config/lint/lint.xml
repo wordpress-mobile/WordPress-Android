@@ -69,4 +69,5 @@
     <issue id="UnknownNullness" severity="informational">
         <ignore path="**/generated/**" />
     </issue>
+    <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
 </lint>

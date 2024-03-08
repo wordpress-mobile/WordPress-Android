@@ -29,7 +29,7 @@ ext {
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.13.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
-    gravatarVersion = '1.0.0'
+    gravatarVersion = 'trunk-03c676dc112256edbd20cf2b2dc9595e7236579d'
 
     // debug
     flipperVersion = '0.245.0'
@@ -141,6 +141,12 @@ allprojects {
                 includeVersion "org.jetbrains.kotlinx", "kotlinx-html-jvm", "0.7.2"
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
+            }
+        }
+        maven {
+            url "https://a8c-libs.s3.amazonaws.com/android"
+            content {
+                includeGroup "com.gravatar"
             }
         }
         flatDir {
