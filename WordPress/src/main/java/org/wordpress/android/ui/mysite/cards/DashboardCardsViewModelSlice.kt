@@ -30,6 +30,7 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 
+@SuppressWarnings("LongParameterList")
 class DashboardCardsViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val jpMigrationSuccessCardViewModelSlice: JpMigrationSuccessCardViewModelSlice,
@@ -126,9 +127,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         )
     }.distinctUntilChanged() as MutableLiveData<List<MySiteCardAndItem>>
 
-
-
-    @SuppressWarnings("LongParameterList")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     private fun mergeUiModels(
         quicklinks: MySiteCardAndItem.Card.QuickLinksItem?,
         quickStart: MySiteCardAndItem.Card.QuickStartCard?,
