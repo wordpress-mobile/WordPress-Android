@@ -37,6 +37,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongParameterList")
 class CardViewModelSlice @Inject constructor(
     private val cardsStore: CardsStore,
     private val dashboardActivityLogCardFeatureUtils: DashboardActivityLogCardFeatureUtils,
