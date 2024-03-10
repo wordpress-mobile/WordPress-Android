@@ -14,7 +14,6 @@ import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.invocation.InvocationOnMock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -31,7 +30,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -47,28 +45,20 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.DomainRegistrationCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.ErrorCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackFeatureCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.QuickStartCard.QuickStartTaskTypeItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard.IconState
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.ListItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.SingleActionCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.JetpackBadge
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DashboardCardsBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.DomainRegistrationCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.QuickStartCardBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.BloggingPromptUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -86,10 +76,8 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardSh
 import org.wordpress.android.ui.mysite.cards.jpfullplugininstall.JetpackInstallFullPluginShownTracker
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardBuilder
 import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewModelSlice
-import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardType
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardBuilder
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
 import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
@@ -139,9 +127,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var quickStartRepository: QuickStartRepository
-
-    @Mock
-    lateinit var siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 
     @Mock
     lateinit var homePageDataLoader: HomePageDataLoader
@@ -266,13 +251,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val localHomepageId = 1
     private val bloggingPromptId = 123
     private lateinit var site: SiteModel
-    private lateinit var siteInfoHeader: SiteInfoHeaderCard
     private lateinit var homepage: PageModel
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
-    private val showSiteIconProgressBar = MutableLiveData(ShowSiteIconProgressBar(false))
     private val selectedSite = MediatorLiveData<SelectedSite>()
     private val refresh = MutableLiveData<Event<Boolean>>()
 
@@ -286,8 +269,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
     private val activeTask = MutableLiveData<QuickStartTask>()
 
-    private var quickStartHideThisMenuItemClickAction: ((type: QuickStartCardType) -> Unit)? = null
-    private var quickStartMoreMenuClickAction: ((type: QuickStartCardType) -> Unit)? = null
     private var quickStartTaskTypeItemClickAction: ((QuickStartTaskType) -> Unit)? = null
     private var onDashboardErrorRetryClick: (() -> Unit)? = null
     private val quickStartCategory: QuickStartCategory
@@ -325,39 +306,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     )
 
-    private val bloggingPromptsUpdate = MutableLiveData(
-        BloggingPromptUpdate(
-            promptModel = BloggingPromptModel(
-                id = bloggingPromptId,
-                text = "text",
-                date = Date(),
-                isAnswered = false,
-                attribution = "dayone",
-                respondentsCount = 5,
-                respondentsAvatarUrls = listOf(),
-                answeredLink = "https://wordpress.com/tag/$bloggingPromptId"
-            )
-        )
-    )
-
-    private val blazeCardUpdate = MutableLiveData(
-        MySiteUiState.PartialState.BlazeCardUpdate(
-            blazeEligible = true,
-            campaign = null
-        )
-    )
-
-    private val partialStates = listOf(
-        isDomainCreditAvailable,
-        jetpackCapabilities,
-        currentAvatar,
-        cardsUpdate,
-        quickStartUpdate,
-        showSiteIconProgressBar,
-        selectedSite,
-        bloggingPromptsUpdate,
-        blazeCardUpdate
-    )
 
     @Suppress("LongMethod")
     @Before
@@ -399,22 +347,17 @@ class MySiteViewModelTest : BaseUnitTest() {
             accountStore,
             selectedSiteRepository,
             siteIconUploadHandler,
-            displayUtilsWrapper,
             quickStartRepository,
             homePageDataLoader,
             quickStartUtilsWrapper,
             snackbarSequencer,
             landOnTheEditorFeatureConfig,
-            cardsTracker,
-            domainRegistrationCardShownTracker,
             buildConfigWrapper,
             appPrefsWrapper,
             quickStartTracker,
             dispatcher,
-            jetpackFeatureCardShownTracker,
             jetpackFeatureRemovalOverlayUtil,
             getShowJetpackFullPluginInstallOnboardingUseCase,
-            jetpackInstallFullPluginShownTracker,
             jetpackFeatureRemovalPhaseHelper,
             wpJetpackIndividualPluginHelper,
             siteInfoHeaderCardViewModelSlice,
@@ -1364,80 +1307,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(siteItemsBuilder.build(anyOrNull())).thenReturn(initSiteItems(siteItemsBuilderParams))
     }
 
-    private fun initSiteInfoCard(): SiteInfoHeaderCard {
-        return SiteInfoHeaderCard(
-            title = siteName,
-            url = siteUrl,
-            iconState = IconState.Visible(siteIcon),
-            showTitleFocusPoint = false,
-            showSubtitleFocusPoint = false,
-            showIconFocusPoint = false,
-            onTitleClick = mock(),
-            onIconClick = mock(),
-            onUrlClick = mock(),
-            onSwitchSiteClick = mock()
-        )
-    }
-
-    private fun initDomainRegistrationCard(mockInvocation: InvocationOnMock) = DomainRegistrationCard(
-        ListItemInteraction.create {
-            (mockInvocation.arguments.filterIsInstance<DomainRegistrationCardBuilderParams>()).first()
-                .domainRegistrationClick.invoke()
-        }
-    )
-
-    private fun initQuickStartCard(mockInvocation: InvocationOnMock): QuickStartCard {
-        val params = (mockInvocation.arguments.filterIsInstance<QuickStartCardBuilderParams>()).first()
-        quickStartHideThisMenuItemClickAction = params.moreMenuClickParams.onHideThisMenuItemClick
-        quickStartMoreMenuClickAction = params.moreMenuClickParams.onMoreMenuClick
-        quickStartTaskTypeItemClickAction = params.onQuickStartTaskTypeItemClick
-        return QuickStartCard(
-            title = UiStringText(""),
-            moreMenuOptions = QuickStartCard.MoreMenuOptions(
-                onMoreMenuClick = {
-                    (quickStartMoreMenuClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
-                        QuickStartCardType.NEXT_STEPS
-                    )
-                },
-                onHideThisMenuItemClick = {
-                    (quickStartHideThisMenuItemClickAction as ((type: QuickStartCardType) -> Unit)).invoke(
-                        QuickStartCardType.NEXT_STEPS
-                    )
-                }
-            ),
-            quickStartCardType = QuickStartCardType.NEXT_STEPS,
-            taskTypeItems = listOf(
-                QuickStartTaskTypeItem(
-                    quickStartTaskType = mock(),
-                    title = UiStringText(""),
-                    titleEnabled = true,
-                    subtitle = UiStringText(""),
-                    strikeThroughTitle = false,
-                    progressColor = 0,
-                    progress = 0,
-                    onClick = ListItemInteraction.create(
-                        mock(),
-                        (quickStartTaskTypeItemClickAction as ((QuickStartTaskType) -> Unit))
-                    )
-                )
-            )
-        )
-    }
-
-    private fun initDashboardCards(mockInvocation: InvocationOnMock): List<MySiteCardAndItem.Card> {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        return  mutableListOf<MySiteCardAndItem.Card>().apply {
-            if (params.showErrorCard) {
-                add(initErrorCard(mockInvocation))
-            }
-        }
-    }
-
-    private fun initErrorCard(mockInvocation: InvocationOnMock): ErrorCard {
-        val params = (mockInvocation.arguments.filterIsInstance<DashboardCardsBuilderParams>()).first()
-        onDashboardErrorRetryClick = params.onErrorRetryClick
-        return ErrorCard(onRetryClick = ListItemInteraction.create { onDashboardErrorRetryClick })
-    }
 
     private fun initSiteItems(params: MySiteCardAndItemBuilderParams.SiteItemsBuilderParams): List<ListItem> {
         val items = mutableListOf<ListItem>()
