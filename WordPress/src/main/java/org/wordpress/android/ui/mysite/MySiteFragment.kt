@@ -849,7 +849,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
-        private const val CHECK_REFRESH_DELAY = 300L
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
