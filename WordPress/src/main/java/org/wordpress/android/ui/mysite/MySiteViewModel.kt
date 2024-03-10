@@ -60,7 +60,6 @@ class MySiteViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val homePageDataLoader: HomePageDataLoader,
     private val quickStartUtilsWrapper: QuickStartUtilsWrapper,
