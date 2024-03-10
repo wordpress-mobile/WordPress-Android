@@ -10,10 +10,10 @@ import org.mockito.Mockito.doReturn
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
-import org.mockito.kotlin.spy
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
@@ -67,6 +67,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
     @Before
     fun setup() {
         blazeCardViewModelSlice = BlazeCardViewModelSlice(
+            testDispatcher(),
             blazeFeatureUtils,
             selectedSiteRepository,
             cardsTracker,
