@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.domainregistration
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.CancellationException
@@ -11,30 +10,46 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.mysite.MySiteSource.MySiteRefreshSource
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.resume
 
-class DomainRegistrationSource @Inject constructor(
+class DomainRegistrationCardViewModelSlice @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
-    private val siteUtils: SiteUtilsWrapper
-) : MySiteRefreshSource<DomainCreditAvailable> {
-    override val refresh = MutableLiveData(false)
+    private val siteUtils: SiteUtilsWrapper,
+    private val domainRegistrationTracker: DomainRegistrationTracker,
+    private val domainRegistrationCardShownTracker: DomainRegistrationCardShownTracker
+) {
+    private lateinit var scope: CoroutineScope
+
+    private val _isRefreshing = MutableLiveData<Boolean>()
+    val isRefreshing: LiveData<Boolean> = _isRefreshing
+
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DomainRegistrationCard>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.DomainRegistrationCard> = _uiModel
+
+    private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
+    val onNavigation = _onNavigation
 
     private val continuations = mutableMapOf<Int, CancellableContinuation<OnPlansFetched>?>()
 
@@ -46,51 +61,35 @@ class DomainRegistrationSource @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    override fun build(coroutineScope: CoroutineScope, siteLocalId: Int): LiveData<DomainCreditAvailable> {
-        val data = MediatorLiveData<DomainCreditAvailable>()
-        data.addSource(refresh) { data.refreshData(coroutineScope, siteLocalId, refresh.value) }
-        refresh()
-        return data
+    fun initialize(scope: CoroutineScope) {
+        this.scope = scope
     }
 
-    private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
-        coroutineScope: CoroutineScope,
-        siteLocalId: Int,
-        isRefresh: Boolean? = null
-    ) {
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        when (isRefresh) {
-            null, true -> refreshData(coroutineScope, siteLocalId, selectedSite)
-            false -> Unit // Do nothing
-        }
-    }
-
-    private fun MediatorLiveData<DomainCreditAvailable>.refreshData(
-        coroutineScope: CoroutineScope,
+    fun buildCard(
         siteLocalId: Int,
         selectedSite: SiteModel?
     ) {
+        _isRefreshing.postValue(true)
         if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchPlans(selectedSite)) {
-            postState(DomainCreditAvailable(false))
+            postState(false)
         } else {
-            fetchPlansAndRefreshData(coroutineScope, siteLocalId, selectedSite)
+            fetchPlansAndRefreshData(siteLocalId, selectedSite)
         }
     }
 
-    private fun MediatorLiveData<DomainCreditAvailable>.fetchPlansAndRefreshData(
-        coroutineScope: CoroutineScope,
+    private fun fetchPlansAndRefreshData(
         siteLocalId: Int,
         selectedSite: SiteModel
     ) {
         if (continuations[siteLocalId] == null) {
-            coroutineScope.launch(bgDispatcher) { fetchPlans(siteLocalId, selectedSite) }
+            scope.launch(bgDispatcher) { fetchPlans(siteLocalId, selectedSite) }
         } else {
             appLogWrapper.d(DOMAIN_REGISTRATION, "A request is already running for $siteLocalId")
         }
     }
 
     @Suppress("SwallowedException")
-    private suspend fun MediatorLiveData<DomainCreditAvailable>.fetchPlans(siteLocalId: Int, selectedSite: SiteModel) {
+    private suspend fun fetchPlans(siteLocalId: Int, selectedSite: SiteModel) {
         try {
             val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
                 continuations[siteLocalId] = cancellableContinuation
@@ -100,18 +99,36 @@ class DomainRegistrationSource @Inject constructor(
                 event.isError -> {
                     val message = "An error occurred while fetching plans :${event.error.message}"
                     appLogWrapper.e(DOMAIN_REGISTRATION, message)
-                    postState(DomainCreditAvailable(false))
+                    postState(false)
                 }
+
                 siteLocalId == event.site.id -> {
-                    postState(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
+                    postState((isDomainCreditAvailable(event.plans)))
                 }
+
                 else -> {
-                    postState(DomainCreditAvailable(false))
+                    postState(false)
                 }
             }
         } catch (e: CancellationException) {
-            postState(DomainCreditAvailable(false))
+            postState(false)
         }
+    }
+
+    private fun postState(isDomainCreditAvailable: Boolean) {
+        _isRefreshing.postValue(false)
+        if (isDomainCreditAvailable)
+            _uiModel.postValue(
+                MySiteCardAndItem.Card.DomainRegistrationCard(
+                    ListItemInteraction.create(this::domainRegistrationClick)
+                )
+            )
+    }
+
+    private fun domainRegistrationClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
+        domainRegistrationTracker.track(AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+        _onNavigation.value = Event(SiteNavigationAction.OpenDomainRegistration(selectedSite))
     }
 
     private fun shouldFetchPlans(site: SiteModel) = !siteUtils.onFreePlan(site)
@@ -123,4 +140,18 @@ class DomainRegistrationSource @Inject constructor(
         continuations[event.site.id]?.resume(event)
         continuations[event.site.id] = null
     }
+
+    fun trackShown(card:  MySiteCardAndItem.Card.DomainRegistrationCard) {
+        domainRegistrationCardShownTracker.trackShown(card.type)
+    }
+
+    fun resetCardShown() {
+        domainRegistrationCardShownTracker.resetShown()
+    }
+}
+
+/* This class is a helper to offset the AppLogWrapper dependency conflict (see AppLogWrapper itself for more info) */
+class DomainRegistrationTracker
+@Inject constructor(private val analyticsTrackerWrapper: AnalyticsTrackerWrapper) {
+    fun track(stat: AnalyticsTracker.Stat, site: SiteModel) = analyticsTrackerWrapper.track(stat, site)
 }

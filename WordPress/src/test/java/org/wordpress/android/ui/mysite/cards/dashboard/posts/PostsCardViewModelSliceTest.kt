@@ -16,9 +16,9 @@ import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuItemType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuCard
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuItemType
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -31,6 +31,9 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Mock
+    lateinit var postCardBuilder: PostCardBuilder
 
     private lateinit var postsCardViewModelSlice: PostsCardViewModelSlice
 
@@ -47,7 +50,8 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
         postsCardViewModelSlice = PostsCardViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            postCardBuilder
         )
 
         navigationActions = mutableListOf()

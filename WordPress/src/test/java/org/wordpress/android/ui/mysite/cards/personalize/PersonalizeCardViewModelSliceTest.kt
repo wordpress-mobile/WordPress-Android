@@ -22,6 +22,9 @@ class PersonalizeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var personalizeCardShownTracker: PersonalizeCardShownTracker
 
+    @Mock
+    lateinit var personalizeCardBuilder: PersonalizeCardBuilder
+
     private lateinit var viewModelSlice: PersonalizeCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -30,7 +33,8 @@ class PersonalizeCardViewModelSliceTest : BaseUnitTest() {
     fun setUp() {
         viewModelSlice = PersonalizeCardViewModelSlice(
             cardsTracker,
-            personalizeCardShownTracker
+            personalizeCardShownTracker,
+            personalizeCardBuilder
         )
         navigationActions = mutableListOf()
         viewModelSlice.onNavigation.observeForever { event ->

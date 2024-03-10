@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.assertj.core.api.Assertions.assertThat
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -33,6 +33,9 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var todaysStatsCardBuilder: TodaysStatsCardBuilder
+
     private lateinit var todaysStatsViewModelSlice: TodaysStatsViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -47,7 +50,8 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             cardsTracker,
             selectedSiteRepository,
             jetpackFeatureRemovalPhaseHelper,
-            appPrefsWrapper
+            appPrefsWrapper,
+            todaysStatsCardBuilder
         )
         navigationActions = mutableListOf()
         todaysStatsViewModelSlice.onNavigation.observeForever { event ->

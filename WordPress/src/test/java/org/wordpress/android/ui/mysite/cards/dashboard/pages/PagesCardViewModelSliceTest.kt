@@ -32,6 +32,9 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var pagesCardBuilder: PagesCardBuilder
+
     private lateinit var pagesCardViewModelSlice: PagesCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
@@ -45,7 +48,8 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
         pagesCardViewModelSlice = PagesCardViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            pagesCardBuilder
         )
         navigationActions = mutableListOf()
         pagesCardViewModelSlice.onNavigation.observeForever { event ->
