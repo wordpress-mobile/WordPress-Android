@@ -135,13 +135,13 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any())).thenReturn(true)
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(fetchCampaignListUseCase.execute(any(), any())).thenReturn(mock())
+        whenever(fetchCampaignListUseCase.execute(any(), any(), any())).thenReturn(mock())
 
         // When
         blazeCardViewModelSlice.buildCard(mock())
 
         // Then
-        verify(fetchCampaignListUseCase).execute(any(), any())
+        verify(fetchCampaignListUseCase).execute(any(), any(), any())
     }
 
     @Test
@@ -150,13 +150,13 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
         whenever(blazeFeatureUtils.shouldShowBlazeCardEntryPoint(any())).thenReturn(true)
         whenever(blazeFeatureUtils.shouldShowBlazeCampaigns()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(fetchCampaignListUseCase.execute(any(), any())).thenReturn(mock())
+        whenever(fetchCampaignListUseCase.execute(any(), any(), any())).thenReturn(mock())
 
         // When
         blazeCardViewModelSlice.buildCard(mock())
 
         // Then
-        verify(fetchCampaignListUseCase).execute(any(), any())
+        verify(fetchCampaignListUseCase).execute(any(), any(), any())
     }
 
     @Test
