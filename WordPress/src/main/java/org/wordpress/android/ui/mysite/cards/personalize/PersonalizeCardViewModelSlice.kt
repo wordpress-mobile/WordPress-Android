@@ -44,8 +44,8 @@ class PersonalizeCardViewModelSlice @Inject constructor(
         _onNavigation.value = Event(OpenDashboardPersonalization)
     }
 
-    fun trackShown(card: MySiteCardAndItem.Card.PersonalizeCardModel) {
-        personalizeCardShownTracker.trackShown(card.type)
+    fun trackShown() {
+        personalizeCardShownTracker.trackShown(MySiteCardAndItem.Type.PERSONALIZE_CARD)
     }
 
     fun resetShown() {

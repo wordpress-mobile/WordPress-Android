@@ -238,7 +238,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
                 .forEach { domainRegistrationCardViewModelSlice.trackShown(it) }
 
             filterIsInstance<MySiteCardAndItem.Card.PersonalizeCardModel>().forEach {
-                personalizeCardViewModelSlice.trackShown(it)
+                personalizeCardViewModelSlice.trackShown()
             }
 
             filterIsInstance<MySiteCardAndItem.Card.QuickStartCard>().forEach {

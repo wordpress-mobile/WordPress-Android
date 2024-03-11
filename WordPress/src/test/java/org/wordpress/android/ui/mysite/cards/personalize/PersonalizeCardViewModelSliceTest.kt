@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -69,7 +68,7 @@ class PersonalizeCardViewModelSliceTest : BaseUnitTest() {
     @Test
     fun `given personalize card, when card shown track requested, then track card shown`() =
         test {
-            viewModelSlice.trackShown(mock())
+            viewModelSlice.trackShown()
 
             verify(personalizeCardShownTracker).trackShown(MySiteCardAndItem.Type.PERSONALIZE_CARD)
         }
