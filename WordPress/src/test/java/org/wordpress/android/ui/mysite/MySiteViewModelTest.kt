@@ -249,7 +249,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteName = "Site"
     private val emailAddress = "test@email.com"
     private val localHomepageId = 1
-    private val bloggingPromptId = 123
     private lateinit var site: SiteModel
     private lateinit var homepage: PageModel
     private val onSiteChange = MutableLiveData<SiteModel>()

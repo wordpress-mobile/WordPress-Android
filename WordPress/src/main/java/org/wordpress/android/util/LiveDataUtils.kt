@@ -367,7 +367,7 @@ fun <S, T, U, V, W, X, Y> merge(
  * @param sourceH eightth source
  * @return new data source
  */
-@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
+@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList", "CyclomaticComplexMethod", "LongMethod")
 fun <A, B, C, D, E, F, G, H, I, J, K, Z> merge(
     sourceA: LiveData<A>,
     sourceB: LiveData<B>,
