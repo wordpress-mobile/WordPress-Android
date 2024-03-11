@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isInvisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -317,9 +318,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 emptyView.statsEmptyView.visibility = View.GONE
             }
             is Empty -> {
-                recyclerView.visibility = View.GONE
                 emptyView.statsEmptyView.visibility = View.VISIBLE
                 errorView.statsErrorView.visibility = View.GONE
+                recyclerView.isInvisible = true
                 emptyView.statsEmptyView.title.setText(it.title)
                 if (it.subtitle != null) {
                     emptyView.statsEmptyView.subtitle.setText(it.subtitle)
