@@ -12,6 +12,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams.PagesItemClickParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -39,7 +40,7 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
-    private lateinit var refreshEvents: MutableList<Boolean>
+    private lateinit var uiModels: MutableList<MySiteCardAndItem.Card.PagesCard?>
 
     private val site = mock<SiteModel>()
 
@@ -57,12 +58,13 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
                 navigationActions.add(it)
             }
         }
-        refreshEvents = mutableListOf()
-        pagesCardViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
+
+        uiModels = mutableListOf()
+
+        pagesCardViewModelSlice.uiModel.observeForever {
+            uiModels.add(it)
         }
+
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
@@ -161,6 +163,6 @@ class PagesCardViewModelSliceTest : BaseUnitTest() {
             CardsTracker.Type.PAGES.label,
             PagesMenuItemType.HIDE_THIS.label
         )
-        assertThat(refreshEvents).containsOnly(true)
+        assertThat(uiModels.last()).isNull()
     }
 }

@@ -60,11 +60,6 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
             }
         }
         refreshEvents = mutableListOf()
-        activityLogCardViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
-        }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 

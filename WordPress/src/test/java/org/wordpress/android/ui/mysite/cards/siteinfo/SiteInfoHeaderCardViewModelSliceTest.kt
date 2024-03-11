@@ -475,7 +475,7 @@ class SiteInfoHeaderCardViewModelSliceTest : BaseUnitTest() {
 
         clearInvocations(siteInfoHeaderCardBuilder)
 
-        viewModelSlice.onResume(siteModel)
+        viewModelSlice.buildCard(siteModel)
 
         verify(siteInfoHeaderCardBuilder).buildSiteInfoCard(any())
     }

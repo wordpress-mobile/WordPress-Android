@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
+import org.wordpress.android.ui.mysite.cards.DomainRegistrationCardShownTracker
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
@@ -45,6 +46,9 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var domainRegistrationTracker: DomainRegistrationTracker
 
+    @Mock
+    lateinit var domainRegistrationCardTracker: DomainRegistrationCardShownTracker
+
     private val siteLocalId = 1
     private val site = SiteModel()
     private lateinit var result: MutableList<MySiteCardAndItem.Card.DomainRegistrationCard>
@@ -62,7 +66,8 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
             selectedSiteRepository,
             appLogWrapper,
             siteUtils,
-            domainRegistrationTracker
+            domainRegistrationTracker,
+            domainRegistrationCardTracker
         )
 
         viewModelSlice.initialize(testScope())

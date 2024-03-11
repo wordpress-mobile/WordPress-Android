@@ -62,11 +62,6 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
         }
 
         refreshEvents = mutableListOf()
-        postsCardViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
-        }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 

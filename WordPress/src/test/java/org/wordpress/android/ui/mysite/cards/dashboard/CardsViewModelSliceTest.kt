@@ -237,11 +237,15 @@ class CardsViewModelSliceTest : BaseUnitTest() {
 
     @Mock
     lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Mock
     lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
 
     @Mock
     lateinit var sharedPreferences: SharedPreferences
+
+    @Mock
+    lateinit var cardTracker: CardsTracker
 
     private lateinit var viewModelSlice: CardViewModelSlice
 
@@ -276,6 +280,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             activityLogCardViewModelSlice,
             preferenceUtilsWrapper,
             buildConfigWrapper,
+            cardTracker
         )
         defaultFetchCardsPayload = FetchCardsPayload(
             siteModel,

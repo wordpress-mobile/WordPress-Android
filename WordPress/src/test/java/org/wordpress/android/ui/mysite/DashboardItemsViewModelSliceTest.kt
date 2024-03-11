@@ -70,13 +70,13 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         whenever(sotw2023NudgeCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         dashboardItemsViewModelSlice = DashboardItemsViewModelSlice(
+            testDispatcher(),
             jetpackFeatureCardViewModelSlice,
             jetpackSwitchMenuViewModelSlice,
             jetpackBadgeViewModelSlice,
             siteItemsViewModelSlice,
             sotw2023NudgeCardViewModelSlice,
-            jetpackFeatureCardHelper,
-            buildConfigWrapper
+            jetpackFeatureCardHelper
         )
 
         navigationActions = mutableListOf()
@@ -111,7 +111,7 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardItemsViewModelSlice.initialize(testScope())
-        dashboardItemsViewModelSlice.onResume(mockSite)
+        dashboardItemsViewModelSlice.buildItems(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
@@ -126,7 +126,7 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
 
         dashboardItemsViewModelSlice.initialize(testScope())
 
-        dashboardItemsViewModelSlice.onResume(mockSite)
+        dashboardItemsViewModelSlice.buildItems(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
@@ -144,7 +144,7 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardItemsViewModelSlice.initialize(testScope())
-        dashboardItemsViewModelSlice.onRefresh(mockSite)
+        dashboardItemsViewModelSlice.buildItems(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
@@ -159,7 +159,7 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
 
         dashboardItemsViewModelSlice.initialize(testScope())
 
-        dashboardItemsViewModelSlice.onRefresh(mockSite)
+        dashboardItemsViewModelSlice.buildItems(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())

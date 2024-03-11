@@ -30,7 +30,6 @@ import org.wordpress.android.ui.mysite.cards.personalize.PersonalizeCardViewMode
 import org.wordpress.android.ui.mysite.cards.plans.PlansCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quicklinksitem.QuickLinksItemViewModelSlice
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartCardViewModelSlice
-import org.wordpress.android.util.BuildConfigWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -61,8 +60,6 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     lateinit var plansCardViewModelSlice: PlansCardViewModelSlice
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
-    @Mock
-    lateinit var buildConfigWrapper: BuildConfigWrapper
 
     private lateinit var dashboardCardsViewModelSlice: DashboardCardsViewModelSlice
 
@@ -81,6 +78,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         whenever(plansCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
 
         dashboardCardsViewModelSlice = DashboardCardsViewModelSlice(
+            testDispatcher(),
             jpMigrationSuccessCardViewModelSlice,
             jetpackInstallFullPluginCardViewModelSlice,
             domainRegistrationCardViewModelSlice,
@@ -93,8 +91,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
             quickLinksItemViewModelSlice,
             bloganuaryNudgeCardViewModelSlice,
             plansCardViewModelSlice,
-            selectedSiteRepository,
-            buildConfigWrapper
+            selectedSiteRepository
         )
     }
 
@@ -116,11 +113,10 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is true, when onResume, then should build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onResume(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -138,11 +134,10 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is false, when onResume, then should not build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onResume(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
@@ -160,11 +155,10 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is true, when onRefresh, then should build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onRefresh(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -182,11 +176,10 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is false, when onRefresh, then should not build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onRefresh(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
@@ -204,12 +197,11 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is true, when onSiteChanged, then should build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onSiteChanged(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
@@ -227,12 +219,11 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     @Test
     fun `given showDashboardCards is false, when onSiteChanged, then should not build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
 
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.onSiteChanged(mockSite)
+        dashboardCardsViewModelSlice.buildCards(mockSite)
 
         verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()

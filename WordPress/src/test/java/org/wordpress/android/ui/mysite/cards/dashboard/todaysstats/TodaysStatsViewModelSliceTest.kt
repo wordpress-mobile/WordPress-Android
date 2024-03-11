@@ -60,11 +60,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             }
         }
         refreshEvents = mutableListOf()
-        todaysStatsViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
-        }
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
