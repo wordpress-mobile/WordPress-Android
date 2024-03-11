@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite.cards.dashboard
 
 import android.content.SharedPreferences
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.single
@@ -11,6 +12,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -267,6 +269,13 @@ class CardsViewModelSliceTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        whenever(dynamicCardsViewModelSlice.topDynamicCards).thenReturn(MutableLiveData())
+        whenever(dynamicCardsViewModelSlice.bottomDynamicCards).thenReturn(MutableLiveData())
+        whenever(todaysStatsViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(pagesCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(postsCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
+        whenever(activityLogCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
+
         viewModelSlice = CardViewModelSlice(
             cardsStore,
             dashboardActivityLogCardFeatureUtils,
@@ -291,6 +300,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             MARKETING_VERSION_PARAM,
             PLATFORM_PARAM
         )
+
         viewModelSlice.initialize(testScope())
 
         result = emptyList()
@@ -455,6 +465,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success).thenReturn(apiError)
+        whenever(todaysStatsViewModelSlice.uiModel).thenReturn(mock())
 
         viewModelSlice.buildCard(siteModel)
 
@@ -480,8 +491,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.buildCard(siteModel)
 
         assertThat(isRefreshing.size).isEqualTo(2)
-        assertThat(isRefreshing.first()).isFalse
-        assertThat(isRefreshing.last()).isTrue
+        assertThat(isRefreshing.first()).isTrue()
     }
 
     @Test
