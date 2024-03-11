@@ -119,6 +119,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
             quickStartTracker
         )
         mQuickStartCardViewModelSlice = QuickStartCardViewModelSlice(
+            testDispatcher(),
             quickStartRepository,
             quickStartStore,
             quickStartUtilsWrapper,
@@ -151,8 +152,6 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         initStore()
 
         mQuickStartCardViewModelSlice.build(site)
-
-
     }
 
     @Test
