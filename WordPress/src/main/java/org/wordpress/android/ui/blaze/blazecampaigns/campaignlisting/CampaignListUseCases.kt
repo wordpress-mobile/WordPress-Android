@@ -9,13 +9,26 @@ class FetchCampaignListUseCase @Inject constructor(
     private val store: BlazeCampaignsStore,
     private val mapper: CampaignListingUIModelMapper
 ) {
+    companion object {
+        const val PAGE_SIZE = 10
+    }
+
     @Suppress("ReturnCount")
-    suspend fun execute(site: SiteModel, page: Int): Result<NetworkError, List<CampaignModel>> {
-        val result = store.fetchBlazeCampaigns(site, page)
-        if (result.isError || result.model == null) return Result.Failure(GenericError)
+    suspend fun execute(
+        site: SiteModel,
+        offset: Int,
+        pageSize: Int = PAGE_SIZE
+    ): Result<NetworkResult, FetchedCampaignsResult> {
+        val result = store.fetchBlazeCampaigns(site = site, offset = offset, perPage = pageSize)
+        if (result.isError || result.model == null) return Result.Failure(GenericResult)
         val campaigns = result.model!!.campaigns
         if (campaigns.isEmpty()) return Result.Failure(NoCampaigns)
-        return Result.Success(mapper.mapToCampaignModels(campaigns))
+        return Result.Success(
+            FetchedCampaignsResult(
+                campaigns = mapper.mapToCampaignModels(campaigns),
+                totalItems = result.model!!.totalItems
+            )
+        )
     }
 }
 
@@ -24,14 +37,19 @@ class GetCampaignListFromDbUseCase @Inject constructor(
     private val mapper: CampaignListingUIModelMapper
 ) {
     suspend fun execute(site: SiteModel): Result<NoCampaigns, List<CampaignModel>> {
-        val result = store.getBlazeCampaigns(site)
-        if (result.campaigns.isEmpty()) return Result.Failure(NoCampaigns)
-        return Result.Success(mapper.mapToCampaignModels(result.campaigns))
+        val campaigns = store.getBlazeCampaigns(site)
+        if (campaigns.isEmpty()) return Result.Failure(NoCampaigns)
+        return Result.Success(mapper.mapToCampaignModels(campaigns))
     }
 }
 
-sealed interface NetworkError
+data class FetchedCampaignsResult(
+    val campaigns: List<CampaignModel>,
+    val totalItems: Int
+)
 
-object GenericError : NetworkError
+sealed interface NetworkResult
 
-object NoCampaigns : NetworkError
+object GenericResult : NetworkResult
+
+object NoCampaigns : NetworkResult

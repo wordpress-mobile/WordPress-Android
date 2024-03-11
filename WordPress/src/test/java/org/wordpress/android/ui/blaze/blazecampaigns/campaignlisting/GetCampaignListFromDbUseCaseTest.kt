@@ -14,7 +14,6 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.Result
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 
 @ExperimentalCoroutinesApi
@@ -36,9 +35,7 @@ class GetCampaignListFromDbUseCaseTest: BaseUnitTest() {
     @Test
     fun `given store returns empty campaigns, when usecase execute, returns no campaigns error`() = runTest {
         val siteModel = mock<SiteModel>()
-        whenever(store.getBlazeCampaigns(siteModel)).thenReturn(
-            BlazeCampaignsModel(emptyList(), 1, 0, 1)
-        )
+        whenever(store.getBlazeCampaigns(siteModel)).thenReturn(emptyList())
 
         val actualResult = getCampaignListFromDbUseCase.execute(siteModel)
 
@@ -49,7 +46,7 @@ class GetCampaignListFromDbUseCaseTest: BaseUnitTest() {
     @Test
     fun `given store returns campaigns, when usecase execute, returns campaigns `() = runTest {
         val siteModel = mock<SiteModel>()
-        whenever(store.getBlazeCampaigns(siteModel)).thenReturn(BlazeCampaignsModel(mock(),1,0,1))
+        whenever(store.getBlazeCampaigns(siteModel)).thenReturn(mock())
         whenever(mapper.mapToCampaignModels(any())).thenReturn(mock())
 
         val actualResult = getCampaignListFromDbUseCase.execute(siteModel)

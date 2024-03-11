@@ -73,6 +73,8 @@ public class AppPrefs {
 
         READER_ANALYTICS_COUNT_TAGS_TIMESTAMP,
 
+        READER_ANALYTICS_COUNT_SITES_TIMESTAMP,
+
         // currently active tab on the main Reader screen when the user is in Reader
         READER_ACTIVE_TAB,
 
@@ -1167,6 +1169,14 @@ public class AppPrefs {
 
     public static void setReaderAnalyticsCountTagsTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_TAGS_TIMESTAMP, timestamp);
+    }
+
+    public static long getReaderAnalyticsCountSitesTimestamp() {
+        return getLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, -1);
+    }
+
+    public static void setReaderAnalyticsCountSitesTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, timestamp);
     }
 
     public static long getReaderCssUpdatedTimestamp() {
