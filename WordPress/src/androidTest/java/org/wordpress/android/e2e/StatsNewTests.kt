@@ -18,7 +18,7 @@ import org.wordpress.android.util.StatsMocksReader
 import org.wordpress.android.util.StatsVisitsData
 
 @HiltAndroidTest
-class StatsNewTests : BaseTest("stats-feature-flags.json") {
+class StatsNewTests : BaseTest("new-stats-feature-response.json") {
     @Before
     fun setUp() {
         Assume.assumeTrue(BuildConfig.IS_JETPACK_APP)

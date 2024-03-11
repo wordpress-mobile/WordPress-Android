@@ -1,7 +1,6 @@
 package org.wordpress.android.mocks;
 
 import android.content.res.AssetManager;
-import android.text.TextUtils;
 
 import com.github.tomakehurst.wiremock.common.BinaryFile;
 import com.github.tomakehurst.wiremock.common.FileSource;
@@ -22,28 +21,18 @@ import static com.google.common.collect.Lists.newArrayList;
  * WireMock has no Android specific behaviour so we must implement asset loading here.
  */
 public class AssetFileSource implements FileSource {
-    static final String MOCKS_PATH = "mocks";
+    private static final String MOCKS_PATH = "mocks";
 
     private final AssetManager mAssetManager;
     private final String mPath;
 
-    private static final String FEATURES_PATH = MOCKS_PATH + "/" + "mappings" + "/" + "wpcom/features";
-    static final String DEFAULT_FEATURE_FILE = "feature-flags.json";
-
-    private final String mFeatureFile;
-
-    public AssetFileSource(AssetManager assetManager, final String featureFile) {
-        this(assetManager, MOCKS_PATH, featureFile);
+    public AssetFileSource(AssetManager assetManager) {
+        this(assetManager, MOCKS_PATH);
     }
 
-    public AssetFileSource(AssetManager assetManager, String path, String featureFile) {
+    public AssetFileSource(AssetManager assetManager, String path) {
         mAssetManager = assetManager;
         mPath = path;
-        if (TextUtils.isEmpty(featureFile)) {
-            this.mFeatureFile = DEFAULT_FEATURE_FILE;
-        } else {
-            this.mFeatureFile = featureFile;
-        }
     }
 
     @Override public BinaryFile getBinaryFileNamed(String name) {
@@ -58,7 +47,7 @@ public class AssetFileSource implements FileSource {
     }
 
     @Override public FileSource child(String subDirectoryName) {
-        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName, mFeatureFile);
+        return new AssetFileSource(mAssetManager, mPath + "/" + subDirectoryName);
     }
 
     @Override public String getPath() {
@@ -106,18 +95,12 @@ public class AssetFileSource implements FileSource {
                 if (isDirectory(path)) {
                     recursivelyAddFilePathsToList(path, filePaths);
                 } else {
-                    if (!this.skipAddingFile(root, name)) {
-                        filePaths.add(path);
-                    }
+                    filePaths.add(path);
                 }
             }
         } catch (IOException e) {
             // Ignore this
         }
-    }
-
-    boolean skipAddingFile(final String root, final String fileName) {
-        return root.equals(FEATURES_PATH) && !mFeatureFile.equals(fileName);
     }
 
     private List<TextFile> toTextFileList(List<String> filePaths) {

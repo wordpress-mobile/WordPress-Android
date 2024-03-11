@@ -11,6 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.DateOffset;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelper;
@@ -29,6 +30,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
+import org.wordpress.android.editor.Utils;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
 import org.wordpress.android.ui.WPLaunchActivity;
@@ -85,7 +87,7 @@ public class BaseTest {
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
                          .fileSource(
-                             new AssetFileSource(instrumentation.getContext().getAssets(), wireMockFeatureFileName)
+                             new AssetFileSource(instrumentation.getContext().getAssets())
                          )
 
                          .extensions(new ResponseTemplateTransformer(true, new HashMap<String, Helper>() {
@@ -94,6 +96,18 @@ public class BaseTest {
                              }
                          }))
                          .notifier(new AndroidNotifier()));
+        if (wireMockFeatureFileName != null) {
+            try {
+                final String result = Utils.getStringFromInputStream(instrumentation.getContext().getClassLoader()
+                                                                                    .getResourceAsStream(
+                                                                                            wireMockFeatureFileName));
+                // This is where we can stub out
+                wireMockRule.stubFor(WireMock.get(WireMock.urlPathMatching("/wpcom/v2/mobile/feature-flags/"))
+                                             .willReturn(WireMock.aResponse().withBody(result)));
+            } catch (final Exception exception) {
+                // do nothing
+            }
+        }
     }
 
     @Before
