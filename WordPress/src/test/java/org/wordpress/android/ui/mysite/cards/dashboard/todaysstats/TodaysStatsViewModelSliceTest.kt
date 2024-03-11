@@ -13,6 +13,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -40,7 +41,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
-    private lateinit var refreshEvents: MutableList<Boolean>
+    private lateinit var uiModels : MutableList<MySiteCardAndItem.Card.TodaysStatsCard?>
 
     private val site = mock<SiteModel>()
 
@@ -59,7 +60,10 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
                 navigationActions.add(it)
             }
         }
-        refreshEvents = mutableListOf()
+
+        uiModels = mutableListOf()
+        todaysStatsViewModelSlice.uiModel.observeForever { uiModels.add(it) }
+
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
@@ -134,6 +138,6 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             CardsTracker.Type.STATS.label,
             TodaysStatsMenuItemType.HIDE_THIS.label
         )
-        assertThat(refreshEvents).containsOnly(true)
+        assertThat(uiModels.last()).isNull()
     }
 }
