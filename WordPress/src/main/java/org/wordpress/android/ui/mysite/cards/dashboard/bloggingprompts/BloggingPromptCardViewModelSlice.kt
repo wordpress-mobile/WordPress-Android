@@ -195,18 +195,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-
-    /**
-     * This function is used to make sure the [refresh] information is propagated and processed correctly even though
-     * the previous status is still the current one. This avoids issues like the loading progress indicator being shown
-     * indefinitely.
-     *
-     * Also, for this card source, this can be used as the error state as we don't have any special error handling at
-     * this point, so we just show the last available prompt.
-     */
+    // this function is called when there is no change in the data, this just updates the loading state to false
     private fun postLastState() {
         _isRefreshing.postValue(false)
-        //do nothing WIP @ajesh: remove this once this case doesnt occur on the new architecture
     }
 
     private fun postEmptyState() {
