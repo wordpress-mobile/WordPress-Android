@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0-rc.1
 Language: sr_RS
 -->
 <resources>
@@ -203,17 +203,9 @@ Language: sr_RS
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Очисти</string>
     <string name="activity_log_activity_type_filter_apply">Примени</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF датотеке нису подржане</string>
-    <string name="color_picker_label_background">Позадина</string>
-    <string name="color_picker_label_text">Текст</string>
-    <string name="dialog_discard_story_ok_button_edit">Одбаци</string>
-    <string name="dialog_discard_story_title_edit">Одбацити измене?</string>
     <string name="label_done_button">Готово</string>
-    <string name="label_next_button">Следеће</string>
-    <string name="delete_button_alt">Обриши</string>
     <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
-    <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
     <string name="reader_discover_empty_title">Добродошли!</string>
     <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
@@ -248,12 +240,6 @@ Language: sr_RS
     <string name="gutenberg_native_help_button">Дугме помоћи</string>
     <string name="gutenberg_native_edit_using_web_editor">Уреди помоћу веб уређивача</string>
     <string name="gutenberg_native_choose_images">Одабери слике</string>
-    <string name="stories_intro_create_story_post_label">Направи чланак приче</string>
-    <string name="stories_intro_title_second">Чланци приче не нестају</string>
-    <string name="stories_intro_title_first">Приче су сада за све</string>
-    <string name="stories_intro_image_caption_second">Пример наслова приче</string>
-    <string name="stories_intro_image_caption_first">Како направити чланак приче</string>
-    <string name="stories_intro_main_title">Представљамо чланке приче</string>
     <string name="mlp_notice_blank_page_created">Празна страница је направљена</string>
     <string name="mlp_notice_page_created">Страница направљена</string>
     <string name="reader_label_toolbar_back">Назад</string>
@@ -281,61 +267,9 @@ Language: sr_RS
     <string name="gutenberg_native_page_title_empty">Наслов странице. Празно</string>
     <string name="toast_error_playing_video">Грешка се појавила током пуштања Вашег видео записа</string>
     <string name="camera_error">Овај уређај не подржава Camera2 API.</string>
-    <string name="toast_error_saving_video">Видео запис није могао бити сачуван</string>
-    <string name="toast_error_saving_image">Грешка приликом чувања слике</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Види складиште</string>
-    <string name="toast_capture_operation_in_progress">Операција у току, покушајте поново</string>
-    <string name="toast_story_page_not_found">Није могуће пронаћи слајд Приче</string>
-    <string name="dialog_insufficient_device_storage_error_title">Недеовољно складишта на уређају</string>
-    <string name="dialog_story_saving_error_title_plural">Није могуће сачувати %1$d слајдове</string>
-    <string name="dialog_story_saving_error_title_singular">Није могуће сачувати 1 слајд</string>
-    <string name="story_saving_failed_quick_action_manage">Управљај</string>
-    <string name="story_saving_failed_message_plural">%1$d слајдова захтева радњу</string>
-    <string name="story_saving_failed_message_singular">1 слајд захтева радњу</string>
-    <string name="dialog_story_saving_error_message">Покушајте поново да сачувате или обришете слајдове, затим покушајте поново да објавите Вашу причу.</string>
-    <string name="story_saving_failed_title">Није могуће отпремити \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Није могуће отпремити \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" је објављен</string>
-    <string name="story_saving_snackbar_started">Отпремање \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d преосталих слајдова</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 преостао слајд</string>
-    <string name="story_saving_title_several">неколико прича</string>
-    <string name="story_saving_title">Снимање \"%1$s\"…</string>
-    <string name="story_saving_untitled">Без наслова</string>
-    <string name="dialog_discard_story_ok_button">Одбаци</string>
-    <string name="dialog_discard_story_message">Ваш чланак Приче се неће сачувати као нацрт.</string>
-    <string name="dialog_discard_story_title">Одбаци чланак приче?</string>
-    <string name="dialog_discard_page_ok_button">Обриши</string>
-    <string name="dialog_discard_page_message">Овај слајд ће бити уклоњен из Ваше приче.</string>
-    <string name="dialog_discard_errored_page_message">Овај слајд још увек није сачуван. Ако обришете овај слајд, изгубићете сва уређивања која сте направили.</string>
-    <string name="dialog_discard_page_title">Обриши слајд приче?</string>
-    <string name="label_text_color_button">Измени боју текста</string>
-    <string name="label_text_alignment_button">Измени поравнање текста</string>
-    <string name="label_frame_errored">има грешку</string>
-    <string name="label_frame_selected_border">одабрано</string>
-    <string name="label_frame_unselected_border">није одабрано</string>
     <string name="mlp_create_page">Напарвити страницу</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Направити чланак или причу</string>
     <string name="mlp_create_blank_page">Направити празну страницу</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Направите чланак, страницу или причу</string>
-    <string name="label_frame_image">Слајд</string>
-    <string name="label_retry_icon">Покушај поново</string>
-    <string name="label_saved_icon">Сачувано</string>
     <string name="label_close_button">Затвори</string>
-    <string name="label_share_to">Подели</string>
-    <string name="label_snackbar_share">ПОДЕЛИ</string>
-    <string name="label_snackbar_loop_frame_saved">Сачувано међу фотографијама</string>
-    <string name="label_control_retry">Покушај поново</string>
-    <string name="label_control_saved">Сачувано</string>
-    <string name="label_control_saving">Чува се</string>
-    <string name="label_control_flip_camera">Окрени</string>
-    <string name="label_control_flash">Блиц</string>
-    <string name="sound_button_alt">Звук</string>
-    <string name="text_button_alt">Текст</string>
-    <string name="stickers_button_alt">Налепнице</string>
-    <string name="flash_button_alt">Блиц</string>
-    <string name="flip_button_alt">Окрени камеру</string>
-    <string name="capture_button_alt">Ухвати</string>
     <string name="mlp_preview_page">Преглед</string>
     <string name="mlp_choose_layout_title">Одабери распоред</string>
     <string name="prepublishing_nudges_story_title_hint">Доделите својој причи наслов</string>
