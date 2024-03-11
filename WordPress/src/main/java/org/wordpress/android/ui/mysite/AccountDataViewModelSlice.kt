@@ -21,8 +21,8 @@ class AccountDataViewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<AccountData>()
-    val uiModel: LiveData<AccountData> = _uiModel
+    private val _uiModel = MutableLiveData<AccountData?>()
+    val uiModel: LiveData<AccountData?> = _uiModel
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
