@@ -63,6 +63,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
+    var readerAnalyticsCountTagsTimestamp: Long
+        get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
+        set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
+
     var readerCssUpdatedTimestamp: Long
         get() = AppPrefs.getReaderCssUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)

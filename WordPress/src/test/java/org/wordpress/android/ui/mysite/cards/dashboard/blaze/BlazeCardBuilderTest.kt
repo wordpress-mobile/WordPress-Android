@@ -24,16 +24,17 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
 val campaign = BlazeCampaignModel(
-    campaignId = 1,
+    campaignId = "1234",
     title = "title",
     imageUrl = "imageUrl",
-    createdAt = mock(),
-    endDate = mock(),
+    startTime = mock(),
+    durationInDays = 1,
     uiStatus = "active",
-    budgetCents = 20L,
     impressions = 1,
     clicks = 1,
     targetUrn = null,
+    totalBudget = 0.0,
+    spentBudget = 0.0,
 )
 
 val onCreateCampaignClick = { }
@@ -44,7 +45,7 @@ val onMoreMenuClick = { }
 val onLearnMoreItemClick = { }
 val viewAllCampaignsClick = { }
 
-private var onCampaignClick: ((campaignId: Int) -> Unit) = { }
+private var onCampaignClick: ((campaignId: String) -> Unit) = { }
 val campaignWithBlazeBuilderParams = CampaignWithBlazeCardBuilderParams(
     campaign = campaign,
     onCardClick = onCardClick,

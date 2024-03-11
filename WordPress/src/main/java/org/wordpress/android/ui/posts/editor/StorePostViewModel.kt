@@ -12,15 +12,19 @@ import org.wordpress.android.editor.gutenberg.DialogVisibility.Hidden
 import org.wordpress.android.editor.gutenberg.DialogVisibility.Showing
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
+import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.IPostFreshnessChecker
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
@@ -46,7 +50,8 @@ class StorePostViewModel
     private val uploadService: UploadServiceFacade,
     private val savePostToDbUseCase: SavePostToDbUseCase,
     private val networkUtils: NetworkUtilsWrapper,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val postFreshnessChecker: IPostFreshnessChecker
 ) : ScopedViewModel(uiCoroutineDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
@@ -63,6 +68,12 @@ class StorePostViewModel
         postValue(Hidden)
     }
     override val savingInProgressDialogVisibility: LiveData<DialogVisibility> = _savingProgressDialogVisibility
+
+    private val _onPostUpdateUiVisible = MutableLiveData<Boolean>()
+    val onPostUpdateUiVisible: LiveData<Boolean> = _onPostUpdateUiVisible
+
+    private val _onPostUpdateResult = MutableLiveData<Boolean>()
+    val onPostUpdateResult: LiveData<Boolean> = _onPostUpdateResult
 
     init {
         dispatcher.register(this)
@@ -190,6 +201,21 @@ class StorePostViewModel
         _onFinish.postValue(Event(state))
     }
 
+    fun checkIfUpdatedPostVersionExists(
+        editPostRepository: EditPostRepository,
+        site: SiteModel
+    ) {
+        editPostRepository.getPost()?.let { postModel ->
+            if (!postModel.isLocalDraft
+                    && !postModel.isLocallyChanged
+                    && postFreshnessChecker.shouldRefreshPost(postModel)) {
+                _onPostUpdateUiVisible.postValue(true)
+                val payload = RemotePostPayload(editPostRepository.getEditablePost(), site)
+                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(payload))
+            }
+        }
+    }
+
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostUploaded(event: OnPostUploaded) {
@@ -200,6 +226,17 @@ class StorePostViewModel
     @Subscribe
     fun onPostChanged(event: OnPostChanged) {
         hideSavingProgressDialog()
+
+        // Refresh post content if needed
+        (event.causeOfChange as? CauseOfOnPostChanged.UpdatePost)?.let { updatePost ->
+            // if post update is only local do nothing
+            if (!updatePost.isLocalUpdate) {
+                // Post the result based on `event.isError`
+                _onPostUpdateResult.postValue(!event.isError)
+                // Hide updating post area
+                _onPostUpdateUiVisible.postValue(false)
+            }
+        }
     }
 
     sealed class UpdateResult {

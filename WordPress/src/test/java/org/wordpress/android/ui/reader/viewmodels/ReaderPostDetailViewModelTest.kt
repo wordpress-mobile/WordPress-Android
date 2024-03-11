@@ -978,7 +978,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
         val likers = MutableList(5) { mock<AvatarItem>() }
-        val testTextString = "10 bloggers like this."
+        val testTextString = "10 likes"
 
         getLikesState.value = likesState
         whenever(accountStore.account).thenReturn(AccountModel().apply { userId = -1 })
