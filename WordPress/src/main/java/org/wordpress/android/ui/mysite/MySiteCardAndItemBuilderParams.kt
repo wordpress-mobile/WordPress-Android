@@ -188,7 +188,7 @@ sealed class MySiteCardAndItemBuilderParams {
         data class CampaignWithBlazeCardBuilderParams(
             val campaign: BlazeCampaignModel,
             val onCreateCampaignClick: () -> Unit,
-            val onCampaignClick: (campaignId: Int) -> Unit,
+            val onCampaignClick: (campaignId: String) -> Unit,
             val onCardClick: () -> Unit,
             val moreMenuParams: MoreMenuParams
         ) : BlazeCardBuilderParams() {

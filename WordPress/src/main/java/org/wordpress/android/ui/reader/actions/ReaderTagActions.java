@@ -51,7 +51,7 @@ public class ReaderTagActions {
     private static boolean deleteTagsLocallyOnly(ActionListener actionListener, ReaderTag tag) {
         ReaderTagTable.deleteTag(tag);
         ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new FollowedTagsFetched(true));
+        EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
 
         return true;
     }
@@ -130,7 +130,7 @@ public class ReaderTagActions {
     private static boolean saveTagsLocallyOnly(ActionListener actionListener, ReaderTagList newTags) {
         ReaderTagTable.addOrUpdateTags(newTags);
         ReaderActions.callActionListener(actionListener, true);
-        EventBus.getDefault().post(new FollowedTagsFetched(true));
+        EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
 
         return true;
     }
@@ -147,7 +147,7 @@ public class ReaderTagActions {
             if (actionListener != null) {
                 ReaderActions.callActionListener(actionListener, true);
             }
-            EventBus.getDefault().post(new FollowedTagsFetched(true));
+            EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
         };
 
         RestRequest.ErrorListener errorListener = volleyError -> {
@@ -159,7 +159,7 @@ public class ReaderTagActions {
                 if (actionListener != null) {
                     ReaderActions.callActionListener(actionListener, true);
                 }
-                EventBus.getDefault().post(new FollowedTagsFetched(true));
+                EventBus.getDefault().post(new FollowedTagsFetched(true, ReaderTagTable.getFollowedTags().size()));
                 return;
             }
 
@@ -171,7 +171,7 @@ public class ReaderTagActions {
             if (actionListener != null) {
                 ReaderActions.callActionListener(actionListener, false);
             }
-            EventBus.getDefault().post(new FollowedTagsFetched(false));
+            EventBus.getDefault().post(new FollowedTagsFetched(false, ReaderTagTable.getFollowedTags().size()));
         };
 
         ReaderTagTable.addOrUpdateTags(newTags);

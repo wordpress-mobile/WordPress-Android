@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -211,9 +212,11 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
-        AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
-        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+    public void onEventMainThread(FollowedBlogsFetched event) {
+        if (event.didChange()) {
+            AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
+            getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+        }
     }
 
     private void performUpdate() {
