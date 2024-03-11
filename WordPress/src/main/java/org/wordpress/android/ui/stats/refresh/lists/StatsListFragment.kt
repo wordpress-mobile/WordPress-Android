@@ -338,10 +338,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.updateInsights(statsState: List<StatsBlock>) {
-        recyclerView.visibility = View.VISIBLE
-        errorView.statsErrorView.visibility = View.GONE
-        emptyView.statsEmptyView.visibility = View.GONE
-
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager, statsTrafficTabFeatureConfig.isEnabled())
@@ -354,6 +350,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
         recyclerView.scrollToPosition(0)
+
+        errorView.statsErrorView.isGone = true
+        emptyView.statsEmptyView.isGone = true
+        recyclerView.isVisible = true
+
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
