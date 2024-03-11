@@ -4,7 +4,6 @@ import android.icu.util.Calendar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -27,7 +26,6 @@ import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.BloganuaryNudgeFeatureConfig
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@Ignore("Update tests to work with new architecture")
 class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var bloganuaryNudgeFeatureConfig: BloganuaryNudgeFeatureConfig
