@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.main.utils
 
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
+import org.wordpress.android.ui.main.SiteRecord
 import java.util.Locale
 
 

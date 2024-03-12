@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
+import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.AskForSiteSelection
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ContinueReblogTo

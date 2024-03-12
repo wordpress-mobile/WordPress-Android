@@ -91,7 +91,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final @LayoutRes int mItemLayoutReourceId;
 
-    private static int mBlavatarSz;
+    static int mBlavatarSz;
 
     @NonNull private List<SiteRecord> mSites = new ArrayList<>();
     private final int mCurrentLocalId;
@@ -282,7 +282,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (viewType == VIEW_TYPE_FOOTER) {
             return -2;
         } else {
-            return getItem(position).mLocalId;
+            return getItem(position).getLocalId();
         }
     }
 
@@ -346,24 +346,24 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         final SiteViewHolder holder = (SiteViewHolder) viewHolder;
         holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
-        holder.mTxtDomain.setText(site.mHomeURL);
-        mImageManager.loadImageWithCorners(holder.mImgBlavatar, site.getBlavatarType(), site.mBlavatarUrl,
+        holder.mTxtDomain.setText(site.getHomeURL());
+        mImageManager.loadImageWithCorners(holder.mImgBlavatar, site.getBlavatarType(), site.getBlavatarUrl(),
                 DisplayUtils.dpToPx(holder.itemView.getContext(), 4));
 
-        if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled
+        if ((site.getLocalId() == mCurrentLocalId && !mIsMultiSelectEnabled
              && mSitePickerMode == SitePickerMode.DEFAULT_MODE)
             || (mIsMultiSelectEnabled && isItemSelected(position))
-            || (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mSelectedLocalId == site.mLocalId)) {
+            || (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mSelectedLocalId == site.getLocalId())) {
             holder.mLayoutContainer.setBackgroundColor(mSelectedItemBackground);
         } else {
             holder.mLayoutContainer.setBackground(null);
         }
 
         // different styling for visible/hidden sites
-        if (holder.mIsSiteHidden == null || holder.mIsSiteHidden != site.mIsHidden) {
-            holder.mIsSiteHidden = site.mIsHidden;
-            holder.mTxtTitle.setAlpha(site.mIsHidden ? mDisabledSiteOpacity : 1f);
-            holder.mImgBlavatar.setAlpha(site.mIsHidden ? mDisabledSiteOpacity : 1f);
+        if (holder.mIsSiteHidden == null || holder.mIsSiteHidden != site.isHidden()) {
+            holder.mIsSiteHidden = site.isHidden();
+            holder.mTxtTitle.setAlpha(site.isHidden() ? mDisabledSiteOpacity : 1f);
+            holder.mImgBlavatar.setAlpha(site.isHidden() ? mDisabledSiteOpacity : 1f);
         }
 
         if (holder.mItemDivider != null) {
@@ -372,10 +372,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
         if (holder.mDivider != null) {
             // only show divider after last recent pick
-            boolean showDivider = site.mIsRecentPick
+            boolean showDivider = site.isRecentPick()
                                   && !mIsInSearchMode
                                   && position < getItemCount() - 1
-                                  && !getItem(position + 1).mIsRecentPick;
+                                  && !getItem(position + 1).isRecentPick();
             holder.mDivider.setVisibility(showDivider ? View.VISIBLE : View.GONE);
         }
 
@@ -388,7 +388,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     } else if (mSiteSelectedListener != null) {
                         if (mSitePickerMode.isReblogMode()) {
                             mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
-                            mSelectedLocalId = site.mLocalId;
+                            mSelectedLocalId = site.getLocalId();
                             selectSingleItem(clickedPosition);
                         }
 
@@ -457,7 +457,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public int getSelectedItemLocalId() {
-        return mSites.size() != 0 ? getItem(mSelectedItemPos).mLocalId : -1;
+        return mSites.size() != 0 ? getItem(mSelectedItemPos).getLocalId() : -1;
     }
 
     public int getItemPosByLocalId(int localId) {
@@ -535,7 +535,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     int getNumHiddenSelected() {
         int numHidden = 0;
         for (Integer i : mSelectedPositions) {
-            if (isValidPosition(i) && mSites.get(i).mIsHidden) {
+            if (isValidPosition(i) && mSites.get(i).isHidden()) {
                 numHidden++;
             }
         }
@@ -545,7 +545,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     int getNumVisibleSelected() {
         int numVisible = 0;
         for (Integer i : mSelectedPositions) {
-            if (i < mSites.size() && !mSites.get(i).mIsHidden) {
+            if (i < mSites.size() && !mSites.get(i).isHidden()) {
                 numVisible++;
             }
         }
@@ -637,7 +637,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     List<SiteRecord> getHiddenSites() {
         ArrayList<SiteRecord> hiddenSites = new ArrayList<>();
         for (SiteRecord site : mSites) {
-            if (site.mIsHidden) {
+            if (site.isHidden()) {
                 hiddenSites.add(site);
             }
         }
@@ -656,13 +656,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 int index = SiteRecordUtil.indexOf(mAllSites, site);
                 if (index > -1) {
                     SiteRecord siteRecord = mAllSites.get(index);
-                    if (siteRecord.mIsHidden == makeVisible) {
+                    if (siteRecord.isHidden() == makeVisible) {
                         changeSet.add(siteRecord);
-                        siteRecord.mIsHidden = !makeVisible;
+                        siteRecord.setHidden(!makeVisible);
                         if (!makeVisible
-                            && siteRecord.mLocalId != selectedSiteLocalId
-                            && recentIds.contains(siteRecord.mLocalId)) {
-                            AppPrefs.removeRecentlyPickedSiteId(siteRecord.mLocalId);
+                            && siteRecord.getLocalId() != selectedSiteLocalId
+                            && recentIds.contains(siteRecord.getLocalId())) {
+                            AppPrefs.removeRecentlyPickedSiteId(siteRecord.getLocalId());
                         }
                     }
                 }
@@ -751,9 +751,9 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             final long primaryBlogId = mAccountStore.getAccount().getPrimarySiteId();
             Collections.sort(sites, (site1, site2) -> {
                 if (primaryBlogId > 0 && !mIsInSearchMode) {
-                    if (site1.mSiteId == primaryBlogId) {
+                    if (site1.getSiteId() == primaryBlogId) {
                         return -1;
-                    } else if (site2.mSiteId == primaryBlogId) {
+                    } else if (site2.getSiteId() == primaryBlogId) {
                         return 1;
                     }
                 }
@@ -769,7 +769,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     int indexOfSite = SiteRecordUtil.indexOf(sites, thisId);
                     if (indexOfSite > -1) {
                         SiteRecord site = sites.remove(indexOfSite);
-                        site.mIsRecentPick = true;
+                        site.setRecentPick(true);
                         sites.add(0, site);
                     }
                 }
@@ -795,74 +795,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 notifyDataSetChanged();
             }
             mDataLoadedListener.onAfterLoad();
-        }
-    }
-
-    /**
-     * SiteRecord is a simplified version of the full account (blog) record
-     */
-    public static class SiteRecord {
-        private final int mLocalId;
-        private final long mSiteId;
-        private final String mBlogName;
-        private final String mHomeURL;
-        private final String mBlavatarUrl;
-        private final ImageType mBlavatarType;
-        private boolean mIsHidden;
-        private boolean mIsRecentPick;
-
-        public SiteRecord(SiteModel siteModel) {
-            mLocalId = siteModel.getId();
-            mSiteId = siteModel.getSiteId();
-            mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
-            mHomeURL = SiteUtils.getHomeURLOrHostName(siteModel);
-            mBlavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
-            mBlavatarType = SiteUtils.getSiteImageType(
-                    siteModel.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
-            mIsHidden = !siteModel.isVisible();
-        }
-
-        public String getBlogNameOrHomeURL() {
-            if (TextUtils.isEmpty(mBlogName)) {
-                return mHomeURL;
-            }
-            return mBlogName;
-        }
-
-        public String getBlogName() {
-            return mBlogName;
-        }
-
-        public int getLocalId() {
-            return mLocalId;
-        }
-
-        public boolean isHidden() {
-            return mIsHidden;
-        }
-
-        public boolean isRecentPick() {
-            return mIsRecentPick;
-        }
-
-        public void setHidden(boolean hidden) {
-            mIsHidden = hidden;
-        }
-
-        public String getHomeURL() {
-            return mHomeURL;
-        }
-
-        public String getBlavatarUrl() {
-            return mBlavatarUrl;
-        }
-
-        public ImageType getBlavatarType() {
-            return mBlavatarType;
-        }
-
-        public long getSiteId() {
-            return mSiteId;
         }
     }
 }
