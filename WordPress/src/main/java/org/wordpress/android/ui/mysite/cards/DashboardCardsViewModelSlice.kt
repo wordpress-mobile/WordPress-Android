@@ -210,6 +210,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         plansCardViewModelSlice.clearValue()
         cardViewModelSlice.clearValue()
         quickStartCardViewModelSlice.clearValue()
+        domainRegistrationCardViewModelSlice.clearValue()
     }
 
     fun onCleared() {

@@ -12,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
@@ -111,14 +110,12 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     }
 
     @Test
-    fun `given showDashboardCards is true, when onResume, then should build cards`() = test {
+    fun `given showDashboardCards is true, when buildCards, then should build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardCardsViewModelSlice.initialize(testScope())
         dashboardCardsViewModelSlice.buildCards(mockSite)
 
-        verify(selectedSiteRepository).getSelectedSite()
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
         verify(jetpackInstallFullPluginCardViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(blazeCardViewModelSlice, atMost(1)).buildCard(mockSite)
@@ -132,110 +129,21 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
     }
 
     @Test
-    fun `given showDashboardCards is false, when onResume, then should not build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-
+    fun `when clear value called, then should clear value all slices`() {
         dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.buildCards(mockSite)
+        dashboardCardsViewModelSlice.clearValue()
 
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
-        verify(jetpackInstallFullPluginCardViewModelSlice, never()).buildCard(mockSite)
-        verify(blazeCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloganuaryNudgeCardViewModelSlice, never()).buildCard()
-        verify(personalizeCardViewModelSlice, never()).buildCard()
-        verify(quickLinksItemViewModelSlice, never()).buildCard(mockSite)
-        verify(plansCardViewModelSlice, never()).buildCard(mockSite)
-        verify(cardViewModelSlice, never()).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, never()).build(mockSite)
-    }
-
-    @Test
-    fun `given showDashboardCards is true, when onRefresh, then should build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-
-        dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.buildCards(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
-        verify(jetpackInstallFullPluginCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(blazeCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(bloganuaryNudgeCardViewModelSlice, atMost(1)).buildCard()
-        verify(personalizeCardViewModelSlice, atMost(1)).buildCard()
-        verify(quickLinksItemViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(plansCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(cardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, atMost(1)).build(mockSite)
-    }
-
-    @Test
-    fun `given showDashboardCards is false, when onRefresh, then should not build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-
-        dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.buildCards(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
-        verify(jetpackInstallFullPluginCardViewModelSlice, never()).buildCard(mockSite)
-        verify(blazeCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloganuaryNudgeCardViewModelSlice, never()).buildCard()
-        verify(personalizeCardViewModelSlice, never()).buildCard()
-        verify(quickLinksItemViewModelSlice, never()).buildCard(mockSite)
-        verify(plansCardViewModelSlice, never()).buildCard(mockSite)
-        verify(cardViewModelSlice, never()).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, never()).build(mockSite)
-    }
-
-    @Test
-    fun `given showDashboardCards is true, when onSiteChanged, then should build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
-
-        dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.buildCards(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
-        verify(jetpackInstallFullPluginCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(blazeCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(bloganuaryNudgeCardViewModelSlice, atMost(1)).buildCard()
-        verify(personalizeCardViewModelSlice, atMost(1)).buildCard()
-        verify(quickLinksItemViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(plansCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(cardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, atMost(1)).build(mockSite)
-    }
-
-    @Test
-    fun `given showDashboardCards is false, when onSiteChanged, then should not build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSite)
-
-        dashboardCardsViewModelSlice.initialize(testScope())
-        dashboardCardsViewModelSlice.buildCards(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(jpMigrationSuccessCardViewModelSlice, never()).buildCard()
-        verify(jetpackInstallFullPluginCardViewModelSlice, never()).buildCard(mockSite)
-        verify(blazeCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, never()).buildCard(mockSite)
-        verify(bloganuaryNudgeCardViewModelSlice, never()).buildCard()
-        verify(personalizeCardViewModelSlice, never()).buildCard()
-        verify(quickLinksItemViewModelSlice, never()).buildCard(mockSite)
-        verify(plansCardViewModelSlice, never()).buildCard(mockSite)
-        verify(cardViewModelSlice, never()).buildCard(mockSite)
-        verify(quickStartCardViewModelSlice, never()).build(mockSite)
+        verify(jpMigrationSuccessCardViewModelSlice).clearValue()
+        verify(jetpackInstallFullPluginCardViewModelSlice).clearValue()
+        verify(domainRegistrationCardViewModelSlice).clearValue()
+        verify(blazeCardViewModelSlice).clearValue()
+        verify(cardViewModelSlice).clearValue()
+        verify(personalizeCardViewModelSlice).clearValue()
+        verify(bloggingPromptCardViewModelSlice).clearValue()
+        verify(quickStartCardViewModelSlice).clearValue()
+        verify(quickLinksItemViewModelSlice).clearValue()
+        verify(bloganuaryNudgeCardViewModelSlice).clearValue()
+        verify(plansCardViewModelSlice).clearValue()
     }
 
     @Test
