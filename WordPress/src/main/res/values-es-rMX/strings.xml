@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-12-08 22:14:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0-rc.1
 Language: es_MX
 -->
 <resources>
@@ -50,7 +50,6 @@ Language: es_MX
     <string name="user_profile_untitled_site">(Sin título)</string>
     <string name="likes_list_screen_title">Lista de Me gusta %s</string>
     <string name="gutenberg_native_add_button_text">Añade el texto al botón</string>
-    <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenido en tu sitio.</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="threat_fix_all_status_success_message_plural">Las amenazas se solucionaron con éxito.</string>
     <string name="gutenberg_native_edit_focal_point">Editar punto focal</string>
@@ -60,7 +59,6 @@ Language: es_MX
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Todas las tareas completadas&lt;/b&gt;&lt;br/&gt; Llegará a más personas. ¡Buen trabajo! </string>
     <string name="backup_download_complete_info">También te hemos enviado por correo electrónico un enlace a tu archivo.</string>
     <string name="jetpack_icon_content_description">icono</string>
-    <string name="label_control_upload">Subir</string>
     <string name="backup_download_complete_header">Tu copia de seguridad ya está disponible para descargar</string>
     <string name="backup_download_complete_description_with_two_parameters">Hemos creado con éxito una copia de seguridad de tu sitio desde %1$s %2$s.</string>
     <string name="backup_download_complete_download_action_button">Descargar</string>
@@ -103,7 +101,6 @@ Language: es_MX
     <string name="dialog_confirm_copy_local_message">La entrada que estás tratando de copiar tiene dos versiones que están en conflicto o has hecho cambios recientemente, pero no los has guardado.\nEdita la entrada primero para resolver cualquier conflicto o procede a copiar la versión de esta aplicación.</string>
     <string name="dialog_confirm_copy_local_title">Conflicto de sincronización de la entrada</string>
     <string name="button_copy">Duplicar</string>
-    <string name="toast_edit_story_update_in_progress_title">La historia está siendo guardada, por favor, espera…</string>
     <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
     <string name="gutenberg_native_edit_file">Editar el archivo</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Fallo al guardar los medios.\nPor favor, toca para ver las opciones.</string>
@@ -119,26 +116,11 @@ Language: es_MX
     <string name="activity_log_activity_type_filter_clear">Vaciar</string>
     <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
     <string name="reader_follow_comments_bad_format_response">Respuesta recibida no válida</string>
-    <string name="dialog_edit_story_unsupported_format_message">Una o más diapositivas no se han añadido a tu historia porque en este momento las historias no son compatibles con archivos GIF. Por favor, elige una imagen estática o un video de fondo en su lugar.</string>
-    <string name="dialog_edit_story_limited_message">Esta historia se ha editado en un dispositivo diferente y la posibilidad de editar ciertos objetos puede estar limitada.</string>
-    <string name="dialog_edit_story_unavailable_title">No se puede editar la historia</string>
-    <string name="dialog_edit_story_unavailable_message">No ha sido posible subir medios a esta historia. Comprueba tu conexión a Internet e inténtalo de nuevo dentro de un momento.</string>
-    <string name="dialog_edit_story_unrecoverable_title">No se puede editar la historia</string>
-    <string name="dialog_edit_story_unrecoverable_message">No hemos podido encontrar en el sitio los medios para esta historia.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Los archivos GIF no son compatibles</string>
-    <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
     <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta volver a crear tu historia.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
-    <string name="delete_button_alt">Borrar</string>
-    <string name="label_next_button">Siguiente</string>
     <string name="label_done_button">Hecho</string>
-    <string name="dialog_discard_story_title_edit">¿Descartar los cambios?</string>
-    <string name="dialog_discard_story_message_edit">Cualquier cambio realizado no se guardará.</string>
-    <string name="dialog_discard_story_ok_button_edit">Descartar</string>
-    <string name="color_picker_label_text">Texto</string>
-    <string name="color_picker_label_background">Fondo</string>
     <string name="scan">Explorar</string>
     <string name="reader_discover_empty_title">¡Bienvenido!</string>
     <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
@@ -180,19 +162,11 @@ Language: es_MX
     <string name="media_loading_failed">La carga del medio ha fallado</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabajando duro para añadir más bloques con cada versión.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" no es totalmente compatible</string>
-    <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>
-    <string name="stories_intro_create_story_post_label">Crear una entrada de historia</string>
     <string name="gutenberg_native_choose_images">Elegir las imágenes</string>
     <string name="gutenberg_native_edit_using_web_editor">Editar usando el editor web</string>
     <string name="gutenberg_native_help_button">Botón de ayuda</string>
-    <string name="stories_intro_description_first">Combina fotos, vídeos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
-    <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
-    <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
-    <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
-    <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
-    <string name="stories_intro_title_first">Ahora las historias son para todos</string>
     <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
     <string name="media_insert_failed_with_reason">Ha fallado la inserción del medio: %s</string>
     <string name="media_insert_failed">Inserción del medio fallida.</string>
@@ -212,13 +186,6 @@ Language: es_MX
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
     <string name="mlp_selected_description">%s seleccionado</string>
     <string name="mlp_notselected_description">%s</string>
-    <string name="toast_capture_operation_permission_needed">Tienes que conceder permisos de grabación de audio a la aplicación para grabar video</string>
-    <string name="typeface_label_nunito">Casual</string>
-    <string name="typeface_label_libre_baskerville">Clásico</string>
-    <string name="typeface_label_oswald">Fuerte</string>
-    <string name="typeface_label_pacifico">Alegre</string>
-    <string name="typeface_label_space_mono">Moderno</string>
-    <string name="typeface_label_shrikhand">Negrita</string>
     <string name="media_browse_for_items">Navegar por elementos</string>
     <string name="comment_unable_to_show_error">No se puede mostrar este comentario</string>
     <string name="permission_microphone">Micrófono</string>
@@ -236,11 +203,6 @@ Language: es_MX
     <string name="create_post_story_fab_tooltip">Crear una entrada o historia</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ocultar</string>
     <string name="reader_discover_interests_header">Puede que te guste</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Ver el almacenamiento</string>
-    <string name="toast_story_page_not_found">No se ha podido encontrar la diapositiva de la historia</string>
-    <string name="toast_capture_operation_in_progress">Operación en progreso, inténtalo de nuevo</string>
-    <string name="toast_error_saving_image">Error al guardar la imagen</string>
-    <string name="toast_error_saving_video">No se ha podido guardar el video</string>
     <string name="camera_error">Este dispositivo no es compatible con la API de Camera2</string>
     <string name="toast_error_playing_video">Ha ocurrido un error al reproducir tu video</string>
     <string name="gutenberg_native_page_title_empty">Título de la página. Vacío</string>
@@ -248,61 +210,13 @@ Language: es_MX
     <string name="gutenberg_native_paste_block_after">Pegar el bloque después</string>
     <string name="gutenberg_native_updates_the_title">Actualiza el título.</string>
     <string name="gutenberg_native_video_caption_empty">Leyenda del video. Vacía</string>
-    <string name="story_saving_failed_message_singular">1 diapositiva necesita una acción</string>
-    <string name="story_saving_failed_message_plural">%1$d diapositivas necesitan una acción</string>
-    <string name="story_saving_failed_quick_action_manage">Gestionar</string>
-    <string name="dialog_story_saving_error_title_singular">No se ha podido guardar 1 diapositiva</string>
-    <string name="dialog_story_saving_error_title_plural">No se han podido guardar %1$d diapositivas</string>
-    <string name="dialog_story_saving_error_message">Intenta volver a guardar o borrar las diapositivas y, después, intenta volver a publicar tu historia.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Insuficiente almacenamiento en el dispositivo</string>
-    <string name="dialog_insufficient_device_storage_error_message">Tenemos que guardar la historia en tu dispositivo antes de que pueda ser publicada. Revisa tus ajustes de almacenamiento y elimina archivos para ganar espacio.</string>
-    <string name="story_saving_snackbar_started">Subiendo \"%1$s\"…</string>
-    <string name="story_saving_snackbar_finished_successfully">Publicado \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">No se ha podido subir \"%1$s\"</string>
-    <string name="story_saving_failed_title">No se ha podido subir \"%1$s\"</string>
-    <string name="story_saving_title">Guardando \"%1$s\"…</string>
-    <string name="story_saving_title_several">varias historias</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Queda 1 diapositiva</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Quedan %1$d diapositivas</string>
-    <string name="label_frame_unselected_border">sin seleccionar</string>
-    <string name="label_frame_selected_border">seleccionado</string>
-    <string name="label_frame_errored">con error</string>
-    <string name="label_text_alignment_button">Cambiar la alineación del texto</string>
-    <string name="label_text_color_button">Cambiar el color del texto</string>
-    <string name="dialog_discard_page_title">¿Borrar la diapositiva de la historia?</string>
-    <string name="dialog_discard_page_message">Esta diapositiva será eliminada de tu historia.</string>
-    <string name="dialog_discard_errored_page_message">Esta diapositiva aún no ha sido guardada. Si borras esta diapositiva, perderás cualquier edición que hayas hecho.</string>
-    <string name="dialog_discard_page_ok_button">Borrar</string>
-    <string name="dialog_discard_story_title">¿Descartar la entrada de la historia?</string>
-    <string name="dialog_discard_story_message">La entrada de tu historia no se guardará como borrador.</string>
-    <string name="dialog_discard_story_ok_button">Descartar</string>
-    <string name="story_saving_untitled">Sin título</string>
     <string name="quick_start_dialog_create_new_post_message_short">Toca crear %1$s. %2$s Después selecciona &lt;b&gt;Entrada del blog&lt;/b&gt;</string>
     <string name="prepublishing_nudges_story_title_hint">Pon un título a tu historia</string>
     <string name="mlp_create_blank_page">Crear una página en blanco</string>
     <string name="mlp_create_page">Crear una página</string>
     <string name="mlp_preview_page">Vista previa</string>
-    <string name="capture_button_alt">Capturar</string>
-    <string name="flip_button_alt">Girar la cámara</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="stickers_button_alt">Pegatinas</string>
-    <string name="text_button_alt">Texto</string>
-    <string name="sound_button_alt">Sonido</string>
-    <string name="label_control_flip_camera">Girar</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_saving">Guardando</string>
-    <string name="label_control_saved">Guardado</string>
-    <string name="label_control_retry">Reintentar</string>
-    <string name="label_snackbar_loop_frame_saved">Guardado en fotos</string>
-    <string name="label_snackbar_share">COMPARTIR</string>
-    <string name="label_share_to">Compartir con</string>
     <string name="label_close_button">Cerrar</string>
-    <string name="label_saved_icon">Guardado</string>
-    <string name="label_retry_icon">Reintentar</string>
-    <string name="label_frame_image">Diapositiva</string>
     <string name="mlp_choose_layout_subtitle">Empieza eligiendo entre una amplia variedad de layouts de página prefabricados. O simplemente empieza con una página en blanco.</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Crear una entrada, página o historia</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crear una entrada o historia</string>
     <string name="mlp_choose_layout_title">Elegir un layout</string>
     <string name="error_media_quota_exceeded">Cuota de almacenamiento superada</string>
     <string name="error_media_quota_exceeded_toast">No se puede subir el archivo.\nSe ha superado la cuota de almacenamiento.</string>
