@@ -598,7 +598,8 @@ public class AnalyticsTrackerNosara extends Tracker {
     /**
      * Returns the event name for a given Stat.
      * NOTES:
-     * - Please add a new case only if the new Stat's name in lower case does not match the expected event name.
+     * - Please add a new case only if the new Stat's name in lower case does not match the expected event name. In that
+     *   case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.
      * - Otherwise declaring the new `AnalyticsTracker.Stat` is enough.
      * @param stat the stat to get the event name for
      * @return event name
@@ -1220,7 +1221,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "free_to_paid_plan_dashboard_card_menu_tapped";
             case DASHBOARD_CARD_PLANS_HIDDEN:
                 return "free_to_paid_plan_dashboard_card_hidden";
-            // Please add a new case only if the new Stat's name in lower case does not match the expected event name.
+            /*
+             * Please add a new case only if the new Stat's name in lower case does not match the expected event name.
+             * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.
+             */
             default:
                 return stat.name().toLowerCase(Locale.getDefault());
         }
