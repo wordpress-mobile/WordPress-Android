@@ -45,6 +45,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
+import com.automattic.android.tracks.crashlogging.JsException;
+import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -3932,5 +3934,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Nullable private SavedInstanceDatabase getDB() {
         return SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
+    }
+
+    @Override public void onLogJsException(JsException exception, JsExceptionCallback onExceptionSend) {
+        mCrashLogging.sendJavaScriptReport(exception, onExceptionSend);
     }
 }
