@@ -719,3 +719,20 @@ if (project.hasProperty("debugStoreFile")) {
         }
     }
 }
+
+// Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
+// service during the build process.
+android {
+    applicationVariants.all { variant ->
+        variant.mergeAssetsProvider.configure {
+            doLast {
+                // Copy bundle and source map files
+                copy {
+                    from(outputDir)
+                    into("${buildDir}/react-native-bundle-source-map")
+                    include("*.bundle", "*.bundle.map")
+                }
+            }
+        }
+    }
+}

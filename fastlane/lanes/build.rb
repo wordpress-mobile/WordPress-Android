@@ -388,25 +388,20 @@ platform :android do
     # The format is: <app><flavor><build_type>
     # E.g.: jetpackJalapenoDebug
     build_asset_folder_name = "#{app.downcase}#{flavor}#{build_type}"
-    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'intermediates', 'assets', build_asset_folder_name)
+    # Bundle and source map files are copied to a specific folder as part of the build process.
+    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
 
-    Dir.mktmpdir do |sourcemaps_folder|
-      # It's important that the bundle and source map files have specific names, otherwise, Sentry won't symbolicate the stack traces.
-      FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle'), File.join(sourcemaps_folder, 'index.android.bundle'))
-      FileUtils.cp(File.join(bundle_source_map_path, 'index.android.bundle.map'), File.join(sourcemaps_folder, 'index.android.bundle.map'))
-
-      sentry_upload_sourcemap(
-        auth_token: sentry_token,
-        org_slug: org_slug,
-        project_slug: project_slug,
-        version: release_version,
-        dist: current_build_code,
-        # When the React native bundle is generated, the source map file references include the local machine path;
-        # With the `rewrite` and `strip_common_prefix` options, Sentry automatically strips this part.
-        rewrite: true,
-        strip_common_prefix: true,
-        sourcemap: sourcemaps_folder
-      )
-    end
+    sentry_upload_sourcemap(
+      auth_token: sentry_token,
+      org_slug: org_slug,
+      project_slug: project_slug,
+      version: release_version,
+      dist: current_build_code,
+      # When the React native bundle is generated, the source map file references include the local machine path;
+      # With the `rewrite` and `strip_common_prefix` options, Sentry automatically strips this part.
+      rewrite: true,
+      strip_common_prefix: true,
+      sourcemap: bundle_source_map_path
+    )
   end
 end
