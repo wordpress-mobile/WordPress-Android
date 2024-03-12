@@ -56,7 +56,7 @@ class BlazeCardSource @Inject constructor(
         if (networkUtilsWrapper.isNetworkAvailable().not()) {
             getMostRecentCampaignFromDb(site)
         } else {
-            when (fetchCampaignListUseCase.execute(site = site, page = 1)) {
+            when (fetchCampaignListUseCase.execute(site = site, offset = 0)) {
                 is Result.Success -> getMostRecentCampaignFromDb(site)
                 // there are no campaigns or if there is an error , show blaze promo card
                 is Result.Failure -> showPromoteWithBlazeCard()

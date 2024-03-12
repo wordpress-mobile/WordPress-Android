@@ -229,16 +229,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.stats_bar_chart_top)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_top
-            ), ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_top
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
@@ -252,16 +244,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Overlapping data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.primary_60)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_bottom
-            ), ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_bottom
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
@@ -279,16 +263,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             BarEntry(it.x, maxEntry.y, it.data)
         }
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, AndroidR.color.transparent)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            ), ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(

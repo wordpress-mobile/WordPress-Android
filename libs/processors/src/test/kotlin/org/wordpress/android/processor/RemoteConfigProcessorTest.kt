@@ -2,6 +2,8 @@ package org.wordpress.android.processor
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
+import com.tschuchort.compiletesting.kspWithCompilation
+import com.tschuchort.compiletesting.symbolProcessorProviders
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.Test
@@ -32,12 +34,7 @@ class RemoteConfigProcessorTest {
         )
 
         // when
-        val result = compile(
-            listOf(
-                remoteFieldA,
-                featureA, /* adding a feature, as without it, annotation processor won't start */
-            )
-        )
+        val result = compile(listOf(remoteFieldA))
 
         // then
         assertThat(result.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
@@ -102,12 +99,7 @@ class RemoteConfigProcessorTest {
         )
 
         // when
-        val result = compile(
-            listOf(
-                experiment,
-                featureA, /* adding a feature, as without it, annotation processor won't start */
-            )
-        )
+        val result = compile(listOf(experiment))
 
         // then
 
@@ -124,7 +116,8 @@ class RemoteConfigProcessorTest {
 
     private fun compile(src: List<SourceFile>) = KotlinCompilation().apply {
         sources = src + fakeAppConfig
-        annotationProcessors = listOf(RemoteConfigProcessor())
+        symbolProcessorProviders = listOf(RemoteConfigProcessorProvider())
+        kspWithCompilation = true
         inheritClassPath = true
         messageOutputStream = System.out
     }.compile()
