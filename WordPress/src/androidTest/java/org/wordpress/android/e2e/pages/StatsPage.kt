@@ -3,12 +3,14 @@ package org.wordpress.android.e2e.pages
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
+import org.wordpress.android.support.WPSupportUtils.isElementDisplayed
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsVisitsData
@@ -99,6 +101,11 @@ class StatsPage {
                 )
             )
         )
+
+        if (!isElementDisplayed(cardStructure)) {
+            cardStructure.perform(swipeDown());
+        }
+
         cardStructure.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         return this
     }
