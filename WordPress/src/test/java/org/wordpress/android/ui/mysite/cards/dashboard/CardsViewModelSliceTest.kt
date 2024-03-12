@@ -12,7 +12,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -36,7 +35,6 @@ import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsErrorType
 import org.wordpress.android.fluxc.store.dashboard.CardsStore.CardsResult
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.ActivityLogCardViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.activity.DashboardActivityLogCardFeatureUtils
 import org.wordpress.android.ui.mysite.cards.dashboard.pages.PagesCardViewModelSlice
@@ -320,7 +318,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         isTodaysStatsCardHidden: Boolean = false,
         isDynamicCardsEnabled: Boolean = false,
     ) {
-        whenever(siteModel.id).thenReturn(SITE_LOCAL_ID)
         whenever(dashboardActivityLogCardFeatureUtils.shouldRequestActivityCard(siteModel))
             .thenReturn(isDashboardCardActivityLogEnabled)
         whenever(siteModel.hasCapabilityEditPages).thenReturn(isRequestPages)
@@ -417,9 +414,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given error, when build is invoked, then error snackbar with stale message is also shown (network)`() = test {
+    fun `given error, when build is invoked, then error message is shown (network)`() = test {
         setUpMocks()
-        val result = mutableListOf<CardsUpdate>()
         val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
         whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(apiError)
@@ -430,24 +426,11 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(2)
-        assertThat(result[0]).isEqualTo(
-            CardsUpdate(
-                cards = testData.model,
-                showSnackbarError = false,
-                showStaleMessage = false
-            )
-        )
-        assertThat(result[1]).isEqualTo(
-            CardsUpdate(
-                cards = testData.model,
-                showSnackbarError = true,
-                showStaleMessage = true
-            )
-        )
+        assertThat(result.last()).isInstanceOf(CardsState.ErrorState::class.java)
     }
 
     @Test
-    fun `given no error, when refresh is invoked, then data is only loaded from get cards (database)`() = test {
+    fun `given no error, when build is invoked, then data is only loaded from get cards (database)`() = test {
         setUpMocks()
         val filteredData = CardsResult(model = data.model?.filterIsInstance<PostsCardModel>()?.toList())
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = filteredData.model)))
@@ -456,30 +439,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         viewModelSlice.buildCard(siteModel)
 
         assertThat(result.size).isEqualTo(1)
-        assertThat(result.first()).isEqualTo(CardsUpdate(filteredData.model))
-    }
-
-    @Test
-    fun `given error, when refresh is invoked, then error snackbar with stale message also shown (network)`() = test {
-        setUpMocks()
-        val testData = CardsResult(model = listOf(TODAYS_STATS_CARDS_MODEL, POSTS_MODEL))
-        whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult(model = testData.model)))
-        whenever(cardsStore.fetchCards(defaultFetchCardsPayload)).thenReturn(success).thenReturn(apiError)
-        whenever(todaysStatsViewModelSlice.uiModel).thenReturn(mock())
-
-        viewModelSlice.buildCard(siteModel)
-
-        advanceUntilIdle()
-
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isEqualTo(CardsUpdate(testData.model))
-        assertThat(result.last()).isEqualTo(
-            CardsUpdate(
-                cards = testData.model,
-                showSnackbarError = true,
-                showStaleMessage = true
-            )
-        )
+        assertThat(result.first()).isInstanceOf(CardsState.Success::class.java)
     }
 
     /* IS REFRESHING */
@@ -549,18 +509,6 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         testScope().advanceUntilIdle()
 
         assertThat(result.last()).isInstanceOf(CardsState.ErrorState::class.java)
-    }
-
-    @Test
-    fun `given invalid site, when refresh is invoked, then error card is shown`() = test {
-        val result = mutableListOf<CardsUpdate>()
-        viewModelSlice.refresh.observeForever { }
-
-        viewModelSlice.buildCard(siteModel)
-
-        assertThat(result.size).isEqualTo(2)
-        assertThat(result.first()).isEqualTo(CardsUpdate(showErrorCard = true))
-        assertThat(result.last()).isEqualTo(CardsUpdate(showErrorCard = true))
     }
 
     @Test
