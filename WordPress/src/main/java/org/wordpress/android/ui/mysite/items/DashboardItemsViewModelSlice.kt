@@ -31,6 +31,8 @@ class DashboardItemsViewModelSlice @Inject constructor(
 ) {
     private lateinit var scope: CoroutineScope
 
+    private var job: Job? = null
+
     private var trackingJob : Job? = null
 
     fun initialize(scope: CoroutineScope) {
@@ -83,12 +85,13 @@ class DashboardItemsViewModelSlice @Inject constructor(
             else jetpackFeatureCard?.let { add(jetpackFeatureCard) }
             jetpackBadge?.let { add(jetpackBadge) }
         }.toList()
-        trackShown(dasbhboardSiteItems)
+        if(dasbhboardSiteItems.isNotEmpty()) trackShown(dasbhboardSiteItems)
         return dasbhboardSiteItems
     }
 
     fun buildItems(site: SiteModel) {
-        scope.launch(bgDispatcher) {
+        job?.cancel()
+        job = scope.launch(bgDispatcher) {
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
             jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
             jetpackBadgeViewModelSlice.buildJetpackBadge()
@@ -124,6 +127,7 @@ class DashboardItemsViewModelSlice @Inject constructor(
     }
 
     fun onCleared() {
+        job?.cancel()
         trackingJob?.cancel()
         scope.cancel()
     }

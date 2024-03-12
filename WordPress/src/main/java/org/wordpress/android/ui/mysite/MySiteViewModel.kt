@@ -385,6 +385,7 @@ class MySiteViewModel @Inject constructor(
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.resetShownTracker()
+        dashboardItemsViewModelSlice.resetShownTracker()
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)
         } else {

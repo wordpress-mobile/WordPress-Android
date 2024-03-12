@@ -13,7 +13,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -105,30 +104,12 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
     }
 
     @Test
-    fun `given shouldShowSiteItems is false, when onResume, then should not build cards`() = test {
+    fun `when build invoked, then should build cards`() = test {
         val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
 
         dashboardItemsViewModelSlice.initialize(testScope())
         dashboardItemsViewModelSlice.buildItems(mockSite)
 
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
-        verify(jetpackFeatureCardViewModelSlice, never()).buildJetpackFeatureCard()
-    }
-
-    @Test
-    fun `given shouldShowSiteItems is true, when onResume, then should build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(false)
-
-        dashboardItemsViewModelSlice.initialize(testScope())
-
-        dashboardItemsViewModelSlice.buildItems(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
         verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
         verify(jetpackFeatureCardViewModelSlice, atMost(1)).buildJetpackFeatureCard()
         verify(jetpackSwitchMenuViewModelSlice, atMost(1)).buildJetpackSwitchMenu()
@@ -138,37 +119,17 @@ class DashboardItemsViewModelSliceTest: BaseUnitTest() {
     }
 
     @Test
-    fun `given shouldShowSiteItems is false, when onRefreshed invoked, then should not build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(true)
-
+    fun `when clear value invoked, then should clear vm slices value`() = test {
         dashboardItemsViewModelSlice.initialize(testScope())
-        dashboardItemsViewModelSlice.buildItems(mockSite)
+        dashboardItemsViewModelSlice.clearValue()
 
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(siteItemsViewModelSlice, never()).buildSiteItems(any())
-        verify(jetpackFeatureCardViewModelSlice, never()).buildJetpackFeatureCard()
+        verify(siteItemsViewModelSlice).clearValue()
+        verify(jetpackFeatureCardViewModelSlice).clearValue()
+        verify(jetpackSwitchMenuViewModelSlice).clearValue()
+        verify(jetpackBadgeViewModelSlice).clearValue()
+        verify(sotw2023NudgeCardViewModelSlice).clearValue()
     }
 
-    @Test
-    fun `given shouldShowSiteItems is true, when onRefresh invoked, then should build cards`() = test {
-        val mockSite = mock<SiteModel>()
-        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
-        whenever(mockSite.isUsingWpComRestApi).thenReturn(false)
-
-        dashboardItemsViewModelSlice.initialize(testScope())
-
-        dashboardItemsViewModelSlice.buildItems(mockSite)
-
-        verify(selectedSiteRepository).getSelectedSite()
-        verify(siteItemsViewModelSlice, atLeastOnce()).buildSiteItems(any())
-        verify(jetpackFeatureCardViewModelSlice, atMost(1)).buildJetpackFeatureCard()
-        verify(jetpackSwitchMenuViewModelSlice, atMost(1)).buildJetpackSwitchMenu()
-        verify(jetpackBadgeViewModelSlice, atMost(1)).buildJetpackBadge()
-        verify(siteItemsViewModelSlice, atMost(1)).buildSiteItems(mockSite)
-        verify(sotw2023NudgeCardViewModelSlice, atMost(1)).buildCard()
-    }
     @Test
     fun `given initialized scope, when onCleared, then should cancel the coroutine scope`() {
         val scope = testScope()
