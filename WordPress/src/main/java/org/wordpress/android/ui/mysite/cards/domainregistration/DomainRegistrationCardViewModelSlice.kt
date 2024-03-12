@@ -45,8 +45,8 @@ class DomainRegistrationCardViewModelSlice @Inject constructor(
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
 
-    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DomainRegistrationCard>()
-    val uiModel: LiveData<MySiteCardAndItem.Card.DomainRegistrationCard> = _uiModel
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.DomainRegistrationCard?>()
+    val uiModel: MutableLiveData<MySiteCardAndItem.Card.DomainRegistrationCard?> = _uiModel
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
@@ -147,6 +147,10 @@ class DomainRegistrationCardViewModelSlice @Inject constructor(
 
     fun resetCardShown() {
         domainRegistrationCardShownTracker.resetShown()
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
 

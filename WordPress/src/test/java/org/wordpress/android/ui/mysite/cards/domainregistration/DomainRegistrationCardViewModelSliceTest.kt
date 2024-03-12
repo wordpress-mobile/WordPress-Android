@@ -51,7 +51,7 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
 
     private val siteLocalId = 1
     private val site = SiteModel()
-    private lateinit var result: MutableList<MySiteCardAndItem.Card.DomainRegistrationCard>
+    private lateinit var result: MutableList<MySiteCardAndItem.Card.DomainRegistrationCard?>
     private lateinit var isRefreshing: MutableList<Boolean>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var viewModelSlice: DomainRegistrationCardViewModelSlice
@@ -151,7 +151,7 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
 
         assertThat(result.last()).isNotNull
 
-        result.last().onClick.click()
+        result.last()?.onClick?.click()
 
         assertThat(navigationActions.last()).isEqualTo(SiteNavigationAction.OpenDomainRegistration(site))
     }
