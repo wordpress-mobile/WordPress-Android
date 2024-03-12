@@ -310,14 +310,7 @@ public class NoteBlock {
 
         public ImageView getImageView() {
             if (mImageView == null) {
-                mImageView = new ImageView(mRootLayout.getContext());
-                int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 180);
-                int imagePadding = mRootLayout.getContext().getResources().getDimensionPixelSize(R.dimen.margin_large);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
-                layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                mImageView.setLayoutParams(layoutParams);
-                mImageView.setPadding(0, imagePadding, 0, 0);
-                mRootLayout.addView(mImageView, 0);
+                mImageView = mRootLayout.findViewById(R.id.image);
             }
 
             return mImageView;

@@ -286,6 +286,7 @@
     <dimen name="notifications_icon_size">40dp</dimen>
     <dimen name="notifications_multiple_icon_height">44dp</dimen>
     <dimen name="notifications_multiple_icon_width">48dp</dimen>
+    <dimen name="notifications_image_size">180dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>
