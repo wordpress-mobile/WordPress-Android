@@ -11,7 +11,6 @@ import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
