@@ -384,11 +384,7 @@ platform :android do
     project_slug = sentry_properties[:'defaults.project']
     org_slug = sentry_properties[:'defaults.org']
 
-    # The bundle and source map files are extracted from merged assets location created after building the app.
-    # The format is: <app><flavor><build_type>
-    # E.g.: jetpackJalapenoDebug
-    build_asset_folder_name = "#{app.downcase}#{flavor}#{build_type}"
-    # Bundle and source map files are copied to a specific folder as part of the build process.
+    # Bundle and source map files are copied to a specific folder as part of the build process.
     bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
 
     sentry_upload_sourcemap(
