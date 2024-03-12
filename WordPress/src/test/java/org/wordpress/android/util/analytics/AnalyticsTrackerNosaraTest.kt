@@ -21,7 +21,6 @@ class AnalyticsTrackerNosaraTest {
         AnalyticsTracker.Stat.values().filter { specialNames.keys.contains(it) }.forEach {
             val eventName = AnalyticsTrackerNosara.getEventNameForStat(it)
             val expectedName = specialNames[it]
-            println("case $it: return \"$expectedName\";")
             Assert.assertEquals(eventName, expectedName)
         }
     }
