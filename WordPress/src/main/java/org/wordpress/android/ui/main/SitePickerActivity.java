@@ -44,7 +44,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
@@ -518,7 +517,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private void saveSitesVisibility(Set<SiteRecord> changeSet) {
         boolean skippedCurrentSite = false;
         String currentSiteName = null;
-        SiteList hiddenSites = getAdapter().getHiddenSites();
+        List<SiteRecord> hiddenSites = getAdapter().getHiddenSites();
         List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
             SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());

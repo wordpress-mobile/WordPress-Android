@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.main.utils.SiteRecordUtil;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
@@ -36,6 +37,7 @@ import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -65,7 +67,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface ViewHolderHandler<T extends RecyclerView.ViewHolder> {
         T onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot);
 
-        void onBindViewHolder(T holder, SiteList sites);
+        void onBindViewHolder(T holder, List<SiteRecord> sites);
     }
 
     /**
@@ -91,7 +93,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static int mBlavatarSz;
 
-    private SiteList mSites = new SiteList();
+    @NonNull private List<SiteRecord> mSites = new ArrayList<>();
     private final int mCurrentLocalId;
     private int mSelectedLocalId;
 
@@ -110,7 +112,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final boolean mShowAndReturn;
     private boolean mShowSelfHostedSites = true;
     private String mLastSearch;
-    private SiteList mAllSites;
+    private List<SiteRecord> mAllSites = new ArrayList<>();
     @Nullable private final ArrayList<Integer> mIgnoreSitesIds;
 
     private OnSiteClickListener mSiteSelectedListener;
@@ -219,7 +221,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         setHasStableIds(true);
 
         mLastSearch = StringUtils.notNullStr(lastSearch);
-        mAllSites = new SiteList();
         mIsInSearchMode = isInSearchMode;
         mItemLayoutReourceId = itemLayoutResourceId;
         mCurrentLocalId = currentLocalBlogId;
@@ -308,6 +309,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mSelectedCountListener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setOnSiteClickListener(OnSiteClickListener listener) {
         mSiteSelectedListener = listener;
         notifyDataSetChanged();
@@ -439,6 +441,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyItemChanged(mSelectedItemPos);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setSingleItemSelectionEnabled(final boolean enabled) {
         if (enabled != mIsSingleItemSelectionEnabled) {
             mIsSingleItemSelectionEnabled = enabled;
@@ -447,7 +450,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void findAndSelect(final int lastUsedBlogLocalId) {
-        int positionInSitesArray = mSites.indexOfSiteId(lastUsedBlogLocalId);
+        int positionInSitesArray = SiteRecordUtil.indexOf(mSites, lastUsedBlogLocalId);
         if (positionInSitesArray != -1) {
             selectSingleItem(positionInSitesArray + getPositionOffset());
         }
@@ -458,7 +461,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public int getItemPosByLocalId(int localId) {
-        int positionInSitesArray = mSites.indexOfSiteId(localId);
+        int positionInSitesArray = SiteRecordUtil.indexOf(mSites, localId);
 
         return mSites.size() != 0 && positionInSitesArray > -1 ? positionInSitesArray : -1;
     }
@@ -475,9 +478,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mIsInSearchMode;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void searchSites(String searchText) {
         mLastSearch = searchText;
-        mSites = filteredSitesByText(mAllSites);
+        mSites = SiteRecordUtil.filteredSites(mAllSites, searchText);
 
         notifyDataSetChanged();
     }
@@ -573,6 +577,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void selectAll() {
         if (mSelectedPositions.size() == mSites.size()) {
             return;
@@ -589,6 +594,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void deselectAll() {
         if (mSelectedPositions.size() == 0) {
             return;
@@ -602,14 +608,15 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void clearReblogSelection() {
         mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
         notifyDataSetChanged();
     }
 
     @NonNull
-    private SiteList getSelectedSites() {
-        SiteList sites = new SiteList();
+    private List<SiteRecord> getSelectedSites() {
+        ArrayList<SiteRecord> sites = new ArrayList<>();
         if (!mIsMultiSelectEnabled) {
             return sites;
         }
@@ -627,8 +634,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mSelectedPositions;
     }
 
-    SiteList getHiddenSites() {
-        SiteList hiddenSites = new SiteList();
+    List<SiteRecord> getHiddenSites() {
+        ArrayList<SiteRecord> hiddenSites = new ArrayList<>();
         for (SiteRecord site : mSites) {
             if (site.mIsHidden) {
                 hiddenSites.add(site);
@@ -638,14 +645,15 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return hiddenSites;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
-        SiteList sites = getSelectedSites();
+        List<SiteRecord> sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
         if (sites.size() > 0) {
             ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
             int selectedSiteLocalId = mSelectedSiteRepository.getSelectedSiteLocalId();
             for (SiteRecord site : sites) {
-                int index = mAllSites.indexOfSite(site);
+                int index = SiteRecordUtil.indexOf(mAllSites, site);
                 if (index > -1) {
                     SiteRecord siteRecord = mAllSites.get(index);
                     if (siteRecord.mIsHidden == makeVisible) {
@@ -673,29 +681,12 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private SiteList filteredSitesByTextIfInSearchMode(SiteList sites) {
+    private List<SiteRecord> filteredSitesByTextIfInSearchMode(List<SiteRecord> sites) {
         if (!mIsInSearchMode) {
             return sites;
         } else {
-            return filteredSitesByText(sites);
+            return SiteRecordUtil.filteredSites(sites, mLastSearch);
         }
-    }
-
-    private SiteList filteredSitesByText(SiteList sites) {
-        SiteList filteredSiteList = new SiteList();
-
-        for (int i = 0; i < sites.size(); i++) {
-            SiteRecord record = sites.get(i);
-            String siteNameLowerCase = record.mBlogName.toLowerCase(Locale.getDefault());
-            String hostNameLowerCase = record.mHomeURL.toLowerCase(Locale.ROOT);
-
-            if (siteNameLowerCase.contains(mLastSearch.toLowerCase(Locale.getDefault())) || hostNameLowerCase
-                    .contains(mLastSearch.toLowerCase(Locale.ROOT))) {
-                filteredSiteList.add(record);
-            }
-        }
-
-        return filteredSiteList;
     }
 
     public List<SiteModel> getBlogsForCurrentView() {
@@ -727,7 +718,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    private class LoadSitesTask extends AsyncTask<Void, Void, SiteList[]> {
+    private class LoadSitesTask extends AsyncTask<Void, Void, List<SiteRecord>[]> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -741,7 +732,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         @Override
-        protected SiteList[] doInBackground(Void... params) {
+        protected List<SiteRecord>[] doInBackground(Void... params) {
             List<SiteModel> siteModels = getBlogsForCurrentView();
 
             if (mIgnoreSitesIds != null) {
@@ -754,7 +745,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 siteModels = unignoredSiteModels;
             }
 
-            SiteList sites = new SiteList(siteModels);
+            List<SiteRecord> sites = SiteRecordUtil.createRecords(siteModels);
 
             // sort primary blog to the top, otherwise sort by blog/host
             final long primaryBlogId = mAccountStore.getAccount().getPrimarySiteId();
@@ -775,7 +766,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ArrayList<Integer> pickedIds = AppPrefs.getRecentlyPickedSiteIds();
                 for (int i = pickedIds.size() - 1; i > -1; i--) {
                     int thisId = pickedIds.get(i);
-                    int indexOfSite = sites.indexOfSiteId(thisId);
+                    int indexOfSite = SiteRecordUtil.indexOf(sites, thisId);
                     if (indexOfSite > -1) {
                         SiteRecord site = sites.remove(indexOfSite);
                         site.mIsRecentPick = true;
@@ -784,18 +775,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             }
 
-            if (mSites == null || !mSites.isSameList(sites)) {
-                SiteList allSites = (SiteList) sites.clone();
-                SiteList filteredSites = filteredSitesByTextIfInSearchMode(sites);
+            if (!SiteRecordUtil.isSameList(mSites, sites)) {
+                List<SiteRecord>[] arrayOfLists = new List[2];
+                arrayOfLists[0] = sites;
+                arrayOfLists[1] = filteredSitesByTextIfInSearchMode(sites);
 
-                return new SiteList[]{allSites, filteredSites};
+                return arrayOfLists;
             }
 
             return null;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
-        protected void onPostExecute(SiteList[] updatedSiteLists) {
+        protected void onPostExecute(List<SiteRecord>[] updatedSiteLists) {
             if (updatedSiteLists != null) {
                 mAllSites = updatedSiteLists[0];
                 mSites = updatedSiteLists[1];
@@ -836,12 +829,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return mBlogName;
         }
 
+        public String getBlogName() {
+            return mBlogName;
+        }
+
         public int getLocalId() {
             return mLocalId;
         }
 
         public boolean isHidden() {
             return mIsHidden;
+        }
+
+        public boolean isRecentPick() {
+            return mIsRecentPick;
         }
 
         public void setHidden(boolean hidden) {
@@ -862,55 +863,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public long getSiteId() {
             return mSiteId;
-        }
-    }
-
-    public static class SiteList extends ArrayList<SiteRecord> {
-        SiteList() {
-        }
-
-        SiteList(List<SiteModel> siteModels) {
-            if (siteModels != null) {
-                for (SiteModel siteModel : siteModels) {
-                    add(new SiteRecord(siteModel));
-                }
-            }
-        }
-
-        boolean isSameList(SiteList sites) {
-            if (sites == null || sites.size() != this.size()) {
-                return false;
-            }
-            int i;
-            for (SiteRecord site : sites) {
-                i = indexOfSite(site);
-                if (i == -1
-                    || this.get(i).mIsHidden != site.mIsHidden
-                    || this.get(i).mIsRecentPick != site.mIsRecentPick) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        int indexOfSite(SiteRecord site) {
-            if (site != null && site.mSiteId > 0) {
-                for (int i = 0; i < size(); i++) {
-                    if (site.mSiteId == this.get(i).mSiteId) {
-                        return i;
-                    }
-                }
-            }
-            return -1;
-        }
-
-        int indexOfSiteId(int localId) {
-            for (int i = 0; i < size(); i++) {
-                if (localId == this.get(i).mLocalId) {
-                    return i;
-                }
-            }
-            return -1;
         }
     }
 }
