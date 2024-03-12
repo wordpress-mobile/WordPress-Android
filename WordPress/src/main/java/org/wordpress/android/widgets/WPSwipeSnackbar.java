@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,6 +27,23 @@ public class WPSwipeSnackbar {
 
     private WPSwipeSnackbar() {
         throw new AssertionError();
+    }
+
+    /** {@link ViewPager2}-based clone of the original helper method: {@link #show(ViewPager)} */
+    @NonNull
+    public static Snackbar show(@NonNull ViewPager2 viewPager) {
+        SwipeArrows arrows;
+        Adapter<?> adapter = viewPager.getAdapter();
+        if (adapter == null || adapter.getItemCount() <= 1) {
+            arrows = SwipeArrows.NONE;
+        } else if (viewPager.getCurrentItem() == 0) {
+            arrows = SwipeArrows.RIGHT;
+        } else if (viewPager.getCurrentItem() == (adapter.getItemCount() - 1)) {
+            arrows = SwipeArrows.LEFT;
+        } else {
+            arrows = SwipeArrows.BOTH;
+        }
+        return show(viewPager, arrows);
     }
 
     public static Snackbar show(@NonNull ViewPager viewPager) {
@@ -61,6 +80,38 @@ public class WPSwipeSnackbar {
             case BOTH:
                 text = arrowLeft + " " + swipeText + " " + arrowRight;
                 break;
+            default:
+                text = swipeText;
+                break;
+        }
+
+        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
+        centerSnackbarText(snackbar);
+        snackbar.show();
+
+        return snackbar;
+    }
+
+    /** {@link ViewPager2}-based clone of the original helper method: {@link #show(ViewPager, SwipeArrows)} */
+    @NonNull
+    private static Snackbar show(@NonNull ViewPager2 viewPager, @NonNull SwipeArrows arrows) {
+        Context context = viewPager.getContext();
+        String swipeText = context.getResources().getString(R.string.swipe_for_more);
+        String arrowLeft = context.getResources().getString(R.string.previous_button);
+        String arrowRight = context.getResources().getString(R.string.next_button);
+
+        String text;
+        switch (arrows) {
+            case LEFT:
+                text = arrowLeft + " " + swipeText;
+                break;
+            case RIGHT:
+                text = swipeText + " " + arrowRight;
+                break;
+            case BOTH:
+                text = arrowLeft + " " + swipeText + " " + arrowRight;
+                break;
+            case NONE:
             default:
                 text = swipeText;
                 break;
