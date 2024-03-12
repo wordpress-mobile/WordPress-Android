@@ -34,12 +34,10 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    flavor = 'Vanilla'
-    build_type = 'Release'
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: flavor, buildType: build_type)
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
-    upload_gutenberg_sourcemaps(app: app, flavor: flavor, build_type: build_type, release_version: version_name)
+    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
@@ -105,12 +103,10 @@ platform :android do
     # Create the file names
     app = get_app_name_option!(options)
     version_name = current_version_name
-    flavor = 'Vanilla'
-    build_type = 'Release'
-    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: flavor, buildType: build_type)
+    build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
-    upload_gutenberg_sourcemaps(app: app, flavor: flavor, build_type: build_type, release_version: version_name)
+    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
@@ -223,7 +219,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'WordPress', version_name: version_name)
-    upload_gutenberg_sourcemaps(app: 'Wordpress', flavor: PROTOTYPE_BUILD_FLAVOR, build_type: PROTOTYPE_BUILD_TYPE, release_version: version_name)
+    upload_gutenberg_sourcemaps(app: 'Wordpress', release_version: version_name)
   end
 
   #####################################################################################
@@ -247,7 +243,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'Jetpack', version_name: version_name)
-    upload_gutenberg_sourcemaps(app: 'Jetpack', flavor: PROTOTYPE_BUILD_FLAVOR, build_type: PROTOTYPE_BUILD_TYPE, release_version: version_name)
+    upload_gutenberg_sourcemaps(app: 'Jetpack', release_version: version_name)
   end
 
   #####################################################################################
@@ -372,11 +368,9 @@ platform :android do
   # These files are provided by the Gutenberg Mobile library.
   #
   # @param [String] app App name, e.g. 'WordPress' or 'Jetpack'.
-  # @param [String] flavor Build flavor, e.g. 'Jalapeno' or 'Vanilla'.
-  # @param [String] build_type Build type, e.g. 'Debug' or 'Release'.
   # @param [String] release_version Release version name to attach the files to in Sentry.
   #
-  def upload_gutenberg_sourcemaps(app:, flavor:, build_type:, release_version:)
+  def upload_gutenberg_sourcemaps(app:, release_version:)
     # Load Sentry properties
     sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
     sentry_properties = JavaProperties.load(sentry_path)
