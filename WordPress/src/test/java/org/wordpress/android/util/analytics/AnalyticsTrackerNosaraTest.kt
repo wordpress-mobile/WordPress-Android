@@ -3,23 +3,22 @@ package org.wordpress.android.util.analytics
 import org.junit.Assert
 import org.junit.Test
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTrackerNosara
 import java.util.Locale
 
 class AnalyticsTrackerNosaraTest {
     @Test
     fun testEventWithStandardNames() {
         AnalyticsTracker.Stat.values().filter { !specialNames.keys.contains(it) }.forEach {
-            val eventName = AnalyticsTrackerNosara.getEventNameForStat(it)
-            val eventEnumNameToLowerCase = it.name.lowercase(Locale.US)
-            Assert.assertEquals(eventName, eventEnumNameToLowerCase)
+            val eventName = it.eventName
+            val expectedName = it.name.lowercase(Locale.US)
+            Assert.assertEquals(eventName, expectedName)
         }
     }
 
     @Test
     fun testEventWithSpecialNames() {
         AnalyticsTracker.Stat.values().filter { specialNames.keys.contains(it) }.forEach {
-            val eventName = AnalyticsTrackerNosara.getEventNameForStat(it)
+            val eventName = it.eventName
             val expectedName = specialNames[it]
             Assert.assertEquals(eventName, expectedName)
         }

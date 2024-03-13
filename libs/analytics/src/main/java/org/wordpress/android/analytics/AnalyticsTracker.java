@@ -1095,6 +1095,12 @@ public final class AnalyticsTracker {
         NOTIFICATIONS_MARK_ALL_READ_TAPPED,
         NOTIFICATIONS_INLINE_ACTION_TAPPED,
         WEBVIEW_TOO_LARGE_PAYLOAD_ERROR;
+
+        /*
+         * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
+         * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.
+         */
+
         private String mEventName;
 
         Stat(String eventName) {

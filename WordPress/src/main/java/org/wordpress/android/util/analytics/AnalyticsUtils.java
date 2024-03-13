@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -518,7 +517,7 @@ public class AnalyticsUtils {
         }
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
-        properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
+        properties.put("action", stat.getEventName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT, properties);
     }
 

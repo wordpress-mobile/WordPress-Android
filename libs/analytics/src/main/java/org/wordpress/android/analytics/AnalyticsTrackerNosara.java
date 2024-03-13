@@ -52,11 +52,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             return;
         }
 
-        String eventName = getEventNameForStat(stat);
-        if (eventName == null) {
-            AppLog.w(AppLog.T.STATS, "There is NO match for the event " + stat.name() + "stat");
-            return;
-        }
+        String eventName = stat.getEventName();
 
         Map<String, Object> predefinedEventProperties = new HashMap<>();
         switch (stat) {
@@ -592,23 +588,6 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
         mNosaraClient.clearUserProperties();
         mNosaraClient.clearQueues();
-    }
-
-    /**
-     * Returns the event name for a given Stat.
-     * NOTES:
-     * - Please add a new case only if the new Stat's name in lower case does not match the expected event name. In that
-     *   case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.
-     * - Otherwise declaring the new `AnalyticsTracker.Stat` is enough.
-     * @param stat the stat to get the event name for
-     * @return event name
-     */
-    @SuppressWarnings("checkstyle:methodlength")
-    public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
-        if (!isValidEvent(stat)) {
-            return null;
-        }
-        return stat.getEventName();
     }
 }
 // CHECKSTYLE END IGNORE
