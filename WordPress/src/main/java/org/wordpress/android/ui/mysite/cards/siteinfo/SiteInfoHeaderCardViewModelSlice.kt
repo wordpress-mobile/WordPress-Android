@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -78,6 +80,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         }.distinctUntilChanged()
 
     private lateinit var scope: CoroutineScope
+
+    private var uploadIconJob: Job? = null
 
     fun initialize(viewModelScope: CoroutineScope) {
         this.scope = viewModelScope
@@ -266,7 +270,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         if (success && croppedUri != null) {
             analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ICON_CROPPED)
             selectedSiteRepository.showSiteIconProgressBar(true)
-            scope.launch(bgDispatcher) {
+            uploadIconJob = scope.launch(bgDispatcher) {
                 wpMediaUtilsWrapper.fetchMediaToUriWrapper(UriWrapper(croppedUri))?.let { fetchMedia ->
                     mediaUtilsWrapper.getRealPathFromURI(fetchMedia.uri)
                 }?.let {
@@ -312,5 +316,10 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = contextProvider.getContext().contentResolver.getType(uri)
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
+    }
+
+    fun onCleared() {
+        uploadIconJob?.cancel()
+        scope.cancel()
     }
 }

@@ -272,6 +272,7 @@ class MySiteViewModel @Inject constructor(
         siteIconUploadHandler.clear()
         quickStartRepository.clear()
         dispatcher.unregister(this)
+        siteInfoHeaderCardViewModelSlice.onCleared()
         dashboardCardsViewModelSlice.onCleared()
         dashboardItemsViewModelSlice.onCleared()
         accountDataViewModelSlice.onCleared()
