@@ -404,7 +404,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(quickStartUtilsWrapper)
             .startQuickStart(site.id, false, quickStartRepository.quickStartType, quickStartTracker)
-//        verify(mySiteSourceManager).refreshQuickStart()
+        verify(dashboardCardsViewModelSlice).startQuickStart(site)
     }
 
     @Test
@@ -425,7 +425,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onPostUploaded(postUploadedEvent)
 
-//        verify(mySiteSourceManager).refreshBloggingPrompts(true)
+        verify(dashboardCardsViewModelSlice).refreshBloggingPrompt()
     }
 
     @Test
@@ -450,13 +450,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper, times(0)).track(Stat.MY_SITE_PULL_TO_REFRESH)
     }
 
-    /* CLEARED */
-    @Test
-    fun `when vm cleared() is invoked, then MySiteSource clear() is invoked`() {
-        viewModel.invokeOnCleared()
-
-//        verify(mySiteSourceManager).clear()
-    }
 
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
@@ -501,6 +494,17 @@ class MySiteViewModelTest : BaseUnitTest() {
 
             assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
         }
+
+
+    @Test
+    fun `when onCleared is called, then clears all the vm slices`() {
+        viewModel.invokeOnCleared()
+
+        verify(siteInfoHeaderCardViewModelSlice).onCleared()
+        verify(accountDataViewModelSlice).onCleared()
+        verify(dashboardCardsViewModelSlice).onCleared()
+        verify(dashboardItemsViewModelSlice).onCleared()
+    }
 
     @Suppress("LongParameterList")
     private fun initSelectedSite(
