@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/date_selector_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:minHeight="52dp"
-    android:orientation="horizontal"
     android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_large"
     android:paddingVertical="@dimen/margin_extra_small"
     tools:ignore="RtlSymmetry">
 
@@ -18,62 +17,64 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/min_touch_target_sz"
         android:overlapAnchor="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight" />
-
-    <Space
-        android:id="@+id/granularity_space"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-        <org.wordpress.android.widgets.MaterialTextViewWithNumerals
-            android:id="@+id/selectedDateTextView"
-            style="@style/StatsDateSelectorTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unknown" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/currentSiteTimeZone"
-            style="@style/StatsDateTimeZone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unknown"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <Space
-        android:id="@+id/date_space"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
-
-    <ImageButton
-        android:id="@+id/previousDateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_medium"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/stats_select_previous_period_description"
-        android:src="@drawable/ic_chevron_left_white_24dp"
-        android:tintMode="src_in"
-        app:tint="@color/on_surface_disabled_selector" />
 
     <ImageButton
         android:id="@+id/nextDateButton"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_height="@dimen/min_touch_target_sz"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@string/stats_select_next_period_description"
         android:src="@drawable/ic_chevron_right_white_24dp"
         android:tintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/on_surface_disabled_selector" />
-</LinearLayout>
+
+    <ImageButton
+        android:id="@+id/previousDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/min_touch_target_sz"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stats_select_previous_period_description"
+        android:src="@drawable/ic_chevron_left_white_24dp"
+        android:tintMode="src_in"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/nextDateButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/on_surface_disabled_selector" />
+
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+        android:id="@+id/selectedDateTextView"
+        style="@style/StatsDateSelectorTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:text="@string/unknown"
+        app:layout_constraintBottom_toTopOf="@id/currentSiteTimeZone"
+        app:layout_constraintEnd_toStartOf="@id/previousDateButton"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/granularity_spinner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth="wrap_content_constrained" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/currentSiteTimeZone"
+        style="@style/StatsDateTimeZone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:text="@string/unknown"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/previousDateButton"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/granularity_spinner"
+        app:layout_constraintTop_toBottomOf="@id/selectedDateTextView"
+        app:layout_constraintWidth="wrap_content_constrained" />
+</androidx.constraintlayout.widget.ConstraintLayout>
