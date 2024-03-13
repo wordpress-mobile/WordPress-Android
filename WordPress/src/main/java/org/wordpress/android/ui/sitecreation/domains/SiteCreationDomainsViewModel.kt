@@ -130,11 +130,10 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun onCreateSiteBtnClicked() {
-        val domain = requireNotNull(selectedDomain) {
-            "Create site button should not be visible if a domain is not selected"
-        }
-        tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost, domain.isFree)
-        _createSiteBtnClicked.value = domain
+        selectedDomain?.let { domain ->
+            tracker.trackDomainSelected(domain.domainName, currentQuery?.value.orEmpty(), domain.cost, domain.isFree)
+            _createSiteBtnClicked.value = domain
+        } // selectedDomain is null if the query has been asynchronously updated and the domain list has been changed.
     }
 
     fun onClearTextBtnClicked() = _clearBtnClicked.call()

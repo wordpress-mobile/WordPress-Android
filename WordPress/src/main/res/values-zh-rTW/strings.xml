@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-22 09:54:10+0000
+Translation-Revision-Date: 2024-03-06 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0-rc.1
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
+    <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">自動播放可能會導致某些使用者無法使用。</string>
+    <string name="notifications_action_mark_all_as_read">將全部標示為已讀</string>
+    <string name="notifications_unread_content_description">未讀</string>
     <string name="qrcode_media_deeplink_error">找不到網站。 檢查你是否已登入正確的帳號。</string>
     <string name="gravatar_info_sync_done_button">完成</string>
     <string name="gravatar_info_sync_message">更新內容和 Gravatar 個人檔案同步可能需要一些時間。</string>
@@ -381,7 +387,6 @@ Language: zh_TW
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">本網站</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s 正在使用 %2$s，目前尚未支援應用程式的所有功能。 Please install the %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
     <string name="wp_jp_static_poster_footnote">切換完全免費，只要 1 分鐘就能完成。</string>
     <string name="wp_jp_static_poster_button_secondary">前往 jetpack.com 深入瞭解</string>
     <string name="wp_jp_static_poster_button_primary">切換至 Jetpack 應用程式</string>
@@ -1167,7 +1172,6 @@ Language: zh_TW
     <string name="jetpack_brute_force_allowlist_title">一律允許的 IP 位址</string>
     <string name="site_settings_denylist_title">留言含有不允許的內容</string>
     <string name="gutenberg_native_add_button_text">新增按鈕文字</string>
-    <string name="stories_intro_main_subtitle">在網站創作並發布引人注目內容的全新方式。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">關閉</string>
     <string name="activity_log_backup_download_notice_download_action">下載</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
@@ -1335,7 +1339,6 @@ Language: zh_TW
     <string name="request_failed_message">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="gutenberg_native_move_to_bottom">移至底部</string>
     <string name="gutenberg_native_change_block_position">變更區塊位置</string>
-    <string name="label_control_upload">上傳</string>
     <string name="jetpack_icon_content_description">圖示</string>
     <string name="backup_download_complete_info">我們也已將檔案連結透過電子郵件傳送給你。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">分享連結按鈕</string>
@@ -1436,7 +1439,6 @@ Language: zh_TW
     <string name="dialog_confirm_copy_local_message">你嘗試複製的文章有兩個互相不一致的版本，或者你最近進行變更但沒有儲存。\n首先編輯文章，解決任何不一致，或繼續複製此應用程式的版本。</string>
     <string name="dialog_confirm_copy_local_title">文章同步不一致</string>
     <string name="button_copy">複製</string>
-    <string name="toast_edit_story_update_in_progress_title">正在儲存故事，請稍候…</string>
     <string name="gutenberg_native_file_name">檔案名稱</string>
     <string name="gutenberg_native_file_block_settings">檔案區塊設定</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">上傳檔案失敗。\n請點選以顯示選項。</string>
@@ -1454,23 +1456,8 @@ Language: zh_TW
     <string name="reader_follow_comments_null_response">未收到回應</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
     <string name="activity_log_activity_type_filter_apply">套用</string>
-    <string name="dialog_edit_story_unsupported_format_message">一或多張投影片並未加入你的限時動態，因為「限時動態」功能目前不支援 GIF 檔案。 請改為選擇靜態圖片或影片背景。</string>
-    <string name="dialog_edit_story_unsupported_format_title">不支援 GIF 檔案</string>
-    <string name="dialog_edit_story_unrecoverable_message">我們無法在網站上找到這個限時動態使用的媒體。</string>
-    <string name="dialog_edit_story_unrecoverable_title">無法編輯限時動態</string>
-    <string name="dialog_edit_story_unavailable_message">無法載入這個限時動態的媒體 請檢查你的網際網路連線，並稍後再試一次。</string>
-    <string name="dialog_edit_story_unavailable_title">無法編輯限時動態</string>
-    <string name="dialog_edit_story_limited_message">這個限時動態已在不同裝置上編輯過，因此特定物件的編輯功能可能受到限制。</string>
-    <string name="dialog_edit_story_limited_title">限時動態編輯功能受限</string>
     <string name="cannot_retry_deleted_media_item_fatal">已移除媒體。 請嘗試重新建立你的限時動態。</string>
-    <string name="color_picker_label_background">背景</string>
-    <string name="color_picker_label_text">文字</string>
-    <string name="dialog_discard_story_ok_button_edit">捨棄</string>
-    <string name="dialog_discard_story_message_edit">系統將不會儲存任何變更。</string>
-    <string name="dialog_discard_story_title_edit">要捨棄變更嗎？</string>
     <string name="label_done_button">完成</string>
-    <string name="label_next_button">下一步</string>
-    <string name="delete_button_alt">刪除</string>
     <string name="hpp_choose_error">選取佈景主題時發生錯誤。</string>
     <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
     <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
@@ -1520,14 +1507,6 @@ Language: zh_TW
     <string name="gutenberg_native_help_button">「協助」按鈕</string>
     <string name="gutenberg_native_edit_using_web_editor">使用網頁編輯器編輯</string>
     <string name="gutenberg_native_choose_images">選擇圖片</string>
-    <string name="stories_intro_create_story_post_label">建立限時動態文章</string>
-    <string name="stories_intro_description_second">它們會以新網誌文章的形式發佈在你的網站上，這樣你的讀者群永遠不會錯過任何精彩內容。</string>
-    <string name="stories_intro_title_second">故事文章不會消失</string>
-    <string name="stories_intro_description_first">結合相片、視訊和文字，建立吸睛又可點按的故事，你的訪客一定會喜歡。</string>
-    <string name="stories_intro_title_first">現在人人都可以發佈限時動態</string>
-    <string name="stories_intro_image_caption_second">限時動態標題例子</string>
-    <string name="stories_intro_image_caption_first">如何建立限時動態文章</string>
-    <string name="stories_intro_main_title">限時動態文章介紹</string>
     <string name="mlp_notice_blank_page_created">已建立空白頁面</string>
     <string name="mlp_notice_page_created">已建立頁面</string>
     <string name="media_insert_failed">媒體插入失敗。</string>
@@ -1548,13 +1527,6 @@ Language: zh_TW
     <string name="gutenberg_native_add_this_link">新增此連結</string>
     <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
     <string name="suggestion_no_connection">沒有網際網路連線。\n建議無法使用。</string>
-    <string name="typeface_label_shrikhand">粗體</string>
-    <string name="typeface_label_space_mono">現代</string>
-    <string name="typeface_label_pacifico">趣味</string>
-    <string name="typeface_label_oswald">強</string>
-    <string name="typeface_label_libre_baskerville">傳統編輯器</string>
-    <string name="typeface_label_nunito">休閒</string>
-    <string name="toast_capture_operation_permission_needed">你需要授予應用程式錄音權限，才能錄製影片</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">已選取 %s</string>
     <string name="login_get_link_by_email">透過電子郵件取得登入連結</string>
@@ -1581,66 +1553,13 @@ Language: zh_TW
     <string name="gutenberg_native_page_title_empty">頁面標題。 清空</string>
     <string name="toast_error_playing_video">播放視訊時發生錯誤</string>
     <string name="camera_error">此裝置不支援 Camera2 API。</string>
-    <string name="toast_error_saving_video">無法儲存視訊</string>
-    <string name="toast_error_saving_image">儲存圖片時發生錯誤</string>
-    <string name="toast_capture_operation_in_progress">操作進行中，請再試一次</string>
-    <string name="toast_story_page_not_found">找不到故事投影片</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">檢視儲存空間</string>
-    <string name="dialog_insufficient_device_storage_error_message">我們需先將故事儲存在你的裝置上，然後才能發表。 請檢視你的儲存空間設定，並移除一些檔案以釋放空間。</string>
-    <string name="dialog_insufficient_device_storage_error_title">裝置儲存空間不足</string>
-    <string name="dialog_story_saving_error_message">請重試儲存或刪除投影片，然後重新發表你的故事。</string>
-    <string name="dialog_story_saving_error_title_plural">無法儲存 %1$d 張投影片</string>
-    <string name="dialog_story_saving_error_title_singular">無法儲存 1 張投影片</string>
-    <string name="story_saving_failed_quick_action_manage">管理</string>
-    <string name="story_saving_failed_message_plural">%1$d 張投影片須採取動作</string>
-    <string name="story_saving_failed_message_singular">1 張投影片須採取動作</string>
-    <string name="story_saving_failed_title">無法上傳「%1$s」</string>
-    <string name="story_saving_snackbar_finished_with_error">無法上傳「%1$s」</string>
-    <string name="story_saving_snackbar_finished_successfully">已發表「%1$s」</string>
-    <string name="story_saving_snackbar_started">正在上傳「%1$s」…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d 剩餘投影片數量：</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">剩餘 1 張投影片</string>
-    <string name="story_saving_title_several">幾個故事</string>
-    <string name="story_saving_title">正在儲存「%1$s」…</string>
-    <string name="story_saving_untitled">無標題</string>
-    <string name="dialog_discard_story_ok_button">捨棄</string>
-    <string name="dialog_discard_story_message">你的故事文章將不會儲存為草稿。</string>
-    <string name="dialog_discard_story_title">要捨棄故事文章嗎？</string>
-    <string name="dialog_discard_page_ok_button">刪除</string>
-    <string name="dialog_discard_errored_page_message">此投影片尚未儲存。 若刪除此投影片，你所做的任何編輯將會遺失。</string>
-    <string name="dialog_discard_page_message">此投影片將從你的故事移除。</string>
-    <string name="dialog_discard_page_title">要刪除故事投影片嗎？</string>
-    <string name="label_text_color_button">變更文字顏色</string>
-    <string name="label_text_alignment_button">變更文字對齊方式</string>
-    <string name="label_frame_errored">發生錯誤</string>
-    <string name="label_frame_selected_border">已選取</string>
-    <string name="label_frame_unselected_border">已取消選取</string>
-    <string name="label_frame_image">滑動</string>
-    <string name="label_retry_icon">重試</string>
-    <string name="label_saved_icon">已儲存</string>
     <string name="label_close_button">關閉</string>
-    <string name="label_share_to">分享至</string>
-    <string name="label_snackbar_share">分享</string>
-    <string name="label_snackbar_loop_frame_saved">已儲存至相片</string>
-    <string name="label_control_retry">重試</string>
-    <string name="label_control_saved">已儲存</string>
-    <string name="label_control_saving">儲存中</string>
-    <string name="label_control_flash">閃爍</string>
-    <string name="label_control_flip_camera">翻轉</string>
-    <string name="sound_button_alt">音效</string>
-    <string name="text_button_alt">文字</string>
-    <string name="stickers_button_alt">貼紙</string>
-    <string name="flash_button_alt">閃爍</string>
-    <string name="flip_button_alt">翻轉相機</string>
-    <string name="capture_button_alt">擷取</string>
     <string name="mlp_preview_page">預覽</string>
     <string name="mlp_create_page">建立頁面</string>
     <string name="mlp_create_blank_page">建立空白頁面</string>
     <string name="mlp_choose_layout_subtitle">首先請從各種預先製作的頁面版面配置挑選。 或從空白頁面開始也可以。</string>
     <string name="mlp_choose_layout_title">選擇版面配置</string>
     <string name="prepublishing_nudges_story_title_hint">新增故事標題</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">建立文章或限時動態</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">建立文章、頁面或限時動態</string>
     <string name="quick_start_dialog_create_new_post_message_short">點選 %1$s「建立」。 %2$s 然後選取&lt;b&gt;「網誌文章」&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">從裝置中選擇</string>
     <string name="my_site_bottom_sheet_add_story">故事文章</string>

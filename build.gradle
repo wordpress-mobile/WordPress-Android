@@ -9,6 +9,7 @@ plugins {
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
     id "org.jetbrains.kotlin.plugin.parcelize" apply false
+    id "com.google.devtools.ksp" apply false
 }
 
 ext {
@@ -21,8 +22,8 @@ ext {
     // libs
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
-    automatticTracksVersion = '3.4.0'
-    gutenbergMobileVersion = 'v1.115.0-alpha3'
+    automatticTracksVersion = '3.5.0'
+    gutenbergMobileVersion = 'v1.115.0-alpha5'
     wordPressAztecVersion = 'v2.0'
     wordPressFluxCVersion = 'trunk-b9ecc708dde74d6cc95aeab42e56fb8067640039'
     wordPressLoginVersion = '1.14.1'
@@ -42,7 +43,7 @@ ext {
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.2.3'
     androidxComposeBomVersion = '2023.10.00'
-    androidxComposeCompilerVersion = '1.5.3'
+    androidxComposeCompilerVersion = '1.5.9'
     androidxComposeNavigationVersion = '2.7.6'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'

@@ -92,7 +92,8 @@ class TrafficOverviewUseCase(
                     statsSiteProvider.siteModel,
                     lowerGranularity,
                     LimitMode.Top(OVERVIEW_ITEMS_TO_LOAD),
-                    it
+                    it,
+                    false
                 )
             }
         } else {
