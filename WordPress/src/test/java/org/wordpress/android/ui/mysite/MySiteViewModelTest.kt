@@ -14,9 +14,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
 import org.mockito.kotlin.atLeastOnce
-import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -26,27 +25,19 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
-import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel.PostCardModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.GetShowJetpackFullPluginInstallOnboardingUseCase
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItem.Item.InfoItem
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.InfoItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.AccountData
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
-import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.cards.DashboardCardsViewModelSlice
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
@@ -54,18 +45,13 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.cards.siteinfo.SiteInfoHeaderCardViewModelSlice
 import org.wordpress.android.ui.mysite.items.DashboardItemsViewModelSlice
-import org.wordpress.android.ui.mysite.items.infoitem.MySiteInfoItemBuilder
-import org.wordpress.android.ui.mysite.items.listitem.SiteItemsBuilder
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTracker
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -76,9 +62,6 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
-    @Mock
-    lateinit var siteItemsBuilder: SiteItemsBuilder
-
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
@@ -116,9 +99,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var getShowJetpackFullPluginInstallOnboardingUseCase: GetShowJetpackFullPluginInstallOnboardingUseCase
 
     @Mock
-    lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Mock
@@ -140,9 +120,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
     @Mock
-    lateinit var mySiteInfoItemBuilder: MySiteInfoItemBuilder
-
-    @Mock
     lateinit var siteInfoHeaderCardViewModelSlice: SiteInfoHeaderCardViewModelSlice
 
     @Mock
@@ -162,8 +139,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private lateinit var showSwipeRefreshLayout: MutableList<Boolean>
-    private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
-    private val userName = "Username"
     private val siteLocalId = 1
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
@@ -178,42 +153,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private val currentAvatar = MutableLiveData(AccountData("",""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
-    private val activeTask = MutableLiveData<QuickStartTask>()
     private val quickStartCategory: QuickStartCategory
         get() = QuickStartCategory(
             taskType = QuickStartTaskType.CUSTOMIZE,
             uncompletedTasks = listOf(QuickStartTaskDetails.UPDATE_SITE_TITLE),
             completedTasks = emptyList()
         )
-
-    private val cardsUpdate = MutableLiveData(
-        CardsUpdate(
-            cards = listOf(
-                PostsCardModel(
-                    hasPublished = true,
-                    draft = listOf(
-                        PostCardModel(
-                            id = 1,
-                            title = "draft",
-                            content = "content",
-                            featuredImage = "featuredImage",
-                            date = Date()
-                        )
-                    ),
-                    scheduled = listOf(
-                        PostCardModel(
-                            id = 2,
-                            title = "scheduled",
-                            content = "",
-                            featuredImage = null,
-                            date = Date()
-                        )
-                    )
-                )
-            )
-        )
-    )
-
 
     @Suppress("LongMethod")
     @Before
@@ -227,11 +172,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
         selectedSite.value = null
-        whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
-        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(quickStartRepository.quickStartType).thenReturn(quickStartType)
-        whenever(jetpackBrandingUtils.getBrandingTextForScreen(any())).thenReturn(mock())
-        whenever(quickStartRepository.quickStartMenuStep).thenReturn(mock())
 
         whenever(siteInfoHeaderCardViewModelSlice.uiModel).thenReturn(MutableLiveData())
         whenever(accountDataViewModelSlice.uiModel).thenReturn(MutableLiveData())
@@ -296,7 +237,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(homePageDataLoader.loadHomepage(site)).thenReturn(homepage)
-        whenever(siteInfoHeaderCardViewModelSlice.getParams(site)).thenReturn(mock())
     }
 
     /* SITE STATE */
@@ -310,28 +250,24 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `model contains header of selected site`() {
+    fun `when selected site is changed, then reset shown tracker is called`() = test {
         initSelectedSite()
 
-        assertThat(uiModels.last()).isInstanceOf(SiteSelected::class.java)
+        viewModel.onSitePicked()
 
-        assertThat(getSiteInfoHeaderCard()).isInstanceOf(SiteInfoHeaderCard::class.java)
+        verify(dashboardCardsViewModelSlice, atLeastOnce()).resetShownTracker()
+        verify(dashboardItemsViewModelSlice, atLeastOnce()).resetShownTracker()
     }
 
+
     @Test
-    fun `when selected site is changed, then cardTracker is reset`() = test {
+    fun `when selected site is changed, then clear ui model value is called`() = test {
         initSelectedSite()
 
-        verify(cardsTracker, atLeastOnce()).resetShown()
-    }
+        viewModel.onSitePicked()
 
-    /* AVATAR */
-
-    @Test
-    fun `account avatar url value is emitted and updated from the source`() {
-        currentAvatar.value = AccountData(avatarUrl,userName)
-
-        assertThat((uiModels.last() as NoSites).avatarUrl).isEqualTo(avatarUrl)
+        verify(dashboardCardsViewModelSlice, atLeastOnce()).clearValue()
+        verify(dashboardItemsViewModelSlice, atLeastOnce()).clearValue()
     }
 
     @Test
@@ -502,36 +438,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.onPostUploaded(postUploadedEvent)
 
-//        verify(mySiteSourceManager, never()).refreshBloggingPrompts(true)
+        verify(dashboardCardsViewModelSlice, never()).refreshBloggingPrompt()
     }
-
-    /* DASHBOARD ERROR SNACKBAR */
-
-    @Test
-    fun `given show snackbar in cards update, when dashboard cards updated, then dashboard snackbar shown`() =
-        test {
-            initSelectedSite()
-
-            cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = true)
-
-            assertThat(snackbars).containsOnly(
-                SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
-            )
-        }
-
-    @Test
-    fun `given show snackbar not in cards update, when dashboard cards updated, then dashboard snackbar not shown`() =
-        test {
-            initSelectedSite()
-
-            cardsUpdate.value = cardsUpdate.value?.copy(showSnackbarError = false)
-
-            assertThat(snackbars).doesNotContain(
-                SnackbarMessageHolder(UiStringRes(R.string.my_site_dashboard_update_error))
-            )
-        }
-
-    /* SWIPE REFRESH */
 
     @Test
     fun `given refresh, when not invoked as PTR, then pull-to-refresh request is not tracked`() {
@@ -594,26 +502,18 @@ class MySiteViewModelTest : BaseUnitTest() {
             assertThat(viewModel.onShowJetpackIndividualPluginOverlay.value?.peekContent()).isNull()
         }
 
-    private fun getSiteInfoHeaderCard() = (uiModels.last() as SiteSelected).dashboardData[0]
-
     @Suppress("LongParameterList")
     private fun initSelectedSite(
         isQuickStartInProgress: Boolean = false,
-        showStaleMessage: Boolean = false,
         isSiteUsingWpComRestApi: Boolean = true,
-        shouldShowJetpackBranding: Boolean = true,
         isJetpackApp: Boolean = false
     ) {
-        whenever(
-            mySiteInfoItemBuilder.build(InfoItemBuilderParams(isStaleMessagePresent = showStaleMessage))
-        ).thenReturn(if (showStaleMessage) InfoItem(title = UiStringText("")) else null)
         quickStartUpdate.value = QuickStartUpdate(
             categories = if (isQuickStartInProgress) listOf(quickStartCategory) else emptyList()
         )
         // in order to build the dashboard cards, this value should be true along with isSiteUsingWpComRestApi
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(isJetpackApp)
 
-        whenever(jetpackBrandingUtils.shouldShowJetpackBrandingInDashboard()).thenReturn(shouldShowJetpackBranding)
         if (isSiteUsingWpComRestApi) {
             site.setIsWPCom(true)
             site.setIsJetpackConnected(true)

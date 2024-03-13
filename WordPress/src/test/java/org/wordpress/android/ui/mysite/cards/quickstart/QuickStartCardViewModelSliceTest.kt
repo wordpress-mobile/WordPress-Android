@@ -8,7 +8,6 @@ import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -309,9 +308,5 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteLocalId.toLong(), GROW)).thenReturn(
             listOf(PUBLISH_POST)
         )
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormat(anyOrNull())).thenReturn("")
-        whenever(resourceProvider.getString(any())).thenReturn("")
-        whenever(resourceProvider.getString(any(), any())).thenReturn("")
-        whenever(htmlCompat.fromHtml(any(), any())).thenReturn(" ")
     }
 }

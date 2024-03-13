@@ -380,7 +380,7 @@ class MySiteViewModel @Inject constructor(
         }
     }
 
-    fun onSitePicked(site: SiteModel) {
+    private fun onSitePicked(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         dashboardItemsViewModelSlice.clearValue()
         dashboardCardsViewModelSlice.clearValue()
