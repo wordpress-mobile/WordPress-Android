@@ -11,7 +11,7 @@ class AnalyticsTrackerNosaraTest {
     fun testEventWithStandardNames() {
         AnalyticsTracker.Stat.values().filter { !specialNames.keys.contains(it) }.forEach {
             val eventName = AnalyticsTrackerNosara.getEventNameForStat(it)
-            val eventEnumNameToLowerCase = it.name.lowercase(Locale.getDefault())
+            val eventEnumNameToLowerCase = it.name.lowercase(Locale.US)
             Assert.assertEquals(eventName, eventEnumNameToLowerCase)
         }
     }
