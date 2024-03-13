@@ -191,7 +191,7 @@ class MySiteViewModel @Inject constructor(
         isSiteSelected = false
         checkAndShowJetpackFullPluginInstallOnboarding()
         checkAndShowQuickStartNotice()
-//        bloggingPromptCardViewModelSlice.onResume(uiModel.value as? SiteSelected)
+
         selectedSiteRepository.getSelectedSite()?.let {
             buildDashboardOrSiteItems(it)
         } ?: run {

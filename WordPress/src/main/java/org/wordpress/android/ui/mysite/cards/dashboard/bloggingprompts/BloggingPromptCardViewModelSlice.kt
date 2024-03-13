@@ -16,9 +16,9 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.mysite.BloggingPromptCardNavigationAction
 import org.wordpress.android.ui.mysite.BloggingPromptsCardTrackHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
-import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -238,20 +238,13 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
 
     fun onDashboardCardsUpdated(
         scope: CoroutineScope,
-        state: MySiteViewModel.State.SiteSelected?
+        bloggingPromptCards: List<MySiteCardAndItem.Card.BloggingPromptCard>
     ) {
-        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, state)
-    }
-
-    fun onSiteChanged(siteId: Int?, state: MySiteViewModel.State.SiteSelected?) {
-        bloggingPromptsCardTrackHelper.onSiteChanged(siteId, state)
-    }
-
-    fun onResume(state: MySiteViewModel.State.SiteSelected?) {
-        bloggingPromptsCardTrackHelper.onResume(state)
+        bloggingPromptsCardTrackHelper.onDashboardCardsUpdated(scope, bloggingPromptCards)
     }
 
     fun clearValue() {
+        bloggingPromptsCardTrackHelper.onSiteChanged()
         _uiModel.postValue(null)
     }
 }

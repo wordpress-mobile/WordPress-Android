@@ -253,6 +253,10 @@ class DashboardCardsViewModelSlice @Inject constructor(
             filterIsInstance<MySiteCardAndItem.Card.DashboardPlansCard>().forEachIndexed { index, _ ->
                 plansCardViewModelSlice.trackShown(index)
             }
+
+            filterIsInstance<MySiteCardAndItem.Card.BloggingPromptCard>().let {
+                bloggingPromptCardViewModelSlice.onDashboardCardsUpdated(scope, it)
+            }
         }
     }
 
