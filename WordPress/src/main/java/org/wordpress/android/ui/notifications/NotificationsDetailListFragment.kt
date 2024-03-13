@@ -76,7 +76,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var commentListPosition = ListView.INVALID_POSITION
     private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var noteBlockAdapter: NoteBlockAdapter? = null
-    private var confettiShown = false
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -625,6 +624,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     companion object {
         private const val KEY_NOTE_ID = "noteId"
         private const val KEY_LIST_POSITION = "listPosition"
+
+        private var confettiShown = false
 
         @JvmStatic
         fun newInstance(noteId: String?): NotificationsDetailListFragment {
