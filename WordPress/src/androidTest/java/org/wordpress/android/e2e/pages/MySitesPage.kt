@@ -148,8 +148,7 @@ class MySitesPage {
     fun goToStats(): StatsPage {
         val statsButton = Espresso.onView(
             Matchers.allOf(
-                ViewMatchers.withText(R.string.stats),
-                ViewMatchers.withId(R.id.quick_link_item)
+                ViewMatchers.withText(R.string.stats)
             )
         )
         WPSupportUtils.clickOn(statsButton)
