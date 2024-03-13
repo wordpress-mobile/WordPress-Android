@@ -20,7 +20,6 @@ import org.wordpress.android.ui.mysite.cards.jetpackfeature.JetpackFeatureCardSh
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
-
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackFeatureCardViewModelSliceTest: BaseUnitTest() {
