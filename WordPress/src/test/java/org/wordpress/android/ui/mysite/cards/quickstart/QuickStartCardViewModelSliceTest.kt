@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.C
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
@@ -273,9 +272,7 @@ class QuickStartCardViewModelSliceTest : BaseUnitTest() {
         mQuickStartCardViewModelSlice.build(site)
     }
 
-    private suspend fun initStore(
-        nextUncompletedTask: QuickStartTask? = null
-    ) {
+    private fun initStore() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(
             quickStartType.isQuickStartInProgress(
