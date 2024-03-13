@@ -1,6 +1,7 @@
 package org.wordpress.android.support;
 
 import android.app.Instrumentation;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.compose.ui.test.junit4.ComposeTestRule;
@@ -34,11 +35,13 @@ import org.wordpress.android.editor.Utils;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.wiremock.WireMockStub;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -55,6 +58,7 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import dagger.hilt.android.testing.HiltAndroidRule;
 
 public class BaseTest {
+    static final String TAG = BaseTest.class.getSimpleName();
     public static final int WIREMOCK_PORT = 8080;
 
     @Rule(order = 0)
@@ -80,9 +84,9 @@ public class BaseTest {
     /**
      * Constructor
      *
-     * @param wireMockFeatureFileName the wiremock feature flag file to use for this specific test.
+     * @param wireMockStubs the wiremock stubs to use for this specific test.
      */
-    public BaseTest(@Nullable final String wireMockFeatureFileName) {
+    public BaseTest(@Nullable final List<WireMockStub> wireMockStubs) {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
@@ -96,16 +100,20 @@ public class BaseTest {
                              }
                          }))
                          .notifier(new AndroidNotifier()));
-        if (wireMockFeatureFileName != null) {
-            try {
-                final String result = Utils.getStringFromInputStream(instrumentation.getContext().getClassLoader()
-                                                                                    .getResourceAsStream(
-                                                                                            wireMockFeatureFileName));
-                // This is where we can stub out
-                wireMockRule.stubFor(WireMock.get(WireMock.urlPathMatching("/wpcom/v2/mobile/feature-flags/"))
-                                             .willReturn(WireMock.aResponse().withBody(result)));
-            } catch (final Exception exception) {
-                // do nothing
+        if (wireMockStubs != null && !wireMockStubs.isEmpty()) {
+            for (WireMockStub wireMockStub : wireMockStubs) {
+                try {
+                    final String result = Utils.getStringFromInputStream(
+                            instrumentation.getContext().getClassLoader().getResourceAsStream(
+                                    wireMockStub.getFileName()
+                            )
+                    );
+                    // This is where we can stub out
+                    wireMockRule.stubFor(WireMock.get(WireMock.urlPathMatching(wireMockStub.getUrlPath().getPath()))
+                                                 .willReturn(WireMock.aResponse().withBody(result)));
+                } catch (final Exception exception) {
+                    Log.e(TAG, "Problem stubbing endpoint", exception);
+                }
             }
         }
     }
