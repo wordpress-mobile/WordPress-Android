@@ -133,10 +133,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             showErrorToastAndFinish()
         }
 
-        val confetti: LottieAnimationView = requireActivity().findViewById(R.id.confetti)
-        if (note?.isViewMilestoneType == true && !confettiShown) {
-            confetti.playAnimation()
-            confettiShown = true
+        if (note?.isViewMilestoneType == true) {
+            view?.findViewById<LottieAnimationView>(R.id.confetti)?.playAnimation()
         }
     }
 
@@ -160,9 +158,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (note == null) {
             showErrorToastAndFinish()
             return
-        }
-        if (noteId != note.id) {
-            confettiShown = false
         }
         notification = note
     }
@@ -624,8 +619,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     companion object {
         private const val KEY_NOTE_ID = "noteId"
         private const val KEY_LIST_POSITION = "listPosition"
-
-        private var confettiShown = false
 
         @JvmStatic
         fun newInstance(noteId: String?): NotificationsDetailListFragment {
