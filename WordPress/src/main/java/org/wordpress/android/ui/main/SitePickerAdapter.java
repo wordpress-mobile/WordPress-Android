@@ -3,7 +3,6 @@ package org.wordpress.android.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,21 +27,15 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
-import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -749,16 +742,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             // sort primary blog to the top, otherwise sort by blog/host
             final long primaryBlogId = mAccountStore.getAccount().getPrimarySiteId();
-            Collections.sort(sites, (site1, site2) -> {
-                if (primaryBlogId > 0 && !mIsInSearchMode) {
-                    if (site1.getSiteId() == primaryBlogId) {
-                        return -1;
-                    } else if (site2.getSiteId() == primaryBlogId) {
-                        return 1;
-                    }
-                }
-                return site1.getBlogNameOrHomeURL().compareToIgnoreCase(site2.getBlogNameOrHomeURL());
-            });
+            sites = SiteRecordUtil.sort(sites, primaryBlogId);
 
             // flag recently-picked sites and move them to the top if there are enough sites and
             // the user isn't searching

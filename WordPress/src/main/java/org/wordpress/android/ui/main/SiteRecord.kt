@@ -6,7 +6,6 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.BlavatarShape
 import org.wordpress.android.util.image.ImageType
 
-
 /**
  * SiteRecord is a simplified version of the full account (blog) record
  */
@@ -37,4 +36,3 @@ class SiteRecord(siteModel: SiteModel) {
             homeURL
         } else blogName
 }
-

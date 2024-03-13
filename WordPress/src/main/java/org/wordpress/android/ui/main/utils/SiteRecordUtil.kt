@@ -4,16 +4,31 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.main.SiteRecord
 import java.util.Locale
 
-
 object SiteRecordUtil {
-    fun sortByName(sites: List<SiteRecord>) = sites.sortedBy { it.blogNameOrHomeURL }
+    /**
+     * Sorts the list of sites by blog name or home URL and moves the primary site to the top.
+     */
+    @JvmStatic
+    fun sort(sites: List<SiteRecord>, primarySiteId: Long): List<SiteRecord> {
+        val list = sites.sortedBy { it.blogNameOrHomeURL }.toMutableList()
+        val primarySite = list.firstOrNull { it.siteId == primarySiteId }
+        list.remove(primarySite)
+        return if (primarySite == null) list else (listOf(primarySite) + list)
+    }
 
+    /**
+     * Returns the index of the site with the given local ID.
+     */
     @JvmStatic
     fun indexOf(sites: List<SiteRecord>, localId: Int) = sites.indexOfFirst { it.localId == localId }
 
+    /**
+     * Returns the index of the given site.
+     */
     @JvmStatic
     fun indexOf(sites: List<SiteRecord>, siteRecord: SiteRecord) = sites.indexOfFirst { it.siteId == siteRecord.siteId }
 
+    @Suppress("ReturnCount")
     @JvmStatic
     fun isSameList(currentSites: List<SiteRecord>, anotherSites: List<SiteRecord>): Boolean {
         if (currentSites.size != anotherSites.size) {
@@ -42,4 +57,3 @@ object SiteRecordUtil {
     @JvmStatic
     fun createRecords(siteModels: List<SiteModel>) = siteModels.map { SiteRecord(it) }
 }
-
