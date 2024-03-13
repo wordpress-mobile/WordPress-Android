@@ -21,7 +21,7 @@ import org.wordpress.android.util.StatsVisitsData
 class StatsTests : BaseTest() {
     @Before
     fun setUp() {
-        assumeTrue(BuildConfig.IS_JETPACK_APP)
+        assumeTrue(!BuildConfig.IS_JETPACK_APP)
         ComposeEspressoLink().unregister()
         logoutIfNecessary()
         wpLogin()
@@ -35,7 +35,7 @@ class StatsTests : BaseTest() {
             Espresso.pressBack()
         }
     }
-    
+
     @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
