@@ -370,7 +370,7 @@ class MySiteViewModel @Inject constructor(
         quickStartTracker.track(Stat.QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED)
     }
 
-    fun buildDashboardOrSiteItems(site: SiteModel) {
+    private fun buildDashboardOrSiteItems(site: SiteModel) {
         siteInfoHeaderCardViewModelSlice.buildCard(site)
         if (shouldShowDashboard(site)) {
             dashboardCardsViewModelSlice.buildCards(site)

@@ -469,6 +469,29 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
 
+
+    @Test
+    fun `given jp app, when refresh invoked, then dashboard cards are refreshed`() {
+        initSelectedSite(isJetpackApp = true)
+
+        viewModel.refresh()
+
+        verify(dashboardCardsViewModelSlice).buildCards(site)
+        verify(dashboardItemsViewModelSlice).clearValue()
+    }
+
+    @Test
+    fun `given wp app, when refresh invoked, then site items are refreshed`() {
+        initSelectedSite(isJetpackApp = false)
+
+        viewModel.refresh()
+
+        verify(dashboardItemsViewModelSlice).buildItems(site)
+        verify(dashboardCardsViewModelSlice).clearValue()
+    }
+
+
+
     /* LAND ON THE EDITOR A/B EXPERIMENT */
     @Test
     fun `given the land on the editor feature is enabled, then the home page editor is shown`() = test {
