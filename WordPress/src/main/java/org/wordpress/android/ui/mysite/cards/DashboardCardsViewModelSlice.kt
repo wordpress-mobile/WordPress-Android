@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
@@ -229,6 +230,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     private fun trackCardShown(dashboardData: List<MySiteCardAndItem>) = with(dashboardData) {
         trackingJob?.cancel()
         trackingJob = scope.launch(bgDispatcher) {
+            delay(TRACKING_JOB_DEBOUNCE_DELAY)
+
             filterIsInstance<MySiteCardAndItem.Card>().let {
                 cardViewModelSlice.trackCardShown(it)
             }
@@ -274,3 +277,5 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickStartCardViewModelSlice.build(siteModel)
     }
 }
+
+const val TRACKING_JOB_DEBOUNCE_DELAY = 600L
