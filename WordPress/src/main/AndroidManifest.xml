@@ -656,6 +656,11 @@
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
+            android:name=".ui.main.ChooseSiteActivity"
+            android:label="@string/site_picker_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
             android:name=".ui.photopicker.PhotoPickerActivity"
             android:theme="@style/WordPress.NoActionBar" />
 

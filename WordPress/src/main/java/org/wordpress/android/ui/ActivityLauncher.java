@@ -71,6 +71,7 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -210,7 +211,8 @@ public class ActivityLauncher {
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
         Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
-        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+//        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+        ChooseSiteActivity.Companion.start(activity);
     }
 
     /**
