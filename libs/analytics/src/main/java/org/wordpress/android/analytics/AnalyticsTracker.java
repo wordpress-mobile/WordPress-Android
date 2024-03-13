@@ -20,6 +20,8 @@ public final class AnalyticsTracker {
 
     @SuppressWarnings("LineLength")
     public enum Stat {
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         APPLICATION_OPENED,
         APPLICATION_CLOSED,
         APPLICATION_INSTALLED,
@@ -209,10 +211,10 @@ public final class AnalyticsTracker {
         EDITOR_POST_SLUG_CHANGED,
         EDITOR_POST_EXCERPT_CHANGED,
         EDITOR_SAVED_DRAFT("editor_draft_saved"),
-        EDITOR_EDITED_IMAGE("editor_image_edited"),
-        EDITOR_UPLOAD_MEDIA_FAILED,
-        EDITOR_UPLOAD_MEDIA_RETRIED,
-        EDITOR_UPLOAD_MEDIA_PAUSED,
+        EDITOR_EDITED_IMAGE("editor_image_edited"), // Visual editor only
+        EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_RETRIED, // Visual editor only
+        EDITOR_UPLOAD_MEDIA_PAUSED, // Visual editor only
         EDITOR_TAPPED_BLOCKQUOTE("editor_button_tapped"),
         EDITOR_TAPPED_BOLD("editor_button_tapped"),
         EDITOR_TAPPED_ELLIPSIS_COLLAPSE("editor_button_tapped"),
@@ -224,14 +226,14 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_HEADING_4("editor_button_tapped"),
         EDITOR_TAPPED_HEADING_5("editor_button_tapped"),
         EDITOR_TAPPED_HEADING_6("editor_button_tapped"),
-        EDITOR_TAPPED_HTML("editor_button_tapped"),
+        EDITOR_TAPPED_HTML("editor_button_tapped"), // Visual editor only
         EDITOR_TAPPED_HORIZONTAL_RULE("editor_button_tapped"),
         EDITOR_TAPPED_IMAGE("editor_button_tapped"),
         EDITOR_TAPPED_ITALIC("editor_button_tapped"),
         EDITOR_TAPPED_LINK_ADDED("editor_button_tapped"),
         EDITOR_TAPPED_LIST("editor_button_tapped"),
-        EDITOR_TAPPED_LIST_ORDERED("editor_button_tapped"),
-        EDITOR_TAPPED_LIST_UNORDERED("editor_button_tapped"),
+        EDITOR_TAPPED_LIST_ORDERED("editor_button_tapped"), // Visual editor only
+        EDITOR_TAPPED_LIST_UNORDERED("editor_button_tapped"), // Visual editor only
         EDITOR_TAPPED_NEXT_PAGE("editor_button_tapped"),
         EDITOR_TAPPED_PARAGRAPH("editor_button_tapped"),
         EDITOR_TAPPED_PREFORMAT("editor_button_tapped"),
@@ -243,11 +245,11 @@ public final class AnalyticsTracker {
         EDITOR_TAPPED_ALIGN_RIGHT("editor_button_tapped"),
         EDITOR_TAPPED_REDO("editor_button_tapped"),
         EDITOR_TAPPED_UNDO("editor_button_tapped"),
-        EDITOR_AZTEC_TOGGLED_OFF,
-        EDITOR_AZTEC_TOGGLED_ON,
-        EDITOR_AZTEC_ENABLED,
-        EDITOR_GUTENBERG_ENABLED("gutenberg_enabled"),
-        EDITOR_GUTENBERG_DISABLED("gutenberg_disabled"),
+        EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
+        EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
+        EDITOR_AZTEC_ENABLED, // Aztec editor only
+        EDITOR_GUTENBERG_ENABLED("gutenberg_enabled"), // Aztec editor only
+        EDITOR_GUTENBERG_DISABLED("gutenberg_disabled"), // Aztec editor only
         EDITOR_HELP_SHOWN,
         EDITOR_SETTINGS_FETCHED,
         LANDING_EDITOR_SHOWN,
@@ -372,6 +374,8 @@ public final class AnalyticsTracker {
         CREATE_ACCOUNT_EMAIL_EXISTS("account_create_email_exists"),
         CREATE_ACCOUNT_USERNAME_EXISTS("account_create_username_exists"),
         CREATE_ACCOUNT_FAILED("account_create_failed"),
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         CREATED_ACCOUNT("account_created"),
         CLOSE_ACCOUNT_FAILED,
         CLOSED_ACCOUNT,
@@ -394,7 +398,7 @@ public final class AnalyticsTracker {
         CONNECT_JETPACK_SELECTED,
         CONNECT_JETPACK_FAILED,
         PUSH_NOTIFICATION_RECEIVED,
-        PUSH_NOTIFICATION_TAPPED("push_notification_alert_tapped"),
+        PUSH_NOTIFICATION_TAPPED("push_notification_alert_tapped"), // Same of opened
         UNIFIED_LOGIN_STEP,
         UNIFIED_LOGIN_INTERACTION,
         UNIFIED_LOGIN_FAILURE,
@@ -440,6 +444,8 @@ public final class AnalyticsTracker {
         LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING,
         LOGIN_SOCIAL_ERROR_UNKNOWN_USER,
         LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         PAGES_SET_PARENT_CHANGES_SAVED("site_pages_set_parent_changes_saved"),
         PAGES_ADD_PAGE("site_pages_add_page"),
         PAGES_TAB_PRESSED("site_pages_tabs_pressed"),
@@ -519,6 +525,8 @@ public final class AnalyticsTracker {
         LAYOUT_PICKER_ERROR_SHOWN,
         CATEGORY_FILTER_SELECTED,
         CATEGORY_FILTER_DESELECTED,
+        // This stat is part of a funnel that provides critical information.  Before
+        // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SITE_CREATED,
         MEDIA_LIBRARY_ADDED_PHOTO("media_library_photo_added"),
         MEDIA_LIBRARY_ADDED_VIDEO("media_library_video_added"),
