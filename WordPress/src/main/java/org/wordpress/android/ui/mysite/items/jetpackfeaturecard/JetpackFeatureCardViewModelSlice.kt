@@ -23,7 +23,10 @@ class JetpackFeatureCardViewModelSlice @Inject constructor(
     val uiModel = _uiModel.distinctUntilChanged()
 
     suspend fun buildJetpackFeatureCard() {
-        if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()) _uiModel.postValue(null)
+        if (!jetpackFeatureCardHelper.shouldShowJetpackFeatureCard()){
+            _uiModel.postValue(null)
+            return
+        }
         _uiModel.postValue(
             MySiteCardAndItem.Card.JetpackFeatureCard(
                 content = jetpackFeatureCardHelper.getCardContent(),
