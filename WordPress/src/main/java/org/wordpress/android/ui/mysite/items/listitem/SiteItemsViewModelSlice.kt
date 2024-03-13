@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
@@ -93,8 +94,8 @@ class SiteItemsViewModelSlice @Inject constructor(
         )
     }
 
-    @Suppress("ComplexMethod")
-    private fun onItemClick(action: ListItemAction) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { selectedSite ->
             analyticsTrackerWrapper.track(
                 AnalyticsTracker.Stat.MY_SITE_MENU_ITEM_TAPPED,

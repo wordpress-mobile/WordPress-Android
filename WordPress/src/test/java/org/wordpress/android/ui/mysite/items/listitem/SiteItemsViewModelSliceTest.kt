@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.mysite.items.listitem
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -16,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.MySiteCardAndItem
+import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.ListItemActionHandler
@@ -24,7 +28,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-@Ignore("Update tests to work with new architecture")
 class SiteItemsViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var selectedSiteRepository: SelectedSiteRepository
@@ -71,6 +74,7 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
 
         navigationActions = mutableListOf()
         snackBarMessages = mutableListOf()
+        uiModels = mutableListOf()
 
         siteItemsViewModelSlice.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
@@ -90,19 +94,11 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
-        site.setIsJetpackConnected(false)
-        site.setIsWPCom(false)
-        site.origin = SiteModel.ORIGIN_XMLRPC
-
-        invokeItemClickAction(action = ListItemAction.STATS)
-
-        verify(listItemActionHandler).handleAction(ListItemAction.STATS, site)
-    }
-
-    @Test
     fun `when site item is clicked, then event is tracked`() = test {
-        invokeItemClickAction(action = ListItemAction.POSTS)
+        initJetpackCapabilities(scanPurchased = false, backupPurchased = false)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        siteItemsViewModelSlice.onItemClick(ListItemAction.POSTS)
 
         verify(analyticsTrackerWrapper).track(
             AnalyticsTracker.Stat.MY_SITE_MENU_ITEM_TAPPED,
@@ -111,38 +107,76 @@ class SiteItemsViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site blaze eligible, when isSiteBlazeEligible is called, then return true`() = test {
+    fun `when site blaze ineligible, then siteItemsBuilder build is called with blaze false`() = test {
         // Given
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initJetpackCapabilities(scanPurchased = false, backupPurchased = false)
         whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(true)
+        val captor = argumentCaptor<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()
+
 
         // When
         siteItemsViewModelSlice.buildSiteItems(site = site)
+        advanceUntilIdle()
 
         // Then
-        assertThat(uiModels.last()?.find { it.type == MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD }).isNotNull
+        verify(siteItemsBuilder).build(captor.capture())
+        assertThat(captor.lastValue.isBlazeEligible).isTrue()
     }
 
     @Test
-    fun `given site blaze ineligible, when isSiteBlazeEligible is called, then return false`() = test {
+    fun `when site blaze ineligible, then siteItemsBuilder build is called with blaze true`() = test {
         // Given
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(blazeFeatureUtils.isSiteBlazeEligible(site)).thenReturn(false)
+        initJetpackCapabilities(scanPurchased = false, backupPurchased = false)
+        val captor = argumentCaptor<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()
 
         // When
         siteItemsViewModelSlice.buildSiteItems(site = site)
 
         // Then
-        assertThat(uiModels.last()?.find { it.type == MySiteCardAndItem.Type.PROMOTE_WITH_BLAZE_CARD }).isNull()
+        verify(siteItemsBuilder).build(captor.capture())
+        assertThat(captor.lastValue.isBlazeEligible).isFalse()
     }
 
-    private fun invokeItemClickAction(
-        action: ListItemAction,
-    ) = test {
-        siteItemsViewModelSlice.buildSiteItems(site)
-        val listItem =
-            ((uiModels.last())?.find { it is MySiteCardAndItem.Item.ListItem } as MySiteCardAndItem.Item.ListItem)
-                .takeIf { it.listItemAction == action }
-        listItem?.onClick?.click()
+    @Test
+    fun `when scan is eligible, then siteItemsBuilder build is called with scan true`() = test {
+        // Given
+        initJetpackCapabilities(scanPurchased = true, backupPurchased = false)
+        val captor = argumentCaptor<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()
+
+        // When
+        siteItemsViewModelSlice.buildSiteItems(site = site)
+        advanceUntilIdle()
+
+        // Then
+        verify(siteItemsBuilder, atLeast(2)).build(captor.capture())
+        assertThat(captor.firstValue.scanAvailable).isFalse()
+        assertThat(captor.secondValue.scanAvailable).isTrue()
+    }
+
+
+    @Test
+    fun `when backupAvailable is eligible, then siteItemsBuilder build is called with backupAvailable true`() = test {
+        // Given
+        initJetpackCapabilities(scanPurchased = false, backupPurchased = true)
+        val captor = argumentCaptor<MySiteCardAndItemBuilderParams.SiteItemsBuilderParams>()
+
+
+        // When
+        siteItemsViewModelSlice.buildSiteItems(site = site)
+        advanceUntilIdle()
+
+        // Then
+        verify(siteItemsBuilder, atLeast(2)).build(captor.capture())
+        assertThat(captor.firstValue.backupAvailable).isFalse()
+        assertThat(captor.secondValue.backupAvailable).isTrue()
+    }
+
+    private suspend fun initJetpackCapabilities(
+        scanPurchased: Boolean = false,
+        backupPurchased: Boolean = false
+    ) {
+        val products =
+            JetpackCapabilitiesUseCase.JetpackPurchasedProducts(scan = scanPurchased, backup = backupPurchased)
+        whenever(jetpackPackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)).thenReturn(flowOf(products))
     }
 }
