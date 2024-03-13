@@ -468,6 +468,26 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(analyticsTrackerWrapper, times(0)).track(Stat.MY_SITE_PULL_TO_REFRESH)
     }
 
+    @Test
+    fun `given jp app, when onResume invoked, then dashboard cards are fetched`() {
+        initSelectedSite(isJetpackApp = true)
+
+        viewModel.onResume()
+
+        verify(dashboardCardsViewModelSlice).buildCards(site)
+        verify(dashboardItemsViewModelSlice).clearValue()
+    }
+
+    @Test
+    fun `given wp app, when onResume invoked, then site items are fetched`() {
+        initSelectedSite(isJetpackApp = false)
+
+        viewModel.refresh()
+
+        verify(dashboardItemsViewModelSlice).buildItems(site)
+        verify(dashboardCardsViewModelSlice).clearValue()
+    }
+
 
 
     @Test
