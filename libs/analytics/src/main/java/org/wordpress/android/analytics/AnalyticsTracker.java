@@ -248,8 +248,8 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
-        EDITOR_GUTENBERG_ENABLED("gutenberg_enabled"), // Aztec editor only
-        EDITOR_GUTENBERG_DISABLED("gutenberg_disabled"), // Aztec editor only
+        EDITOR_GUTENBERG_ENABLED("gutenberg_enabled"), // Gutenberg editor only
+        EDITOR_GUTENBERG_DISABLED("gutenberg_disabled"), // Gutenberg editor only
         EDITOR_HELP_SHOWN,
         EDITOR_SETTINGS_FETCHED,
         LANDING_EDITOR_SHOWN,
