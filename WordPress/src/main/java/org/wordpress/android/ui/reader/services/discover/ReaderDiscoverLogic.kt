@@ -123,7 +123,7 @@ class ReaderDiscoverLogic @Inject constructor(
             } else {
                 "read/tags/cards"
             }
-            WordPress.getRestClientUtilsV2()[endpoint, params, null, listener, errorListener]
+            WordPress.getRestClientUtilsV2().getWithLocale(endpoint, params, null, listener, errorListener)
         }
     }
 

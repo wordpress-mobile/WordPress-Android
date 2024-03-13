@@ -55,7 +55,7 @@ public class ReaderSearchLogic {
 
         AppLog.d(AppLog.T.READER, "reader search service > starting search for " + query);
         EventBus.getDefault().post(new ReaderEvents.SearchPostsStarted(query, offset));
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private void handleSearchResponse(final String query, final int offset, final JSONObject jsonObject) {
