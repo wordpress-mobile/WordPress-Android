@@ -11,6 +11,7 @@ import org.hamcrest.Matchers
 import org.wordpress.android.R
 import org.wordpress.android.support.WPSupportUtils
 import org.wordpress.android.support.WPSupportUtils.isElementDisplayed
+import org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel
 import org.wordpress.android.util.StatsKeyValueData
 import org.wordpress.android.util.StatsVisitsData
@@ -105,6 +106,8 @@ class StatsPage {
         if (!isElementDisplayed(cardStructure)) {
             cardStructure.perform(swipeDown());
         }
+
+        waitForElementToBeDisplayedWithoutFailure(cardStructure)
 
         cardStructure.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         return this
