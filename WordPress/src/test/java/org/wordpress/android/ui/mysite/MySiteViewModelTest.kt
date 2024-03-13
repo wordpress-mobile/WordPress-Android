@@ -271,6 +271,24 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given jp app, when selected site is changed, then dashboard cards are fetched`() = test {
+        initSelectedSite(isJetpackApp = true)
+
+        viewModel.onSitePicked()
+
+        verify(dashboardCardsViewModelSlice, atLeastOnce()).buildCards(site)
+    }
+
+    @Test
+    fun `given not jp app, when selected site is changed, then site items are fetched`() = test {
+        initSelectedSite()
+
+        viewModel.onSitePicked()
+
+        verify(dashboardItemsViewModelSlice, atLeastOnce()).buildItems(site)
+    }
+
+    @Test
     fun `avatar press opens me screen`() {
         viewModel.onAvatarPressed()
 
