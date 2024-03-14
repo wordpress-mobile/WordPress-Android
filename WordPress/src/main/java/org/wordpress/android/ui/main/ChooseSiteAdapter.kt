@@ -15,8 +15,6 @@ import javax.inject.Inject
 class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
     private val sites = ArrayList<SiteRecord>()
 
-    @Inject
-    lateinit var appPrefs: AppPrefsWrapper
     var mode: ActionMode = ActionMode.None
         private set
 
@@ -86,7 +84,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
 
         binding.textTitle.text = site.blogNameOrHomeURL
         binding.textDomain.text = site.homeURL
-        binding.pin.isVisible = mode == ActionMode.Pin
+        binding.pin.isVisible = mode is ActionMode.Pin
 
         val isPinned = site.isPinned()
         binding.pin.setImageResource(if (isPinned) R.drawable.pin_filled else R.drawable.pin)
@@ -107,6 +105,6 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
 }
 
 sealed class ActionMode {
-    object None : ActionMode()
-    object Pin : ActionMode()
+    data object None : ActionMode()
+    data object Pin : ActionMode()
 }

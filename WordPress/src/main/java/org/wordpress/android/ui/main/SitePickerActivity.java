@@ -245,7 +245,7 @@ public class SitePickerActivity extends LocaleAwareActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.site_picker, menu);
         mMenuSearch = menu.findItem(R.id.menu_search);
-        mMenuEdit = menu.findItem(R.id.menu_edit);
+        mMenuEdit = menu.findItem(R.id.menu_pin);
         mMenuAdd = menu.findItem(R.id.menu_add);
         return true;
     }
@@ -292,7 +292,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED);
             getOnBackPressedDispatcher().onBackPressed();
             return true;
-        } else if (itemId == R.id.menu_edit) {
+        } else if (itemId == R.id.menu_pin) {
             if (mBinding != null) {
                 AnalyticsTracker.track(Stat.SITE_SWITCHER_TOGGLED_EDIT_TAPPED,
                         Collections.singletonMap(TRACK_PROPERTY_STATE, TRACK_PROPERTY_STATE_EDIT));

@@ -3,8 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_edit"
-        android:title="Edit"
-        app:showAsAction="always" />
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom" />
 
+    <item
+        android:id="@+id/menu_add"
+        android:icon="@drawable/ic_plus_white_24dp"
+        android:title="@string/site_picker_add_site"
+        app:showAsAction="collapseActionView|ifRoom" />
+
+    <item
+        android:id="@+id/menu_pin"
+        android:title="Edit pinned sites"
+        android:icon="@drawable/pin_filled"
+        app:showAsAction="always" />
 </menu>

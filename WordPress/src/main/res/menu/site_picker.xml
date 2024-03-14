@@ -16,7 +16,7 @@
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
-        android:id="@+id/menu_edit"
+        android:id="@+id/menu_pin"
         android:title="@string/site_picker_edit_visibility"
         app:showAsAction="never" />
 
