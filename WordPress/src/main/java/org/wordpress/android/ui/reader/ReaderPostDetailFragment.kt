@@ -303,7 +303,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
             val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-            context?.let { context ->
+            view?.context?.let { context ->
                 val menu: Menu = toolbar.menu
                 val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
                 val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
@@ -314,12 +314,11 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         collapsingToolbarLayout.scrimVisibleHeightTrigger
                 val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-                val colorAttr = if (isCollapsed || isDarkTheme) {
-                    MaterialR.attr.colorOnSurface
+                val color = if (isCollapsed || isDarkTheme) {
+                    context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
                 } else {
-                    MaterialR.attr.colorSurface
+                    ContextCompat.getColor(context, R.color.white)
                 }
-                val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat
                     .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
 
