@@ -76,7 +76,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var commentListPosition = ListView.INVALID_POSITION
     private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var noteBlockAdapter: NoteBlockAdapter? = null
-    private var confettiShown = false
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -134,10 +133,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             showErrorToastAndFinish()
         }
 
-        val confetti: LottieAnimationView = requireActivity().findViewById(R.id.confetti)
-        if (note?.isViewMilestoneType == true && !confettiShown) {
-            confetti.playAnimation()
-            confettiShown = true
+        if (note?.isViewMilestoneType == true) {
+            view?.findViewById<LottieAnimationView>(R.id.confetti)?.playAnimation()
         }
     }
 
@@ -161,9 +158,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (note == null) {
             showErrorToastAndFinish()
             return
-        }
-        if (noteId != note.id) {
-            confettiShown = false
         }
         notification = note
     }
