@@ -143,6 +143,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         domainRegistrationCard: MySiteCardAndItem.Card.DomainRegistrationCard?,
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
+        migrationSuccessCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
         quickStart?.let { cards.add(it) }
         domainRegistrationCard?.let { cards.add(it) }
@@ -155,7 +156,6 @@ class DashboardCardsViewModelSlice @Inject constructor(
                 is CardsState.ErrorState -> cards.add(cardsState.error)
             }
         }
-        migrationSuccessCard?.let { cards.add(it) }
         plansCard?.let { cards.add(it) }
         jpFullInstallFullPlugin?.let { cards.add(it) }
         // when clearing the values of all child VM Slices,
