@@ -32,7 +32,8 @@ enum class DesignSystemScreen {
     Start,
     Foundation,
     Components,
-    Colors
+    Colors,
+    Fonts
 }
 
 @Composable
@@ -66,6 +67,7 @@ private fun getTitleForRoute(route: String): String {
         "Foundation" -> "Foundation"
         "Components" -> "Components"
         "Colors" -> "Colors"
+        "Fonts" -> "Fonts"
         else -> ""
     }
 }
