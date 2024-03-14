@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <!-- Paper Theme -->
+    <color name="reader_theme_paper_background">@color/white</color>
+    <color name="reader_theme_paper_text">@color/black</color>
+
+    <!-- OLED Theme -->
+    <color name="reader_theme_oled_background">@color/black</color>
+    <color name="reader_theme_oled_text">@color/white</color>
+
+    <!-- Sepia Theme -->
+    <color name="reader_theme_sepia_background">#EEE2CC</color>
+    <color name="reader_theme_sepia_text">#352A24</color>
+</resources>

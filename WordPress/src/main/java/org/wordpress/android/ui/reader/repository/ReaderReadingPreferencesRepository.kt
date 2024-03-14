@@ -18,9 +18,7 @@ class ReaderReadingPreferencesRepository @Inject constructor(
     suspend fun getReadingPreferences(): ReaderReadingPreferences = withContext(ioDispatcher) {
         appPrefsWrapper.readerReadingPreferencesJson?.let {
             gson.fromJson(it, ReaderReadingPreferences::class.java)
-        } ?: ReaderReadingPreferences(
-            theme = ReaderReadingPreferences.Theme.Light,
-        )
+        } ?: ReaderReadingPreferences(ReaderReadingPreferences.Theme.SYSTEM)
     }
 
     suspend fun saveReadingPreferences(preferences: ReaderReadingPreferences): Unit = withContext(ioDispatcher) {
