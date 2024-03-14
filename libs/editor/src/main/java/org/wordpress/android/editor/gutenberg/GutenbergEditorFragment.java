@@ -1091,7 +1091,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
         if (isAdded()) {
-            getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+            GutenbergContainerFragment containerFragment = getGutenbergContainerFragment();
+            if (containerFragment != null) {
+                containerFragment.updateCapabilities(gutenbergPropsBuilder);
+            }
         } else {
             mUpdateCapabilitiesOnCreate = true;
         }
