@@ -58,9 +58,9 @@ class TrafficOverviewUseCase(
         else -> statsGranularity
     }
 
-    private val barCount = when (lowerGranularity) {
+    private val itemsToLoad = when (lowerGranularity) {
         StatsGranularity.DAYS -> 7
-        StatsGranularity.WEEKS -> 5
+        StatsGranularity.WEEKS -> 6
         StatsGranularity.MONTHS -> 12
         else -> OVERVIEW_ITEMS_TO_LOAD
     }
@@ -122,7 +122,7 @@ class TrafficOverviewUseCase(
         // Fetch lower granularity model for chart values
         val lowerGranularityResponse = if (statsGranularity != StatsGranularity.DAYS) {
             val selectedDate = getLastDate(model)
-            selectedDate?.let { fetchVisit(lowerGranularity, OVERVIEW_ITEMS_TO_LOAD, forced, it) }
+            selectedDate?.let { fetchVisit(lowerGranularity, itemsToLoad, forced, it) }
         } else {
             null
         }
