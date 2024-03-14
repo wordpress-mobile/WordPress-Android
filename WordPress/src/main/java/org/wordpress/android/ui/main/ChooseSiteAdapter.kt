@@ -9,22 +9,30 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ItemChooseSiteBinding
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
     private val sites = ArrayList<SiteRecord>()
-    private var mode: ActionMode = ActionMode.None
-    var onSiteClicked = { _: SiteRecord -> }
-    var onSitePinned = { _: Boolean, _: SiteRecord -> }
+
+    @Inject
+    lateinit var appPrefs: AppPrefsWrapper
+    var mode: ActionMode = ActionMode.None
+        private set
+
+    var onReload = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseSiteViewHolder =
         ChooseSiteViewHolder(ItemChooseSiteBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int = sites.size
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ChooseSiteViewHolder, position: Int) {
         holder.bind(mode, sites.getOrNull(position - 1), sites[position])
+        holder.onPinUpdated = {
+            onReload()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -48,13 +56,16 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     @Inject
     lateinit var appPrefs: AppPrefsWrapper
 
+    var onPinUpdated = { _: SiteRecord -> }
+
     init {
         (itemView.context.applicationContext as WordPress).component().inject(this)
     }
 
     fun bind(mode: ActionMode, previousSite: SiteRecord?, site: SiteRecord) {
         imageManager.loadImageWithCorners(
-            binding.avatar, site.blavatarType, site.blavatarUrl, DisplayUtils.dpToPx(itemView.context, 20)
+            binding.avatar, site.blavatarType, site.blavatarUrl,
+            itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
         )
 
         when {
@@ -81,10 +92,11 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         binding.pin.setImageResource(if (isPinned) R.drawable.pin_filled else R.drawable.pin)
         binding.pin.setOnClickListener {
             if (isPinned) {
-                appPrefs.pinnedSiteLocalIds.remove(site.localId)
+                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { remove(site.localId) }
             } else {
-                appPrefs.pinnedSiteLocalIds.add(site.localId)
+                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { add(site.localId) }
             }
+            onPinUpdated(site)
         }
     }
 

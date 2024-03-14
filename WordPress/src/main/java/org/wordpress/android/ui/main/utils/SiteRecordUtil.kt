@@ -16,6 +16,17 @@ object SiteRecordUtil {
         return if (primarySite == null) list else (listOf(primarySite) + list)
     }
 
+    @JvmStatic
+    fun sort(sites: List<SiteRecord>, pinnedSiteLocalIds:Set<Int>): List<SiteRecord> {
+        val sortedSites = sites.sortedBy { it.blogNameOrHomeURL }
+            .toMutableList()
+
+        val pinnedSites = sites.filter { pinnedSiteLocalIds.contains(it.localId) }
+        pinnedSites.forEach { sortedSites.remove(it) }
+
+        return pinnedSites + sortedSites
+    }
+
     /**
      * Returns the index of the site with the given local ID.
      */
