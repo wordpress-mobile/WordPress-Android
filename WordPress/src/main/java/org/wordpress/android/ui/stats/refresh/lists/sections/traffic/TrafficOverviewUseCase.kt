@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -201,6 +202,10 @@ class TrafficOverviewUseCase(
             if (statsGranularity == StatsGranularity.DAYS) {
                 buildTodayCard(selectedItem, items)
             } else {
+                val lowerGranularityDates = domainModel.lowerGranularityDates.map {
+                    statsDateFormatter.parseStatsDate(lowerGranularity, it.period)
+                }
+                val barCount = getBarCount(lowerGranularityDates, selectedDate)
                 buildGranularChart(
                     domainModel.lowerGranularityDates.takeLast(barCount),
                     uiState,
@@ -213,6 +218,31 @@ class TrafficOverviewUseCase(
             AppLog.e(AppLog.T.STATS, "There is no data to be shown in the overview block")
         }
         return items
+    }
+
+    private fun getBarCount(dates: List<Date>, selectedDate: Date) = if (statsGranularity == StatsGranularity.MONTHS) {
+        val selectedCalendar = Calendar.getInstance().apply { time = selectedDate }
+        val selectedYear = selectedCalendar.get(Calendar.YEAR)
+        val selectedMonth = selectedCalendar.get(Calendar.MONTH)
+
+        // Count the weeks that are in the selected month.
+        dates.count {
+            val weekEndCalendar = Calendar.getInstance().apply { time = it }
+            val weekEndYear = weekEndCalendar.get(Calendar.YEAR)
+            val weekEndMonth = weekEndCalendar.get(Calendar.MONTH)
+
+            val weekStartCalendar = Calendar.getInstance().apply {
+                time = it
+                add(Calendar.DAY_OF_YEAR, @Suppress("MagicNumber") -6)
+            }
+            val weekStartYear = weekStartCalendar.get(Calendar.YEAR)
+            val weekStartMonth = weekStartCalendar.get(Calendar.MONTH)
+
+            (weekEndYear == selectedYear && weekEndMonth == selectedMonth) ||
+                    (weekStartYear == selectedYear && weekStartMonth == selectedMonth)
+        }
+    } else {
+        itemsToLoad
     }
 
     private fun buildTodayCard(
