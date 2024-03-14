@@ -28,7 +28,7 @@ ext {
     wordPressFluxCVersion = 'trunk-b9ecc708dde74d6cc95aeab42e56fb8067640039'
     wordPressLoginVersion = '1.14.1'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = '3.13.0'
+    wordPressUtilsVersion = 'trunk-4d6cb9a20bfda0dfe2310cf8275cbdcfb0d42ba7'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
@@ -112,7 +112,7 @@ ext {
 
     // other
     androidDesugarVersion = '2.0.4'
-    wordPressLintVersion = '2.0.0'
+    wordPressLintVersion = '2.1.0'
 }
 
 measureBuilds {
