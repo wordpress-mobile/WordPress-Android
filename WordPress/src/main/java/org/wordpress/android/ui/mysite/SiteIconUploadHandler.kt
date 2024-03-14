@@ -74,8 +74,6 @@ class SiteIconUploadHandler
                 if (event.mediaModelList.size > 0) {
                     val media = event.mediaModelList[0]
                     selectedSiteRepository.updateSiteIconMediaId(media.mediaId.toInt(), true)
-                    selectedSiteRepository.showSiteIconProgressBar(false)
-                    selectedSiteRepository.refresh()
                 } else {
                     AppLog.w(
                         MAIN,
