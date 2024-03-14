@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import androidx.fragment.app.FragmentActivity
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
@@ -86,7 +87,7 @@ fun handlePostListAction(
             ActivityLauncher.viewStatsSinglePostDetails(activity, action.site, action.post)
         }
         is PostListAction.ViewPost -> {
-            if (viewOwnPostOnReader) {
+            if (viewOwnPostOnReader && BuildConfig.IS_JETPACK_APP) {
                 ReaderActivityLauncher.showReaderPostDetail(activity, action.site.siteId, action.post.remotePostId)
             } else {
                 ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
