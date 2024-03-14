@@ -50,7 +50,8 @@ fun handlePostListAction(
     action: PostListAction,
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
     previewStateHelper: PreviewStateHelper,
-    blazeFeatureUtils: BlazeFeatureUtils
+    blazeFeatureUtils: BlazeFeatureUtils,
+    viewOwnPostOnReader: Boolean = false,
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -85,7 +86,11 @@ fun handlePostListAction(
             ActivityLauncher.viewStatsSinglePostDetails(activity, action.site, action.post)
         }
         is PostListAction.ViewPost -> {
-            ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
+            if (viewOwnPostOnReader) {
+                ReaderActivityLauncher.showReaderPostDetail(activity, action.site.siteId, action.post.remotePostId)
+            } else {
+                ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
+            }
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)
