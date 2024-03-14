@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-22 09:54:10+0000
+Translation-Revision-Date: 2024-03-06 09:54:14+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0-rc.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
+    <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">ユーザーによっては、自動再生を不便に感じる場合があります。</string>
+    <string name="notifications_action_mark_all_as_read">すべてを既読にする</string>
+    <string name="notifications_unread_content_description">未読</string>
     <string name="qrcode_media_deeplink_error">サイトが見つかりません。 正しいアカウントにログインしていることを確認してください。</string>
     <string name="gravatar_info_sync_done_button">完了</string>
     <string name="gravatar_info_sync_message">Gravatar プロフィールと更新内容が同期されるのに時間がかかる場合があります。</string>
@@ -381,7 +387,6 @@ Language: ja_JP
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">このサイト</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s が使用している %2$s は、まだアプリのすべての機能をサポートしていません。 %3$s をインストールしてください。</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">数日後に Jetpack アプリに移動予定です。</string>
     <string name="wp_jp_static_poster_footnote">切り替えは無料で、数分で終わります。</string>
     <string name="wp_jp_static_poster_button_secondary">詳細は Jetpack.com をご覧ください</string>
     <string name="wp_jp_static_poster_button_primary">Jetpack アプリに切り替える</string>
@@ -1168,7 +1173,6 @@ Language: ja_JP
     <string name="jetpack_brute_force_allowlist_title">常時許可 IP アドレス</string>
     <string name="site_settings_denylist_title">禁止コメント</string>
     <string name="gutenberg_native_add_button_text">ボタンのテキストを追加</string>
-    <string name="stories_intro_main_subtitle">心をつかむコンテンツを作り、サイトで公開する新しい方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">非表示</string>
     <string name="activity_log_backup_download_notice_download_action">ダウンロード</string>
     <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
@@ -1336,7 +1340,6 @@ Language: ja_JP
     <string name="request_failed_message">リクエストの処理中に問題が発生しました。 後ほどもう一度お試しください。</string>
     <string name="gutenberg_native_move_to_bottom">一番下へ</string>
     <string name="gutenberg_native_change_block_position">ブロックの位置を変更</string>
-    <string name="label_control_upload">アップロード</string>
     <string name="jetpack_icon_content_description">アイコン</string>
     <string name="backup_download_complete_info">ファイルへのリンクはメールでも送信されました。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">リンク共有ボタン</string>
@@ -1437,7 +1440,6 @@ Language: ja_JP
     <string name="dialog_confirm_copy_local_message">コピーしようとしている投稿に競合する2つのバージョンが存在するか、最近行った変更が保存されていません。\n競合を解消するには投稿を編集するか、このアプリからバージョンをコピーしてください。</string>
     <string name="dialog_confirm_copy_local_title">同期後の競合</string>
     <string name="button_copy">複製</string>
-    <string name="toast_edit_story_update_in_progress_title">ストーリーを保存中です。しばらくお待ちください…</string>
     <string name="gutenberg_native_file_name">ファイル名</string>
     <string name="gutenberg_native_file_block_settings">ファイルブロック設定</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
@@ -1455,23 +1457,8 @@ Language: ja_JP
     <string name="reader_follow_comments_null_response">応答がありませんでした</string>
     <string name="activity_log_activity_type_filter_clear">クリア</string>
     <string name="activity_log_activity_type_filter_apply">適用</string>
-    <string name="dialog_edit_story_unsupported_format_message">1つ以上のスライドがストーリーに追加されていません。現在、ストーリーでは GIF ファイルがサポートされていないためです。 代わりに静的画像または動画の背景を選択してください。</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF ファイルはサポートされていません</string>
-    <string name="dialog_edit_story_unrecoverable_message">このストーリーのメディアがサイトにありませんでした。</string>
-    <string name="dialog_edit_story_unrecoverable_title">ストーリーを編集できません</string>
-    <string name="dialog_edit_story_unavailable_message">このストーリーのメディアを読み込めません。 ネットワーク接続を確認して、もう一度お試しください。</string>
-    <string name="dialog_edit_story_unavailable_title">ストーリーを編集できません</string>
-    <string name="dialog_edit_story_limited_message">このストーリーは別の端末で編集されており、特定のオブジェクトを編集する機能が制限される可能性があります。</string>
-    <string name="dialog_edit_story_limited_title">制限されたストーリー編集</string>
     <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーを再度作成してみてください。</string>
-    <string name="color_picker_label_background">背景</string>
-    <string name="color_picker_label_text">テキスト</string>
-    <string name="dialog_discard_story_ok_button_edit">保存しない</string>
-    <string name="dialog_discard_story_message_edit">行った変更はすべて保存されません。</string>
-    <string name="dialog_discard_story_title_edit">変更を破棄しますか ?</string>
     <string name="label_done_button">終了</string>
-    <string name="label_next_button">次へ</string>
-    <string name="delete_button_alt">削除</string>
     <string name="hpp_choose_error">テーマの選択中にエラーが発生しました。</string>
     <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
     <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
@@ -1521,14 +1508,6 @@ Language: ja_JP
     <string name="gutenberg_native_help_button">ヘルプボタン</string>
     <string name="gutenberg_native_edit_using_web_editor">Web エディターを使って編集</string>
     <string name="gutenberg_native_choose_images">画像を選択</string>
-    <string name="stories_intro_create_story_post_label">ストーリー投稿を作成</string>
-    <string name="stories_intro_description_second">新しいブログ投稿としてサイトに公開されるため、読者が見逃すことはありません。</string>
-    <string name="stories_intro_title_second">ストーリー投稿は消えません</string>
-    <string name="stories_intro_description_first">写真、動画、文章を組み合わせて、見た人が心をつかまれタップしたくなるような、好感を持たれるストーリー投稿を作ります。</string>
-    <string name="stories_intro_title_first">いまやストーリーはみなさんのためのものです</string>
-    <string name="stories_intro_image_caption_second">ストーリーのタイトルの例</string>
-    <string name="stories_intro_image_caption_first">ストーリー投稿の作り方</string>
-    <string name="stories_intro_main_title">ストーリー投稿の紹介</string>
     <string name="mlp_notice_blank_page_created">空白ページが作成されました</string>
     <string name="mlp_notice_page_created">ページが作成されました</string>
     <string name="media_insert_failed">メディアの挿入に失敗しました。</string>
@@ -1549,13 +1528,6 @@ Language: ja_JP
     <string name="gutenberg_native_add_this_link">このリンクを追加</string>
     <string name="gutenberg_native_add_this_email_link">このメールリンクを追加</string>
     <string name="suggestion_no_connection">インターネットに接続していません。\n提案が利用できません。</string>
-    <string name="typeface_label_shrikhand">太字</string>
-    <string name="typeface_label_space_mono">モダン</string>
-    <string name="typeface_label_pacifico">プレイフル</string>
-    <string name="typeface_label_oswald">強調</string>
-    <string name="typeface_label_libre_baskerville">クラシック</string>
-    <string name="typeface_label_nunito">カジュアル</string>
-    <string name="toast_capture_operation_permission_needed">動画を録画するには、アプリに音声録音の権限を付与する必要があります</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%sを選択済み</string>
     <string name="login_get_link_by_email">ログインリンクをメールで取得</string>
@@ -1582,66 +1554,13 @@ Language: ja_JP
     <string name="gutenberg_native_page_title_empty">ページタイトル。 空にする</string>
     <string name="toast_error_playing_video">動画再生時にエラーが発生しました</string>
     <string name="camera_error">この端末は Camera2 API をサポートしていません。</string>
-    <string name="toast_error_saving_video">動画を保存できませんでした</string>
-    <string name="toast_error_saving_image">画像を保存する際にエラーが発生しました</string>
-    <string name="toast_capture_operation_in_progress">操作が進行中です。再度お試しください</string>
-    <string name="toast_story_page_not_found">ストーリースライドが見つかりませんでした</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">ストレージを表示</string>
-    <string name="dialog_insufficient_device_storage_error_message">公開する前に端末にストーリーを保存する必要があります。ストレージ設定を確認し、ファイルを削除してスペースを空けてください。</string>
-    <string name="dialog_insufficient_device_storage_error_title">端末のストレージ容量が足りません</string>
-    <string name="dialog_story_saving_error_message">スライドの保存または削除を再度試してから、ストーリーの公開を再度試してみてください。</string>
-    <string name="dialog_story_saving_error_title_plural">%1$dつのスライドを保存できません</string>
-    <string name="dialog_story_saving_error_title_singular">1つのスライドを保存できません</string>
-    <string name="story_saving_failed_quick_action_manage">管理</string>
-    <string name="story_saving_failed_message_plural">%1$d つのスライドで操作が必要です</string>
-    <string name="story_saving_failed_message_singular">1つのスライドで操作が必要です</string>
-    <string name="story_saving_failed_title">「%1$s」をアップロードできません</string>
-    <string name="story_saving_snackbar_finished_with_error">「%1$s」をアップロードできません</string>
-    <string name="story_saving_snackbar_finished_successfully">「%1$s」を公開しました</string>
-    <string name="story_saving_snackbar_started">「%1$s」をアップロード中…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d つのスライドが残っています</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1つのスライドが残っています</string>
-    <string name="story_saving_title_several">複数のストーリー</string>
-    <string name="story_saving_title">「%1$s」を保存中…</string>
-    <string name="story_saving_untitled">名称未設定</string>
-    <string name="dialog_discard_story_ok_button">削除</string>
-    <string name="dialog_discard_story_message">ストーリーの投稿は下書きとして保存されません。</string>
-    <string name="dialog_discard_story_title">ストーリーの投稿を破棄しますか ?</string>
-    <string name="dialog_discard_page_ok_button">削除</string>
-    <string name="dialog_discard_errored_page_message">このスライドはまだ保存されていません。 このスライドを削除すると、編集内容がすべて失われます。</string>
-    <string name="dialog_discard_page_message">このスライドはストーリーから削除されます。</string>
-    <string name="dialog_discard_page_title">ストーリーのスライドを削除しますか ?</string>
-    <string name="label_text_color_button">テキストの色を変更</string>
-    <string name="label_text_alignment_button">テキストの配置を変更</string>
-    <string name="label_frame_errored">エラーが発生</string>
-    <string name="label_frame_selected_border">選択済み</string>
-    <string name="label_frame_unselected_border">選択解除済み</string>
-    <string name="label_frame_image">スライド</string>
-    <string name="label_retry_icon">再試行</string>
-    <string name="label_saved_icon">保存しました</string>
     <string name="label_close_button">閉じる</string>
-    <string name="label_share_to">以下と共有</string>
-    <string name="label_snackbar_share">共有</string>
-    <string name="label_snackbar_loop_frame_saved">写真に保存しました</string>
-    <string name="label_control_retry">再試行</string>
-    <string name="label_control_saved">保存しました</string>
-    <string name="label_control_saving">保存中</string>
-    <string name="label_control_flash">フラッシュ</string>
-    <string name="label_control_flip_camera">反転</string>
-    <string name="sound_button_alt">音声</string>
-    <string name="text_button_alt">テキスト</string>
-    <string name="stickers_button_alt">ステッカー</string>
-    <string name="flash_button_alt">フラッシュ</string>
-    <string name="flip_button_alt">カメラを反転</string>
-    <string name="capture_button_alt">即時売上</string>
     <string name="mlp_preview_page">プレビュー</string>
     <string name="mlp_create_page">ページを作成</string>
     <string name="mlp_create_blank_page">空白ページを作成</string>
     <string name="mlp_choose_layout_subtitle">事前に用意されたさまざまなページレイアウトを選ぶところから始めましょう。 空白ページから始めることもできます。</string>
     <string name="mlp_choose_layout_title">レイアウトを選択</string>
     <string name="prepublishing_nudges_story_title_hint">ストーリーにタイトルを付ける</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">投稿またはストーリーを作成</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">投稿、ページ、ストーリーを作成</string>
     <string name="quick_start_dialog_create_new_post_message_short">「%1$s 作成」をタップします。%2$s 次に「&lt;b&gt;ブログ投稿&lt;/b&gt;」を選択します</string>
     <string name="photo_picker_choose_file">端末から選択</string>
     <string name="my_site_bottom_sheet_add_story">ストーリー投稿</string>

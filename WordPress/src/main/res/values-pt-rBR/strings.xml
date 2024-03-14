@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2024-02-21 21:16:50+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0-rc.1
 Language: pt_BR
 -->
 <resources>
@@ -212,7 +212,6 @@ Language: pt_BR
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Este site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s está usando %2$s, que ainda não são compatíveis com todas as funcionalidades do aplicativo. Instale o %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s está usando %2$s, que ainda não é compatível com todas as funcionalidades do aplicativo. Instale o %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Indo para o aplicativo Jetpack em alguns dias.</string>
     <string name="wp_jp_static_poster_footnote">A mudança é gratuita e leva apenas um minuto.</string>
     <string name="wp_jp_static_poster_button_secondary">Saiba mais em br.jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Mudar para o aplicativo do Jetpack</string>
@@ -992,7 +991,6 @@ Language: pt_BR
     <string name="jetpack_brute_force_allowlist_title">Endereços IP sempre permitidos</string>
     <string name="site_settings_denylist_title">Comentários não permitidos</string>
     <string name="gutenberg_native_add_button_text">Adicionar texto do botão</string>
-    <string name="stories_intro_main_subtitle">Uma nova maneira de criar e publicar conteúdos atraentes em seu site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Dispensar</string>
     <string name="activity_log_backup_download_notice_download_action">Baixar</string>
     <string name="threat_fix_all_status_success_message_plural">As ameaças foram corrigidas.</string>
@@ -1160,7 +1158,6 @@ Language: pt_BR
     <string name="request_failed_message">Houve um problema no processamento da solicitação. Tente novamente mais tarde.</string>
     <string name="gutenberg_native_move_to_bottom">Mover para o fim</string>
     <string name="gutenberg_native_change_block_position">Alterar posição do bloco</string>
-    <string name="label_control_upload">Enviar</string>
     <string name="jetpack_icon_content_description">ícone</string>
     <string name="backup_download_complete_info">Nós também enviarmos um e-mail com link para seu arquivo.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Botão para compartilhar link</string>
@@ -1261,7 +1258,6 @@ Language: pt_BR
     <string name="dialog_confirm_copy_local_message">O post que você está tentando copiar possui duas versões em conflito ou você fez alterações recentemente que não foram salvas.\nPrimeiro edite o post para corrigir qualquer conflito e depois copie a versão no aplicativo.</string>
     <string name="dialog_confirm_copy_local_title">Conflito na sincronização do post</string>
     <string name="button_copy">Duplicar</string>
-    <string name="toast_edit_story_update_in_progress_title">A story está sendo salva. Aguarde…</string>
     <string name="gutenberg_native_file_name">Nome do arquivo</string>
     <string name="gutenberg_native_file_block_settings">Configurações do bloco Arquivo</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Falha ao enviar arquivos.\nToque para ver mais opções.</string>
@@ -1279,23 +1275,8 @@ Language: pt_BR
     <string name="reader_follow_comments_null_response">Nenhuma resposta recebida</string>
     <string name="activity_log_activity_type_filter_clear">Limpar</string>
     <string name="activity_log_activity_type_filter_apply">Aplicar</string>
-    <string name="dialog_edit_story_unsupported_format_message">Um ou mais slide não foi adicionado ao seu Story por que este recurso não suporte arquivos GIF no momento. Escolha uma imagem estática ou vídeo de fundo.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Arquivos gif não são compatíveis</string>
-    <string name="dialog_edit_story_unrecoverable_message">Não conseguimos encontrar a mídia para este story no site.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Não é possível editar o story</string>
-    <string name="dialog_edit_story_unavailable_message">Não foi possível enviar a mídia para este story. Verifique sua conexão de internet e tente novamente.</string>
-    <string name="dialog_edit_story_unavailable_title">Não é possível editar o story</string>
-    <string name="dialog_edit_story_limited_message">Este story foi editado em outro dispositivo e a possibilidade de edição de certos objetos pode estar limitada.</string>
-    <string name="dialog_edit_story_limited_title">Edição limitada de story</string>
     <string name="cannot_retry_deleted_media_item_fatal">A mídia foi removida. Tente criar a story novamente.</string>
-    <string name="color_picker_label_background">Fundo</string>
-    <string name="color_picker_label_text">Texto</string>
-    <string name="dialog_discard_story_ok_button_edit">Descartar</string>
-    <string name="dialog_discard_story_message_edit">Qualquer alteração feita não será salva.</string>
-    <string name="dialog_discard_story_title_edit">Descartar alterações?</string>
     <string name="label_done_button">Concluído</string>
-    <string name="label_next_button">Seguinte</string>
-    <string name="delete_button_alt">Excluir</string>
     <string name="hpp_choose_error">Ocorreu um erro durante a seleção do tema.</string>
     <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
     <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
@@ -1345,14 +1326,6 @@ Language: pt_BR
     <string name="gutenberg_native_help_button">Botão de ajuda</string>
     <string name="gutenberg_native_edit_using_web_editor">Editar usando o editor web</string>
     <string name="gutenberg_native_choose_images">Escolher imagens</string>
-    <string name="stories_intro_create_story_post_label">Criar um post de Story</string>
-    <string name="stories_intro_description_second">São publicados como novos posts em seu site para que sua audiência não perca nada.</string>
-    <string name="stories_intro_title_second">Posts de Stories não desaparecem</string>
-    <string name="stories_intro_description_first">Combine fotos, vídeos e texto para criar stories clicáveis e com alto engajamento que seus visitantes vão adorar.</string>
-    <string name="stories_intro_title_first">Agora stories são para todo mundo</string>
-    <string name="stories_intro_image_caption_second">Título de exemplo to story</string>
-    <string name="stories_intro_image_caption_first">Como criar um post de story</string>
-    <string name="stories_intro_main_title">Apresentando os posts de Story</string>
     <string name="mlp_notice_blank_page_created">Página vazia criada</string>
     <string name="mlp_notice_page_created">Página criada</string>
     <string name="media_insert_failed">Inserção de imagem falhou.</string>
@@ -1373,13 +1346,6 @@ Language: pt_BR
     <string name="gutenberg_native_add_this_link">Adicionar este link</string>
     <string name="gutenberg_native_add_this_email_link">Adicionar este e-mail como link</string>
     <string name="suggestion_no_connection">Sem conexão à internet.\nAs sugestões estão indisponíveis.</string>
-    <string name="typeface_label_shrikhand">Negrito</string>
-    <string name="typeface_label_space_mono">Moderno</string>
-    <string name="typeface_label_pacifico">Divertido</string>
-    <string name="typeface_label_oswald">Forte</string>
-    <string name="typeface_label_libre_baskerville">Clássico</string>
-    <string name="typeface_label_nunito">Casual</string>
-    <string name="toast_capture_operation_permission_needed">Você deve conceder ao aplicativo permissão de gravação de áudio para gravar um vídeo</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s selecionado(s)</string>
     <string name="login_get_link_by_email">Receber um link de acesso por e-mail</string>
@@ -1406,66 +1372,13 @@ Language: pt_BR
     <string name="gutenberg_native_page_title_empty">Título da página. Vazio</string>
     <string name="toast_error_playing_video">Ocorreu um erro ao reproduzir o vídeo</string>
     <string name="camera_error">Este dispositivo não suporta a API Camera2.</string>
-    <string name="toast_error_saving_video">Não foi possível salvar o vídeo</string>
-    <string name="toast_error_saving_image">Erro ao salvar a imagem</string>
-    <string name="toast_capture_operation_in_progress">Operação em andamento. Tente novamente</string>
-    <string name="toast_story_page_not_found">Não foi possível encontrar um slide de Story</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Ver armazenamento</string>
-    <string name="dialog_insufficient_device_storage_error_message">Precisamos salvar o story em seu dispositivo antes de publicá-lo. Verifique suas configurações de armazenamento e exclua alguns arquivos para liberar espaço.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Sem espaço suficiente no dispositivo</string>
-    <string name="dialog_story_saving_error_message">Tente salvar novamente ou exclua os slides. Então tente publicar seu story novamente.</string>
-    <string name="dialog_story_saving_error_title_plural">Não foi possível salvar %1$d slides</string>
-    <string name="dialog_story_saving_error_title_singular">Não foi possível salvar 1 slide</string>
-    <string name="story_saving_failed_quick_action_manage">Gerenciar</string>
-    <string name="story_saving_failed_message_plural">%1$d slides requerem sua atenção</string>
-    <string name="story_saving_failed_message_singular">1 slide requer sua atenção</string>
-    <string name="story_saving_failed_title">Não foi possível enviar \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Não foi possível enviar \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" publicado</string>
-    <string name="story_saving_snackbar_started">Enviando \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d slides restantes</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 slide restante</string>
-    <string name="story_saving_title_several">vários stories</string>
-    <string name="story_saving_title">Salvando \"%1$s\"…</string>
-    <string name="story_saving_untitled">Sem título</string>
-    <string name="dialog_discard_story_ok_button">Descartar</string>
-    <string name="dialog_discard_story_message">Seu story não será salvo como um rascunho.</string>
-    <string name="dialog_discard_story_title">Descartar story?</string>
-    <string name="dialog_discard_page_ok_button">Excluir</string>
-    <string name="dialog_discard_errored_page_message">O slide ainda não foi salvo. Caso você exclua este slide, todas as alterações serão perdidas.</string>
-    <string name="dialog_discard_page_message">Este slide será removido de seu story.</string>
-    <string name="dialog_discard_page_title">Excluir slide do story?</string>
-    <string name="label_text_color_button">Mudar cor do texto</string>
-    <string name="label_text_alignment_button">Mudar alinhamento do texto</string>
-    <string name="label_frame_errored">com erro</string>
-    <string name="label_frame_selected_border">selecionado</string>
-    <string name="label_frame_unselected_border">não selecionado</string>
-    <string name="label_frame_image">Slide</string>
-    <string name="label_retry_icon">Tentar novamente</string>
-    <string name="label_saved_icon">Salvo</string>
     <string name="label_close_button">Fechar</string>
-    <string name="label_share_to">Compartilhar em</string>
-    <string name="label_snackbar_share">Compartilhar</string>
-    <string name="label_snackbar_loop_frame_saved">Salvo em fotos</string>
-    <string name="label_control_retry">Tentar novamente</string>
-    <string name="label_control_saved">Salvo</string>
-    <string name="label_control_saving">Salvando</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Virar</string>
-    <string name="sound_button_alt">Som</string>
-    <string name="text_button_alt">Texto</string>
-    <string name="stickers_button_alt">Adesivos</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">Virar câmera</string>
-    <string name="capture_button_alt">Capturar</string>
     <string name="mlp_preview_page">Visualizar</string>
     <string name="mlp_create_page">Criar página</string>
     <string name="mlp_create_blank_page">Criar uma página vazia</string>
     <string name="mlp_choose_layout_subtitle">Comece escolhendo entre uma grande variedade de modelos prontos ou crie uma página vazia.</string>
     <string name="mlp_choose_layout_title">Escolher um modelo</string>
     <string name="prepublishing_nudges_story_title_hint">Adicione um título para seu story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Criar um post ou story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Criar um post, página ou story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Toque em %1$s Criar. %2$s Então selecione  &lt;b&gt;Post do blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Escolher no dispositivo</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>
