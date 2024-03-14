@@ -422,6 +422,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                             noteObject, imageManager, notificationsUtilsWrapper,
                             mOnNoteBlockTextClickListener
                         )
+                        if (noteBlock.hasImageMediaItem()) {
+                            noteBlock.noteMediaItem?.url?.let {
+                                imageManager.preload(requireContext(), it)
+                            }
+                        }
                     }
 
                     // Badge notifications apply different colors and formatting

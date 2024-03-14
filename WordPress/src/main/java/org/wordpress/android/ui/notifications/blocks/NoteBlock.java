@@ -104,7 +104,7 @@ public class NoteBlock {
         mIsPingback = true;
     }
 
-    FormattableMedia getNoteMediaItem() {
+    @Nullable public FormattableMedia getNoteMediaItem() {
         return FormattableContentUtilsKt.getMediaOrNull(mNoteData, 0);
     }
 
@@ -124,7 +124,7 @@ public class NoteBlock {
         return mNoteData.getMedia() != null && !mNoteData.getMedia().isEmpty();
     }
 
-    boolean hasImageMediaItem() {
+    public boolean hasImageMediaItem() {
         return hasMediaArray()
                && getNoteMediaItem() != null
                && !TextUtils.isEmpty(getNoteMediaItem().getType())
