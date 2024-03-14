@@ -624,36 +624,6 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             return mNoteList.size();
         }
 
-        // TODO: The following work-arounds have been commented out because the overridden methods are either final
-        //       or non-existent. It should be determined whether these are still necessary, and if there are similar
-        //       work-arounds that can be applied for ViewPager2.
-//        @Override
-//        public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
-//            // work around "Fragment no longer exists for key" Android bug
-//            // by catching the IllegalStateException
-//            // https://code.google.com/p/android/issues/detail?id=42601
-//            try {
-//                AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter restoreState");
-//                super.restoreState(state, loader);
-//            } catch (IllegalStateException e) {
-//                AppLog.e(AppLog.T.NOTIFS, e);
-//            }
-//        }
-//
-//        @Nullable
-//        @Override
-//        public Parcelable saveState() {
-//            AppLog.d(AppLog.T.NOTIFS, "notifications pager > adapter saveState");
-//            Bundle bundle = (Bundle) super.saveState();
-//            if (bundle == null) {
-//                bundle = new Bundle();
-//            }
-//            // This is a possible solution to https://github.com/wordpress-mobile/WordPress-Android/issues/5456
-//            // See https://issuetracker.google.com/issues/37103380#comment77 for more details
-//            bundle.putParcelableArray("states", null);
-//            return bundle;
-//        }
-
         boolean isValidPosition(int position) {
             return (position >= 0 && position < getItemCount());
         }
