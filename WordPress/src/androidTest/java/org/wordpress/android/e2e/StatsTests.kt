@@ -38,7 +38,7 @@ class StatsTests : BaseTest() {
 
     @Test
     fun e2eAllDayStatsLoad() {
-        val todayVisits = StatsVisitsData("97", "28", "14", "11")
+        // val todayVisits = StatsVisitsData("97", "28", "14", "11")
         val postsList: List<StatsKeyValueData> = StatsMocksReader().readDayTopPostsToList()
         val referrersList: List<StatsKeyValueData> = StatsMocksReader().readDayTopReferrersToList()
         val clicksList: List<StatsKeyValueData> = StatsMocksReader().readDayClicksToList()
