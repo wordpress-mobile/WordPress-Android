@@ -273,14 +273,20 @@ public class RestClientUtils {
      */
     public Request<JSONObject> get(final String path, final Map<String, String> params, RetryPolicy retryPolicy,
                                    final Listener listener, final ErrorListener errorListener) {
+        final Map<String, String> paramsWithPath = new HashMap<>();
+        if (params != null) {
+            paramsWithPath.putAll(params);
+        }
         String realPath = getSanitizedPath(path);
         if (TextUtils.isEmpty(realPath)) {
             realPath = path;
         }
-        params.putAll(getSanitizedParameters(path));
+        if (path != null) {
+            paramsWithPath.putAll(getSanitizedParameters(path));
+        }
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient
-                .getAbsoluteURL(realPath, params), null, listener, errorListener);
+                .getAbsoluteURL(realPath, paramsWithPath), null, listener, errorListener);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);

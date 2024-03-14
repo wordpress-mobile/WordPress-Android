@@ -1,22 +1,29 @@
 package org.wordpress.android.ui.reader.services.search;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.StringUtils;
+
+import javax.inject.Inject;
 
 /**
  * service which searches for reader posts on wordpress.com
  */
 
+@AndroidEntryPoint
 public class ReaderSearchService extends Service implements ServiceCompletionListener {
     private static final String ARG_QUERY = "query";
     private static final String ARG_OFFSET = "offset";
 
     private ReaderSearchLogic mReaderSearchLogic;
+
+    @Inject LocaleManagerWrapper mLocaleManagerWrapper;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -26,7 +33,7 @@ public class ReaderSearchService extends Service implements ServiceCompletionLis
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderSearchLogic = new ReaderSearchLogic(this);
+        mReaderSearchLogic = new ReaderSearchLogic(this, mLocaleManagerWrapper);
         AppLog.i(AppLog.T.READER, "reader search service > created");
     }
 
