@@ -207,12 +207,9 @@ public class ActivityLauncher {
      * Presents the site picker and expects the selection result
      *
      * @param activity the activity that starts the site picker and expects the result
-     * @param site     the preselected site
      */
-    public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
-//        activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
-        ChooseSiteActivity.Companion.start(activity);
+    public static void showSitePickerForResult(Activity activity) {
+        ChooseSiteActivity.startForResult(activity);
     }
 
     /**

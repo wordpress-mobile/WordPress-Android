@@ -19,6 +19,7 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
         private set
 
     var onReload = {}
+    var onSiteClicked: (SiteRecord) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseSiteViewHolder =
         ChooseSiteViewHolder(ItemChooseSiteBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -30,6 +31,9 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
         holder.bind(mode, sites.getOrNull(position - 1), sites[position])
         holder.onPinUpdated = {
             onReload()
+        }
+        holder.onSiteClicked = {
+            onSiteClicked(it)
         }
     }
 
@@ -55,6 +59,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     lateinit var appPrefs: AppPrefsWrapper
 
     var onPinUpdated = { _: SiteRecord -> }
+    var onSiteClicked = { _: SiteRecord -> }
 
     init {
         (itemView.context.applicationContext as WordPress).component().inject(this)
@@ -68,12 +73,12 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
 
         when {
             previousSite == null && site.isPinned() -> {
-                binding.header.text = "Pinned Sites"
+                binding.header.text = itemView.context.getString(R.string.pinned_sites)
                 binding.header.isVisible = true
             }
 
             (previousSite == null || previousSite.isPinned()) && site.isPinned().not() -> {
-                binding.header.text = "All Sites"
+                binding.header.text = itemView.context.getString(R.string.all_sites)
                 binding.header.isVisible = true
             }
 
@@ -96,6 +101,8 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             }
             onPinUpdated(site)
         }
+
+        binding.layoutContainer.setOnClickListener { onSiteClicked(site) }
     }
 
     private fun SiteRecord?.isPinned(): Boolean = when (this) {

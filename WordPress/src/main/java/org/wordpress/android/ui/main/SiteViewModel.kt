@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -21,8 +22,13 @@ class SiteViewModel @Inject constructor(
     private val _sites = MutableLiveData<List<SiteRecord>>()
     val sites: LiveData<List<SiteRecord>> = _sites
 
-    fun loadSites() = launch {
-        _sites.postValue(getSites())
+    fun loadSites(siteModels: List<SiteModel>? = null) = launch {
+        if (siteModels == null) {
+            _sites.postValue(getSites())
+        } else {
+            siteModels.map { SiteRecord(it) }
+                .let { _sites.postValue(sortSites(it)) }
+        }
     }
 
     fun searchSites(keyword: String) = launch {
@@ -42,8 +48,12 @@ class SiteViewModel @Inject constructor(
     private fun getSites(): List<SiteRecord> {
         val sites = (siteStore.visibleSitesAccessedViaWPCom + siteStore.sitesAccessedViaXMLRPC)
             .map { SiteRecord(it) }
-            .toMutableList()
 
+        return sortSites(sites)
+    }
+
+    private fun sortSites(records: List<SiteRecord>): List<SiteRecord> {
+        val sites = records.toMutableList()
         val pinnedSites = appPrefsWrapper.pinnedSiteLocalIds
             .mapNotNull { pinnedId -> sites.firstOrNull { it.localId == pinnedId } }
 

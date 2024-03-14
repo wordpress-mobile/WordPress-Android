@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.main
 
+import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -17,20 +17,33 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.SitePickerActivityBinding
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.ARG_SITE_CREATION_SOURCE
 import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.SOURCE
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.Companion.fromString
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
+import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -41,9 +54,13 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private lateinit var menuSearch: MenuItem
     private lateinit var menuEditPin: MenuItem
     private lateinit var menuAdd: MenuItem
+    private lateinit var refreshHelper: SwipeToRefreshHelper
 
     @Inject
     lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var dispatcher: Dispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +68,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarMain)
+        binding.toolbarMain.setNavigationOnClickListener { finish() }
 
         binding.progress.isVisible = true
         setupRecycleView()
@@ -61,7 +79,44 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             binding.actionableEmptyView.isVisible = it.isEmpty()
             adapter.setSites(it)
         }
+
+        refreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(binding.ptrLayout) {
+            refreshHelper.isRefreshing = true
+            dispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()))
+        }
+
         viewModel.loadSites()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dispatcher.register(this)
+    }
+
+    override fun onStop() {
+        dispatcher.unregister(this)
+        super.onStop()
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSiteChanged(event: OnSiteChanged) {
+        if (refreshHelper.isRefreshing) {
+            refreshHelper.isRefreshing = false
+        }
+        viewModel.loadSites(event.updatedSites)
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onSiteRemoved(event: OnSiteRemoved) {
+        if (event.isError.not()) {
+            viewModel.loadSites()
+        } else {
+            // shouldn't happen
+            AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error)
+            ToastUtils.showToast(this, R.string.site_picker_remove_site_error)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -181,17 +236,29 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     private fun setupRecycleView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter.apply { onReload = { viewModel.loadSites() } }
+        binding.recyclerView.adapter = adapter.apply {
+            onReload = { viewModel.loadSites() }
+            onSiteClicked = { selectSite(it) }
+        }
         binding.recyclerView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         binding.recyclerView.setEmptyView(binding.actionableEmptyView)
+    }
+
+    private fun selectSite(siteRecord: SiteRecord) {
+        AppPrefs.addRecentlyPickedSiteId(siteRecord.localId)
+        setResult(RESULT_OK, Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.localId))
+        finish()
     }
 
     companion object {
         const val ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE"
         const val SOURCE = "source"
-        fun start(context: Context) {
-            Intent(context, ChooseSiteActivity::class.java)
-                .let { context.startActivity(it) }
+        const val KEY_SITE_LOCAL_ID = "local_id"
+
+        @JvmStatic
+        fun startForResult(activity: Activity) {
+            Intent(activity, ChooseSiteActivity::class.java)
+                .let { activity.startActivityForResult(it, RequestCodes.SITE_PICKER) }
         }
     }
 }

@@ -576,7 +576,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Suppress("ComplexMethod", "LongMethod")
     fun handleNavigationAction(action: SiteNavigationAction) = when (action) {
         is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
-        is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+        is SiteNavigationAction.OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity)
         is SiteNavigationAction.OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
         is SiteNavigationAction.OpenMediaPicker ->
             mediaPickerLauncher.showSiteIconPicker(this@MySiteFragment, action.site)
