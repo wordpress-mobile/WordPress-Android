@@ -109,6 +109,35 @@
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
+    <style name="ReaderTheme.System" parent="Base.Wordpress" />
+
+    <style name="ReaderTheme.Paper" parent="Base.Wordpress">
+        <item name="colorSurface">@color/reader_theme_paper_background</item>
+        <item name="colorOnSurface">@color/reader_theme_paper_text</item>
+        <item name="android:colorBackground">@color/reader_theme_paper_background</item>
+        <item name="colorOnBackground">@color/reader_theme_paper_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_paper_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_paper_text</item>
+    </style>
+
+    <style name="ReaderTheme.OLED" parent="Base.Wordpress">
+        <item name="colorSurface">@color/reader_theme_oled_background</item>
+        <item name="colorOnSurface">@color/reader_theme_oled_text</item>
+        <item name="android:colorBackground">@color/reader_theme_oled_background</item>
+        <item name="colorOnBackground">@color/reader_theme_oled_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_oled_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_oled_text</item>
+    </style>
+
+    <style name="ReaderTheme.Sepia" parent="Base.Wordpress">
+        <item name="colorSurface">@color/reader_theme_sepia_background</item>
+        <item name="colorOnSurface">@color/reader_theme_sepia_text</item>
+        <item name="android:colorBackground">@color/reader_theme_sepia_background</item>
+        <item name="colorOnBackground">@color/reader_theme_sepia_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_sepia_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_sepia_text</item>
+    </style>
+
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
         <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
