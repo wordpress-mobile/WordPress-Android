@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/menu_pin"
-        android:title="Edit pinned sites"
+        android:title="@string/edit"
         android:icon="@drawable/pin_filled"
         app:showAsAction="always" />
 </menu>
