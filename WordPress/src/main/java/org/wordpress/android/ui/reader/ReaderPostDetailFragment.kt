@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
@@ -107,9 +108,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
+import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -284,6 +286,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject
     lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
+    @Inject
+    lateinit var getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase
+
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
             .post(ReaderEvents.DoSignIn())
@@ -356,6 +361,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Suppress("RedundantNullableReturnType")
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
+    }
+
+    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
+        val readingPreferences = getReadingPreferences()
+        val inflater = super.onGetLayoutInflater(savedInstanceState)
+        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
+        return inflater.cloneInContext(contextThemeWrapper)
     }
 
     override fun onCreateView(
@@ -1578,7 +1590,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView,
             viewModel.post,
             readerCssProvider,
-            readerImprovementsFeatureConfig.isEnabled()
+            getReadingPreferences()
         )
 
         // if the post is from private atomic site postpone render until we have a special access cookie
