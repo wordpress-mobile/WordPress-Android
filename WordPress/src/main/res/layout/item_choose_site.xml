@@ -58,7 +58,7 @@
             style="@style/Widget.LoginFlow.TextView.List.Line1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="15sp"
@@ -73,7 +73,7 @@
             style="@style/Widget.LoginFlow.TextView.List.Line2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="15sp"
@@ -84,6 +84,4 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="pamelanguyen.com" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </LinearLayout>

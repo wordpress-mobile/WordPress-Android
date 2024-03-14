@@ -22,13 +22,8 @@ class SiteViewModel @Inject constructor(
     private val _sites = MutableLiveData<List<SiteRecord>>()
     val sites: LiveData<List<SiteRecord>> = _sites
 
-    fun loadSites(siteModels: List<SiteModel>? = null) = launch {
-        if (siteModels == null) {
-            _sites.postValue(getSites())
-        } else {
-            siteModels.map { SiteRecord(it) }
-                .let { _sites.postValue(sortSites(it)) }
-        }
+    fun loadSites() = launch {
+        _sites.postValue(getSites())
     }
 
     fun searchSites(keyword: String) = launch {

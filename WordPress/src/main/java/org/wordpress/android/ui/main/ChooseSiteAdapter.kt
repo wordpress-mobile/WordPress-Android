@@ -102,7 +102,11 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             onPinUpdated(site)
         }
 
-        binding.layoutContainer.setOnClickListener { onSiteClicked(site) }
+        if (mode is ActionMode.Pin) {
+            binding.layoutContainer.setOnClickListener(null)
+        } else {
+            binding.layoutContainer.setOnClickListener { onSiteClicked(site) }
+        }
     }
 
     private fun SiteRecord?.isPinned(): Boolean = when (this) {

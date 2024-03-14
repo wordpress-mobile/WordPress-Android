@@ -23,7 +23,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.databinding.SitePickerActivityBinding
+import org.wordpress.android.databinding.ChooseSiteActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
@@ -50,10 +50,9 @@ import javax.inject.Inject
 class ChooseSiteActivity : LocaleAwareActivity() {
     private val viewModel: SiteViewModel by viewModels()
     private val adapter = ChooseSiteAdapter()
-    private lateinit var binding: SitePickerActivityBinding
+    private lateinit var binding: ChooseSiteActivityBinding
     private lateinit var menuSearch: MenuItem
     private lateinit var menuEditPin: MenuItem
-    private lateinit var menuAdd: MenuItem
     private lateinit var refreshHelper: SwipeToRefreshHelper
 
     @Inject
@@ -64,12 +63,14 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = SitePickerActivityBinding.inflate(layoutInflater)
+        binding = ChooseSiteActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarMain)
         binding.toolbarMain.setNavigationOnClickListener { finish() }
-
+        binding.buttonAddSite.setOnClickListener {
+            addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
+        }
         binding.progress.isVisible = true
         setupRecycleView()
 
@@ -104,7 +105,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         if (refreshHelper.isRefreshing) {
             refreshHelper.isRefreshing = false
         }
-        viewModel.loadSites(event.updatedSites)
+        if (event.isError.not()) {
+            viewModel.loadSites()
+        }
     }
 
     @Suppress("unused")
@@ -123,7 +126,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.choose_site, menu)
         menuSearch = menu.findItem(R.id.menu_search)
-        menuAdd = menu.findItem(R.id.menu_add)
         menuEditPin = menu.findItem(R.id.menu_pin)
         return true
     }
@@ -138,7 +140,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private fun setupSearchView(searchView: SearchView) {
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                menuAdd.isVisible = false
                 menuEditPin.isVisible = false
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
@@ -159,7 +160,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 searchView.setOnQueryTextListener(null)
                 viewModel.loadSites()
-                menuAdd.isVisible = true
                 menuEditPin.isVisible = true
                 invalidateOptionsMenu()
                 return true
@@ -176,11 +176,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
                 } else {
                     enablePinSitesMode()
                 }
-                return true
-            }
-
-            R.id.menu_add -> {
-                addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
                 return true
             }
 
@@ -217,7 +212,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
      */
     private fun enablePinSitesMode() {
         menuSearch.isVisible = false
-        menuAdd.isVisible = false
         menuEditPin.setIcon(null)
         menuEditPin.title = "Done"
         adapter.setActionMode(ActionMode.Pin)
@@ -228,7 +222,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
      */
     private fun disablePinSitesMode() {
         menuSearch.isVisible = true
-        menuAdd.isVisible = true
         menuEditPin.setIcon(R.drawable.pin_filled)
         menuEditPin.title = "Edit Pins"
         adapter.setActionMode(ActionMode.None)
