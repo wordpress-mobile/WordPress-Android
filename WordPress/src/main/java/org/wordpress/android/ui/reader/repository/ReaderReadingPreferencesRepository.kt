@@ -16,7 +16,11 @@ class ReaderReadingPreferencesRepository @Inject constructor(
     private val gson = Gson()
 
     suspend fun getReadingPreferences(): ReaderReadingPreferences = withContext(ioDispatcher) {
-        appPrefsWrapper.readerReadingPreferencesJson?.let {
+        getReadingPreferencesSync()
+    }
+
+    fun getReadingPreferencesSync(): ReaderReadingPreferences {
+        return appPrefsWrapper.readerReadingPreferencesJson?.let {
             gson.fromJson(it, ReaderReadingPreferences::class.java)
         } ?: ReaderReadingPreferences(ReaderReadingPreferences.Theme.SYSTEM)
     }
