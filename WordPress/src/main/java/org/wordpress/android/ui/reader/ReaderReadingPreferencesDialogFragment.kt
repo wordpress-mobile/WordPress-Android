@@ -9,12 +9,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -72,21 +72,21 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     private fun observeActionEvents() {
         viewModel.actionEvents.onEach {
             when (it) {
-                is ActionEvent.UpdateStatusBarColor -> setWindowStatusBarColor(it.theme)
-                ActionEvent.Close -> {
-                    postDetailViewModel.onReadingPreferencesChanged()
-                    dismiss()
-                }
+                is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
+                is ActionEvent.Close -> handleClose(it.hasThemeChanged)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun setWindowStatusBarColor(theme: ReaderReadingPreferences.Theme) {
+    private fun handleClose(hasThemeChanged: Boolean) {
+        if (hasThemeChanged) postDetailViewModel.onReadingPreferencesThemeChanged()
+        dismiss()
+    }
+
+    private fun handleUpdateStatusBarColor(theme: ReaderReadingPreferences.Theme) {
         val context = requireContext()
-        viewLifecycleOwner.lifecycleScope.launch {
-            val themeValues = ReaderReadingPreferences.ThemeValues.from(context, theme)
-            dialog?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
-        }
+        val themeValues = ReaderReadingPreferences.ThemeValues.from(context, theme)
+        dialog?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
     }
 
     companion object {

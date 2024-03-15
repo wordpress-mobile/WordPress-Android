@@ -22,7 +22,8 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     private val saveReadingPreferences: ReaderSaveReadingPreferencesUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
-    private val _currentReadingPreferences = MutableStateFlow(getReadingPreferences())
+    private val originalReadingPreferences = getReadingPreferences()
+    private val _currentReadingPreferences = MutableStateFlow(originalReadingPreferences)
     val currentReadingPreferences: StateFlow<ReaderReadingPreferences> = _currentReadingPreferences
 
     private val _actionEvents = MutableSharedFlow<ActionEvent>(onBufferOverflow = BufferOverflow.SUSPEND)
@@ -30,9 +31,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     fun init() {
         launch {
-            val readingPreferences = getReadingPreferences()
-            _currentReadingPreferences.update { readingPreferences }
-            _actionEvents.emit(ActionEvent.UpdateStatusBarColor(readingPreferences.theme))
+            _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
         }
     }
 
@@ -56,13 +55,18 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     fun saveReadingPreferencesAndClose() {
         launch {
-            saveReadingPreferences(currentReadingPreferences.value)
-            _actionEvents.emit(ActionEvent.Close)
+            if (currentReadingPreferences.value != originalReadingPreferences) {
+                saveReadingPreferences(currentReadingPreferences.value)
+                val hasThemeChanged = currentReadingPreferences.value.theme != originalReadingPreferences.theme
+                _actionEvents.emit(ActionEvent.Close(hasThemeChanged = hasThemeChanged))
+            } else {
+                _actionEvents.emit(ActionEvent.Close(hasThemeChanged = false))
+            }
         }
     }
 
     sealed interface ActionEvent {
-        data object Close : ActionEvent
+        data class Close(val hasThemeChanged: Boolean) : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
     }
 }

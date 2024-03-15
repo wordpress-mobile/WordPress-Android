@@ -995,7 +995,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    fun onReadingPreferencesChanged() {
+    fun onReadingPreferencesThemeChanged() {
         _reloadFragment.value = Event(Unit)
     }
 
