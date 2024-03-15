@@ -75,10 +75,6 @@ fun Window.setWindowNavigationBarColor(color: Int) {
 
     navigationBarColor = color
     windowInsetsController.isAppearanceLightNavigationBars = ColorUtils.isColorLight(navigationBarColor)
-
-    // we need to set the light status appearance here because, for some reason, changing the navigation bar also
-    // changes the status bar appearance but this method is supposed to only change the navigation bar
-    windowInsetsController.isAppearanceLightStatusBars = ColorUtils.isColorLight(statusBarColor)
 }
 
 private fun Window.isLightTheme() = !context.resources.configuration.isDarkTheme()
