@@ -181,54 +181,12 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @Suppress("KotlinConstantConditions", "MagicNumber", "UNUSED_PARAMETER")
     suspend fun fetchPaymentMethods(site: SiteModel): BlazePayload<BlazePaymentMethods> {
-        // TODO Use real API when it becomes ready
-
-        fun generateFakePaymentMethods() = BlazePaymentMethodsResponse(
-            savedPaymentMethods = listOf(
-                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
-                    id = "payment-method-id",
-                    type = "credit_card",
-                    name = "Visa **** 4689",
-                    info = JsonObject().apply {
-                        addProperty("last_digits", "4689")
-                        add("expiring", JsonObject().apply {
-                            addProperty("month", 2)
-                            addProperty("year", 2025)
-                        })
-                        addProperty("type", "Visa")
-                        addProperty("nickname", "")
-                        addProperty("cardholder_name", "John Doe")
-                    }
-                ),
-                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
-                    id = "payment-method-id-2",
-                    type = "credit_card",
-                    name = "MasterCard **** 1234",
-                    info = JsonObject().apply {
-                        addProperty("last_digits", "1234")
-                        add("expiring", JsonObject().apply {
-                            addProperty("month", 3)
-                            addProperty("year", 2026)
-                        })
-                        addProperty("type", "MasterCard")
-                        addProperty("nickname", "")
-                        addProperty("cardholder_name", "John Doe")
-                    }
-                )
-            ),
-            addPaymentMethodUrls = BlazePaymentMethodsResponse.BlazeAddPaymentMethodUrlsNetworkModel(
-                formUrl = "https://example.com/blaze-pm-add",
-                successUrl = "https://example.com/blaze-pm-success",
-                idUrlParameter = "pmid"
-            )
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.payment_methods.url
+        val response = wpComNetwork.executeGetGsonRequest(
+            url = url,
+            clazz = BlazePaymentMethodsResponse::class.java
         )
-
-        delay(500)
-        val response: WPComGsonRequestBuilder.Response<BlazePaymentMethodsResponse> =
-            WPComGsonRequestBuilder.Response.Success(generateFakePaymentMethods())
-
         return when (response) {
             is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
 
@@ -410,15 +368,15 @@ private class BlazeAdForecastNetworkModel(
 }
 
 private class BlazePaymentMethodsResponse(
-    @SerializedName("saved_payment_methods")
+    @SerializedName("payment_methods")
     val savedPaymentMethods: List<BlazePaymentMethodsNetworkModel>,
     @SerializedName("add_payment_method")
-    val addPaymentMethodUrls: BlazeAddPaymentMethodUrlsNetworkModel
+    val addPaymentMethodUrls: BlazeAddPaymentMethodUrlsNetworkModel? // TODO make this non nullable when used
 ) {
     fun toDomainModel(): BlazePaymentMethods {
         return BlazePaymentMethods(
             savedPaymentMethods = savedPaymentMethods.map { it.toDomainModel() },
-            addPaymentMethodUrls = addPaymentMethodUrls.toDomainModel()
+            addPaymentMethodUrls = addPaymentMethodUrls?.toDomainModel()
         )
     }
 
