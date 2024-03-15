@@ -156,6 +156,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
 
+    private val _reloadFragment = MutableLiveData<Event<Unit>>()
+    val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
+
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
@@ -990,6 +993,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onReadingPreferencesChanged() {
+        _reloadFragment.value = Event(Unit)
     }
 
     override fun onCleared() {

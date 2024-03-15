@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReaderReadingPreferencesScreen
@@ -29,6 +31,9 @@ import org.wordpress.android.util.extensions.setWindowStatusBarColor
 @AndroidEntryPoint
 class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     private val viewModel: ReaderReadingPreferencesViewModel by viewModels()
+    private val postDetailViewModel: ReaderPostDetailViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
 
     override fun getTheme(): Int {
         return R.style.ReaderReadingPreferencesDialogFragment
@@ -68,7 +73,10 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         viewModel.actionEvents.onEach {
             when (it) {
                 is ActionEvent.UpdateStatusBarColor -> setWindowStatusBarColor(it.theme)
-                ActionEvent.Close -> dismiss()
+                ActionEvent.Close -> {
+                    postDetailViewModel.onReadingPreferencesChanged()
+                    dismiss()
+                }
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }

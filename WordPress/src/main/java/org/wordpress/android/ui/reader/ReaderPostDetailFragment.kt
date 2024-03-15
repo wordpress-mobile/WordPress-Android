@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -43,6 +44,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
+import androidx.fragment.app.transaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -363,19 +367,23 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return scrollView
     }
 
-    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
-        val readingPreferences = getReadingPreferences()
-        val inflater = super.onGetLayoutInflater(savedInstanceState)
-        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
-        return inflater.cloneInContext(contextThemeWrapper)
-    }
+//    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
+//        val readingPreferences = getReadingPreferences()
+//        val inflater = super.onGetLayoutInflater(savedInstanceState)
+//        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
+//        return inflater.cloneInContext(contextThemeWrapper)
+//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
+        val readingPreferences = getReadingPreferences()
+        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
+        val customInflater = inflater.cloneInContext(contextThemeWrapper)
+
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(customInflater, container, false).also { binding = it }
         val view = viewBinding.root
 
         initNavigationBar()
@@ -681,6 +689,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
+        viewModel.reloadFragment.observeEvent(viewLifecycleOwner) {
+            if (isAdded) {
+                // TODO thomashortadev this works but looks a bit bad since the post and images are reloaded
+                //  I also only tested on SDK 34 and based on my research some people did that in a single transaction
+                //  and it worked in the past, but I had to do it in two transactions
+                parentFragmentManager.commit(allowStateLoss = true) {
+                    detach(this@ReaderPostDetailFragment)
+                }
+                parentFragmentManager.commit {
+                    attach(this@ReaderPostDetailFragment)
+                }
+            }
         }
     }
 
