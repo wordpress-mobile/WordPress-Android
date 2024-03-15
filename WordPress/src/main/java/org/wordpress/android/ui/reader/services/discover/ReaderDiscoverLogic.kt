@@ -120,12 +120,13 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
-                params["_locale"] = localeManagerWrapper.getLanguage()
-                WordPress.getRestClientUtilsV2().get("read/streams/discover", params, null, listener, errorListener)
+            params["_locale"] = localeManagerWrapper.getLanguage()
+            val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
+                "read/streams/discover"
             } else {
-                WordPress.getRestClientUtilsV2().getWithLocale("read/tags/cards", params, null, listener, errorListener)
+                "read/tags/cards"
             }
+            WordPress.getRestClientUtilsV2().get(endpoint, params, null, listener, errorListener)
         }
     }
 
