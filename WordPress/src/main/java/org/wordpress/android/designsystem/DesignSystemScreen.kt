@@ -133,6 +133,13 @@ fun DesignSystem(
                         .padding(innerPadding)
                 )
             }
+            composable(route = DesignSystemScreen.Fonts.name) {
+                DesignSystemFontsScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+            }
         }
     }
 }
