@@ -32,6 +32,25 @@ fun DesignSystemFontsScreen(
     ) {
         item {
             FontsTitle("Heading")
+            FontCard(text = "Heading1", font = MaterialTheme.typography.heading1)
+            FontCard(text = "Heading2", font = MaterialTheme.typography.heading2)
+            FontCard(text = "Heading3", font = MaterialTheme.typography.heading3)
+            FontCard(text = "Heading4", font = MaterialTheme.typography.heading4)
+
+            FontsTitle("Body")
+            FontCard(text = "Body Large", font = MaterialTheme.typography.bodyLarge)
+            FontCard(text = "Body Large Emphasized", font = MaterialTheme.typography.bodyLargeEmphasized)
+            FontCard(text = "Body Medium", font = MaterialTheme.typography.bodyMedium)
+            FontCard(text = "Body Medium Emphasized", font = MaterialTheme.typography.bodyMediumEmphasized)
+            FontCard(text = "Body Small", font = MaterialTheme.typography.bodySmall)
+            FontCard(text = "Body Small Emphasized", font = MaterialTheme.typography.bodySmallEmphasized)
+
+            FontsTitle("Miscellaneous")
+            FontCard(text = "Footnote", font = MaterialTheme.typography.footnote)
+            FontCard(text = "Footnote Emphasized", font = MaterialTheme.typography.footnoteEmphasized)
+        }
+    }
+}
 @Composable
 fun FontCard (text: String, font: TextStyle) {
     Row (modifier = Modifier
