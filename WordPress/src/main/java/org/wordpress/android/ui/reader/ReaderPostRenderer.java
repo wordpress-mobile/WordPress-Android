@@ -633,6 +633,6 @@ public class ReaderPostRenderer {
     private String getContentTextProperties() {
         return "font-family: " + mReadingPreferences.getFontFamily().getValue() + "; "
                + "font-weight: 400; "
-               + "font-size: " + mReadingPreferences.getFontSize() + "px; ";
+               + "font-size: " + mReadingPreferences.getFontSize().getValue() + "px; ";
     }
 }
