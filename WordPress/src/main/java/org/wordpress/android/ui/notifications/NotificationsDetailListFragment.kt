@@ -16,7 +16,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
@@ -85,6 +87,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Inject
     lateinit var listScenarioUtils: ListScenarioUtils
+
+    @Inject
+    lateinit var reloadNotesUseCase: ReloadNotesUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -461,6 +466,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             if (notification == null) {
                 return null
             }
+
             requestReaderContentForNote()
 
             requireNotNull(notification).let { note ->
@@ -592,35 +598,13 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     // Requests Reader content for certain notification types
     private fun requestReaderContentForNote() {
-        if (notification == null || !isAdded) {
-            return
-        }
-
-        // Request the reader post so that loading reader activities will work.
-        if (notification!!.isUserList && !ReaderPostTable.postExists(
-                notification!!.siteId.toLong(),
-                notification!!.postId.toLong()
-            )
-        ) {
-            ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
-        }
-
-        requireNotNull(notification).let { note ->
-            // Request reader comments until we retrieve the comment for this note
-            val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
-            val commentNotExists = !ReaderCommentTable.commentExists(
-                note.siteId.toLong(),
-                note.postId.toLong(),
-                note.commentId
-            )
-
-            if (isReplyOrCommentLike && commentNotExists) {
-                ReaderCommentService.startServiceForComment(
-                    activity,
-                    note.siteId.toLong(),
-                    note.postId.toLong(),
-                    note.commentId
-                )
+        viewLifecycleOwner.lifecycleScope.launch {
+            activity?.let { activity ->
+                notification?.let { note ->
+                    if (isAdded) {
+                        reloadNotesUseCase.requestReaderContentForNote(activity, note)
+                    }
+                }
             }
         }
     }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -58,7 +60,7 @@ public class ReaderCommentService extends Service {
     }
 
     // Requests comments until the passed commentId is found
-    public static void startServiceForComment(Context context, long blogId, long postId, long commentId) {
+    public static void startServiceForComment(@Nullable Context context, long blogId, long postId, long commentId) {
         if (context == null) {
             return;
         }
