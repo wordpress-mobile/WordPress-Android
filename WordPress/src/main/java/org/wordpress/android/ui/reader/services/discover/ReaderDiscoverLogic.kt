@@ -241,7 +241,11 @@ class ReaderDiscoverLogic @Inject constructor(
         // If we've received a recommended tags or blogs card as the first element,
         // it should be displayed as the third card.
         if (firstRecommendationCard != null) {
-            simplifiedJsonList.add(2, firstRecommendationCard)
+            if (simplifiedJsonList.size >=2) {
+                simplifiedJsonList.add(2, firstRecommendationCard)
+            } else {
+                simplifiedJsonList.add(firstRecommendationCard)
+            }
         }
 
         return JSONArray(simplifiedJsonList)
