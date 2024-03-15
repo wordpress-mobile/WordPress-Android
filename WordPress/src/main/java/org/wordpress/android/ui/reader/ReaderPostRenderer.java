@@ -633,9 +633,8 @@ public class ReaderPostRenderer {
 
     @NonNull
     private String getContentTextProperties() {
-        int fontSize = (int) (CONTENT_BASE_FONT_SIZE * mReadingPreferences.getTextSizeMultiplier());
         return "font-family: " + mReadingPreferences.getFontFamily().getValue() + "; "
                + "font-weight: 400; "
-               + "font-size: " + fontSize + "px; ";
+               + "font-size: " + mReadingPreferences.getFontSize() + "px; ";
     }
 }

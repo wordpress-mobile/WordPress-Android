@@ -14,7 +14,7 @@ import com.google.android.material.R as MaterialR
 data class ReaderReadingPreferences @JvmOverloads constructor(
     val theme: Theme,
     val fontFamily: FontFamily = FontFamily.SANS_SERIF,
-    val textSizeMultiplier: Float = 1.0f,
+    val fontSize: FontSize = FontSize.DEFAULT,
 ) {
     enum class Theme(
         @StyleRes val style: Int,
@@ -112,5 +112,17 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         SERIF("serif"),
         SANS_SERIF("sans-serif"),
         MONOSPACE("monospace"),
+    }
+
+    enum class FontSize(val value: Int) {
+        EXTRA_SMALL(12),
+        SMALL(14),
+        NORMAL(16),
+        LARGE(18),
+        EXTRA_LARGE(20);
+
+        companion object {
+            val DEFAULT = NORMAL
+        }
     }
 }
