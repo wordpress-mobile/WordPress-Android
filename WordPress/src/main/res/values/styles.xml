@@ -1739,7 +1739,7 @@
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
-    <style name="RoundedButton" parent="WordPress">
+    <style name="Widget.SitePicker.Button" parent="Widget.LoginFlow.Button.Primary">
         <item name="android:textColor">?attr/colorSurface</item>
         <item name="android:backgroundTint">?attr/colorOnBackground</item>
     </style>

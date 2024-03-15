@@ -858,7 +858,7 @@ public class SitePickerActivity extends LocaleAwareActivity
                     {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
-            builder.setTitle(R.string.site_picker_add_site);
+            builder.setTitle(R.string.site_picker_add_a_site);
             builder.setAdapter(
                     new ArrayAdapter<>(requireActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
                     (dialog, which) -> {

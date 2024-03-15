@@ -265,7 +265,7 @@ class AddSiteDialog : DialogFragment() {
             getString(R.string.site_picker_add_self_hosted)
         )
         val builder = MaterialAlertDialogBuilder(requireActivity())
-        builder.setTitle(R.string.site_picker_add_site)
+        builder.setTitle(R.string.site_picker_add_a_site)
         builder.setAdapter(
             ArrayAdapter(requireActivity(), R.layout.add_new_site_dialog_item, R.id.text, items)
         ) { _: DialogInterface?, which: Int ->
