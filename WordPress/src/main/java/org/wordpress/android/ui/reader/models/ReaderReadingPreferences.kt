@@ -12,7 +12,7 @@ import java.util.Locale
 import com.google.android.material.R as MaterialR
 
 data class ReaderReadingPreferences @JvmOverloads constructor(
-    val theme: Theme,
+    val theme: Theme = Theme.SYSTEM,
     val fontFamily: FontFamily = FontFamily.SANS_SERIF,
     val fontSize: FontSize = FontSize.DEFAULT,
 ) {

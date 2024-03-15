@@ -22,7 +22,7 @@ class ReaderReadingPreferencesRepository @Inject constructor(
     fun getReadingPreferencesSync(): ReaderReadingPreferences {
         return appPrefsWrapper.readerReadingPreferencesJson?.let {
             gson.fromJson(it, ReaderReadingPreferences::class.java)
-        } ?: ReaderReadingPreferences(ReaderReadingPreferences.Theme.SYSTEM)
+        } ?: ReaderReadingPreferences()
     }
 
     suspend fun saveReadingPreferences(preferences: ReaderReadingPreferences): Unit = withContext(ioDispatcher) {
