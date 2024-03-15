@@ -108,6 +108,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
@@ -150,6 +151,7 @@ import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.extensions.setWindowNavigationBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -376,6 +378,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
         val view = viewBinding.root
 
+        initNavigationBar()
         initSwipeRefreshLayout(view)
         initAppBar(view)
         initScrollView(view)
@@ -524,6 +527,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         if (postSlugsResolutionUnderway) {
             progress.visibility = View.VISIBLE
         }
+    }
+
+    private fun initNavigationBar() {
+        val readingPreferences = getReadingPreferences()
+        val themeValues = ReaderReadingPreferences.ThemeValues.from(requireContext(), readingPreferences.theme)
+        activity?.window?.setWindowNavigationBarColor(themeValues.intBackgroundColor)
     }
 
     override fun onResume() {
