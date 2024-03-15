@@ -16,6 +16,8 @@ import androidx.core.widget.ImageViewCompat
 import kotlin.math.roundToInt
 
 object ColorUtils {
+    private const val LUMINANCE_LIGHT_THRESHOLD = 0.5
+
     @JvmStatic
     fun applyTintToDrawable(context: Context, @DrawableRes drawableResId: Int, @ColorRes colorResId: Int): Drawable {
         val drawable = context.resources.getDrawable(drawableResId, context.theme)
@@ -40,4 +42,7 @@ object ColorUtils {
         @ColorInt color: Int,
         @FloatRange(from = 0.0, to = 1.0) emphasisAlpha: Float
     ) = ColorUtils.setAlphaComponent(color, (emphasisAlpha * 255).roundToInt())
+
+    @JvmStatic
+    fun isColorLight(@ColorInt color: Int) = ColorUtils.calculateLuminance(color) > LUMINANCE_LIGHT_THRESHOLD
 }
