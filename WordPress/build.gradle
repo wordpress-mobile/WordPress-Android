@@ -22,6 +22,8 @@ sentry {
         logcat.enabled = false
     }
     autoInstallation.enabled = false
+    includeSourceContext = true
+    autoUploadSourceContext = true
 }
 
 repositories {
