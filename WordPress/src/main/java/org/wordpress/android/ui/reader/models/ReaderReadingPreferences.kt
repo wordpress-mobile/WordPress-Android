@@ -91,6 +91,7 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
 
         companion object {
             private const val HTML_RGBA_TEMPLATE = "rgba(%d, %d, %d, %.2f)"
+            private const val HTML_RGB_MASK = 0xFFFFFF
 
             @JvmStatic
             fun from(context: Context, theme: Theme): ThemeValues {
@@ -98,7 +99,7 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
             }
 
             private fun colorToHtmlColor(color: Int): String {
-                return String.format(Locale.US, "#%06X", 0xFFFFFF and color)
+                return String.format(Locale.US, "#%06X", HTML_RGB_MASK and color)
             }
 
             private fun htmlRgbaColor(red: Int, green: Int, blue: Int, alpha: Float): String {
