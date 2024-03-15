@@ -32,8 +32,21 @@ fun DesignSystemFontsScreen(
     ) {
         item {
             FontsTitle("Heading")
+@Composable
+fun FontCard (text: String, font: TextStyle) {
+    Row (modifier = Modifier
+        .padding(10.dp, 3.dp)
+        .fillMaxWidth()) {
+        Column {
+            Text(
+                modifier = Modifier.padding(start = 25.dp, end = 40.dp),
+                style = font,
+                text = text,
+                color = MaterialTheme.colorScheme.primary,
+            )
         }
     }
+    Divider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
 }
 @Composable
 fun FontsTitle(title: String) {
