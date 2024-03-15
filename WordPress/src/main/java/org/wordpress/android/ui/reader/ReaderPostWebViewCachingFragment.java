@@ -78,7 +78,6 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                     }
                 });
 
-                // TODO thomashortadev get the action ReadingPreferences from UseCase instead of using SYSTEM
                 ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post,
                         mReaderCssProvider, mGetReadingPreferencesUseCase.invoke());
                 rendered.beginRender(); // rendering will cache post content using native WebView implementation.
