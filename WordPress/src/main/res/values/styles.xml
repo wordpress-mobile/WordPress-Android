@@ -109,9 +109,22 @@
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
-    <style name="ReaderTheme.System" parent="Base.Wordpress" />
+    <style name="ReaderDetailsPopupTheme.Popup" parent="Widget.MaterialComponents.PopupMenu.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/popup_background_surface</item>
+    </style>
 
-    <style name="ReaderTheme.Paper" parent="Base.Wordpress">
+    <style name="ReaderDetailsPopupTheme.Dropdown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_on_surface_emphasis_lowest</item>
+    </style>
+
+    <style name="ReaderTheme.System" parent="Base.Wordpress">
+        <item name="listPopupWindowStyle">@style/ReaderDetailsPopupTheme.Popup</item>
+        <item name="android:listPopupWindowStyle">@style/ReaderDetailsPopupTheme.Popup</item>
+        <item name="android:dropDownListViewStyle">@style/ReaderDetailsPopupTheme.Dropdown</item>
+    </style>
+
+    <style name="ReaderTheme.Paper" parent="ReaderTheme.System">
         <item name="colorSurface">@color/reader_theme_paper_background</item>
         <item name="colorOnSurface">@color/reader_theme_paper_text</item>
         <item name="android:colorBackground">@color/reader_theme_paper_background</item>
@@ -120,7 +133,7 @@
         <item name="android:textColorSecondary">@color/reader_theme_paper_text</item>
     </style>
 
-    <style name="ReaderTheme.OLED" parent="Base.Wordpress">
+    <style name="ReaderTheme.OLED" parent="ReaderTheme.System">
         <item name="colorSurface">@color/reader_theme_oled_background</item>
         <item name="colorOnSurface">@color/reader_theme_oled_text</item>
         <item name="android:colorBackground">@color/reader_theme_oled_background</item>
@@ -129,7 +142,7 @@
         <item name="android:textColorSecondary">@color/reader_theme_oled_text</item>
     </style>
 
-    <style name="ReaderTheme.Sepia" parent="Base.Wordpress">
+    <style name="ReaderTheme.Sepia" parent="ReaderTheme.System">
         <item name="colorSurface">@color/reader_theme_sepia_background</item>
         <item name="colorOnSurface">@color/reader_theme_sepia_text</item>
         <item name="android:colorBackground">@color/reader_theme_sepia_background</item>
