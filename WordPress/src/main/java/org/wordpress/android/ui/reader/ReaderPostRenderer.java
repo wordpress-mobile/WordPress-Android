@@ -44,8 +44,6 @@ import java.util.regex.Pattern;
  * http://developer.android.com/guide/webapps/targeting.html
  */
 public class ReaderPostRenderer {
-    private static final int CONTENT_BASE_FONT_SIZE = 16;
-
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
