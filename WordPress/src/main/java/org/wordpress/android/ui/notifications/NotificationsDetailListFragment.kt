@@ -422,6 +422,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                             noteObject, imageManager, notificationsUtilsWrapper,
                             mOnNoteBlockTextClickListener
                         )
+                        preloadImage(noteBlock)
                     }
 
                     // Badge notifications apply different colors and formatting
@@ -445,6 +446,14 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
 
             return pingbackUrl
+        }
+
+        private fun preloadImage(noteBlock: NoteBlock) {
+            if (noteBlock.hasImageMediaItem()) {
+                noteBlock.noteMediaItem?.url?.let {
+                    imageManager.preload(requireContext(), it)
+                }
+            }
         }
 
         @Suppress("OVERRIDE_DEPRECATION")
