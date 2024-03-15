@@ -153,7 +153,9 @@ class ReaderDiscoverLogic @Inject constructor(
             insertCardsJsonIntoDb(simplifiedCardsJson)
 
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (nextPageHandle.isNotEmpty()) {
+                appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            }
 
             if (cards.isEmpty()) {
                 readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
