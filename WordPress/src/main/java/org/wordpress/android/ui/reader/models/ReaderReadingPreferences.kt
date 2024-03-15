@@ -121,6 +121,9 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         LARGE(18),
         EXTRA_LARGE(20);
 
+        val multiplier: Float
+            get() = value / DEFAULT.value.toFloat()
+
         companion object {
             val DEFAULT = NORMAL
         }
