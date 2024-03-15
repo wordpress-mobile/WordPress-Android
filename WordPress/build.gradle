@@ -24,6 +24,7 @@ sentry {
     autoInstallation.enabled = false
     includeSourceContext = true
     autoUploadSourceContext = true
+    includeDependenciesReport = false
 }
 
 repositories {
