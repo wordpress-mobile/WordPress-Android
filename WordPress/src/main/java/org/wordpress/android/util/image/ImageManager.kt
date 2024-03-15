@@ -25,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.TransitionOptions
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -299,6 +300,47 @@ class ImageManager @Inject constructor(
             .attachRequestListener(requestListener)
             .into(imageView)
             .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUrl" into the ImageView animating it with the provided Glide animation.
+     * Adds a placeholder and an error placeholder depending on the ImageType and attaches a ResultListener.
+     */
+    fun animateWithResultListener(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        transitionOptions: TransitionOptions<*, in Drawable>,
+        requestListener: RequestListener<Drawable>
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        Glide.with(context)
+            .load(Uri.parse(imgUrl))
+            .addFallback(imageType)
+            .addPlaceholder(imageType)
+            .applyScaleType(CENTER)
+            .attachRequestListener(requestListener)
+            .transition(transitionOptions)
+            .into(imageView)
+            .clearOnDetach()
+    }
+
+    /**
+     * Preloads an image from the provided `imgUrl`.
+     */
+    fun preload(context: Context, imgUrl: String) {
+        if (!context.isAvailable()) return
+        try {
+            Glide.with(context)
+                .downloadOnly()
+                .load(Uri.parse(imgUrl))
+                .submit()
+                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+        } catch (e: ExecutionException) {
+            // This is a best effort preload, so we don't want to crash the app if an `ExecutionException` is thrown.
+            AppLog.e(AppLog.T.UTILS, "Error preloading image $imgUrl: $e")
+        }
     }
 
     /**

@@ -84,7 +84,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
-        val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
+        val editSubscriptions = view.findViewById<View>(R.id.manage_subscriptions)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
             requireActivity(),
