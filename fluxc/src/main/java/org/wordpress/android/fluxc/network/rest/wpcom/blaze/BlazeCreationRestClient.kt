@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 import android.annotation.SuppressLint
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
-import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.utils.extensions.filterNotNull
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.days
 
 class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
@@ -194,31 +192,12 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @Suppress("UNREACHABLE_CODE", "MagicNumber")
     @SuppressLint("SimpleDateFormat")
     suspend fun createCampaign(
         site: SiteModel,
         request: BlazeCampaignCreationRequest
     ): BlazePayload<BlazeCampaignModel> {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-
-        delay(500)
-        return BlazePayload(BlazeCampaignCreationNetworkResponse(
-            id = "campaign-0",
-            status = "pending",
-            targetUrn = "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
-            startTime = dateFormatter.format(request.startDate),
-            durationDays = ((request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds).toInt(),
-            totalBudget = request.budget,
-            siteName = request.tagLine,
-            textSnippet = request.description,
-            targetURL = request.targetUrl,
-            mainImage = BlazeCampaignCreationNetworkResponse.BlazeImageNetworkModel(
-                url = request.mainImage.url
-            )
-        ).toDomainModel())
-
-        // TODO Use real API when it becomes ready
         val body = mutableMapOf(
             "origin" to request.origin,
             "origin_version" to request.originVersion,
