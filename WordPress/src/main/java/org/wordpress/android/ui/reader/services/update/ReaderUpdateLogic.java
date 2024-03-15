@@ -279,7 +279,7 @@ public class ReaderUpdateLogic {
         HashMap<String, String> params = new HashMap<>();
         params.put("_locale", mLanguage);
         mClientUtilsProvider.getRestClientForInterestTags()
-                            .getWithLocale("read/interests", params, null, listener, errorListener);
+                            .get("read/interests", params, null, listener, errorListener);
     }
 
     private void handleInterestTagsResponse(final JSONObject jsonObject) {
