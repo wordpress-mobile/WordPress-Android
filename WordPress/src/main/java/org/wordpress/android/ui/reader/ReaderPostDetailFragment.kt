@@ -927,6 +927,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     EngagementNavigationSource.LIKE_READER_LIST
                 )
             }
+
+            ReaderNavigationEvents.ShowReadingPreferences ->
+                ReaderReadingPreferencesDialogFragment.show(childFragmentManager)
+
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing

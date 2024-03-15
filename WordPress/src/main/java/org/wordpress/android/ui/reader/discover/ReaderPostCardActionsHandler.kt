@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.READING_PREFERENCES
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
@@ -195,6 +197,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REPORT_POST -> handleReportPostClicked(post)
             REPORT_USER -> handleReportUserClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
+            READING_PREFERENCES -> handleReadingPreferencesClicked()
             SPACER_NO_ACTION -> Unit // Do nothing
         }
     }
@@ -391,6 +394,11 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleVisitSiteClicked(post: ReaderPost) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
         _navigationEvents.postValue(Event(OpenPost(post)))
+    }
+
+    private fun handleReadingPreferencesClicked() {
+        // TODO add analytics readerTracker.track(AnalyticsTracker.Stat.READER_READING_PREFERENCES_OPENED)
+        _navigationEvents.postValue(Event(ShowReadingPreferences))
     }
 
     private suspend fun handleBlockSiteClicked(

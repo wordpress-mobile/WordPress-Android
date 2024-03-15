@@ -1332,6 +1332,14 @@
         </item>
     </style>
 
+    <style name="ReaderReadingPreferencesDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">
+            @style/SlideDialogFragmentAnimation
+        </item>
+    </style>
+
     <style name="WordPress.FullscreenDialog">
         <item name="android:windowIsFloating">false</item>
     </style>
