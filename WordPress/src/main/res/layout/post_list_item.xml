@@ -76,7 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.textview.MaterialTextView
+            <org.wordpress.android.ui.posts.PostListTitleExcerptTextView
                 android:id="@+id/title"
                 style="@style/PostList.Item.Title"
                 android:layout_width="0dp"
@@ -88,7 +88,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="My Title is super duper long and longer than the fox that is running into the area of large text and will have to cut off the remaining" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <org.wordpress.android.ui.posts.PostListTitleExcerptTextView
                 android:id="@+id/excerpt"
                 style="@style/PostList.Item.Body"
                 android:layout_width="0dp"
