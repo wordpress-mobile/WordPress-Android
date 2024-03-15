@@ -44,7 +44,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 @Composable
-private fun ReaderReadingPreferencesScreen(
+fun ReaderReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
     onCloseClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
@@ -300,7 +300,7 @@ fun FontSizeSlider(
 
 @Preview
 @Composable
-fun ReaderReadingPreferencesScreenPreview() {
+private fun ReaderReadingPreferencesScreenPreview() {
     AppTheme {
         var readingPreferences by remember { mutableStateOf(ReaderReadingPreferences()) }
 
