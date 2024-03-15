@@ -401,7 +401,8 @@ public class ReaderBlogActions {
             WordPress.getRestClientUtilsV1_1().getWithLocale("read/sites/" + blogId, listener, errorListener);
         } else {
             WordPress.getRestClientUtilsV1_1()
-                     .getWithLocale("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
+                     .getWithLocale("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener,
+                             errorListener);
         }
     }
 

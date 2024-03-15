@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.search;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -11,6 +10,8 @@ import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.StringUtils;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * service which searches for reader posts on wordpress.com

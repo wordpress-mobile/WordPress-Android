@@ -316,7 +316,8 @@ public class ReaderUpdateLogic {
         AppLog.d(AppLog.T.READER, "reader service > updating followed blogs. Page requested: " + page);
         // request using ?meta=site,feed to get extra info
         WordPress.getRestClientUtilsV1_2()
-                 .getWithLocale("read/following/mine?number=100&page=" + page + "&meta=site%2Cfeed", listener, errorListener);
+                 .getWithLocale("read/following/mine?number=100&page=" + page + "&meta=site%2Cfeed", listener,
+                         errorListener);
     }
 
     private void handleFollowedBlogsResponse(final ReaderBlogList serverBlogs, final JSONObject jsonObject) {

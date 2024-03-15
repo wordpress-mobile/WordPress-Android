@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.search;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
 
@@ -9,6 +8,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManagerWrapper;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter.ARG_OFFSET;
 import static org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter.ARG_QUERY;

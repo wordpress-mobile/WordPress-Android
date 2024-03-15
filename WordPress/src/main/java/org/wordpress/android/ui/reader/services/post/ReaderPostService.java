@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.services.post;
 
-import dagger.hilt.android.AndroidEntryPoint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -13,6 +12,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManagerWrapper;
 
 import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_ACTION;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_BLOG_ID;
