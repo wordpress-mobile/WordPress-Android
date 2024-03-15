@@ -1,0 +1,7 @@
+24.4:
+- Aggiunta di una nuova scheda Traffico alla schermata Statistiche
+- Aggiornamento del design delle notifiche
+- Introduzione del supporto del blocco video per VideoPress v5
+- Risoluzione di un arresto anomalo causato dallo scorrimento automatico dell'editor a blocchi
+- Inserimento di un messaggio per l'errore del caricamento dei video
+- Rimozione della trasparenza delle immagini durante il caricamento

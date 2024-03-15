@@ -1,2 +1,0 @@
-24.3:
-Anda dapat login ke situs WordPress dengan kredensial Google, perangkat fisik, dan passkey pihak ketiga lainnya. Tenang, situs Anda dikunci lebih ketat dari resep rahasia Kolonel Sanders.

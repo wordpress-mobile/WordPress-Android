@@ -1,0 +1,7 @@
+24.4 :
+- Ajout d’un onglet Trafic sur l’écran Stats
+- Mise à niveau du design des notifications
+- Introduction de la prise en charge du bloc Vidéo avec VideoPress v5
+- Correction d’un plantage provoqué par le défilement automatique de l’éditeur de blocs
+- Ajout d’un message d’erreur en cas d’échec de la mise en ligne de vidéos
+- Suppression de la transparence de l’image lors de la mise en ligne

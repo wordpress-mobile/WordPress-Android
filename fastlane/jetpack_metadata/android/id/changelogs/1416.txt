@@ -1,0 +1,7 @@
+24.4:
+- Menambahkan tab Pengunjung baru pada layar Statistik
+- Mengupgrade desain Pemberitahuan
+- Menghadirkan dukungan blok video untuk VideoPress v5
+- Memperbaiki crash yang disebabkan oleh fitur gulir otomatis di editor blok
+- Menampilkan pesan error saat terjadi kegagalan pengunggahan video
+- Menghapus transparansi gambar selama proses pengunggahan
