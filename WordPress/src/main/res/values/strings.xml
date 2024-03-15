@@ -1698,6 +1698,17 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_theme_paper">Paper</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+
+    <string name="reader_preferences_font_family_serif">Serif</string>
+    <string name="reader_preferences_font_family_sans">Sans</string>
+    <string name="reader_preferences_font_family_mono">Mono</string>
+
+    <string name="reader_preferences_font_family_preview">Aa</string>
+
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_page_saved_online">Page saved online</string>
