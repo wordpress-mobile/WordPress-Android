@@ -14,10 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -73,13 +71,13 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         viewModel.actionEvents.onEach {
             when (it) {
                 is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
-                is ActionEvent.Close -> handleClose(it.hasThemeChanged)
+                is ActionEvent.Close -> handleClose(it.isDirty)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
-    private fun handleClose(hasThemeChanged: Boolean) {
-        if (hasThemeChanged) postDetailViewModel.onReadingPreferencesThemeChanged()
+    private fun handleClose(isDirty: Boolean) {
+        if (isDirty) postDetailViewModel.onReadingPreferencesThemeChanged()
         dismiss()
     }
 

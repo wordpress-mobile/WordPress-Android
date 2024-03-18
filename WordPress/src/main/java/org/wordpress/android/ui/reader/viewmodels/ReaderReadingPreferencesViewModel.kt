@@ -57,16 +57,16 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         launch {
             if (currentReadingPreferences.value != originalReadingPreferences) {
                 saveReadingPreferences(currentReadingPreferences.value)
-                val hasThemeChanged = currentReadingPreferences.value.theme != originalReadingPreferences.theme
-                _actionEvents.emit(ActionEvent.Close(hasThemeChanged = hasThemeChanged))
+                val isDirty = currentReadingPreferences.value != originalReadingPreferences
+                _actionEvents.emit(ActionEvent.Close(isDirty = isDirty))
             } else {
-                _actionEvents.emit(ActionEvent.Close(hasThemeChanged = false))
+                _actionEvents.emit(ActionEvent.Close(isDirty = false))
             }
         }
     }
 
     sealed interface ActionEvent {
-        data class Close(val hasThemeChanged: Boolean) : ActionEvent
+        data class Close(val isDirty: Boolean) : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
     }
 }
