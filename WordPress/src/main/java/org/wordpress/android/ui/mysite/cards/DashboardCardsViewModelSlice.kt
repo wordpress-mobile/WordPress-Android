@@ -216,6 +216,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun onCleared() {
         quickLinksItemViewModelSlice.onCleared()
+        bloggingPromptCardViewModelSlice.onCleared()
         job?.cancel()
         trackingJob?.cancel()
         scope.cancel()

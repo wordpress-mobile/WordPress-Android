@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -66,56 +67,42 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     fun buildCard(
         siteModel: SiteModel
     ) {
-        if (bloggingPromptsFeature.isEnabled()) {
-            scope.launch(bgDispatcher) {
-                if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
-                    promptsStore.getPrompts(siteModel)
-                        .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
-                        .collect { result ->
-                            postState(result?.firstOrNull())
-                        }
-                    refreshData(siteModel)
-                } else {
-                    postEmptyState()
-                }
+        scope.launch(bgDispatcher) {
+            if (bloggingPromptsFeature.isEnabled() &&
+                bloggingPromptsSettingsHelper.shouldShowPromptsFeature()
+            ) {
+                refreshData(siteModel)
+                promptsStore.getPrompts(siteModel)
+                    .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
+                    .collect { result ->
+                        postState(result?.firstOrNull())
+                    }
+            } else {
+                postEmptyState()
             }
-        } else {
-            postLastState()
         }
     }
 
-    fun refreshData(
+    suspend fun refreshData(
         siteModel: SiteModel,
         isSinglePromptRefresh: Boolean = false
     ) {
-        if (bloggingPromptsFeature.isEnabled()) {
-            scope.launch(bgDispatcher) {
-                if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
-                    fetchPromptsAndPostErrorIfAvailable(siteModel, isSinglePromptRefresh)
-                } else {
-                    postEmptyState()
-                }
-            }
-        } else {
-            postEmptyState()
-        }
+        fetchPromptsAndPostErrorIfAvailable(siteModel, isSinglePromptRefresh)
     }
 
-    private fun fetchPromptsAndPostErrorIfAvailable(
+    private suspend fun fetchPromptsAndPostErrorIfAvailable(
         selectedSite: SiteModel,
         isSinglePromptRefresh: Boolean = false
     ) {
-        scope.launch(bgDispatcher) {
-            val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
-            val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
-            when {
-                result.isError -> postLastState()
-                else -> {
-                    result.model
-                        ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
-                        ?.let { prompt -> postState(prompt) }
-                        ?: postLastState()
-                }
+        val numOfPromptsToFetch = if (isSinglePromptRefresh) 1 else NUM_PROMPTS_TO_REQUEST
+        val result = promptsStore.fetchPrompts(selectedSite, numOfPromptsToFetch, Date())
+        when {
+            result.isError -> postLastState()
+            else -> {
+                result.model
+                    ?.firstOrNull { prompt -> isSameDay(prompt.date, Date()) }
+                    ?.let { prompt -> postState(prompt) }
+                    ?: postLastState()
             }
         }
     }
@@ -211,7 +198,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
             buildCard(bloggingPrompt)?.let { card ->
                 _uiModel.postValue(card)
             }
-        }?: _uiModel.postValue(null)
+        } ?: _uiModel.postValue(null)
     }
 
     private fun isSameDay(date1: Date, date2: Date): Boolean {
@@ -246,5 +233,9 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     fun clearValue() {
         bloggingPromptsCardTrackHelper.onSiteChanged()
         _uiModel.postValue(null)
+    }
+
+    fun onCleared() {
+        scope.cancel()
     }
 }
