@@ -310,9 +310,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             view?.context?.let { context ->
                 val menu: Menu = toolbar.menu
-                val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-                val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-                val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
                 val collapsingToolbarHeight = collapsingToolbarLayout.height
                 val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
@@ -330,9 +327,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
 
-                menuBrowse?.icon?.colorFilter = colorFilter
-                menuShare?.icon?.colorFilter = colorFilter
-                menuMore?.icon?.colorFilter = colorFilter
+                for (i in 0 until menu.size()) {
+                    val menuItem = menu.getItem(i)
+                    menuItem.icon?.colorFilter = colorFilter
+                }
             }
         }
 
@@ -366,13 +364,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return scrollView
     }
-
-//    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
-//        val readingPreferences = getReadingPreferences()
-//        val inflater = super.onGetLayoutInflater(savedInstanceState)
-//        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
-//        return inflater.cloneInContext(contextThemeWrapper)
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -1132,6 +1123,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
         R.id.menu_more -> {
             viewModel.onMoreButtonClicked()
+            true
+        }
+        R.id.menu_reading_preferences -> {
+            ReaderReadingPreferencesDialogFragment.show(childFragmentManager)
             true
         }
         else -> false
