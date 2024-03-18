@@ -723,18 +723,14 @@ if (project.hasProperty("debugStoreFile")) {
 // service during the build process.
 android {
     applicationVariants.all { variant ->
-        variant.mergeAssetsProvider.configure {
-            doLast {
-                // Copy bundle and source map files
-                copy {
-                    from(outputDir)
-                    into("${buildDir}/react-native-bundle-source-map")
-                    include("*.bundle", "*.bundle.map")
-                }
+        tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
+            from("${buildDir}/intermediates/assets/${variant.name}")
+            into("${buildDir}/react-native-bundle-source-map")
+            include("*.bundle", "*.bundle.map")
+        }
 
-                // Delete source maps
-                delete(fileTree(dir: outputDir, includes: ['**/*.bundle.map']))
-            }
+        variant.mergeAssetsProvider.configure {
+            finalizedBy("copy${variant.name.capitalize()}ReactNativeBundleSourceMap")
         }
     }
 }
