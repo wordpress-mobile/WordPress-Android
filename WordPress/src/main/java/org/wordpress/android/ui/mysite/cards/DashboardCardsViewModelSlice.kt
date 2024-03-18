@@ -181,6 +181,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
         quickLinksItemViewModelSlice.initialization(scope)
         cardViewModelSlice.initialize(scope)
         quickStartCardViewModelSlice.initialize(scope)
+        domainRegistrationCardViewModelSlice.initialize(scope)
     }
 
     fun buildCards(site: SiteModel) {
