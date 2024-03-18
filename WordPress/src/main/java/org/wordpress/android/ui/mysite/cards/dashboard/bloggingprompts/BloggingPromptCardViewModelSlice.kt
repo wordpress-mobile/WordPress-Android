@@ -68,9 +68,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         siteModel: SiteModel
     ) {
         scope.launch(bgDispatcher) {
-            if (bloggingPromptsFeature.isEnabled() &&
-                bloggingPromptsSettingsHelper.shouldShowPromptsFeature()
-            ) {
+            if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
                 refreshData(siteModel)
                 promptsStore.getPrompts(siteModel)
                     .map { it.model?.filter { prompt -> isSameDay(prompt.date, Date()) } }
