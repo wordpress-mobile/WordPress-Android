@@ -38,6 +38,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     private var tagsUiState: List<TagUiState>? = null
+    private var readingPreferences: ReaderReadingPreferences? = null
 
     private val tagChips
         get() = (0 until childCount - 1).map { getChildAt(it) as Chip }
@@ -69,17 +70,20 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         tagsUiState: List<TagUiState>,
         readingPreferences: ReaderReadingPreferences? = null
     ) {
-        if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
+        if (this.tagsUiState != null && this.tagsUiState == tagsUiState &&
+            this.readingPreferences == readingPreferences
+        ) {
             return
         }
         this.tagsUiState = tagsUiState
+        this.readingPreferences = readingPreferences
         removeAllViews()
-        addOverflowIndicatorChip(readingPreferences)
-        addTagChips(tagsUiState, readingPreferences)
+        addOverflowIndicatorChip()
+        addTagChips(tagsUiState)
         expandLayout(false)
     }
 
-    private fun addOverflowIndicatorChip(readingPreferences: ReaderReadingPreferences?) {
+    private fun addOverflowIndicatorChip() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val chip = inflater.inflate(chipStyle.overflowChipLayoutRes, this, false) as Chip
         chip.setOnCheckedChangeListener { _, isChecked ->
@@ -95,7 +99,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         addView(chip)
     }
 
-    private fun addTagChips(tagsUiState: List<TagUiState>, readingPreferences: ReaderReadingPreferences?) {
+    private fun addTagChips(tagsUiState: List<TagUiState>) {
         tagsUiState.forEachIndexed { index, tagUiState ->
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val chip = inflater.inflate(chipStyle.chipLayoutRes, this, false) as Chip
