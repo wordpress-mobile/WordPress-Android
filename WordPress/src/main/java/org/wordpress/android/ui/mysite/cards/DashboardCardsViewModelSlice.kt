@@ -196,6 +196,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             plansCardViewModelSlice.buildCard(site)
             cardViewModelSlice.buildCard(site)
             quickStartCardViewModelSlice.build(site)
+            domainRegistrationCardViewModelSlice.buildCard(site)
         }
     }
 

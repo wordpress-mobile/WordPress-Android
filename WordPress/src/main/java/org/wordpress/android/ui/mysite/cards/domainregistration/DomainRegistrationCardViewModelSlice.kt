@@ -66,14 +66,13 @@ class DomainRegistrationCardViewModelSlice @Inject constructor(
     }
 
     fun buildCard(
-        siteLocalId: Int,
-        selectedSite: SiteModel?
+        selectedSite: SiteModel
     ) {
         _isRefreshing.postValue(true)
-        if (selectedSite == null || selectedSite.id != siteLocalId || !shouldFetchPlans(selectedSite)) {
+        if (!shouldFetchPlans(selectedSite)) {
             postState(false)
         } else {
-            fetchPlansAndRefreshData(siteLocalId, selectedSite)
+            fetchPlansAndRefreshData(selectedSite.id, selectedSite)
         }
     }
 

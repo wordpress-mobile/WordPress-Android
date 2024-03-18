@@ -84,7 +84,7 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
 
     @Test
     fun `when getData is invoked, then refresh is true`() = test {
-        viewModelSlice.buildCard(siteLocalId, site)
+        viewModelSlice.buildCard(site)
 
         assertThat(isRefreshing.last()).isTrue
     }
@@ -165,7 +165,7 @@ class DomainRegistrationCardViewModelSliceTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { viewModelSlice.onPlansFetched(event) }
         }
-        viewModelSlice.buildCard(siteLocalId,site)
+        viewModelSlice.buildCard(site)
     }
 
     private fun buildOnPlansFetchedEvent(
