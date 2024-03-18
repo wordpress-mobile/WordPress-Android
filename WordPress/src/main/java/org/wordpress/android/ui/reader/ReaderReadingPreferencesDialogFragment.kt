@@ -22,7 +22,7 @@ import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
-import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReaderReadingPreferencesScreen
+import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesScreen
 import org.wordpress.android.util.extensions.fillScreen
 import org.wordpress.android.util.extensions.setWindowStatusBarColor
 
@@ -45,7 +45,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         setContent {
             AppTheme {
                 val readerPreferences by viewModel.currentReadingPreferences.collectAsState()
-                ReaderReadingPreferencesScreen(
+                ReadingPreferencesScreen(
                     currentReadingPreferences = readerPreferences,
                     onCloseClick = viewModel::saveReadingPreferencesAndClose,
                     onThemeClick = viewModel::onThemeClick,

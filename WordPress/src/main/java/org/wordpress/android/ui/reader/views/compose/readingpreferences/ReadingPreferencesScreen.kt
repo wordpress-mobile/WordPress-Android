@@ -53,7 +53,7 @@ private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
 private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 
 @Composable
-fun ReaderReadingPreferencesScreen(
+fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
     onCloseClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
@@ -131,7 +131,7 @@ fun ReaderReadingPreferencesScreen(
                 Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
 
                 ReaderReadingPreferences.Theme.values().forEach { theme ->
-                    ReaderReadingPreferencesThemeButton(
+                    ReadingPreferencesThemeButton(
                         theme = theme,
                         isSelected = theme == currentReadingPreferences.theme,
                         onClick = { onThemeClick(theme) },
@@ -150,7 +150,7 @@ fun ReaderReadingPreferencesScreen(
                 Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
 
                 ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
-                    ReaderReadingPreferencesFontFamilyButton(
+                    ReadingPreferencesFontFamilyButton(
                         fontFamily = fontFamily,
                         isSelected = fontFamily == currentReadingPreferences.fontFamily,
                         onClick = { onFontFamilyClick(fontFamily) },
@@ -296,11 +296,11 @@ fun FontSlider(
 
 @Preview
 @Composable
-private fun ReaderReadingPreferencesScreenPreview() {
+private fun ReadingPreferencesScreenPreview() {
     AppTheme {
         var readingPreferences by remember { mutableStateOf(ReaderReadingPreferences()) }
 
-        ReaderReadingPreferencesScreen(
+        ReadingPreferencesScreen(
             currentReadingPreferences = readingPreferences,
             onCloseClick = {},
             onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },

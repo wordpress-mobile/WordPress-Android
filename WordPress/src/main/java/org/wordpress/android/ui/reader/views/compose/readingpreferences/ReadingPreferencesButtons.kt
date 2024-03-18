@@ -98,7 +98,7 @@ private fun ReadingPreferenceButton(
 }
 
 @Composable
-fun ReaderReadingPreferencesThemeButton(
+fun ReadingPreferencesThemeButton(
     theme: ReaderReadingPreferences.Theme,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -127,7 +127,7 @@ fun ReaderReadingPreferencesThemeButton(
 }
 
 @Composable
-fun ReaderReadingPreferencesFontFamilyButton(
+fun ReadingPreferencesFontFamilyButton(
     fontFamily: ReaderReadingPreferences.FontFamily,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -155,7 +155,7 @@ fun ReaderReadingPreferencesFontFamilyButton(
 // region Previews
 @Preview
 @Composable
-fun ReaderReadingPreferencesThemeButtonPreview() {
+fun ReadingPreferencesThemeButtonPreview() {
     AppTheme {
         var selectedItem: ReaderReadingPreferences.Theme? by remember { mutableStateOf(null) }
 
@@ -163,7 +163,7 @@ fun ReaderReadingPreferencesThemeButtonPreview() {
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
             ReaderReadingPreferences.Theme.values().forEach { theme ->
-                ReaderReadingPreferencesThemeButton(
+                ReadingPreferencesThemeButton(
                     theme = theme,
                     isSelected = theme == selectedItem,
                     onClick = { selectedItem = theme }
@@ -175,7 +175,7 @@ fun ReaderReadingPreferencesThemeButtonPreview() {
 
 @Preview
 @Composable
-fun ReaderReadingPreferencesFontFamilyButtonPreview() {
+fun ReadingPreferencesFontFamilyButtonPreview() {
     AppTheme {
         var selectedItem: ReaderReadingPreferences.FontFamily? by remember { mutableStateOf(null) }
 
@@ -183,7 +183,7 @@ fun ReaderReadingPreferencesFontFamilyButtonPreview() {
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
             ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
-                ReaderReadingPreferencesFontFamilyButton(
+                ReadingPreferencesFontFamilyButton(
                     fontFamily = fontFamily,
                     isSelected = fontFamily == selectedItem,
                     onClick = { selectedItem = fontFamily }
