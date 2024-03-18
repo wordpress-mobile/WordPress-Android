@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views.compose.readingpreferences
 import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.postDelayed
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
@@ -63,9 +63,9 @@ fun ReadingPreferencesScreen(
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
 ) {
     val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, currentReadingPreferences.theme)
-    val backgroundColor = Color(themeValues.intBackgroundColor)
-    val baseTextColor = Color(themeValues.intBaseTextColor)
-    val textColor = Color(themeValues.intTextColor)
+    val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor))
+    val baseTextColor by animateColorAsState(Color(themeValues.intBaseTextColor))
+    val textColor by animateColorAsState(Color(themeValues.intTextColor))
 
     val fontFamily = currentReadingPreferences.fontFamily.toComposeFontFamily()
     val fontSize = currentReadingPreferences.fontSize.toSp()
