@@ -24,18 +24,18 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         val baseTextColorRes: Int,
         val linkColorRes: Int,
     ) {
+        SYSTEM(
+            displayNameRes = R.string.reader_preferences_theme_system,
+            style = R.style.ReaderTheme_System,
+            backgroundColorRes = MaterialR.attr.colorSurface,
+            baseTextColorRes = MaterialR.attr.colorOnSurface,
+            linkColorRes = R.color.reader_post_body_link,
+        ),
         PAPER(
             displayNameRes = R.string.reader_preferences_theme_paper,
             style = R.style.ReaderTheme_Paper,
             backgroundColorRes = R.color.reader_theme_paper_background,
             baseTextColorRes = R.color.reader_theme_paper_text,
-            linkColorRes = R.color.reader_post_body_link,
-        ),
-        OLED(
-            displayNameRes = R.string.reader_preferences_theme_oled,
-            style = R.style.ReaderTheme_OLED,
-            backgroundColorRes = R.color.reader_theme_oled_background,
-            baseTextColorRes = R.color.reader_theme_oled_text,
             linkColorRes = R.color.reader_post_body_link,
         ),
         SEPIA(
@@ -45,11 +45,18 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
             baseTextColorRes = R.color.reader_theme_sepia_text,
             linkColorRes = R.color.reader_post_body_link,
         ),
-        SYSTEM(
-            displayNameRes = R.string.reader_preferences_theme_system,
-            style = R.style.ReaderTheme_System,
-            backgroundColorRes = MaterialR.attr.colorSurface,
-            baseTextColorRes = MaterialR.attr.colorOnSurface,
+        CHARCOAL(
+            displayNameRes = R.string.reader_preferences_theme_charcoal,
+            style = R.style.ReaderTheme_Charcoal,
+            backgroundColorRes = R.color.reader_theme_charcoal_background,
+            baseTextColorRes = R.color.reader_theme_charcoal_text,
+            linkColorRes = R.color.reader_post_body_link,
+        ),
+        OLED(
+            displayNameRes = R.string.reader_preferences_theme_oled,
+            style = R.style.ReaderTheme_OLED,
+            backgroundColorRes = R.color.reader_theme_oled_background,
+            baseTextColorRes = R.color.reader_theme_oled_text,
             linkColorRes = R.color.reader_post_body_link,
         ),
     }
