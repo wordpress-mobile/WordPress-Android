@@ -146,11 +146,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
         migrationSuccessCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
         quickStart?.let { cards.add(it) }
+        blazeCard?.let { cards.add(it) }
         plansCard?.let { cards.add(it) }
         domainRegistrationCard?.let { cards.add(it) }
         bloganuaryNudgeCard?.let { cards.add(it) }
         bloggingPromptCard?.let { cards.add(it) }
-        blazeCard?.let { cards.add(it) }
         cardsState?.let {
             when (cardsState) {
                 is CardsState.Success -> cards.addAll(cardsState.cards)
