@@ -29,10 +29,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 private const val BORDER_ALPHA_10 = 0.1f
@@ -40,8 +42,8 @@ private const val BORDER_ALPHA_100 = 1f
 
 private val buttonWidth = 72.dp
 private val buttonBorderWidth = 1.dp
-private val buttonPadding = 16.dp
-private val buttonSpacing = 8.dp
+private val buttonPadding = Margin.ExtraLarge.value
+private val buttonSpacing = Margin.Medium.value
 private val buttonShape = RoundedCornerShape(5.dp)
 
 private val themeButtonPreviewBorderWidth = 1.dp
@@ -57,6 +59,7 @@ private fun ReadingPreferenceButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    verticalSpacing: Dp = buttonSpacing,
     preview: @Composable () -> Unit,
 ) {
     Column(
@@ -77,7 +80,7 @@ private fun ReadingPreferenceButton(
             )
             .clickable { onClick() }
             .padding(vertical = buttonPadding),
-        verticalArrangement = Arrangement.spacedBy(buttonSpacing, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         preview()
@@ -105,7 +108,7 @@ fun ReaderReadingPreferencesThemeButton(
     ReadingPreferenceButton(
         label = stringResource(theme.displayNameRes),
         isSelected = isSelected,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Box(
             modifier = Modifier
@@ -132,7 +135,8 @@ fun ReaderReadingPreferencesFontFamilyButton(
     ReadingPreferenceButton(
         label = stringResource(fontFamily.displayNameRes),
         isSelected = isSelected,
-        onClick = onClick
+        verticalSpacing = 0.dp,
+        onClick = onClick,
     ) {
         Text(
             text = stringResource(R.string.reader_preferences_font_family_preview),
@@ -156,7 +160,7 @@ fun ReaderReadingPreferencesThemeButtonPreview() {
         var selectedItem: ReaderReadingPreferences.Theme? by remember { mutableStateOf(null) }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
             ReaderReadingPreferences.Theme.values().forEach { theme ->
                 ReaderReadingPreferencesThemeButton(
@@ -176,7 +180,7 @@ fun ReaderReadingPreferencesFontFamilyButtonPreview() {
         var selectedItem: ReaderReadingPreferences.FontFamily? by remember { mutableStateOf(null) }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
             ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
                 ReaderReadingPreferencesFontFamilyButton(
