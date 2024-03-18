@@ -1,0 +1,7 @@
+24.4:
+- Neuer Traffic-Tab zum Stats-Bildschirm hinzugefügt
+- Benachrichtigungsdesign aktualisiert
+- Videoblock-Support für VideoPress v5 eingeführt
+- Absturz behoben, der durch das automatische Scrollen des Block-Editors verursacht wurde
+- Fehlermeldung für fehlgeschlagenen Video-Upload hinzugefügt
+- Bildtransparenz während Upload entfernt

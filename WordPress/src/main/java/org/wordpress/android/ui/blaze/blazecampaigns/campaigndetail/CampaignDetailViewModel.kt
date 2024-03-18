@@ -30,7 +30,7 @@ class CampaignDetailViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private lateinit var pageSource: CampaignDetailPageSource
-    private var campaignId: Int = 0
+    private var campaignId: String = ""
 
     private val _actionEvents = Channel<BlazeActionEvent>(Channel.BUFFERED)
     val actionEvents = _actionEvents.receiveAsFlow()
@@ -38,7 +38,7 @@ class CampaignDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<CampaignDetailUiState>(CampaignDetailUiState.Preparing)
     val uiState = _uiState as StateFlow<CampaignDetailUiState>
 
-    fun start(campaignId: Int, campaignDetailPageSource: CampaignDetailPageSource) {
+    fun start(campaignId: String, campaignDetailPageSource: CampaignDetailPageSource) {
         this.campaignId = campaignId
         this.pageSource = campaignDetailPageSource
 
@@ -76,7 +76,7 @@ class CampaignDetailViewModel @Inject constructor(
             pathComponents = arrayOf(
                 ADVERTISING_PATH,
                 CAMPAIGNS_PATH,
-                campaignId.toString(),
+                campaignId,
                 extractAndSanitizeSiteUrl()
             ),
             source = pageSource.trackingName

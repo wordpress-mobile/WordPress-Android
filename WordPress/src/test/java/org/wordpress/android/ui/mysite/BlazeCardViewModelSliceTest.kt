@@ -39,7 +39,7 @@ class BlazeCardViewModelSliceTest : BaseUnitTest() {
 
     private lateinit var refreshActions: MutableList<Boolean>
 
-    private val campaignId = 1
+    private val campaignId = "1"
 
     @Before
     fun setup() {

@@ -46,25 +46,25 @@ fun DesignSystemThemeWithoutBackground(
 private val paletteLightScheme = lightColorScheme(
     primary = DesignSystemAppColor.Black,
     primaryContainer = DesignSystemAppColor.White,
-    secondary = DesignSystemAppColor.Gray40,
-    secondaryContainer = DesignSystemAppColor.Gray,
-    tertiary = DesignSystemAppColor.Gray50,
-    tertiaryContainer = DesignSystemAppColor.Gray10,
+    secondary = DesignSystemAppColor.DarkGray55,
+    secondaryContainer = DesignSystemAppColor.DarkGray8,
+    tertiary = DesignSystemAppColor.DarkGray30,
+    tertiaryContainer = DesignSystemAppColor.DarkGray15,
     error = DesignSystemAppColor.Red,
     )
 
 private val paletteDarkScheme = darkColorScheme(
     primary = DesignSystemAppColor.White,
     primaryContainer = DesignSystemAppColor.Black,
-    secondary = DesignSystemAppColor.Gray20,
-    secondaryContainer = DesignSystemAppColor.Gray70,
-    tertiary = DesignSystemAppColor.Gray10,
-    tertiaryContainer = DesignSystemAppColor.Gray80,
+    secondary = DesignSystemAppColor.Gray60,
+    secondaryContainer = DesignSystemAppColor.Gray22,
+    tertiary = DesignSystemAppColor.Gray,
+    tertiaryContainer = DesignSystemAppColor.Gray30,
     error = DesignSystemAppColor.Red10,
     )
 
 private val extraPaletteLight = ExtraColors(
-    quaternaryContainer = DesignSystemAppColor.Gray30,
+    quaternaryContainer = DesignSystemAppColor.DarkGray40,
     brand = DesignSystemAppColor.Green,
     brandContainer = DesignSystemAppColor.Green,
     warning = DesignSystemAppColor.Orange,
@@ -73,7 +73,7 @@ private val extraPaletteLight = ExtraColors(
     )
 
 private val extraPaletteDark = ExtraColors(
-    quaternaryContainer = DesignSystemAppColor.Gray60,
+    quaternaryContainer = DesignSystemAppColor.Gray40,
     brand = DesignSystemAppColor.Green10,
     brandContainer = DesignSystemAppColor.Green20,
     warning = DesignSystemAppColor.Orange10,

@@ -49,7 +49,7 @@ class ActivityNavigator @Inject constructor() {
 
     fun navigateToCampaignDetailPage(
         context: Context,
-        campaignId: Int,
+        campaignId: String,
         campaignDetailPageSource: CampaignDetailPageSource
     ) {
         context.startActivity(

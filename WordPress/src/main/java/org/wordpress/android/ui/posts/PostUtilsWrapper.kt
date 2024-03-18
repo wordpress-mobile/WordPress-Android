@@ -16,7 +16,10 @@ import javax.inject.Inject
  *
  */
 @Reusable
-class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvider) {
+class PostUtilsWrapper
+@Inject constructor(
+    private val dateProvider: DateProvider
+) {
     fun isPublishable(post: PostImmutableModel) = PostUtils.isPublishable(post)
 
     fun isPostInConflictWithRemote(post: PostImmutableModel) =

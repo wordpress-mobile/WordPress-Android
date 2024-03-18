@@ -1,0 +1,7 @@
+24.4:
+- Added a new Traffic tab on the Stats screen
+* Het ontwerp van het meldingenscherm is bijgewerkt.
+- Introduced video block support for VideoPress v5
+- Fixed a crash caused by block editor auto-scrolling
+- Provided an error message for video upload failure
+- Removed image transparency during upload

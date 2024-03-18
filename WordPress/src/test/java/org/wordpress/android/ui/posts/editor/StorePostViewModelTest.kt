@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.IPostFreshnessChecker
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
@@ -59,6 +60,9 @@ class StorePostViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var context: Context
 
+    @Mock
+    lateinit var postFreshnessChecker: IPostFreshnessChecker
+
     private lateinit var viewModel: StorePostViewModel
     private val title = "title"
     private val updatedTitle = "updatedTitle"
@@ -79,7 +83,8 @@ class StorePostViewModelTest : BaseUnitTest() {
             uploadService,
             savePostToDbUseCase,
             networkUtils,
-            dispatcher
+            dispatcher,
+            postFreshnessChecker
         )
         postModel.setId(postId)
         postModel.setTitle(title)

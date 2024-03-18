@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-21 18:54:09+0000
+Translation-Revision-Date: 2024-03-06 11:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">La lecture automatique peut engendrer des problèmes d’ergonomie pour certains utilisateurs.</string>
+    <string name="notifications_action_mark_all_as_read">Tout marquer comme lu</string>
+    <string name="notifications_unread_content_description">Non lues</string>
     <string name="qrcode_media_deeplink_error">Site non trouvé. Vérifiez que vous êtes connecté(e) sur le bon compte.</string>
     <string name="gravatar_info_sync_done_button">Terminé</string>
     <string name="gravatar_info_sync_message">Il se peut que les mises à jour prennent un peu de temps pour se synchroniser avec votre profil Gravatar.</string>
@@ -379,7 +385,6 @@ Language: fr
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Ce site</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s utilise des %2$s, qui ne prennent pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s utilise une %2$s, qui ne prend pas encore en charge toutes les fonctionnalités de l’application. Installez l’%3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Le passage à l’application Jetpack est prévu dans quelques jours.</string>
     <string name="wp_jp_static_poster_footnote">Passer d’une application à l’autre est gratuit et ne prend qu’une minute.</string>
     <string name="wp_jp_static_poster_button_secondary">Lire la suite sur Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Passer à l’application Jetpack</string>
@@ -1165,7 +1170,6 @@ Language: fr
     <string name="jetpack_brute_force_allowlist_title">Adresses IP toujours autorisées</string>
     <string name="site_settings_denylist_title">Commentaires rejetés</string>
     <string name="gutenberg_native_add_button_text">Ajouter le libellé du bouton</string>
-    <string name="stories_intro_main_subtitle">Une nouvelle façon de publier du contenu attrayant sur votre site.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ignorer</string>
     <string name="activity_log_backup_download_notice_download_action">Téléchargement</string>
     <string name="threat_fix_all_status_success_message_plural">Les menaces ont bien été corrigées.</string>
@@ -1334,7 +1338,6 @@ Language: fr
     <string name="request_failed_message">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
     <string name="gutenberg_native_move_to_bottom">Déplacer tout en bas</string>
     <string name="gutenberg_native_change_block_position">Modifier l’emplacement du bloc</string>
-    <string name="label_control_upload">Charger</string>
     <string name="jetpack_icon_content_description">icône</string>
     <string name="backup_download_complete_info">Nous vous avons également envoyé par e-mail un lien vers votre fichier.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Bouton Lien de partage</string>
@@ -1435,7 +1438,6 @@ Language: fr
     <string name="dialog_confirm_copy_local_message">L’article que vous essayez de copier existe en deux versions conflictuelles ou vous avez apporté des modifications dernièrement qui n’ont pas été enregistrées.\nCommencez par modifier l’article pour résoudre les conflits ou poursuivez en copiant la version à partir de l’application.</string>
     <string name="dialog_confirm_copy_local_title">Conflit de synchronisation de l’article</string>
     <string name="button_copy">Dupliquer</string>
-    <string name="toast_edit_story_update_in_progress_title">La story a été enregistrée, veuillez patienter…</string>
     <string name="gutenberg_native_file_name">Nom du fichier</string>
     <string name="gutenberg_native_file_block_settings">Réglages du bloc fichier</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Le téléversement des fichiers a échoué.\nVeuillez toucher pour accéder aux options.</string>
@@ -1453,23 +1455,8 @@ Language: fr
     <string name="reader_follow_comments_null_response">Aucune réponse reçue</string>
     <string name="activity_log_activity_type_filter_clear">Effacer</string>
     <string name="activity_log_activity_type_filter_apply">Appliquer</string>
-    <string name="dialog_edit_story_unsupported_format_message">Une ou plusieurs diapositives n’ont pas été ajoutées à votre Story, car les Stories ne prennent pas en charge les fichiers GIF pour le moment. Veuillez plutôt choisir une image statique ou un arrière-plan vidéo.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Fichiers GIF non pris en charge</string>
-    <string name="dialog_edit_story_unrecoverable_message">Nous n’avons pas pu trouver les médias pour cette Story sur le site.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Impossible de modifier la Story</string>
-    <string name="dialog_edit_story_unavailable_message">Impossible de charger le média pour cette Story. Vérifiez votre connexion internet et réessayez dans un instant.</string>
-    <string name="dialog_edit_story_unavailable_title">Impossible de modifier la Story</string>
-    <string name="dialog_edit_story_limited_message">Cette Story a été modifiée sur un appareil différent et la possibilité de modifier certains objets peut être limitée.</string>
-    <string name="dialog_edit_story_limited_title">Modification de la Story limitée</string>
     <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de créer à nouveau votre story.</string>
-    <string name="color_picker_label_background">Arrière-plan</string>
-    <string name="color_picker_label_text">Texte</string>
-    <string name="dialog_discard_story_ok_button_edit">Rejeter</string>
-    <string name="dialog_discard_story_message_edit">Aucune modification effectuée n’a été enregistrée.</string>
-    <string name="dialog_discard_story_title_edit">Annuler les modifications ?</string>
     <string name="label_done_button">Terminé</string>
-    <string name="label_next_button">Suivant</string>
-    <string name="delete_button_alt">Supprimer</string>
     <string name="hpp_choose_error">Une erreur est survenue lors de la sélection du thème.</string>
     <string name="hpp_retry_error">Veuillez vérifier votre connexion internet, puis réessayez.</string>
     <string name="hpp_error_subtitle">Appuyez sur Réessayer lorsque vous êtes de nouveau en ligne.</string>
@@ -1519,14 +1506,6 @@ Language: fr
     <string name="gutenberg_native_help_button">Bouton d’aide</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifier avec l’éditeur web</string>
     <string name="gutenberg_native_choose_images">Choisir des images</string>
-    <string name="stories_intro_create_story_post_label">Créer une publication de story</string>
-    <string name="stories_intro_description_second">Elles sont publiées en tant que nouvel article de blog sur votre site afin que votre public ne rate jamais rien.</string>
-    <string name="stories_intro_title_second">Les publications de story ne disparaissent pas.</string>
-    <string name="stories_intro_description_first">Combinez des photos, des vidéos et du texte pour créer des publications de story engageantes et sur lesquelles on peut appuyer. Vos visiteurs apprécieront.</string>
-    <string name="stories_intro_title_first">Maintenant, les stories sont pour tout le monde</string>
-    <string name="stories_intro_image_caption_second">Exemple de titre de story</string>
-    <string name="stories_intro_image_caption_first">Comment créer une publication de story</string>
-    <string name="stories_intro_main_title">Présentation des publications de story</string>
     <string name="mlp_notice_blank_page_created">Page vide créée</string>
     <string name="mlp_notice_page_created">Page créée</string>
     <string name="media_insert_failed">L’insertion du média a échoué.</string>
@@ -1547,13 +1526,6 @@ Language: fr
     <string name="gutenberg_native_add_this_link">Ajouter ce lien</string>
     <string name="gutenberg_native_add_this_email_link">Lien d’ajout de cet e-mail</string>
     <string name="suggestion_no_connection">Aucune connexion internet.\nLes suggestions ne sont pas disponibles.</string>
-    <string name="typeface_label_shrikhand">Gras</string>
-    <string name="typeface_label_space_mono">Moderne</string>
-    <string name="typeface_label_pacifico">Ludique</string>
-    <string name="typeface_label_oswald">Forte</string>
-    <string name="typeface_label_libre_baskerville">Classique</string>
-    <string name="typeface_label_nunito">Décontractée</string>
-    <string name="toast_capture_operation_permission_needed">Vous devez accorder l’autorisation d’enregistrement audio de l’application afin d’enregistrer des vidéos.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s sélectionné </string>
     <string name="login_get_link_by_email">Obtenir un lien de connexion par e-mail.</string>
@@ -1580,66 +1552,13 @@ Language: fr
     <string name="gutenberg_native_page_title_empty">Titre de la page. Vide</string>
     <string name="toast_error_playing_video">Une erreur s’est produite lors de la lecture de votre vidéo</string>
     <string name="camera_error">Cet appareil ne prend pas en charge l’API Camera2.</string>
-    <string name="toast_error_saving_video">La vidéo n’a pas pu être enregistrée</string>
-    <string name="toast_error_saving_image">Erreur lors de l’enregistrement de l’image</string>
-    <string name="toast_capture_operation_in_progress">Opération en cours, réessayez</string>
-    <string name="toast_story_page_not_found">Diapositive Story introuvable</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Afficher le stockage</string>
-    <string name="dialog_insufficient_device_storage_error_message">Nous devons enregistrer la story sur votre appareil avant de pouvoir la publier. Vérifiez les réglages de votre stockage et supprimez des fichiers pour libérer de l’espace.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Stockage de l’appareil insuffisant</string>
-    <string name="dialog_story_saving_error_message">Réessayez d’enregistrer ou supprimez les diapositives, puis essayez de publier à nouveau votre story.</string>
-    <string name="dialog_story_saving_error_title_plural">Impossible d’enregistrer les %1$d diapositives</string>
-    <string name="dialog_story_saving_error_title_singular">Impossible d’enregistrer une diapositive </string>
-    <string name="story_saving_failed_quick_action_manage">Gérer</string>
-    <string name="story_saving_failed_message_plural">%1$d les diapositives nécessitent une action</string>
-    <string name="story_saving_failed_message_singular">une diapositive nécessite une action</string>
-    <string name="story_saving_failed_title">Impossible de charger « %1$s »</string>
-    <string name="story_saving_snackbar_finished_with_error">Impossible de charger « %1$s »</string>
-    <string name="story_saving_snackbar_finished_successfully">« %1$s » publié</string>
-    <string name="story_saving_snackbar_started">Chargement de « %1$s »…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d diapositives restantes</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">une diapositive restante</string>
-    <string name="story_saving_title_several">plusieurs stories</string>
-    <string name="story_saving_title">Enregistrement de « %1$s »…</string>
-    <string name="story_saving_untitled">Sans titre</string>
-    <string name="dialog_discard_story_ok_button">Annuler</string>
-    <string name="dialog_discard_story_message">Votre story ne sera pas enregistrée en tant que brouillon.</string>
-    <string name="dialog_discard_story_title">Annuler la publication de la story ?</string>
-    <string name="dialog_discard_page_ok_button">Supprimer </string>
-    <string name="dialog_discard_errored_page_message">Cette diapositive n’a pas encore été enregistrée. Si vous supprimez cette diapositive, vous perdrez toutes les modifications que vous avez apportées.</string>
-    <string name="dialog_discard_page_message">Cette diapositive sera supprimée de votre story.</string>
-    <string name="dialog_discard_page_title">Supprimer la diapositive de la story ?</string>
-    <string name="label_text_color_button">Modifier la couleur du texte</string>
-    <string name="label_text_alignment_button">Modifier l’alignement du texte</string>
-    <string name="label_frame_errored">erroné</string>
-    <string name="label_frame_selected_border">Sélectionnée</string>
-    <string name="label_frame_unselected_border">Desélectionnée </string>
-    <string name="label_frame_image">Diapositive</string>
-    <string name="label_retry_icon">Réessayer</string>
-    <string name="label_saved_icon">Enregistrée</string>
     <string name="label_close_button">Fermer</string>
-    <string name="label_share_to">Partager vers</string>
-    <string name="label_snackbar_share">PARTAGER</string>
-    <string name="label_snackbar_loop_frame_saved">Enregistré dans les photos</string>
-    <string name="label_control_retry">Réessayer</string>
-    <string name="label_control_saved">Enregistré</string>
-    <string name="label_control_saving">Enregistrement</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Retourner</string>
-    <string name="sound_button_alt">Son</string>
-    <string name="text_button_alt">Texte</string>
-    <string name="stickers_button_alt">Autocollants</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">Retourner l’appareil photo</string>
-    <string name="capture_button_alt">Capturer</string>
     <string name="mlp_preview_page">Prévisualiser</string>
     <string name="mlp_create_page">Créer une page</string>
     <string name="mlp_create_blank_page">Créer une page vide</string>
     <string name="mlp_choose_layout_subtitle">Commencez en choisissant parmi une large variété de mises en page prédéfinies. Ou commencez simplement avec une page vide.</string>
     <string name="mlp_choose_layout_title">Choisissez une mise en page</string>
     <string name="prepublishing_nudges_story_title_hint">Donnez un titre à votre story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Créez un article ou une story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Créez un article, une page ou une story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Appuyez sur %1$s Créer. %2$s Puis sélectionnez &lt;b&gt;Article de blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Choisir depuis l’appareil</string>
     <string name="my_site_bottom_sheet_add_story">Publication de story</string>

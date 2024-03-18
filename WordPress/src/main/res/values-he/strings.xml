@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-22 15:54:09+0000
+Translation-Revision-Date: 2024-03-06 17:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
+    <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">ניגון אוטומטי עלול לגרום לבעיות בשימוש אצל חלק מהמשתמשים.</string>
+    <string name="notifications_action_mark_all_as_read">לסמן את כל ההודעות כ\'נקרא\'</string>
+    <string name="notifications_unread_content_description">לא נקרא</string>
     <string name="qrcode_media_deeplink_error">האתר לא נמצא. יש לוודא שהתחברת לחשבון הנכון.</string>
     <string name="gravatar_info_sync_done_button">סיימנו</string>
     <string name="gravatar_info_sync_message">ייתכן שיידרש קצת זמן לסנכרון העדכונים האלה בפרופיל שלך ב-Gravatar.</string>
@@ -381,7 +387,6 @@ Language: he_IL
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">האתר הזה</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומכים בכל האפשרויות של האפליקציה. יש להתקין את ⁦%3$s⁩.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">האתר ⁦%1$s⁩ משתמש ב-⁦%2$s⁩ שעדיין לא תומך בכל האפשרויות של האפליקציה. יש להתקין את ⁦%3$s⁩.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">האפשרות תעבור לאפליקציה של Jetpack בימים הקרובים.</string>
     <string name="wp_jp_static_poster_footnote">ההחלפה היא חינמית ואורכת דקה בלבד.</string>
     <string name="wp_jp_static_poster_button_secondary">מידע נוסף באתר Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">החלפה לאפליקציה של Jetpack</string>
@@ -1166,7 +1171,6 @@ Language: he_IL
     <string name="jetpack_brute_force_allowlist_title">כתובת IP שמותרות תמיד</string>
     <string name="site_settings_denylist_title">תגובות שלא יותרו לפרסום</string>
     <string name="gutenberg_native_add_button_text">להוסיף טקסט לכפתור</string>
-    <string name="stories_intro_main_subtitle">דרך חדשה ליצור ולפרסם תוכן מעניין באתר שלך.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">ביטול</string>
     <string name="activity_log_backup_download_notice_download_action">הורדה</string>
     <string name="threat_fix_all_status_success_message_plural">האיומים תוקנו בהצלחה.</string>
@@ -1334,7 +1338,6 @@ Language: he_IL
     <string name="request_failed_message">הייתה בעיה לטפל בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="gutenberg_native_move_to_bottom">להעביר לתחתית</string>
     <string name="gutenberg_native_change_block_position">לבדוק את מיקום הבלוק</string>
-    <string name="label_control_upload">להעלות</string>
     <string name="jetpack_icon_content_description">סמל</string>
     <string name="backup_download_complete_info">בנוסף, שלחנו לך הודעת אימייל עם קישור לקובץ שלך.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">כפתור לשיתוף הקישור</string>
@@ -1435,7 +1438,6 @@ Language: he_IL
     <string name="dialog_confirm_copy_local_message">לפוסט שברצונך להעתיק קיימות שתי גרסאות שונות זו מזו, או שערכת את הפוסט אבל לא שמרת את השינויים.\n עליך קודם לערוך את הפוסט כדי לפתור התנגשויות בין הגרסאות ואז להמשיך בפעולת ההעתקה של הגרסה מהאפליקציה.</string>
     <string name="dialog_confirm_copy_local_title">התנגשות בסנכרון הפוסט</string>
     <string name="button_copy">לשכפל</string>
-    <string name="toast_edit_story_update_in_progress_title">הסטורי נשמר, רק רגע…</string>
     <string name="gutenberg_native_file_name">שם קובץ</string>
     <string name="gutenberg_native_file_block_settings">הגדרות של בלוק הקובץ</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">העלאת קבצים נכשלה.\nיש להקיש לאפשרויות.</string>
@@ -1453,23 +1455,8 @@ Language: he_IL
     <string name="reader_follow_comments_null_response">לא התקבלו תגובות</string>
     <string name="activity_log_activity_type_filter_clear">לנקות</string>
     <string name="activity_log_activity_type_filter_apply">להחיל</string>
-    <string name="dialog_edit_story_unsupported_format_message">לפחות שקופית אחת לא נוספה לסטורי שלך מאחר שסטוריז לא תומכים בקובצי GIF כרגע. במקום, יש לבחור תמונה סטטית או וידאו לרקע.</string>
-    <string name="dialog_edit_story_unsupported_format_title">קובצי GIF לא נתמכים</string>
-    <string name="dialog_edit_story_unrecoverable_message">מצטערים, לא הצלחנו למצוא את המדיה לסטורי באתר זה.</string>
-    <string name="dialog_edit_story_unrecoverable_title">אין אפשרות לערוך את הסטורי</string>
-    <string name="dialog_edit_story_unavailable_message">לא ניתן לטעון את המדיה לסטורי הזה. יש לבדוק את החיבור שלך לאינטרנט ולנסות שוב עוד מעט.</string>
-    <string name="dialog_edit_story_unavailable_title">אין אפשרות לערוך את הסטורי</string>
-    <string name="dialog_edit_story_limited_message">הסטורי הזה נערך במכשיר שונה והאפשרות לערוך אובייקטים מסוימים עלולה להיות מוגבלת.</string>
-    <string name="dialog_edit_story_limited_title">עריכה מוגבלת של הסטורי</string>
     <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. כדאי לנסות ליצור את הסיפור שלך מחדש.</string>
-    <string name="color_picker_label_background">רקע</string>
-    <string name="color_picker_label_text">טקסט</string>
-    <string name="dialog_discard_story_ok_button_edit">ביטול</string>
-    <string name="dialog_discard_story_message_edit">השינויים לא יישמרו.</string>
-    <string name="dialog_discard_story_title_edit">לבטל את השינויים?</string>
     <string name="label_done_button">בוצע</string>
-    <string name="label_next_button">הבא</string>
-    <string name="delete_button_alt">למחוק</string>
     <string name="hpp_choose_error">אירעה שגיאה בעת בחירת ערכת העיצוב.</string>
     <string name="hpp_retry_error">יש לבדוק את החיבור לאינטרנט ולנסות שוב.</string>
     <string name="hpp_error_subtitle">יש להקיש כדי לנסות שוב במצב מקוון.</string>
@@ -1519,14 +1506,6 @@ Language: he_IL
     <string name="gutenberg_native_help_button">כפתור עזרה</string>
     <string name="gutenberg_native_edit_using_web_editor">לערוך באמצעות עורך אינטרנט</string>
     <string name="gutenberg_native_choose_images">לבחור תמונות</string>
-    <string name="stories_intro_create_story_post_label">ליצור פוסט של סטורי</string>
-    <string name="stories_intro_description_second">הם מתפרסמים באתר שלך כפוסט חדש בבלוג, כדי שהקהל שלך אף פעם לא יחמיץ דבר.</string>
-    <string name="stories_intro_title_second">פוסטים של סטורי לא נעלמים לעולם</string>
-    <string name="stories_intro_description_first">אפשר לשלב תמונות, סרטוני וידאו וטקסטים כדי ליצור פוסטים מעניינים של סטורי לתצוגה באמצעות הקשה ולהרשים את הקוראים הסקרנים.</string>
-    <string name="stories_intro_title_first">הסטוריז החדשים מיועדים לכולם</string>
-    <string name="stories_intro_image_caption_second">כותרת סטורי לדוגמה</string>
-    <string name="stories_intro_image_caption_first">כיצד ליצור פוסט של סטורי</string>
-    <string name="stories_intro_main_title">אנו שמחים להציג את האפשרות \'פוסטים של סטורי\'</string>
     <string name="mlp_notice_blank_page_created">נוצר עמוד ריק</string>
     <string name="mlp_notice_page_created">העמוד נוצר</string>
     <string name="media_insert_failed">הכנסת המדיה נכשלה.</string>
@@ -1547,13 +1526,6 @@ Language: he_IL
     <string name="gutenberg_native_add_this_link">להוסיף את הקישור</string>
     <string name="gutenberg_native_add_this_email_link">להוסיף את הקישור לאימייל</string>
     <string name="suggestion_no_connection">אין חיבור לאינטרנט.\nההצעות לא זמינות.</string>
-    <string name="typeface_label_shrikhand">מודגש</string>
-    <string name="typeface_label_space_mono">מודרני</string>
-    <string name="typeface_label_pacifico">משעשע</string>
-    <string name="typeface_label_oswald">חזק</string>
-    <string name="typeface_label_libre_baskerville">קלאסי</string>
-    <string name="typeface_label_nunito">יומיומי</string>
-    <string name="toast_capture_operation_permission_needed">עליך לתת לאפליקציה הרשאה להקליט אודיו כדי להקליט וידאו</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s נבחר</string>
     <string name="login_get_link_by_email">לקבל קישור לכניסה באימייל</string>
@@ -1580,66 +1552,13 @@ Language: he_IL
     <string name="gutenberg_native_page_title_empty">כותרת העמוד. ריק</string>
     <string name="toast_error_playing_video">אירעה שגיאה בעת ניגון הווידאו</string>
     <string name="camera_error">המכשיר לא תומך בממשק API של Camera2.</string>
-    <string name="toast_error_saving_video">לא ניתן לשמור את הווידאו</string>
-    <string name="toast_error_saving_image">שגיאה בשמירת התמונה</string>
-    <string name="toast_capture_operation_in_progress">הפעולה בתהליך, יש לנסות שוב</string>
-    <string name="toast_story_page_not_found">לא ניתן היה למצוא את השקופית של הסטורי</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">להציג את שטח האחסון</string>
-    <string name="dialog_insufficient_device_storage_error_message">אנחנו צריכים לשמור את הסטורי במכשיר שלך לפני שנוכל לפרסם אותו. לבדוק את הגדרות האחסון שלך כדי להסיר קבצים ולפנות שטח אחסון.</string>
-    <string name="dialog_insufficient_device_storage_error_title">אין מספיק שטח אחסון במכשיר</string>
-    <string name="dialog_story_saving_error_message">אפשר לנסות לשמור או למחוק את השקופיות ולאחר מכן לנסות לפרסם את הסטורי שוב.</string>
-    <string name="dialog_story_saving_error_title_plural">אין אפשרות לשמור ⁦%1$d⁩ שקופיות</string>
-    <string name="dialog_story_saving_error_title_singular">אין אפשרות לשמור שקופית אחת</string>
-    <string name="story_saving_failed_quick_action_manage">ניהול</string>
-    <string name="story_saving_failed_message_plural">⁦%1$d⁩ שקופיות דורשות פעולה מצידך</string>
-    <string name="story_saving_failed_message_singular">שקופית אחת דורשת פעולה מצידך</string>
-    <string name="story_saving_failed_title">אין אפשרות להעלות את \'⁦%1$s⁩\'</string>
-    <string name="story_saving_snackbar_finished_with_error">אין אפשרות להעלות את \'⁦%1$s⁩\'</string>
-    <string name="story_saving_snackbar_finished_successfully">הפריט \'⁦%1$s⁩\' פורסם</string>
-    <string name="story_saving_snackbar_started">מעלה את \'⁦%1$s⁩\'…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">⁦%1$d⁩ שקופיות נותרו</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">שקופית אחת נותרה</string>
-    <string name="story_saving_title_several">מספר פריטי סטורי</string>
-    <string name="story_saving_title">שומר את \'⁦%1$s⁩\'…</string>
-    <string name="story_saving_untitled">ללא כותרת</string>
-    <string name="dialog_discard_story_ok_button">לבטל</string>
-    <string name="dialog_discard_story_message">הפוסט של הסטורי לא יישמר כטיוטה.</string>
-    <string name="dialog_discard_story_title">האם למחוק את הפוסט של הסטורי?</string>
-    <string name="dialog_discard_page_ok_button">למחוק</string>
-    <string name="dialog_discard_errored_page_message">השקופית הזאת טרם נשמרה. אם השקופית תימחק, כל העריכות שביצעת יאבדו.</string>
-    <string name="dialog_discard_page_message">השקופית תוסר מהסטורי שלך.</string>
-    <string name="dialog_discard_page_title">האם למחוק את השקופית?</string>
-    <string name="label_text_color_button">לשנות את צבע הטקסט</string>
-    <string name="label_text_alignment_button">לשנות את היישור של הטקסט</string>
-    <string name="label_frame_errored">אירעה שגיאה</string>
-    <string name="label_frame_selected_border">נבחר</string>
-    <string name="label_frame_unselected_border">לא נבחר</string>
-    <string name="label_frame_image">שקופית</string>
-    <string name="label_retry_icon">יש לנסות שוב</string>
-    <string name="label_saved_icon">נשמר</string>
     <string name="label_close_button">לסגור</string>
-    <string name="label_share_to">לשתף אל</string>
-    <string name="label_snackbar_share">שיתוף</string>
-    <string name="label_snackbar_loop_frame_saved">נשמר בתמונות</string>
-    <string name="label_control_retry">יש לנסות שוב</string>
-    <string name="label_control_saved">נשמר</string>
-    <string name="label_control_saving">שומר</string>
-    <string name="label_control_flash">מבזק</string>
-    <string name="label_control_flip_camera">לשנות כיוון</string>
-    <string name="sound_button_alt">שמע</string>
-    <string name="text_button_alt">טקסט</string>
-    <string name="stickers_button_alt">מדבקות</string>
-    <string name="flash_button_alt">מבזק</string>
-    <string name="flip_button_alt">לשנות את כיוון המצלמה</string>
-    <string name="capture_button_alt">לצלם</string>
     <string name="mlp_preview_page">תצוגה מקדימה</string>
     <string name="mlp_create_page">ליצור עמוד</string>
     <string name="mlp_create_blank_page">ליצור עמוד ריק</string>
     <string name="mlp_choose_layout_subtitle">ניתן להתחיל באמצעות בחירה ממגוון רחב של פריסות עמוד שהוכנו מראש. או פשוט להתחיל מעמוד ריק.</string>
     <string name="mlp_choose_layout_title">יש לבחור פריסה</string>
     <string name="prepublishing_nudges_story_title_hint">להגדיר שם לסטורי</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">ליצור פוסט או סטורי</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">ליצור פוסט, עמוד או סטורי</string>
     <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על ⁦%1$s⁩ כדי ליצור. ⁦%2$s⁩ לאחר מכן, יש לבחור &lt;b&gt;פוסט בבלוג&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">לבחור מהמכשיר</string>
     <string name="my_site_bottom_sheet_add_story">פוסט של סטורי</string>
