@@ -25,7 +25,6 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.config.BloggingPromptsFeature
 import org.wordpress.android.viewmodel.Event
 import java.time.LocalDate
 import java.time.ZoneId
@@ -44,8 +43,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private val bloggingPromptsCardTrackHelper: BloggingPromptsCardTrackHelper,
     private val bloggingPromptsPostTagProvider: BloggingPromptsPostTagProvider,
     private val bloggingPromptCardBuilder: BloggingPromptCardBuilder,
-    private val promptsStore: BloggingPromptsStore,
-    private val bloggingPromptsFeature: BloggingPromptsFeature
+    private val promptsStore: BloggingPromptsStore
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
