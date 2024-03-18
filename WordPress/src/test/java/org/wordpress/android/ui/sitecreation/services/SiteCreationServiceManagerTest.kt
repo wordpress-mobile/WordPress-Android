@@ -135,6 +135,22 @@ class SiteCreationServiceManagerTest : BaseUnitTest() {
     }
 
     @Test
+    fun verifyFailureFlowWhenTheSiteExistsAndIsNotARetry() = test {
+        setSiteExistsErrorResponses()
+        val stateBeforeFailure = CREATE_SITE_STATE
+        whenever(serviceListener.getCurrentState()).thenReturn(stateBeforeFailure)
+
+        startFlow()
+        
+        argumentCaptor<SiteCreationServiceState>().apply {
+            verify(serviceListener, times(3)).updateState(capture())
+            assertThat(allValues[0]).isEqualTo(IDLE_STATE)
+            assertThat(allValues[1]).isEqualTo(CREATE_SITE_STATE)
+            assertThat(allValues[2]).isEqualTo(FAILURE_STATE.copy(payload = stateBeforeFailure))
+        }
+    }
+
+    @Test
     fun verifyRetryWorksWhenCreateSiteRequestFailed() = test {
         setGenericErrorResponses()
         startFlow()
