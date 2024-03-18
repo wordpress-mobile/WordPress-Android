@@ -7,9 +7,11 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -107,7 +109,7 @@ fun ReaderReadingPreferencesScreen(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
-                .padding(horizontal = 16.dp, vertical = 32.dp),
+                .padding(vertical = 32.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically),
         ) {
             Row(
@@ -116,6 +118,8 @@ fun ReaderReadingPreferencesScreen(
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
+                Spacer(modifier = Modifier.width(16.dp))
+
                 ReaderReadingPreferences.Theme.values().forEach { theme ->
                     ReaderReadingPreferencesThemeButton(
                         theme = theme,
@@ -123,6 +127,8 @@ fun ReaderReadingPreferencesScreen(
                         onClick = { onThemeClick(theme) },
                     )
                 }
+
+                Spacer(modifier = Modifier.width(16.dp))
             }
 
             Row(
@@ -131,6 +137,8 @@ fun ReaderReadingPreferencesScreen(
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
+                Spacer(modifier = Modifier.width(16.dp))
+
                 ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
                     ReaderReadingPreferencesFontFamilyButton(
                         fontFamily = fontFamily,
@@ -138,6 +146,8 @@ fun ReaderReadingPreferencesScreen(
                         onClick = { onFontFamilyClick(fontFamily) },
                     )
                 }
+
+                Spacer(modifier = Modifier.width(16.dp))
             }
 
             FontSizeSlider(
@@ -171,7 +181,7 @@ fun FontSizeSlider(
 ) {
     // TODO slider with previews and stops
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         ReaderReadingPreferences.FontSize.values().forEach { fontSize ->

@@ -6,10 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 private const val BORDER_ALPHA_10 = 0.1f
 private const val BORDER_ALPHA_100 = 1f
 
+private val buttonWidth = 72.dp
 private val buttonBorderWidth = 1.dp
 private val buttonPadding = 16.dp
 private val buttonSpacing = 8.dp
@@ -47,15 +49,19 @@ private val themeButtonPreviewSize = 48.dp
 
 private val fontFamilyButtonPreviewSize = 32.sp
 
+private val labelFontSize = 12.sp
+
 @Composable
 private fun ReadingPreferenceButton(
+    label: String,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit,
+    preview: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
+            .width(buttonWidth)
             .background(
                 color = MaterialTheme.colors.surface,
                 shape = buttonShape,
@@ -70,11 +76,21 @@ private fun ReadingPreferenceButton(
                 },
             )
             .clickable { onClick() }
-            .padding(buttonPadding),
+            .padding(vertical = buttonPadding),
         verticalArrangement = Arrangement.spacedBy(buttonSpacing, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        content()
+        preview()
+
+        Text(
+            text = label,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = TextStyle(
+                fontSize = labelFontSize,
+                color = MaterialTheme.colors.onSurface,
+            )
+        )
     }
 }
 
@@ -87,6 +103,7 @@ fun ReaderReadingPreferencesThemeButton(
     val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, theme)
 
     ReadingPreferenceButton(
+        label = stringResource(theme.displayNameRes),
         isSelected = isSelected,
         onClick = onClick
     ) {
@@ -103,8 +120,6 @@ fun ReaderReadingPreferencesThemeButton(
                     color = MaterialTheme.colors.onSurface.copy(alpha = BORDER_ALPHA_10),
                 ),
         )
-
-        Text(text = stringResource(theme.displayNameRes))
     }
 }
 
@@ -115,6 +130,7 @@ fun ReaderReadingPreferencesFontFamilyButton(
     onClick: () -> Unit,
 ) {
     ReadingPreferenceButton(
+        label = stringResource(fontFamily.displayNameRes),
         isSelected = isSelected,
         onClick = onClick
     ) {
@@ -129,8 +145,6 @@ fun ReaderReadingPreferencesFontFamilyButton(
                 )
             )
         )
-
-        Text(text = stringResource(fontFamily.displayNameRes))
     }
 }
 
