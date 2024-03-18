@@ -91,8 +91,8 @@ class CardViewModelSlice @Inject constructor(
         val cards = mutableListOf<MySiteCardAndItem.Card>()
         topDynamicCards?.let { cards.addAll(topDynamicCards) }
         todaysStatsCard?.let { cards.add(todaysStatsCard) }
-        pagesCard?.let { cards.add(pagesCard) }
         postsCard?.let { cards.addAll(postsCard) }
+        pagesCard?.let { cards.add(pagesCard) }
         activityCard?.let { cards.add(activityCard) }
         bottomDynamicCards?.let { cards.addAll(bottomDynamicCards) }
         return CardsState.Success(cards)
