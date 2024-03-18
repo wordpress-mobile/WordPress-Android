@@ -37,6 +37,8 @@ import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.utils.toComposeFontFamily
+import org.wordpress.android.ui.reader.utils.toSp
 
 private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f

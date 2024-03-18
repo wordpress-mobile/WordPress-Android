@@ -1,5 +1,6 @@
-package org.wordpress.android.ui.reader.views.compose.readingpreferences
+package org.wordpress.android.ui.reader.utils
 
+import android.graphics.Typeface
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
@@ -10,6 +11,14 @@ fun ReaderReadingPreferences.FontFamily.toComposeFontFamily(): FontFamily {
         ReaderReadingPreferences.FontFamily.SANS -> FontFamily.SansSerif
         ReaderReadingPreferences.FontFamily.SERIF -> FontFamily.Serif
         ReaderReadingPreferences.FontFamily.MONO -> FontFamily.Monospace
+    }
+}
+
+fun ReaderReadingPreferences.FontFamily.toTypeface(): Typeface {
+    return when (this) {
+        ReaderReadingPreferences.FontFamily.SANS -> Typeface.SANS_SERIF
+        ReaderReadingPreferences.FontFamily.SERIF -> Typeface.SERIF
+        ReaderReadingPreferences.FontFamily.MONO -> Typeface.MONOSPACE
     }
 }
 

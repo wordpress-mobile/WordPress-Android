@@ -845,7 +845,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        binding.headerView.updatePost(state.headerUiState)
+        binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
         showOrHideMoreMenu(state)
 
         updateFeaturedImage(state.featuredImageUiState, binding)

@@ -36,6 +36,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.utils.toComposeFontFamily
 
 private const val BORDER_ALPHA_10 = 0.1f
 private const val BORDER_ALPHA_100 = 1f
