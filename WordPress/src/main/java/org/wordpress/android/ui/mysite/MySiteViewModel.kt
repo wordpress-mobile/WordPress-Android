@@ -126,6 +126,7 @@ class MySiteViewModel @Inject constructor(
 
     val isRefreshingOrLoading = merge(
         dashboardCardsViewModelSlice.isRefreshing,
+        dashboardItemsViewModelSlice.isRefreshing,
         accountDataViewModelSlice.isRefreshing
     )
 

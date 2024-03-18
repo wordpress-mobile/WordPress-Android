@@ -68,6 +68,9 @@ class DashboardItemsViewModelSlice @Inject constructor(
         siteItemsViewModelSlice.onSnackbarMessage,
     )
 
+    private val _isRefreshing =  MutableLiveData<Boolean>()
+    val isRefreshing = _isRefreshing.distinctUntilChanged()
+
     private fun mergeUiModels(
         jetpackFeatureCard: MySiteCardAndItem.Card.JetpackFeatureCard?,
         jetpackSwitchMenu: MySiteCardAndItem.Card.JetpackSwitchMenu?,
@@ -92,11 +95,13 @@ class DashboardItemsViewModelSlice @Inject constructor(
     fun buildItems(site: SiteModel) {
         job?.cancel()
         job = scope.launch(bgDispatcher) {
+            _isRefreshing.postValue(true)
             jetpackFeatureCardViewModelSlice.buildJetpackFeatureCard()
             jetpackSwitchMenuViewModelSlice.buildJetpackSwitchMenu()
             jetpackBadgeViewModelSlice.buildJetpackBadge()
             siteItemsViewModelSlice.buildSiteItems(site)
             sotw2023NudgeCardViewModelSlice.buildCard()
+            _isRefreshing.postValue(false)
         }
     }
 
