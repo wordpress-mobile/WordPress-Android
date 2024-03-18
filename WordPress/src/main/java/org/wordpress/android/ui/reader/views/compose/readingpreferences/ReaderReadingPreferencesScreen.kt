@@ -1,23 +1,28 @@
 package org.wordpress.android.ui.reader.views.compose.readingpreferences
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,20 +33,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 
 private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
+private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 
 @Composable
 fun ReaderReadingPreferencesScreen(
@@ -80,7 +89,7 @@ fun ReaderReadingPreferencesScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(Margin.ExtraLarge.value),
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {
             // title
@@ -99,6 +108,7 @@ fun ReaderReadingPreferencesScreen(
                     fontSize = fontSize,
                     fontWeight = FontWeight.Normal,
                     color = textColor,
+                    lineHeight = fontSize * TEXT_LINE_HEIGHT_MULTIPLIER,
                 ),
             )
         }
@@ -109,16 +119,16 @@ fun ReaderReadingPreferencesScreen(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
-                .padding(vertical = 32.dp),
+                .padding(vertical = Margin.ExtraExtraMediumLarge.value),
             verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(Margin.Small.value),
             ) {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
 
                 ReaderReadingPreferences.Theme.values().forEach { theme ->
                     ReaderReadingPreferencesThemeButton(
@@ -128,16 +138,16 @@ fun ReaderReadingPreferencesScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(Margin.Small.value),
             ) {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
 
                 ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
                     ReaderReadingPreferencesFontFamilyButton(
@@ -147,12 +157,16 @@ fun ReaderReadingPreferencesScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
             }
 
-            FontSizeSlider(
+            FontSlider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = Margin.ExtraLarge.value),
                 selectedFontSize = currentReadingPreferences.fontSize,
-                onFontSizeClick = onFontSizeClick,
+                onFontSizeSelected = onFontSizeClick,
+                previewFontFamily = fontFamily,
             )
         }
     }
@@ -174,34 +188,107 @@ private fun getTitleTextStyle(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FontSizeSlider(
+fun FontSlider(
     selectedFontSize: ReaderReadingPreferences.FontSize,
-    onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
+    onFontSizeSelected: (ReaderReadingPreferences.FontSize) -> Unit,
+    previewFontFamily: FontFamily,
+    modifier: Modifier = Modifier,
 ) {
-    // TODO slider with previews and stops
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+    val thumbSize = 20.dp
+    val selectedIndex = ReaderReadingPreferences.FontSize.values().indexOf(selectedFontSize)
+
+    Column(
+        modifier = modifier,
     ) {
-        ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
-            Text(
-                text = fontSize.value.toString(),
+        // Text size previews on top of the slider
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = thumbSize / 2),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
+        ) {
+            ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
+                val isSelected = fontSize == selectedFontSize
+
+                Text(
+                    text = "A",
+                    style = TextStyle(
+                        fontFamily = previewFontFamily,
+                        fontSize = fontSize.value.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        platformStyle = PlatformTextStyle(
+                            includeFontPadding = false,
+                        ),
+                    ),
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = MutableInteractionSource(),
+                            indication = null,
+                        ) { onFontSizeSelected(fontSize) }
+                )
+            }
+        }
+
+        val maxRange = (ReaderReadingPreferences.FontSize.values().size - 1).toFloat()
+        val sliderTrackColor = Color(0xFF999999)
+
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            val stepTickSize = 10.dp
+            val stepPadding = (thumbSize - stepTickSize) / 2
+            // Custom steps
+            Row(
                 modifier = Modifier
-                    .clickable { onFontSizeClick(fontSize) }
-                    .border(
-                        width = 1.dp,
-                        color = if (fontSize == selectedFontSize) {
-                            MaterialTheme.colors.onSurface
-                        } else {
-                            MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
-                        }
+                    .fillMaxWidth()
+                    .padding(horizontal = stepPadding),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                repeat(ReaderReadingPreferences.FontSize.values().size) {
+                    Box(
+                        modifier = Modifier
+                            .size(stepTickSize)
+                            .background(
+                                color = sliderTrackColor,
+                                shape = CircleShape,
+                            )
                     )
-                    .padding(8.dp),
-                style = TextStyle(
-                    fontSize = 32.sp,
-                    color = MaterialTheme.colors.onSurface,
-                ),
+                }
+            }
+
+            val interactionSource = remember { MutableInteractionSource() }
+            val sliderColors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colors.onSurface,
+                inactiveTrackColor = sliderTrackColor,
+                activeTrackColor = Color.Transparent,
+                activeTickColor = Color.Transparent,
+                inactiveTickColor = Color.Transparent,
+            )
+            Slider(
+                modifier = Modifier.fillMaxWidth(),
+                value = selectedIndex.toFloat(),
+                onValueChange = {
+                    val newIndex = it.toInt()
+                    if (newIndex != selectedIndex) {
+                        onFontSizeSelected(ReaderReadingPreferences.FontSize.values()[newIndex])
+                    }
+                },
+                valueRange = 0f..maxRange,
+                steps = ReaderReadingPreferences.FontSize.values().size,
+                colors = sliderColors,
+                interactionSource = interactionSource,
+                thumb = {
+                    SliderDefaults.Thumb(
+                        interactionSource = interactionSource,
+                        thumbSize = DpSize(thumbSize, thumbSize),
+                        colors = sliderColors,
+                    )
+                }
             )
         }
     }
