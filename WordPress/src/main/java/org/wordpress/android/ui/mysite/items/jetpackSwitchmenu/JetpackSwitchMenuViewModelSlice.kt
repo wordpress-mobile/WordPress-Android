@@ -23,7 +23,10 @@ class JetpackSwitchMenuViewModelSlice @Inject constructor(
     val uiModel = _uiModel.distinctUntilChanged()
 
     suspend fun buildJetpackSwitchMenu() {
-        if (!jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()) _uiModel.postValue(null)
+        if (!jetpackFeatureCardHelper.shouldShowSwitchToJetpackMenuCard()) {
+            _uiModel.postValue(null)
+            return
+        }
         _uiModel.postValue(
             MySiteCardAndItem.Card.JetpackSwitchMenu(
                 onClick = ListItemInteraction.create(this::onJetpackFeatureCardClick),
