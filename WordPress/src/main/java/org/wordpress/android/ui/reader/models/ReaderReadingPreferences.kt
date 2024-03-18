@@ -150,11 +150,11 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
     }
 
     enum class FontSize(val value: Int) {
-        EXTRA_SMALL(12),
-        SMALL(14),
+        EXTRA_SMALL(10),
+        SMALL(12),
         NORMAL(16),
-        LARGE(18),
-        EXTRA_LARGE(20);
+        LARGE(20),
+        EXTRA_LARGE(24);
 
         val multiplier: Float
             get() = value / DEFAULT.value.toFloat()
