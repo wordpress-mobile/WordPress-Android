@@ -185,9 +185,11 @@ public class ReaderPost {
         // if there's no featured image, check if featured media has been set to an image
         if (!post.hasFeaturedImage() && json.has("featured_media")) {
             JSONObject jsonMedia = json.optJSONObject("featured_media");
-            String type = JSONUtils.getString(jsonMedia, "type");
-            if (type.equals("image")) {
-                post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
+            if (jsonMedia != null) {
+                String type = JSONUtils.getString(jsonMedia, "type");
+                if (type.equals("image")) {
+                    post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
+                }
             }
         }
 

@@ -87,7 +87,7 @@ public class NotificationsUtils {
         if (!TextUtils.isEmpty(deviceID)) {
             settingsEndpoint += "?device_id=" + deviceID;
         }
-        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {

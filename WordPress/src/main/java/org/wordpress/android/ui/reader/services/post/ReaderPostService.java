@@ -9,6 +9,11 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManagerWrapper;
+
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_ACTION;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_BLOG_ID;
@@ -21,8 +26,11 @@ import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceSta
  * EventBus to alert of update status
  */
 
+@AndroidEntryPoint
 public class ReaderPostService extends Service implements ServiceCompletionListener {
     private ReaderPostLogic mReaderPostLogic;
+
+    @Inject LocaleManagerWrapper mLocaleManagerWrapper;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -32,7 +40,7 @@ public class ReaderPostService extends Service implements ServiceCompletionListe
     @Override
     public void onCreate() {
         super.onCreate();
-        mReaderPostLogic = new ReaderPostLogic(this);
+        mReaderPostLogic = new ReaderPostLogic(this, mLocaleManagerWrapper);
         AppLog.i(AppLog.T.READER, "reader post service > created");
     }
 
