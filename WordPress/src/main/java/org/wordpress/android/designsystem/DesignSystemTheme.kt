@@ -132,6 +132,77 @@ val ColorScheme.wpContainer
     @ReadOnlyComposable
     get() = localColors.current.wpContainer
 
+private val extraTypography = ExtraTypography(
+    heading1 = DesignSystemAppTypography.heading1,
+    heading2 = DesignSystemAppTypography.heading2,
+    heading3 = DesignSystemAppTypography.heading3,
+    heading4 = DesignSystemAppTypography.heading4,
+    bodyLargeEmphasized = DesignSystemAppTypography.bodyLargeEmphasized,
+    bodyMediumEmphasized = DesignSystemAppTypography.bodyMediumEmphasized,
+    bodySmallEmphasized = DesignSystemAppTypography.bodySmallEmphasized,
+    footnote = DesignSystemAppTypography.footnote,
+    footnoteEmphasized = DesignSystemAppTypography.footnoteEmphasized,
+    )
+
+data class ExtraTypography(
+    val heading1: TextStyle,
+    val heading2: TextStyle,
+    val heading3: TextStyle,
+    val heading4: TextStyle,
+    val bodyLargeEmphasized: TextStyle,
+    val bodyMediumEmphasized: TextStyle,
+    val bodySmallEmphasized: TextStyle,
+    val footnote: TextStyle,
+    val footnoteEmphasized: TextStyle,
+    )
+@Suppress("UnusedReceiverParameter")
+val Typography.heading1
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading1
+
+@Suppress("UnusedReceiverParameter")
+val Typography.heading2
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading2
+
+@Suppress("UnusedReceiverParameter")
+val Typography.heading3
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading3
+
+val Typography.heading4
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading4
+
+val Typography.bodyLargeEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodyLargeEmphasized
+
+val Typography.bodyMediumEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodyMediumEmphasized
+
+val Typography.bodySmallEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodySmallEmphasized
+
+val Typography.footnote
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.footnote
+
+val Typography.footnoteEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.footnoteEmphasized
+
 val typography = Typography(
     bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
