@@ -1698,8 +1698,8 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
-    <string name="reader_preferences_screen_preview_title">The quick brown fox jumps over the lazy dog</string>
-    <string name="reader_preferences_screen_preview_text">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
+    <string name="reader_preferences_screen_preview_title" translatable="false">The quick brown fox jumps over the lazy dog</string>
+    <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
 
     <string name="reader_preferences_theme_system">Default</string>
     <string name="reader_preferences_theme_paper">Paper</string>
@@ -1707,11 +1707,12 @@
     <string name="reader_preferences_theme_charcoal">Charcoal</string>
     <string name="reader_preferences_theme_oled">OLED</string>
 
-    <string name="reader_preferences_font_family_serif">Serif</string>
-    <string name="reader_preferences_font_family_sans">Sans</string>
-    <string name="reader_preferences_font_family_mono">Mono</string>
+    <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
+    <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>
+    <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
 
-    <string name="reader_preferences_font_family_preview">Aa</string>
+    <string name="reader_preferences_font_family_preview" translatable="false">Aa</string>
+    <string name="reader_preferences_font_size_preview" translatable="false">A</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
