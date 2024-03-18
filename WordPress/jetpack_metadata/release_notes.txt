@@ -1,6 +1,4 @@
-- Added a new Traffic tab on the Stats screen
-- Upgraded the Notifications design
-- Introduced video block support for VideoPress v5
-- Fixed a crash caused by block editor auto-scrolling
-- Provided an error message for video upload failure
-- Removed image transparency during upload
+* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
+* [*] [Jetpack-only] Fixes broken links on some notifications [https://github.com/wordpress-mobile/WordPress-Android/pull/20417]
+* [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
+

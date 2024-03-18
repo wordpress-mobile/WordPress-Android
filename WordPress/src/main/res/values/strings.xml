@@ -4796,4 +4796,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit video</string>
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. Empty</string>
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy error details</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy post text</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy error details</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy post text</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy error details</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
 </resources>
