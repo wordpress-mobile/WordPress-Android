@@ -47,7 +47,7 @@ public class MediaTextBlockProcessor extends BlockProcessor {
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("mediaId");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            jsonAttributes.addProperty("mediaId", Integer.parseInt(mRemoteId));
+            addIdPropertySafely(jsonAttributes, "mediaId", mRemoteId);
             return true;
         }
 
