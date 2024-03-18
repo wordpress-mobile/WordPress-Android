@@ -38,12 +38,12 @@ fun DesignSystemFontsScreen(
             FontCard(text = "Heading4", font = MaterialTheme.typography.heading4)
 
             FontsTitle("Body")
-            FontCard(text = "Body Large", font = MaterialTheme.typography.bodyLarge)
-            FontCard(text = "Body Large Emphasized", font = MaterialTheme.typography.bodyLargeEmphasized)
-            FontCard(text = "Body Medium", font = MaterialTheme.typography.bodyMedium)
-            FontCard(text = "Body Medium Emphasized", font = MaterialTheme.typography.bodyMediumEmphasized)
             FontCard(text = "Body Small", font = MaterialTheme.typography.bodySmall)
+            FontCard(text = "Body Medium", font = MaterialTheme.typography.bodyMedium)
+            FontCard(text = "Body Large", font = MaterialTheme.typography.bodyLarge)
             FontCard(text = "Body Small Emphasized", font = MaterialTheme.typography.bodySmallEmphasized)
+            FontCard(text = "Body Medium Emphasized", font = MaterialTheme.typography.bodyMediumEmphasized)
+            FontCard(text = "Body Large Emphasized", font = MaterialTheme.typography.bodyLargeEmphasized)
 
             FontsTitle("Miscellaneous")
             FontCard(text = "Footnote", font = MaterialTheme.typography.footnote)
