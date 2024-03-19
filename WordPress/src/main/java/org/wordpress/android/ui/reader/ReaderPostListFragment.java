@@ -745,6 +745,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Override
     public void onResume() {
         super.onResume();
+        if (!isAdded() || getView() == null) {
+            return;
+        }
         /*
          * This is a workaround for https://github.com/wordpress-mobile/WordPress-Android/issues/11985.
          * The RecyclerView doesn't get redrawn correctly when the adapter finishes its initialization in onStart.
