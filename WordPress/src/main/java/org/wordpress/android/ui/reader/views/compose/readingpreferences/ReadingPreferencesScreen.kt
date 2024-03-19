@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +47,7 @@ private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
 private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
@@ -82,16 +85,36 @@ fun ReadingPreferencesScreen(
                 .fillMaxWidth()
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(Margin.ExtraLarge.value),
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+                .padding(
+                    bottom = Margin.ExtraLarge.value,
+                    start = Margin.ExtraLarge.value,
+                    end = Margin.ExtraLarge.value
+                ),
+            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value, Alignment.CenterVertically),
         ) {
-            // title
+            // Title
             Text(
                 text = stringResource(R.string.reader_preferences_screen_preview_title),
                 style = getTitleTextStyle(fontFamily, fontSizeMultiplier, baseTextColor),
             )
 
-            // TODO thomashortadev tags
+            // Tags
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+            ) {
+                stringResource(R.string.reader_preferences_screen_preview_tags)
+                    .split(",")
+                    .forEach { tag ->
+                        ReadingPreferencesPreviewTag(
+                            text = tag.trim(),
+                            baseTextColor = baseTextColor,
+                            fontSizeMultiplier = fontSizeMultiplier,
+                            fontFamily = fontFamily,
+                        )
+                    }
+            }
 
             // Content
             Text(

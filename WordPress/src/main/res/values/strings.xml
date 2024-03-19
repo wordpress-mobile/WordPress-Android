@@ -1699,6 +1699,7 @@
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
     <string name="reader_preferences_screen_preview_title" translatable="false">The quick brown fox jumps over the lazy dog</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">dogs,fox,design,writing</string>
     <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
 
     <string name="reader_preferences_theme_system">Default</string>
