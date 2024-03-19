@@ -33,6 +33,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.BundleCompat.getParcelableArrayList
 import androidx.core.util.Consumer
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
@@ -319,87 +320,87 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var htmlModeMenuStateOn: Boolean = false
     private var updatingPostArea: FrameLayout? = null
 
-    @Inject var dispatcher: Dispatcher? = null
+    @Inject lateinit var dispatcher: Dispatcher
 
-    @Inject var accountStore: AccountStore? = null
+    @Inject lateinit var accountStore: AccountStore
 
-    @Inject var siteStore: SiteStore? = null
+    @Inject lateinit var siteStore: SiteStore
 
-    @Inject var postStore: PostStore? = null
+    @Inject lateinit var postStore: PostStore
 
-    @Inject var mediaStore: MediaStore? = null
+    @Inject lateinit var mediaStore: MediaStore
 
-    @Inject var uploadStore: UploadStore? = null
+    @Inject lateinit var uploadStore: UploadStore
 
-    @Inject var editorThemeStore: EditorThemeStore? = null
+    @Inject lateinit var editorThemeStore: EditorThemeStore
 
-    @Inject var imageLoader: FluxCImageLoader? = null
+    @Inject lateinit var imageLoader: FluxCImageLoader
 
-    @Inject var shortcutUtils: ShortcutUtils? = null
+    @Inject lateinit var shortcutUtils: ShortcutUtils
 
-    @Inject var quickStartStore: QuickStartStore? = null
+    @Inject lateinit var quickStartStore: QuickStartStore
 
-    @Inject var imageManager: ImageManager? = null
+    @Inject lateinit var imageManager: ImageManager
 
-    @Inject var uiHelpers: UiHelpers? = null
+    @Inject lateinit var uiHelpers: UiHelpers
 
-    @Inject var remotePreviewLogicHelper: RemotePreviewLogicHelper? = null
+    @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
 
-    @Inject var progressDialogHelper: ProgressDialogHelper? = null
+    @Inject lateinit var progressDialogHelper: ProgressDialogHelper
 
-    @Inject var featuredImageHelper: FeaturedImageHelper? = null
+    @Inject lateinit var featuredImageHelper: FeaturedImageHelper
 
-    @Inject var reactNativeRequestHandler: ReactNativeRequestHandler? = null
+    @Inject lateinit var reactNativeRequestHandler: ReactNativeRequestHandler
 
-    @Inject var editorMedia: EditorMedia? = null
+    @Inject lateinit var editorMedia: EditorMedia
 
-    @Inject var localeManagerWrapper: LocaleManagerWrapper? = null
+    @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
 
-    @Inject var editPostRepository: EditPostRepository? = null
+    @Inject lateinit var editPostRepository: EditPostRepository
 
-    @Inject var postUtilsWrapper: PostUtilsWrapper? = null
+    @Inject lateinit var postUtilsWrapper: PostUtilsWrapper
 
-    @Inject var editorTracker: EditorTracker? = null
+    @Inject lateinit var editorTracker: EditorTracker
 
-    @Inject var uploadUtilsWrapper: UploadUtilsWrapper? = null
+    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
-    @Inject var editorActionsProvider: EditorActionsProvider? = null
+    @Inject lateinit var editorActionsProvider: EditorActionsProvider
 
-    @Inject var buildConfigWrapper: BuildConfigWrapper? = null
+    @Inject lateinit var buildConfigWrapper: BuildConfigWrapper
 
-    @Inject var dateTimeUtils: DateTimeUtilsWrapper? = null
+    @Inject lateinit var dateTimeUtils: DateTimeUtilsWrapper
 
-    @Inject var viewModelFactory: ViewModelProvider.Factory? = null
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject var readerUtilsWrapper: ReaderUtilsWrapper? = null
+    @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
-    @Inject var privateAtomicCookie: PrivateAtomicCookie? = null
+    @Inject lateinit var privateAtomicCookie: PrivateAtomicCookie
 
-    @Inject var imageEditorTracker: ImageEditorTracker? = null
+    @Inject lateinit var imageEditorTracker: ImageEditorTracker
 
-    @Inject var reblogUtils: ReblogUtils? = null
+    @Inject lateinit var reblogUtils: ReblogUtils
 
-    @Inject var analyticsTrackerWrapper: AnalyticsTrackerWrapper? = null
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-    @Inject var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase? = null
+    @Inject lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
 
-    @Inject var xPostsCapabilityChecker: XPostsCapabilityChecker? = null
+    @Inject lateinit var xPostsCapabilityChecker: XPostsCapabilityChecker
 
-    @Inject var crashLogging: CrashLogging? = null
+    @Inject lateinit var crashLogging: CrashLogging
 
-    @Inject var mediaPickerLauncher: MediaPickerLauncher? = null
+    @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
 
-    @Inject var updateFeaturedImageUseCase: UpdateFeaturedImageUseCase? = null
+    @Inject lateinit var updateFeaturedImageUseCase: UpdateFeaturedImageUseCase
 
-    @Inject var globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig? = null
+    @Inject lateinit var globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig
 
-    @Inject var zendeskHelper: ZendeskHelper? = null
+    @Inject lateinit var zendeskHelper: ZendeskHelper
 
-    @Inject var bloggingPromptsStore: BloggingPromptsStore? = null
+    @Inject lateinit var bloggingPromptsStore: BloggingPromptsStore
 
-    @Inject var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper? = null
+    @Inject lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
-    @Inject var contactSupportFeatureConfig: ContactSupportFeatureConfig? = null
+    @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     @Inject var syncPublishingFeatureConfig: SyncPublishingFeatureConfig? = null
     private var storePostViewModel: StorePostViewModel? = null
@@ -630,19 +631,19 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     if (extras.getBoolean(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
                         editPostRepository!!.update<Boolean> { postModel: PostModel ->
                             val updateTitle: Boolean =
-                                !TextUtils.isEmpty(postModel.getAutoSaveTitle())
+                                !TextUtils.isEmpty(postModel.autoSaveTitle)
                             if (updateTitle) {
-                                postModel.setTitle(postModel.getAutoSaveTitle())
+                                postModel.setTitle(postModel.autoSaveTitle)
                             }
                             val updateContent: Boolean =
-                                !TextUtils.isEmpty(postModel.getAutoSaveContent())
+                                !TextUtils.isEmpty(postModel.autoSaveContent)
                             if (updateContent) {
-                                postModel.setContent(postModel.getAutoSaveContent())
+                                postModel.setContent(postModel.autoSaveContent)
                             }
                             val updateExcerpt: Boolean =
-                                !TextUtils.isEmpty(postModel.getAutoSaveExcerpt())
+                                !TextUtils.isEmpty(postModel.autoSaveExcerpt)
                             if (updateExcerpt) {
-                                postModel.setExcerpt(postModel.getAutoSaveExcerpt())
+                                postModel.setExcerpt(postModel.autoSaveExcerpt)
                             }
                             updateTitle || updateContent || updateExcerpt
                         }
@@ -755,7 +756,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             showIfNecessary(fragmentManager)
             dispatcher!!.dispatch(
                 SiteActionBuilder.newFetchPrivateAtomicCookieAction(
-                    FetchPrivateAtomicCookiePayload(siteModel!!.siteId)
+                    // todo: annmarie fix this
+                    SiteStore.FetchPrivateAtomicCookiePayload(siteModel!!.siteId)
                 )
             )
         } else {
@@ -852,7 +854,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
+    fun onPrivateAtomicCookieFetched(event: SiteStore.OnPrivateAtomicCookieFetched) {
         // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
         if (isShowing(supportFragmentManager)) {
             setupViewPager()
