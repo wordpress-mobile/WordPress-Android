@@ -61,6 +61,7 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         ),
     }
 
+    @Suppress("MagicNumber")
     class ThemeValues private constructor(
         context: Context,
         theme: Theme,
