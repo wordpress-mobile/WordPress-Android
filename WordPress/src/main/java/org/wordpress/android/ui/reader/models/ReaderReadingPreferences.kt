@@ -136,13 +136,13 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         @StringRes val displayNameRes: Int,
         val value: String,
     ) {
-        SERIF(
-            displayNameRes = R.string.reader_preferences_font_family_serif,
-            value = "serif",
-        ),
         SANS(
             displayNameRes = R.string.reader_preferences_font_family_sans,
             value = "sans-serif",
+        ),
+        SERIF(
+            displayNameRes = R.string.reader_preferences_font_family_serif,
+            value = "serif",
         ),
         MONO(
             displayNameRes = R.string.reader_preferences_font_family_mono,
