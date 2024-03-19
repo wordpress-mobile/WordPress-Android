@@ -273,12 +273,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         RESTART_DONT_SUPPRESS_GUTENBERG
     }
 
-    private var mRestartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
-    private var mShowAztecEditor: Boolean = false
-    private var mShowGutenbergEditor: Boolean = false
-    private var mPendingVideoPressInfoRequests: MutableList<String>? = null
-    private var mPostEditorAnalyticsSession: PostEditorAnalyticsSession? = null
-    private var mIsConfigChange: Boolean = false
+    private var restartEditorOption: RestartEditorOptions = RestartEditorOptions.NO_RESTART
+    private var showAztecEditor: Boolean = false
+    private var showGutenbergEditor: Boolean = false
+    private var pendingVideoPressInfoRequests: MutableList<String>? = null
+    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
+    private var isConfigChange: Boolean = false
 
     /**
      * The [PagerAdapter] that will provide
@@ -288,7 +288,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
      * may be best to switch to a
      * [FragmentStatePagerAdapter].
      */
-    var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var sectionsPagerAdapter: SectionsPagerAdapter? = null
 
     /**
      * The [ViewPager] that will host the section contents.
@@ -498,8 +498,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         showGutenbergEditor: Boolean, post: PostImmutableModel?,
         site: SiteModel, isNewPost: Boolean
     ) {
-        if (mPostEditorAnalyticsSession == null) {
-            mPostEditorAnalyticsSession = PostEditorAnalyticsSession(
+        if (postEditorAnalyticsSession == null) {
+            postEditorAnalyticsSession = PostEditorAnalyticsSession(
                 if (showGutenbergEditor) PostEditorAnalyticsSession.Editor.GUTENBERG else PostEditorAnalyticsSession.Editor.CLASSIC,
                 post, site, isNewPost, analyticsTrackerWrapper
             )
@@ -508,18 +508,18 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     private fun createEditShareMessageActivityResultLauncher() {
         editShareMessageActivityResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-            { result: ActivityResult ->
-                if (result.getResultCode() == RESULT_OK) {
-                    val data: Intent? = result.getData()
-                    if (data != null) {
-                        val shareMessage: String? = result.getData()!!.getStringExtra(
-                            EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
-                        )
-                        editorJetpackSocialViewModel!!.onJetpackSocialShareMessageChanged(shareMessage)
-                    }
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.getResultCode() == RESULT_OK) {
+                val data: Intent? = result.getData()
+                if (data != null) {
+                    val shareMessage: String? = result.getData()!!.getStringExtra(
+                        EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
+                    )
+                    editorJetpackSocialViewModel!!.onJetpackSocialShareMessageChanged(shareMessage)
                 }
-            })
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -574,11 +574,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         //  throw this 'java.lang.ClassCastException': 'org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation
         //  cannot be cast to androidx.preference.Preference'
         PreferenceManager.setDefaultValues(this, R.xml.account_settings, false)
-        mShowAztecEditor = AppPrefs.isAztecEditorEnabled()
-        editorPhotoPicker = EditorPhotoPicker(this, this, this, mShowAztecEditor)
+        showAztecEditor = AppPrefs.isAztecEditorEnabled()
+        editorPhotoPicker = EditorPhotoPicker(this, this, this, showAztecEditor)
 
         // TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
-        if (mShowAztecEditor) {
+        if (showAztecEditor) {
             val overlay: View = findViewById(R.id.view_overlay)
             val layoutParams: MarginLayoutParams = overlay.layoutParams as MarginLayoutParams
             layoutParams.bottomMargin = resources.getDimensionPixelOffset(
@@ -664,10 +664,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
             // retrieve Editor session data if switched editors
             if (isRestarting && extras.containsKey(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
-                mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+                postEditorAnalyticsSession = PostEditorAnalyticsSession
                     .fromBundle(extras, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
             }
         } else {
+            // todo: annmarie - fix this
             editorMedia.droppedMediaUris =
                 (savedInstanceState.(getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS))!!)
             isNewPost = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
@@ -679,7 +680,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if (dB != null) {
                 revision = dB!!.getParcel<Revision>(EditPostActivityConstants.STATE_KEY_REVISION, Revision.CREATOR)
             }
-            mPostEditorAnalyticsSession = PostEditorAnalyticsSession
+            postEditorAnalyticsSession = PostEditorAnalyticsSession
                 .fromBundle(savedInstanceState, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
@@ -712,6 +713,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         editorMedia.start(siteModel!!, this)
         startObserving()
+        // todo: annmarie fix this
         if (editorFragment != null.also { hasSetPostContent = (it)!! }) {
             editorFragment!!.setImageLoader(imageLoader)
         }
@@ -723,15 +725,15 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 if (restartEditorOptionName == null) RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG else RestartEditorOptions.valueOf(
                     restartEditorOptionName
                 )
-            mShowGutenbergEditor = (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
+            showGutenbergEditor = (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
                     && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG)
         } else {
-            mShowGutenbergEditor = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
+            showGutenbergEditor = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
         }
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(
-            mShowGutenbergEditor, editPostRepository.getPost(), siteModel!!,
+            showGutenbergEditor, editPostRepository.getPost(), siteModel!!,
             isNewPost
         )
         logTemplateSelection()
@@ -751,7 +753,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             UploadService.cancelFinalNotification(this, editPostRepository.getPost())
             resetUploadingMediaToFailedIfPostHasNotMediaInProgressOrQueued()
         }
-        mSectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
+        sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
         if (siteModel!!.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
@@ -862,7 +864,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             setupViewPager()
             dismissIfNecessary(supportFragmentManager)
         }
-        if (event.isError()) {
+        if (event.isError) {
             AppLog.e(
                 AppLog.T.EDITOR,
                 "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message
@@ -899,14 +901,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
-        viewPager.setAdapter(mSectionsPagerAdapter)
-        viewPager.setOffscreenPageLimit(4)
-        viewPager.setPagingEnabled(false)
+        viewPager?.adapter = sectionsPagerAdapter
+        viewPager?.offscreenPageLimit = 4
+        viewPager?.setPagingEnabled(false)
 
         // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
         // to do this if we have a reference to the Tab.
-        viewPager.clearOnPageChangeListeners()
-        viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
+        viewPager?.clearOnPageChangeListeners()
+        viewPager?.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 invalidateOptionsMenu()
                 if (position == PAGE_CONTENT) {
@@ -934,113 +936,112 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun startObserving() {
-        editorMedia.uiState.observe(this,
-            { uiState: AddMediaToPostUiState? ->
-                if (uiState != null) {
-                    updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
-                    if (uiState.editorOverlayVisibility) {
-                        showOverlay(false)
-                    } else {
-                        hideOverlay()
-                    }
-                }
-            })
-        editorMedia.snackBarMessage.observe(this,
-            { event: Event<SnackbarMessageHolder?> ->
-                val messageHolder: SnackbarMessageHolder? = event.getContentIfNotHandled()
-                if (messageHolder != null) {
-                    make(
-                        findViewById(R.id.editor_activity),
-                        uiHelpers.getTextOfUiString(this, messageHolder.message),
-                        Snackbar.LENGTH_SHORT
-                    )
-                        .show()
-                }
-            })
-        editorMedia.toastMessage.observe(this,
-            { event: Event<ToastMessageHolder?> ->
-                val contentIfNotHandled: ToastMessageHolder? = event.getContentIfNotHandled()
-                if (contentIfNotHandled != null) {
-                    contentIfNotHandled.show(this)
-                }
-            })
-        storePostViewModel!!.onSavePostTriggered.observe(this,
-            { unitEvent: Event<Unit> ->
-                unitEvent.applyIfNotHandled { unit: Unit ->
-                    updateAndSavePostAsync()
-                    null
-                }
-            })
-        storePostViewModel!!.onFinish.observe(this,
-            { finishEvent: Event<ActivityFinishState?> ->
-                finishEvent.applyIfNotHandled { activityFinishState: ActivityFinishState? ->
-                    when (activityFinishState) {
-                        ActivityFinishState.SAVED_ONLINE -> saveResult(true, false)
-                        ActivityFinishState.SAVED_LOCALLY -> saveResult(true, true)
-                        ActivityFinishState.CANCELLED -> saveResult(false, true)
-                    }
-                    removePostOpenInEditorStickyEvent()
-                    editorMedia!!.definitelyDeleteBackspaceDeletedMediaItemsAsync()
-                    finish()
-                    null
-                }
-            })
-        editPostRepository.postChanged.observe(this,
-            { postEvent: Event<PostImmutableModel?> ->
-                postEvent.applyIfNotHandled { post: PostImmutableModel? ->
-                    storePostViewModel!!.savePostToDb((editPostRepository)!!, (siteModel)!!)
-                    null
-                }
-            })
-        storageUtilsViewModel!!.checkStorageWarning.observe(this,
-            { event: Event<Unit> ->
-                event.applyIfNotHandled { unit: Unit ->
-                    storageUtilsViewModel!!.onStorageWarningCheck(
-                        getSupportFragmentManager(),
-                        StorageUtilsProvider.Source.EDITOR
-                    )
-                    null
+        editorMedia.uiState.observe(this
+        ) { uiState: AddMediaToPostUiState? ->
+            if (uiState != null) {
+                updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
+                if (uiState.editorOverlayVisibility) {
+                    showOverlay(false)
+                } else {
+                    hideOverlay()
                 }
             }
-        )
-        editorBloggingPromptsViewModel!!.onBloggingPromptLoaded.observe(this,
-            { event: Event<EditorLoadedPrompt> ->
-                event.applyIfNotHandled { loadedPrompt: EditorLoadedPrompt ->
-                    editPostRepository.updateAsync({ postModel: PostModel ->
-                        postModel.setContent(loadedPrompt.content)
-                        postModel.setAnsweredPromptId(loadedPrompt.promptId)
-                        postModel.setTagNameList(loadedPrompt.tags)
-                        true
-                    }) { postModel: PostImmutableModel?, result: UpdatePostResult? ->
-                        refreshEditorContent()
-                        null
-                    }
+        }
+        editorMedia.snackBarMessage.observe(this
+        ) { event: Event<SnackbarMessageHolder?> ->
+            val messageHolder: SnackbarMessageHolder? = event.getContentIfNotHandled()
+            if (messageHolder != null) {
+                make(
+                    findViewById(R.id.editor_activity),
+                    uiHelpers.getTextOfUiString(this, messageHolder.message),
+                    Snackbar.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+        editorMedia.toastMessage.observe(this
+        ) { event: Event<ToastMessageHolder?> ->
+            val contentIfNotHandled: ToastMessageHolder? = event.getContentIfNotHandled()
+            if (contentIfNotHandled != null) {
+                contentIfNotHandled.show(this)
+            }
+        }
+        storePostViewModel!!.onSavePostTriggered.observe(this
+        ) { unitEvent: Event<Unit> ->
+            unitEvent.applyIfNotHandled { unit: Unit ->
+                updateAndSavePostAsync()
+                null
+            }
+        }
+        storePostViewModel!!.onFinish.observe(this
+        ) { finishEvent: Event<ActivityFinishState?> ->
+            finishEvent.applyIfNotHandled { activityFinishState: ActivityFinishState? ->
+                when (activityFinishState) {
+                    ActivityFinishState.SAVED_ONLINE -> saveResult(true, false)
+                    ActivityFinishState.SAVED_LOCALLY -> saveResult(true, true)
+                    ActivityFinishState.CANCELLED -> saveResult(false, true)
+                }
+                removePostOpenInEditorStickyEvent()
+                editorMedia!!.definitelyDeleteBackspaceDeletedMediaItemsAsync()
+                finish()
+                null
+            }
+        }
+        editPostRepository.postChanged.observe(this
+        ) { postEvent: Event<PostImmutableModel?> ->
+            postEvent.applyIfNotHandled { post: PostImmutableModel? ->
+                storePostViewModel!!.savePostToDb((editPostRepository)!!, (siteModel)!!)
+                null
+            }
+        }
+        storageUtilsViewModel!!.checkStorageWarning.observe(this
+        ) { event: Event<Unit> ->
+            event.applyIfNotHandled { unit: Unit ->
+                storageUtilsViewModel!!.onStorageWarningCheck(
+                    getSupportFragmentManager(),
+                    StorageUtilsProvider.Source.EDITOR
+                )
+                null
+            }
+        }
+        editorBloggingPromptsViewModel!!.onBloggingPromptLoaded.observe(this
+        ) { event: Event<EditorLoadedPrompt> ->
+            event.applyIfNotHandled { loadedPrompt: EditorLoadedPrompt ->
+                editPostRepository.updateAsync({ postModel: PostModel ->
+                    postModel.setContent(loadedPrompt.content)
+                    postModel.setAnsweredPromptId(loadedPrompt.promptId)
+                    postModel.setTagNameList(loadedPrompt.tags)
+                    true
+                }) { postModel: PostImmutableModel?, result: UpdatePostResult? ->
+                    refreshEditorContent()
                     null
                 }
-            })
-        editorJetpackSocialViewModel!!.actionEvents.observe(this,
-            { actionEvent: EditorJetpackSocialViewModel.ActionEvent? ->
-                if (actionEvent is OpenEditShareMessage) {
-                    val intent: Intent = createIntent(
-                        this, actionEvent.shareMessage
-                    )
-                    editShareMessageActivityResultLauncher!!.launch(intent)
-                } else if (actionEvent is OpenSocialConnectionsList) {
-                    ActivityLauncher.viewBlogSharing(this, actionEvent.siteModel)
-                } else if (actionEvent is OpenSubscribeJetpackSocial) {
-                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
-                        this, actionEvent.url
-                    )
-                }
-            })
-        storePostViewModel!!.onPostUpdateUiVisible.observe(this, { isVisible: Boolean ->
+                null
+            }
+        }
+        editorJetpackSocialViewModel!!.actionEvents.observe(this
+        ) { actionEvent: EditorJetpackSocialViewModel.ActionEvent? ->
+            if (actionEvent is OpenEditShareMessage) {
+                val intent: Intent = createIntent(
+                    this, actionEvent.shareMessage
+                )
+                editShareMessageActivityResultLauncher!!.launch(intent)
+            } else if (actionEvent is OpenSocialConnectionsList) {
+                ActivityLauncher.viewBlogSharing(this, actionEvent.siteModel)
+            } else if (actionEvent is OpenSubscribeJetpackSocial) {
+                WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(
+                    this, actionEvent.url
+                )
+            }
+        }
+        storePostViewModel!!.onPostUpdateUiVisible.observe(this) { isVisible: Boolean ->
             if (isVisible) {
                 showUpdatingPostArea()
             } else {
                 hideUpdatingPostArea()
             }
-        })
-        storePostViewModel!!.onPostUpdateResult.observe(this, { isSuccess: Boolean ->
+        }
+        storePostViewModel!!.onPostUpdateResult.observe(this) { isSuccess: Boolean ->
             if (isSuccess) {
                 editPostRepository.loadPostByLocalPostId(editPostRepository.id)
                 refreshEditorContent()
@@ -1051,7 +1052,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     ToastUtils.Duration.SHORT
                 )
             }
-        })
+        }
     }
 
     private fun initializePostObject() {
@@ -1108,7 +1109,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         // Bump editor opened event every time the activity is resumed, to match the EDITOR_CLOSED event onPause
         PostUtils.trackOpenEditorAnalytics(editPostRepository.getPost(), siteModel)
-        mIsConfigChange = false
+        isConfigChange = false
     }
 
     private fun reattachUploadingMediaForAztec() {
@@ -1142,9 +1143,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onDestroy() {
-        if (!mIsConfigChange && (mRestartEditorOption == RestartEditorOptions.NO_RESTART)) {
-            if (mPostEditorAnalyticsSession != null) {
-                mPostEditorAnalyticsSession!!.end()
+        if (!isConfigChange && (restartEditorOption == RestartEditorOptions.NO_RESTART)) {
+            if (postEditorAnalyticsSession != null) {
+                postEditorAnalyticsSession!!.end()
             }
         }
         dispatcher.unregister(this)
@@ -1187,9 +1188,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (dB != null) {
             dB!!.addParcel(EditPostActivityConstants.STATE_KEY_REVISION, revision)
         }
-        outState.putSerializable(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession)
-        mIsConfigChange = true // don't call sessionData.end() in onDestroy() if this is an Android config change
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN, mShowGutenbergEditor)
+        outState.putSerializable(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        isConfigChange = true // don't call sessionData.end() in onDestroy() if this is an Android config change
+        outState.putBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN, showGutenbergEditor)
         outState.putParcelableArrayList(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris)
         if (editorFragment != null) {
             supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, editorFragment!!)
@@ -1219,19 +1220,19 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private val primaryAction: PrimaryEditorAction
-        private get() = editorActionsProvider
+        get() = editorActionsProvider
             .getPrimaryAction(editPostRepository.status, UploadUtils.userCanPublish(siteModel), isLandingEditor)
     private val primaryActionText: String
-        private get() {
+        get() {
             return getString(primaryAction.titleResource)
         }
     private val secondaryAction: SecondaryEditorAction
-        private get() {
+        get() {
             return editorActionsProvider
                 .getSecondaryAction(editPostRepository.status, UploadUtils.userCanPublish(siteModel))
         }
     private val secondaryActionText: String?
-        private get() {
+        get() {
             @StringRes val titleResource: Int? = secondaryAction.titleResource
             return if (titleResource != null) getString(titleResource) else null
         }
@@ -1384,9 +1385,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             secondaryAction.setVisible(showMenuItems && this.secondaryAction.isVisible)
             secondaryAction.setTitle(secondaryActionText)
         }
-        if (previewMenuItem != null) {
-            previewMenuItem.setVisible(showMenuItems)
-        }
+        previewMenuItem?.setVisible(showMenuItems)
         if (viewHtmlModeMenuItem != null) {
             viewHtmlModeMenuItem.setVisible(
                 (((editorFragment is AztecEditorFragment)
@@ -1421,12 +1420,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
         if (switchToGutenbergMenuItem != null) {
             val switchToGutenbergVisibility: Boolean =
-                if (mShowGutenbergEditor) false else shouldSwitchToGutenbergBeVisible(editorFragment, siteModel)
+                if (showGutenbergEditor) false else shouldSwitchToGutenbergBeVisible(editorFragment, siteModel)
             switchToGutenbergMenuItem.setVisible(switchToGutenbergVisibility)
         }
         val contentInfo: MenuItem = menu.findItem(R.id.menu_content_info)
         if (editorFragment is GutenbergEditorFragment) {
-            contentInfo.setOnMenuItemClickListener({ menuItem: MenuItem? ->
+            contentInfo.setOnMenuItemClickListener { menuItem: MenuItem? ->
                 try {
                     editorFragment.showContentInfo()
                 } catch (e: EditorFragmentNotAddedException) {
@@ -1436,7 +1435,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     )
                 }
                 true
-            })
+            }
         } else {
             contentInfo.setVisible(false) // only show the menu item when for Gutenberg
         }
@@ -1546,7 +1545,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if ((!(mShowAztecEditor || mShowGutenbergEditor)
+            if ((!(showAztecEditor || showGutenbergEditor)
                         && (editorFragment!!.isUploadingMedia || editorFragment!!.isActionInProgress))
             ) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, ToastUtils.Duration.SHORT)
@@ -1581,9 +1580,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 // (see https://github.com/wordpress-mobile/WordPress-Android/issues/9748 for more information)
                 if (shouldSwitchToGutenbergBeVisible(editorFragment, siteModel)) {
                     // let's finish this editing instance and start again, but let GB be used
-                    mRestartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
-                    mPostEditorAnalyticsSession!!.switchEditor(PostEditorAnalyticsSession.Editor.GUTENBERG)
-                    mPostEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
+                    restartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
+                    postEditorAnalyticsSession!!.switchEditor(PostEditorAnalyticsSession.Editor.GUTENBERG)
+                    postEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
                     storePostViewModel!!.finish(ActivityFinishState.SAVED_LOCALLY)
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.")
@@ -1747,7 +1746,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     private fun trackPostSessionEditorModeSwitch() {
         val isGutenberg: Boolean = editorFragment is GutenbergEditorFragment
-        mPostEditorAnalyticsSession!!.switchEditor(
+        postEditorAnalyticsSession!!.switchEditor(
             if (htmlModeMenuStateOn) PostEditorAnalyticsSession.Editor.HTML else (if (isGutenberg) PostEditorAnalyticsSession.Editor.GUTENBERG else PostEditorAnalyticsSession.Editor.CLASSIC)
         )
     }
@@ -2099,8 +2098,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         i.putExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, saved)
         i.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, editPostRepository.id)
         i.putExtra(EditPostActivityConstants.EXTRA_POST_REMOTE_ID, editPostRepository.remotePostId)
-        i.putExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR, mRestartEditorOption.name)
-        i.putExtra(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, mPostEditorAnalyticsSession)
+        i.putExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
+        i.putExtra(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         i.putExtra(EditPostActivityConstants.EXTRA_IS_NEW_POST, isNewPost)
         setResult(RESULT_OK, i)
     }
@@ -2195,9 +2194,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     } else {
                         postModel.setStatus(PostStatus.PENDING.toString())
                     }
-                    mPostEditorAnalyticsSession!!.setOutcome(Outcome.PUBLISH)
+                    postEditorAnalyticsSession!!.setOutcome(Outcome.PUBLISH)
                 } else {
-                    mPostEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
+                    postEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
                 }
                 AppLog.d(
                     AppLog.T.POSTS,
@@ -2227,7 +2226,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
             // if post was modified during this editing session, save it
             val shouldSave: Boolean = shouldSavePost() || forceSave
-            mPostEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
+            postEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
             var activityFinishState: ActivityFinishState? = ActivityFinishState.CANCELLED
             if (shouldSave) {
                 /*
@@ -2249,7 +2248,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             // discard post if new & empty
             if (isDiscardable) {
                 dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-                mPostEditorAnalyticsSession!!.setOutcome(Outcome.CANCEL)
+                postEditorAnalyticsSession!!.setOutcome(Outcome.CANCEL)
                 activityFinishState = ActivityFinishState.CANCELLED
             }
             if (doFinish) {
@@ -2298,17 +2297,17 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             when (position) {
-                PAGE_CONTENT -> if (mShowGutenbergEditor) {
+                PAGE_CONTENT -> if (showGutenbergEditor) {
                     // Enable gutenberg on the site & show the informative popup upon opening
                     // the GB editor the first time when the remote setting value is still null
                     setGutenbergEnabledIfNeeded()
                     xPostsCapabilityChecker.retrieveCapability(
-                        (siteModel)!!,
-                        { isXpostsCapable: Boolean ->
-                            onXpostsSettingsCapability(
-                                isXpostsCapable
-                            )
-                        })
+                        (siteModel)!!
+                    ) { isXpostsCapable: Boolean ->
+                        onXpostsSettingsCapability(
+                            isXpostsCapable
+                        )
+                    }
                     val isWpCom: Boolean = site.isWPCom || siteModel!!.isPrivateWPComAtomic || siteModel!!.isWPComAtomic
                     val gutenbergPropsBuilder: GutenbergPropsBuilder = gutenbergPropsBuilder
                     val gutenbergWebViewAuthorizationData: GutenbergWebViewAuthorizationData =
@@ -2387,7 +2386,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private val gutenbergPropsBuilder: GutenbergPropsBuilder
-        private get() {
+         get() {
             val postType: String = if (isPage) "page" else "post"
             val featuredImageId: Int = editPostRepository.featuredImageId.toInt()
             val languageString: String = LocaleManager.getLanguage(this@EditPostActivity)
@@ -2605,7 +2604,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 var updatedContent: String = AutolinkUtils.autoCreateLinks(text)
 
                 // If editor is Gutenberg, add Gutenberg block around content
-                if (mShowGutenbergEditor) {
+                if (showGutenbergEditor) {
                     updatedContent = migrateToGutenbergEditor(updatedContent)
                 }
 
@@ -2941,12 +2940,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
-        if ((ids.size > 1) && allAreImages && !mShowGutenbergEditor) {
+        if ((ids.size > 1) && allAreImages && !showGutenbergEditor) {
             showInsertMediaDialog(ids)
         } else {
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
             editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids)
-            if (mShowGutenbergEditor && editorPhotoPicker!!.allowMultipleSelection) {
+            if (showGutenbergEditor && editorPhotoPicker!!.allowMultipleSelection) {
                 editorPhotoPicker!!.allowMultipleSelection = false
             }
         }
@@ -3011,10 +3010,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 ToastUtils.showToast(this@EditPostActivity, errorMessage, ToastUtils.Duration.SHORT)
             }
         } else {
-            if (mPendingVideoPressInfoRequests != null && !mPendingVideoPressInfoRequests!!.isEmpty()) {
+            if (pendingVideoPressInfoRequests != null && !pendingVideoPressInfoRequests!!.isEmpty()) {
                 // If there are pending requests for video URLs from VideoPress ids, query the DB for
                 // them again and notify the editor
-                for (videoId: String? in mPendingVideoPressInfoRequests!!) {
+                for (videoId: String? in pendingVideoPressInfoRequests!!) {
                     val videoUrl: String? = mediaStore.getUrlForSiteVideoWithVideoPressGuid(
                         (siteModel)!!,
                         (videoId)!!
@@ -3022,7 +3021,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     val posterUrl: String = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl)
                     editorFragment!!.setUrlForVideoPressId(videoId, videoUrl, posterUrl)
                 }
-                mPendingVideoPressInfoRequests!!.clear()
+                pendingVideoPressInfoRequests!!.clear()
             }
         }
     }
@@ -3256,7 +3255,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     override fun onMediaDeleted(localMediaId: String) {
         if (!TextUtils.isEmpty(localMediaId)) {
-            editorMedia.onMediaDeleted(mShowAztecEditor, mShowGutenbergEditor, localMediaId)
+            editorMedia.onMediaDeleted(showAztecEditor, showGutenbergEditor, localMediaId)
         }
     }
 
@@ -3305,13 +3304,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     this, WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE
                 )
             ) {
-                runOnUiThread({
-                    if (mPendingVideoPressInfoRequests == null) {
-                        mPendingVideoPressInfoRequests = ArrayList()
+                runOnUiThread {
+                    if (pendingVideoPressInfoRequests == null) {
+                        pendingVideoPressInfoRequests = ArrayList()
                     }
-                    mPendingVideoPressInfoRequests!!.add(videoId)
+                    pendingVideoPressInfoRequests!!.add(videoId)
                     editorMedia.refreshBlogMedia()
-                })
+                }
             }
         }
         val posterUrl: String = WPMediaUtils.getVideoPressVideoPosterFromURL(videoUrl)
@@ -3353,7 +3352,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun onEditorFinalTouchesBeforeShowing() {
         refreshEditorContent()
         // probably here is best for Gutenberg to start interacting with
-        if (mShowGutenbergEditor && editorFragment is GutenbergEditorFragment) {
+        if (showGutenbergEditor && editorFragment is GutenbergEditorFragment) {
             refreshEditorTheme()
             val post: PostImmutableModel? = editPostRepository.getPost()
             if (post != null) {
@@ -3370,10 +3369,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
                 }
             }
-        } else if (mShowAztecEditor && editorFragment is AztecEditorFragment) {
+        } else if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint: PostUtils.EntryPoint? =
                 intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
-            mPostEditorAnalyticsSession!!.start(null, themeSupportsGalleryWithImageBlocks(), entryPoint)
+            postEditorAnalyticsSession!!.start(null, themeSupportsGalleryWithImageBlocks(), entryPoint)
         }
     }
 
@@ -3387,7 +3386,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        mPostEditorAnalyticsSession!!.start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks(), entryPoint)
+        postEditorAnalyticsSession!!.start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks(), entryPoint)
         presentNewPageNoticeIfNeeded()
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
@@ -3400,7 +3399,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (template == null) {
             return
         }
-        mPostEditorAnalyticsSession!!.applyTemplate(template)
+        postEditorAnalyticsSession!!.applyTemplate(template)
     }
 
     override fun showUserSuggestions(onResult: Consumer<String>) {
@@ -3729,7 +3728,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val editorThemeSupport: EditorThemeSupport = editorTheme.themeSupport
         (editorFragment as EditorThemeUpdateListener)
             .onEditorThemeUpdated(editorThemeSupport.toBundle((siteModel)!!))
-        mPostEditorAnalyticsSession
+        postEditorAnalyticsSession
             .editorSettingsFetched(editorThemeSupport.isBlockBasedTheme, event.endpoint.value)
     }
 
