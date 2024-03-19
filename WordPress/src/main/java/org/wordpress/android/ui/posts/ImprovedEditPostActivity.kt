@@ -265,7 +265,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     SiteSettingsListener {
     // External Access to the Image Loader
     var aztecImageLoader: AztecImageLoader? = null
-        private set
 
     internal enum class RestartEditorOptions {
         NO_RESTART,
@@ -415,30 +414,28 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private val hideUpdatingPostAreaHandler: Handler? = Handler(Looper.getMainLooper())
     private var hideUpdatingPostAreaRunnable: Runnable? = null
     private var updatingPostStartTime: Long = 0L
-    private fun newPostSetup() {
+
+    private fun newPostSetup(title: String? = null, content: String?= null) {
         isNewPost = true
-
-        if (siteModel == null) {
-            showErrorAndFinish(R.string.blog_not_found)
-            return
-        }
-        // todo: annmarie - refactor to remove the !!
-        if (!siteModel!!.isVisible) {
-            showErrorAndFinish(R.string.error_blog_hidden)
-            return
-        }
-
-        // Create a new post
-        editPostRepository.set {
-            val post: PostModel = postStore.instantiatePostModel(siteModel, isPage, null, null)
-            post.setStatus(PostStatus.DRAFT.toString())
-            post
-        }
-        editPostRepository.savePostSnapshot()
-        EventBus.getDefault().postSticky(
-            PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
-        )
-        shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
+        siteModel?.let { model ->
+            if (!model.isVisible) {
+                showErrorAndFinish(R.string.error_blog_hidden)
+                return@let
+            }
+            // Create a new post
+            editPostRepository.set {
+                val post: PostModel = postStore.instantiatePostModel(
+                    siteModel, isPage, title, content,
+                    PostStatus.DRAFT.toString(), null, null, false
+                )
+                post
+            }
+            editPostRepository.savePostSnapshot()
+            EventBus.getDefault().postSticky(
+                PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
+            )
+            shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
+        } ?: showErrorAndFinish(R.string.blog_not_found)
     }
 
     private fun newPostFromShareAction() {
@@ -467,31 +464,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun newPageFromLayoutPickerSetup(title: String?, layoutSlug: String?) {
         val content: String? = siteStore.getBlockLayoutContent((siteModel)!!, (layoutSlug)!!)
         newPostSetup(title, content)
-    }
-
-    private fun newPostSetup(title: String?, content: String?) {
-        isNewPost = true
-        if (siteModel == null) {
-            showErrorAndFinish(R.string.blog_not_found)
-            return
-        }
-        if (!siteModel!!.isVisible) {
-            showErrorAndFinish(R.string.error_blog_hidden)
-            return
-        }
-        // Create a new post
-        editPostRepository.set {
-            val post: PostModel = postStore.instantiatePostModel(
-                siteModel, isPage, title, content,
-                PostStatus.DRAFT.toString(), null, null, false
-            )
-            post
-        }
-        editPostRepository.savePostSnapshot()
-        EventBus.getDefault().postSticky(
-            PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
-        )
-        shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -599,9 +571,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val fragmentManager: FragmentManager = supportFragmentManager
         val extras: Bundle? = intent.extras
         val action: String? = intent.action
-        val isRestarting: Boolean = checkToRestart(
-            intent
-        )
+        val isRestarting: Boolean = checkToRestart(intent)
         if (savedInstanceState == null) {
             if ((!intent.hasExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID)
                         || (Intent.ACTION_SEND == action) || (Intent.ACTION_SEND_MULTIPLE == action) || (NEW_MEDIA_POST == action) || intent.hasExtra(
@@ -3824,7 +3794,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return storePostViewModel!!.savingInProgressDialogVisibility
         }
     private val dB: SavedInstanceDatabase?
-        private get() {
+        get() {
             return getDatabase(getContext())
         }
 
@@ -3839,9 +3809,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         private const val PAGE_HISTORY: Int = 3
         private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
         fun checkToRestart(data: Intent): Boolean {
-            return (data.hasExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
-                    && RestartEditorOptions.valueOf((data.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR))!!)
-                    != RestartEditorOptions.NO_RESTART)
+            val extraRestartEditor = data.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
+            return extraRestartEditor != null &&
+                    RestartEditorOptions.valueOf(extraRestartEditor) != RestartEditorOptions.NO_RESTART
         }
 
         // Moved from EditPostContentFragment
