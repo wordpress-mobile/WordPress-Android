@@ -718,7 +718,7 @@ if (project.hasProperty("debugStoreFile")) {
 // service during the build process.
 android {
     applicationVariants.configureEach { variant ->
-        def variantAssets = "${buildDir}/intermediates/assets/${variant.name}"
+        def variantAssets = variant.mergeAssetsProvider.get().outputDir.get()
 
         tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
             delete(fileTree(dir: variantAssets, includes: ['**/*.bundle.map']))
