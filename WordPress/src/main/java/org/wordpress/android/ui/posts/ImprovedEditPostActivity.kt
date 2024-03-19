@@ -3833,11 +3833,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     companion object {
-        private val PAGE_CONTENT: Int = 0
-        private val PAGE_SETTINGS: Int = 1
-        private val PAGE_PUBLISH_SETTINGS: Int = 2
-        private val PAGE_HISTORY: Int = 3
-        private val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
+        private const val PAGE_CONTENT: Int = 0
+        private const val PAGE_SETTINGS: Int = 1
+        private const val PAGE_PUBLISH_SETTINGS: Int = 2
+        private const val PAGE_HISTORY: Int = 3
+        private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
         fun checkToRestart(data: Intent): Boolean {
             return (data.hasExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
                     && RestartEditorOptions.valueOf((data.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR))!!)
@@ -3845,8 +3845,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
         // Moved from EditPostContentFragment
-        val NEW_MEDIA_POST: String = "NEW_MEDIA_POST"
-        val NEW_MEDIA_POST_EXTRA_IDS: String = "NEW_MEDIA_POST_EXTRA_IDS"
+        const val NEW_MEDIA_POST: String = "NEW_MEDIA_POST"
+        const val NEW_MEDIA_POST_EXTRA_IDS: String = "NEW_MEDIA_POST_EXTRA_IDS"
     }
 }
 
