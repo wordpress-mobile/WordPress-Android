@@ -14,10 +14,16 @@ data class BlazeCampaignCreationRequest(
     val description: String,
     val startDate: Date,
     val endDate: Date,
-    val budget: Double,
+    val budget: BlazeCampaignCreationRequestBudget,
     val targetUrl: String,
     val urlParams: Map<String, String>,
     val mainImage: MediaModel,
     val targetingParameters: BlazeTargetingParameters?,
     val timeZoneId: String = TimeZone.getDefault().id
+)
+
+data class BlazeCampaignCreationRequestBudget(
+    val mode: String,
+    val amount: Double,
+    val currency: String
 )
