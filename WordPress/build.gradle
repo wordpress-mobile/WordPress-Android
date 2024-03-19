@@ -717,19 +717,22 @@ if (project.hasProperty("debugStoreFile")) {
 // Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
 // service during the build process.
 android {
-    applicationVariants.all { variant ->
-        variant.mergeAssetsProvider.configure {
-            doLast {
-                // Copy bundle and source map files
-                copy {
-                    from(outputDir)
-                    into("${buildDir}/react-native-bundle-source-map")
-                    include("*.bundle", "*.bundle.map")
-                }
+    applicationVariants.configureEach { variant ->
+        def variantAssets = variant.mergeAssetsProvider.get().outputDir.get()
 
-                // Delete source maps
-                delete(fileTree(dir: outputDir, includes: ['**/*.bundle.map']))
-            }
+        tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
+            delete(fileTree(dir: variantAssets, includes: ['**/*.bundle.map']))
+        }
+
+        tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
+            from(variantAssets)
+            into("${buildDir}/react-native-bundle-source-map")
+            include("*.bundle", "*.bundle.map")
+            finalizedBy("delete${variant.name.capitalize()}ReactNativeBundleSourceMap")
+        }
+
+        variant.mergeAssetsProvider.configure {
+            finalizedBy("copy${variant.name.capitalize()}ReactNativeBundleSourceMap")
         }
     }
 }
