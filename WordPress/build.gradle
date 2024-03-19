@@ -717,7 +717,7 @@ if (project.hasProperty("debugStoreFile")) {
 // Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
 // service during the build process.
 android {
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
         def variantAssets = "${buildDir}/intermediates/assets/${variant.name}"
 
         tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
