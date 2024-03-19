@@ -36,13 +36,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     fun onThemeClick(theme: ReaderReadingPreferences.Theme) {
-        val previousBackgroundColor = currentReadingPreferences.value.theme.backgroundColorRes
         _currentReadingPreferences.update { it.copy(theme = theme) }
-        launch {
-            if (previousBackgroundColor != theme.backgroundColorRes) {
-                _actionEvents.emit(ActionEvent.UpdateStatusBarColor(theme))
-            }
-        }
     }
 
     fun onFontFamilyClick(fontFamily: ReaderReadingPreferences.FontFamily) {

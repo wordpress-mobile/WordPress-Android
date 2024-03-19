@@ -51,6 +51,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
                     onFontSizeClick = viewModel::onFontSizeClick,
+                    onBackgroundColorUpdate = { dialog?.window?.setWindowStatusBarColor(it) }
                 )
             }
         }

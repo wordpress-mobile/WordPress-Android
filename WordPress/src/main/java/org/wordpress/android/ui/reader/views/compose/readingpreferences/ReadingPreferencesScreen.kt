@@ -19,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -55,11 +57,18 @@ fun ReadingPreferencesScreen(
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
+    onBackgroundColorUpdate: (Int) -> Unit,
 ) {
     val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, currentReadingPreferences.theme)
-    val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor))
-    val baseTextColor by animateColorAsState(Color(themeValues.intBaseTextColor))
-    val textColor by animateColorAsState(Color(themeValues.intTextColor))
+    val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor), label = "backgroundColor")
+    val baseTextColor by animateColorAsState(Color(themeValues.intBaseTextColor), label = "baseTextColor")
+    val textColor by animateColorAsState(Color(themeValues.intTextColor), label = "textColor")
+
+    SideEffect {
+        // update background color based on value animation and notify the parent
+        // this provides a way of updating the status bar color smoothly
+        onBackgroundColorUpdate(backgroundColor.toArgb())
+    }
 
     val fontFamily = currentReadingPreferences.fontFamily.toComposeFontFamily()
     val fontSize = currentReadingPreferences.fontSize.toSp()
@@ -216,6 +225,7 @@ private fun ReadingPreferencesScreenPreview() {
             onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },
             onFontFamilyClick = { readingPreferences = readingPreferences.copy(fontFamily = it) },
             onFontSizeClick = { readingPreferences = readingPreferences.copy(fontSize = it) },
+            onBackgroundColorUpdate = {},
         )
     }
 }
