@@ -28,7 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -57,6 +59,7 @@ fun ReadingPreferencesScreen(
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
     onBackgroundColorUpdate: (Int) -> Unit,
+    isHapticsFeedbackEnabled: Boolean = true,
 ) {
     val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, currentReadingPreferences.theme)
     val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor), label = "backgroundColor")
@@ -72,6 +75,8 @@ fun ReadingPreferencesScreen(
     val fontFamily = currentReadingPreferences.fontFamily.toComposeFontFamily()
     val fontSize = currentReadingPreferences.fontSize.toSp()
     val fontSizeMultiplier = currentReadingPreferences.fontSize.multiplier
+
+    val haptics = LocalHapticFeedback.current.takeIf { isHapticsFeedbackEnabled }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -159,7 +164,10 @@ fun ReadingPreferencesScreen(
                     ReadingPreferencesThemeButton(
                         theme = theme,
                         isSelected = theme == currentReadingPreferences.theme,
-                        onClick = { onThemeClick(theme) },
+                        onClick = {
+                            haptics?.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onThemeClick(theme)
+                        },
                     )
                 }
 
@@ -179,7 +187,10 @@ fun ReadingPreferencesScreen(
                     ReadingPreferencesFontFamilyButton(
                         fontFamily = fontFamily,
                         isSelected = fontFamily == currentReadingPreferences.fontFamily,
-                        onClick = { onFontFamilyClick(fontFamily) },
+                        onClick = {
+                            haptics?.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onFontFamilyClick(fontFamily)
+                        },
                     )
                 }
 
@@ -191,9 +202,12 @@ fun ReadingPreferencesScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = Margin.ExtraLarge.value),
-                selectedFontSize = currentReadingPreferences.fontSize,
-                onFontSizeSelected = onFontSizeClick,
                 previewFontFamily = fontFamily,
+                selectedFontSize = currentReadingPreferences.fontSize,
+                onFontSizeSelected = {
+                    haptics?.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onFontSizeClick(it)
+                },
             )
         }
     }
