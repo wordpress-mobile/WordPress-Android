@@ -725,7 +725,7 @@ android {
         }
 
         tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
-            from("${buildDir}/intermediates/assets/${variant.name}")
+            from(variantAssets)
             into("${buildDir}/react-native-bundle-source-map")
             include("*.bundle", "*.bundle.map")
             finalizedBy("delete${variant.name.capitalize()}ReactNativeBundleSourceMap")
