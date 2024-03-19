@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.reader.views.compose.readingpreferences
 
-import android.view.ContextThemeWrapper
-import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -33,26 +30,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.toComposeFontFamily
 import org.wordpress.android.ui.reader.utils.toSp
-import org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
 
 private const val TITLE_BASE_FONT_SIZE_SP = 24
 private const val TITLE_LINE_HEIGHT_MULTIPLIER = 1.2f
 private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
-
-// list of TagUiStates with: dogs, fox, design, writing
-private val previewTags = listOf("dogs", "fox", "design", "writing")
-    .map { tag -> TagUiState(tag, tag) }
 
 @Composable
 fun ReadingPreferencesScreen(
@@ -92,7 +83,7 @@ fun ReadingPreferencesScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .padding(Margin.ExtraLarge.value),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         ) {
             // title
             Text(
@@ -100,37 +91,7 @@ fun ReadingPreferencesScreen(
                 style = getTitleTextStyle(fontFamily, fontSizeMultiplier, baseTextColor),
             )
 
-            // tags
-            AndroidView(
-                modifier = Modifier.fillMaxWidth(),
-                factory = { context ->
-                    FrameLayout(context).apply {
-                        layoutParams = FrameLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                        )
-                    }
-                },
-                update = {
-                    // TODO thomashortadev this is not looking so great since sometimes we can notice
-                    //   the tag section being removed and then added again. It works though.
-                    it.removeAllViews()
-
-                    val contextThemeWrapper = ContextThemeWrapper(it.context, currentReadingPreferences.theme.style)
-                    val tagsView = ReaderExpandableTagsView(contextThemeWrapper).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                    }
-
-                    it.addView(tagsView)
-
-                    it.post {
-                        tagsView.updateUi(previewTags, currentReadingPreferences)
-                    }
-                }
-            )
+            // TODO thomashortadev tags
 
             // Content
             Text(
@@ -152,7 +113,7 @@ fun ReadingPreferencesScreen(
                 .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
                 .padding(vertical = Margin.ExtraExtraMediumLarge.value),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraExtraMediumLarge.value, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically),
         ) {
             Row(
                 modifier = Modifier
