@@ -15,7 +15,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -45,8 +44,6 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
-import androidx.fragment.app.commitNow
-import androidx.fragment.app.transaction
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -374,7 +371,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
         val customInflater = inflater.cloneInContext(contextThemeWrapper)
 
-        val viewBinding = ReaderFragmentPostDetailBinding.inflate(customInflater, container, false).also { binding = it }
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(customInflater, container, false)
+            .also { binding = it }
         val view = viewBinding.root
 
         initNavigationBar()
