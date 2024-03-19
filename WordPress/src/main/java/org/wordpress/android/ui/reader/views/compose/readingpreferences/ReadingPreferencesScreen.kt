@@ -34,7 +34,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -144,9 +143,10 @@ fun ReadingPreferencesScreen(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(MaterialTheme.colors.surface)
-                .padding(vertical = Margin.ExtraExtraMediumLarge.value),
-            verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically),
+                .padding(vertical = Margin.ExtraMediumLarge.value),
+            verticalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value, Alignment.CenterVertically),
         ) {
+            // Theme
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -166,6 +166,7 @@ fun ReadingPreferencesScreen(
                 Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
             }
 
+            // Font family
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -185,6 +186,7 @@ fun ReadingPreferencesScreen(
                 Spacer(modifier = Modifier.width(Margin.ExtraLarge.value))
             }
 
+            // Font size
             ReadingPreferencesFontSizeSlider(
                 modifier = Modifier
                     .fillMaxWidth()
