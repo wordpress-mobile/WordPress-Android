@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-22 11:54:08+0000
+Translation-Revision-Date: 2024-03-06 22:59:37+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">비디오 캡션. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">비디오 캡션. 비우기</string>
+    <string name="gutenberg_native_edit_video_024aee6d">비디오 편집</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">비디오를 자동 재생하면 일부 사용자에게 유용성 문제가 발생할 수 있습니다.</string>
+    <string name="notifications_action_mark_all_as_read">모두 읽음으로 표시</string>
+    <string name="notifications_unread_content_description">읽지 않음</string>
     <string name="qrcode_media_deeplink_error">사이트를 찾을 수 없습니다. 올바른 계정에 로그인했는지 확인하세요.</string>
     <string name="gravatar_info_sync_done_button">완료</string>
     <string name="gravatar_info_sync_message">업데이트 내용이 그라바타 프로필과 동기화되려면 시간이 조금 걸릴 수 있습니다.</string>
@@ -381,7 +387,6 @@ Language: ko_KR
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">이 사이트</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s에서는 %2$s을(를) 사용하고 있으며 여기에서는 아직 앱의 모든 기능이 지원되지 않습니다. %3$s을(를) 설치하세요.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">며칠 후 젯팩 앱이 이동됩니다.</string>
     <string name="wp_jp_static_poster_footnote">전환은 무료이며 1분밖에 걸리지 않습니다.</string>
     <string name="wp_jp_static_poster_button_secondary">Jetpack.com에서 더 알아보기</string>
     <string name="wp_jp_static_poster_button_primary">젯팩 앱으로 전환</string>
@@ -1168,7 +1173,6 @@ Language: ko_KR
     <string name="jetpack_brute_force_allowlist_title">항상 허용되는 IP 주소</string>
     <string name="site_settings_denylist_title">허용되지 않는 댓글</string>
     <string name="gutenberg_native_add_button_text">추가 버튼 텍스트</string>
-    <string name="stories_intro_main_subtitle">사이트에서 매력적인 콘텐츠를 만들고 공개하는 새로운 방법입니다.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">해제</string>
     <string name="activity_log_backup_download_notice_download_action">다운로드하기</string>
     <string name="threat_fix_all_status_success_message_plural">위협이 해결되었습니다.</string>
@@ -1336,7 +1340,6 @@ Language: ko_KR
     <string name="request_failed_message">요청 처리 중 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="gutenberg_native_move_to_bottom">아래로 이동하기</string>
     <string name="gutenberg_native_change_block_position">블록 위치 변경</string>
-    <string name="label_control_upload">업로드하기</string>
     <string name="jetpack_icon_content_description">아이콘</string>
     <string name="backup_download_complete_info">파일에 연결하는 링크도 이메일했습니다.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">링크 버튼 공유하기</string>
@@ -1437,7 +1440,6 @@ Language: ko_KR
     <string name="dialog_confirm_copy_local_message">복사하려고 한 글은 충돌하거나 최근 만들고 저장하지 않은 두 버전이 있습니다.\n충돌을 해결하거나 이 앱으로부터 버전 복사를 진행하려면 먼저 글을 편집하세요.</string>
     <string name="dialog_confirm_copy_local_title">글 동기화 충돌</string>
     <string name="button_copy">복제하기</string>
-    <string name="toast_edit_story_update_in_progress_title">이야기를 저장하는 중입니다. 기다려 주시기 바랍니다…</string>
     <string name="gutenberg_native_file_name">파일 이름</string>
     <string name="gutenberg_native_file_block_settings">파일 블록 설정</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">파일 업로드를 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
@@ -1455,23 +1457,8 @@ Language: ko_KR
     <string name="reader_follow_comments_null_response">받은 응답이 없습니다</string>
     <string name="activity_log_activity_type_filter_clear">지우기</string>
     <string name="activity_log_activity_type_filter_apply">적용하기</string>
-    <string name="dialog_edit_story_unsupported_format_message">하나 또는 그 이상의 슬라이드는 지금 이야기가 GIF 파일을 지원하지 않기에 이야기에 추가할 수 없습니다. 정지한 이미지 또는 비디오 배경을 대신 선택하시기 바랍니다.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF 파일을 지원하지 않습니다</string>
-    <string name="dialog_edit_story_unrecoverable_message">사이트의 이 이야기에 대한 미디어를 찾을 수 없습니다.</string>
-    <string name="dialog_edit_story_unrecoverable_title">이야기를 편집할 수 없습니다</string>
-    <string name="dialog_edit_story_unavailable_message">이 이야기에 대한 미디어를 로드할 수 없습니다. 인터넷 연결을 확인하고 잠시 후 다시 시도하세요.</string>
-    <string name="dialog_edit_story_unavailable_title">이야기를 편집할 수 없습니다</string>
-    <string name="dialog_edit_story_limited_message">이 이야기는 다른 장치에서 편집하였고 특정 객체를 편집하는 기능을 제한할 수도 있습니다.</string>
-    <string name="dialog_edit_story_limited_title">제한적인 이야기 편집 중</string>
     <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 다시 만들기를 시도하세요.</string>
-    <string name="color_picker_label_background">배경</string>
-    <string name="color_picker_label_text">본문</string>
-    <string name="dialog_discard_story_ok_button_edit">폐기하기</string>
-    <string name="dialog_discard_story_message_edit">아무 변경사항도 저장하지 않을 것입니다.</string>
-    <string name="dialog_discard_story_title_edit">변경사항을 취소하시나요?</string>
     <string name="label_done_button">완료</string>
-    <string name="label_next_button">다음</string>
-    <string name="delete_button_alt">삭제하기</string>
     <string name="hpp_choose_error">테마를 선택하는 동안 오류가 발생했습니다.</string>
     <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
     <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
@@ -1521,14 +1508,6 @@ Language: ko_KR
     <string name="gutenberg_native_help_button">도움 버튼</string>
     <string name="gutenberg_native_edit_using_web_editor">웹 편집기를 이용하여 편집하기</string>
     <string name="gutenberg_native_choose_images">이미지 고르기</string>
-    <string name="stories_intro_create_story_post_label">스토리 글 만들기</string>
-    <string name="stories_intro_description_second">사이트에 새 블로그 글로 발행되기에 독자들이 하나도 놓치지 않습니다.</string>
-    <string name="stories_intro_title_second">스토리 글이 보이지 않습니다</string>
-    <string name="stories_intro_description_first">사진, 비디오, 그리고 문제를 혼합하여 방문자가 좋아하여 매력적이고 탭할 수 이는 이야기 글을 만드세요.</string>
-    <string name="stories_intro_title_first">이제 모두를 위한 이야기가 있습니다</string>
-    <string name="stories_intro_image_caption_second">이야기 제목의 예제</string>
-    <string name="stories_intro_image_caption_first">이야기 글을 만드는 방법</string>
-    <string name="stories_intro_main_title">이야기 글 소개</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
     <string name="media_insert_failed">미디어 삽입을 실패했습니다.</string>
@@ -1549,13 +1528,6 @@ Language: ko_KR
     <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
     <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
     <string name="suggestion_no_connection">인터넷에 연결되지 않았습니다.\n제안을 사용할 수 없습니다.</string>
-    <string name="typeface_label_shrikhand">굵게</string>
-    <string name="typeface_label_space_mono">모던</string>
-    <string name="typeface_label_pacifico">발랄</string>
-    <string name="typeface_label_oswald">스트롱</string>
-    <string name="typeface_label_libre_baskerville">클래식</string>
-    <string name="typeface_label_nunito">캐쥬얼</string>
-    <string name="toast_capture_operation_permission_needed">비디오를 기록하려면 앱 오디오 기록 권한을 승인해야 합니다</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 선택했습니다</string>
     <string name="login_get_link_by_email">이메일로 로그인 링크 얻기</string>
@@ -1582,66 +1554,13 @@ Language: ko_KR
     <string name="gutenberg_native_page_title_empty">페이지 제목입니다. 비었습니다</string>
     <string name="toast_error_playing_video">비디오를 재생하는 중에 오류가 생겼습니다</string>
     <string name="camera_error">이 장치는 카메라2 API를 지원하지 않습니다.</string>
-    <string name="toast_error_saving_video">비디오를 저장할 수 없습니다</string>
-    <string name="toast_error_saving_image">이미지를 저장하는 중에 오류가 있습니다</string>
-    <string name="toast_capture_operation_in_progress">작업을 진행하고 있습니다. 나중에 다시 시도하세요</string>
-    <string name="toast_story_page_not_found">저장소 슬라이드를 찾을 수 없습니다</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">저장소 보기</string>
-    <string name="dialog_insufficient_device_storage_error_message">발행하기 전에 장치에 스토리를 저장해야 합니다. 저장소 설정을 검토하고 공간을 확보하려면 파일을 제거하세요.</string>
-    <string name="dialog_insufficient_device_storage_error_title">장치 저장소가 충분하지 않습니다</string>
-    <string name="dialog_story_saving_error_message">슬라이드를 저장하거나 지우기를 다시 시도한 뒤에, 스토리 발행을 다시 시도하세요.</string>
-    <string name="dialog_story_saving_error_title_plural">%1$d개의 슬라이드를 저장할 수 없습니다</string>
-    <string name="dialog_story_saving_error_title_singular">1개의 슬라이드를 저장할 수 없습니다</string>
-    <string name="story_saving_failed_quick_action_manage">관리하기</string>
-    <string name="story_saving_failed_message_plural">%1$d개의 슬라이드에 조치가 필요합니다</string>
-    <string name="story_saving_failed_message_singular">1개의 슬라이드에 조치가 필요합니다</string>
-    <string name="story_saving_failed_title">“%1$s”(을)를 업로드할 수 없습니다</string>
-    <string name="story_saving_snackbar_finished_with_error">“%1$s”(을)를 업로드할 수 없습니다</string>
-    <string name="story_saving_snackbar_finished_successfully">“%1$s”(을)를 발행했습니다</string>
-    <string name="story_saving_snackbar_started">“%1$s”(을)를 업로드 중…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d개의 슬라이드가 남았습니다</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1개의 슬라이드가 남았습니다</string>
-    <string name="story_saving_title_several">몇 개의 스토리</string>
-    <string name="story_saving_title">“%1$s”(을)를 저장하는 중…</string>
-    <string name="story_saving_untitled">제목이 없습니다</string>
-    <string name="dialog_discard_story_ok_button">폐기하였습니다</string>
-    <string name="dialog_discard_story_message">스토리 글을 임시글로 저장하지 않을 것입니다.</string>
-    <string name="dialog_discard_story_title">스토리 글을 폐기하시겠어요?</string>
-    <string name="dialog_discard_page_ok_button">지우기</string>
-    <string name="dialog_discard_errored_page_message">이 슬라이드는 아직 저장하지 않았습니다. 이 슬라이드를 지웠다면, 편집한 내용을 읽게 될 것입니다.</string>
-    <string name="dialog_discard_page_message">이 슬라이드는 스토리에서 지워질 것입니다.</string>
-    <string name="dialog_discard_page_title">스토리 슬라이드를 지우시겠어요?</string>
-    <string name="label_text_color_button">본문 색상 변경하기</string>
-    <string name="label_text_alignment_button">본문 정렬 변경하기</string>
-    <string name="label_frame_errored">오류가 있습니다</string>
-    <string name="label_frame_selected_border">선택하였습니다</string>
-    <string name="label_frame_unselected_border">선택하지 않았습니다</string>
-    <string name="label_frame_image">슬라이드</string>
-    <string name="label_retry_icon">다시 시도하기</string>
-    <string name="label_saved_icon">저장했습니다</string>
     <string name="label_close_button">닫기</string>
-    <string name="label_share_to">공유할 대상</string>
-    <string name="label_snackbar_share">공유하기</string>
-    <string name="label_snackbar_loop_frame_saved">사진에 저장했습니다</string>
-    <string name="label_control_retry">다시 시도하기</string>
-    <string name="label_control_saved">저장했습니다</string>
-    <string name="label_control_saving">저장하는 중</string>
-    <string name="label_control_flash">플래시</string>
-    <string name="label_control_flip_camera">뒤집기</string>
-    <string name="sound_button_alt">소리</string>
-    <string name="text_button_alt">문자</string>
-    <string name="stickers_button_alt">스티커</string>
-    <string name="flash_button_alt">플래시</string>
-    <string name="flip_button_alt">카메라 뒤집기</string>
-    <string name="capture_button_alt">갈무리하기</string>
     <string name="mlp_preview_page">미리보기</string>
     <string name="mlp_create_page">페이지 만들기</string>
     <string name="mlp_create_blank_page">빈 페이지 만들기</string>
     <string name="mlp_choose_layout_subtitle">넓고 다양한 이전에 만들어진 페이지 레이아웃에서 선택하여 시작하세요. 또는 빈 페이지로 시작하세요.</string>
     <string name="mlp_choose_layout_title">레이아웃을 선택하기</string>
     <string name="prepublishing_nudges_story_title_hint">스토리에 제목을 부여하기</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">글 또는 스토리 만들기</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">글, 페이지 또는 스토리를 만들기</string>
     <string name="quick_start_dialog_create_new_post_message_short">%1$s 만들기를 %2$s탭하세요. 다음 &lt;b&gt;블로그 글&lt;/b&gt;을 선택하세요</string>
     <string name="photo_picker_choose_file">장치에서 선택하기</string>
     <string name="my_site_bottom_sheet_add_story">스토리 글</string>

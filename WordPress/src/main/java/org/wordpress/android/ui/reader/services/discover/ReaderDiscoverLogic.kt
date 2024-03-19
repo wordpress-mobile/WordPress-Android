@@ -46,6 +46,8 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.ReaderDiscoverNewEndpointFeatureConfig
 import javax.inject.Inject
 
 /**
@@ -57,6 +59,8 @@ class ReaderDiscoverLogic @Inject constructor(
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val readerDiscoverNewEndpointFeatureConfig: ReaderDiscoverNewEndpointFeatureConfig,
+    private val localeManagerWrapper: LocaleManagerWrapper,
 ) {
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -116,7 +120,13 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
-            WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
+            params["_locale"] = localeManagerWrapper.getLanguage()
+            val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
+                "read/streams/discover"
+            } else {
+                "read/tags/cards"
+            }
+            WordPress.getRestClientUtilsV2().get(endpoint, params, null, listener, errorListener)
         }
     }
 
@@ -143,7 +153,9 @@ class ReaderDiscoverLogic @Inject constructor(
             insertCardsJsonIntoDb(simplifiedCardsJson)
 
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (nextPageHandle.isNotEmpty()) {
+                appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            }
 
             if (cards.isEmpty()) {
                 readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
@@ -200,10 +212,19 @@ class ReaderDiscoverLogic @Inject constructor(
     @Suppress("NestedBlockDepth")
     private fun createSimplifiedJson(cardsJsonArray: JSONArray, discoverTasks: DiscoverTasks): JSONArray {
         val simplifiedJsonList = mutableListOf<JSONObject>()
-        var firstYouMayLikeCard: JSONObject? = null
+        var firstRecommendationCard: JSONObject? = null
+        val isFirstPage = discoverTasks == REQUEST_FIRST_PAGE
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
-            when (cardJson.getString(JSON_CARD_TYPE)) {
+            // We should not have a recommended blogs or interests/tags card as the first element on Discover feed.
+            val cardType = cardJson.optString(JSON_CARD_TYPE, "")
+            val isCardTypeRecommendation =
+                cardType == JSON_CARD_RECOMMENDED_BLOGS || cardType == JSON_CARD_INTERESTS_YOU_MAY_LIKE
+            if (i == 0 && isFirstPage && isCardTypeRecommendation) {
+                firstRecommendationCard = cardJson
+                continue
+            }
+            when (cardType) {
                 JSON_CARD_RECOMMENDED_BLOGS -> {
                     cardJson.optJSONArray(JSON_CARD_DATA)?.let { recommendedBlogsCardJson ->
                         if (recommendedBlogsCardJson.length() > 0) {
@@ -212,11 +233,6 @@ class ReaderDiscoverLogic @Inject constructor(
                     }
                 }
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    // We should not have an interests/tags card as the first element on Discover feed.
-                    if (i == 0 && discoverTasks == REQUEST_FIRST_PAGE) {
-                        firstYouMayLikeCard = cardJson
-                        continue
-                    }
                     simplifiedJsonList.add(cardJson)
                 }
                 JSON_CARD_POST -> {
@@ -224,9 +240,14 @@ class ReaderDiscoverLogic @Inject constructor(
                 }
             }
         }
-        // If we've received an interests/tags card as the first element, it should be displayed as the third card.
-        if (firstYouMayLikeCard != null) {
-            simplifiedJsonList.add(2, firstYouMayLikeCard)
+        // If we've received a recommended tags or blogs card as the first element,
+        // it should be displayed as the third card.
+        if (firstRecommendationCard != null) {
+            if (simplifiedJsonList.size >=2) {
+                simplifiedJsonList.add(2, firstRecommendationCard)
+            } else {
+                simplifiedJsonList.add(firstRecommendationCard)
+            }
         }
 
         return JSONArray(simplifiedJsonList)

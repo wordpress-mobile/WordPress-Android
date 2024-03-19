@@ -1,8 +1,13 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.6
+-----
+
+
 24.5
 -----
 * [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
+* [*] [Jetpack-only] Fixes broken links on some notifications [https://github.com/wordpress-mobile/WordPress-Android/pull/20417]
 * [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
 
 24.4
@@ -14,6 +19,7 @@
 * [*] Block editor: Prevent crash when autoscrolling to blocks [https://github.com/WordPress/gutenberg/pull/59110]
 * [*] Block editor: Remove opacity change when images are being uploaded [https://github.com/WordPress/gutenberg/pull/59264]
 * [*] Block editor: Media & Text blocks correctly show an error message when the attached video upload fails [https://github.com/WordPress/gutenberg/pull/59288]
+* [*] [Jetpack-only] Themes: Filters themes that are not available due to tier to prevent activation errors. [https://github.com/wordpress-mobile/WordPress-Android/pull/20425]
 
 24.3
 -----

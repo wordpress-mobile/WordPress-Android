@@ -17,6 +17,7 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
@@ -37,6 +38,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
 import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -85,7 +87,7 @@ public class NotificationsUtils {
         if (!TextUtils.isEmpty(deviceID)) {
             settingsEndpoint += "?device_id=" + deviceID;
         }
-        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
@@ -215,16 +217,17 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                  TextView textView,
-                                                  final Function1<FormattableRange, Unit> clickHandler,
-                                                  boolean isFooter) {
+    @NonNull
+    static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            @Nullable final Function1<FormattableRange, Unit> clickHandler,
+            boolean isFooter
+    ) {
         Function1<NoteBlockClickableSpan, Unit> clickListener =
-                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
-                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
-                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
-                        return null;
-                    }
+                clickHandler != null ? noteBlockClickableSpan -> {
+                    clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                    return null;
                 } : null;
         return getSpannableContentForRanges(formattableContent,
                 textView,
@@ -241,11 +244,14 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    private static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                          TextView textView,
-                                                          boolean isFooter,
-                                                          final Function1<NoteBlockClickableSpan, Unit>
-                                                                  onNoteBlockTextClickListener) {
+    @NonNull
+    public static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            boolean isFooter,
+            @Nullable final Function1<NoteBlockClickableSpan, Unit>
+                    onNoteBlockTextClickListener
+    ) {
         if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
@@ -262,6 +268,9 @@ public class NotificationsUtils {
         List<FormattableRange> rangesArray = formattableContent.getRanges();
         if (rangesArray != null) {
             for (FormattableRange range : rangesArray) {
+                // Skip ranges with UNKNOWN type and no URL since they are not actionable
+                if (range.rangeType() == FormattableRangeType.UNKNOWN && TextUtils.isEmpty(range.getUrl())) continue;
+
                 NoteBlockClickableSpan clickableSpan =
                         new NoteBlockClickableSpan(range, shouldLink, isFooter) {
                     @Override

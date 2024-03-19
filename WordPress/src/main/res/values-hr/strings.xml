@@ -2,18 +2,11 @@
 <!--
 Translation-Revision-Date: 2022-10-18 07:57:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: hr
 -->
 <resources>
-    <string name="color_picker_label_background">Pozadina</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Odbaci</string>
-    <string name="dialog_discard_story_message_edit">Sve izvršene promjene neće biti spremljene.</string>
-    <string name="dialog_discard_story_title_edit">Odbaciti promjene?</string>
     <string name="label_done_button">Gotovo</string>
-    <string name="label_next_button">Sljedeće</string>
-    <string name="delete_button_alt">Izbrisati</string>
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>
     <string name="hpp_choose_button">Odaberi</string>
@@ -35,12 +28,6 @@ Language: hr
     <string name="gutenberg_native_help_button">Gumb za pomoć</string>
     <string name="gutenberg_native_edit_using_web_editor">Uređujte pomoću web uređivača</string>
     <string name="gutenberg_native_choose_images">Odaberite slike</string>
-    <string name="stories_intro_create_story_post_label">Napravite članak o priči</string>
-    <string name="stories_intro_title_second">Članci priče ne nestaju</string>
-    <string name="stories_intro_title_first">Priče su sada za sve</string>
-    <string name="stories_intro_image_caption_second">Primjer naslova priče</string>
-    <string name="stories_intro_image_caption_first">Kako napraviti članak iz priče</string>
-    <string name="stories_intro_main_title">Predstavljamo vam članke priče</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
     <string name="reader_label_toolbar_back">Povratak</string>
@@ -66,19 +53,7 @@ Language: hr
     <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
     <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
     <string name="camera_error">Ovaj uređaj ne podržava API Camera2.</string>
-    <string name="toast_error_saving_video">Videozapis nije moguće spremiti</string>
-    <string name="toast_error_saving_image">Pogreška prilikom spremanja slike</string>
-    <string name="toast_capture_operation_in_progress">Operacija je u tijeku, pokušajte ponovo</string>
-    <string name="toast_story_page_not_found">Slajd Story nije pronađen</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Pogledajte spremište</string>
     <string name="label_close_button">Zatvori</string>
-    <string name="label_share_to">Podijeli</string>
-    <string name="label_control_retry">Pokušaj ponovno</string>
-    <string name="label_control_saved">Spremljeno</string>
-    <string name="label_control_saving">Spremanje</string>
-    <string name="sound_button_alt">Zvuk</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="stickers_button_alt">Naljepnice</string>
     <string name="comment_q_action_replying">Odgovaram …</string>
     <string name="comment_q_action_approving">Odobravam …</string>
     <string name="comment_q_action_liking">Sviđa mi se …</string>

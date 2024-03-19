@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.automattic.android.tracks.crashlogging.CrashLogging;
+import com.automattic.android.tracks.crashlogging.JsException;
+import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
@@ -223,6 +226,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ContactSupportFeatureConfig;
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig;
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig;
 import org.wordpress.android.util.extensions.AppBarLayoutExtensionsKt;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -384,6 +388,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean mHtmlModeMenuStateOn = false;
 
+    private FrameLayout mUpdatingPostArea;
+
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -425,6 +431,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject BloggingPromptsStore mBloggingPromptsStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
+    @Inject SyncPublishingFeatureConfig mSyncPublishingFeatureConfig;
 
     private StorePostViewModel mViewModel;
     private StorageUtilsViewModel mStorageUtilsViewModel;
@@ -439,6 +446,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
     private ActivityResultLauncher<Intent> mEditShareMessageActivityResultLauncher;
+
+    private final Handler mHideUpdatingPostAreaHandler = new Handler(Looper.getMainLooper());
+    private Runnable mHideUpdatingPostAreaRunnable;
+    private long mUpdatingPostStartTime = 0L;
+    private static final long MIN_UPDATING_POST_DISPLAY_TIME = 2000L; // Minimum display time in milliseconds
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EXTRA_RESTART_EDITOR)
@@ -561,6 +573,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         getOnBackPressedDispatcher().addCallback(this, callback);
 
         mDispatcher.register(this);
+
+        // initialise ViewModels
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         mStorageUtilsViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorageUtilsViewModel.class);
         mEditorBloggingPromptsViewModel = new ViewModelProvider(this, mViewModelFactory)
@@ -568,6 +582,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorJetpackSocialViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(EditorJetpackSocialViewModel.class);
         mPublishingViewModel = new ViewModelProvider(this, mViewModelFactory).get(PublishingViewModel.class);
+
         setContentView(R.layout.new_edit_post_activity);
 
         createEditShareMessageActivityResultLauncher();
@@ -618,7 +633,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Set up the action bar.
         mToolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(mToolbar);
-
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -807,6 +821,46 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 Log.e("EditPostActivity", "ui state: " + uiState);
             }
         });
+
+        mUpdatingPostArea = findViewById(R.id.updating);
+
+        // check if post content needs updating
+       if (mSyncPublishingFeatureConfig.isEnabled()) {
+           mViewModel.checkIfUpdatedPostVersionExists(mEditPostRepository, mSite);
+       }
+    }
+    private void showUpdatingPostArea() {
+        mUpdatingPostArea.setVisibility(View.VISIBLE);
+        mUpdatingPostStartTime = System.currentTimeMillis();
+        // Cancel any pending hide operations to avoid conflicts
+        if (mHideUpdatingPostAreaRunnable != null) {
+            mHideUpdatingPostAreaHandler.removeCallbacks(mHideUpdatingPostAreaRunnable);
+        }
+    }
+
+    private void hideUpdatingPostArea() {
+        long elapsedTime = System.currentTimeMillis() - mUpdatingPostStartTime;
+        long delay = MIN_UPDATING_POST_DISPLAY_TIME - elapsedTime;
+
+        if (delay > 0) {
+            // Delay hiding the view if the elapsed time is less than the minimum display time
+            hideUpdatingPostAreaWithDelay(delay);
+        } else {
+            // Hide the view immediately if the minimum display time has been met or exceeded
+            mUpdatingPostArea.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideUpdatingPostAreaWithDelay(long delay) {
+        // Define the runnable only once or ensure it's the same instance if it's already defined
+        if (mHideUpdatingPostAreaRunnable == null) {
+            mHideUpdatingPostAreaRunnable = () -> {
+                if (mUpdatingPostArea != null) {
+                    mUpdatingPostArea.setVisibility(View.GONE);
+                }
+            };
+        }
+        mHideUpdatingPostAreaHandler.postDelayed(mHideUpdatingPostAreaRunnable, delay);
     }
 
     private void customizeToolbar() {
@@ -1024,6 +1078,27 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 );
             }
         });
+
+        mViewModel.getOnPostUpdateUiVisible().observe(this, isVisible -> {
+            if (isVisible) {
+                showUpdatingPostArea();
+            } else {
+                hideUpdatingPostArea();
+            }
+        });
+
+        mViewModel.getOnPostUpdateResult().observe(this, isSuccess -> {
+            if (isSuccess) {
+                mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
+                refreshEditorContent();
+            } else {
+                ToastUtils.showToast(
+                        EditPostActivity.this,
+                        getString(R.string.editor_updating_post_failed),
+                        ToastUtils.Duration.SHORT
+                );
+            }
+        });
     }
 
     private void initializePostObject() {
@@ -1104,6 +1179,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
             mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
+        }
+
+        if (mHideUpdatingPostAreaHandler != null && mHideUpdatingPostAreaRunnable != null) {
+            mHideUpdatingPostAreaHandler.removeCallbacks(mHideUpdatingPostAreaRunnable);
         }
     }
 
@@ -2989,7 +3068,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             showInsertMediaDialog(ids);
         } else {
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-
             mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
             if (mShowGutenbergEditor && mEditorPhotoPicker.getAllowMultipleSelection()) {
                 mEditorPhotoPicker.setAllowMultipleSelection(false);
@@ -3893,5 +3971,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Nullable private SavedInstanceDatabase getDB() {
         return SavedInstanceDatabase.Companion.getDatabase(WordPress.getContext());
+    }
+
+    @Override public void onLogJsException(JsException exception, JsExceptionCallback onExceptionSend) {
+        mCrashLogging.sendJavaScriptReport(exception, onExceptionSend);
     }
 }

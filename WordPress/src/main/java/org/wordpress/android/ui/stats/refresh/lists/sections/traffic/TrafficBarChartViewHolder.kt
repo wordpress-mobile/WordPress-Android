@@ -177,6 +177,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.blue_50)
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
