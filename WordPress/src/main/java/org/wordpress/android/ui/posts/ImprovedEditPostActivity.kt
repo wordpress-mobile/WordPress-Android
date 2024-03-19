@@ -27,6 +27,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
@@ -49,6 +50,7 @@ import com.automattic.android.tracks.crashlogging.JsExceptionCallback
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -256,7 +258,8 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
+@AndroidEntryPoint
+class ImprovedEditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
     PhotoPickerListener, EditorPhotoPickerListener, EditorMediaListener, EditPostActivityHook,
@@ -306,7 +309,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var hasSetPostContent: Boolean = false
     private var postLoadingState: PostLoadingState = PostLoadingState.NONE
     private var isXPostsCapable: Boolean? = null
-    var onGetSuggestionResult: Consumer<String?>? = null
+    private var onGetSuggestionResult: Consumer<String?>? = null
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -369,8 +372,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Inject lateinit var dateTimeUtils: DateTimeUtilsWrapper
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
     @Inject lateinit var privateAtomicCookie: PrivateAtomicCookie
@@ -402,10 +403,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     @Inject var syncPublishingFeatureConfig: SyncPublishingFeatureConfig? = null
-    private var storePostViewModel: StorePostViewModel? = null
-    private var storageUtilsViewModel: StorageUtilsViewModel? = null
-    private var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel? = null
-    private var editorJetpackSocialViewModel: EditorJetpackSocialViewModel? = null
+    private val storePostViewModel: StorePostViewModel by viewModels()
+    private val storageUtilsViewModel: StorageUtilsViewModel by viewModels()
+    private val editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel by viewModels()
+    private val editorJetpackSocialViewModel: EditorJetpackSocialViewModel by viewModels()
     private lateinit var siteModel: SiteModel
     private var siteSettings: SiteSettingsInterface? = null
     private var isJetpackSsoEnabled: Boolean = false
@@ -460,7 +461,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun newPageFromLayoutPickerSetup(title: String?, layoutSlug: String?) {
-        val content = siteStore.getBlockLayoutContent((siteModel)!!, (layoutSlug)!!)
+        val content = siteStore.getBlockLayoutContent(siteModel, (layoutSlug)!!)
         newPostSetup(title, content)
     }
 
@@ -486,7 +487,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     val shareMessage: String? = result.getData()!!.getStringExtra(
                         EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE
                     )
-                    editorJetpackSocialViewModel!!.onJetpackSocialShareMessageChanged(shareMessage)
+                    editorJetpackSocialViewModel.onJetpackSocialShareMessageChanged(shareMessage)
                 }
             }
         }
@@ -494,7 +495,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as WordPress).component().inject(this)
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -504,17 +504,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
 
-        // initialise ViewModels
-        storePostViewModel = ViewModelProvider(this, (viewModelFactory)).get(
-            StorePostViewModel::class.java
-        )
-        storageUtilsViewModel = ViewModelProvider(this, (viewModelFactory)).get(
-            StorageUtilsViewModel::class.java
-        )
-        editorBloggingPromptsViewModel = ViewModelProvider(this, (viewModelFactory))
-            .get(EditorBloggingPromptsViewModel::class.java)
-        editorJetpackSocialViewModel = ViewModelProvider(this, (viewModelFactory))
-            .get(EditorJetpackSocialViewModel::class.java)
         setContentView(R.layout.new_edit_post_activity)
         createEditShareMessageActivityResultLauncher()
 
@@ -684,22 +673,22 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         editorMedia.start(siteModel, this)
         startObserving()
-        // todo: annmarie fix this
-        if (editorFragment != null.also { hasSetPostContent = (it)!! }) {
-            editorFragment!!.setImageLoader(imageLoader)
+        editorFragment?.let {
+            hasSetPostContent = true
+            it.setImageLoader(imageLoader)
         }
 
         // Ensure that this check happens when mPost is set
-        if (savedInstanceState == null) {
+        showGutenbergEditor = if (savedInstanceState == null) {
             val restartEditorOptionName: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
             val restartEditorOption: RestartEditorOptions =
                 if (restartEditorOptionName == null) RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG else RestartEditorOptions.valueOf(
                     restartEditorOptionName
                 )
-            showGutenbergEditor = (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
+            (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
                     && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG)
         } else {
-            showGutenbergEditor = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
+            savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN)
         }
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
@@ -742,14 +731,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
-        storageUtilsViewModel!!.start(savedInstanceState == null)
-        editorJetpackSocialViewModel!!.start(siteModel, (editPostRepository))
+        storageUtilsViewModel.start(savedInstanceState == null)
+        editorJetpackSocialViewModel.start(siteModel, (editPostRepository))
         customizeToolbar()
         updatingPostArea = findViewById<FrameLayout>(R.id.updating)
 
         // check if post content needs updating
         if (syncPublishingFeatureConfig!!.isEnabled()) {
-            storePostViewModel!!.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
+            storePostViewModel.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
         }
     }
 
@@ -934,14 +923,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 contentIfNotHandled.show(this)
             }
         }
-        storePostViewModel!!.onSavePostTriggered.observe(this
+        storePostViewModel.onSavePostTriggered.observe(this
         ) { unitEvent: Event<Unit> ->
             unitEvent.applyIfNotHandled { unit: Unit ->
                 updateAndSavePostAsync()
                 null
             }
         }
-        storePostViewModel!!.onFinish.observe(this
+        storePostViewModel.onFinish.observe(this
         ) { finishEvent: Event<ActivityFinishState?> ->
             finishEvent.applyIfNotHandled { activityFinishState: ActivityFinishState? ->
                 when (activityFinishState) {
@@ -958,21 +947,21 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         editPostRepository.postChanged.observe(this
         ) { postEvent: Event<PostImmutableModel?> ->
             postEvent.applyIfNotHandled { post: PostImmutableModel? ->
-                storePostViewModel!!.savePostToDb((editPostRepository)!!, (siteModel)!!)
+                storePostViewModel.savePostToDb((editPostRepository)!!, (siteModel)!!)
                 null
             }
         }
-        storageUtilsViewModel!!.checkStorageWarning.observe(this
+        storageUtilsViewModel.checkStorageWarning.observe(this
         ) { event: Event<Unit> ->
             event.applyIfNotHandled { unit: Unit ->
-                storageUtilsViewModel!!.onStorageWarningCheck(
+                storageUtilsViewModel.onStorageWarningCheck(
                     getSupportFragmentManager(),
                     StorageUtilsProvider.Source.EDITOR
                 )
                 null
             }
         }
-        editorBloggingPromptsViewModel!!.onBloggingPromptLoaded.observe(this
+        editorBloggingPromptsViewModel.onBloggingPromptLoaded.observe(this
         ) { event: Event<EditorLoadedPrompt> ->
             event.applyIfNotHandled { loadedPrompt: EditorLoadedPrompt ->
                 editPostRepository.updateAsync({ postModel: PostModel ->
@@ -987,7 +976,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 null
             }
         }
-        editorJetpackSocialViewModel!!.actionEvents.observe(this
+        editorJetpackSocialViewModel.actionEvents.observe(this
         ) { actionEvent: EditorJetpackSocialViewModel.ActionEvent? ->
             if (actionEvent is OpenEditShareMessage) {
                 val intent: Intent = createIntent(
@@ -1002,14 +991,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 )
             }
         }
-        storePostViewModel!!.onPostUpdateUiVisible.observe(this) { isVisible: Boolean ->
+        storePostViewModel.onPostUpdateUiVisible.observe(this) { isVisible: Boolean ->
             if (isVisible) {
                 showUpdatingPostArea()
             } else {
                 hideUpdatingPostArea()
             }
         }
-        storePostViewModel!!.onPostUpdateResult.observe(this) { isSuccess: Boolean ->
+        storePostViewModel.onPostUpdateResult.observe(this) { isSuccess: Boolean ->
             if (isSuccess) {
                 editPostRepository.loadPostByLocalPostId(editPostRepository.id)
                 refreshEditorContent()
@@ -1551,7 +1540,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     restartEditorOption = RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
                     postEditorAnalyticsSession!!.switchEditor(PostEditorAnalyticsSession.Editor.GUTENBERG)
                     postEditorAnalyticsSession!!.setOutcome(Outcome.SAVE)
-                    storePostViewModel!!.finish(ActivityFinishState.SAVED_LOCALLY)
+                    storePostViewModel.finish(ActivityFinishState.SAVED_LOCALLY)
                 } else {
                     logWrongMenuState("Wrong state in menu_switch_to_gutenberg: menu should not be visible.")
                 }
@@ -1774,7 +1763,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (editorFragment is GutenbergEditorFragment) {
             (editorFragment as GutenbergEditorFragment).sendToJSPostSaveEvent()
         }
-        return storePostViewModel!!.savePostOnline(isFirstTimePublish, this, (editPostRepository), (siteModel)!!)
+        return storePostViewModel.savePostOnline(isFirstTimePublish, this, (editPostRepository), (siteModel)!!)
     }
 
     private fun onUploadSuccess(media: MediaModel?) {
@@ -1822,7 +1811,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
         }
-        storePostViewModel!!.updatePostObjectWithUIAsync(
+        storePostViewModel.updatePostObjectWithUIAsync(
             (editPostRepository),
             { oldContent: String -> updateFromEditor(oldContent) },
             null
@@ -1834,10 +1823,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized")
             return
         }
-        storePostViewModel!!.updatePostObjectWithUIAsync(
+        storePostViewModel.updatePostObjectWithUIAsync(
             (editPostRepository), { oldContent: String -> updateFromEditor(oldContent) }
         ) { post: PostImmutableModel?, result: UpdatePostResult? ->
-            storePostViewModel!!.isSavingPostOnEditorExit = false
+            storePostViewModel.isSavingPostOnEditorExit = false
             // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
             if (listener != null) {
                 listener.onPostUpdatedFromUI(result)
@@ -1856,8 +1845,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (editorFragment == null) {
             return
         }
-        storePostViewModel!!.isSavingPostOnEditorExit = true
-        storePostViewModel!!.showSavingProgressDialog()
+        storePostViewModel.isSavingPostOnEditorExit = true
+        storePostViewModel.showSavingProgressDialog()
         updateAndSavePostAsync(OnPostUpdatedFromUIListener { result: UpdatePostResult? ->
             listener.onPostUpdatedFromUI(
                 result
@@ -2105,7 +2094,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             val account: AccountModel = accountStore.getAccount()
             // prompt user to verify e-mail before publishing
             if (!account.getEmailVerified()) {
-                storePostViewModel!!.hideSavingProgressDialog()
+                storePostViewModel.hideSavingProgressDialog()
                 val message: String =
                     if (TextUtils.isEmpty(account.getEmail())) getString(R.string.editor_confirm_email_prompt_message) else String.format(
                         getString(R.string.editor_confirm_email_prompt_message_with_email),
@@ -2132,7 +2121,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 return@OnPostUpdatedFromUIListener
             }
             if (!postUtilsWrapper.isPublishable((editPostRepository.getPost())!!)) {
-                storePostViewModel!!.hideSavingProgressDialog()
+                storePostViewModel.hideSavingProgressDialog()
                 // TODO we don't want to show "publish" message when the user clicked on eg. save
                 editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
                 runOnUiThread(Runnable {
@@ -2147,7 +2136,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 })
                 return@OnPostUpdatedFromUIListener
             }
-            storePostViewModel!!.showSavingProgressDialog()
+            storePostViewModel.showSavingProgressDialog()
             val isFirstTimePublish: Boolean = isFirstTimePublish(publishPost)
             editPostRepository.updateAsync({ postModel: PostModel ->
                 if (publishPost) {
@@ -2176,7 +2165,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }) { postModel: PostImmutableModel?, result: UpdatePostResult ->
                 if (result === Updated) {
                     val activityFinishState: ActivityFinishState = savePostOnline(isFirstTimePublish)
-                    storePostViewModel!!.finish(activityFinishState)
+                    storePostViewModel.finish(activityFinishState)
                 }
                 null
             }
@@ -2220,7 +2209,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 activityFinishState = ActivityFinishState.CANCELLED
             }
             if (doFinish) {
-                storePostViewModel!!.finish((activityFinishState)!!)
+                storePostViewModel.finish((activityFinishState)!!)
             }
         }))
     }
@@ -2322,7 +2311,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     editorFragment = fragment as EditorFragmentAbstract
                     editorFragment!!.setImageLoader(imageLoader)
                     editorFragment!!.titleOrContentChanged.observe(this@EditPostActivity,
-                        { editable: Editable? -> storePostViewModel!!.savePostWithDelay() })
+                        { editable: Editable? -> storePostViewModel.savePostWithDelay() })
                     if (editorFragment is EditorMediaUploadListener) {
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
 
@@ -3355,7 +3344,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         val promptId: Int = intent.getIntExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, -1)
-        editorBloggingPromptsViewModel!!.start((siteModel)!!, promptId)
+        editorBloggingPromptsViewModel.start((siteModel)!!, promptId)
     }
 
     private fun logTemplateSelection() {
@@ -3727,6 +3716,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         editorFragment!!.appendMediaFiles(mediaFiles)
     }
 
+    override fun syncPostObjectWithUiAndSaveIt(listener: EditPostActivity.OnPostUpdatedFromUIListener?) {
+        TODO("Not yet implemented")
+    }
+
     override fun getImmutablePost(): PostImmutableModel {
         return Objects.requireNonNull(editPostRepository!!.getPost())
     }
@@ -3785,7 +3778,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     override val savingInProgressDialogVisibility: LiveData<DialogVisibility>
         get() {
-            return storePostViewModel!!.savingInProgressDialogVisibility
+            return storePostViewModel.savingInProgressDialogVisibility
         }
     private val dB: SavedInstanceDatabase?
         get() {
