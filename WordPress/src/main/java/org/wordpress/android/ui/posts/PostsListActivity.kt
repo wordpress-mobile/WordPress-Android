@@ -59,7 +59,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.config.ViewPostListPostOnReaderActivityFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.extensions.logException
@@ -127,9 +126,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
-
-    @Inject
-    internal lateinit var viewOwnPostListPostOnReader: ViewPostListPostOnReaderActivityFeatureConfig
 
     private lateinit var site: SiteModel
     private lateinit var binding: PostListActivityBinding
@@ -280,7 +276,6 @@ class PostsListActivity : LocaleAwareActivity(),
                     remotePreviewLogicHelper,
                     previewStateHelper,
                     blazeFeatureUtils,
-                    viewOwnPostListPostOnReader.isEnabled()
                 )
             }
         }

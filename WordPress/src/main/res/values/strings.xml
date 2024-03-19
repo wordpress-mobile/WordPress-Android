@@ -296,6 +296,7 @@
     <string name="button_publish">Publish</string>
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
+    <string name="button_read">Read</string>
     <string name="button_preview">Preview</string>
     <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>

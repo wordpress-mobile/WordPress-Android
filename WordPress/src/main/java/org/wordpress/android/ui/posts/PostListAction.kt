@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import androidx.fragment.app.FragmentActivity
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
@@ -39,6 +38,7 @@ sealed class PostListAction {
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
+    class ReadPost(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
     class ShowComments(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -52,7 +52,6 @@ fun handlePostListAction(
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
     previewStateHelper: PreviewStateHelper,
     blazeFeatureUtils: BlazeFeatureUtils,
-    viewOwnPostOnReader: Boolean = false,
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -87,11 +86,10 @@ fun handlePostListAction(
             ActivityLauncher.viewStatsSinglePostDetails(activity, action.site, action.post)
         }
         is PostListAction.ViewPost -> {
-            if (viewOwnPostOnReader && BuildConfig.IS_JETPACK_APP) {
-                ReaderActivityLauncher.showReaderPostDetail(activity, action.site.siteId, action.post.remotePostId)
-            } else {
-                ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
-            }
+            ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
+        }
+        is PostListAction.ReadPost-> {
+            ReaderActivityLauncher.showReaderPostDetail(activity, action.site.siteId, action.post.remotePostId)
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)

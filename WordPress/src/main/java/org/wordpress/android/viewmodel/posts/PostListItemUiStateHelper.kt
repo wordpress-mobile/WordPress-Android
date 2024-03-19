@@ -32,6 +32,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.HtmlUtils
+import org.wordpress.android.util.config.ViewPostListPostOnReaderActivityFeatureConfig
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.NothingToUpload
@@ -64,6 +65,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_READ
 import javax.inject.Inject
 
 /**
@@ -74,7 +76,8 @@ class PostListItemUiStateHelper @Inject constructor(
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val viewOwnPostListPostOnReader: ViewPostListPostOnReaderActivityFeatureConfig
 ) {
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
@@ -437,6 +440,9 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowViewButton) {
             buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
+            if (viewOwnPostListPostOnReader.isEnabled() && BuildConfig.IS_JETPACK_APP) {
+                buttonTypes.addReadAction(isLocalDraft || isLocallyChanged)
+            }
         }
 
         if (canShowStats) {
@@ -473,6 +479,12 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
         add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
+    }
+
+    private fun MutableList<PostListButtonType>.addReadAction(isPreview: Boolean) {
+        if (!isPreview) {
+            add(BUTTON_READ)
+        }
     }
 
     private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(
