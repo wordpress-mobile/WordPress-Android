@@ -406,7 +406,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var storageUtilsViewModel: StorageUtilsViewModel? = null
     private var editorBloggingPromptsViewModel: EditorBloggingPromptsViewModel? = null
     private var editorJetpackSocialViewModel: EditorJetpackSocialViewModel? = null
-    private var siteModel: SiteModel? = null
+    private lateinit var siteModel: SiteModel
     private var siteSettings: SiteSettingsInterface? = null
     private var isJetpackSsoEnabled: Boolean = false
     private var networkErrorOnLastMediaFetchAttempt: Boolean = false
@@ -415,7 +415,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var hideUpdatingPostAreaRunnable: Runnable? = null
     private var updatingPostStartTime: Long = 0L
 
-    private fun newPostSetup(title: String? = null, content: String?= null) {
+    private fun newPostSetup(title: String? = null, content: String? = null) {
         isNewPost = true
         siteModel?.let { model ->
             if (!model.isVisible) {
@@ -424,7 +424,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
             // Create a new post
             editPostRepository.set {
-                val post: PostModel = postStore.instantiatePostModel(
+                val post = postStore.instantiatePostModel(
                     siteModel, isPage, title, content,
                     PostStatus.DRAFT.toString(), null, null, false
                 )
@@ -439,30 +439,28 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun newPostFromShareAction() {
-        val intent: Intent = intent
         if (isMediaTypeIntent(intent, null)) {
             newPostSetup()
             setPostMediaFromShareAction()
         } else {
-            val title: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT)
-            val text: String? = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val content: String = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text))
+            val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
+            val text = intent.getStringExtra(Intent.EXTRA_TEXT)
+            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text))
             newPostSetup(title, content)
         }
     }
 
     private fun newReblogPostSetup() {
-        val intent: Intent = intent
-        val title: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE)
-        val quote: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE)
-        val citation: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION)
-        val image: String? = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE)
-        val content: String = reblogUtils.reblogContent(image, (quote)!!, title, citation)
+        val title = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE)
+        val quote = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE)
+        val citation = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION)
+        val image = intent.getStringExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE)
+        val content = reblogUtils.reblogContent(image, (quote)!!, title, citation)
         newPostSetup(title, content)
     }
 
     private fun newPageFromLayoutPickerSetup(title: String?, layoutSlug: String?) {
-        val content: String? = siteStore.getBlockLayoutContent((siteModel)!!, (layoutSlug)!!)
+        val content = siteStore.getBlockLayoutContent((siteModel)!!, (layoutSlug)!!)
         newPostSetup(title, content)
     }
 
@@ -497,6 +495,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
+
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleBackPressed()
@@ -518,25 +517,25 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             .get(EditorJetpackSocialViewModel::class.java)
         setContentView(R.layout.new_edit_post_activity)
         createEditShareMessageActivityResultLauncher()
-        if (savedInstanceState == null) {
-            siteModel = intent.getSerializableExtra(WordPress.SITE) as SiteModel?
-        } else {
-            siteModel = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
-        }
-        isLandingEditor = intent.extras!!.getBoolean(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR)
 
-        // TODO: Make sure to use the latest fresh info about the site we've in the DB
-        // set only the editor setting for now.
-        if (siteModel != null) {
-            val refreshedSite: SiteModel? = siteStore.getSiteByLocalId(siteModel!!.id)
+        var extractedSite = if (savedInstanceState == null) {
+            intent.getSerializableExtra(WordPress.SITE) as SiteModel?
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+        }
+
+        isLandingEditor = intent.extras?.getBoolean(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR) ?: false
+
+        // TODO: Make sure to use the latest fresh info about the site we've in the DB set only the editor setting for now
+        extractedSite?.let {
+            val refreshedSite: SiteModel? = siteStore.getSiteByLocalId(it.id)
             if (refreshedSite != null) {
-                siteModel!!.mobileEditor = refreshedSite.mobileEditor
+                it.mobileEditor = refreshedSite.mobileEditor
             }
-            siteSettings = SiteSettingsInterface.getInterface(this, siteModel, this)
+            siteSettings = SiteSettingsInterface.getInterface(this, it, this)
             // initialize settings with locally cached values, fetch remote on first pass
             fetchSiteSettings()
         }
-
         // Check whether to show the visual editor
 
         // TODO: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
@@ -581,7 +580,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 if (intent.hasExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)) {
                     // QuickPress might want to use a different blog than the current blog
                     val localSiteId: Int = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
-                    siteModel = siteStore.getSiteByLocalId(localSiteId)
+                    extractedSite = siteStore.getSiteByLocalId(localSiteId)
                 }
                 isPage = extras!!.getBoolean(EditPostActivityConstants.EXTRA_IS_PAGE)
                 if (isPage && !TextUtils.isEmpty(extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE))) {
@@ -638,9 +637,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     .fromBundle(extras, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
             }
         } else {
-            // todo: annmarie - fix this
             editorMedia.droppedMediaUris =
-                (savedInstanceState.(getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS))!!)
+                (savedInstanceState.getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS))!!
             isNewPost = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
             updatePostLoadingAndDialogState(
                 fromInt(
@@ -657,7 +655,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if (savedInstanceState.containsKey(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID)) {
                 editPostRepository.loadPostByRemotePostId(
                     savedInstanceState.getLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID),
-                    (siteModel)!!
+                    (extractedSite)!!
                 )
                 initializePostObject()
             } else if (savedInstanceState.containsKey(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)) {
@@ -670,7 +668,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
             }
         }
-        if (siteModel == null) {
+
+        extractedSite?.let {
+            siteModel = it
+        }?: run {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
             finish()
             return
@@ -681,7 +682,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             showErrorAndFinish(R.string.post_not_found)
             return
         }
-        editorMedia.start(siteModel!!, this)
+        editorMedia.start(siteModel, this)
         startObserving()
         // todo: annmarie fix this
         if (editorFragment != null.also { hasSetPostContent = (it)!! }) {
@@ -703,7 +704,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         // ok now we are sure to have both a valid Post and showGutenberg flag, let's start the editing session tracker
         createPostEditorAnalyticsSessionTracker(
-            showGutenbergEditor, editPostRepository.getPost(), siteModel!!,
+            showGutenbergEditor, editPostRepository.getPost(), siteModel,
             isNewPost
         )
         logTemplateSelection()
@@ -726,12 +727,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         sectionsPagerAdapter = SectionsPagerAdapter(fragmentManager)
 
         // we need to make sure AT cookie is available when trying to edit post on private AT site
-        if (siteModel!!.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
+        if (siteModel.isPrivateWPComAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
             showIfNecessary(fragmentManager)
             dispatcher.dispatch(
                 SiteActionBuilder.newFetchPrivateAtomicCookieAction(
-                    // todo: annmarie fix this
-                    SiteStore.FetchPrivateAtomicCookiePayload(siteModel!!.siteId)
+                    SiteStore.FetchPrivateAtomicCookiePayload(siteModel.siteId)
                 )
             )
         } else {
@@ -743,13 +743,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
         storageUtilsViewModel!!.start(savedInstanceState == null)
-        editorJetpackSocialViewModel!!.start(siteModel!!, (editPostRepository))
+        editorJetpackSocialViewModel!!.start(siteModel, (editPostRepository))
         customizeToolbar()
         updatingPostArea = findViewById<FrameLayout>(R.id.updating)
 
         // check if post content needs updating
         if (syncPublishingFeatureConfig!!.isEnabled()) {
-            storePostViewModel!!.checkIfUpdatedPostVersionExists((editPostRepository), siteModel!!)
+            storePostViewModel!!.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
         }
     }
 
@@ -779,7 +779,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (hideUpdatingPostAreaRunnable == null) {
             hideUpdatingPostAreaRunnable = Runnable {
                 if (updatingPostArea != null) {
-                    updatingPostArea!!.setVisibility(View.GONE)
+                    updatingPostArea!!.visibility = View.GONE
                 }
             }
         }
@@ -794,7 +794,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // Custom close button
         val closeHeader: View = toolbar!!.findViewById(R.id.edit_post_header)
         closeHeader.setOnClickListener({ v: View? -> handleBackPressed() })
-        if (siteModel != null) {
             // Update site icon if mSite is available, if not it will use the placeholder.
             val siteIconUrl: String = SiteUtils.getSiteIconUrl(
                 siteModel,
@@ -802,13 +801,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             )
             val siteIcon: ImageView = toolbar!!.findViewById(R.id.close_editor_site_icon)
             val blavatarType: ImageType = SiteUtils.getSiteImageType(
-                siteModel!!.isWpForTeamsSite, BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES
+                siteModel.isWpForTeamsSite, BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES
             )
             imageManager.loadImageWithCorners(
                 siteIcon, blavatarType, siteIconUrl,
                 resources.getDimensionPixelSize(R.dimen.edit_post_header_image_corner_radius)
             )
-        }
     }
 
     private fun presentNewPageNoticeIfNeeded() {
@@ -855,7 +853,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     override fun onFetchError(error: Exception) {}
     override fun onSettingsUpdated() {
         // Let's hold the value in local variable as listener is too noisy
-        val isJetpackSsoEnabled: Boolean = siteModel!!.isJetpackConnected && siteSettings!!.isJetpackSsoEnabled
+        val isJetpackSsoEnabled: Boolean = siteModel.isJetpackConnected && siteSettings!!.isJetpackSsoEnabled
         if (this.isJetpackSsoEnabled != isJetpackSsoEnabled) {
             this.isJetpackSsoEnabled = isJetpackSsoEnabled
             if (editorFragment is GutenbergEditorFragment) {
@@ -1364,7 +1362,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             viewHtmlModeMenuItem.setTitle(if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
         }
         if (historyMenuItem != null) {
-            val hasHistory: Boolean = !isNewPost && siteModel!!.isUsingWpComRestApi
+            val hasHistory: Boolean = !isNewPost && siteModel.isUsingWpComRestApi
             historyMenuItem.setVisible(showMenuItems && hasHistory)
         }
         if (settingsMenuItem != null) {
@@ -1742,23 +1740,23 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // We are no longer showing the dialog, but we are leaving all the surrounding logic because
         // this is going in shortly before release, and we're going to remove all this logic in the
         // very near future.
-        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel!!.url, true)
+        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel.url, true)
     }
 
     private fun showGutenbergRolloutV2InformativeDialog() {
         // We are no longer showing the dialog, but we are leaving all the surrounding logic because
         // this is going in shortly before release, and we're going to remove all this logic in the
         // very near future.
-        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel!!.url, true)
+        AppPrefs.setGutenbergInfoPopupDisplayed(siteModel.url, true)
     }
 
     private fun setGutenbergEnabledIfNeeded() {
-        if (AppPrefs.isGutenbergInfoPopupDisplayed(siteModel!!.url)) {
+        if (AppPrefs.isGutenbergInfoPopupDisplayed(siteModel.url)) {
             return
         }
-        val showPopup: Boolean = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(siteModel!!.url)
-        val showRolloutPopupPhase2: Boolean = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(siteModel!!.url)
-        if (TextUtils.isEmpty(siteModel!!.mobileEditor) && !isNewPost) {
+        val showPopup: Boolean = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(siteModel.url)
+        val showRolloutPopupPhase2: Boolean = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(siteModel.url)
+        if (TextUtils.isEmpty(siteModel.mobileEditor) && !isNewPost) {
             SiteUtils.enableBlockEditor(dispatcher, siteModel)
             AnalyticsUtils.trackWithSiteDetails(
                 Stat.EDITOR_GUTENBERG_ENABLED, siteModel,
@@ -1987,7 +1985,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             reducedSizeWidth,
             0,
             !SiteUtils.isPhotonCapable(siteModel),
-            siteModel!!.isWPComAtomic
+            siteModel.isWPComAtomic
         )
         val outputFileExtension: String = MimeTypeMap.getFileExtensionFromUrl(imageUrl)
         val inputData: ArrayList<InputData> = ArrayList(1)
@@ -2020,7 +2018,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         this.revision = revision
         val postId: Long = editPostRepository.remotePostId
         ActivityLauncher.viewHistoryDetailForResult(
-            this, this.revision!!, getRevisionsIds(revisions), postId, siteModel!!.siteId
+            this, this.revision!!, getRevisionsIds(revisions), postId, siteModel.siteId
         )
     }
 
@@ -2206,7 +2204,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                  * user didn't confirm the changes in this code path.
                  */
                 val isWpComOrIsLocalDraft: Boolean =
-                    siteModel!!.isUsingWpComRestApi() || editPostRepository.isLocalDraft
+                    siteModel.isUsingWpComRestApi() || editPostRepository.isLocalDraft
                 if (isWpComOrIsLocalDraft) {
                     activityFinishState = savePostOnline(isFirstTimePublish)
                 } else if (forceSave) {
@@ -2278,20 +2276,20 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                             isXpostsCapable
                         )
                     }
-                    val isWpCom: Boolean = site.isWPCom || siteModel!!.isPrivateWPComAtomic || siteModel!!.isWPComAtomic
+                    val isWpCom: Boolean = site.isWPCom || siteModel.isPrivateWPComAtomic || siteModel.isWPComAtomic
                     val gutenbergPropsBuilder: GutenbergPropsBuilder = gutenbergPropsBuilder
                     val gutenbergWebViewAuthorizationData: GutenbergWebViewAuthorizationData =
                         GutenbergWebViewAuthorizationData(
-                            siteModel!!.url,
+                            siteModel.url,
                             isWpCom,
                             accountStore.account.userId,
                             accountStore.account.userName,
                             accountStore.accessToken,
-                            siteModel!!.selfHostedSiteId,
-                            siteModel!!.username,
-                            siteModel!!.password,
-                            siteModel!!.isUsingWpComRestApi,
-                            siteModel!!.webEditor,
+                            siteModel.selfHostedSiteId,
+                            siteModel.username,
+                            siteModel.password,
+                            siteModel.isUsingWpComRestApi,
+                            siteModel.webEditor,
                             getUserAgent(),
                             isJetpackSsoEnabled
                         )
@@ -2365,14 +2363,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             // this.mIsXPostsCapable may return true for non-WP.com sites, but the app only supports xPosts for P2-based
             // WP.com sites so, gate with `isUsingWpComRestApi()`
             // If this.mIsXPostsCapable has not been set, default to allowing xPosts.
-            val enableXPosts: Boolean = siteModel!!.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable)
-            val editorTheme: EditorTheme? = editorThemeStore.getEditorThemeForSite((siteModel)!!)
-            val themeBundle: Bundle? = if ((editorTheme != null)) editorTheme.themeSupport.toBundle((siteModel)!!) else null
-            val isUnsupportedBlockEditorEnabled: Boolean = siteModel!!.isWPCom || isJetpackSsoEnabled
-            val unsupportedBlockEditorSwitch: Boolean = siteModel!!.isJetpackConnected && !isJetpackSsoEnabled
-            val isFreeWPCom: Boolean = siteModel!!.isWPCom && SiteUtils.onFreePlan((siteModel)!!)
-            val isWPComSite: Boolean = siteModel!!.isWPCom || siteModel!!.isWPComAtomic
-            val shouldUseFastImage: Boolean = !siteModel!!.isPrivate && !siteModel!!.isPrivateWPComAtomic
+            val enableXPosts: Boolean = siteModel.isUsingWpComRestApi && (isXPostsCapable == null || isXPostsCapable)
+            val editorTheme: EditorTheme? = editorThemeStore.getEditorThemeForSite((siteModel))
+            val themeBundle: Bundle? = if ((editorTheme != null)) editorTheme.themeSupport.toBundle((siteModel)) else null
+            val isUnsupportedBlockEditorEnabled: Boolean = siteModel.isWPCom || isJetpackSsoEnabled
+            val unsupportedBlockEditorSwitch: Boolean = siteModel.isJetpackConnected && !isJetpackSsoEnabled
+            val isFreeWPCom: Boolean = siteModel.isWPCom && SiteUtils.onFreePlan((siteModel))
+            val isWPComSite: Boolean = siteModel.isWPCom || siteModel.isWPComAtomic
+            val shouldUseFastImage: Boolean = !siteModel.isPrivate && !siteModel.isPrivateWPComAtomic
             val hostAppNamespace: String = if (buildConfigWrapper.isJetpackApp) "Jetpack" else "WordPress"
 
             // Disable Jetpack-powered editor features in WordPress app based on Jetpack Features Removal Phase helper
@@ -2415,7 +2413,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_INSTAGRAM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_LOOM_EMBED_JETPACK_VERSION),
                 SiteUtils.supportsEmbedVariationFeature(siteModel, SiteUtils.WP_SMARTFRAME_EMBED_JETPACK_VERSION),
-                siteModel!!.isUsingWpComRestApi,
+                siteModel.isUsingWpComRestApi,
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 true,
@@ -2504,7 +2502,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     private fun fillContentEditorFields() {
         // Needed blog settings needed by the editor
-        editorFragment!!.setFeaturedImageSupported(siteModel!!.isFeaturedImageSupported)
+        editorFragment!!.setFeaturedImageSupported(siteModel.isFeaturedImageSupported)
 
         // Special actions - these only make sense for empty posts that are going to be populated now
         if (TextUtils.isEmpty(editPostRepository.content)) {
@@ -3131,9 +3129,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onResult: Consumer<String>,
         onError: Consumer<Bundle>
     ) {
-        if (siteModel != null) {
-            reactNativeRequestHandler.performGetRequest(path, siteModel!!, enableCaching, onResult, onError)
-        }
+       reactNativeRequestHandler.performGetRequest(path, siteModel, enableCaching, onResult, onError)
     }
 
     override fun onPerformPost(
@@ -3142,9 +3138,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onResult: Consumer<String>,
         onError: Consumer<Bundle>
     ) {
-        if (siteModel != null) {
-            reactNativeRequestHandler.performPostRequest(path, body, siteModel!!, onResult, onError)
-        }
+       reactNativeRequestHandler.performPostRequest(path, body, siteModel, onResult, onError)
     }
 
     override fun onCaptureVideoClicked() {
@@ -3260,11 +3254,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onVideoPressInfoRequested(videoId: String) {
-        val videoUrl: String? = mediaStore.getUrlForSiteVideoWithVideoPressGuid((siteModel)!!, videoId)
+        val videoUrl: String? = mediaStore.getUrlForSiteVideoWithVideoPressGuid((siteModel), videoId)
         if (videoUrl == null) {
             AppLog.w(
                 AppLog.T.EDITOR, ("The editor wants more info about the following VideoPress code: " + videoId
-                        + " but it's not available in the current site " + siteModel!!.url
+                        + " but it's not available in the current site " + siteModel.url
                         + " Maybe it's from another site?")
             )
             return
@@ -3290,12 +3284,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     override fun onAuthHeaderRequested(url: String): Map<String, String> {
         val authHeaders: MutableMap<String, String> = HashMap()
         val token: String? = accountStore.accessToken
-        if ((siteModel!!.isPrivate && WPUrlUtils.safeToAddWordPressComAuthToken(url)
+        if ((siteModel.isPrivate && WPUrlUtils.safeToAddWordPressComAuthToken(url)
                     && !TextUtils.isEmpty(token))
         ) {
             authHeaders[AuthenticationUtils.AUTHORIZATION_HEADER_NAME] = "Bearer $token"
         }
-        if (siteModel!!.isPrivateWPComAtomic && privateAtomicCookie.exists() && WPUrlUtils
+        if (siteModel.isPrivateWPComAtomic && privateAtomicCookie.exists() && WPUrlUtils
                 .safeToAddPrivateAtCookie(url, privateAtomicCookie.getDomain())
         ) {
             authHeaders[AuthenticationUtils.COOKIE_HEADER_NAME] = privateAtomicCookie.getCookieContent()
@@ -3684,7 +3678,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return
         }
         val payload: FetchMediaListPayload =
-            FetchMediaListPayload((siteModel)!!, MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
+            FetchMediaListPayload((siteModel), MediaStore.DEFAULT_NUM_MEDIA_PER_FETCH, false)
         dispatcher.dispatch(MediaActionBuilder.newFetchMediaListAction(payload))
     }
 
@@ -3692,7 +3686,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorThemeChanged(event: OnEditorThemeChanged) {
         if (!(editorFragment is EditorThemeUpdateListener)) return
-        if (siteModel!!.id != event.siteId) return
+        if (siteModel.id != event.siteId) return
         val editorTheme: EditorTheme? = event.editorTheme
         if (editorTheme == null) return
         val editorThemeSupport: EditorThemeSupport = editorTheme.themeSupport
@@ -3708,7 +3702,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun getSite(): SiteModel {
-        return (siteModel)!!
+        return siteModel
     }
 
     override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
