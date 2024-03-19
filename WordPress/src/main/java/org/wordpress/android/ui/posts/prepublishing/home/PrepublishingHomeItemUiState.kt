@@ -128,6 +128,8 @@ sealed class PrepublishingHomeItemUiState(
 
         sealed class Action : ActionType {
             object NavigateToSharingSettings : Action()
+
+            object Close : Action()
         }
     }
 }

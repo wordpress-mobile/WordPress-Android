@@ -1,12 +1,13 @@
-package org.wordpress.android.ui.posts.prepublishing.home
+package org.wordpress.android.ui.posts.prepublishing.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.modules.BG_THREAD
@@ -15,18 +16,23 @@ import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
 import org.wordpress.android.ui.posts.GetCategoriesUseCase
 import org.wordpress.android.ui.posts.GetPostTagsUseCase
 import org.wordpress.android.ui.posts.PostSettingsUtils
+import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.ActionType.PrepublishingScreenNavigation
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUiState.SocialUiState
+import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
-import org.wordpress.android.ui.posts.prepublishing.publishing.PublishingEvent
+import org.wordpress.android.ui.posts.prepublishing.home.viewmodel.slice.AsyncPublishingUiModifier
+import org.wordpress.android.ui.posts.prepublishing.home.viewmodel.slice.SyncPublishingUiModifier
+import org.wordpress.android.ui.posts.prepublishing.home.viewmodel.slice.UiModifier
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -39,7 +45,9 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig,
+    private val dispatcher: Dispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
@@ -51,19 +59,27 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
+    private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
+
+    private val mPublishingUiModifier: UiModifier<List<PrepublishingHomeItemUiState>, Event<ActionType.Action>> =
+        if (syncPublishingFeatureConfig.isEnabled()) {
+            SyncPublishingUiModifier(dispatcher)
+        } else {
+            AsyncPublishingUiModifier()
+        }
+    val publishingEvent = mPublishingUiModifier.event
+
     // todo: annmarie @ajesh - I think we need to break the button state out of the UI state, so we can manage this more
     // easily - what happens if the start up logic finishes after the emitted value is received? I don't want to
     // screw up access to the state. This is all solvable, just need to think about it. I guess we can set a init
     // value ONLY if the state hasn't been emitted yet? Wdyt?  What is the bummer, is that the eventBus events
     // can constantly emit if we are in the image uploading state. Of course, we also want to lock the publish
     // button or the other buttons - ooh, now we have other buttons to think about to
-
-    private var _socialUiState: MutableLiveData<SocialUiState> = MutableLiveData(SocialUiState.Hidden)
-
+    private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = merge(
         _uiState,
-        _socialUiState
+        _socialUiState,
+       // publishingViewModelSlice.uiState
     ) { list, socialUiState ->
         list?.map { item ->
             if (item is SocialUiState) {
@@ -78,6 +94,8 @@ class PrepublishingHomeViewModel @Inject constructor(
         this.editPostRepository = editPostRepository
         if (isStarted) return
         isStarted = true
+
+        mPublishingUiModifier.initialize(_uiState, viewModelScope)
 
         // todo: annmarie @ajesh - starting and the button state? And also the sheet state - we need to make sure
         // we can allow back press and close in certain instances too.
@@ -213,6 +231,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         updateStoryTitleJob?.cancel()
+        mPublishingUiModifier.onCleared()
     }
 
     private fun onActionClicked(actionType: ActionType) {
@@ -231,33 +250,5 @@ class PrepublishingHomeViewModel @Inject constructor(
         } ?: SocialUiState.Hidden
 
         _socialUiState.postValue(newState)
-    }
-
-    fun updatePublishingState(publishingEvent: PublishingEvent) {
-        Log.i(javaClass.simpleName, "***=> updatePublishingState: $publishingEvent")
-         val newButtonState = when (publishingEvent) {
-            is PublishingEvent.MediaUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
-            is PublishingEvent.PostUploadError ->  PrepublishingHomeItemUiState.ButtonUiState.ErrorButtonUiState(null)
-            is PublishingEvent.PostUploadInProgress -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
-            is PublishingEvent.PostUploadStarted -> PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
-            is PublishingEvent.PostUploadSuccess -> PrepublishingHomeItemUiState.ButtonUiState.DoneButtonUiState(null)
-            is PublishingEvent.ReadyToUpload -> {
-                PrepublishingHomeItemUiState.ButtonUiState.InProgressButtonUiState(null)
-            }
-        }
-
-        val updatedUiState = uiState.value?.map { item ->
-            if (item is PrepublishingHomeItemUiState.ButtonUiState) {
-                // update button state
-                newButtonState
-            } else {
-                item
-            }
-        }
-
-        // Post the updated state
-        updatedUiState?.let { updatedValue ->
-            _uiState.postValue(updatedValue)
-        }
     }
 }

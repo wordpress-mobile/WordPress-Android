@@ -27,11 +27,10 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class PublishingViewModel @Inject constructor(
+class SyncPublishingViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
-
     private val _uiState = MutableLiveData<PublishingEvent>()
     val uiState: LiveData<PublishingEvent> = _uiState
 
@@ -133,7 +132,6 @@ class PublishingViewModel @Inject constructor(
         Log.e("PublishingViewModel", "ProgressEvent: $event")
         Log.e("PublishingViewModel", "ProgressEvent: ${event.progress}")
         uploadStatusChanged(event.media.localPostId)
-
     }
 
     @Suppress("unused", "SpreadOperator")

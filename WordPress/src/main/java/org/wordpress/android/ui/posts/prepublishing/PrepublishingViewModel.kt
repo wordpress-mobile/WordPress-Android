@@ -21,13 +21,17 @@ import org.wordpress.android.ui.posts.prepublishing.home.PrepublishingHomeItemUi
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.io.Serializable
 import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
 
-class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
+class PrepublishingViewModel @Inject constructor(
+    private val dispatcher: Dispatcher,
+    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
 
@@ -143,12 +147,17 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     fun onSubmitButtonClicked(publishPost: PublishPost) {
+        // todo this should be called if is sync publishing FF is false
+        if (!syncPublishingFeatureConfig.isEnabled()) {
+            onCloseClicked()
+        }
         _triggerOnSubmitButtonClickedListener.postValue(Event(publishPost))
     }
 
     private fun handleAction(action: ActionType.Action) {
         when (action) {
             ActionType.Action.NavigateToSharingSettings -> _navigateToSharingSettings.postValue(Event(site))
+            ActionType.Action.Close -> onCloseClicked()
         }
     }
 

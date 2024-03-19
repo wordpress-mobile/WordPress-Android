@@ -34,6 +34,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -51,7 +52,8 @@ class StorePostViewModel
     private val savePostToDbUseCase: SavePostToDbUseCase,
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
-    private val postFreshnessChecker: IPostFreshnessChecker
+    private val postFreshnessChecker: IPostFreshnessChecker,
+    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
 ) : ScopedViewModel(uiCoroutineDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
@@ -90,6 +92,10 @@ class StorePostViewModel
         editPostRepository: EditPostRepository,
         site: SiteModel,
     ): ActivityFinishState {
+        if (!syncPublishingFeatureConfig.isEnabled()) {
+            savePostToDbUseCase.savePostToDb(editPostRepository, site)
+        }
+
         Log.e("StorePostViewModel", "savePostOnline: is called $isFirstTimePublish")
         // todo: @annmarie, ajesh
         // in my analysis this is only called when the user pressess update/publish post and not when the user
@@ -108,7 +114,11 @@ class StorePostViewModel
             savePostToDbUseCase.savePostToDb(editPostRepository, site)
             SAVED_ONLINE
         } else  {
-            ActivityFinishState.NETWORK_ERROR
+            if (syncPublishingFeatureConfig.isEnabled()) {
+                ActivityFinishState.NETWORK_ERROR
+            } else {
+                ActivityFinishState.SAVED_LOCALLY
+            }
         }
     }
 

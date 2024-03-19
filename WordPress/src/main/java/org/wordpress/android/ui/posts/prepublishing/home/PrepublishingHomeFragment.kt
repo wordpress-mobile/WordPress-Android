@@ -4,15 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostPrepublishingHomeFragmentBinding
@@ -20,9 +14,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel
+import org.wordpress.android.ui.posts.prepublishing.home.viewmodel.PrepublishingHomeViewModel
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingActionClickedListener
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingSocialViewModelProvider
-import org.wordpress.android.ui.posts.prepublishing.publishing.PublishingViewModel
 import org.wordpress.android.ui.stats.refresh.utils.WrappingLinearLayoutManager
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -39,9 +33,9 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private lateinit var viewModel: PrepublishingHomeViewModel
     private lateinit var jetpackSocialViewModel: EditorJetpackSocialViewModel
-    private lateinit var publishingViewModel: PublishingViewModel
 
     private var actionClickedListener: PrepublishingActionClickedListener? = null
 
@@ -65,7 +59,6 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         with(PostPrepublishingHomeFragmentBinding.bind(view)) {
             setupRecyclerView()
             initViewModel()
-            initPublishingViewModel()
             setupJetpackSocialViewModel()
         }
     }
@@ -111,24 +104,16 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             actionClickedListener?.onSubmitButtonClicked(publishPost)
         }
 
-        viewModel.start(getEditPostRepository(), getSite())
-    }
-
-    private fun initPublishingViewModel() {
-        publishingViewModel =
-            ViewModelProvider(requireActivity(), viewModelFactory)[PublishingViewModel::class.java]
-
-//        publishingViewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-//            uiState?.let { viewModel.updatePublishingState(it) }
-//        }
-
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                publishingViewModel.uiStateFlow.onEach { uiState ->
-                    uiState.let { viewModel.updatePublishingState(it) }
-                }.collect()
+        viewModel.publishingEvent.observeEvent(viewLifecycleOwner) { publishEvent ->
+            when (publishEvent) {
+                PrepublishingHomeItemUiState.ActionType.Action.Close -> {
+                    actionClickedListener?.onActionClicked(publishEvent)
+                }
+                else -> {}
             }
         }
+
+        viewModel.start(getEditPostRepository(), getSite())
     }
 
     private fun setupJetpackSocialViewModel() {
