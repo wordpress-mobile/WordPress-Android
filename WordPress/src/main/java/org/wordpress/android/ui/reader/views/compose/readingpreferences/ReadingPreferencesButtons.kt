@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -21,6 +23,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -111,19 +115,26 @@ fun ReadingPreferencesThemeButton(
         isSelected = isSelected,
         onClick = onClick,
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .size(themeButtonPreviewSize)
-                .background(
-                    color = Color(themeValues.intBackgroundColor),
-                    shape = CircleShape,
-                )
+                .clip(CircleShape)
                 .border(
                     width = themeButtonPreviewBorderWidth,
                     shape = CircleShape,
                     color = MaterialTheme.colors.onSurface.copy(alpha = BORDER_ALPHA_10),
-                ),
-        )
+                )
+                .rotate(-45f),
+        ) {
+            listOf(themeValues.intBaseTextColor, themeValues.intBackgroundColor).forEach { color ->
+                Box(
+                    modifier = Modifier
+                        .height(themeButtonPreviewSize / 2)
+                        .fillMaxWidth()
+                        .background(color = Color(color)),
+                )
+            }
+        }
     }
 }
 
