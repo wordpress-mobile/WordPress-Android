@@ -7,12 +7,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.wordpress.android.editor.Utils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
 
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES;
+import static org.wordpress.android.util.AppLog.T.MEDIA;
 
 /**
  * Abstract class to be extended for each enumerated {@link MediaBlockType}.
@@ -127,6 +129,14 @@ public abstract class BlockProcessor {
 
     String processBlock(String block) {
         return processBlock(block, false);
+    }
+
+     final void addIntPropertySafely(JsonObject jsonAttributes, String propertyName, String value) {
+        try {
+            jsonAttributes.addProperty(propertyName, Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            AppLog.e(MEDIA, e.getMessage());
+        }
     }
 
     /**

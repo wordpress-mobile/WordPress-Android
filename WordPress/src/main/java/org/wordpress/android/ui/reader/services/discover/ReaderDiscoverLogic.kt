@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.ReaderDiscoverNewEndpointFeatureConfig
 import javax.inject.Inject
 
@@ -59,6 +60,7 @@ class ReaderDiscoverLogic @Inject constructor(
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val readerDiscoverNewEndpointFeatureConfig: ReaderDiscoverNewEndpointFeatureConfig,
+    private val localeManagerWrapper: LocaleManagerWrapper,
 ) {
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -118,12 +120,13 @@ class ReaderDiscoverLogic @Inject constructor(
                 AppLog.e(READER, volleyError)
                 resultListener.onUpdateResult(FAILED)
             }
+            params["_locale"] = localeManagerWrapper.getLanguage()
             val endpoint = if (readerDiscoverNewEndpointFeatureConfig.isEnabled()) {
                 "read/streams/discover"
             } else {
                 "read/tags/cards"
             }
-            WordPress.getRestClientUtilsV2()[endpoint, params, null, listener, errorListener]
+            WordPress.getRestClientUtilsV2().get(endpoint, params, null, listener, errorListener)
         }
     }
 
@@ -150,7 +153,9 @@ class ReaderDiscoverLogic @Inject constructor(
             insertCardsJsonIntoDb(simplifiedCardsJson)
 
             val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-            appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            if (nextPageHandle.isNotEmpty()) {
+                appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+            }
 
             if (cards.isEmpty()) {
                 readerTagTableWrapper.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
@@ -238,7 +243,11 @@ class ReaderDiscoverLogic @Inject constructor(
         // If we've received a recommended tags or blogs card as the first element,
         // it should be displayed as the third card.
         if (firstRecommendationCard != null) {
-            simplifiedJsonList.add(2, firstRecommendationCard)
+            if (simplifiedJsonList.size >=2) {
+                simplifiedJsonList.add(2, firstRecommendationCard)
+            } else {
+                simplifiedJsonList.add(firstRecommendationCard)
+            }
         }
 
         return JSONArray(simplifiedJsonList)

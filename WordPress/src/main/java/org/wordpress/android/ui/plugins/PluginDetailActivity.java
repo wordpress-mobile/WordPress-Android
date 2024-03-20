@@ -963,8 +963,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginConfigured(OnSitePluginConfigured event) {
+    public void onSitePluginConfigured(@NonNull OnSitePluginConfigured event) {
         if (isFinishing()) {
+            return;
+        }
+
+        if (event.site == null || event.pluginName == null) {
+            ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed,
+                    event.isError() ? event.error.message : getString(R.string.unknown)));
             return;
         }
 
@@ -1061,8 +1067,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginUpdated(OnSitePluginUpdated event) {
+    public void onSitePluginUpdated(@NonNull OnSitePluginUpdated event) {
         if (isFinishing()) {
+            return;
+        }
+
+        if (event.site == null || event.pluginName == null) {
+            ToastUtils.showToast(this, getString(R.string.plugin_updated_failed,
+                    event.isError() ? event.error.message : getString(R.string.unknown)));
             return;
         }
 
@@ -1129,8 +1141,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginDeleted(OnSitePluginDeleted event) {
+    public void onSitePluginDeleted(@NonNull OnSitePluginDeleted event) {
         if (isFinishing()) {
+            return;
+        }
+
+        if (event.site == null || event.pluginName == null) {
+            ToastUtils.showToast(this, getString(R.string.plugin_remove_failed,
+                    event.isError() ? event.error.message : getString(R.string.unknown)));
             return;
         }
 
@@ -1165,8 +1183,8 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
     // This check should only handle events for already installed plugins - onSitePluginConfigured,
     // onSitePluginUpdated, onSitePluginDeleted
-    private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
-        return mSite.getId() == eventSite.getId() // correct site
+    private boolean shouldHandleFluxCSitePluginEvent(@NonNull SiteModel eventSite, @NonNull String eventPluginName) {
+        return mSite != null && mSite.getId() == eventSite.getId() // correct site
                && mPlugin.isInstalled() // needs plugin to be already installed
                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
