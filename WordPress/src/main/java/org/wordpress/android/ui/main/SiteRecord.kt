@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main
 
-import android.text.TextUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.image.BlavatarShape
@@ -32,7 +31,7 @@ class SiteRecord(siteModel: SiteModel) {
     }
 
     val blogNameOrHomeURL: String
-        get() = if (TextUtils.isEmpty(blogName)) {
+        get() = blogName.ifEmpty {
             homeURL
-        } else blogName
+        }
 }

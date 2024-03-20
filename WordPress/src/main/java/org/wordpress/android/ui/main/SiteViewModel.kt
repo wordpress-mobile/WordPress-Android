@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -22,16 +21,16 @@ class SiteViewModel @Inject constructor(
     private val _sites = MutableLiveData<List<SiteRecord>>()
     val sites: LiveData<List<SiteRecord>> = _sites
 
-    fun loadSites() = launch {
-        _sites.postValue(getSites())
+    fun loadSites(sitePickerMode: SitePickerMode) = launch {
+        _sites.postValue(getSites(sitePickerMode))
     }
 
-    fun searchSites(keyword: String) = launch {
+    fun searchSites(keyword: String, sitePickerMode: SitePickerMode) = launch {
         if (keyword.trim().isEmpty()) {
-            _sites.postValue(getSites())
+            _sites.postValue(getSites(sitePickerMode))
             return@launch
         }
-        getSites().filter { record ->
+        getSites(sitePickerMode).filter { record ->
             val siteName: String = record.blogName.lowercase(Locale.getDefault())
             val hostName: String = record.homeURL.lowercase(Locale.ROOT)
 
@@ -40,11 +39,17 @@ class SiteViewModel @Inject constructor(
         }.let { _sites.postValue(it) }
     }
 
-    private fun getSites(): List<SiteRecord> {
-        val sites = (siteStore.visibleSitesAccessedViaWPCom + siteStore.sitesAccessedViaXMLRPC)
-            .map { SiteRecord(it) }
-
-        return sortSites(sites)
+    /**
+     * Returns a list of sites to display in the site picker.
+     * @param mode if [SitePickerMode.WPCOM_SITES_ONLY], only WPCOM sites are returned.
+     */
+    private fun getSites(mode: SitePickerMode): List<SiteRecord> {
+        val result = if (mode == SitePickerMode.WPCOM_SITES_ONLY) {
+            siteStore.sitesAccessedViaWPComRest
+        } else {
+            siteStore.sites
+        }
+        return result.map { SiteRecord(it) }.let { sortSites(it) }
     }
 
     private fun sortSites(records: List<SiteRecord>): List<SiteRecord> {

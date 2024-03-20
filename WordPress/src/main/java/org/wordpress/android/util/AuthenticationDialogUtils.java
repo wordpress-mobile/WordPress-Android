@@ -34,7 +34,7 @@ public class AuthenticationDialogUtils {
         if (site.isWPCom()) {
             if (siteStore.hasSiteAccessedViaXMLRPC()) {
                 // show site picker since there are site besides WPCOM ones
-                ActivityLauncher.showSitePickerForResult(activity);
+                ActivityLauncher.showSitePickerForResult(activity, site);
             } else {
                 // only WPCOM sites are available so, need to ask the user to log in again
                 Intent intent = new Intent(activity, LoginActivity.class);

@@ -86,7 +86,7 @@ import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
-import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -108,7 +108,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -1376,7 +1375,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(
-                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                         SelectedSiteRepository.UNAVAILABLE
                     ) ?: SelectedSiteRepository.UNAVAILABLE
                     viewModel.onReblogSiteSelected(siteLocalId)

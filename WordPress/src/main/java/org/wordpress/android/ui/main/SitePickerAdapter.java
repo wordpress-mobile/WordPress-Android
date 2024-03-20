@@ -68,10 +68,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     public enum SitePickerMode {
         DEFAULT_MODE,
-        REBLOG_SELECT_MODE,
-        REBLOG_CONTINUE_MODE,
-        BLOGGING_PROMPTS_MODE,
-        SIMPLE_MODE;
+        REBLOG_SELECT_MODE, // used when the site is not selected yet (first step of reblogging)
+        REBLOG_CONTINUE_MODE, // used when the site is selected (second step of reblogging)
+        BLOGGING_PROMPTS_MODE, // used when choose a site for prompts
+        SIMPLE_MODE; // used when select a non-self-hosted site for purchasing a domain
 
         public boolean isReblogMode() {
             return this == REBLOG_SELECT_MODE || this == REBLOG_CONTINUE_MODE;

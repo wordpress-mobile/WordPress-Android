@@ -43,6 +43,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="64dp"
             android:scrollbars="vertical" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>

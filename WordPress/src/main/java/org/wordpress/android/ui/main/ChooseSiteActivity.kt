@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -27,16 +26,19 @@ import org.wordpress.android.databinding.ChooseSiteActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.ARG_SITE_CREATION_SOURCE
-import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.SOURCE
+import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.KEY_ARG_SITE_CREATION_SOURCE
+import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.KEY_SOURCE
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.Companion.fromString
+import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DeviceUtils
@@ -44,12 +46,15 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseSiteActivity : LocaleAwareActivity() {
     private val viewModel: SiteViewModel by viewModels()
     private val adapter = ChooseSiteAdapter()
+    private val mode by lazy { SitePickerMode.valueOf(intent.getStringExtra(KEY_SITE_PICKER_MODE)!!) }
+    private val localId: Int? by lazy { intent.getIntExtra(KEY_SITE_LOCAL_ID, -1).takeIf { it != -1 } }
     private lateinit var binding: ChooseSiteActivityBinding
     private lateinit var menuSearch: MenuItem
     private lateinit var menuEditPin: MenuItem
@@ -57,6 +62,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var siteStore: SiteStore
 
     @Inject
     lateinit var dispatcher: Dispatcher
@@ -67,9 +75,13 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarMain)
-        binding.toolbarMain.setNavigationOnClickListener { finish() }
+        binding.toolbarMain.setNavigationOnClickListener {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED)
+            finish()
+        }
         binding.buttonAddSite.setOnClickListener {
-            addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_ADD_SITE_TAPPED)
+            AddSiteHandler.addSite(this, accountStore.hasAccessToken(), SiteCreationSource.MY_SITE)
         }
         binding.progress.isVisible = true
         setupRecycleView()
@@ -86,7 +98,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             dispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()))
         }
 
-        viewModel.loadSites()
+        adapter.selectedSiteId = localId
+
+        viewModel.loadSites(mode)
     }
 
     override fun onStart() {
@@ -106,7 +120,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             refreshHelper.isRefreshing = false
         }
         if (event.isError.not()) {
-            viewModel.loadSites()
+            viewModel.loadSites(mode)
         }
     }
 
@@ -114,7 +128,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteRemoved(event: OnSiteRemoved) {
         if (event.isError.not()) {
-            viewModel.loadSites()
+            viewModel.loadSites(mode)
         } else {
             // shouldn't happen
             AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error)
@@ -134,7 +148,18 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         super.onPrepareOptionsMenu(menu)
         val searchView = menuSearch.actionView as SearchView
         setupSearchView(searchView)
+        setupVisibility()
         return true
+    }
+
+    private fun setupVisibility() {
+        if (mode == SitePickerMode.DEFAULT) {
+            menuEditPin.isVisible = true
+            binding.layoutAddSite.isVisible = true
+        } else {
+            menuEditPin.isVisible = false
+            binding.layoutAddSite.isVisible = false
+        }
     }
 
     private fun setupSearchView(searchView: SearchView) {
@@ -150,7 +175,8 @@ class ChooseSiteActivity : LocaleAwareActivity() {
                     }
 
                     override fun onQueryTextChange(newText: String): Boolean {
-                        viewModel.searchSites(newText)
+                        AnalyticsTracker.track(Stat.SITE_SWITCHER_SEARCH_PERFORMED)
+                        viewModel.searchSites(newText, mode)
                         return true
                     }
                 })
@@ -159,7 +185,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                 searchView.setOnQueryTextListener(null)
-                viewModel.loadSites()
+                viewModel.loadSites(mode)
                 menuEditPin.isVisible = true
                 invalidateOptionsMenu()
                 return true
@@ -182,29 +208,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             R.id.menu_search -> return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun addSite(activity: FragmentActivity, hasAccessToken: Boolean, source: SiteCreationSource) {
-        if (hasAccessToken) {
-            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
-                ActivityLauncher.newBlogForResult(activity, source)
-            } else {
-                // user is signed into wordpress app, so use the dialog to enable choosing whether to
-                // create a new wp.com blog or add a self-hosted one
-                showAddSiteDialog(activity, source)
-            }
-        } else {
-            // user doesn't have an access token, so simply enable adding self-hosted
-            ActivityLauncher.addSelfHostedSiteForResult(activity)
-        }
-    }
-
-    private fun showAddSiteDialog(activity: FragmentActivity, source: SiteCreationSource) {
-        val dialog: DialogFragment = AddSiteDialog()
-        val args = Bundle()
-        args.putString(ARG_SITE_CREATION_SOURCE, source.label)
-        dialog.arguments = args
-        dialog.show(activity.supportFragmentManager, AddSiteDialog.ADD_SITE_DIALOG_TAG)
     }
 
     /**
@@ -230,7 +233,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private fun setupRecycleView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter.apply {
-            onReload = { viewModel.loadSites() }
+            onReload = { viewModel.loadSites(this@ChooseSiteActivity.mode) }
             onSiteClicked = { selectSite(it) }
         }
         binding.recyclerView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
@@ -243,23 +246,55 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         finish()
     }
 
-    companion object {
-        const val ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE"
-        const val SOURCE = "source"
-        const val KEY_SITE_LOCAL_ID = "local_id"
-
-        @JvmStatic
-        fun startForResult(activity: Activity) {
-            Intent(activity, ChooseSiteActivity::class.java)
-                .let { activity.startActivityForResult(it, RequestCodes.SITE_PICKER) }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.ADD_ACCOUNT, RequestCodes.CREATE_SITE -> if (resultCode == RESULT_OK) {
+                viewModel.loadSites(mode)
+                if (data?.getBooleanExtra(KEY_SITE_CREATED_BUT_NOT_FETCHED, false) == true) {
+                    showSiteCreatedButNotFetchedSnackbar()
+                } else {
+                    val intent = data ?: Intent()
+                    intent.putExtra(WPMainActivity.ARG_CREATE_SITE, RequestCodes.CREATE_SITE)
+                    setResult(resultCode, intent)
+                    finish()
+                }
+            }
         }
+
+        // Enable the block editor on sites created on mobile
+        if (requestCode == RequestCodes.CREATE_SITE) {
+            if (data != null) {
+                val newSiteLocalID = data.getIntExtra(
+                    KEY_SITE_LOCAL_ID,
+                    SelectedSiteRepository.UNAVAILABLE
+                )
+                SiteUtils.enableBlockEditorOnSiteCreation(dispatcher, siteStore, newSiteLocalID)
+            }
+        }
+    }
+
+    private fun showSiteCreatedButNotFetchedSnackbar() {
+        val duration = AccessibilityUtils
+            .getSnackbarDuration(this, resources.getInteger(R.integer.site_creation_snackbar_duration))
+        val message = getString(R.string.site_created_but_not_fetched_snackbar_message)
+        WPDialogSnackbar.make(binding.coordinatorLayout, message, duration).show()
+    }
+
+    companion object {
+        const val KEY_ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE"
+        const val KEY_SOURCE = "source"
+        const val KEY_SITE_LOCAL_ID = "local_id"
+        const val KEY_SITE_PICKER_MODE = "key_site_picker_mode"
+        const val KEY_SITE_TITLE_TASK_COMPLETED = "key_site_title_task_completed"
+        const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
     }
 }
 
 
 class AddSiteDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val source = fromString(requireArguments().getString(ARG_SITE_CREATION_SOURCE))
+        val source = fromString(requireArguments().getString(KEY_ARG_SITE_CREATION_SOURCE))
         val items = arrayOf<CharSequence>(
             getString(R.string.site_picker_create_wpcom),
             getString(R.string.site_picker_add_self_hosted)
@@ -277,7 +312,7 @@ class AddSiteDialog : DialogFragment() {
         }
         AnalyticsTracker.track(
             Stat.ADD_SITE_ALERT_DISPLAYED,
-            mapOf(SOURCE to source.label)
+            mapOf(KEY_SOURCE to source.label)
         )
         return builder.create()
     }
@@ -285,4 +320,47 @@ class AddSiteDialog : DialogFragment() {
     companion object {
         const val ADD_SITE_DIALOG_TAG = "add_site_dialog"
     }
+}
+
+object AddSiteHandler {
+    fun addSite(activity: FragmentActivity, hasAccessToken: Boolean, source: SiteCreationSource) {
+        if (hasAccessToken) {
+            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
+                ActivityLauncher.newBlogForResult(activity, source)
+            } else {
+                // user is signed into wordpress app, so use the dialog to enable choosing whether to
+                // create a new wp.com blog or add a self-hosted one
+                showAddSiteDialog(activity, source)
+            }
+        } else {
+            // user doesn't have an access token, so simply enable adding self-hosted
+            ActivityLauncher.addSelfHostedSiteForResult(activity)
+        }
+    }
+
+    private fun showAddSiteDialog(activity: FragmentActivity, source: SiteCreationSource) {
+        val dialog: DialogFragment = AddSiteDialog()
+        val args = Bundle()
+        args.putString(KEY_ARG_SITE_CREATION_SOURCE, source.label)
+        dialog.arguments = args
+        dialog.show(activity.supportFragmentManager, AddSiteDialog.ADD_SITE_DIALOG_TAG)
+    }
+}
+
+enum class SitePickerMode {
+    /**
+     * Show everything
+     */
+    DEFAULT,
+
+    /**
+     * Show all sites, hide the "Add Site" button and hide the "Edit Pins" button
+     */
+    SIMPLE,
+
+    /**
+     * Hide self-hosted sites for purchasing a domain for a WPCOM site
+     * Also hide the "Add Site" button and hide the "Edit Pins" button
+     */
+    WPCOM_SITES_ONLY
 }
