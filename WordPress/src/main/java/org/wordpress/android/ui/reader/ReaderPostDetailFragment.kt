@@ -311,9 +311,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 val collapsingToolbarHeight = collapsingToolbarLayout.height
                 val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
                         collapsingToolbarLayout.scrimVisibleHeightTrigger
-                val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-                val color = if (isCollapsed || isDarkTheme) {
+                val color = if (isCollapsed) {
                     context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
                 } else {
                     ContextCompat.getColor(context, R.color.white)
