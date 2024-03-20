@@ -72,7 +72,6 @@ Language: ko_KR
     <string name="reader_discover_no_posts_subscribe_subtitle">추가 태그를 구독하여 검색 범위 확대하기</string>
     <string name="reader_discover_empty_subtitle_subscribe">태그를 구독하여 새 블로그 발견하기</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>
-    <string name="reader_filter_empty_tags_action_subscribe">태그 구독</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
     <string name="reader_filter_empty_tags_list_title">태그 없음</string>

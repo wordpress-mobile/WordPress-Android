@@ -72,7 +72,6 @@ Language: fr
     <string name="reader_discover_no_posts_subscribe_subtitle">Essayer de s’abonner à d’autres étiquettes pour élargir la recherche</string>
     <string name="reader_discover_empty_subtitle_subscribe">S’abonner à des étiquettes pour découvrir de nouveaux blogs</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs auxquels s’abonner</string>
-    <string name="reader_filter_empty_tags_action_subscribe">S’abonner à une étiquette</string>
     <string name="reader_filter_empty_tags_action_suggested">Étiquettes suggérées</string>
     <string name="reader_filter_empty_blogs_action_search">Chercher un blog</string>
     <string name="reader_filter_empty_tags_list_title">Aucune étiquette</string>

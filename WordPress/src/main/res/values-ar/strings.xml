@@ -72,7 +72,6 @@ Language: ar
     <string name="reader_discover_no_posts_subscribe_subtitle">محاولة الاشتراك في مزيد من الوسوم لتوسيع نطاق البحث</string>
     <string name="reader_discover_empty_subtitle_subscribe">الاشتراك في الوسوم لاكتشاف مدونات جديدة</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">المدونات المطلوب الاشتراك فيها</string>
-    <string name="reader_filter_empty_tags_action_subscribe">الاشتراك في وسم</string>
     <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
     <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>

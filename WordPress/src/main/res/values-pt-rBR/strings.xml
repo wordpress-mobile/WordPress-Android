@@ -67,7 +67,6 @@ Language: pt_BR
     <string name="reader_discover_no_posts_subscribe_subtitle">Tente assinar mais tags para melhorar a pesquisa</string>
     <string name="reader_discover_empty_subtitle_subscribe">Assine tags para descobrir novos blogs</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs para assinar</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Assinar uma tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tags sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar um blog</string>
     <string name="reader_filter_empty_tags_list_title">Nenhuma tag</string>

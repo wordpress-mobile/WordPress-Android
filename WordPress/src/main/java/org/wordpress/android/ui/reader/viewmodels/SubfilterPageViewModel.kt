@@ -58,7 +58,7 @@ class SubfilterPageViewModel @Inject constructor(
                 )
             } else {
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_empty_tags_action_subscribe),
+                    text = UiStringRes(R.string.reader_filter_empty_tags_action_follow),
                     action = ActionType.OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
                 )
             }
