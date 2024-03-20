@@ -70,7 +70,6 @@ Language: ro
     <string name="reader_dropdown_menu_subscriptions">Abonamente</string>
     <string name="reader_dropdown_menu_discover">Descoperă</string>
     <string name="reader_search_content_description">Caută</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Încearcă să te abonezi la mai multe etichete ca să extinzi căutarea</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloguri la care să te abonezi</string>
     <string name="reader_filter_empty_tags_action_suggested">Etichete sugerate</string>
     <string name="reader_filter_empty_blogs_action_search">Caută un blog</string>

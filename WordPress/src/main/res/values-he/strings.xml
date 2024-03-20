@@ -69,7 +69,6 @@ Language: he_IL
     <string name="reader_dropdown_menu_subscriptions">מינויים</string>
     <string name="reader_dropdown_menu_discover">היכרות</string>
     <string name="reader_search_content_description">חיפוש</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">כדאי להירשם לתגיות נוספות כדי להרחיב את החיפוש</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">בלוגים שכדאי להירשם לעדכונים מהם</string>
     <string name="reader_filter_empty_tags_action_suggested">תגיות מומלצות</string>
     <string name="reader_filter_empty_blogs_action_search">לחפש בלוג</string>

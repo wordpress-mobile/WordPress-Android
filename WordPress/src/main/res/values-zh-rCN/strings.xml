@@ -69,7 +69,6 @@ Language: zh_CN
     <string name="reader_dropdown_menu_subscriptions">订阅</string>
     <string name="reader_dropdown_menu_discover">发现</string>
     <string name="reader_search_content_description">搜索</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">尝试订阅更多标签，以扩大搜索范围</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">要订阅的博客</string>
     <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
     <string name="reader_filter_empty_blogs_action_search">搜索博客</string>

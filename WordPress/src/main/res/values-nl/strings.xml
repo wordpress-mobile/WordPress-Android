@@ -47,7 +47,6 @@ Language: nl
     <string name="reader_filter_chip_blog_one">1 Blog</string>
     <string name="reader_filter_chip_blog_zero">0 Blogs</string>
     <string name="reader_dropdown_menu_liked">Geliket</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
     <string name="reader_filter_empty_blogs_list_text">Abonneer je op blogs in Ontdek en je ziet hun nieuwste berichten hier. Of zoek een blog die je al leuk vindt.</string>
     <string name="reader_filter_empty_blogs_list_title">Geen blog-abonnementen</string>
     <string name="reader_filter_empty_blogs_action">Abonneren op blog</string>

@@ -70,7 +70,6 @@ Language: en_GB
     <string name="reader_dropdown_menu_subscriptions">Subscriptions</string>
     <string name="reader_dropdown_menu_discover">Discover</string>
     <string name="reader_search_content_description">Search</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs to which to subscribe</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>

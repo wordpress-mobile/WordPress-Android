@@ -70,7 +70,6 @@ Language: ja_JP
     <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
     <string name="reader_dropdown_menu_discover">ディスカバー</string>
     <string name="reader_search_content_description">検索</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">もっと多くのタグを購読して、検索を広げてみてください</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">購読するブログ</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
