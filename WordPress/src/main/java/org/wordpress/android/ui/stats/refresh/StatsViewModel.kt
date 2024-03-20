@@ -302,8 +302,32 @@ class StatsViewModel
         if (networkUtilsWrapper.isNetworkAvailable()) {
             loadData {
                 val baseListUseCase = listUseCases[statsSectionManager.getSelectedSection()]
+                val statsSection = statsSectionManager.getSelectedSection()
+                val baseListUseCase = listUseCases[statsSection]
                 baseListUseCase?.refreshTypes()
                 baseListUseCase?.refreshData(true)
+
+                if (statsTrafficTabFeatureConfig.isEnabled()) {
+                    val statsGranularity =
+                        selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+                    if (statsGranularity == StatsGranularity.DAYS) {
+                        val currentUseCase = listUseCases[StatsSection.DAYS]
+                        currentUseCase?.refreshTypes()
+                        currentUseCase?.refreshData(true)
+                    } else if (statsGranularity == StatsGranularity.WEEKS) {
+                        val currentUseCase = listUseCases[StatsSection.WEEKS]
+                        currentUseCase?.refreshTypes()
+                        currentUseCase?.refreshData(true)
+                    } else if (statsGranularity == StatsGranularity.MONTHS) {
+                        val currentUseCase = listUseCases[StatsSection.MONTHS]
+                        currentUseCase?.refreshTypes()
+                        currentUseCase?.refreshData(true)
+                    } else {
+                        val currentUseCase = listUseCases[StatsSection.YEARS]
+                        currentUseCase?.refreshTypes()
+                        currentUseCase?.refreshData(true)
+                    }
+                }
             }
         } else {
             _isRefreshing.value = false
