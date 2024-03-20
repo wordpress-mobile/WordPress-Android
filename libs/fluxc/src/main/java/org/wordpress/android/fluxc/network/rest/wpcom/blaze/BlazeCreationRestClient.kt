@@ -207,7 +207,11 @@ class BlazeCreationRestClient @Inject constructor(
             "start_date" to dateFormatter.format(request.startDate),
             "end_date" to dateFormatter.format(request.endDate),
             "time_zone" to request.timeZoneId,
-            "total_budget" to request.budget,
+            "budget" to mapOf(
+                "mode" to request.budget.mode,
+                "amount" to request.budget.amount,
+                "currency" to request.budget.currency
+            ),
             "site_name" to request.tagLine,
             "text_snippet" to request.description,
             "target_url" to request.targetUrl,
