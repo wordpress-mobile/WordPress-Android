@@ -71,7 +71,6 @@ Language: es
     <string name="reader_dropdown_menu_discover">Descubrir</string>
     <string name="reader_search_content_description">Buscar</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Intenta suscribirte a más etiquetas para ampliar la búsqueda</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Suscríbete a etiquetas para descubrir nuevos blogs</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs a los que suscribirse</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>

@@ -67,7 +67,6 @@ Language: gl_ES
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs aos que subscribirse</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Subscríbete a etiquetas para descubrir novos blogs</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Intenta subscribirte a máis etiquetas para ampliar a busca</string>
     <string name="reader_filter_empty_tags_list_title">Sen etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Subscríbete a blogs en Descubrir e verás as súas últimas publicacións aquí. Ou busca un blog que xa che guste.</string>

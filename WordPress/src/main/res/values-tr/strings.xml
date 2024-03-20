@@ -71,7 +71,6 @@ Language: tr
     <string name="reader_dropdown_menu_discover">Keşfet</string>
     <string name="reader_search_content_description">Ara</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Aramayı genişletmek için daha fazla etikete abone olmayı deneyin</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Yeni bloglar keşfetmek için etiketlere abone olun</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Abone olunacak bloglar</string>
     <string name="reader_filter_empty_tags_action_suggested">Önerilen etiketler</string>
     <string name="reader_filter_empty_blogs_action_search">Blog ara</string>

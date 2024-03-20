@@ -71,7 +71,6 @@ Language: sq_AL
     <string name="reader_dropdown_menu_discover">Zbuloni</string>
     <string name="reader_search_content_description">Kërko</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Provoni të pajtoheni në më tepër etiketa, për të zgjeruar kërkimin</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Që të zbuloni blogje të rinj, pajtohuni te etiketa</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogje ku të pajtoheni</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
