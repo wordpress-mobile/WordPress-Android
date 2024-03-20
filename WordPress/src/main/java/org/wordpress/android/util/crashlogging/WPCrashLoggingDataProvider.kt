@@ -46,7 +46,6 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val enableCrashLoggingLogs: Boolean = false
     override val locale: Locale
         get() = localeManager.getLocale()
-    override val releaseName: String = BuildConfig.VERSION_NAME
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
     override val applicationContextProvider = MutableStateFlow<Map<String, String>>(emptyMap())
