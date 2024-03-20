@@ -1,3 +1,4 @@
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
 
@@ -17,14 +18,18 @@ plugins {
 sentry {
     tracingInstrumentation {
         enabled = true
-        features = [io.sentry.android.gradle.extensions.InstrumentationFeature.DATABASE]
-        logcat {
-            enabled = false
-        }
+        features = [InstrumentationFeature.DATABASE]
+        logcat.enabled = false
     }
-    autoInstallation {
-        enabled = false
-    }
+    autoInstallation.enabled = false
+    includeSourceContext = true
+    autoUploadSourceContext = true
+    includeDependenciesReport = false
+    /* Sentry won't send source context or add performance instrumentations for debug builds
+    so we can save build times. Sending events will still work in debug builds
+    (if enabled in WPCrashLoggingDataProvider).
+    */
+    ignoredBuildTypes = ["debug"]
 }
 
 repositories {
