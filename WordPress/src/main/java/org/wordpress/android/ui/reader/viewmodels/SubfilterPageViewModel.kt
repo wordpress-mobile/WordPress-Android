@@ -80,7 +80,7 @@ class SubfilterPageViewModel @Inject constructor(
                         }
                     } else {
                         if (accountStore.hasAccessToken()) {
-                            R.string.reader_filter_empty_tags_list_text
+                            R.string.reader_filter_empty_tags_list_follow_text
                         } else {
                             R.string.reader_filter_self_hosted_empty_tags_list
                         }

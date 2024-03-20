@@ -76,7 +76,6 @@ Language: ja_JP
     <string name="reader_filter_empty_tags_action_subscribe">タグを購読</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
-    <string name="reader_filter_empty_tags_list_text">タグを購読すると、そのタグで最適の投稿がこちらに表示されます。</string>
     <string name="reader_filter_empty_tags_list_title">タグなし</string>
     <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
     <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>

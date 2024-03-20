@@ -76,7 +76,6 @@ Language: tr
     <string name="reader_filter_empty_tags_action_subscribe">Bir etikete abone olun</string>
     <string name="reader_filter_empty_tags_action_suggested">Önerilen etiketler</string>
     <string name="reader_filter_empty_blogs_action_search">Blog ara</string>
-    <string name="reader_filter_empty_tags_list_text">Bir etikete abone olduğunuzda en iyi yazılar burada görüntülenir.</string>
     <string name="reader_filter_empty_tags_list_title">Etiket yok</string>
     <string name="reader_filter_empty_blogs_list_text">Keşfet bölümünden bloglara abone olduğunuzda en son yazılar burada görüntülenir. Zaten sevdiğiniz bir blogu da arayabilirsiniz.</string>
     <string name="reader_filter_empty_blogs_list_title">Abone olunan blog yok</string>

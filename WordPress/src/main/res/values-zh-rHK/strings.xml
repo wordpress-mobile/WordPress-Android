@@ -76,7 +76,6 @@ Language: zh_TW
     <string name="reader_filter_empty_tags_action_subscribe">訂閱標籤</string>
     <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
     <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
-    <string name="reader_filter_empty_tags_list_text">只要訂閱標籤，就能從此處看到最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">無標籤</string>
     <string name="reader_filter_empty_blogs_list_text">在「探索」中訂閱網誌，就會於此處看到網誌的最新文章。 或者搜尋你已按讚的網誌。</string>
     <string name="reader_filter_empty_blogs_list_title">無網誌訂閱</string>

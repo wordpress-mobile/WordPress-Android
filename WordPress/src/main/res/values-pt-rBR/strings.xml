@@ -70,7 +70,6 @@ Language: pt_BR
     <string name="reader_filter_empty_tags_action_subscribe">Assinar uma tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tags sugeridas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar um blog</string>
-    <string name="reader_filter_empty_tags_list_text">Assine uma tag para ver aqui os melhores posts com ela.</string>
     <string name="reader_filter_empty_tags_list_title">Nenhuma tag</string>
     <string name="reader_filter_empty_blogs_list_text">Assine blogs em Descobrir e você verá suas postagens mais recentes aqui. Ou procure por um blog que você já goste.</string>
     <string name="reader_filter_empty_blogs_list_title">Nenhuma assinatura de blog</string>

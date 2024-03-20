@@ -75,7 +75,6 @@ Language: he_IL
     <string name="reader_filter_empty_tags_action_subscribe">להירשם לעדכונים מתגית</string>
     <string name="reader_filter_empty_tags_action_suggested">תגיות מומלצות</string>
     <string name="reader_filter_empty_blogs_action_search">לחפש בלוג</string>
-    <string name="reader_filter_empty_tags_list_text">ניתן להירשם לקבלת עדכונים מתגית והפוסטים המומלצים עם התגית הזאת יוצגו כאן.</string>
     <string name="reader_filter_empty_tags_list_title">ללא תגיות</string>
     <string name="reader_filter_empty_blogs_list_text">ניתן להירשם לעדכונים מבלוגים במקטע \'היכרות\' כדי להציג את הפוסטים האחרונים שלהם כאן. לחלופין, אפשר לחפש בלוג שכבר מצא חן בעיניך.</string>
     <string name="reader_filter_empty_blogs_list_title">אין מינויים לבלוגים</string>

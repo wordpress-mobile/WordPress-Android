@@ -76,7 +76,6 @@ Language: sv_SE
     <string name="reader_filter_empty_tags_action_subscribe">Prenumerera på en etikett</string>
     <string name="reader_filter_empty_tags_action_suggested">Föreslagna etiketter</string>
     <string name="reader_filter_empty_blogs_action_search">Sök efter en blogg</string>
-    <string name="reader_filter_empty_tags_list_text">Prenumerera på en etikett så kommer du att se de bästa inläggen från den här.</string>
     <string name="reader_filter_empty_tags_list_title">Inga etiketter</string>
     <string name="reader_filter_empty_blogs_list_text">Prenumerera på bloggar i Upptäck så kommer du att se deras senaste inlägg här. Eller så kan du söka efter en blogg som du redan gillar.</string>
     <string name="reader_filter_empty_blogs_list_title">Inga bloggprenumerationer</string>

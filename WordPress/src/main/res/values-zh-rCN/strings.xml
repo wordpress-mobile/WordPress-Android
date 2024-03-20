@@ -75,7 +75,6 @@ Language: zh_CN
     <string name="reader_filter_empty_tags_action_subscribe">订阅一个标签</string>
     <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
     <string name="reader_filter_empty_blogs_action_search">搜索博客</string>
-    <string name="reader_filter_empty_tags_list_text">订阅一个标签，您就能在此处看到该标签下的最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">无标签</string>
     <string name="reader_filter_empty_blogs_list_text">在“发现”中订阅博客，您就能在此处看到他们的最新文章。 或者搜索一个您已点赞过的博客。</string>
     <string name="reader_filter_empty_blogs_list_title">无博客订阅</string>

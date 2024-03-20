@@ -75,7 +75,6 @@ Language: ko_KR
     <string name="reader_filter_empty_tags_action_subscribe">태그 구독</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
-    <string name="reader_filter_empty_tags_list_text">태그를 구독하면 여기에서 인기 글을 확인할 수 있습니다.</string>
     <string name="reader_filter_empty_tags_list_title">태그 없음</string>
     <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
     <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>

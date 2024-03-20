@@ -75,7 +75,6 @@ Language: ru
     <string name="reader_filter_empty_tags_action_subscribe">Подписаться на тег</string>
     <string name="reader_filter_empty_tags_action_suggested">Рекомендуемые теги</string>
     <string name="reader_filter_empty_blogs_action_search">Искать блог</string>
-    <string name="reader_filter_empty_tags_list_text">Подпишитесь на тег, и лучшие записи с ним станут отображаться здесь.</string>
     <string name="reader_filter_empty_tags_list_title">Нет тегов</string>
     <string name="reader_filter_empty_blogs_list_text">Подписывайтесь на блоги в разделе «Поиск», и последние записи из них будут отображаться здесь. Или найдите блог, который вам уже понравился.</string>
     <string name="reader_filter_empty_blogs_list_title">Нет подписок на блоги</string>

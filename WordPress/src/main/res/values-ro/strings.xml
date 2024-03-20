@@ -76,7 +76,6 @@ Language: ro
     <string name="reader_filter_empty_tags_action_subscribe">Abonează-te la o etichetă</string>
     <string name="reader_filter_empty_tags_action_suggested">Etichete sugerate</string>
     <string name="reader_filter_empty_blogs_action_search">Caută un blog</string>
-    <string name="reader_filter_empty_tags_list_text">Abonează-te la o etichetă și vei putea să vezi aici cele mai bune articole cu această etichetă.</string>
     <string name="reader_filter_empty_tags_list_title">Nicio etichetă</string>
     <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
     <string name="reader_filter_empty_blogs_list_title">Niciun abonament la bloguri</string>

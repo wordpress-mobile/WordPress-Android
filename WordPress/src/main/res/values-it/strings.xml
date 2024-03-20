@@ -76,7 +76,6 @@ Language: it
     <string name="reader_filter_empty_tags_action_subscribe">Segui un tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag suggeriti</string>
     <string name="reader_filter_empty_blogs_action_search">Cerca un blog</string>
-    <string name="reader_filter_empty_tags_list_text">Inizia a seguire un tag e potrai vedere qui i migliori articoli correlati.</string>
     <string name="reader_filter_empty_tags_list_title">Nessun tag</string>
     <string name="reader_filter_empty_blogs_list_text">Segui i blog della sezione Scopri e vedrai i loro ultimi articoli qui. Oppure cerca un blog che già ti piace.</string>
     <string name="reader_filter_empty_blogs_list_title">Nessun abbonamento ai blog</string>

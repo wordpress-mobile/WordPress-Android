@@ -1643,7 +1643,7 @@
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
-    <string name="reader_filter_empty_tags_list_text">Subscribe to a tag and you’ll be able to see the best posts from it here.</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Follow a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
     <string name="reader_filter_empty_tags_action_subscribe">Subscribe to a tag</string>

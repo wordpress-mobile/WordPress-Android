@@ -75,7 +75,6 @@ Language: ar
     <string name="reader_filter_empty_tags_action_subscribe">الاشتراك في وسم</string>
     <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
     <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
-    <string name="reader_filter_empty_tags_list_text">اشترك في وسم وستتمكن من الاطلاع على أفضل التدوينات الواردة منه هنا.</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_filter_empty_tags_list_title">لا توجد وسوم</string>
     <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>

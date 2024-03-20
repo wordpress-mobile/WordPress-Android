@@ -76,7 +76,6 @@ Language: sq_AL
     <string name="reader_filter_empty_tags_action_subscribe">Pajtohuni te një etiketë</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
-    <string name="reader_filter_empty_tags_list_text">Pajtohuni te një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
     <string name="reader_filter_empty_tags_list_title">Pa etiketa</string>
     <string name="reader_filter_empty_blogs_list_text">Pajtohuni në blogje te Zbuloni dhe do të shihni këtu postimet e tyre më të reja. Ose kërkoni për një blog që ju pëlqen tashmë.</string>
     <string name="reader_filter_empty_blogs_list_title">S’ka pajtime në blog</string>

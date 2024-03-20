@@ -70,7 +70,6 @@ Language: id
     <string name="reader_filter_empty_tags_action_subscribe">Berlangganan tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag yang diusulkan</string>
     <string name="reader_filter_empty_blogs_action_search">Cari blog</string>
-    <string name="reader_filter_empty_tags_list_text">Berlangganan tag dan Anda akan dapat melihat pos terbaik dari tag tersebut di sini.</string>
     <string name="reader_filter_empty_tags_list_title">Tidak ada tag</string>
     <string name="reader_filter_empty_blogs_list_text">Berlangganan blog di Temukan dan Anda akan melihat pos terbarunya di sini. Atau, cari blog yang sudah Anda sukai.</string>
     <string name="reader_filter_empty_blogs_list_title">Tidak ada langganan blog</string>

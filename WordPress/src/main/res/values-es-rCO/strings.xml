@@ -76,7 +76,6 @@ Language: es_CO
     <string name="reader_filter_empty_tags_action_subscribe">Suscribirse a una etiqueta</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
-    <string name="reader_filter_empty_tags_list_text">Suscríbete a una etiqueta y podrás ve las mejores publicaciones asociadas a ella.</string>
     <string name="reader_filter_empty_tags_list_title">Sin etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Suscríbete a blogs en Descubrir y verás sus últimas publicaciones aquí. O busca un blog que ya te guste.</string>
     <string name="reader_filter_empty_blogs_list_title">No hay suscripciones al blog</string>
