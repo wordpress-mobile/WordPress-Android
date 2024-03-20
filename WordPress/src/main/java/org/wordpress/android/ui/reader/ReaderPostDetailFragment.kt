@@ -150,7 +150,6 @@ import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.setWindowNavigationBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
