@@ -51,7 +51,6 @@ Language: sq_AL
     <string name="reader_menu_block_this_blog">Bllokoje këtë blog</string>
     <string name="reader_menu_tags_and_blogs">Përpunoni etiketa dhe blogje</string>
     <string name="reader_page_followed_blogs_title">Blogje me pajtime</string>
-    <string name="reader_page_followed_tags_title">Etiketa me pajtime</string>
     <string name="reader_title_tags">Ndiqni etiketa</string>
     <string name="reader_activity_title_manage_tags_blogs">Administroni Etiketa &amp; Blogje</string>
     <string name="reader_activity_title_tag_preview">Etiketë</string>

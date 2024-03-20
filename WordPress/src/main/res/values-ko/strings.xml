@@ -51,7 +51,6 @@ Language: ko_KR
     <string name="reader_menu_block_this_blog">이 블로그 차단</string>
     <string name="reader_menu_tags_and_blogs">태그 및 블로그 편집</string>
     <string name="reader_page_followed_blogs_title">구독한 블로그</string>
-    <string name="reader_page_followed_tags_title">구독한 태그</string>
     <string name="reader_title_tags">태그 팔로우</string>
     <string name="reader_activity_title_manage_tags_blogs">블로그 및 블로그 관리</string>
     <string name="reader_activity_title_tag_preview">태그</string>

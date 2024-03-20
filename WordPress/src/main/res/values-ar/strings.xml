@@ -51,7 +51,6 @@ Language: ar
     <string name="reader_menu_block_this_blog">حظر هذه المدونة</string>
     <string name="reader_menu_tags_and_blogs">تحرير الوسوم والمدونات</string>
     <string name="reader_page_followed_blogs_title">المدونات التي تم الاشتراك فيها</string>
-    <string name="reader_page_followed_tags_title">الوسوم التي تم الاشتراك فيها</string>
     <string name="reader_title_tags">اتباع الوسوم</string>
     <string name="reader_activity_title_manage_tags_blogs">إدارة الوسوم والمدونات</string>
     <string name="reader_activity_title_tag_preview">الوسم</string>

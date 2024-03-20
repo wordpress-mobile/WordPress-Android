@@ -46,7 +46,6 @@ Language: id
     <string name="reader_btn_subscribe">Berlangganan</string>
     <string name="reader_menu_tags_and_blogs">Sunting tag dan blog</string>
     <string name="reader_page_followed_blogs_title">Telah berlangganan blog</string>
-    <string name="reader_page_followed_tags_title">Telah berlangganan tag</string>
     <string name="reader_title_tags">Ikuti tag</string>
     <string name="reader_activity_title_manage_tags_blogs">Kelola Tag &amp; Blog</string>
     <string name="reader_activity_title_blog_preview">Blog Pembaca</string>

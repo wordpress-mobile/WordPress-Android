@@ -51,7 +51,6 @@ Language: tr
     <string name="reader_menu_block_this_blog">Bu blogu engelle</string>
     <string name="reader_menu_tags_and_blogs">Etiketleri ve blogları düzenle</string>
     <string name="reader_page_followed_blogs_title">Abone olunan bloglar</string>
-    <string name="reader_page_followed_tags_title">Abone olunan etiketler</string>
     <string name="reader_title_tags">Etiketleri takip edin</string>
     <string name="reader_activity_title_manage_tags_blogs">Etiket ve blog yönetimi</string>
     <string name="reader_activity_title_tag_preview">Etiket</string>

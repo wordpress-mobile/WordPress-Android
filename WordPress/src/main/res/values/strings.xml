@@ -2102,7 +2102,7 @@
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags_title">Subscribed tags</string>
+    <string name="reader_page_followed_tags_text_title">Followed tags</string>
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
 
     <!-- menu text -->

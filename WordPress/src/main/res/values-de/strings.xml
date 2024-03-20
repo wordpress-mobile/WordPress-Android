@@ -51,7 +51,6 @@ Language: de
     <string name="reader_menu_block_this_blog">Dieses Blog blockieren</string>
     <string name="reader_menu_tags_and_blogs">Schlagwörter und Blogs bearbeiten</string>
     <string name="reader_page_followed_blogs_title">Abonnierte Blogs</string>
-    <string name="reader_page_followed_tags_title">Abonnierte Schlagwörter</string>
     <string name="reader_title_tags">Schlagwörtern folgen</string>
     <string name="reader_activity_title_manage_tags_blogs">Schlagwörter und Blogs verwalten</string>
     <string name="reader_activity_title_tag_preview">Schlagwort</string>

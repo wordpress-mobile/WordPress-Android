@@ -51,7 +51,6 @@ Language: it
     <string name="reader_menu_block_this_blog">Blocca questo blog</string>
     <string name="reader_menu_tags_and_blogs">Modifica tag e blog</string>
     <string name="reader_page_followed_blogs_title">Blog che segui</string>
-    <string name="reader_page_followed_tags_title">Tag che segui</string>
     <string name="reader_title_tags">Segui tag</string>
     <string name="reader_activity_title_manage_tags_blogs">Gestisci tag e blog</string>
     <string name="reader_activity_title_tag_preview">Tag</string>

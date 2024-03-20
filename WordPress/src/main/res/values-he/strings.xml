@@ -51,7 +51,6 @@ Language: he_IL
     <string name="reader_menu_block_this_blog">לחסום את הבלוג הזה</string>
     <string name="reader_menu_tags_and_blogs">לערוך תגיות ובלוגים</string>
     <string name="reader_page_followed_blogs_title">בלוגים שרשומים לעדכונים</string>
-    <string name="reader_page_followed_tags_title">תגיות שרשומות לעדכונים</string>
     <string name="reader_title_tags">לעקוב אחרי תגיות</string>
     <string name="reader_activity_title_manage_tags_blogs">לנהל תגיות ובלוגים</string>
     <string name="reader_activity_title_tag_preview">תגית</string>

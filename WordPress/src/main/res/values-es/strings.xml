@@ -51,7 +51,6 @@ Language: es
     <string name="reader_menu_block_this_blog">Bloquear este blog</string>
     <string name="reader_menu_tags_and_blogs">Editar etiquetas y blogs</string>
     <string name="reader_page_followed_blogs_title">Blogs suscritos</string>
-    <string name="reader_page_followed_tags_title">Etiquetas suscritas</string>
     <string name="reader_title_tags">Seguir etiquetas</string>
     <string name="reader_activity_title_manage_tags_blogs">Gestionar etiquetas y blogs</string>
     <string name="reader_activity_title_tag_preview">Etiqueta</string>

@@ -51,7 +51,6 @@ Language: ro
     <string name="reader_menu_block_this_blog">Blochează acest blog</string>
     <string name="reader_menu_tags_and_blogs">Editează etichetele și blogurile</string>
     <string name="reader_page_followed_blogs_title">Bloguri la care te-ai abonat</string>
-    <string name="reader_page_followed_tags_title">Etichete la care te-ai abonat</string>
     <string name="reader_title_tags">Urmărește etichetele</string>
     <string name="reader_activity_title_manage_tags_blogs">Administrează etichetele și blogurile</string>
     <string name="reader_activity_title_tag_preview">Etichetă</string>

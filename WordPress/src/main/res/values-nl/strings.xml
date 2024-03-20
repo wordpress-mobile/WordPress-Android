@@ -37,7 +37,6 @@ Language: nl
     <string name="reader_menu_block_this_blog">Deze blog blokkeren</string>
     <string name="reader_menu_tags_and_blogs">Tags en blogs bijwerken</string>
     <string name="reader_page_followed_blogs_title">Geabonneerd op blog</string>
-    <string name="reader_page_followed_tags_title">Abonneren op tags</string>
     <string name="reader_title_tags">Tag volgen</string>
     <string name="reader_activity_title_manage_tags_blogs">Blogs beheren</string>
     <string name="reader_activity_title_blog_preview">Reader-blog</string>

@@ -51,7 +51,6 @@ Language: ja_JP
     <string name="reader_menu_block_this_blog">このブログをブロック</string>
     <string name="reader_menu_tags_and_blogs">タグとブログを編集</string>
     <string name="reader_page_followed_blogs_title">購読済みのブログ</string>
-    <string name="reader_page_followed_tags_title">購読済みのタグ</string>
     <string name="reader_title_tags">タグをフォロー</string>
     <string name="reader_activity_title_manage_tags_blogs">タグとブログを管理</string>
     <string name="reader_activity_title_tag_preview">タグ</string>

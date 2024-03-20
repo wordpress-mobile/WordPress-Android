@@ -51,7 +51,6 @@ Language: sv_SE
     <string name="reader_menu_block_this_blog">Blockera denna blogg</string>
     <string name="reader_menu_tags_and_blogs">Redigera etiketter och bloggar</string>
     <string name="reader_page_followed_blogs_title">Du prenumererar på de här bloggarna</string>
-    <string name="reader_page_followed_tags_title">Du prenumererar på de här etiketterna</string>
     <string name="reader_title_tags">Följ etiketter</string>
     <string name="reader_activity_title_manage_tags_blogs">Hantera etiketter och bloggar</string>
     <string name="reader_activity_title_tag_preview">Etikett</string>

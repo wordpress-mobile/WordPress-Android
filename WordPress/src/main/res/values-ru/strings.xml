@@ -51,7 +51,6 @@ Language: ru
     <string name="reader_menu_block_this_blog">Заблокировать этот блог</string>
     <string name="reader_menu_tags_and_blogs">Редактировать теги и блоги</string>
     <string name="reader_page_followed_blogs_title">Подписки на блоги</string>
-    <string name="reader_page_followed_tags_title">Подписки на теги</string>
     <string name="reader_title_tags">Подписаться на теги</string>
     <string name="reader_activity_title_manage_tags_blogs">Управление тегами и блогами</string>
     <string name="reader_activity_title_tag_preview">Метка</string>
