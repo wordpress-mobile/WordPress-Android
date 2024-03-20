@@ -82,7 +82,6 @@ Language: ja_JP
     <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
     <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>
     <string name="reader_filter_empty_blogs_action">ブログを購読</string>
-    <string name="reader_filter_empty_tags_list_subscribe">タグを追加することで、特定の内容に関する投稿を購読できます</string>
     <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
     <string name="reader_filter_by_tag_title">タグで絞り込む</string>
     <string name="reader_filter_by_blog_title">ブログで絞り込む</string>

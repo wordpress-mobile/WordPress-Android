@@ -82,7 +82,6 @@ Language: sq_AL
     <string name="reader_filter_empty_blogs_list_text">Pajtohuni në blogje te Zbuloni dhe do të shihni këtu postimet e tyre më të reja. Ose kërkoni për një blog që ju pëlqen tashmë.</string>
     <string name="reader_filter_empty_blogs_list_title">S’ka pajtime në blog</string>
     <string name="reader_filter_empty_blogs_action">Pajtohuni te një blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Mund të pajtoheni te postime lidhur me një subjekt të caktuar, duke dhënë një etiketë</string>
     <string name="reader_filter_empty_blogs_list">Shihni postimet më të reja prej blogjesh ku jeni pajtuar</string>
     <string name="reader_filter_by_tag_title">Filtroji sipas etiketash</string>
     <string name="reader_filter_by_blog_title">Filtroji sipas blogjesh</string>

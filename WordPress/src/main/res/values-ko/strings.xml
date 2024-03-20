@@ -81,7 +81,6 @@ Language: ko_KR
     <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
     <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>
     <string name="reader_filter_empty_blogs_action">블로그 구독</string>
-    <string name="reader_filter_empty_tags_list_subscribe">태그를 추가하여 특정 주제의 글을 구독할 수 있습니다</string>
     <string name="reader_filter_empty_blogs_list">구독하는 블로그의 최신 글 확인</string>
     <string name="reader_filter_by_tag_title">태그로 필터링</string>
     <string name="reader_filter_by_blog_title">블로그로 필터링</string>

@@ -81,7 +81,6 @@ Language: zh_CN
     <string name="reader_filter_empty_blogs_list_text">在“发现”中订阅博客，您就能在此处看到他们的最新文章。 或者搜索一个您已点赞过的博客。</string>
     <string name="reader_filter_empty_blogs_list_title">无博客订阅</string>
     <string name="reader_filter_empty_blogs_action">订阅博客</string>
-    <string name="reader_filter_empty_tags_list_subscribe">您可以通过添加标签的方式来订阅特定主题的文章</string>
     <string name="reader_filter_empty_blogs_list">查看您所订阅的博客的最新文章</string>
     <string name="reader_filter_by_tag_title">按标签筛选</string>
     <string name="reader_filter_by_blog_title">按博客筛选</string>

@@ -79,7 +79,6 @@ Language: gl_ES
     <string name="reader_filter_empty_blogs_action">Subscríbete a un blog</string>
     <string name="reader_filter_empty_blogs_list_title">Non hai subscricións ao blog</string>
     <string name="reader_filter_empty_blogs_list">Ver as últimas entradas dos blogs aos que estás subscrito</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Podes subscribirte a publicacións sobre un tema específico engadindo unha etiqueta</string>
     <string name="stats_timeframe_by_day">Por día</string>
     <string name="stats_timeframe_by_year">Por ano</string>
     <string name="stats_timeframe_by_week">Por semana</string>

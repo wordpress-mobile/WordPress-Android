@@ -81,7 +81,6 @@ Language: ru
     <string name="reader_filter_empty_blogs_list_text">Подписывайтесь на блоги в разделе «Поиск», и последние записи из них будут отображаться здесь. Или найдите блог, который вам уже понравился.</string>
     <string name="reader_filter_empty_blogs_list_title">Нет подписок на блоги</string>
     <string name="reader_filter_empty_blogs_action">Подписаться на блог</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Вы можете подписаться на определенную тему, добавив тег</string>
     <string name="reader_filter_empty_blogs_list">Просмотреть последние записи из блогов, на которые вы подписаны</string>
     <string name="reader_filter_by_tag_title">Фильтровать по тегу</string>
     <string name="reader_filter_by_blog_title">Фильтровать по блогу</string>

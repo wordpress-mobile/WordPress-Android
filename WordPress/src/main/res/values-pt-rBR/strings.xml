@@ -76,7 +76,6 @@ Language: pt_BR
     <string name="reader_filter_empty_blogs_list_text">Assine blogs em Descobrir e você verá suas postagens mais recentes aqui. Ou procure por um blog que você já goste.</string>
     <string name="reader_filter_empty_blogs_list_title">Nenhuma assinatura de blog</string>
     <string name="reader_filter_empty_blogs_action">Assinar um blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Você pode assinar posts de um assunto específico adicionando uma tag</string>
     <string name="reader_filter_empty_blogs_list">Veja os posts mais recentes de blogs de que você é assinante</string>
     <string name="reader_filter_by_tag_title">Filtrar por tag</string>
     <string name="reader_filter_by_blog_title">Filtrar por blog</string>

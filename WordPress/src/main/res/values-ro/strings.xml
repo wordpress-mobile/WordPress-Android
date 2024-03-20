@@ -82,7 +82,6 @@ Language: ro
     <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
     <string name="reader_filter_empty_blogs_list_title">Niciun abonament la bloguri</string>
     <string name="reader_filter_empty_blogs_action">Abonează-te la un blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Poți să te abonezi la articole despre un anumit subiect prin adăugarea unei etichete</string>
     <string name="reader_filter_empty_blogs_list">Vezi cele mai noi articole pe blogurile la care te-ai abonat</string>
     <string name="reader_filter_by_tag_title">Filtrează după etichetă</string>
     <string name="reader_filter_by_blog_title">Filtrează după blog</string>

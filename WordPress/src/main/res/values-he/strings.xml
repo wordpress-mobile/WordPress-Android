@@ -81,7 +81,6 @@ Language: he_IL
     <string name="reader_filter_empty_blogs_list_text">ניתן להירשם לעדכונים מבלוגים במקטע \'היכרות\' כדי להציג את הפוסטים האחרונים שלהם כאן. לחלופין, אפשר לחפש בלוג שכבר מצא חן בעיניך.</string>
     <string name="reader_filter_empty_blogs_list_title">אין מינויים לבלוגים</string>
     <string name="reader_filter_empty_blogs_action">להירשם לעדכונים מבלוג</string>
-    <string name="reader_filter_empty_tags_list_subscribe">אפשר להירשם לעדכונים מפוסטים לגבי נושא מסוים על ידי הוספת תגית</string>
     <string name="reader_filter_empty_blogs_list">ניתן לראות את הפוסטים החדשים ביותר מבלוגים שנרשמת לעדכונים מהם</string>
     <string name="reader_filter_by_tag_title">לסנן לפי תגית</string>
     <string name="reader_filter_by_blog_title">לסנן לפי בלוג</string>

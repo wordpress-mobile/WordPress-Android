@@ -82,7 +82,6 @@ Language: es
     <string name="reader_filter_empty_blogs_list_text">Suscríbete a blogs en Descubrir y verás sus últimas publicaciones aquí. O busca un blog que ya te guste.</string>
     <string name="reader_filter_empty_blogs_list_title">No hay suscripciones al blog</string>
     <string name="reader_filter_empty_blogs_action">Suscríbete a un blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Puedes suscribirte a publicaciones sobre un tema específico añadiendo una etiqueta</string>
     <string name="reader_filter_empty_blogs_list">Ver las últimas entradas de los blogs a los que estás suscrito</string>
     <string name="reader_filter_by_tag_title">Filtrar por etiqueta</string>
     <string name="reader_filter_by_blog_title">Filtrar por blog</string>

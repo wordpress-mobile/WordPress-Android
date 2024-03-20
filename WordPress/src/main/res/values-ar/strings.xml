@@ -82,7 +82,6 @@ Language: ar
     <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
     <string name="reader_filter_empty_blogs_list_title">لا توجد اشتراكات في المدونة</string>
     <string name="reader_filter_empty_blogs_action">الاشتراك في المدونة</string>
-    <string name="reader_filter_empty_tags_list_subscribe">يمكنك الاشتراك في التدوينات الموجودة حول موضوع معيَّن عن طريق إضافة وسم</string>
     <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
     <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
     <string name="stats_timeframe_by_year">حسب العام</string>

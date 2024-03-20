@@ -76,7 +76,6 @@ Language: id
     <string name="reader_filter_empty_blogs_list_text">Berlangganan blog di Temukan dan Anda akan melihat pos terbarunya di sini. Atau, cari blog yang sudah Anda sukai.</string>
     <string name="reader_filter_empty_blogs_list_title">Tidak ada langganan blog</string>
     <string name="reader_filter_empty_blogs_action">Berlangganan blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Anda dapat berlangganan pos dengan subjek tertentu dengan menambahkan tag</string>
     <string name="reader_filter_empty_blogs_list">Lihat pos terbaru dari blog langganan Anda</string>
     <string name="reader_filter_by_tag_title">Saring berdasarkan tag</string>
     <string name="reader_filter_by_blog_title">Saring berdasarkan blog</string>

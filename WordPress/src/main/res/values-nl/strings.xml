@@ -52,7 +52,6 @@ Language: nl
     <string name="reader_filter_empty_blogs_list_text">Abonneer je op blogs in Ontdek en je ziet hun nieuwste berichten hier. Of zoek een blog die je al leuk vindt.</string>
     <string name="reader_filter_empty_blogs_list_title">Geen blog-abonnementen</string>
     <string name="reader_filter_empty_blogs_action">Abonneren op blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Je kan berichten over een bepaald onderwerp volgen door een label toe te voegen</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
     <string name="stats_traffic">Bezoekersaantallen</string>
     <string name="gutenberg_native_working_offline">Werk offline</string>

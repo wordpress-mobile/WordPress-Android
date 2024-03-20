@@ -82,7 +82,6 @@ Language: sv_SE
     <string name="reader_filter_empty_blogs_list_text">Prenumerera på bloggar i Upptäck så kommer du att se deras senaste inlägg här. Eller så kan du söka efter en blogg som du redan gillar.</string>
     <string name="reader_filter_empty_blogs_list_title">Inga bloggprenumerationer</string>
     <string name="reader_filter_empty_blogs_action">Prenumerera på en blogg</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Du kan prenumerera på inlägg om ett specifikt ämne genom att lägga till en etikett</string>
     <string name="reader_filter_empty_blogs_list">Se de nyaste inläggen från bloggar du prenumererar på</string>
     <string name="reader_filter_by_tag_title">Filtrera efter etikett</string>
     <string name="reader_filter_by_blog_title">Filtrera efter blogg</string>

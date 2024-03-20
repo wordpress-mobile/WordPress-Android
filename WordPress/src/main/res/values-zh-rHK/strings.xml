@@ -82,7 +82,6 @@ Language: zh_TW
     <string name="reader_filter_empty_blogs_list_text">在「探索」中訂閱網誌，就會於此處看到網誌的最新文章。 或者搜尋你已按讚的網誌。</string>
     <string name="reader_filter_empty_blogs_list_title">無網誌訂閱</string>
     <string name="reader_filter_empty_blogs_action">訂閱網誌</string>
-    <string name="reader_filter_empty_tags_list_subscribe">你可以新增標籤以訂閱特定主題的文章</string>
     <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
     <string name="reader_filter_by_tag_title">依標籤篩選</string>
     <string name="reader_filter_by_blog_title">依網誌篩選</string>

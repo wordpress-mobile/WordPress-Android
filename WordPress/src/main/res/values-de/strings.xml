@@ -82,7 +82,6 @@ Language: de
     <string name="reader_filter_empty_blogs_list_text">Abonniere Blogs in Entdecken und die neuesten Beiträge werden hier angezeigt. Oder suche nach einem Blog, den du bereits magst.</string>
     <string name="reader_filter_empty_blogs_list_title">Keine Blog-Abonnements</string>
     <string name="reader_filter_empty_blogs_action">Einen Blog abonnieren</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Du kannst Beiträge zu einem bestimmten Thema abonnieren, indem du ein Schlagwort hinzufügst</string>
     <string name="reader_filter_empty_blogs_list">Sieh dir die neuesten Beiträge der Blogs an, die du abonniert hast</string>
     <string name="reader_filter_by_tag_title">Nach Schlagwort filtern</string>
     <string name="reader_filter_by_blog_title">Nach Blog filtern</string>

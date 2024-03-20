@@ -82,7 +82,6 @@ Language: tr
     <string name="reader_filter_empty_blogs_list_text">Keşfet bölümünden bloglara abone olduğunuzda en son yazılar burada görüntülenir. Zaten sevdiğiniz bir blogu da arayabilirsiniz.</string>
     <string name="reader_filter_empty_blogs_list_title">Abone olunan blog yok</string>
     <string name="reader_filter_empty_blogs_action">Bloga abone ol</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Bir etiket ekleyerek belirli bir konudaki yazılara abone olabilirsiniz</string>
     <string name="reader_filter_empty_blogs_list">Abone olduğunuz bloglardaki en iyi yazıları görün</string>
     <string name="reader_filter_by_tag_title">Etikete göre süz</string>
     <string name="reader_filter_by_blog_title">Bloğa göre süz</string>

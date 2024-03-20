@@ -82,7 +82,6 @@ Language: it
     <string name="reader_filter_empty_blogs_list_text">Segui i blog della sezione Scopri e vedrai i loro ultimi articoli qui. Oppure cerca un blog che già ti piace.</string>
     <string name="reader_filter_empty_blogs_list_title">Nessun abbonamento ai blog</string>
     <string name="reader_filter_empty_blogs_action">Segui un blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Puoi seguire gli articoli su uno specifico argomento aggiungendo un tag</string>
     <string name="reader_filter_empty_blogs_list">Vedi i nuovi articoli dei blog che segui</string>
     <string name="reader_filter_by_tag_title">Filtra per tag</string>
     <string name="reader_filter_by_blog_title">Filtra per blog</string>

@@ -1636,7 +1636,6 @@
     <string name="reader_filter_by_blog_title">Filter by blog</string>
     <string name="reader_filter_by_tag_title">Filter by tag</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
-    <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Log in to WordPress.com to see the latest posts from tags you\'re subscribed to</string>
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>

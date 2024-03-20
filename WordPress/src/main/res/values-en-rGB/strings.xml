@@ -82,7 +82,6 @@ Language: en_GB
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs to which you\'re subscribed</string>
     <string name="reader_filter_by_tag_title">Filter by tag</string>
     <string name="reader_filter_by_blog_title">Filter by blog</string>
