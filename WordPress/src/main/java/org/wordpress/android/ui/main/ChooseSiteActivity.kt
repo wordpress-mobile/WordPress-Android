@@ -25,10 +25,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ChooseSiteActivityBinding
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
+import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
@@ -106,6 +108,11 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     override fun onStart() {
         super.onStart()
         dispatcher.register(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ActivityId.trackLastActivity(ActivityId.SITE_PICKER)
     }
 
     override fun onStop() {
@@ -235,6 +242,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         binding.recyclerView.adapter = adapter.apply {
             onReload = { viewModel.loadSites(this@ChooseSiteActivity.mode) }
             onSiteClicked = { selectSite(it) }
+            onSiteLongClicked = { onSiteLongClick(it) }
         }
         binding.recyclerView.scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         binding.recyclerView.setEmptyView(binding.actionableEmptyView)
@@ -244,6 +252,30 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         AppPrefs.addRecentlyPickedSiteId(siteRecord.localId)
         setResult(RESULT_OK, Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.localId))
         finish()
+    }
+
+    private fun onSiteLongClick(siteRecord: SiteRecord) {
+        val site: SiteModel = siteStore.getSiteByLocalId(siteRecord.localId) ?: return
+        if (site.isUsingWpComRestApi.not()) {
+            showRemoveSelfHostedSiteDialog(site)
+        }
+    }
+
+    private fun showRemoveSelfHostedSiteDialog(site: SiteModel) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getText(R.string.remove_account))
+            .setMessage(resources.getText(R.string.sure_to_remove_account))
+            .setPositiveButton(
+                resources.getText(R.string.yes)
+            ) { _: DialogInterface?, _: Int ->
+                dispatcher.dispatch(
+                    SiteActionBuilder.newRemoveSiteAction(site)
+                )
+            }
+            .setNegativeButton(resources.getText(R.string.no), null)
+            .setCancelable(false)
+            .create()
+            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -23,6 +23,7 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
 
     var onReload = {}
     var onSiteClicked: (SiteRecord) -> Unit = {}
+    var onSiteLongClicked: (SiteRecord) -> Unit = {}
     var selectedSiteId: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseSiteViewHolder =
@@ -32,12 +33,9 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
 
     override fun onBindViewHolder(holder: ChooseSiteViewHolder, position: Int) {
         holder.bind(mode, sites.getOrNull(position - 1), sites[position], selectedSiteId)
-        holder.onPinUpdated = {
-            onReload()
-        }
-        holder.onSiteClicked = {
-            onSiteClicked(it)
-        }
+        holder.onPinUpdated = { onReload() }
+        holder.onClicked = { onSiteClicked(it) }
+        holder.onLongClicked = { onSiteLongClicked(it) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -62,7 +60,8 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     lateinit var appPrefs: AppPrefsWrapper
 
     var onPinUpdated = { _: SiteRecord -> }
-    var onSiteClicked = { _: SiteRecord -> }
+    var onClicked = { _: SiteRecord -> }
+    var onLongClicked = { _: SiteRecord -> }
 
     init {
         (itemView.context.applicationContext as WordPress).component().inject(this)
@@ -107,8 +106,13 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
 
         if (mode is ActionMode.Pin) {
             binding.layoutContainer.setOnClickListener(null)
+            binding.layoutContainer.setOnLongClickListener(null)
         } else {
-            binding.layoutContainer.setOnClickListener { onSiteClicked(site) }
+            binding.layoutContainer.setOnClickListener { onClicked(site) }
+            binding.layoutContainer.setOnLongClickListener {
+                onLongClicked(site)
+                true
+            }
         }
 
         handleHighlight(site, selectedId)
