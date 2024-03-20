@@ -49,7 +49,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
         includeBookmark: Boolean,
-        isPostDetails: Boolean,
+        includeReadingPreferences: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<ReaderPostCardAction> {
         val menuItems = mutableListOf<ReaderPostCardAction>()
@@ -62,7 +62,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (includeBookmark) menuItems.add(buildBookmark(isPostBookmarked, onButtonClicked))
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
-        if (isPostDetails) {
+        if (includeReadingPreferences) {
             menuItems.add(SpacerNoAction())
             menuItems.add(buildReadingPreferences(onButtonClicked))
         }

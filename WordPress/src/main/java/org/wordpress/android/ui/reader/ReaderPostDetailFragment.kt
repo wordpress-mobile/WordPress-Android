@@ -147,6 +147,7 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
@@ -286,6 +287,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
+
+    @Inject
+    lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
 
     @Inject
     lateinit var getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase
@@ -1089,6 +1093,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // share require the post to have a URL
         val menuShare = menu.findItem(R.id.menu_share)
         menuShare?.isVisible = postHasUrl
+        // reading preferences require the feature flag to be on
+        val menuReadingPreferences = menu.findItem(R.id.menu_reading_preferences)
+        menuReadingPreferences?.isVisible = readingPreferencesFeatureConfig.isEnabled()
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {

@@ -6,11 +6,13 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderReadingPreferencesRepository @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
+    private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     private val gson = Gson()
@@ -20,7 +22,13 @@ class ReaderReadingPreferencesRepository @Inject constructor(
     }
 
     fun getReadingPreferencesSync(): ReaderReadingPreferences {
-        return appPrefsWrapper.readerReadingPreferencesJson?.let {
+        val savedPreferences = if (readingPreferencesFeatureConfig.isEnabled()) {
+            appPrefsWrapper.readerReadingPreferencesJson
+        } else {
+            null
+        }
+
+        return savedPreferences?.let {
             gson.fromJson(it, ReaderReadingPreferences::class.java)
         } ?: ReaderReadingPreferences()
     }

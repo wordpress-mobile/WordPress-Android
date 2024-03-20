@@ -92,6 +92,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -127,7 +128,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper,
+    private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -450,7 +452,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
                         post,
                         includeBookmark = false,
-                        isPostDetails = true,
+                        includeReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
                         onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
