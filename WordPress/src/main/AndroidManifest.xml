@@ -250,15 +250,6 @@
                 android:value=".ui.posts.PostsListActivity" />
         </activity>
         <activity
-            android:name=".ui.posts.ImprovedEditPostActivity"
-            android:theme="@style/WordPress.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.posts.PostsListActivity" />
-        </activity>
-        <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
             android:theme="@style/WordPress.NoActionBar"
