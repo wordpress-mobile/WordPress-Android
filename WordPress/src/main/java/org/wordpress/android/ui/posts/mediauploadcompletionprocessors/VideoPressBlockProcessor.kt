@@ -18,7 +18,7 @@ class VideoPressBlockProcessor(
 
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
             jsonAttributes.apply {
-                addIdPropertySafely(this, ID_ATTRIBUTE, mRemoteId)
+                addIntPropertySafely(this, ID_ATTRIBUTE, mRemoteId)
                 addProperty(GUID_ATTRIBUTE, mRemoteGuid)
                 if (src?.startsWith("file:") == true) {
                     remove(SRC_ATTRIBUTE)

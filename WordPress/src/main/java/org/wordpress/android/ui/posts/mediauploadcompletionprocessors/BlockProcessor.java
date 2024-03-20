@@ -131,9 +131,9 @@ public abstract class BlockProcessor {
         return processBlock(block, false);
     }
 
-     final void addIdPropertySafely(JsonObject jsonAttributes, String idName, String remoteId) {
+     final void addIntPropertySafely(JsonObject jsonAttributes, String propertyName, String value) {
         try {
-            jsonAttributes.addProperty(idName, Integer.parseInt(remoteId));
+            jsonAttributes.addProperty(propertyName, Integer.parseInt(value));
         } catch (NumberFormatException e) {
             AppLog.e(MEDIA, e.getMessage());
         }

@@ -23,7 +23,7 @@ class AudioBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProces
 
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
             jsonAttributes.apply {
-                addIdPropertySafely(this, ID_ATTRIBUTE, mRemoteId)
+                addIntPropertySafely(this, ID_ATTRIBUTE, mRemoteId)
             }
             true
         } else {

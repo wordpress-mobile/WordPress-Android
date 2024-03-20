@@ -35,7 +35,7 @@ public class ImageBlockProcessor extends BlockProcessor {
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            addIdPropertySafely(jsonAttributes, "id", mRemoteId);
+            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
             return true;
         }
         return false;
