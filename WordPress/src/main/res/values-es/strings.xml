@@ -45,7 +45,6 @@ Language: es
     <string name="reader_label_subscribe_count">%,d suscriptores</string>
     <string name="reader_label_blog_subscribed">Blog suscrito</string>
     <string name="reader_hint_search_subscribed_blogs">Buscar blogs suscritos</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Introduce una URL o etiqueta a la que suscribirte</string>
     <string name="reader_btn_subscribed">Suscrito</string>
     <string name="reader_btn_subscribe">Suscribirse</string>
     <string name="reader_menu_block_this_blog">Bloquear este blog</string>

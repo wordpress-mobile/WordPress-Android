@@ -45,7 +45,6 @@ Language: fr
     <string name="reader_label_subscribe_count">%,d abonnés</string>
     <string name="reader_label_blog_subscribed">Abonné(e) au blog</string>
     <string name="reader_hint_search_subscribed_blogs">Rechercher parmi les blogs auxquels vous êtes abonné(e)</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Saisir l’URL ou une étiquette auxquels s’abonner</string>
     <string name="reader_btn_subscribed">Abonné(e)</string>
     <string name="reader_btn_subscribe">S’abonner</string>
     <string name="reader_menu_block_this_blog">Bloquer ce blog</string>

@@ -33,7 +33,6 @@ Language: nl
     <string name="reader_label_subscribe_count">%,d Abonnees</string>
     <string name="reader_label_blog_subscribed">Blog subscribed</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Voer de URL in van een blog waarop je je wilt abonneren</string>
     <string name="reader_menu_block_this_blog">Deze blog blokkeren</string>
     <string name="reader_menu_tags_and_blogs">Tags en blogs bijwerken</string>
     <string name="reader_page_followed_blogs_title">Geabonneerd op blog</string>

@@ -49,7 +49,6 @@ Language: gl_ES
     <string name="reader_menu_tags_and_blogs">Editar etiquetas e blogs</string>
     <string name="reader_activity_title_manage_tags_blogs">Xestionar etiquetas e blogs</string>
     <string name="reader_hint_search_subscribed_blogs">Buscar blogs subscritos</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Introduce unha URL ou etiqueta á que subscribirte</string>
     <string name="reader_filter_chip_tag_one">1 etiqueta</string>
     <string name="reader_dropdown_menu_lists">Listas</string>
     <string name="reader_dropdown_menu_liked">Gustoume</string>

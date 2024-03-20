@@ -45,7 +45,6 @@ Language: tr
     <string name="reader_label_subscribe_count">%,d Abone</string>
     <string name="reader_label_blog_subscribed">Bloga abone olundu</string>
     <string name="reader_hint_search_subscribed_blogs">Abone olunan bloglarda arayın</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Abone olunacak bir adres veya etiket yazın</string>
     <string name="reader_btn_subscribed">Abone olundu</string>
     <string name="reader_btn_subscribe">Abone ol</string>
     <string name="reader_menu_block_this_blog">Bu blogu engelle</string>

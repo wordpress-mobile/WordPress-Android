@@ -39,7 +39,6 @@ Language: pt_BR
     <string name="reader_label_subscribe_count">%,d assinantes</string>
     <string name="reader_label_blog_subscribed">Blog assinado</string>
     <string name="reader_hint_search_subscribed_blogs">Pesquisar blogs assinados</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Digite uma URL ou tag para assinar</string>
     <string name="reader_btn_subscribed">Assinado</string>
     <string name="reader_btn_subscribe">Assinar</string>
     <string name="reader_menu_block_this_blog">Bloquear este blog</string>

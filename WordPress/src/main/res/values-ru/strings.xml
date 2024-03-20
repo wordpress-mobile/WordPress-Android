@@ -45,7 +45,6 @@ Language: ru
     <string name="reader_label_subscribe_count">Подписчиков: %,d</string>
     <string name="reader_label_blog_subscribed">Подписка на блог оформлена</string>
     <string name="reader_hint_search_subscribed_blogs">Поиск подписок на блоги</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Введите URL-адрес или тег, на который хотите подписаться</string>
     <string name="reader_btn_subscribed">Подписка оформлена</string>
     <string name="reader_btn_subscribe">Подписаться</string>
     <string name="reader_menu_block_this_blog">Заблокировать этот блог</string>

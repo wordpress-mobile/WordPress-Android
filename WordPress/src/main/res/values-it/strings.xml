@@ -45,7 +45,6 @@ Language: it
     <string name="reader_label_subscribe_count">%,d Abbonati</string>
     <string name="reader_label_blog_subscribed">Blog che segui</string>
     <string name="reader_hint_search_subscribed_blogs">Cerca blog che segui</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Inserisci un URL o un tag da seguire</string>
     <string name="reader_btn_subscribed">Stai seguendo</string>
     <string name="reader_btn_subscribe">Segui</string>
     <string name="reader_menu_block_this_blog">Blocca questo blog</string>

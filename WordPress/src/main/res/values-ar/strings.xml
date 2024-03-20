@@ -45,7 +45,6 @@ Language: ar
     <string name="reader_label_subscribe_count">%,d من المشتركين</string>
     <string name="reader_label_blog_subscribed">تم الاشتراك في المدونة</string>
     <string name="reader_hint_search_subscribed_blogs">البحث عن المدونات التي تم الاشتراك فيها</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">إدخال عنوان URL أو وسم للاشتراك فيها</string>
     <string name="reader_btn_subscribed">مشترك</string>
     <string name="reader_btn_subscribe">اشترك</string>
     <string name="reader_menu_block_this_blog">حظر هذه المدونة</string>

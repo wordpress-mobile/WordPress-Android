@@ -41,7 +41,6 @@ Language: id
     <string name="reader_label_subscribe_count">%,d Pelanggan</string>
     <string name="reader_label_blog_subscribed">Blog langganan</string>
     <string name="reader_hint_search_subscribed_blogs">Cari blog langganan</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Masukkan URL atau tag untuk dijadikan langganan</string>
     <string name="reader_btn_subscribed">Telah berlangganan</string>
     <string name="reader_btn_subscribe">Berlangganan</string>
     <string name="reader_menu_tags_and_blogs">Sunting tag dan blog</string>

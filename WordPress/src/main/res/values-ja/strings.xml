@@ -45,7 +45,6 @@ Language: ja_JP
     <string name="reader_label_subscribe_count">%,d人の購読者</string>
     <string name="reader_label_blog_subscribed">購読済みのブログ</string>
     <string name="reader_hint_search_subscribed_blogs">購読済みのブログを検索</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">購読する URL またはタグを入力</string>
     <string name="reader_btn_subscribed">購読済み</string>
     <string name="reader_btn_subscribe">購読</string>
     <string name="reader_menu_block_this_blog">このブログをブロック</string>

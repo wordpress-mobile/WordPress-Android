@@ -45,7 +45,6 @@ Language: ro
     <string name="reader_label_subscribe_count">%d abonați</string>
     <string name="reader_label_blog_subscribed">Blog la care te-ai abonat</string>
     <string name="reader_hint_search_subscribed_blogs">Caută bloguri la care te-ai abonat</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Introdu un URL-ul sau o etichetă la care să te abonezi</string>
     <string name="reader_btn_subscribed">Te-ai abonat</string>
     <string name="reader_btn_subscribe">Abonează-te</string>
     <string name="reader_menu_block_this_blog">Blochează acest blog</string>

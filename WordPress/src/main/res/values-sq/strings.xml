@@ -45,7 +45,6 @@ Language: sq_AL
     <string name="reader_label_subscribe_count">%,d Pajtimtarë</string>
     <string name="reader_label_blog_subscribed">U pajtuat në blog</string>
     <string name="reader_hint_search_subscribed_blogs">Kërkoni te blogje të pajtuar</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Jepni një URL, ose një etiketë ku të pajtohet</string>
     <string name="reader_btn_subscribed">I pajtuar</string>
     <string name="reader_btn_subscribe">Pajtohuni</string>
     <string name="reader_menu_block_this_blog">Bllokoje këtë blog</string>

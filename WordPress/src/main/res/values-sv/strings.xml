@@ -45,7 +45,6 @@ Language: sv_SE
     <string name="reader_label_subscribe_count">%,d prenumeranter</string>
     <string name="reader_label_blog_subscribed">Du prenumererar på den här bloggen</string>
     <string name="reader_hint_search_subscribed_blogs">Sök efter bloggar som du prenumererar på</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Ange en URL eller etikett att prenumerera på</string>
     <string name="reader_btn_subscribed">Prenumererad</string>
     <string name="reader_btn_subscribe">Prenumerera</string>
     <string name="reader_menu_block_this_blog">Blockera denna blogg</string>

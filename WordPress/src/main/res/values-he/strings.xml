@@ -45,7 +45,6 @@ Language: he_IL
     <string name="reader_label_subscribe_count">%,d מנויים</string>
     <string name="reader_label_blog_subscribed">הבלוג רשום לעדכונים</string>
     <string name="reader_hint_search_subscribed_blogs">לחפש בלוגים שרשומים לעדכונים</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">יש להזין כתובת URL או תגית שברצונך להירשם לעדכונים מהן</string>
     <string name="reader_btn_subscribed">רשום לעדכונים</string>
     <string name="reader_btn_subscribe">להירשם לעדכונים</string>
     <string name="reader_menu_block_this_blog">לחסום את הבלוג הזה</string>

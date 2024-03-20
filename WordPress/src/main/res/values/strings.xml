@@ -2145,7 +2145,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Enter a URL or tag to subscribe to</string>
+    <string name="reader_hint_add_tag_or_url_follow">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
 

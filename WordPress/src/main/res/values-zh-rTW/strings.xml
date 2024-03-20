@@ -45,7 +45,6 @@ Language: zh_TW
     <string name="reader_label_subscribe_count">%,d 名訂閱者</string>
     <string name="reader_label_blog_subscribed">網誌已訂閱</string>
     <string name="reader_hint_search_subscribed_blogs">搜尋已訂閱的網誌</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">輸入要訂閱的 URL 或標籤</string>
     <string name="reader_btn_subscribed">已訂閱</string>
     <string name="reader_btn_subscribe">訂閱</string>
     <string name="reader_menu_block_this_blog">封鎖此網誌</string>

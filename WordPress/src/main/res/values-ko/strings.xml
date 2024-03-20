@@ -45,7 +45,6 @@ Language: ko_KR
     <string name="reader_label_subscribe_count">구독자 %,d명</string>
     <string name="reader_label_blog_subscribed">구독하는 블로그</string>
     <string name="reader_hint_search_subscribed_blogs">구독하는 블로그 검색</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">구독할 블로그의 URL 또는 태그 입력</string>
     <string name="reader_btn_subscribed">구독됨</string>
     <string name="reader_btn_subscribe">구독</string>
     <string name="reader_menu_block_this_blog">이 블로그 차단</string>
