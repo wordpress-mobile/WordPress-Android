@@ -38,7 +38,6 @@ Language: fr
     <string name="reader_toast_err_unable_to_follow_blog">Impossible de s’abonner à ce blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ce blog fait déjà partie de vos abonnements</string>
     <string name="reader_toast_err_show_blog">Impossible d’afficher ce blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Cette étiquette fait déjà partie de vos abonnements</string>
     <string name="reader_label_choose_interests">Choisissez vos centres d’intérêt</string>
     <string name="reader_label_subscribers_count_single">1 abonné</string>
     <string name="reader_label_subscribers_count">%s abonnés</string>

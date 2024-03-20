@@ -38,7 +38,6 @@ Language: sv_SE
     <string name="reader_toast_err_unable_to_follow_blog">Kan inte prenumerera på denna blogg</string>
     <string name="reader_toast_err_already_follow_this_blog">Du prenumererar redan på denna blogg</string>
     <string name="reader_toast_err_show_blog">Kan inte visa denna blogg</string>
-    <string name="reader_toast_err_tag_already_subscribed">Du prenumererar redan på denna etikett</string>
     <string name="reader_label_choose_interests">Välj dina intressen</string>
     <string name="reader_label_subscribers_count_single">1 prenumerant</string>
     <string name="reader_label_subscribers_count">%s prenumeranter</string>

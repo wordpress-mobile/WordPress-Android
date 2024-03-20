@@ -38,7 +38,6 @@ Language: ru
     <string name="reader_toast_err_unable_to_follow_blog">Не удалось подписаться на этот блог</string>
     <string name="reader_toast_err_already_follow_this_blog">Вы уже подписаны на этот блог</string>
     <string name="reader_toast_err_show_blog">Не удалось отобразить этот блог</string>
-    <string name="reader_toast_err_tag_already_subscribed">Вы уже подписаны на этот тег</string>
     <string name="reader_label_choose_interests">Выберите ваши интересы</string>
     <string name="reader_label_subscribers_count_single">1 подписчик</string>
     <string name="reader_label_subscribers_count">Подписчиков: %s</string>

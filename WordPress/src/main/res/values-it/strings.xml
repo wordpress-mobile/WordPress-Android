@@ -38,7 +38,6 @@ Language: it
     <string name="reader_toast_err_unable_to_follow_blog">Non è possibile seguire questo blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Segui già questo blog</string>
     <string name="reader_toast_err_show_blog">Impossibile mostrare questo blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Segui già questo tag</string>
     <string name="reader_label_choose_interests">Scegli i tuoi interessi</string>
     <string name="reader_label_subscribers_count_single">1 abbonato</string>
     <string name="reader_label_subscribers_count">%s abbonati</string>

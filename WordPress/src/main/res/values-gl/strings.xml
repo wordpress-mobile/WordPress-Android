@@ -33,7 +33,6 @@ Language: gl_ES
     <string name="reader_label_subscribers_count_single">1 subscritor</string>
     <string name="reader_label_choose_interests">Elixe os teus intereses</string>
     <string name="reader_toast_err_show_blog">Non se pode amosar este blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Xa estás subscrito a esta etiqueta</string>
     <string name="reader_toast_err_already_follow_this_blog">Xa estás subscrito a este blog.</string>
     <string name="reader_activity_title_tag_preview">Etiqueta</string>
     <string name="reader_btn_subscribe">Subscribirse</string>

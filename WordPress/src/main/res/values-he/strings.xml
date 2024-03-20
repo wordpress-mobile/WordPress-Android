@@ -38,7 +38,6 @@ Language: he_IL
     <string name="reader_toast_err_unable_to_follow_blog">לא ניתן להירשם לעדכונים מהבלוג הזה</string>
     <string name="reader_toast_err_already_follow_this_blog">כבר נרשמת לעדכונים מבלוג זה</string>
     <string name="reader_toast_err_show_blog">לא ניתן להציג בלוג זה</string>
-    <string name="reader_toast_err_tag_already_subscribed">כבר נרשמת לקבלת עדכונים מתגית זו</string>
     <string name="reader_label_choose_interests">לבחור את תחומי העניין שלך</string>
     <string name="reader_label_subscribers_count_single">מנוי אחד</string>
     <string name="reader_label_subscribers_count">%s מנויים</string>

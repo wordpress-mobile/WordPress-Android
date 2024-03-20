@@ -38,7 +38,6 @@ Language: ko_KR
     <string name="reader_toast_err_unable_to_follow_blog">이 블로그를 구독할 수 없음</string>
     <string name="reader_toast_err_already_follow_this_blog">이 블로그를 이미 구독하고 있음</string>
     <string name="reader_toast_err_show_blog">이 블로그를 표시할 수 없음</string>
-    <string name="reader_toast_err_tag_already_subscribed">이 태그를 이미 구독하고 있음</string>
     <string name="reader_label_choose_interests">관심사 선택</string>
     <string name="reader_label_subscribers_count_single">구독자 1명</string>
     <string name="reader_label_subscribers_count">구독자 %s명</string>

@@ -38,7 +38,6 @@ Language: ja_JP
     <string name="reader_toast_err_unable_to_follow_blog">このブログを購読できません</string>
     <string name="reader_toast_err_already_follow_this_blog">このブログをすでに購読済みです</string>
     <string name="reader_toast_err_show_blog">このブログを表示できません</string>
-    <string name="reader_toast_err_tag_already_subscribed">このタグをすでに購読済みです</string>
     <string name="reader_label_choose_interests">関心のあるものを選択</string>
     <string name="reader_label_subscribers_count_single">1人の購読者</string>
     <string name="reader_label_subscribers_count">%s人の購読者</string>

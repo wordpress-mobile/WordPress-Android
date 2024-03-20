@@ -35,7 +35,6 @@ Language: id
     <string name="reader_toast_err_unable_to_follow_blog">Tidak dapat berlangganan blog ini</string>
     <string name="reader_toast_err_already_follow_this_blog">Anda sudah berlangganan blog ini</string>
     <string name="reader_toast_err_show_blog">Tidak dapat menampilkan blog ini</string>
-    <string name="reader_toast_err_tag_already_subscribed">Anda telah berlangganan tag ini</string>
     <string name="reader_label_subscribers_count_single">1 pelanggan</string>
     <string name="reader_label_subscribers_count">%s pelanggan</string>
     <string name="reader_label_subscribe_count">%,d Pelanggan</string>

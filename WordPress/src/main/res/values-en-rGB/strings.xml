@@ -38,7 +38,6 @@ Language: en_GB
     <string name="reader_toast_err_unable_to_follow_blog">Unable to subscribe to this blog</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">You\'re already subscribed to this tag</string>
     <string name="reader_label_choose_interests">Choose your interests</string>
     <string name="reader_label_subscribers_count_single">1 subscriber</string>
     <string name="reader_label_subscribers_count">%s subscribers</string>

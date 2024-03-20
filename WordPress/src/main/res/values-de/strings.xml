@@ -38,7 +38,6 @@ Language: de
     <string name="reader_toast_err_unable_to_follow_blog">Dieser Blog kann nicht abonniert werden</string>
     <string name="reader_toast_err_already_follow_this_blog">Du hast diesen Blog bereits abonniert</string>
     <string name="reader_toast_err_show_blog">Dieser Blog kann nicht angezeigt werden</string>
-    <string name="reader_toast_err_tag_already_subscribed">Du hast dieses Schlagwort bereits abonniert</string>
     <string name="reader_label_choose_interests">Wähle deine Interessengebiete</string>
     <string name="reader_label_subscribers_count_single">1 Abonnent</string>
     <string name="reader_label_subscribers_count">%s Abonnenten</string>

@@ -32,7 +32,6 @@ Language: pt_BR
     <string name="reader_toast_err_unable_to_follow_blog">Não foi possível assinar este blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Você já assinou este blog</string>
     <string name="reader_toast_err_show_blog">Não foi possível mostrar este blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Você já é assinante desta tag</string>
     <string name="reader_label_choose_interests">Escolher seus interesses</string>
     <string name="reader_label_subscribers_count_single">1 assinante</string>
     <string name="reader_label_subscribers_count">%s assinantes</string>

@@ -38,7 +38,6 @@ Language: ar
     <string name="reader_no_recommended_blogs_title">لا توجد مدونات موصى بها</string>
     <string name="reader_toast_err_already_follow_this_blog">لقد اشتركت في هذه المدونة بالفعل</string>
     <string name="reader_toast_err_show_blog">يتعذر إظهار هذه المدونة</string>
-    <string name="reader_toast_err_tag_already_subscribed">أنت مشترك بالفعل في هذه المدونة</string>
     <string name="reader_label_choose_interests">اختيار اهتماماتك</string>
     <string name="reader_label_subscribers_count_single">مشترك واحد</string>
     <string name="reader_label_subscribers_count">%s من المشتركين</string>

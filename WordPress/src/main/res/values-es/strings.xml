@@ -38,7 +38,6 @@ Language: es
     <string name="reader_toast_err_unable_to_follow_blog">No es posible suscribirse a este blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ya estás suscrito a este blog.</string>
     <string name="reader_toast_err_show_blog">No se puede mostrar este blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Ya estás suscrito a esta etiqueta</string>
     <string name="reader_label_choose_interests">Elige tus intereses</string>
     <string name="reader_label_subscribers_count_single">1 suscriptor</string>
     <string name="reader_label_subscribers_count">%s suscriptores</string>

@@ -38,7 +38,6 @@ Language: sq_AL
     <string name="reader_toast_err_unable_to_follow_blog">S’arrihet të pajtoheni te ky blogu</string>
     <string name="reader_toast_err_already_follow_this_blog">Jeni tashmë i pajtuar te ky blog</string>
     <string name="reader_toast_err_show_blog">S’arrihet të shfaqet ky blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Jeni i pajtuar tashmë te kjo etiketë</string>
     <string name="reader_label_choose_interests">Zgjidhni ç’ju intereson</string>
     <string name="reader_label_subscribers_count_single">1 pajtimtar</string>
     <string name="reader_label_subscribers_count">%s pajtimtarë</string>

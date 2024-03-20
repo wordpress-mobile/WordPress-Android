@@ -38,7 +38,6 @@ Language: ro
     <string name="reader_toast_err_unable_to_follow_blog">Nu pot face abonarea la acest blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Te-ai abonat deja la acest blog</string>
     <string name="reader_toast_err_show_blog">Nu pot să arăt acest blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Te-ai abonat deja la această etichetă</string>
     <string name="reader_label_choose_interests">Alege ce te interesează</string>
     <string name="reader_label_subscribers_count_single">1 abonat</string>
     <string name="reader_label_subscribers_count">%s abonați</string>
