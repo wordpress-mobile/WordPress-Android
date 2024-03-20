@@ -29,7 +29,6 @@ Language: ja_JP
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">購読しているブログには、最近の投稿はありません</string>
     <string name="reader_no_followed_blogs_description_subs">「ディスカバー」でブログを購読するか、すでに気に入っているブログを検索します。</string>
     <string name="reader_no_recommended_blogs_title">おすすめのブログはありません</string>
-    <string name="reader_no_followed_tags_title">購読しているタグはありません</string>
     <string name="reader_no_posts_with_this_tag">このタグを使った投稿はありません</string>
     <string name="reader_toast_err_unable_to_block_blog">このブログをブロックできませんでした</string>
     <string name="reader_toast_posts_from_this_blog_blocked">このブログからの投稿は今後表示されません</string>

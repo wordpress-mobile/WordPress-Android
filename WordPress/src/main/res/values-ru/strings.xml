@@ -29,7 +29,6 @@ Language: ru
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось.</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
     <string name="reader_no_recommended_blogs_title">Нет рекомендуемых блогов</string>
-    <string name="reader_no_followed_tags_title">Нет подписок на теги</string>
     <string name="reader_no_posts_with_this_tag">Нет записей с этой меткой</string>
     <string name="reader_toast_err_unable_to_block_blog">Не удалось заблокировать этот блог</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Записи из этого блога больше не будут отображаться</string>

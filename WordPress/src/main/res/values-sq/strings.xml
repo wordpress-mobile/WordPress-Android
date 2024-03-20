@@ -29,7 +29,6 @@ Language: sq_AL
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogjet ku jeni pajtuar s’kanë postuar gjë tani së fundi</string>
     <string name="reader_no_followed_blogs_description_subs">Pajtohuni te blogje në Zbuloni, ose kërkoni për një blog që ju pëlqen tashmë.</string>
     <string name="reader_no_recommended_blogs_title">S’ka blogje të rekomanduar</string>
-    <string name="reader_no_followed_tags_title">S’ka etiketa me pajtime</string>
     <string name="reader_no_posts_with_this_tag">S’ka postime me këtë etiketë</string>
     <string name="reader_toast_err_unable_to_block_blog">S’arrihet të bllokohet ky blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Postimet prej këtij blogu s’do të shfaqen më</string>

@@ -29,7 +29,6 @@ Language: tr
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Abone olduğunuz bloglar yakın zamanda herhangi bir yazı yayınlamadı</string>
     <string name="reader_no_followed_blogs_description_subs">Keşfette bloglara abone olun veya zaten sevdiğiniz bir blogu arayın.</string>
     <string name="reader_no_recommended_blogs_title">Önerilen bir blog yok</string>
-    <string name="reader_no_followed_tags_title">Abone olunan etiket yok</string>
     <string name="reader_no_posts_with_this_tag">Bu etiketi taşıyan bir yazı yok</string>
     <string name="reader_toast_err_unable_to_block_blog">Bu blog engellenemiyor</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Bu bloğun yazıları artık görüntülenmeyecek</string>

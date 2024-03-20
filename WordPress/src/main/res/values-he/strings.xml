@@ -29,7 +29,6 @@ Language: he_IL
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">הבלוגים שנרשמת אליהם לא פרסמו תוכן לאחרונה</string>
     <string name="reader_no_followed_blogs_description_subs">אפשר להירשם לעדכונים מבלוגים דרך \'היכרות\' או לחפש בלוג שכבר מצא חן בעיניך.</string>
     <string name="reader_no_recommended_blogs_title">אין בלוגים מומלצים</string>
-    <string name="reader_no_followed_tags_title">אין תגיות שנרשמת לקבלת עדכונים מהן</string>
     <string name="reader_no_posts_with_this_tag">אין פוסטים עם התגית הזו</string>
     <string name="reader_toast_err_unable_to_block_blog">לא ניתן לחסום את הבלוג הזה</string>
     <string name="reader_toast_posts_from_this_blog_blocked">פוסטים מהבלוג הזה לא יוצגו עוד</string>

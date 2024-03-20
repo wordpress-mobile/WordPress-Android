@@ -29,7 +29,6 @@ Language: es
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Los blogs a los que estás suscrito no han publicado nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Suscríbete a blogs en Descubrir o busca un blog que ya te guste.</string>
     <string name="reader_no_recommended_blogs_title">No hay blogs recomendados</string>
-    <string name="reader_no_followed_tags_title">No hay suscripciones a etiquetas</string>
     <string name="reader_no_posts_with_this_tag">No hay entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">No ha sido posible bloquear este blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Las entradas de este blog ya no se mostrarán</string>

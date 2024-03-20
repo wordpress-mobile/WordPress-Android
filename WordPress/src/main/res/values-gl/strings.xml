@@ -22,7 +22,6 @@ Language: gl_ES
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Os blogs aos que estás subscrito non publicaron nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Subscríbete a blogs en Descubrir ou busca un blog que xa che guste.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Utiliza &lt;b&gt;Descubrir&lt;/b&gt; para encontrar sitios e etiquetas. Proba a seleccionar &lt;b&gt;Subscricións&lt;/b&gt; para ver o contido subscrito e xestionar as túas subscricións.</string>
-    <string name="reader_no_followed_tags_title">Non hai subscricións a etiquetas</string>
     <string name="reader_no_recommended_blogs_title">Non hai blogs recomendados</string>
     <string name="reader_no_posts_with_this_tag">Non hai entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">Non se puido bloquear este blog</string>

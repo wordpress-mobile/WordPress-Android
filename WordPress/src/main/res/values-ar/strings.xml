@@ -28,7 +28,6 @@ Language: ar
     <string name="reader_empty_followed_blogs_button_subscriptions">الانتقال إلى الاشتراكات</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">لم تنشر المدونات التي اشتركتَ فيها أي شيء مؤخرًا</string>
     <string name="reader_no_followed_blogs_description_subs">اشترك في المدونات ضمن \"اكتشاف\" أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
-    <string name="reader_no_followed_tags_title">لا توجد وسوم تم الاشتراك فيها</string>
     <string name="reader_no_posts_with_this_tag">لا توجد تدوينات تحمل هذا الوسم</string>
     <string name="reader_toast_err_unable_to_block_blog">يتعذر حظر هذه المدونة</string>
     <string name="reader_toast_posts_from_this_blog_blocked">لن تظهر التدوينات الواردة من هذه المدونة بعد الآن</string>

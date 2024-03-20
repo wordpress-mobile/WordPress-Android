@@ -29,7 +29,6 @@ Language: ro
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogurile la care te-ai abonat nu au publicat nimic recent</string>
     <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
     <string name="reader_no_recommended_blogs_title">Niciun blog recomandat</string>
-    <string name="reader_no_followed_tags_title">Nu te-ai abonat la nicio etichetă</string>
     <string name="reader_no_posts_with_this_tag">Nu există articole cu această etichetă</string>
     <string name="reader_toast_err_unable_to_block_blog">Nu pot să blochez acest blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>

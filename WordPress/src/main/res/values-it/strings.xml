@@ -29,7 +29,6 @@ Language: it
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">I blog che segui non hanno pubblicato articoli di recente</string>
     <string name="reader_no_followed_blogs_description_subs">Segui i blog in Scopri, oppure cerca un blog che già ti piace.</string>
     <string name="reader_no_recommended_blogs_title">Nessun blog consigliato</string>
-    <string name="reader_no_followed_tags_title">Nessun tag che segui</string>
     <string name="reader_no_posts_with_this_tag">Nessun articolo con questo tag</string>
     <string name="reader_toast_err_unable_to_block_blog">Non è possibile bloccare questo blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Gli articoli di questo blog non verranno più mostrati</string>

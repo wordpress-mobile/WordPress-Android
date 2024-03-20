@@ -23,7 +23,6 @@ Language: pt_BR
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Os blogs que você assinou não postaram nada recentemente</string>
     <string name="reader_no_followed_blogs_description_subs">Assine blogs em Descobrir ou busque um blog que você já gosta.</string>
     <string name="reader_no_recommended_blogs_title">Nenhum blog recomendado</string>
-    <string name="reader_no_followed_tags_title">Nenhuma tag assinada</string>
     <string name="reader_no_posts_with_this_tag">Nenhum post com esta tag</string>
     <string name="reader_toast_err_unable_to_block_blog">Não foi possível bloquear este blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Os posts deste blog não serão mais exibidos</string>

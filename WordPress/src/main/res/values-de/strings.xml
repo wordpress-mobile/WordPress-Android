@@ -29,7 +29,6 @@ Language: de
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Die Blogs, die du abonniert hast, haben in letzter Zeit nichts veröffentlicht</string>
     <string name="reader_no_followed_blogs_description_subs">Abonniere Blogs in Entdecken oder suche nach einem Blog, den du bereits magst.</string>
     <string name="reader_no_recommended_blogs_title">Keine empfohlenen Blogs</string>
-    <string name="reader_no_followed_tags_title">Keine abonnierten Schlagwörter</string>
     <string name="reader_no_posts_with_this_tag">Keine Beiträge mit diesem Schlagwort</string>
     <string name="reader_toast_err_unable_to_block_blog">Dieser Blog kann nicht blockiert werden</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Beiträge aus diesem Blog werden nicht mehr angezeigt</string>
