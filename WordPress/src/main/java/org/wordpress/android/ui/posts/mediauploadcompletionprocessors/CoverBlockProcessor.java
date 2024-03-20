@@ -55,7 +55,8 @@ public class CoverBlockProcessor extends BlockProcessor {
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
-            jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId, 10));
+            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+
             jsonAttributes.addProperty("url", mRemoteUrl);
 
             // check if background type is video
