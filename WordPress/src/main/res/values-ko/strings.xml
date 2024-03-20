@@ -69,7 +69,6 @@ Language: ko_KR
     <string name="reader_dropdown_menu_subscriptions">구독</string>
     <string name="reader_dropdown_menu_discover">발견</string>
     <string name="reader_search_content_description">검색</string>
-    <string name="reader_discover_no_posts_button_tags_text">태그 구독</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">추가 태그를 구독하여 검색 범위 확대하기</string>
     <string name="reader_discover_empty_subtitle_subscribe">태그를 구독하여 새 블로그 발견하기</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>

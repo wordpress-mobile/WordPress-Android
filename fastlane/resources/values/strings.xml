@@ -1663,7 +1663,6 @@
     <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribe to tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>

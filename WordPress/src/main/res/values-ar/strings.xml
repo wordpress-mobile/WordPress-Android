@@ -69,7 +69,6 @@ Language: ar
     <string name="reader_dropdown_menu_subscriptions">الاشتراكات</string>
     <string name="reader_dropdown_menu_discover">اكتشاف</string>
     <string name="reader_search_content_description">البحث</string>
-    <string name="reader_discover_no_posts_button_tags_text">الاشتراك في الوسوم</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">محاولة الاشتراك في مزيد من الوسوم لتوسيع نطاق البحث</string>
     <string name="reader_discover_empty_subtitle_subscribe">الاشتراك في الوسوم لاكتشاف مدونات جديدة</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">المدونات المطلوب الاشتراك فيها</string>

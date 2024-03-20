@@ -65,7 +65,6 @@ Language: gl_ES
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_subscriptions">Subscricións</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribirse a etiquetas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
     <string name="reader_filter_empty_tags_action_subscribe">Subscribirse a unha etiqueta</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs aos que subscribirse</string>

@@ -70,7 +70,6 @@ Language: tr
     <string name="reader_dropdown_menu_subscriptions">Abonelikler</string>
     <string name="reader_dropdown_menu_discover">Keşfet</string>
     <string name="reader_search_content_description">Ara</string>
-    <string name="reader_discover_no_posts_button_tags_text">Etiketleri takip et</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Aramayı genişletmek için daha fazla etikete abone olmayı deneyin</string>
     <string name="reader_discover_empty_subtitle_subscribe">Yeni bloglar keşfetmek için etiketlere abone olun</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Abone olunacak bloglar</string>

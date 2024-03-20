@@ -70,7 +70,6 @@ Language: sv_SE
     <string name="reader_dropdown_menu_subscriptions">Prenumerationer</string>
     <string name="reader_dropdown_menu_discover">Upptäck</string>
     <string name="reader_search_content_description">Sök</string>
-    <string name="reader_discover_no_posts_button_tags_text">Prenumerera på etiketter</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Prova att prenumerera på fler etiketter för att bredda sökningen</string>
     <string name="reader_discover_empty_subtitle_subscribe">Prenumerera på etiketter för att upptäcka nya bloggar</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloggar att prenumerera på</string>

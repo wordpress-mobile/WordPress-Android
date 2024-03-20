@@ -69,7 +69,6 @@ Language: ru
     <string name="reader_dropdown_menu_subscriptions">Подписки</string>
     <string name="reader_dropdown_menu_discover">Раздел «Поиск»</string>
     <string name="reader_search_content_description">Поиск</string>
-    <string name="reader_discover_no_posts_button_tags_text">Подписаться на теги</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Подпишитесь на другие теги, чтобы расширить область поиска</string>
     <string name="reader_discover_empty_subtitle_subscribe">Подписывайтесь на теги, чтобы находить новые блоги</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Блоги, на которые можно подписаться</string>

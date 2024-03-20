@@ -64,7 +64,6 @@ Language: pt_BR
     <string name="reader_dropdown_menu_subscriptions">Assinaturas</string>
     <string name="reader_dropdown_menu_discover">Descobrir</string>
     <string name="reader_search_content_description">Pesquisar</string>
-    <string name="reader_discover_no_posts_button_tags_text">Assinar tags</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Tente assinar mais tags para melhorar a pesquisa</string>
     <string name="reader_discover_empty_subtitle_subscribe">Assine tags para descobrir novos blogs</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs para assinar</string>

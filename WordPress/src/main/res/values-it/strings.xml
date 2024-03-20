@@ -70,7 +70,6 @@ Language: it
     <string name="reader_dropdown_menu_subscriptions">Abbonamenti</string>
     <string name="reader_dropdown_menu_discover">Scopri</string>
     <string name="reader_search_content_description">Cerca</string>
-    <string name="reader_discover_no_posts_button_tags_text">Segui tag</string>
     <string name="reader_discover_no_posts_subscribe_subtitle">Prova a seguire più tag per ampliare la ricerca</string>
     <string name="reader_discover_empty_subtitle_subscribe">Segui i tag per scoprire nuovi blog</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blog da seguire</string>
