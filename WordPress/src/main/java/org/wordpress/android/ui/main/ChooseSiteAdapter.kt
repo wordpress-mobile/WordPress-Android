@@ -1,14 +1,17 @@
 package org.wordpress.android.ui.main
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ItemChooseSiteBinding
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -20,15 +23,15 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
 
     var onReload = {}
     var onSiteClicked: (SiteRecord) -> Unit = {}
+    var selectedSiteId: Int? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseSiteViewHolder =
         ChooseSiteViewHolder(ItemChooseSiteBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun getItemCount(): Int = sites.size
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ChooseSiteViewHolder, position: Int) {
-        holder.bind(mode, sites.getOrNull(position - 1), sites[position])
+        holder.bind(mode, sites.getOrNull(position - 1), sites[position], selectedSiteId)
         holder.onPinUpdated = {
             onReload()
         }
@@ -65,7 +68,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         (itemView.context.applicationContext as WordPress).component().inject(this)
     }
 
-    fun bind(mode: ActionMode, previousSite: SiteRecord?, site: SiteRecord) {
+    fun bind(mode: ActionMode, previousSite: SiteRecord?, site: SiteRecord, selectedId: Int?) {
         imageManager.loadImageWithCorners(
             binding.avatar, site.blavatarType, site.blavatarUrl,
             itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
@@ -107,6 +110,26 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         } else {
             binding.layoutContainer.setOnClickListener { onSiteClicked(site) }
         }
+
+        handleHighlight(site, selectedId)
+    }
+
+    private fun handleHighlight(site: SiteRecord, selectedId: Int?) {
+        val isSelected = site.localId == (selectedId ?: appPrefs.getSelectedSite())
+        if (isSelected) {
+            // highlight the selected site
+            ColorUtils.setAlphaComponent(
+                itemView.context.getColorFromAttribute(com.google.android.material.R.attr.colorOnSurface),
+                itemView.context.resources.getInteger(R.integer.selected_list_item_opacity)
+            ).let { color ->
+                binding.layoutContainer.setBackgroundColor(color)
+            }
+            binding.textTitle.setTypeface(null, Typeface.BOLD)
+        } else {
+            // clear the highlight
+            binding.layoutContainer.background = null
+            binding.textTitle.setTypeface(null, Typeface.NORMAL)
+        }
     }
 
     private fun SiteRecord?.isPinned(): Boolean = when (this) {
@@ -115,6 +138,9 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     }
 }
 
+/**
+ * For displaying the UI of "Edit Pins"
+ */
 sealed class ActionMode {
     data object None : ActionMode()
     data object Pin : ActionMode()
