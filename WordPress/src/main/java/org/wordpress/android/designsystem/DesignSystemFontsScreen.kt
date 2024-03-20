@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -55,7 +56,9 @@ fun DesignSystemFontsScreen(
 fun FontCard (text: String, font: TextStyle) {
     Row (modifier = Modifier
         .padding(10.dp, 3.dp)
-        .fillMaxWidth()) {
+        .defaultMinSize(minHeight = 30.dp)
+        .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically) {
         Column {
             Text(
                 modifier = Modifier.padding(start = 25.dp, end = 40.dp),
