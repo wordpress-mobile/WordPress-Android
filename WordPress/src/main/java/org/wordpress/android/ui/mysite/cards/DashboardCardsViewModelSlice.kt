@@ -146,6 +146,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
         migrationSuccessCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
         quickStart?.let { cards.add(it) }
+        cardsState?.let {
+            if (cardsState is CardsState.Success) {
+                cards.addAll(cardsState.topCards)
+            }
+        }
         blazeCard?.let { cards.add(it) }
         plansCard?.let { cards.add(it) }
         domainRegistrationCard?.let { cards.add(it) }
@@ -158,6 +163,11 @@ class DashboardCardsViewModelSlice @Inject constructor(
             }
         }
         jpFullInstallFullPlugin?.let { cards.add(it) }
+        cardsState?.let {
+            if (cardsState is CardsState.Success) {
+                cards.addAll(cardsState.bottomCards)
+            }
+        }
         // when clearing the values of all child VM Slices,
         // the no cards message will still be shown and hence we need to check if the personalize card
         // is shown or not, if the personalize card is not shown, then it means that

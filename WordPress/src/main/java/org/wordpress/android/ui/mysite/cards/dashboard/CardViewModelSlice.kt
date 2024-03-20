@@ -89,13 +89,11 @@ class CardViewModelSlice @Inject constructor(
         bottomDynamicCards: List<MySiteCardAndItem.Card>?
     ): CardsState {
         val cards = mutableListOf<MySiteCardAndItem.Card>()
-        topDynamicCards?.let { cards.addAll(topDynamicCards) }
         todaysStatsCard?.let { cards.add(todaysStatsCard) }
         postsCard?.let { cards.addAll(postsCard) }
         pagesCard?.let { cards.add(pagesCard) }
         activityCard?.let { cards.add(activityCard) }
-        bottomDynamicCards?.let { cards.addAll(bottomDynamicCards) }
-        return CardsState.Success(cards)
+        return CardsState.Success(topDynamicCards ?: emptyList(), cards, bottomDynamicCards ?: emptyList())
     }
 
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
@@ -224,7 +222,7 @@ class CardViewModelSlice @Inject constructor(
     fun postState(cards: List<CardModel>?) {
         _isRefreshing.postValue(false)
         if (cards.isNullOrEmpty()) {
-            uiModel.postValue(CardsState.Success(emptyList()))
+            uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
             return
         }
         scope.launch(bgDispatcher) {
@@ -256,7 +254,7 @@ class CardViewModelSlice @Inject constructor(
     }
 
     fun clearValue() {
-        uiModel.postValue(CardsState.Success(emptyList()))
+        uiModel.postValue(CardsState.Success(emptyList(), emptyList(), emptyList()))
         collectJob?.cancel()
         fetchJob?.cancel()
         dynamicCardsViewModelSlice.clearValue()
@@ -280,6 +278,10 @@ class CardViewModelSlice @Inject constructor(
 }
 
 sealed class CardsState {
-    data class Success(val cards: List<MySiteCardAndItem.Card>) : CardsState()
+    data class Success(
+        val topCards: List<MySiteCardAndItem.Card>,
+        val cards: List<MySiteCardAndItem.Card>,
+        val bottomCards: List<MySiteCardAndItem.Card>
+    ) : CardsState()
     data class ErrorState(val error: MySiteCardAndItem) : CardsState()
 }
