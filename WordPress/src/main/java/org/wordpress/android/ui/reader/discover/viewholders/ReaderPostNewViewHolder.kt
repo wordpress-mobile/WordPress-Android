@@ -15,6 +15,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -164,7 +165,15 @@ class ReaderPostNewViewHolder(
         view.isVisible = state.isEnabled
         view.isSelected = state.isSelected
         view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
-        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
+        view.setOnClickListener {
+            // If it's a like action, we want to update the UI right away. If there's an error, we'll revert
+            // the UI change.
+            // TODO revert UI when there's an error (e.g. no internet connection)
+            if (state.type == ReaderPostCardActionType.LIKE) {
+                view.isSelected = !view.isSelected
+            }
+            state.onClicked?.invoke(postId, blogId, state.type)
+        }
     }
 
     private fun loadVideoThumbnail(state: ReaderPostNewUiState) = with(binding) {
