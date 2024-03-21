@@ -14,7 +14,6 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
-import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -415,7 +414,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var isJetpackSsoEnabled: Boolean = false
     private var networkErrorOnLastMediaFetchAttempt: Boolean = false
     private var editShareMessageActivityResultLauncher: ActivityResultLauncher<Intent>? = null
-    private val hideUpdatingPostAreaHandler: Handler? = Handler(Looper.getMainLooper())
+    private val hideUpdatingPostAreaHandler: Handler = Handler(Looper.getMainLooper())
     private var hideUpdatingPostAreaRunnable: Runnable? = null
     private var updatingPostStartTime: Long = 0L
 
@@ -590,7 +589,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         storageUtilsViewModel.start(savedInstanceState == null)
         editorJetpackSocialViewModel.start(siteModel, (editPostRepository))
         customizeToolbar()
-        updatingPostArea = findViewById<FrameLayout>(R.id.updating)
+        updatingPostArea = findViewById(R.id.updating)
 
         // check if post content needs updating
         if (syncPublishingFeatureConfig.isEnabled()) {
@@ -744,16 +743,15 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 )
                 initializePostObject()
             }
-            editorFragment =
-                fragmentManager.getFragment(
+
+            (fragmentManager.getFragment(
                     state,
                     EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
-                ) as? EditorFragmentAbstract?
-
-            editorFragment?.let { fragment ->
-                if (fragment is EditorMediaUploadListener) {
-                    editorMediaUploadListener = fragment
-                }
+                ) as EditorFragmentAbstract?)?.let { frag ->
+                        editorFragment = frag
+                    if (frag is EditorMediaUploadListener) {
+                        editorMediaUploadListener = frag
+                    }
             }
         }
     }
@@ -812,7 +810,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         updatingPostStartTime = System.currentTimeMillis()
         // Cancel any pending hide operations to avoid conflicts
         hideUpdatingPostAreaRunnable?.let {
-            hideUpdatingPostAreaHandler?.removeCallbacks(it)
+            hideUpdatingPostAreaHandler.removeCallbacks(it)
         }
     }
 
@@ -836,7 +834,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
         }
         hideUpdatingPostAreaRunnable?.let {
-            hideUpdatingPostAreaHandler?.postDelayed(it, delay)
+            hideUpdatingPostAreaHandler.postDelayed(it, delay)
         }
     }
 
@@ -1147,7 +1145,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
         hideUpdatingPostAreaRunnable?.let {
-            hideUpdatingPostAreaHandler?.removeCallbacks(it)
+            hideUpdatingPostAreaHandler.removeCallbacks(it)
         }
     }
 
@@ -2165,9 +2163,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "UnusedParameter")
     private fun uploadPost(publishPost: Boolean) {
-        val lambda: (UpdatePostResult?) -> Unit = fun(_: UpdatePostResult?) {
+        val lambda: (UpdatePostResult?) -> Unit = fun( unusedUpdatePostResult: UpdatePostResult?) {
             val account: AccountModel = accountStore.account
             // prompt user to verify e-mail before publishing
             if (!account.emailVerified) {
@@ -2761,7 +2759,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth")
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "Deprecated")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -3369,7 +3367,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 )
             ) {
                 runOnUiThread {
-                    pendingVideoPressInfoRequests?.let { it.add(videoId) } ?: run {
+                    pendingVideoPressInfoRequests?.add(videoId) ?: run {
                         pendingVideoPressInfoRequests = mutableListOf(videoId)
                     }
                     editorMedia.refreshBlogMedia()
