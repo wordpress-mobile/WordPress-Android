@@ -3627,7 +3627,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     editorMedia.onMediaUploadError(listener, media, event.error)
                 }
             }
-
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             event.media?.let { media ->
