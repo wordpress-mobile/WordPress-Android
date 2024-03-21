@@ -56,7 +56,7 @@ fun DesignSystemFontsScreen(
 fun FontCard (text: String, font: TextStyle) {
     Row (modifier = Modifier
         .padding(10.dp, 3.dp)
-        .defaultMinSize(minHeight = 30.dp)
+        .defaultMinSize(minHeight = 34.dp)
         .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically) {
         Column {
