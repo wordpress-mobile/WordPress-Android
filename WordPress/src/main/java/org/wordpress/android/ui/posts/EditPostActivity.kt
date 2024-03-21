@@ -47,6 +47,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.parcelableCreator
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -639,7 +640,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             )
             // todo: annmarie - where the hell is Revision.CREATOR?
             dB?.let {
-                revision = it.getParcel<Revision>(EditPostActivityConstants.STATE_KEY_REVISION, Revision.CREATOR)
+                revision = it.getParcel(EditPostActivityConstants.STATE_KEY_REVISION, parcelableCreator())
             }
             postEditorAnalyticsSession = PostEditorAnalyticsSession
                 .fromBundle(savedInstanceState, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
@@ -2741,7 +2742,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 RequestCodes.HISTORY_DETAIL -> if (dB != null && dB!!.hasParcel(KEY_REVISION)) {
                     viewPager?.currentItem = PAGE_CONTENT
                     // todo: annmarie where is Revision.CREATOR coming from
-                    revision = dB?.getParcel<Revision>(KEY_REVISION, Revision.CREATOR)
+                    revision = dB?.getParcel<Revision>(KEY_REVISION, parcelableCreator())
                     Handler().postDelayed(
                         { loadRevision() },
                         resources.getInteger(R.integer.full_screen_dialog_animation_duration).toLong()
