@@ -2167,9 +2167,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Suppress("LongMethod")
     private fun uploadPost(publishPost: Boolean) {
-        fun handleUpdateResult(updatePostResult: UpdatePostResult?) {
-// todo: annmarie why is updatePostResult not used -- how can I change this?
-            Log.i(javaClass.simpleName, "***UpdatePostResult $updatePostResult")
+        val lambda: (UpdatePostResult?) -> Unit = fun(_: UpdatePostResult?) {
             val account: AccountModel = accountStore.account
             // prompt user to verify e-mail before publishing
             if (!account.emailVerified) {
@@ -2254,11 +2252,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
         // Convert the function to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(object : OnPostUpdatedFromUIListener {
-            override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
-                handleUpdateResult(updatePostResult)
-            }
-        })
+        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda))
     }
 
     private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
@@ -2304,17 +2298,17 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
         }
 
-        // Function to convert a lambda to OnPostUpdatedFromUIListener
-        fun lambdaToListener(lambda: (UpdatePostResult) -> Unit): OnPostUpdatedFromUIListener {
-            return object : OnPostUpdatedFromUIListener {
-                override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
-                    lambda(updatePostResult)
-                }
-            }
-        }
-
         // Convert the lambda to OnPostUpdatedFromUIListener and pass it to the method
         updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda))
+    }
+
+    // Helper function to convert a lambda to OnPostUpdatedFromUIListener
+    private fun lambdaToListener(lambda: (UpdatePostResult) -> Unit): OnPostUpdatedFromUIListener {
+        return object : OnPostUpdatedFromUIListener {
+            override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
+                lambda(updatePostResult)
+            }
+        }
     }
 
     private fun shouldSavePost(): Boolean {
