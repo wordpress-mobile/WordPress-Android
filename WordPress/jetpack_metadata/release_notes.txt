@@ -1,4 +1,1 @@
-* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
-* [*] [Jetpack-only] Fixes broken links on some notifications [https://github.com/wordpress-mobile/WordPress-Android/pull/20417]
-* [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
-
+Good news, everyone: we fixed the broken links on your announcement badge screen. Insights into your biggest publishing accomplishments are just a tap away.
