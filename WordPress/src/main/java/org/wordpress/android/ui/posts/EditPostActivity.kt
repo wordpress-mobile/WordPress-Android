@@ -1,4 +1,5 @@
-@file:Suppress("DEPRECATION")
+@file:Suppress("DEPRECATION", "NestedBlockDepth", "ComplexCondition", "SwallowedException",
+    "TooGenericExceptionCaught", "ReturnCount")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
@@ -99,7 +100,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.EditorThemeStore
-import org.wordpress.android.fluxc.store.EditorThemeStore.*
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType
@@ -257,6 +259,7 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 import kotlin.math.max
 
+@Suppress("LargeClass")
 class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorImageSettingsListener,
     EditorImagePreviewListener, EditorEditMediaListener, EditorDragAndDropListener, EditorFragmentListener,
     ActivityCompat.OnRequestPermissionsResultCallback,
@@ -469,7 +472,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     ) {
         if (postEditorAnalyticsSession == null) {
             postEditorAnalyticsSession = PostEditorAnalyticsSession(
-                if (showGutenbergEditor) PostEditorAnalyticsSession.Editor.GUTENBERG else PostEditorAnalyticsSession.Editor.CLASSIC,
+                if (showGutenbergEditor) PostEditorAnalyticsSession.Editor.GUTENBERG
+                else PostEditorAnalyticsSession.Editor.CLASSIC,
                 post, site, isNewPost, analyticsTrackerWrapper
             )
         }
@@ -482,7 +486,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if (result.resultCode == RESULT_OK) {
                 val data: Intent? = result.data
                 data?.let { intent ->
-                    val shareMessage: String? = intent.getStringExtra(EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE)
+                    val shareMessage: String? =
+                        intent.getStringExtra(EditJetpackSocialShareMessageActivity.RESULT_UPDATED_SHARE_MESSAGE)
                     shareMessage?.let { message ->
                         editorJetpackSocialViewModel.onJetpackSocialShareMessageChanged(message)
                     }
@@ -491,6 +496,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
@@ -612,7 +618,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun refreshMobileEditorFromSiteSetting() {
-        // TODO: Make sure to use the latest fresh info about the site we've in the DB set only the editor setting for now
+        // Make sure to use the latest fresh info about the site we've in the DB set only the editor setting for now
         siteStore.getSiteByLocalId(siteModel.id)?.let {
                 siteModel.mobileEditor = it.mobileEditor
             siteSettings = SiteSettingsInterface.getInterface(this, siteModel, this)
@@ -620,10 +626,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             fetchSiteSettings()
         }
     }
-
     private fun getSiteModelForExtraQuickPressBlogIdIfRequested(extras: Bundle?): SiteModel? {
         extras?.let {
-            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) || isActionSendOrNewMedia(intent.action) || it.containsKey(
+            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
+                isActionSendOrNewMedia(intent.action) ||
+                it.containsKey(
                     EditPostActivityConstants.EXTRA_IS_QUICKPRESS
                 )
             ) {
@@ -638,10 +645,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         return null
     }
+
+    @Suppress("CyclomaticComplexMethod","NestedBlockDepth")
     private fun handleIntentExtras(extras: Bundle?, isRestarting: Boolean) {
         val action = intent.action
         extras?.let {
-            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) || isActionSendOrNewMedia(intent.action) || it.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
+            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
+                isActionSendOrNewMedia(intent.action) ||
+                it.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
                 isPage = it.getBoolean(EditPostActivityConstants.EXTRA_IS_PAGE)
                 if (isPage && !TextUtils.isEmpty(extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE))) {
                     newPageFromLayoutPickerSetup(
@@ -696,11 +707,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
         }
     }
+
     private fun retrieveSavedInstanceState(savedInstanceState: Bundle?) {
         savedInstanceState?.let { state ->
-            state.getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS)?.let { parcelableArrayList ->
-                editorMedia.droppedMediaUris = parcelableArrayList
-            }
+            state.getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS)
+                ?.let { parcelableArrayList ->
+                    editorMedia.droppedMediaUris = parcelableArrayList
+                }
 
             isNewPost = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
             updatePostLoadingAndDialogState(
@@ -726,7 +739,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 )
                 initializePostObject()
             } else if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)) {
-                editPostRepository.loadPostByLocalPostId(state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID))
+                editPostRepository.loadPostByLocalPostId(
+                    state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)
+                )
                 initializePostObject()
             }
             editorFragment =
@@ -747,7 +762,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         showGutenbergEditor = if (savedInstanceState == null) {
             val restartEditorOptionName = intent.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
             val restartEditorOption =  if (restartEditorOptionName == null)
-                RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG else RestartEditorOptions.valueOf(restartEditorOptionName)
+                RestartEditorOptions.RESTART_DONT_SUPPRESS_GUTENBERG
+            else RestartEditorOptions.valueOf(restartEditorOptionName)
             (PostUtils.shouldShowGutenbergEditor(isNewPost, editPostRepository.content, siteModel)
                     && restartEditorOption != RestartEditorOptions.RESTART_SUPPRESS_GUTENBERG)
         } else {
@@ -758,7 +774,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun setupEditor() {
         // Check whether to show the visual editor
 
-        // TODO: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
+        // NOTE: Migrate to 'androidx.preference.PreferenceManager' and 'androidx.preference.Preference'
         //  This migration is not possible at the moment for 'PreferenceManager.setDefaultValues(...)' because it
         //  depends on the migration of 'EditTextPreferenceWithValidation', which is a type of
         //  'android.preference.EditTextPreference', thus a type of 'android.preference.Preference', and as such it will
@@ -889,8 +905,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     // SiteSettingsListener
-    override fun onSaveError(error: Exception) {}
-    override fun onFetchError(error: Exception) {}
+    override fun onSaveError(error: Exception) { /* No Op */ }
+    override fun onFetchError(error: Exception) { /* No Op */ }
     override fun onSettingsUpdated() {
         // Let's hold the value in local variable as listener is too noisy
         val isJetpackSsoEnabled = siteModel.isJetpackConnected && siteSettings?.isJetpackSsoEnabled == true
@@ -904,13 +920,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    override fun onSettingsSaved() {}
-    override fun onCredentialsValidated(error: Exception) {}
+    override fun onSettingsSaved() { /* No Op */ }
+    override fun onCredentialsValidated(error: Exception) { /* No Op */ }
     private fun setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
         viewPager?.adapter = sectionsPagerAdapter
-        viewPager?.offscreenPageLimit = 4
+        viewPager?.offscreenPageLimit = OFFSCREEN_PAGE_LIMIT
         viewPager?.setPagingEnabled(false)
 
         // When swiping between different sections, select the corresponding tab. We can also use ActionBar.Tab#select()
@@ -943,6 +959,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         })
     }
 
+    @Suppress("LongMethod")
     private fun startObserving() {
         editorMedia.uiState.observe(this
         ) { uiState: AddMediaToPostUiState? ->
@@ -1168,7 +1185,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, isNewPost)
-        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE, editorPhotoPicker?.isPhotoPickerShowing()?:false)
+        outState.putBoolean(
+            EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
+            editorPhotoPicker?.isPhotoPickerShowing() ?: false
+        )
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_HTML_MODE_ON, htmlModeMenuStateOn)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_UNDO, menuHasUndo)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_REDO, menuHasRedo)
@@ -1177,7 +1197,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         outState.putSerializable(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         isConfigChange = true // don't call sessionData.end() in onDestroy() if this is an Android config change
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_GUTENBERG_IS_SHOWN, showGutenbergEditor)
-        outState.putParcelableArrayList(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris)
+        outState.putParcelableArrayList(
+            EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
+        )
         editorFragment?.let {
             supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, it)
         }
@@ -1318,10 +1340,15 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 )
 
                 PhotoPickerIcon.STOCK_MEDIA -> {
-                    val requestCode: Int =
-                        if (allowMultipleSelection) RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT else RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
-                    mediaPickerLauncher
-                        .showStockMediaPickerForResult(this, siteModel, requestCode, allowMultipleSelection)
+                    val requestCode =
+                        if (allowMultipleSelection) RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+                        else RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK
+                    mediaPickerLauncher.showStockMediaPickerForResult(
+                        this,
+                        siteModel,
+                        requestCode,
+                        allowMultipleSelection
+                    )
                 }
 
                 PhotoPickerIcon.GIF -> mediaPickerLauncher.showGifPickerForResult(
@@ -1344,6 +1371,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         return true
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         var showMenuItems = true
         viewPager?.let {
@@ -1378,7 +1406,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 (((editorFragment is AztecEditorFragment)
                         || (editorFragment is GutenbergEditorFragment))) && showMenuItems
             )
-            viewHtmlModeMenuItem.setTitle(if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
+            viewHtmlModeMenuItem.setTitle(
+                if (htmlModeMenuStateOn) R.string.menu_visual_mode else R.string.menu_html_mode)
         }
         if (historyMenuItem != null) {
             val hasHistory = !isNewPost && siteModel.isUsingWpComRestApi
@@ -1527,6 +1556,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
     // Menu actions
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == android.R.id.home) {
@@ -1625,6 +1655,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         savePostAndOptionallyFinish(doFinish = false, forceSave = false)
     }
 
+    @Suppress("UseCheckOrError")
     private fun performSecondaryAction(): Boolean {
         if (UploadService.hasInProgressMediaUploadsForPost(editPostRepository.getPost())) {
             ToastUtils.showToast(
@@ -1656,7 +1687,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 return true
             }
 
-            SecondaryEditorAction.NONE -> throw IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case")
+            SecondaryEditorAction.NONE ->
+                throw IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case")
         }
     }
 
@@ -1688,7 +1720,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     ) {
         when (postLoadingState) {
             PostLoadingState.NONE -> setPreviewingInEditorSticky(false, post)
-            PostLoadingState.UPLOADING_FOR_PREVIEW, PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW, PostLoadingState.PREVIEWING, PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> setPreviewingInEditorSticky(
+            PostLoadingState.UPLOADING_FOR_PREVIEW,
+            PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW,
+            PostLoadingState.PREVIEWING,
+            PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR -> setPreviewingInEditorSticky(
                 true,
                 post
             )
@@ -1729,7 +1764,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     private fun showEditorModeSwitchedNotice() {
         val message: String = getString(
-            if (htmlModeMenuStateOn) R.string.menu_html_mode_switched_notice else R.string.menu_visual_mode_switched_notice
+            if (htmlModeMenuStateOn)
+                R.string.menu_html_mode_switched_notice
+            else R.string.menu_visual_mode_switched_notice
         )
         editorFragment?.showNotice(message)
     }
@@ -1737,7 +1774,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun trackPostSessionEditorModeSwitch() {
         val isGutenberg: Boolean = editorFragment is GutenbergEditorFragment
         postEditorAnalyticsSession?.switchEditor(
-            if (htmlModeMenuStateOn) PostEditorAnalyticsSession.Editor.HTML else (if (isGutenberg) PostEditorAnalyticsSession.Editor.GUTENBERG else PostEditorAnalyticsSession.Editor.CLASSIC)
+            if (htmlModeMenuStateOn) PostEditorAnalyticsSession.Editor.HTML
+            else
+            (
+                if (isGutenberg) PostEditorAnalyticsSession.Editor.GUTENBERG
+                else PostEditorAnalyticsSession.Editor.CLASSIC
+            )
         )
     }
 
@@ -1749,7 +1791,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 return
             }
 
-            PrimaryEditorAction.UPDATE, PrimaryEditorAction.CONTINUE, PrimaryEditorAction.SCHEDULE, PrimaryEditorAction.SUBMIT_FOR_REVIEW -> {
+            PrimaryEditorAction.UPDATE,
+            PrimaryEditorAction.CONTINUE,
+            PrimaryEditorAction.SCHEDULE,
+            PrimaryEditorAction.SUBMIT_FOR_REVIEW -> {
                 showPrepublishingNudgeBottomSheet()
                 return
             }
@@ -2060,7 +2105,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if (result === Updated) {
                 refreshEditorContent()
                 viewPager?.let {
-                    make(it, getString(R.string.history_loaded_revision), 4000)
+                    make(it, getString(R.string.history_loaded_revision), SNACKBAR_DURATION)
                         .setAction(getString(R.string.undo)) { _: View? ->
                             AnalyticsTracker.track(Stat.REVISIONS_LOAD_UNDONE)
                             val payload = RemotePostPayload(editPostRepository.getPostForUndo(), siteModel)
@@ -2107,7 +2152,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private fun showPrepublishingNudgeBottomSheet() {
         viewPager?.currentItem = PAGE_CONTENT
         ActivityUtils.hideKeyboard(this)
-        val delayMs = 100L
+        val delayMs = PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.postDelayed(it, delayMs)
         }
@@ -2120,6 +2165,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    @Suppress("LongMethod")
     private fun uploadPost(publishPost: Boolean) {
         fun handleUpdateResult(updatePostResult: UpdatePostResult?) {
 // todo: annmarie why is updatePostResult not used -- how can I change this?
@@ -2129,7 +2175,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if (!account.emailVerified) {
                 storePostViewModel.hideSavingProgressDialog()
                 val message: String =
-                    if (TextUtils.isEmpty(account.email)) getString(R.string.editor_confirm_email_prompt_message) else String.format(
+                    if (TextUtils.isEmpty(account.email)) getString(R.string.editor_confirm_email_prompt_message)
+                    else String.format(
                         getString(R.string.editor_confirm_email_prompt_message_with_email),
                         account.email
                     )
@@ -2492,8 +2539,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         )
     }
 
+    @Suppress("MagicNumber")
     private fun migrateLegacyDraft(inputContent: String): String {
-        var content: String = inputContent
+        var content = inputContent
         if (content.contains("<img src=\"null\" android-uri=\"")) {
             // We must replace image tags specific to the legacy editor local drafts:
             // <img src="null" android-uri="file:///..." />
@@ -2528,10 +2576,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     matcher.appendReplacement(stringBuffer, replacement)
                 }
             }
-//            while (matcher.find()) {
-//                val replacement = matcher.group(1) + matcher.group(2) + matcher.group(3)
-//                matcher.appendReplacement(stringBuffer, replacement)
-//            }
             matcher.appendTail(stringBuffer)
             content = stringBuffer.toString()
         }
@@ -2552,7 +2596,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             if ((Intent.ACTION_SEND_MULTIPLE == action)) {
                 setPostContentFromShareAction()
             } else if ((NEW_MEDIA_POST == action)) {
-                intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.let { editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, it) }
+                intent.getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS)?.let {
+                    editorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, it)
+                }
             }
         }
         if (isPage) {
@@ -2567,7 +2613,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                         && !hasSetPostContent)
             ) {
                 hasSetPostContent = true
-                // TODO: Might be able to drop .replaceAll() when legacy editor is removed
+                // NOTE: Might be able to drop .replaceAll() when legacy editor is removed
                 var content = editPostRepository.content.replace("\uFFFC".toRegex(), "")
                 // Prepare eventual legacy editor local draft for the new editor
                 content = migrateLegacyDraft(content)
@@ -2585,7 +2631,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 }
             }
 
-            // TODO: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
+            // TBD: postSettingsButton.setText(post.isPage() ? R.string.page_settings : R.string.post_settings);
             editorFragment?.setFeaturedImageId(editPostRepository.featuredImageId)
         }
     }
@@ -2630,6 +2676,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         setPostMediaFromShareAction()
     }
 
+    @Suppress("NestedBlockDepth")
     private fun setPostMediaFromShareAction() {
         // Check for shared media
         if (intent.hasExtra(Intent.EXTRA_STREAM)) {
@@ -2720,6 +2767,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -2732,7 +2780,18 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (resultCode != RESULT_OK) {
             // for all media related intents, let editor fragment know about cancellation
             when (requestCode) {
-                RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER, RequestCodes.PHOTO_PICKER, RequestCodes.STORIES_PHOTO_PICKER, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT, RequestCodes.MEDIA_LIBRARY, RequestCodes.PICTURE_LIBRARY, RequestCodes.TAKE_PHOTO, RequestCodes.VIDEO_LIBRARY, RequestCodes.TAKE_VIDEO, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
+                RequestCodes.MULTI_SELECT_MEDIA_PICKER,
+                RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
+                RequestCodes.PHOTO_PICKER,
+                RequestCodes.STORIES_PHOTO_PICKER,
+                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
+                RequestCodes.MEDIA_LIBRARY,
+                RequestCodes.PICTURE_LIBRARY,
+                RequestCodes.TAKE_PHOTO,
+                RequestCodes.VIDEO_LIBRARY,
+                RequestCodes.TAKE_VIDEO,
+                RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
+                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
                     editorFragment?.mediaSelectionCancelled()
                     return
                 }
@@ -2745,12 +2804,15 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     ) || (requestCode == RequestCodes.PHOTO_PICKER)))
         ) {
             when (requestCode) {
-                RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> handleMediaPickerResult(
+                RequestCodes.MULTI_SELECT_MEDIA_PICKER,
+                RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> handleMediaPickerResult(
                     data
                 )
 
-                RequestCodes.PHOTO_PICKER, RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT -> handlePhotoPickerResult(data)
-                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) == true
+                RequestCodes.PHOTO_PICKER,
+                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT -> handlePhotoPickerResult(data)
+                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK ->
+                    if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) == true
                 ) {
                     // pass array with single item
                     val mediaIds = longArrayOf(data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0))
@@ -2758,7 +2820,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                         .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds)
                 }
 
-                RequestCodes.MEDIA_LIBRARY, RequestCodes.PICTURE_LIBRARY, RequestCodes.VIDEO_LIBRARY -> editorMedia.addNewMediaItemsToEditorAsync(
+                RequestCodes.MEDIA_LIBRARY,
+                RequestCodes.PICTURE_LIBRARY,
+                RequestCodes.VIDEO_LIBRARY -> editorMedia.addNewMediaItemsToEditorAsync(
                     WPMediaUtils.retrieveMediaUris(data),
                     false
                 )
@@ -2823,7 +2887,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     onGetSuggestionResult = null
                 }
 
-                RequestCodes.FILE_LIBRARY, RequestCodes.AUDIO_LIBRARY -> if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
+                RequestCodes.FILE_LIBRARY,
+                RequestCodes.AUDIO_LIBRARY -> if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
                      val uriResults: List<Uri> = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
                         ?.let { convertStringArrayIntoUrisList(it) }
                         ?: emptyList()
@@ -3008,10 +3073,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 MediaErrorType.NOT_FOUND -> errorMessage = getString(R.string.error_media_not_found)
                 MediaErrorType.AUTHORIZATION_REQUIRED -> errorMessage = getString(R.string.error_media_unauthorized)
                 MediaErrorType.PARSE_ERROR -> errorMessage = getString(R.string.error_media_parse_error)
-                MediaErrorType.MALFORMED_MEDIA_ARG, MediaErrorType.NULL_MEDIA_ARG, MediaErrorType.GENERIC_ERROR -> errorMessage =
-                    getString(R.string.error_refresh_media)
-
-                else -> errorMessage = getString(R.string.error_refresh_media)
+                MediaErrorType.MALFORMED_MEDIA_ARG, MediaErrorType.NULL_MEDIA_ARG, MediaErrorType.GENERIC_ERROR ->
+                    errorMessage = getString(R.string.error_refresh_media)
+                        else -> errorMessage = getString(R.string.error_refresh_media)
             }
             if (!TextUtils.isEmpty(errorMessage)) {
                 ToastUtils.showToast(this@EditPostActivity, errorMessage, ToastUtils.Duration.SHORT)
@@ -3262,6 +3326,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    @Suppress("NestedBlockDepth")
     override fun onUndoMediaCheck(undoedContent: String) {
         // here we check which elements tagged UPLOADING are there in undoedContent,
         // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
@@ -3345,7 +3410,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             AnalyticsTracker.track(Stat.NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST)
             val serializableExtra = intent.getSerializableExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA)
 
-            val mediaList: List<MediaModel>? = if (serializableExtra is List<*> && serializableExtra.all { it is MediaModel }) {
+            val mediaList = if (serializableExtra is List<*> && serializableExtra.all { it is MediaModel } ) {
                 @Suppress("UNCHECKED_CAST")
                 serializableExtra as List<MediaModel>
             } else {
@@ -3359,6 +3424,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         onEditorFinalTouchesBeforeShowing()
     }
+
+    @Suppress("NestedBlockDepth")
     private fun onEditorFinalTouchesBeforeShowing() {
         refreshEditorContent()
         // probably here is best for Gutenberg to start interacting with
@@ -3390,7 +3457,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         unsupportedBlocksList: ArrayList<Any>,
         replaceBlockActionWaiting: Boolean
     ) {
-        val entryPoint: PostUtils.EntryPoint? = intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
+        val entryPoint: PostUtils.EntryPoint? =
+            intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
 
         // Note that this method is also used to track startup performance
         // It assumes this is being called when the editor has finished loading
@@ -3523,7 +3591,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     // FluxC events
-    @Suppress("unused")
+    @Suppress("unused", "CyclomaticComplexMethod", "NestedBlockDepth")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (isFinishing) {
@@ -3607,7 +3675,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             ) {
                 AppLog.e(
                     AppLog.T.POSTS, (
-                            "Ignoring REMOTE_AUTO_SAVE_POST in EditPostActivity as mPost is null or id of the opened post"
+                          "Ignoring REMOTE_AUTO_SAVE_POST in EditPostActivity as mPost is null or id of the opened post"
                                     + " doesn't match the event.")
                 )
                 return
@@ -3719,7 +3787,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             for (media: MediaModel in event.mediaModelList) {
                 val localMediaId = media.id.toString()
                 val mediaType: EditorFragmentAbstract.MediaType =
-                    if (media.isVideo) EditorFragmentAbstract.MediaType.VIDEO else EditorFragmentAbstract.MediaType.IMAGE
+                    if (media.isVideo)
+                        EditorFragmentAbstract.MediaType.VIDEO
+                    else EditorFragmentAbstract.MediaType.IMAGE
                 editorMediaUploadListener?.onMediaUploadRetry(localMediaId, mediaType)
             }
         }
@@ -3850,7 +3920,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         private const val PAGE_PUBLISH_SETTINGS: Int = 2
         private const val PAGE_HISTORY: Int = 3
         private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
-
+        private const val OFFSCREEN_PAGE_LIMIT = 4
+        private const val PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY = 100L
+        private const val SNACKBAR_DURATION = 4000
 
         @JvmStatic fun checkToRestart(data: Intent): Boolean {
             val extraRestartEditor = data.getStringExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR)
