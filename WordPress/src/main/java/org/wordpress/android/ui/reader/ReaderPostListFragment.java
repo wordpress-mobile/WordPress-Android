@@ -2321,14 +2321,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
         new Thread() {
             @Override
             public void run() {
-                // Check the fragment is attached to the activity when this Thread starts.
-                FragmentActivity activity = getActivity();
-                if (activity == null) {
-                    return;
-                }
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
+                    // Check the fragment is attached right after `shouldAutoUpdateTag`
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
                     activity.runOnUiThread(() -> updateCurrentTag());
                 } else {
+                    // Check the fragment is attached to the activity when this Thread starts.
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
                     activity.runOnUiThread(() -> {
                         if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
