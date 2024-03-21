@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 import android.annotation.SuppressLint
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
-import kotlinx.coroutines.delay
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
@@ -26,7 +25,6 @@ import org.wordpress.android.fluxc.utils.extensions.filterNotNull
 import java.text.SimpleDateFormat
 import java.util.Date
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.days
 
 class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
@@ -181,54 +179,12 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @Suppress("KotlinConstantConditions", "MagicNumber", "UNUSED_PARAMETER")
     suspend fun fetchPaymentMethods(site: SiteModel): BlazePayload<BlazePaymentMethods> {
-        // TODO Use real API when it becomes ready
-
-        fun generateFakePaymentMethods() = BlazePaymentMethodsResponse(
-            savedPaymentMethods = listOf(
-                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
-                    id = "payment-method-id",
-                    type = "credit_card",
-                    name = "Visa **** 4689",
-                    info = JsonObject().apply {
-                        addProperty("last_digits", "4689")
-                        add("expiring", JsonObject().apply {
-                            addProperty("month", 2)
-                            addProperty("year", 2025)
-                        })
-                        addProperty("type", "Visa")
-                        addProperty("nickname", "")
-                        addProperty("cardholder_name", "John Doe")
-                    }
-                ),
-                BlazePaymentMethodsResponse.BlazePaymentMethodsNetworkModel(
-                    id = "payment-method-id-2",
-                    type = "credit_card",
-                    name = "MasterCard **** 1234",
-                    info = JsonObject().apply {
-                        addProperty("last_digits", "1234")
-                        add("expiring", JsonObject().apply {
-                            addProperty("month", 3)
-                            addProperty("year", 2026)
-                        })
-                        addProperty("type", "MasterCard")
-                        addProperty("nickname", "")
-                        addProperty("cardholder_name", "John Doe")
-                    }
-                )
-            ),
-            addPaymentMethodUrls = BlazePaymentMethodsResponse.BlazeAddPaymentMethodUrlsNetworkModel(
-                formUrl = "https://example.com/blaze-pm-add",
-                successUrl = "https://example.com/blaze-pm-success",
-                idUrlParameter = "pmid"
-            )
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.payment_methods.url
+        val response = wpComNetwork.executeGetGsonRequest(
+            url = url,
+            clazz = BlazePaymentMethodsResponse::class.java
         )
-
-        delay(500)
-        val response: WPComGsonRequestBuilder.Response<BlazePaymentMethodsResponse> =
-            WPComGsonRequestBuilder.Response.Success(generateFakePaymentMethods())
-
         return when (response) {
             is WPComGsonRequestBuilder.Response.Success -> BlazePayload(response.data.toDomainModel())
 
@@ -236,31 +192,12 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @Suppress("UNREACHABLE_CODE", "MagicNumber")
     @SuppressLint("SimpleDateFormat")
     suspend fun createCampaign(
         site: SiteModel,
         request: BlazeCampaignCreationRequest
     ): BlazePayload<BlazeCampaignModel> {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
-
-        delay(500)
-        return BlazePayload(BlazeCampaignCreationNetworkResponse(
-            id = "campaign-0",
-            status = "pending",
-            targetUrn = "urn:wpcom:post:${site.siteId}:${request.targetResourceId}",
-            startTime = dateFormatter.format(request.startDate),
-            durationDays = ((request.endDate.time - request.startDate.time) / 1.days.inWholeMilliseconds).toInt(),
-            totalBudget = request.budget,
-            siteName = request.tagLine,
-            textSnippet = request.description,
-            targetURL = request.targetUrl,
-            mainImage = BlazeCampaignCreationNetworkResponse.BlazeImageNetworkModel(
-                url = request.mainImage.url
-            )
-        ).toDomainModel())
-
-        // TODO Use real API when it becomes ready
         val body = mutableMapOf(
             "origin" to request.origin,
             "origin_version" to request.originVersion,
@@ -270,7 +207,11 @@ class BlazeCreationRestClient @Inject constructor(
             "start_date" to dateFormatter.format(request.startDate),
             "end_date" to dateFormatter.format(request.endDate),
             "time_zone" to request.timeZoneId,
-            "total_budget" to request.budget,
+            "budget" to mapOf(
+                "mode" to request.budget.mode,
+                "amount" to request.budget.amount,
+                "currency" to request.budget.currency
+            ),
             "site_name" to request.tagLine,
             "text_snippet" to request.description,
             "target_url" to request.targetUrl,
@@ -410,15 +351,15 @@ private class BlazeAdForecastNetworkModel(
 }
 
 private class BlazePaymentMethodsResponse(
-    @SerializedName("saved_payment_methods")
+    @SerializedName("payment_methods")
     val savedPaymentMethods: List<BlazePaymentMethodsNetworkModel>,
     @SerializedName("add_payment_method")
-    val addPaymentMethodUrls: BlazeAddPaymentMethodUrlsNetworkModel
+    val addPaymentMethodUrls: BlazeAddPaymentMethodUrlsNetworkModel? // TODO make this non nullable when used
 ) {
     fun toDomainModel(): BlazePaymentMethods {
         return BlazePaymentMethods(
             savedPaymentMethods = savedPaymentMethods.map { it.toDomainModel() },
-            addPaymentMethodUrls = addPaymentMethodUrls.toDomainModel()
+            addPaymentMethodUrls = addPaymentMethodUrls?.toDomainModel()
         )
     }
 
