@@ -144,6 +144,8 @@ class DashboardCardsViewModelSlice @Inject constructor(
     ): List<MySiteCardAndItem> {
         val cards = mutableListOf<MySiteCardAndItem>()
         migrationSuccessCard?.let { cards.add(it) }
+        jpFullInstallFullPlugin?.let { cards.add(it) }
+        domainRegistrationCard?.let { cards.add(it) }
         quicklinks?.let { cards.add(it) }
         quickStart?.let { cards.add(it) }
         cardsState?.let {
@@ -151,21 +153,17 @@ class DashboardCardsViewModelSlice @Inject constructor(
                 cards.addAll(cardsState.topCards)
             }
         }
-        blazeCard?.let { cards.add(it) }
-        plansCard?.let { cards.add(it) }
-        domainRegistrationCard?.let { cards.add(it) }
         bloganuaryNudgeCard?.let { cards.add(it) }
         bloggingPromptCard?.let { cards.add(it) }
+        blazeCard?.let { cards.add(it) }
+        plansCard?.let { cards.add(it) }
         cardsState?.let {
             when (cardsState) {
-                is CardsState.Success -> cards.addAll(cardsState.cards)
+                is CardsState.Success -> {
+                    cards.addAll(cardsState.cards)
+                    cards.addAll(cardsState.bottomCards)
+                }
                 is CardsState.ErrorState -> cards.add(cardsState.error)
-            }
-        }
-        jpFullInstallFullPlugin?.let { cards.add(it) }
-        cardsState?.let {
-            if (cardsState is CardsState.Success) {
-                cards.addAll(cardsState.bottomCards)
             }
         }
         // when clearing the values of all child VM Slices,
