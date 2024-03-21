@@ -14,6 +14,7 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
+import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -2163,9 +2164,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("LongMethod", "UnusedParameter")
+    @Suppress("LongMethod")
     private fun uploadPost(publishPost: Boolean) {
         val lambda: (UpdatePostResult?) -> Unit = fun( unusedUpdatePostResult: UpdatePostResult?) {
+            // todo: annmarie temporarily access the unused parameter - this will be addressed separately
+            AppLog.d(
+                AppLog.T.POSTS,
+                "UnusedUpdatePostResult: " + unusedUpdatePostResult?.javaClass?.simpleName
+            )
             val account: AccountModel = accountStore.account
             // prompt user to verify e-mail before publishing
             if (!account.emailVerified) {
