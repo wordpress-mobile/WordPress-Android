@@ -1,3 +1,0 @@
-24.3:
-Melde dich mit Google-Anmeldedaten, physischen Geräten und Passkeys von Drittanbietern auf deiner Website an. Keine Sorge, deine Website bleibt weiterhin bestens geschützt.
-Das Menü-Icon wird jetzt auf Statistikbildschirmen ausgeblendet und ist nur noch über den Tab „Einsichten“ sichtbar ist. Ninjamodus aktiviert.

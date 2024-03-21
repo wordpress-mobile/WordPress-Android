@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-20 10:41:32+0000
+Translation-Revision-Date: 2024-03-06 22:31:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">Automatisk uppspelning kan försvåra användningen för vissa användare.</string>
+    <string name="notifications_action_mark_all_as_read">Markera alla som lästa</string>
+    <string name="notifications_unread_content_description">Olästa</string>
     <string name="qrcode_media_deeplink_error">Webbplats hittades inte. Kontrollera att du är inloggad på rätt konto.</string>
     <string name="gravatar_info_sync_done_button">Klar</string>
     <string name="gravatar_info_sync_message">Uppdateringar kan ta lite tid att synkronisera med din Gravatar-profil.</string>
@@ -387,7 +393,6 @@ Language: sv_SE
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Denna webbplats</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$sanvänder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s använder %2$s, som inte stöder alla funktioner i appen än. Installera %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Flyttar till Jetpack-appen om några dagar.</string>
     <string name="wp_jp_static_poster_footnote">Att byta är gratis och tar bara en minut.</string>
     <string name="wp_jp_static_poster_button_secondary">Lär dig mer på Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Byt till Jetpack-appen</string>
@@ -1174,7 +1179,6 @@ Language: sv_SE
     <string name="jetpack_brute_force_allowlist_title">IP-adresser som alltid tillåts</string>
     <string name="site_settings_denylist_title">Kommentering avstängd</string>
     <string name="gutenberg_native_add_button_text">Lägg till knapptext</string>
-    <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Avfärda</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
@@ -1343,7 +1347,6 @@ Language: sv_SE
     <string name="request_failed_message">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="gutenberg_native_move_to_bottom">Flytta längst ned</string>
     <string name="gutenberg_native_change_block_position">Ändra blockets position</string>
-    <string name="label_control_upload">Ladda upp</string>
     <string name="jetpack_icon_content_description">ikon</string>
     <string name="backup_download_complete_info">Vi har även skickat e-post med länken till din fil.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Knapp för delning av länk</string>
@@ -1444,7 +1447,6 @@ Language: sv_SE
     <string name="dialog_confirm_copy_local_message">Inlägget du försöker kopiera har två versioner som står i konflikt med varandra, eller så har du nyligen gjort ändringar som inte är sparade.\nRedigera inlägget först för att lösa eventuella konflikter och kopiera därefter versionen från denna app.</string>
     <string name="dialog_confirm_copy_local_title">Konflikt vid synkronisering av inlägg</string>
     <string name="button_copy">Duplicera</string>
-    <string name="toast_edit_story_update_in_progress_title">Berättelsen sparas, vänta lite …</string>
     <string name="gutenberg_native_file_name">Filnamn</string>
     <string name="gutenberg_native_file_block_settings">Inställningar för filblock</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Kunde inte ladda upp filerna.\nTryck för att visa alternativ.</string>
@@ -1462,23 +1464,8 @@ Language: sv_SE
     <string name="reader_follow_comments_null_response">Inget svar har tagits emot</string>
     <string name="activity_log_activity_type_filter_clear">Rensa</string>
     <string name="activity_log_activity_type_filter_apply">Utför</string>
-    <string name="dialog_edit_story_unsupported_format_message">En eller flera bilder lades inte till i din berättelse eftersom berättelser för närvarande saknar stöd för GIF-filer. Välj en statisk bild eller en video som bakgrund i stället.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF-filer stöds inte</string>
-    <string name="dialog_edit_story_unrecoverable_message">Vi hittar inte mediafilerna för denna berättelse på webbplatsen.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Det går inte att redigera berättelsen.</string>
-    <string name="dialog_edit_story_unavailable_message">Det går inte att hämta mediafilerna för denna berättelse. Kontrollera din internetanslutning och försök igen.</string>
-    <string name="dialog_edit_story_unavailable_title">Det går inte att redigera berättelsen.</string>
-    <string name="dialog_edit_story_limited_message">Denna berättelse har redigerats på en annan typ av enhet och möjligheten att redigera vissa objekt kan vara begränsad.</string>
-    <string name="dialog_edit_story_limited_title">Begränsad berättelseredigering</string>
     <string name="cannot_retry_deleted_media_item_fatal">Mediafilerna har tagits bort. Försök att återskapa din berättelse.</string>
-    <string name="color_picker_label_background">Bakgrund</string>
-    <string name="color_picker_label_text">Text</string>
-    <string name="dialog_discard_story_ok_button_edit">Kasta</string>
-    <string name="dialog_discard_story_message_edit">Eventuella ändringar kommer inte att sparas.</string>
-    <string name="dialog_discard_story_title_edit">Kasta ändringarna?</string>
     <string name="label_done_button">Klart</string>
-    <string name="label_next_button">Nästa</string>
-    <string name="delete_button_alt">Ta bort</string>
     <string name="hpp_choose_error">Ett fel uppstod när temat skulle aktiveras.</string>
     <string name="hpp_retry_error">Kontrollera din internet-anslutning och försök igen.</string>
     <string name="hpp_error_subtitle">Tryck på ”Försök igen” när du har förbindelse med internet igen.</string>
@@ -1528,14 +1515,6 @@ Language: sv_SE
     <string name="gutenberg_native_help_button">Hjälpknapp</string>
     <string name="gutenberg_native_edit_using_web_editor">Redigera i webbredigeraren</string>
     <string name="gutenberg_native_choose_images">Välj bilder</string>
-    <string name="stories_intro_create_story_post_label">Skapa ett berättelseinlägg</string>
-    <string name="stories_intro_description_second">De publiceras som ett nytt blogginlägg på din webbplats för att dina läsare aldrig ska missa något.</string>
-    <string name="stories_intro_title_second">Berättelseinlägg försvinner inte</string>
-    <string name="stories_intro_description_first">Kombinera foton, videoklipp och text för att skapa engagerande och smidiga berättelseinlägg som dina besökare kommer att älska.</string>
-    <string name="stories_intro_title_first">Nu kan alla använda berättelser</string>
-    <string name="stories_intro_image_caption_second">Exempelrubrik för berättelse</string>
-    <string name="stories_intro_image_caption_first">Du kanske vill skapa ett berättelseinlägg</string>
-    <string name="stories_intro_main_title">Lär känna berättelseinlägg</string>
     <string name="mlp_notice_blank_page_created">En blank sida har skapats</string>
     <string name="mlp_notice_page_created">Sidan har skapats</string>
     <string name="media_insert_failed">Infogning av media misslyckades.</string>
@@ -1556,13 +1535,6 @@ Language: sv_SE
     <string name="gutenberg_native_add_this_link">Lägg till denna länk</string>
     <string name="gutenberg_native_add_this_email_link">Länka till denna e-postadress</string>
     <string name="suggestion_no_connection">Internetförbindelse saknas.\nFörslag är inte tillgängliga.</string>
-    <string name="typeface_label_shrikhand">Fetstil</string>
-    <string name="typeface_label_space_mono">Modern</string>
-    <string name="typeface_label_pacifico">Lekfull</string>
-    <string name="typeface_label_oswald">Framhävd</string>
-    <string name="typeface_label_libre_baskerville">Klassisk</string>
-    <string name="typeface_label_nunito">Avslappnad</string>
-    <string name="toast_capture_operation_permission_needed">För att kunna spela in video måste du ge appen tillstånd att spela in ljud</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valt</string>
     <string name="login_get_link_by_email">Få en länk för inloggning via e-post</string>
@@ -1589,66 +1561,13 @@ Language: sv_SE
     <string name="gutenberg_native_page_title_empty">Sidrubrik. Tom</string>
     <string name="toast_error_playing_video">Ett fel inträffade när videon skulle spelas upp</string>
     <string name="camera_error">Enheten saknar stöd för API:et Camera2.</string>
-    <string name="toast_error_saving_video">Videon kunde inte sparas</string>
-    <string name="toast_error_saving_image">Det gick inte att spara bilden</string>
-    <string name="toast_capture_operation_in_progress">En åtgärd pågår. Försök igen</string>
-    <string name="toast_story_page_not_found">Hittade ingen bild för berättelsen</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Visa lagring</string>
-    <string name="dialog_insufficient_device_storage_error_message">Berättelsen behöver sparas på din enhet innan den kan publiceras. Kontrollera dina inställningar för lagring av data och radera filer för att frigöra utrymme.</string>
-    <string name="dialog_insufficient_device_storage_error_title">För lite minnesutrymme i enheten</string>
-    <string name="dialog_story_saving_error_message">Gör ett nytt försök att spara eller ta bort bilderna, försök sedan att publicera din berättelse igen.</string>
-    <string name="dialog_story_saving_error_title_plural">Kan inte spara %1$d bilder</string>
-    <string name="dialog_story_saving_error_title_singular">Kan inte spara 1 bild</string>
-    <string name="story_saving_failed_quick_action_manage">Hantera</string>
-    <string name="story_saving_failed_message_plural">%1$d bilder kräver åtgärd</string>
-    <string name="story_saving_failed_message_singular">1 bild kräver åtgärd</string>
-    <string name="story_saving_failed_title">Det gick inte att ladda upp ”%1$s”</string>
-    <string name="story_saving_snackbar_finished_with_error">Det gick inte att ladda upp ”%1$s”</string>
-    <string name="story_saving_snackbar_finished_successfully">”%1$s” har publicerats</string>
-    <string name="story_saving_snackbar_started">Laddar upp ”%1$s” …</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d bilder återstår</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 bild återstår</string>
-    <string name="story_saving_title_several">flera berättelser</string>
-    <string name="story_saving_title">Sparar ”%1$s …</string>
-    <string name="story_saving_untitled">Utan rubrik</string>
-    <string name="dialog_discard_story_ok_button">Kasta</string>
-    <string name="dialog_discard_story_message">Ditt berättelseinlägg kommer inte att sparas som utkast.</string>
-    <string name="dialog_discard_story_title">Ta bort berättelseinlägget?</string>
-    <string name="dialog_discard_page_ok_button">Ta bort</string>
-    <string name="dialog_discard_errored_page_message">Bilden är inte sparad än. Om du tar bort denna bild förlorar du eventuell bildredigering.</string>
-    <string name="dialog_discard_page_message">Denna bild kommer att tas bort ur din berättelse.</string>
-    <string name="dialog_discard_page_title">Ta bort bild ur berättelse?</string>
-    <string name="label_text_color_button">Ändra textfärg</string>
-    <string name="label_text_alignment_button">Ändra textens justering</string>
-    <string name="label_frame_errored">med fel</string>
-    <string name="label_frame_selected_border">valt</string>
-    <string name="label_frame_unselected_border">ej valt</string>
-    <string name="label_frame_image">Bild</string>
-    <string name="label_retry_icon">Försök igen</string>
-    <string name="label_saved_icon">Sparat</string>
     <string name="label_close_button">Stäng</string>
-    <string name="label_share_to">Dela till</string>
-    <string name="label_snackbar_share">DELA</string>
-    <string name="label_snackbar_loop_frame_saved">Sparat till foton</string>
-    <string name="label_control_retry">Försök igen</string>
-    <string name="label_control_saved">Sparat</string>
-    <string name="label_control_saving">Sparar</string>
-    <string name="label_control_flash">Blixt</string>
-    <string name="label_control_flip_camera">Vänd</string>
-    <string name="sound_button_alt">Ljud</string>
-    <string name="text_button_alt">Text</string>
-    <string name="stickers_button_alt">Klistermärken</string>
-    <string name="flash_button_alt">Blixt</string>
-    <string name="flip_button_alt">Spegelvänd kamerabilden</string>
-    <string name="capture_button_alt">Ta bild</string>
     <string name="mlp_preview_page">Förhandsgranska</string>
     <string name="mlp_create_page">Skapa sida</string>
     <string name="mlp_create_blank_page">Skapa en tom sida</string>
     <string name="mlp_choose_layout_subtitle">Kom igång genom att välja någon av alla förberedda sidlayouter. Eller börja helt enkelt med en tom sida.</string>
     <string name="mlp_choose_layout_title">Välj en layout</string>
     <string name="prepublishing_nudges_story_title_hint">Ge din berättelse en rubrik</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Skapa ett inlägg eller en berättelse</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Skapa ett inlägg, en sida eller en berättelse</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tryck på %1$s Skapa. %2$s Välj sedan &lt;b&gt;Blogginlägg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Välj från enheten</string>
     <string name="my_site_bottom_sheet_add_story">Berättelseinlägg</string>

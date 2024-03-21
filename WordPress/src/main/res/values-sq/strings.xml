@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-26 12:01:13+0000
+Translation-Revision-Date: 2024-03-07 10:11:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Legjendë videoje. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Legjendë videoje. E zbrazët</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Përpunoni video</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">Vetëluajtja mund të shkaktojë probleme përdorimi për disa përdorues.</string>
+    <string name="notifications_action_mark_all_as_read">Vëru krejt shenjë si të lexuar</string>
+    <string name="notifications_unread_content_description">Të palexuar</string>
     <string name="qrcode_media_deeplink_error">Sajti s’u gjet. Kontrolloni nëse keni bërë hyrjen te llogaria e saktë.</string>
     <string name="gravatar_info_sync_done_button">U bë</string>
     <string name="gravatar_info_sync_message">Përditësimet mund të duan ca kohë të njëkohësohen në profilin tuaj Gravatar.</string>
@@ -387,7 +393,6 @@ Language: sq_AL
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Këtë sajt</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s po përdor %2$s, të cilat nuk i mbulojnë ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s po përdor %2$s, i cili nuk i mbulon ende krejt veçoritë e aplikacionit. Ju lutemi, instaloni %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Kalim në aplikacionin Jetpack pas pak ditësh.</string>
     <string name="wp_jp_static_poster_footnote">Kalimi është falas dhe do vetëm një minutë.</string>
     <string name="wp_jp_static_poster_button_secondary">Mësoni më tepër, te Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Kaloni te aplikacioni Jetpack</string>
@@ -1167,7 +1172,6 @@ Language: sq_AL
     <string name="jetpack_brute_force_allowlist_title">Adresa IP të lejuara përgjithnjë</string>
     <string name="site_settings_denylist_title">Komente të palejuara</string>
     <string name="gutenberg_native_add_button_text">Tekst butoni Shtoni</string>
-    <string name="stories_intro_main_subtitle">Një rrugë e re për të krijuar dhe botuar lëndë tërheqëse në sajtin tuaj.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
     <string name="activity_log_backup_download_notice_download_action">Shkarkoje</string>
     <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
@@ -1336,7 +1340,6 @@ Language: sq_AL
     <string name="request_failed_message">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
     <string name="gutenberg_native_move_to_bottom">Kaloje në fund</string>
     <string name="gutenberg_native_change_block_position">Ndryshoni pozicion blloku</string>
-    <string name="label_control_upload">Ngarkoje</string>
     <string name="jetpack_icon_content_description">ikonë</string>
     <string name="backup_download_complete_info">Ju dërguam gjithashtu me email një lidhje për te kartela juaj.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Buton “Ndajeni lidhjen me të tjerët”</string>
@@ -1436,7 +1439,6 @@ Language: sq_AL
     <string name="dialog_confirm_copy_local_message">Postimi që po rrekeni të kopjoni, ka dy versione që kanë përplasje, ose keni bërë ndryshime tani afër, por nuk i ruajtët ato.\nSë pari përpunoni postimin, që të zgjidhet çfarëdo përplasje ose që të vazhdohet kopjimi i versionit prej këtij aplikacioni.</string>
     <string name="dialog_confirm_copy_local_title">Përplasje pas njëkohësimi</string>
     <string name="button_copy">Përsëdyte</string>
-    <string name="toast_edit_story_update_in_progress_title">Artikulli po ruhet, ju lutemi, pritni…</string>
     <string name="gutenberg_native_file_name">Emër kartele</string>
     <string name="gutenberg_native_file_block_settings">Rregullime blloku kartelash</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">S’u arrit të ngarkohen kartela.\nJu lutemi, prekeni për mundësi.</string>
@@ -1454,23 +1456,8 @@ Language: sq_AL
     <string name="reader_follow_comments_null_response">S’u mor përgjigje</string>
     <string name="activity_log_activity_type_filter_clear">Spastroje</string>
     <string name="activity_log_activity_type_filter_apply">Aplikoje</string>
-    <string name="dialog_edit_story_unsupported_format_message">Një ose disa diapozitiva nuk janë shtuar te Artikulli juaj, ngaqë Artikujt nuk mbulojnë kartela GIF, hëpërhë. Ju lutemi, në vend të tyre, zgjidhni një figurë statike ose një sfond video.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Kartelat GIF nuk mbulohen</string>
-    <string name="dialog_edit_story_unrecoverable_message">S’gjetëm dot te sajti median për këtë artikull.</string>
-    <string name="dialog_edit_story_unrecoverable_title">S’përpunohet dot Artikulli</string>
-    <string name="dialog_edit_story_unavailable_message">S’arrihet të ngarkohet media për këtë artikull. Kontrolloni lidhjen tuaj në internet dhe riprovoni pas një çasti.</string>
-    <string name="dialog_edit_story_unavailable_title">S’përpunohet dot Artikulli</string>
-    <string name="dialog_edit_story_limited_message">Ky artikull u përpunua në një pajisje tjetër dhe aftësia për të përpunuar disa elemente të dhënë mund të jetë e kufizuar.</string>
-    <string name="dialog_edit_story_limited_title">Përpunim Artikulli i Kufizuar</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media është hequr. Provoni të rikrijoni Artikullin tuaj.</string>
-    <string name="color_picker_label_background">Sfond</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Hidhe tej</string>
-    <string name="dialog_discard_story_message_edit">Çfarëdo ndryshimesh të bëra, s’do të ruhen.</string>
-    <string name="dialog_discard_story_title_edit">Të hidhen tej ndryshimet?</string>
     <string name="label_done_button">U bë</string>
-    <string name="label_next_button">Pasuesi</string>
-    <string name="delete_button_alt">Fshije</string>
     <string name="hpp_choose_error">Pati një gabim gjatë përzgjedhjes së temës.</string>
     <string name="hpp_retry_error">Ju lutemi, Kontrolloni lidhjen tuaj në internet dhe riprovoni.</string>
     <string name="hpp_error_subtitle">Kur të jeni sërish i lidhur, prekni Riprovo.</string>
@@ -1520,14 +1507,6 @@ Language: sq_AL
     <string name="gutenberg_native_help_button">Buton ndihme</string>
     <string name="gutenberg_native_edit_using_web_editor">Përpunojeni duke përdorur përpunuesin web</string>
     <string name="gutenberg_native_choose_images">Zgjidhni figura</string>
-    <string name="stories_intro_create_story_post_label">Krijo Postim Shkrimi</string>
-    <string name="stories_intro_description_second">Botohen si postim i ri blogu në sajtin tuaj, që kështu publiku juaj kurrë të mos humbë një gjë.</string>
-    <string name="stories_intro_title_second">Postimet e shkrimeve s’zhduken</string>
-    <string name="stories_intro_description_first">Ndërthurni foto, video dhe tekst, që të krijoni postime shkrimesh tërheqës, që vizitorët tuaj do t’i duan fort.</string>
-    <string name="stories_intro_title_first">Tanimë shkrimet janë për këdo</string>
-    <string name="stories_intro_image_caption_second">Titull shembulli shkrimi</string>
-    <string name="stories_intro_image_caption_first">Si të krijohet një postim shkrimi</string>
-    <string name="stories_intro_main_title">Ju Paraqesim Postime Shkrimesh</string>
     <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
     <string name="mlp_notice_page_created">Faqja u krijua</string>
     <string name="media_insert_failed">Dështoi futje medie.</string>
@@ -1548,13 +1527,6 @@ Language: sq_AL
     <string name="gutenberg_native_add_this_link">Shtoje këtë lidhje</string>
     <string name="gutenberg_native_add_this_email_link">Shtoni këtë lidhje email</string>
     <string name="suggestion_no_connection">S’ka lidhje në internet.\nS’merren dot sugjerime.</string>
-    <string name="typeface_label_shrikhand">Të trasha</string>
-    <string name="typeface_label_space_mono">Moderne</string>
-    <string name="typeface_label_pacifico">Lojcake</string>
-    <string name="typeface_label_oswald">Të forta</string>
-    <string name="typeface_label_libre_baskerville">Klasike</string>
-    <string name="typeface_label_nunito">Casual</string>
-    <string name="toast_capture_operation_permission_needed">Që të mund të regjistroni video, duhet t’i akordoni aplikacionit leje incizimi audioje</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s të përzgjedhura</string>
     <string name="login_get_link_by_email">Merrni me email një lidhje hyrjeje</string>
@@ -1581,66 +1553,13 @@ Language: sq_AL
     <string name="gutenberg_native_page_title_empty">Titull faqeje. I zbrazët</string>
     <string name="toast_error_playing_video">Ndodhi një gabim teksa luhej videoja juaj</string>
     <string name="camera_error">Kjo pajisje nuk mbulon API-n Camera2.</string>
-    <string name="toast_error_saving_video">Videoja s’u ruajt dot</string>
-    <string name="toast_error_saving_image">Gabim në ruajtje figure</string>
-    <string name="toast_capture_operation_in_progress">Veprim në ecuri e sipër, riprovoni</string>
-    <string name="toast_story_page_not_found">S’u gjet dot diapozitiv Shkrimi</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Shihni Hapësirë Depozitimi</string>
-    <string name="dialog_insufficient_device_storage_error_message">Na duhet të ruajmë shkrimin në pajisjen tuaj, përpara se të mund të botohet. Shqyrtoni rregullimet tuaja për depozitim dhe hiqni kartela për të liruar vend.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Pajisje e pamjaftueshme depozitimi</string>
-    <string name="dialog_story_saving_error_message">Riprovoni të ruani ose fshini diapozitivat, mandej provoni sërish të botoni shkrimin tuaj.</string>
-    <string name="dialog_story_saving_error_title_plural">S’arrihet të ruhen %1$d diapozitiva</string>
-    <string name="dialog_story_saving_error_title_singular">S’arrihet të ruhet 1 diapozitiv</string>
-    <string name="story_saving_failed_quick_action_manage">Administrojini</string>
-    <string name="story_saving_failed_message_plural">%1$d diapozitiva lypin veprim</string>
-    <string name="story_saving_failed_message_singular">1 diapozitiv lyp veprim</string>
-    <string name="story_saving_failed_title">S’arrihet të ngarkohet \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">S’arrihet të ngarkohet \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" u botua</string>
-    <string name="story_saving_snackbar_started">Po ngarkohet \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Ende %1$d diapozitiva</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">edhe 1 diapozitiv</string>
-    <string name="story_saving_title_several">disa shkrime</string>
-    <string name="story_saving_title">Po ruhet \"%1$s\"…</string>
-    <string name="story_saving_untitled">Pa titull</string>
-    <string name="dialog_discard_story_ok_button">Hidhe Tej</string>
-    <string name="dialog_discard_story_message">Postimi juaj s’do të ruhet si skicë.</string>
-    <string name="dialog_discard_story_title">Të hidhet tej postimi i shkrimit?</string>
-    <string name="dialog_discard_page_ok_button">Fshije</string>
-    <string name="dialog_discard_errored_page_message">Ky diapozitiv s’është ruajtur ende. Nëse e fshini këtë diapozitiv, do të humbni çfarëdo përpunimesh që keni bërë.</string>
-    <string name="dialog_discard_page_message">Ky diapozitiv do të hiqet prej sajtit tuaj.</string>
-    <string name="dialog_discard_page_title">Të fshihet diapozitivi i shkrimit?</string>
-    <string name="label_text_color_button">Ndryshoni ngjyrë teksti</string>
-    <string name="label_text_alignment_button">Ndryshoni drejtim teksti</string>
-    <string name="label_frame_errored">me gabim</string>
-    <string name="label_frame_selected_border">e përzgjedhur</string>
-    <string name="label_frame_unselected_border">e papërzgjedhur</string>
-    <string name="label_frame_image">Diapozitiv</string>
-    <string name="label_retry_icon">Riprovo</string>
-    <string name="label_saved_icon">U ruajt</string>
     <string name="label_close_button">Mbylle</string>
-    <string name="label_share_to">Ndajeni me të tjerët në</string>
-    <string name="label_snackbar_share">NDAJENI ME TË TJERË</string>
-    <string name="label_snackbar_loop_frame_saved">U ruajt te fotot</string>
-    <string name="label_control_retry">Riprovo</string>
-    <string name="label_control_saved">U ruajt</string>
-    <string name="label_control_saving">Po ruhet</string>
-    <string name="label_control_flash">Blic</string>
-    <string name="label_control_flip_camera">Ktheje në anë tjetër</string>
-    <string name="sound_button_alt">Tingull</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="stickers_button_alt">Ngjitës</string>
-    <string name="flash_button_alt">Blic</string>
-    <string name="flip_button_alt">Rrotulloni kamerën</string>
-    <string name="capture_button_alt">Regjistroje</string>
     <string name="mlp_preview_page">Paraparje</string>
     <string name="mlp_create_page">Krijoni faqe</string>
     <string name="mlp_create_blank_page">Krijoni faqe të zbrazët</string>
     <string name="mlp_choose_layout_subtitle">Nisjani duke zgjedhur nga një larmi e madhe skemash të parapërgatitura faqesh. Ose thjesht fillojani me një faqe të zbrazët.</string>
     <string name="mlp_choose_layout_title">Zgjidhni një skemë</string>
     <string name="prepublishing_nudges_story_title_hint">Jepini një titull shkrimit tuaj</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Krijoni një postim ose një shkrim</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Krijoni një postim, faqe ose shkrim</string>
     <string name="quick_start_dialog_create_new_post_message_short">Prekni %1$s Krijoni. %2$s Mandej përzgjidhni &lt;b&gt;Postim blogu&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Zgjidhni nga pajisje</string>
     <string name="my_site_bottom_sheet_add_story">Postim shkrimi</string>
