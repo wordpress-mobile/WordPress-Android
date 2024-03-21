@@ -153,7 +153,7 @@ public class PublicizeActions {
         };
 
         String path = "/me/keyring-connections";
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, listener, errorListener);
     }
 
     /*

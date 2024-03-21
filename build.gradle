@@ -23,12 +23,12 @@ ext {
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '3.5.0'
-    gutenbergMobileVersion = '6517-6f7e98cc106bec6714bf54286720232e57f78e60'
-    wordPressAztecVersion = '1073-299b8ea09beb93e7f159e583ef64ae6d8db6d549'
-    wordPressFluxCVersion = 'trunk-b9ecc708dde74d6cc95aeab42e56fb8067640039'
+    gutenbergMobileVersion = 'v1.115.0'
+    wordPressAztecVersion = 'v2.0'
+    wordPressFluxCVersion = '2.72.0'
     wordPressLoginVersion = '1.14.1'
     wordPressPersistentEditTextVersion = '1.0.2'
-    wordPressUtilsVersion = 'trunk-4d6cb9a20bfda0dfe2310cf8275cbdcfb0d42ba7'
+    wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
