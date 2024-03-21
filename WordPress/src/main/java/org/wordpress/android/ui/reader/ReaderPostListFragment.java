@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -745,9 +746,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Override
     public void onResume() {
         super.onResume();
-        if (!isAdded() || getView() == null) {
-            return;
-        }
         /*
          * This is a workaround for https://github.com/wordpress-mobile/WordPress-Android/issues/11985.
          * The RecyclerView doesn't get redrawn correctly when the adapter finishes its initialization in onStart.
@@ -2323,10 +2321,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
         new Thread() {
             @Override
             public void run() {
+                // Check the fragment is attached to the activity when this Thread starts.
+                FragmentActivity activity = getActivity();
+                if (activity == null) {
+                    return;
+                }
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
-                    requireActivity().runOnUiThread(() -> updateCurrentTag());
+                    activity.runOnUiThread(() -> updateCurrentTag());
                 } else {
-                    requireActivity().runOnUiThread(() -> {
+                    activity.runOnUiThread(() -> {
                         if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(
