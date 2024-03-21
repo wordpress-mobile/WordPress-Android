@@ -20,7 +20,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.gravatar.GravatarApi
+import com.gravatar.services.AvatarService
+import com.gravatar.services.ErrorType
+import com.gravatar.services.GravatarListener
+import com.gravatar.types.Email
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -145,7 +148,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
     @Inject
-    lateinit var gravatarApi: GravatarApi
+    lateinit var avatarService: AvatarService
 
     private val viewModel: MeViewModel by viewModels()
 
@@ -664,14 +667,14 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             return
         }
         binding?.showGravatarProgressBar(true)
-        gravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken!!,
-            object : GravatarApi.GravatarListener<Unit> {
+        avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken!!,
+            object : GravatarListener<Unit> {
                 override fun onSuccess(response: Unit) {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
 
-                override fun onError(errorType: GravatarApi.ErrorType) {
+                override fun onError(errorType: ErrorType) {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOAD_EXCEPTION, mapOf("error_type" to errorType.name))
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
                 }

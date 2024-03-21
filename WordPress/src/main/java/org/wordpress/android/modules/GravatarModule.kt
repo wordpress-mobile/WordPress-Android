@@ -1,6 +1,6 @@
 package org.wordpress.android.modules
 
-import com.gravatar.GravatarApi
+import com.gravatar.services.AvatarService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ class GravatarModule {
     @Singleton
     @Provides
     fun provideGravatarApi(
-    ): GravatarApi = GravatarApi()
+    ): AvatarService = AvatarService()
 }

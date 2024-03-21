@@ -32,8 +32,10 @@ import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.gravatar.GravatarApi;
-import com.gravatar.GravatarApi.ErrorType;
+import com.gravatar.services.AvatarService;
+import com.gravatar.services.ErrorType;
+import com.gravatar.services.GravatarListener;
+import com.gravatar.types.Email;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -151,7 +153,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SignupUtils mSignupUtils;
     @Inject protected MediaPickerLauncher mMediaPickerLauncher;
-    @Inject protected GravatarApi mGravatarApi;
+    @Inject protected AvatarService mAvatarService;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -731,9 +733,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             final File file = new File(filePath);
             if (file.exists()) {
                 startProgress(false);
-                mGravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(),
+                mAvatarService.upload(file, new Email(mAccountStore.getAccount().getEmail()),
                         Objects.requireNonNull(mAccountStore.getAccessToken()),
-                        new GravatarApi.GravatarListener<Unit>() {
+                        new GravatarListener<Unit>() {
                             @Override
                             public void onSuccess(@NonNull Unit response) {
                                 endProgress();
@@ -833,8 +835,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             try {
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
-                mGravatarApi.uploadGravatar(file, mEmail, mToken,
-                        new GravatarApi.GravatarListener<Unit>() {
+                mAvatarService.upload(file, new Email(mEmail), mToken,
+                        new GravatarListener<Unit>() {
                             @Override
                             public void onSuccess(@NonNull Unit response) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");

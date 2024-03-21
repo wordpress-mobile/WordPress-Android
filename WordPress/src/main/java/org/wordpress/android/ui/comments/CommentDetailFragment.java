@@ -31,7 +31,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
-import com.gravatar.GravatarUtilsKt;
+import com.gravatar.AvatarQueryOptions;
+import com.gravatar.AvatarUrl;
+import com.gravatar.types.Email;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -817,7 +819,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (comment.getAuthorProfileImageUrl() != null) {
             avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
         } else if (comment.getAuthorEmail() != null) {
-            avatarUrl = GravatarUtilsKt.emailAddressToGravatarUrl(comment.getAuthorEmail(), avatarSz, null, null, null);
+            avatarUrl = new AvatarUrl(new Email(comment.getAuthorEmail()),
+                    new AvatarQueryOptions(avatarSz, null, null, null)).uri().toString();
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 

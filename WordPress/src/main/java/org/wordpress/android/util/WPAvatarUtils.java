@@ -1,14 +1,15 @@
 package org.wordpress.android.util;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.gravatar.DefaultAvatarImage;
-import com.gravatar.DefaultAvatarImage.MysteryPerson;
-
-import static com.gravatar.GravatarUtilsKt.rewriteGravatarImageUrlQueryParams;
+import com.gravatar.AvatarQueryOptions;
+import com.gravatar.AvatarUrl;
+import com.gravatar.DefaultAvatarOption;
+import com.gravatar.DefaultAvatarOption.MysteryPerson;
 
 /**
  * This file contains utility functions for working with avatar urls coming from WordPress accounts.
@@ -16,7 +17,7 @@ import static com.gravatar.GravatarUtilsKt.rewriteGravatarImageUrlQueryParams;
  * see https://docs.gravatar.com/general/images/
  */
 public class WPAvatarUtils {
-    public static final DefaultAvatarImage DEFAULT_AVATAR = MysteryPerson.INSTANCE;
+    public static final DefaultAvatarOption DEFAULT_AVATAR = MysteryPerson.INSTANCE;
 
     /**
      * Remove all query params from a gravatar url and set them to the given size and
@@ -29,7 +30,7 @@ public class WPAvatarUtils {
      * @return the fixed url
      */
     public static String rewriteAvatarUrl(@NonNull final String imageUrl, int avatarSz,
-                                          @Nullable DefaultAvatarImage defaultImage) {
+                                          @Nullable DefaultAvatarOption defaultImage) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -38,7 +39,8 @@ public class WPAvatarUtils {
         if (!imageUrl.contains("gravatar.com")) {
             return PhotonUtils.getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
         } else {
-            return rewriteGravatarImageUrlQueryParams(imageUrl, avatarSz, defaultImage, null, null);
+            return new AvatarUrl(Uri.parse(imageUrl),
+                    new AvatarQueryOptions(avatarSz, defaultImage, null, null)).uri().toString();
         }
     }
 

@@ -2,7 +2,9 @@ package org.wordpress.android.ui.comments.unified
 
 import android.text.TextUtils
 import android.view.ViewGroup
-import com.gravatar.emailAddressToGravatarUrl
+import com.gravatar.AvatarQueryOptions
+import com.gravatar.AvatarUrl
+import com.gravatar.types.Email
 import org.wordpress.android.R
 import org.wordpress.android.databinding.CommentListItemBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
@@ -81,8 +83,10 @@ class UnifiedCommentViewHolder(
                 resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
             )
         } else if (!TextUtils.isEmpty(comment.authorEmail)) {
-            emailAddressToGravatarUrl(comment.authorEmail,
-                size = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium))
+            AvatarUrl(
+                Email(comment.authorEmail),
+                AvatarQueryOptions(preferredSize = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium))
+            ).uri().toString()
         } else {
             ""
         }

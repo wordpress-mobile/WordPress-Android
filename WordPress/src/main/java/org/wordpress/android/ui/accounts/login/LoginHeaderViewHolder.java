@@ -10,8 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gravatar.DefaultAvatarImage;
-import com.gravatar.GravatarUtilsKt;
+import com.gravatar.AvatarQueryOptions;
+import com.gravatar.AvatarUrl;
+import com.gravatar.DefaultAvatarOption;
+import com.gravatar.types.Email;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.AccountModel;
@@ -100,11 +102,13 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
     private String constructGravatarUrl(Context context, AccountModel account) {
         return WPAvatarUtils.rewriteAvatarUrl(account.getAvatarUrl(), getAvatarSize(context),
-                DefaultAvatarImage.Status404.INSTANCE);
+                DefaultAvatarOption.Status404.INSTANCE);
     }
 
     private String constructGravatarUrl(Context context, SiteModel site) {
-        return GravatarUtilsKt.emailAddressToGravatarUrl(site.getEmail(), getAvatarSize(context),
-                DefaultAvatarImage.Status404.INSTANCE, null, null);
+        return new AvatarUrl(
+                new Email(site.getEmail()),
+                new AvatarQueryOptions(getAvatarSize(context), DefaultAvatarOption.Status404.INSTANCE, null, null)
+        ).uri().toString();
     }
 }
