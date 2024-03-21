@@ -632,7 +632,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     // QuickPress might want to use a different blog than the current blog
                     val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
                     siteStore.getSiteByLocalId(localSiteId)?.let { model ->
-                        // todo: this is the only place where the siteModel can be overridden in the entire onCreate
                         return model
                     }
                 }
@@ -3526,8 +3525,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return
         }
         if (event.isError && !NetworkUtils.isNetworkAvailable(this)) {
-            // todo: annmarie - this is odd, event.media can be null, but the paused function requires a non-null?
-            editorMedia.onMediaUploadPaused((editorMediaUploadListener)!!, event.media!!, event.error)
+            editorMediaUploadListener?.let { listener ->
+                event.media?.let { media ->
+                    editorMedia.onMediaUploadPaused(listener, media, event.error)
+                }
+            }
             return
         }
 
@@ -3547,8 +3549,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     )
                 )
             }
-            // todo: annmarie - same here, all these event values can be null but non-nulls are required for the error
-            editorMedia.onMediaUploadError((editorMediaUploadListener)!!, event.media!!, event.error)
+            editorMediaUploadListener?.let { listener ->
+                event.media?.let { media ->
+                    editorMedia.onMediaUploadError(listener, media, event.error)
+                }
+            }
+
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (TextUtils.isEmpty(event.media!!.url) && !NetworkUtils.isNetworkAvailable(this)) {
