@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.blaze
 
 data class BlazePaymentMethods(
     val savedPaymentMethods: List<BlazePaymentMethod>,
-    val addPaymentMethodUrls: BlazePaymentMethodUrls
+    val addPaymentMethodUrls: BlazePaymentMethodUrls? // TODO make this non nullable when API returns URLs
 )
 
 data class BlazePaymentMethod(
