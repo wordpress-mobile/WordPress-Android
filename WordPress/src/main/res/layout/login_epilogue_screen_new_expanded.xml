@@ -22,8 +22,11 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintHeight_default="wrap"
+        tools:itemCount="8"
+        app:layout_constraintVertical_chainStyle="packed"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toTopOf="@id/orLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_shadow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0" />
@@ -33,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/button_container_shadow_height"
         android:background="@drawable/login_shadow"
+        app:layout_constraintTop_toBottomOf="@+id/recycler_view"
         app:layout_constraintBottom_toTopOf="@+id/orLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -42,6 +46,7 @@
         layout="@layout/login_or_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_shadow"
         app:layout_constraintBottom_toTopOf="@+id/bottom_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -55,6 +60,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:text="@string/login_epilogue_create_new_site_button"
+        app:layout_constraintTop_toBottomOf="@+id/orLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

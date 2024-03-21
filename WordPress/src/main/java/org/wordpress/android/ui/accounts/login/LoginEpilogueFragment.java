@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -17,34 +16,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
-import org.wordpress.android.ui.main.SitePickerAdapter;
-import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
-import org.wordpress.android.ui.main.SitePickerAdapter.OnSiteClickListener;
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
-import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
-import org.wordpress.android.ui.main.SiteRecord;
+import org.wordpress.android.ui.main.ChooseSiteAdapter;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
 
 @AndroidEntryPoint
 public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueListener> {
@@ -54,15 +44,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private static final String ARG_SHOW_AND_RETURN = "ARG_SHOW_AND_RETURN";
     private static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
-    private static final int EXPANDED_UI_THRESHOLD = 3;
-
     private RecyclerView mSitesList;
     @Nullable private View mBottomShadow;
 
-    private SitePickerAdapter mAdapter;
+    private ChooseSiteAdapter mAdapter = new ChooseSiteAdapter();
     private boolean mDoLoginUpdate;
     private boolean mShowAndReturn;
-    private ArrayList<Integer> mOldSitesIds;
 
     private LoginEpilogueListener mLoginEpilogueListener;
 
@@ -111,12 +98,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @LayoutRes
     private int loginEpilogueScreenResource() {
         if (isNewLoginEpilogueScreenEnabled()) {
-            if (mAdapter.getBlogsForCurrentView().size() <= EXPANDED_UI_THRESHOLD
-                && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                return R.layout.login_epilogue_screen_new;
-            } else {
-                return R.layout.login_epilogue_screen_new_expanded;
-            }
+            return R.layout.login_epilogue_screen_new_expanded;
         } else {
             return R.layout.login_epilogue_screen;
         }
@@ -135,6 +117,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mSitesList.setItemAnimator(null);
         mSitesList.setAdapter(mAdapter);
+        setOnSiteClickListener();
     }
 
     @Override
@@ -159,15 +142,24 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         mDoLoginUpdate = requireArguments().getBoolean(ARG_DO_LOGIN_UPDATE, false);
         mShowAndReturn = requireArguments().getBoolean(ARG_SHOW_AND_RETURN, false);
-        mOldSitesIds = requireArguments().getIntegerArrayList(ARG_OLD_SITES_IDS);
-
-        initAdapter();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initViewModel();
+        mParentViewModel.getSites().observe(requireActivity(), sites -> {
+            if (mBottomShadow != null) {
+                if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                    mBottomShadow.setVisibility(View.VISIBLE);
+                } else {
+                    mBottomShadow.setVisibility(View.GONE);
+                }
+            }
+            mAdapter.setSites(sites);
+            mParentViewModel.onSiteListLoaded();
+        });
+        mParentViewModel.loadSites();
     }
 
     @Override
@@ -184,118 +176,13 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 .get(LoginEpilogueViewModel.class);
     }
 
-    private void initAdapter() {
-        if (mAdapter == null) {
-            setNewAdapter();
-        }
-    }
-
-    private void setNewAdapter() {
-        mAdapter = new SitePickerAdapter(
-                requireActivity(),
-                R.layout.login_epilogue_sites_listitem,
-                0,
-                "",
-                false,
-                dataLoadedListener(),
-                headerHandler(),
-                footerHandler(),
-                mOldSitesIds,
-                SitePickerMode.DEFAULT_MODE,
-                mShowAndReturn
-        );
-        setOnSiteClickListener();
-    }
-
-    @NonNull
-    private OnDataLoadedListener dataLoadedListener() {
-        return new OnDataLoadedListener() {
-            @Override
-            public void onBeforeLoad(boolean isEmpty) {
-            }
-
-            @Override
-            public void onAfterLoad() {
-                mSitesList.post(() -> {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    if (mBottomShadow != null) {
-                        if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                            mBottomShadow.setVisibility(View.VISIBLE);
-                        } else {
-                            mBottomShadow.setVisibility(View.GONE);
-                        }
-                    }
-
-                    mParentViewModel.onSiteListLoaded();
-                });
-            }
-        };
-    }
-
-    @NonNull
-    private ViewHolderHandler<LoginHeaderViewHolder> headerHandler() {
-        return new ViewHolderHandler<LoginHeaderViewHolder>() {
-            @Override
-            public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                            boolean attachToRoot) {
-                if (isNewLoginEpilogueScreenEnabled()) {
-                    return new LoginHeaderViewHolder(
-                            layoutInflater.inflate(R.layout.login_epilogue_header_new, parent, false),
-                            true
-                    );
-                } else {
-                    return new LoginHeaderViewHolder(
-                            layoutInflater.inflate(R.layout.login_epilogue_header, parent, false),
-                            false
-                    );
-                }
-            }
-
-            @Override
-            public void onBindViewHolder(LoginHeaderViewHolder holder, List<SiteRecord> sites) {
-                bindHeaderViewHolder(holder, sites);
-            }
-        };
-    }
-
-    @Nullable
-    private ViewHolderHandler<LoginFooterViewHolder> footerHandler() {
-        if (isNewLoginEpilogueScreenEnabled()) {
-            return null;
-        } else {
-            return new ViewHolderHandler<LoginFooterViewHolder>() {
-                @Override
-                public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                                boolean attachToRoot) {
-                    return new LoginFooterViewHolder(
-                            layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
-                }
-
-                @Override
-                public void onBindViewHolder(LoginFooterViewHolder holder, List<SiteRecord> sites) {
-                    bindFooterViewHolder(holder, sites);
-                }
-            };
-        }
-    }
-
     private void setOnSiteClickListener() {
         if (isNewLoginEpilogueScreenEnabled()) {
-            mAdapter.setOnSiteClickListener(new OnSiteClickListener() {
-                @Override
-                public void onSiteClick(SiteRecord site) {
-                    AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED);
-                    mUnifiedLoginTracker.trackClick(Click.CHOOSE_SITE);
-                    mLoginEpilogueListener.onSiteClick(site.getLocalId());
-                }
-
-                @Override
-                public boolean onSiteLongClick(SiteRecord site) {
-                    return false;
-                }
+            mAdapter.setOnSiteClicked((site) -> {
+                AnalyticsTracker.track(Stat.LOGIN_EPILOGUE_CHOOSE_SITE_TAPPED);
+                mUnifiedLoginTracker.trackClick(Click.CHOOSE_SITE);
+                mLoginEpilogueListener.onSiteClick(site.getLocalId());
+                return Unit.INSTANCE;
             });
         }
     }
@@ -319,54 +206,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             doFinishLogin();
         }
         mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
-    }
-
-    private void bindHeaderViewHolder(LoginHeaderViewHolder holder, List<SiteRecord> sites) {
-        if (!isAdded()) {
-            return;
-        }
-
-        final boolean isWpcom = mAccountStore.hasAccessToken();
-        final boolean hasSites = sites.size() != 0;
-
-        if (isWpcom) {
-            final AccountModel account = mAccountStore.getAccount();
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, account);
-        } else if (hasSites) {
-            final SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, site);
-        }
-
-        if (hasSites) {
-            if (isNewLoginEpilogueScreenEnabled()) {
-                holder.showSitesHeading();
-            } else {
-                holder.showSitesHeading(StringUtils.getQuantityString(
-                        requireActivity(),
-                        R.string.login_epilogue_mysites_one,
-                        R.string.login_epilogue_mysites_one,
-                        R.string.login_epilogue_mysites_other,
-                        sites.size())
-                );
-            }
-        } else {
-            holder.hideSitesHeading();
-        }
-    }
-
-    private void bindFooterViewHolder(LoginFooterViewHolder holder, List<SiteRecord> sites) {
-        holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK_APP) ? View.GONE : View.VISIBLE);
-        holder.itemView.setOnClickListener(v -> {
-            if (mLoginEpilogueListener != null) {
-                mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);
-                mLoginEpilogueListener.onConnectAnotherSite();
-            }
-        });
-        if (sites.size() == 0) {
-            holder.bindText(getString(R.string.connect_site));
-        } else {
-            holder.bindText(getString(R.string.connect_more));
-        }
     }
 
     @Override
@@ -393,9 +232,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         endProgress();
-        setNewAdapter();
-        mSitesList.setAdapter(mAdapter);
-
         mParentViewModel.onLoginFinished(mDoLoginUpdate);
     }
 

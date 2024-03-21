@@ -2,12 +2,14 @@ package org.wordpress.android.ui.accounts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
+import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
@@ -21,6 +23,13 @@ class LoginEpilogueViewModel @Inject constructor(
 ) : ViewModel() {
     private val _navigationEvents = MediatorLiveData<Event<LoginNavigationEvents>>()
     val navigationEvents: LiveData<Event<LoginNavigationEvents>> = _navigationEvents
+
+    private val _sites = MutableLiveData<List<SiteRecord>>()
+    val sites: LiveData<List<SiteRecord>> = _sites
+
+    fun loadSites() {
+        _sites.postValue(siteStore.sites.map { SiteRecord(it) })
+    }
 
     fun onSiteClick(localId: Int) {
         _navigationEvents.postValue(Event(LoginNavigationEvents.SelectSite(localId)))
