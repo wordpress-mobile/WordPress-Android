@@ -212,7 +212,10 @@ class CardViewModelSlice @Inject constructor(
     }
 
     private fun isUiModelEmpty(): Boolean {
-        return (uiModel.value is CardsState.Success) && (uiModel.value as CardsState.Success).cards.isEmpty()
+        return (uiModel.value is CardsState.Success)
+                && (uiModel.value as CardsState.Success).topCards.isEmpty()
+                && (uiModel.value as CardsState.Success).cards.isEmpty()
+                && (uiModel.value as CardsState.Success).bottomCards.isEmpty()
     }
 
     private fun onDashboardErrorRetry() {
