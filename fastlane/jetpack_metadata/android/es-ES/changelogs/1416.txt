@@ -1,0 +1,7 @@
+24.4:
+- Se ha añadido una pestaña Tráfico nueva en la pantalla Estadísticas
+- Se ha mejorado el diseño de las notificaciones
+- Se ha incluido compatibilidad para los bloques de vídeo para VideoPress v5
+- Se ha solucionado un error que hacía que el editor de bloques bajara automáticamente por la pantalla
+- Ahora aparece un mensaje de error cuando hay problemas al subir un vídeo
+- Las imágenes ya no se vuelven transparentes mientras se suben

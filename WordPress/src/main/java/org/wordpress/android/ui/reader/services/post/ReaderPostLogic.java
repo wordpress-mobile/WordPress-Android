@@ -25,15 +25,19 @@ import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderPostLogic {
     private ServiceCompletionListener mCompletionListener;
+    private final LocaleManagerWrapper mLocaleManagerWrapper;
     private Object mListenerCompanion;
 
-    public ReaderPostLogic(ServiceCompletionListener listener) {
+    public ReaderPostLogic(@NonNull final ServiceCompletionListener listener,
+                           @NonNull final LocaleManagerWrapper localeManagerWrapper) {
         mCompletionListener = listener;
+        mLocaleManagerWrapper = localeManagerWrapper;
     }
 
     public void performTask(Object companion, UpdateAction action,
@@ -87,7 +91,7 @@ public class ReaderPostLogic {
         requestPostsForFeed(feedId, action, listener);
     }
 
-    private static void requestPostsWithTag(final ReaderTag tag,
+    private void requestPostsWithTag(final ReaderTag tag,
                                             final UpdateAction updateAction,
                                             final ReaderActions.UpdateResultListener resultListener) {
         String path = getRelativeEndpointForTag(tag);
@@ -126,22 +130,18 @@ public class ReaderPostLogic {
 
         sb.append("&meta=site,likes");
 
-        com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                // remember when this tag was updated if newer posts were requested
-                if (updateAction == UpdateAction.REQUEST_NEWER || updateAction == UpdateAction.REQUEST_REFRESH) {
-                    ReaderTagTable.setTagLastUpdated(tag);
-                }
-                handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
+        sb.append("&lang=").append(mLocaleManagerWrapper.getLanguage());
+
+        com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
+            // remember when this tag was updated if newer posts were requested
+            if (updateAction == UpdateAction.REQUEST_NEWER || updateAction == UpdateAction.REQUEST_REFRESH) {
+                ReaderTagTable.setTagLastUpdated(tag);
             }
+            handleUpdatePostsResponse(tag, jsonObject, updateAction, resultListener);
         };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.READER, volleyError);
-                resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
-            }
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.READER, volleyError);
+            resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED);
         };
 
         WordPress.getRestClientUtilsV1_2().get(sb.toString(), null, null, listener, errorListener);
@@ -174,7 +174,7 @@ public class ReaderPostLogic {
             }
         };
         AppLog.d(AppLog.T.READER, "updating posts in blog " + blogId);
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static void requestPostsForFeed(final long feedId,
@@ -203,7 +203,7 @@ public class ReaderPostLogic {
         };
 
         AppLog.d(AppLog.T.READER, "updating posts in feed " + feedId);
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener);
     }
 
     /*

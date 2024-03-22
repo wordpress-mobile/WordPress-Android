@@ -174,6 +174,8 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
+    fastlane-plugin-sentry (1.19.0)
+      os (~> 1.1, >= 1.1.4)
     fastlane-plugin-wpmreleasetoolkit (9.4.0)
       activesupport (>= 6.1.7.1)
       buildkit (~> 1.5)
@@ -355,6 +357,7 @@ PLATFORMS
 DEPENDENCIES
   danger-dangermattic (~> 1.0)
   fastlane (~> 2)
+  fastlane-plugin-sentry
   fastlane-plugin-wpmreleasetoolkit (~> 9.2)
   nokogiri
   rmagick (~> 4.1)

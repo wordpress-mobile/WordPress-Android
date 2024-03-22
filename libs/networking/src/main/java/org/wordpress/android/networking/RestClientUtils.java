@@ -103,7 +103,7 @@ public class RestClientUtils {
 
     public void getCategories(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/categories", siteId);
-        get(path, null, null, listener, errorListener);
+        getWithLocale(path, null, null, listener, errorListener);
     }
 
     /**
@@ -112,7 +112,7 @@ public class RestClientUtils {
      * <a href="https://developer.wordpress.com/docs/api/1/get/notifications/">api/1/get/notifications</a>
      */
     public void getNotifications(Map<String, String> params, Listener listener, ErrorListener errorListener) {
-        get("notifications", params, null, listener, errorListener);
+        getWithLocale("notifications", params, null, listener, errorListener);
     }
 
     /**
@@ -123,7 +123,7 @@ public class RestClientUtils {
                                 Listener listener, ErrorListener errorListener) {
         params.put("fields", NOTIFICATION_FIELDS);
         String path = String.format(Locale.US, "notifications/%s/", noteId);
-        get(path, params, null, listener, errorListener);
+        getWithLocale(path, params, null, listener, errorListener);
     }
 
     /**
@@ -135,7 +135,7 @@ public class RestClientUtils {
         HashMap<String, String> params = new HashMap<>();
         params.put("fields", NOTIFICATION_FIELDS);
         String path = String.format("notifications/%s", noteId);
-        get(path, params, null, listener, errorListener);
+        getWithLocale(path, params, null, listener, errorListener);
     }
 
     /**
@@ -166,23 +166,23 @@ public class RestClientUtils {
 
     public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/?path=/jetpack/v4/settings", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
     public void getGeneralSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
     public void getJetpackMonitorSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
 
     public void getJetpackModuleSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/jetpack/modules", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
     public void setGeneralSiteSettings(long siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
@@ -228,7 +228,7 @@ public class RestClientUtils {
 
     public void getSitePurchases(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/purchases", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
     public void exportContentAll(long siteId, Listener listener, ErrorListener errorListener) {
@@ -238,7 +238,7 @@ public class RestClientUtils {
 
     public void getSharingButtons(String siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format("sites/%s/sharing-buttons", siteId);
-        get(path, listener, errorListener);
+        getWithLocale(path, listener, errorListener);
     }
 
     public void setSharingButtons(String siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
@@ -249,29 +249,44 @@ public class RestClientUtils {
     /**
      * Make GET request
      */
-    public Request<JSONObject> get(String path, Listener listener, ErrorListener errorListener) {
-        return get(path, null, null, listener, errorListener);
+    public Request<JSONObject> getWithLocale(final String path, final Listener listener,
+                                             final ErrorListener errorListener) {
+        return getWithLocale(path, null, null, listener, errorListener);
     }
 
     /**
-     * Make GET request with params
+     * Make GET request with params. Locale param is added automatically.
      */
-    public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
-                    ErrorListener errorListener) {
+    public Request<JSONObject> getWithLocale(final String path, final Map<String, String> params,
+                                             RetryPolicy retryPolicy, final Listener listener,
+                                             final ErrorListener errorListener) {
         // turn params into query string
         HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
         if (params != null) {
             paramsWithLocale.putAll(params);
         }
+        return get(path, paramsWithLocale, retryPolicy, listener, errorListener);
+    }
 
+    /**
+     * Make GET request with params.
+     */
+    public Request<JSONObject> get(final String path, final Map<String, String> params, RetryPolicy retryPolicy,
+                                   final Listener listener, final ErrorListener errorListener) {
+        final Map<String, String> paramsWithPath = new HashMap<>();
+        if (params != null) {
+            paramsWithPath.putAll(params);
+        }
         String realPath = getSanitizedPath(path);
         if (TextUtils.isEmpty(realPath)) {
             realPath = path;
         }
-        paramsWithLocale.putAll(getSanitizedParameters(path));
+        if (path != null) {
+            paramsWithPath.putAll(getSanitizedParameters(path));
+        }
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient
-                        .getAbsoluteURL(realPath, paramsWithLocale), null, listener, errorListener);
+                .getAbsoluteURL(realPath, paramsWithPath), null, listener, errorListener);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);

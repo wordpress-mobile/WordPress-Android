@@ -18,31 +18,34 @@ object DesignSystemAppColor {
 
     // Grays
     @Stable
-    val Gray = Color(0xFFF2F2F7)
+    val Gray = Color(0x66C2C2C6)
 
     @Stable
-    val Gray10 = Color(0xFFC2C2C6)
+    val Gray22 = Color(0x38FFFFFF)
 
     @Stable
-    val Gray20 = Color(0x99EBEBF5)
+    val Gray30 = Color(0x4DFFFFFF)
 
     @Stable
-    val Gray30 = Color(0xFF9B9B9E)
+    val Gray40 = Color(0x66FFFFFF)
 
     @Stable
-    val Gray40 = Color(0x993C3C43)
+    val Gray60 = Color(0x99EBEBF5)
 
     @Stable
-    val Gray50 = Color(0x4D3C3C43)
+    val DarkGray8 = Color(0x14000000)
 
     @Stable
-    val Gray60 = Color(0xFF4E4E4F)
+    val DarkGray15 = Color(0x26000000)
 
     @Stable
-    val Gray70 = Color(0xFF3A3A3C)
+    val DarkGray30 = Color(0x4D000000)
 
     @Stable
-    val Gray80 = Color(0xFF2C2C2E)
+    val DarkGray40 = Color(0x66000000)
+
+    @Stable
+    val DarkGray55 = Color(0x8C000000)
 
     // Blues
     @Stable

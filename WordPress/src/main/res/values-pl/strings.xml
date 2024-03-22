@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 09:40:32+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.3
+Generator: GlotPress/4.0.0
 Language: pl
 -->
 <resources>
@@ -601,7 +601,6 @@ Language: pl
     <string name="gutenberg_native_add_button_text">Dodaj tekst przycisku</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Odrzuć</string>
     <string name="activity_log_backup_download_notice_download_action">Pobierz</string>
-    <string name="stories_intro_main_subtitle">Nowy sposób tworzenia i publikacji angażujących treści na twojej witrynie.</string>
     <string name="threat_fix_all_confirmation_message_plural">Proszę o potwierdzenie, że chcesz usunąć wszyskie %s aktywne/ych zagrożeń/nia.</string>
     <string name="threat_fix_all_status_success_message_plural">Zagrożenia zostały z powodzeniem usunięte.</string>
     <string name="scan_fixing_threats_description_plural">Pracujemy nad usunięciem tych zagrożeń. Możesz używać swojej witryny jak dotychczas i w dowolnym czasie sprawdzać nasze postępy.</string>
@@ -756,7 +755,6 @@ Language: pl
     <string name="request_failed_message">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować później.</string>
     <string name="gutenberg_native_change_block_position">Zmień pozycję bloku</string>
     <string name="gutenberg_native_move_to_bottom">Przenieś na dół</string>
-    <string name="label_control_upload">Prześlij</string>
     <string name="jetpack_icon_content_description">ikona</string>
     <string name="backup_download_complete_info">Przesłaliśmy również odnośnik do twojego pliku na adres email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Przycisk udostępniania łącza</string>
@@ -850,7 +848,6 @@ Language: pl
     <string name="dialog_confirm_copy_local_edit_button">Najpierw edytuj wpis</string>
     <string name="dialog_confirm_copy_local_title">Konflikt synchronizacji wpisu</string>
     <string name="button_copy">Powiel</string>
-    <string name="toast_edit_story_update_in_progress_title">Relacja jest zapisywana, proszę czekać…</string>
     <string name="gutenberg_native_file_block_settings">Ustawienia bloku pliku</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Nie można było zapisać plików.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
@@ -868,21 +865,8 @@ Language: pl
     <string name="activity_log_activity_type_filter_apply">Zastosuj</string>
     <string name="reader_follow_comments_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="reader_follow_comments_null_response">Nie otrzymano żadnej odpowiedzi</string>
-    <string name="dialog_edit_story_unsupported_format_title">Pliki GIF nie są obsługiwane</string>
-    <string name="dialog_edit_story_unrecoverable_title">Nie można edytować Relacji</string>
-    <string name="dialog_edit_story_unavailable_title">Nie można edytować Relacji</string>
-    <string name="dialog_edit_story_unrecoverable_message">Nie można było odnaleźć w witrynie mediów dla tej relacji</string>
-    <string name="dialog_edit_story_unavailable_message">Nie można było wczytać mediów dla tej Relacji. Sprawdź swoje połączenie internetowe i spróbuj ponownie za chwilę.</string>
-    <string name="dialog_edit_story_limited_title">Ograniczone edytowanie Relacji</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media zostały usunięte. Proszę spróbować odtworzyć relację.</string>
-    <string name="color_picker_label_background">Tło</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Odrzuć</string>
-    <string name="dialog_discard_story_message_edit">Wszelkie zmiany nie zostaną zapisane</string>
-    <string name="dialog_discard_story_title_edit">Odrzucić zmiany?</string>
     <string name="label_done_button">Gotowe</string>
-    <string name="label_next_button">Następny</string>
-    <string name="delete_button_alt">Usuń</string>
     <string name="hpp_retry_error">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="hpp_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online</string>
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
@@ -927,17 +911,9 @@ Language: pl
     <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierane</string>
-    <string name="stories_intro_create_story_post_label">Utwórz wpis z relacją</string>
     <string name="gutenberg_native_help_button">Przycisk wsparcia</string>
     <string name="gutenberg_native_edit_using_web_editor">Edytuj używając edytora web</string>
     <string name="gutenberg_native_choose_images">Wybierz obrazki</string>
-    <string name="stories_intro_description_second">Są publikowane jako nowe wpisy na twoim blogu, dzięki czemu nie ominą twojej widowni.</string>
-    <string name="stories_intro_title_second">Wpisy z relacjami nie znikają</string>
-    <string name="stories_intro_description_first">Połącz zdjęcia, filmy i tekst aby utworzyć interesujące wpisy z relacjami.</string>
-    <string name="stories_intro_image_caption_second">Przykładowy tytuł relacji</string>
-    <string name="stories_intro_image_caption_first">Jak utworzyć wpis z relacją</string>
-    <string name="stories_intro_main_title">Wprowadzamy wpisy z relacjami</string>
-    <string name="stories_intro_title_first">Nowe relacje są dla każdego</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
@@ -958,15 +934,8 @@ Language: pl
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
-    <string name="typeface_label_pacifico">Zabawna</string>
-    <string name="typeface_label_nunito">Codzienna</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
-    <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
-    <string name="typeface_label_oswald">Silne</string>
-    <string name="typeface_label_space_mono">Nowoczesny</string>
-    <string name="typeface_label_shrikhand">Półgruby</string>
-    <string name="typeface_label_libre_baskerville">Klasyczny</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -990,68 +959,15 @@ Language: pl
     <string name="gutenberg_native_page_title_empty">Tytuł strony. Pusty</string>
     <string name="toast_error_playing_video">Podczas odtwarzania filmu wystąpił błąd</string>
     <string name="camera_error">To urządzenie nie wspiera API Camera2.</string>
-    <string name="toast_error_saving_video">Nie można było zapisać filmu</string>
-    <string name="toast_error_saving_image">Błąd zapisu obrazka</string>
-    <string name="toast_capture_operation_in_progress">Operacja w trakcie, spróbuj ponownie</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Sprawdź pamięć</string>
     <string name="gutenberg_native_video_caption_empty">Podpis pod filmem. Pusty</string>
-    <string name="toast_story_page_not_found">Nie znaleziono slajdu Relacji</string>
-    <string name="dialog_insufficient_device_storage_error_title">Niewystarczająca ilość pamięci w urządzeniu</string>
-    <string name="dialog_story_saving_error_title_plural">Nie udało się zachować %1$d slajdów</string>
-    <string name="dialog_story_saving_error_title_singular">Nie udało się zachować jednego slajdu</string>
-    <string name="story_saving_failed_quick_action_manage">Zarządzaj</string>
-    <string name="story_saving_failed_message_plural">%1$d slajdów wymaga podjęcia działania</string>
-    <string name="story_saving_failed_message_singular">Jeden slajd wymaga podjęcia działania</string>
-    <string name="dialog_insufficient_device_storage_error_message">Zanim będzie można ją opublikować, musimy zachować Relację na twoim urządzeniu. Przejrzyj ustawienia pamięci i usuń pliki, aby zwolnić miejsce.</string>
-    <string name="dialog_story_saving_error_message">Spróbuj zachować ponownie lub usuń slajdy, a następnie opublikuj swoją Relację jeszcze raz.</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" - opublikowano</string>
-    <string name="story_saving_failed_title">Nie udało się przesłać \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Nie udało się przesłać \"%1$s\"</string>
-    <string name="story_saving_snackbar_started">Przesyłanie \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Pozostało %1$d slajdów</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Pozostał jeden slajd</string>
-    <string name="story_saving_title">Zapisywanie \"%1$s\"…</string>
-    <string name="story_saving_title_several">kilka relacji</string>
-    <string name="dialog_discard_page_ok_button">Usuń</string>
-    <string name="dialog_discard_errored_page_message">Ten slajd nie został jeszcze zachowany. Jeśli go usuniesz, stracisz wszystkie zmiany, które wprowadziłeś.</string>
-    <string name="label_text_color_button">Zmień kolor tekstu</string>
-    <string name="label_text_alignment_button">Zmień wyrównanie tekstu</string>
-    <string name="label_frame_errored">z błędem</string>
-    <string name="label_frame_unselected_border">niewybrany</string>
-    <string name="dialog_discard_story_ok_button">Odrzuć</string>
-    <string name="dialog_discard_story_message">Wpis z relacją nie zostanie zapisany jako szkic.</string>
-    <string name="dialog_discard_story_title">Czy odrzucić ten wpis z relacją?</string>
-    <string name="dialog_discard_page_message">Ten slajd zostanie usunięty z twojej relacji.</string>
-    <string name="dialog_discard_page_title">Czy usunąć slajd z relacji?</string>
-    <string name="label_frame_selected_border">wybrano</string>
-    <string name="story_saving_untitled">Nienazwane</string>
-    <string name="label_frame_image">Slajd</string>
     <string name="label_close_button">Zamknij</string>
-    <string name="label_snackbar_share">UDOSTĘPNIJ</string>
-    <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
-    <string name="label_control_saved">Zapisano</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Odwróć</string>
-    <string name="sound_button_alt">Dźwięk</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="stickers_button_alt">Naklejki</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">kamera z funkcją flip</string>
-    <string name="capture_button_alt">Przechwyć</string>
     <string name="mlp_preview_page">Podgląd</string>
     <string name="mlp_create_page">Utwórz stronę</string>
     <string name="mlp_create_blank_page">Utwórz pustą stronę</string>
     <string name="mlp_choose_layout_subtitle">Zacznij od wybrania układu z szerokiej gamy gotowców lub rozpocznij z pustą stroną.</string>
     <string name="mlp_choose_layout_title">Wybierz układ</string>
     <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
-    <string name="label_share_to">Udostępnij na</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
-    <string name="label_control_saving">Zapisywanie</string>
-    <string name="label_saved_icon">Zapisano</string>
-    <string name="label_control_retry">Spróbuj ponownie</string>
-    <string name="label_retry_icon">Spróbuj ponownie</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>

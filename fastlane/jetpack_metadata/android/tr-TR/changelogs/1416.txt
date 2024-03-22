@@ -1,0 +1,7 @@
+24.4:
+- İstatistikler ekranına yeni Trafik sekmesi eklendi
+- Bildirimler tasarımı yükseltildi
+- VideoPress v5 için video bloku desteği eklendi
+- Blok düzenleyici otomatik kaydırma nedeniyle oluşan bir çökme sorunu düzeltildi
+- Video yükleme hatası için bir hata mesajı sağlandı
+- Yükleme sırasındaki görsel şeffaflığı kaldırıldı

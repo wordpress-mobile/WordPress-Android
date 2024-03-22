@@ -1,3 +1,0 @@
-24.3:
-Login ke situs Anda dengan kredensial Google, perangkat fisik, dan passkey pihak ketiga. Tenang, situs dikunci lebih ketat dari resep rahasia Kolonel Sanders.
-Kami menyembunyikan ikon menu pada layar Statistik sehingga hanya dapat dilihat dari tab Wawasan. Mode ninja: diaktifkan.

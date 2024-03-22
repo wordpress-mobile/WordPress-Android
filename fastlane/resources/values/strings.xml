@@ -1629,14 +1629,6 @@
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
-    <!-- Note for translators: the '&lt;a href=""&gt;' and '&lt;/a&gt;' must be kept without
-    translations/modifications and are used to enclose the portion of the text
-    that will be rendered as underlined. -->
-    <string name="like_faces_you_like_text">&lt;a href=""&gt;You&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=""&gt;You and 1 blogger&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=""&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=""&gt;1 blogger&lt;/a&gt; likes this.</string>
-    <string name="like_faces_others_like_text">&lt;a href=""&gt;%1$s bloggers&lt;/a&gt; like this.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -1720,6 +1712,8 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_updating_post">Updating post content</string>
+    <string name="editor_updating_post_failed">Failed to update post content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -4802,4 +4796,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit video</string>
     <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. Empty</string>
     <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy error details</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy post text</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy error details</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy post text</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy error details</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
 </resources>
