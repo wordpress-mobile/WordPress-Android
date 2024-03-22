@@ -69,7 +69,7 @@ class MySitesPage {
         } else {
             // open the overflow and then click on the item with text
             Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
-            Espresso.onView(ViewMatchers.withText(WPSupportUtils.getTranslatedString(R.string.site_picker_add_site)))
+            Espresso.onView(ViewMatchers.withText(WPSupportUtils.getTranslatedString(R.string.site_picker_add_a_site)))
                 .perform(ViewActions.click())
         }
     }
