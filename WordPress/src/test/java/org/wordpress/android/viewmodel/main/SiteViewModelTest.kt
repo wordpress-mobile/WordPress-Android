@@ -13,9 +13,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
 import org.wordpress.android.ui.main.SitePickerMode
-import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.ui.main.SiteViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
@@ -25,16 +23,10 @@ class SiteViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: SiteViewModel
 
     @Mock
-    private lateinit var siteRecord: SiteRecord
-
-    @Mock
     private lateinit var siteModel1: SiteModel
 
     @Mock
     private lateinit var siteModel2: SiteModel
-
-    @Mock
-    private lateinit var wpJetpackIndividualPluginHelper: WPJetpackIndividualPluginHelper
 
     @Mock
     private lateinit var siteStore: SiteStore
