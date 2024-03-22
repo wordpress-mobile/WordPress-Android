@@ -79,7 +79,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         }
     }
 
-    suspend fun refreshData(
+    private suspend fun refreshData(
         siteModel: SiteModel,
         isSinglePromptRefresh: Boolean = false
     ) {
