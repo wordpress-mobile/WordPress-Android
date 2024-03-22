@@ -107,7 +107,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    fun buildCard(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
+    private fun buildCard(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
         return bloggingPromptCardBuilder.build(getBuilderParams(bloggingPromptUpdate))
     }
 
