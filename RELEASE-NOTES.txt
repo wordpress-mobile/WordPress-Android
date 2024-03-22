@@ -3,6 +3,7 @@
 24.6
 -----
 * [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]
+* [*] Block editor: Fixes an Aztec editor crash occurring on some occasions when the keyboard suggestions are used [https://github.com/wordpress-mobile/WordPress-Android/pull/20518]
 
 24.5
 -----
