@@ -10,7 +10,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginHelper
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
+import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action
 import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.AskForSiteSelection
