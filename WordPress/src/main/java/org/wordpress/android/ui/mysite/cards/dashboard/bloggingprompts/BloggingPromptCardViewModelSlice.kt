@@ -62,7 +62,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
 
     private lateinit var scope: CoroutineScope
 
-    fun buildCard(
+    fun fetchBloggingPrompt(
         siteModel: SiteModel
     ) {
         scope.launch(bgDispatcher) {
@@ -107,7 +107,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
         this.scope = scope
     }
 
-    private fun buildCard(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
+    private fun fetchBloggingPrompt(bloggingPromptUpdate: BloggingPromptModel): BloggingPromptCardWithData? {
         return bloggingPromptCardBuilder.build(getBuilderParams(bloggingPromptUpdate))
     }
 
@@ -191,7 +191,7 @@ class BloggingPromptCardViewModelSlice @Inject constructor(
     private fun postState(bloggingPrompt: BloggingPromptModel?) {
         _isRefreshing.postValue(false)
         bloggingPrompt?.let {
-            buildCard(bloggingPrompt)?.let { card ->
+            fetchBloggingPrompt(bloggingPrompt)?.let { card ->
                 _uiModel.postValue(card)
             }
         } ?: _uiModel.postValue(null)

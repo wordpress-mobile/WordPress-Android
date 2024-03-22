@@ -190,7 +190,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
             jpMigrationSuccessCardViewModelSlice.buildCard()
             jetpackInstallFullPluginCardViewModelSlice.buildCard(site)
             blazeCardViewModelSlice.buildCard(site)
-            bloggingPromptCardViewModelSlice.buildCard(site)
+            bloggingPromptCardViewModelSlice.fetchBloggingPrompt(site)
             bloganuaryNudgeCardViewModelSlice.buildCard()
             personalizeCardViewModelSlice.buildCard()
             quickLinksItemViewModelSlice.buildCard(site)
@@ -226,7 +226,7 @@ class DashboardCardsViewModelSlice @Inject constructor(
 
     fun refreshBloggingPrompt() {
         selectedSiteRepository.getSelectedSite()?.let {
-            bloggingPromptCardViewModelSlice.buildCard(it)
+            bloggingPromptCardViewModelSlice.fetchBloggingPrompt(it)
         }
     }
 

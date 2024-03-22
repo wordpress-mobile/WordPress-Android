@@ -119,7 +119,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
         verify(jpMigrationSuccessCardViewModelSlice, atMost(1)).buildCard()
         verify(jetpackInstallFullPluginCardViewModelSlice, atMost(1)).buildCard(mockSite)
         verify(blazeCardViewModelSlice, atMost(1)).buildCard(mockSite)
-        verify(bloggingPromptCardViewModelSlice, atMost(1)).buildCard(mockSite)
+        verify(bloggingPromptCardViewModelSlice, atMost(1)).fetchBloggingPrompt(mockSite)
         verify(bloganuaryNudgeCardViewModelSlice, atMost(1)).buildCard()
         verify(personalizeCardViewModelSlice, atMost(1)).buildCard()
         verify(quickLinksItemViewModelSlice, atMost(1)).buildCard(mockSite)
@@ -168,7 +168,7 @@ class DashboardCardsViewModelSliceTest: BaseUnitTest() {
 
         dashboardCardsViewModelSlice.refreshBloggingPrompt()
 
-        verify(bloggingPromptCardViewModelSlice).buildCard(mockSite)
+        verify(bloggingPromptCardViewModelSlice).fetchBloggingPrompt(mockSite)
     }
 
     @Test
