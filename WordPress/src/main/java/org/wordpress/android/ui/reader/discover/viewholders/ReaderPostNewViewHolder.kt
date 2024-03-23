@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.extensions.expandTouchTargetArea
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
@@ -32,6 +33,7 @@ class ReaderPostNewViewHolder(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val readerTracker: ReaderTracker,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     parentView: ViewGroup
 ) : ReaderViewHolder<ReaderCardviewPostNewBinding>(parentView.viewBinding(ReaderCardviewPostNewBinding::inflate)) {
     init {
@@ -168,8 +170,7 @@ class ReaderPostNewViewHolder(
         view.setOnClickListener {
             // If it's a like action, we want to update the UI right away. If there's an error, we'll revert
             // the UI change.
-            // TODO revert UI when there's an error (e.g. no internet connection)
-            if (state.type == ReaderPostCardActionType.LIKE) {
+            if (state.type == ReaderPostCardActionType.LIKE && networkUtilsWrapper.isNetworkAvailable()) {
                 view.isSelected = !view.isSelected
             }
             state.onClicked?.invoke(postId, blogId, state.type)
