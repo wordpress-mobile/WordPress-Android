@@ -457,7 +457,11 @@ class StatsModule {
         return if (trafficTabFeatureConfig.isEnabled()) {
             mapOf(
                 StatsSection.TRAFFIC to trafficUseCase,
-                StatsSection.INSIGHTS to insightsUseCase
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.DAYS to dayStatsUseCase,
+                StatsSection.WEEKS to weekStatsUseCase,
+                StatsSection.MONTHS to monthStatsUseCase,
+                StatsSection.YEARS to yearStatsUseCase
             )
         } else {
             mapOf(
