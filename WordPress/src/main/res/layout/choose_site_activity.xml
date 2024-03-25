@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingTop="@dimen/margin_medium"
-            android:paddingBottom="64dp"
+            android:paddingBottom="@dimen/site_list_item_height"
             android:scrollbars="vertical" />
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
@@ -67,7 +67,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#993C3C43"/>
+            android:alpha="0.6"
+            android:background="#3C3C43"/>
 
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.SitePicker.Button"

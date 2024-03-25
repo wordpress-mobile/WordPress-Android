@@ -25,6 +25,10 @@ class SiteViewModel @Inject constructor(
         _sites.postValue(getSites(sitePickerMode))
     }
 
+    /**
+     * Search for sites by keyword.
+     * If the keyword is empty, all sites are returned.
+     */
     fun searchSites(keyword: String, sitePickerMode: SitePickerMode) = launch {
         if (keyword.trim().isEmpty()) {
             _sites.postValue(getSites(sitePickerMode))
@@ -41,7 +45,7 @@ class SiteViewModel @Inject constructor(
 
     /**
      * Returns a list of sites to display in the site picker.
-     * @param mode if [SitePickerMode.WPCOM_SITES_ONLY], only WPCOM sites are returned.
+     * If mode is [SitePickerMode.WPCOM_SITES_ONLY], only WPCOM sites are returned.
      */
     private fun getSites(mode: SitePickerMode): List<SiteRecord> {
         val result = if (mode == SitePickerMode.WPCOM_SITES_ONLY) {
@@ -52,6 +56,10 @@ class SiteViewModel @Inject constructor(
         return result.map { SiteRecord(it) }.let { sortSites(it) }
     }
 
+    /**
+     * Make the pinned sites appear first in the list.
+     * Then sort the list of sites by blog name or home URL.
+     */
     private fun sortSites(records: List<SiteRecord>): List<SiteRecord> {
         val sites = records.toMutableList()
         val pinnedSites = appPrefsWrapper.pinnedSiteLocalIds

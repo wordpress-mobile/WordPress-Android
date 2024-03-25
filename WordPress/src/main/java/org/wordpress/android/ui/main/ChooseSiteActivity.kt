@@ -1,24 +1,19 @@
 package org.wordpress.android.ui.main
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -31,15 +26,11 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved
 import org.wordpress.android.ui.ActivityId
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.KEY_ARG_SITE_CREATION_SOURCE
-import org.wordpress.android.ui.main.ChooseSiteActivity.Companion.KEY_SOURCE
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
-import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource.Companion.fromString
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.AppLog
@@ -324,61 +315,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 }
 
 
-class AddSiteDialog : DialogFragment() {
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val source = fromString(requireArguments().getString(KEY_ARG_SITE_CREATION_SOURCE))
-        val items = arrayOf<CharSequence>(
-            getString(R.string.site_picker_create_wpcom),
-            getString(R.string.site_picker_add_self_hosted)
-        )
-        val builder = MaterialAlertDialogBuilder(requireActivity())
-        builder.setTitle(R.string.site_picker_add_a_site)
-        builder.setAdapter(
-            ArrayAdapter(requireActivity(), R.layout.add_new_site_dialog_item, R.id.text, items)
-        ) { _: DialogInterface?, which: Int ->
-            if (which == 0) {
-                ActivityLauncher.newBlogForResult(activity, source)
-            } else {
-                ActivityLauncher.addSelfHostedSiteForResult(activity)
-            }
-        }
-        AnalyticsTracker.track(
-            Stat.ADD_SITE_ALERT_DISPLAYED,
-            mapOf(KEY_SOURCE to source.label)
-        )
-        return builder.create()
-    }
-
-    companion object {
-        const val ADD_SITE_DIALOG_TAG = "add_site_dialog"
-    }
-}
-
-object AddSiteHandler {
-    fun addSite(activity: FragmentActivity, hasAccessToken: Boolean, source: SiteCreationSource) {
-        if (hasAccessToken) {
-            if (!BuildConfig.ENABLE_ADD_SELF_HOSTED_SITE) {
-                ActivityLauncher.newBlogForResult(activity, source)
-            } else {
-                // user is signed into wordpress app, so use the dialog to enable choosing whether to
-                // create a new wp.com blog or add a self-hosted one
-                showAddSiteDialog(activity, source)
-            }
-        } else {
-            // user doesn't have an access token, so simply enable adding self-hosted
-            ActivityLauncher.addSelfHostedSiteForResult(activity)
-        }
-    }
-
-    private fun showAddSiteDialog(activity: FragmentActivity, source: SiteCreationSource) {
-        val dialog: DialogFragment = AddSiteDialog()
-        val args = Bundle()
-        args.putString(KEY_ARG_SITE_CREATION_SOURCE, source.label)
-        dialog.arguments = args
-        dialog.show(activity.supportFragmentManager, AddSiteDialog.ADD_SITE_DIALOG_TAG)
-    }
-}
-
+/**
+ * Mode for the site picker
+ */
 enum class SitePickerMode {
     /**
      * Show everything
