@@ -61,6 +61,7 @@ import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
@@ -82,6 +83,7 @@ import kotlin.jvm.functions.Function3;
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
+    private final NetworkUtilsWrapper mNetworkUtilsWrapper;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -258,7 +260,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new ReaderRemovedPostViewHolder(postView);
             default:
                 return mReaderImprovementsFeatureConfig.isEnabled()
-                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent)
+                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper,
+                        parent)
                         : new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
         }
     }
@@ -644,6 +647,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ReaderPostListType postListType,
             ImageManager imageManager,
             UiHelpers uiHelpers,
+            @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
             boolean isMainReader
     ) {
         super();
@@ -652,6 +656,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mSource = mReaderTracker.getSource(mPostListType);
         mUiHelpers = uiHelpers;
+        mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
 
