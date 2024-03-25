@@ -21,16 +21,12 @@ class SiteViewModel @Inject constructor(
     private val _sites = MutableLiveData<List<SiteRecord>>()
     val sites: LiveData<List<SiteRecord>> = _sites
 
-    fun loadSites(sitePickerMode: SitePickerMode) = launch {
-        _sites.postValue(getSites(sitePickerMode))
-    }
-
     /**
-     * Search for sites by keyword.
-     * If the keyword is empty, all sites are returned.
+     * Load for sites by keyword.
+     * If the keyword is not set, all sites are returned.
      */
-    fun searchSites(keyword: String, sitePickerMode: SitePickerMode) = launch {
-        if (keyword.trim().isEmpty()) {
+    fun loadSites(sitePickerMode: SitePickerMode, keyword: String? = null) = launch {
+        if (keyword == null || keyword.trim().isEmpty()) {
             _sites.postValue(getSites(sitePickerMode))
             return@launch
         }

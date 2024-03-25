@@ -96,7 +96,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an empty keyword and mode DEFAULT, when search the keyword, then return all sites`() {
         whenever(siteStore.sites).thenReturn(listOf(siteModel1, siteModel2, siteModel1))
 
-        viewModel.searchSites("", SitePickerMode.DEFAULT)
+        viewModel.loadSites(SitePickerMode.DEFAULT, "")
 
         assertThat(viewModel.sites.value).hasSize(3)
     }
@@ -105,7 +105,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an empty keyword and mode SIMPLE, when search the keyword, then return all sites`() {
         whenever(siteStore.sites).thenReturn(listOf(siteModel1, siteModel2))
 
-        viewModel.searchSites("", SitePickerMode.SIMPLE)
+        viewModel.loadSites(SitePickerMode.SIMPLE, "")
 
         assertThat(viewModel.sites.value).hasSize(2)
     }
@@ -114,7 +114,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an empty keyword and mode WPCOM_SITES_ONLY, when search the keyword, then return all of WPCOM sites`() {
         whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(listOf(siteModel1))
 
-        viewModel.searchSites("", SitePickerMode.WPCOM_SITES_ONLY)
+        viewModel.loadSites(SitePickerMode.WPCOM_SITES_ONLY, "")
 
         assertThat(viewModel.sites.value).hasSize(1)
     }
@@ -123,7 +123,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an keyword and mode DEFAULT, when search the keyword, then return matched sites`() {
         whenever(siteStore.sites).thenReturn(listOf(siteModel1, siteModel1, siteModel2))
 
-        viewModel.searchSites("he", SitePickerMode.DEFAULT)
+        viewModel.loadSites(SitePickerMode.DEFAULT, "he")
 
         assertThat(viewModel.sites.value).hasSize(2)
         assertThat(viewModel.sites.value!![0].blogName).isEqualTo(siteModel1.name)
@@ -134,7 +134,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an keyword and mode SIMPLE, when search the keyword, then return a matched site`() {
         whenever(siteStore.sites).thenReturn(listOf(siteModel1, siteModel2))
 
-        viewModel.searchSites("ld", SitePickerMode.SIMPLE)
+        viewModel.loadSites(SitePickerMode.SIMPLE, "ld")
 
         assertThat(viewModel.sites.value).hasSize(1)
         assertThat(viewModel.sites.value!![0].blogName).isEqualTo(siteModel2.name)
@@ -144,7 +144,7 @@ class SiteViewModelTest : BaseUnitTest() {
     fun `given an keyword and mode WPCOM_SITES_ONLY, when search the keyword, then return matched WPCOM sites`() {
         whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(listOf(siteModel1, siteModel2, siteModel2))
 
-        viewModel.searchSites("bar", SitePickerMode.WPCOM_SITES_ONLY)
+        viewModel.loadSites(SitePickerMode.WPCOM_SITES_ONLY, "bar")
 
         assertThat(viewModel.sites.value).hasSize(0)
     }

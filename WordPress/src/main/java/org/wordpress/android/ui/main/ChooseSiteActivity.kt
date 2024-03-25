@@ -52,6 +52,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private lateinit var menuSearch: MenuItem
     private lateinit var menuEditPin: MenuItem
     private lateinit var refreshHelper: SwipeToRefreshHelper
+    private var searchKeyword: String? = null
 
     @Inject
     lateinit var accountStore: AccountStore
@@ -118,7 +119,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             refreshHelper.isRefreshing = false
         }
         if (event.isError.not()) {
-            viewModel.loadSites(mode)
+            viewModel.loadSites(mode, searchKeyword)
         }
     }
 
@@ -126,7 +127,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSiteRemoved(event: OnSiteRemoved) {
         if (event.isError.not()) {
-            viewModel.loadSites(mode)
+            viewModel.loadSites(mode, searchKeyword)
         } else {
             // shouldn't happen
             AppLog.e(AppLog.T.DB, "Encountered unexpected error while attempting to remove site: " + event.error)
@@ -173,8 +174,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
                     }
 
                     override fun onQueryTextChange(newText: String): Boolean {
+                        searchKeyword = newText
                         AnalyticsTracker.track(Stat.SITE_SWITCHER_SEARCH_PERFORMED)
-                        viewModel.searchSites(newText, mode)
+                        viewModel.loadSites(mode, newText)
                         return true
                     }
                 })
@@ -182,6 +184,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             }
 
             override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                searchKeyword = null
                 searchView.setOnQueryTextListener(null)
                 viewModel.loadSites(mode)
                 menuEditPin.isVisible = true
