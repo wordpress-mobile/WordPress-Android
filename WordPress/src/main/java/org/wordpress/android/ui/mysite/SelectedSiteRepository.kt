@@ -24,11 +24,21 @@ class SelectedSiteRepository @Inject constructor(
     private val globalStyleSupportFeatureConfig: GlobalStyleSupportFeatureConfig,
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
+
     private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
-    private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
-    val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
+
+    private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
+
+    val siteSelected = _selectedSiteChange.mapSafe { it?.id }.distinctUntilChanged()
+
+    fun refresh() {
+        updateSiteSettingsIfNecessary()
+        _selectedSiteChange.value?.let {
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(it))
+        }
+    }
 
     fun updateSite(selectedSite: SiteModel) {
         if (getSelectedSite()?.iconUrl != selectedSite.iconUrl) {

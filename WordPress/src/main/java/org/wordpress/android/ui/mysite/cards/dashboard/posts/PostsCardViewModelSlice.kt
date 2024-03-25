@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.posts
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PostsCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PostCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -14,13 +16,18 @@ import javax.inject.Inject
 class PostsCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val postCardBuilder: PostCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<List<MySiteCardAndItem.Card>?>()
+    val uiModel = _uiModel as LiveData<List<MySiteCardAndItem.Card>?>
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
+    fun buildPostCard(postsCardModel: PostsCardModel?) {
+        _uiModel.postValue(postCardBuilder.build(getPostsCardBuilderParams(postsCardModel)))
+    }
 
     fun getPostsCardBuilderParams(postsCardModel: PostsCardModel?) : PostCardBuilderParams {
        return  PostCardBuilderParams(
@@ -48,7 +55,7 @@ class PostsCardViewModelSlice @Inject constructor(
             postCardType.name,
             true
         )
-        refresh.postValue(Event(true))
+        _uiModel.postValue(null)
     }
 
     private fun onViewPostsMenuItemClick(postCardType: PostCardType) {
@@ -104,5 +111,9 @@ class PostsCardViewModelSlice @Inject constructor(
             PostCardType.DRAFT -> PostMenuCard.DRAFT_POSTS
             PostCardType.SCHEDULED -> PostMenuCard.SCHEDULED_POSTS
         }
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
