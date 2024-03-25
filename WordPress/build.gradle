@@ -1,3 +1,4 @@
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
 
@@ -17,14 +18,18 @@ plugins {
 sentry {
     tracingInstrumentation {
         enabled = true
-        features = [io.sentry.android.gradle.extensions.InstrumentationFeature.DATABASE]
-        logcat {
-            enabled = false
-        }
+        features = [InstrumentationFeature.DATABASE]
+        logcat.enabled = false
     }
-    autoInstallation {
-        enabled = false
-    }
+    autoInstallation.enabled = false
+    includeSourceContext = true
+    autoUploadSourceContext = true
+    includeDependenciesReport = false
+    /* Sentry won't send source context or add performance instrumentations for debug builds
+    so we can save build times. Sending events will still work in debug builds
+    (if enabled in WPCrashLoggingDataProvider).
+    */
+    ignoredBuildTypes = ["debug"]
 }
 
 repositories {
@@ -112,7 +117,6 @@ android {
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "SITE_NAME", "false"
-        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
@@ -718,19 +722,22 @@ if (project.hasProperty("debugStoreFile")) {
 // Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
 // service during the build process.
 android {
-    applicationVariants.all { variant ->
-        variant.mergeAssetsProvider.configure {
-            doLast {
-                // Copy bundle and source map files
-                copy {
-                    from(outputDir)
-                    into("${buildDir}/react-native-bundle-source-map")
-                    include("*.bundle", "*.bundle.map")
-                }
+    applicationVariants.configureEach { variant ->
+        def variantAssets = variant.mergeAssetsProvider.get().outputDir.get()
 
-                // Delete source maps
-                delete(fileTree(dir: outputDir, includes: ['**/*.bundle.map']))
-            }
+        tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
+            delete(fileTree(dir: variantAssets, includes: ['**/*.bundle.map']))
+        }
+
+        tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
+            from(variantAssets)
+            into("${buildDir}/react-native-bundle-source-map")
+            include("*.bundle", "*.bundle.map")
+            finalizedBy("delete${variant.name.capitalize()}ReactNativeBundleSourceMap")
+        }
+
+        variant.mergeAssetsProvider.configure {
+            finalizedBy("copy${variant.name.capitalize()}ReactNativeBundleSourceMap")
         }
     }
 }

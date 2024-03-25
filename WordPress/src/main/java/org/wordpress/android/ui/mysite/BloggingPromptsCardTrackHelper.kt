@@ -9,7 +9,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.BloggingPromptCard
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptsCardAnalyticsTracker
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,30 +25,9 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
 ) {
     private var dashboardUpdateDebounceJob: Job? = null
 
-    private val latestPromptCardVisible = AtomicReference<Boolean?>(null)
-    private val waitingToTrack = AtomicBoolean(false)
-    private val currentSite = AtomicReference<Int?>(null)
+    private val waitingToTrack = AtomicBoolean(true)
 
-    private fun onDashboardRefreshed(state: MySiteViewModel.State.SiteSelected?) {
-        val bloggingPromptCards = state?.dashboardData
-            ?.filterIsInstance<BloggingPromptCard>()
-            ?: listOf()
-
-        latestPromptCardVisible.get()?.let { isPromptCardVisible ->
-            val attribution = bloggingPromptCards.firstOrNull()?.attribution
-            if (isPromptCardVisible) tracker.trackMySiteCardViewed(attribution)
-            waitingToTrack.set(false)
-        } ?: run {
-            waitingToTrack.set(true)
-        }
-    }
-
-
-    fun onDashboardCardsUpdated(scope: CoroutineScope, state: MySiteViewModel.State.SiteSelected?) {
-        val bloggingPromptCards = state?.dashboardData
-            ?.filterIsInstance<BloggingPromptCard>()
-            ?: listOf()
-
+    fun onDashboardCardsUpdated(scope: CoroutineScope, bloggingPromptCards: List<BloggingPromptCard>) {
         // cancel any existing job (debouncing mechanism)
         dashboardUpdateDebounceJob?.cancel()
 
@@ -58,8 +36,6 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
 
             // add a delay (debouncing mechanism)
             delay(PROMPT_CARD_VISIBLE_DEBOUNCE)
-
-            latestPromptCardVisible.set(isVisible)
             if (isVisible && waitingToTrack.getAndSet(false)) {
                 val attribution = bloggingPromptCards.firstOrNull()?.attribution
                 tracker.trackMySiteCardViewed(attribution)
@@ -72,15 +48,8 @@ class BloggingPromptsCardTrackHelper @Inject constructor(
         }
     }
 
-    fun onResume(state: MySiteViewModel.State.SiteSelected?) {
-        onDashboardRefreshed(state)
-    }
-
-    fun onSiteChanged(siteId: Int?, state: MySiteViewModel.State.SiteSelected?) {
-        if (currentSite.getAndSet(siteId) != siteId) {
-            latestPromptCardVisible.set(null)
-            onDashboardRefreshed(state)
-        }
+    fun onSiteChanged() {
+        waitingToTrack.set(true)
     }
 
     private val BloggingPromptCard.attribution: String?

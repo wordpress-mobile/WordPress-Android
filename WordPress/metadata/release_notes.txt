@@ -1,5 +1,1 @@
-We made a few changes to the block editor.
-
-- The app won’t crash anymore when the editor auto-scrolls down to a block.
-- You’ll now see an error message when a video fails to upload to media and text blocks.
-- Images no longer appear partly transparent while they’re being uploaded.
+The best things in life are worth the wait, like fresh-baked cookies, your coffee order, and the latest releases from your favorite app. (That’s us. See you next update.)

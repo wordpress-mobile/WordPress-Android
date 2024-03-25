@@ -23,6 +23,7 @@ import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -58,9 +59,9 @@ class TrafficOverviewUseCase(
         else -> statsGranularity
     }
 
-    private val barCount = when (lowerGranularity) {
+    private val itemsToLoad = when (lowerGranularity) {
         StatsGranularity.DAYS -> 7
-        StatsGranularity.WEEKS -> 5
+        StatsGranularity.WEEKS -> 6
         StatsGranularity.MONTHS -> 12
         else -> OVERVIEW_ITEMS_TO_LOAD
     }
@@ -122,7 +123,7 @@ class TrafficOverviewUseCase(
         // Fetch lower granularity model for chart values
         val lowerGranularityResponse = if (statsGranularity != StatsGranularity.DAYS) {
             val selectedDate = getLastDate(model)
-            selectedDate?.let { fetchVisit(lowerGranularity, OVERVIEW_ITEMS_TO_LOAD, forced, it) }
+            selectedDate?.let { fetchVisit(lowerGranularity, itemsToLoad, forced, it) }
         } else {
             null
         }
@@ -201,6 +202,10 @@ class TrafficOverviewUseCase(
             if (statsGranularity == StatsGranularity.DAYS) {
                 buildTodayCard(selectedItem, items)
             } else {
+                val lowerGranularityDates = domainModel.lowerGranularityDates.map {
+                    statsDateFormatter.parseStatsDate(lowerGranularity, it.period)
+                }
+                val barCount = getBarCount(lowerGranularityDates, selectedDate)
                 buildGranularChart(
                     domainModel.lowerGranularityDates.takeLast(barCount),
                     uiState,
@@ -215,6 +220,31 @@ class TrafficOverviewUseCase(
         return items
     }
 
+    private fun getBarCount(dates: List<Date>, selectedDate: Date) = if (statsGranularity == StatsGranularity.MONTHS) {
+        val selectedCalendar = Calendar.getInstance().apply { time = selectedDate }
+        val selectedYear = selectedCalendar.get(Calendar.YEAR)
+        val selectedMonth = selectedCalendar.get(Calendar.MONTH)
+
+        // Count the weeks that are in the selected month.
+        dates.count {
+            val weekEndCalendar = Calendar.getInstance().apply { time = it }
+            val weekEndYear = weekEndCalendar.get(Calendar.YEAR)
+            val weekEndMonth = weekEndCalendar.get(Calendar.MONTH)
+
+            val weekStartCalendar = Calendar.getInstance().apply {
+                time = it
+                add(Calendar.DAY_OF_YEAR, @Suppress("MagicNumber") -6)
+            }
+            val weekStartYear = weekStartCalendar.get(Calendar.YEAR)
+            val weekStartMonth = weekStartCalendar.get(Calendar.MONTH)
+
+            (weekEndYear == selectedYear && weekEndMonth == selectedMonth) ||
+                    (weekStartYear == selectedYear && weekStartMonth == selectedMonth)
+        }
+    } else {
+        itemsToLoad
+    }
+
     private fun buildTodayCard(
         selectedItem: VisitsAndViewsModel.PeriodData?,
         items: MutableList<BlockListItem>
@@ -224,7 +254,6 @@ class TrafficOverviewUseCase(
         val likes = selectedItem?.likes ?: 0
         val comments = selectedItem?.comments ?: 0
 
-        items.add(BlockListItem.Title(R.string.stats_timeframe_today))
         items.add(
             BlockListItem.QuickScanItem(
                 BlockListItem.QuickScanItem.Column(

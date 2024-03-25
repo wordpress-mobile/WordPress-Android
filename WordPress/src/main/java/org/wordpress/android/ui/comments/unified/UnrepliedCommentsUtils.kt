@@ -40,17 +40,17 @@ class UnrepliedCommentsUtils @Inject constructor(
         return topLevelComments
     }
 
-    private fun isMyComment(comment: CommentEntity): Boolean {
-        val myEmail: String
+    fun isMyComment(comment: CommentEntity): Boolean {
+        val myEmail: String?
         val selectedSite = selectedSiteRepository.getSelectedSite() ?: return false
 
         // if site is self hosted, we want to use email associate with it, even if we are logged into wpcom
         myEmail = if (!selectedSite.isUsingWpComRestApi) {
             selectedSite.email
         } else {
-            val account: AccountModel = accountStore.account
-            account.email
+            val account: AccountModel? = accountStore.account
+            account?.email
         }
-        return comment.authorEmail == myEmail
+        return myEmail != null && comment.authorEmail == myEmail
     }
 }

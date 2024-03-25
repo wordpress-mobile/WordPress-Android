@@ -7,10 +7,13 @@ import com.google.gson.JsonPrimitive;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static org.wordpress.android.util.AppLog.T.MEDIA;
 
 public class GalleryBlockProcessor extends BlockProcessor {
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
@@ -93,7 +96,11 @@ public class GalleryBlockProcessor extends BlockProcessor {
         for (int i = 0; i < ids.size(); i++) {
             JsonElement id = ids.get(i);
             if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-                ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
+                try {
+                    ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
+                } catch (NumberFormatException e) {
+                    AppLog.e(MEDIA, e.getMessage());
+                }
                 return true;
             }
         }

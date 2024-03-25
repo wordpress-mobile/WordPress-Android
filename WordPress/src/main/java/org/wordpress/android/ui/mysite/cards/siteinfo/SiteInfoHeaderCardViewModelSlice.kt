@@ -1,11 +1,16 @@
 @file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.mysite.cards.siteinfo
 
 import android.net.Uri
 import android.text.TextUtils
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -13,6 +18,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.SiteInfoHeaderCard
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.MySiteViewModel
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -30,6 +36,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import java.io.File
@@ -45,7 +52,8 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val siteInfoHeaderCardBuilder: SiteInfoHeaderCardBuilder
 ) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbarMessage = _onSnackbarMessage
@@ -62,10 +70,41 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
     val onMediaUpload = _onMediaUpload
 
+    val uiModel: LiveData<SiteInfoHeaderCard?> =
+        merge(quickStartRepository.activeTask,
+            selectedSiteRepository.showSiteIconProgressBar,
+            selectedSiteRepository.selectedSiteChange)
+        { activeTask, showSiteIconProgressBar, site ->
+            val siteHeaderCard = buildCard(activeTask, showSiteIconProgressBar, site)
+            siteHeaderCard
+        }.distinctUntilChanged()
+
     private lateinit var scope: CoroutineScope
+
+    private var uploadIconJob: Job? = null
 
     fun initialize(viewModelScope: CoroutineScope) {
         this.scope = viewModelScope
+    }
+
+    fun buildCard(siteModel: SiteModel) {
+        buildCard(null, null, siteModel = siteModel)
+    }
+
+    private fun buildCard(
+        activeTask: QuickStartStore.QuickStartTask?,
+        showSiteIconProgressBar: Boolean?,
+        siteModel: SiteModel?
+    ): SiteInfoHeaderCard? {
+        siteModel?.let { site ->
+            return siteInfoHeaderCardBuilder.buildSiteInfoCard(
+                getParams(
+                    site,
+                    activeTask,
+                    showSiteIconProgressBar?: false
+                )
+            )
+        }?: return null
     }
 
     fun getParams(
@@ -231,7 +270,7 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         if (success && croppedUri != null) {
             analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ICON_CROPPED)
             selectedSiteRepository.showSiteIconProgressBar(true)
-            scope.launch(bgDispatcher) {
+            uploadIconJob = scope.launch(bgDispatcher) {
                 wpMediaUtilsWrapper.fetchMediaToUriWrapper(UriWrapper(croppedUri))?.let { fetchMedia ->
                     mediaUtilsWrapper.getRealPathFromURI(fetchMedia.uri)
                 }?.let {
@@ -277,5 +316,10 @@ class SiteInfoHeaderCardViewModelSlice @Inject constructor(
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = contextProvider.getContext().contentResolver.getType(uri)
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
+    }
+
+    fun onCleared() {
+        uploadIconJob?.cancel()
+        scope.cancel()
     }
 }

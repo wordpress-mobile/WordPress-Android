@@ -5,10 +5,8 @@ import com.google.gson.JsonObject;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import static org.wordpress.android.util.AppLog.T.MEDIA;
 
 public class ImageBlockProcessor extends BlockProcessor {
     public ImageBlockProcessor(String localId, MediaFile mediaFile) {
@@ -37,14 +35,9 @@ public class ImageBlockProcessor extends BlockProcessor {
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            try {
-                jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId));
-            } catch (NumberFormatException e) {
-                AppLog.e(MEDIA, e.getMessage());
-            }
+            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
             return true;
         }
-
         return false;
     }
 }

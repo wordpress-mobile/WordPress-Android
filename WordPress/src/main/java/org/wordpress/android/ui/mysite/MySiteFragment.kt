@@ -382,7 +382,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
-            hideRefreshIndicatorIfNeeded()
             when (uiModel) {
                 is State.SiteSelected -> loadData(uiModel)
                 is State.NoSites -> loadEmptyView(uiModel)
@@ -445,18 +444,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition == -1) {
                 quickStartScrollPosition = 0
             }
-            if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
+            recyclerView.scrollToPosition(quickStartScrollPosition)
         }
 
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
             viewModel.refresh()
         }
-    }
 
-    private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
-        swipeRefreshLayout.postDelayed({
-            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
-        }, CHECK_REFRESH_DELAY)
+        viewModel.isRefreshingOrLoading.observe(viewLifecycleOwner) {
+            swipeToRefreshHelper.isRefreshing = it
+        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -538,15 +535,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
-            noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
             viewModel.onActionableEmptyViewVisible()
-            showAvatarSettingsView(state)
         }
+        showAvatarSettingsView(state)
         siteTitle = getString(R.string.my_site_section_screen_title)
     }
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
-        if (state.shouldShowAccountSettings) {
+        // For a newly created account, avatar may be null
+        if (state.accountName != null || state.avatarUrl != null){
+            noSitesView.actionableEmptyView.image.setVisible(true)
             noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
             if (state.accountName.isNullOrEmpty()) {
@@ -851,7 +849,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
-        private const val CHECK_REFRESH_DELAY = 300L
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"

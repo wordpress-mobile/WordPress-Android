@@ -159,7 +159,7 @@ public class ReaderPostActions {
             }
         };
         AppLog.d(T.READER, "updating post");
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdatePostResponse(@NonNull final ReaderPost localPost,
@@ -320,7 +320,7 @@ public class ReaderPostActions {
         };
 
         AppLog.d(T.READER, "requesting post");
-        restClientUtils.get(path, null, null, listener, errorListener);
+        restClientUtils.getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
@@ -417,7 +417,7 @@ public class ReaderPostActions {
                       + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
                       + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
                       + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
-        WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static void handleRelatedPostsResponse(final ReaderPost sourcePost,

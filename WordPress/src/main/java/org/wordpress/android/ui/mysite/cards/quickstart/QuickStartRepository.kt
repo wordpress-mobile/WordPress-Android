@@ -99,7 +99,7 @@ class QuickStartRepository
     }
 
     fun clearActiveTask() {
-        _activeTask.value = null
+        _activeTask.postValue(null)
     }
 
     fun clearPendingTask() {
