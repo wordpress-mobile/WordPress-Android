@@ -185,12 +185,6 @@ sealed class MySiteCardAndItemBuilderParams {
         val onActionClick: () -> Unit
     )
 
-    data class JetpackInstallFullPluginCardBuilderParams(
-        val site: SiteModel,
-        val onLearnMoreClick: () -> Unit,
-        val onHideMenuItemClick: () -> Unit,
-    )
-
     data class PersonalizeCardBuilderParams(
         val onClick: () -> Unit
     )

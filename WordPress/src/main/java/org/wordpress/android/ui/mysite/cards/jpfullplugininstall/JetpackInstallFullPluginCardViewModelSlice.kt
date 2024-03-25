@@ -5,7 +5,6 @@ import androidx.lifecycle.distinctUntilChanged
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.JetpackInstallFullPluginCard
-import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.JetpackInstallFullPluginCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -41,26 +40,16 @@ class JetpackInstallFullPluginCardViewModelSlice @Inject constructor(
         _onOpenJetpackInstallFullPluginOnboarding.postValue(Event(Unit))
     }
 
-    fun buildCard(site: SiteModel) {
-        build(
-            JetpackInstallFullPluginCardBuilderParams(
-                site = site,
-                onLearnMoreClick = this::onJetpackInstallFullPluginLearnMoreClick,
-                onHideMenuItemClick = this::onJetpackInstallFullPluginHideMenuItemClick
-            )
-        )
-    }
-
-    fun build(
-        params: JetpackInstallFullPluginCardBuilderParams
+    fun buildCard(
+        site: SiteModel
     ) {
-        if (shouldShowCard(params.site)) {
+        if (shouldShowCard(site)) {
             _uiModel.postValue(
                 JetpackInstallFullPluginCard(
-                    siteName = params.site.name,
-                    pluginNames = params.site.activeIndividualJetpackPluginNames().orEmpty(),
-                    onLearnMoreClick = ListItemInteraction.create(params.onLearnMoreClick),
-                    onHideMenuItemClick = ListItemInteraction.create(params.onHideMenuItemClick),
+                    siteName = site.name,
+                    pluginNames = site.activeIndividualJetpackPluginNames().orEmpty(),
+                    onLearnMoreClick = ListItemInteraction.create(this::onJetpackInstallFullPluginLearnMoreClick),
+                    onHideMenuItemClick = ListItemInteraction.create(this::onJetpackInstallFullPluginHideMenuItemClick),
                 )
             )
         } else _uiModel.postValue(null)
