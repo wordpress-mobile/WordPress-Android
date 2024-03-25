@@ -657,7 +657,7 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.OpenStatsByDay -> ActivityLauncher.viewBlogStatsForTimeframe(
             requireActivity(),
             action.site,
-            StatsTimeframe.INSIGHTS,
+            StatsTimeframe.DAY,
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
