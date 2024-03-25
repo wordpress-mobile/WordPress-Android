@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-15 14:54:08+0000
+Translation-Revision-Date: 2024-03-06 22:32:44+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">视频说明。 %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">视频说明。 空</string>
+    <string name="gutenberg_native_edit_video_024aee6d">编辑视频</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">自动播放可能会给某些用户带来使用方面的问题。</string>
+    <string name="notifications_action_mark_all_as_read">全部标为已读</string>
+    <string name="notifications_unread_content_description">未读</string>
+    <string name="qrcode_media_deeplink_error">未找到站点。 检查您是否已登录到正确的账户。</string>
+    <string name="gravatar_info_sync_done_button">完成</string>
+    <string name="gravatar_info_sync_message">更新的内容可能需要一段时间才能与您的 Gravatar 个人资料同步。</string>
+    <string name="gravatar_info_learn_more_link">什么是 Gravatar？</string>
+    <string name="gravatar_info_description">您在此对头像、名称和简介信息做出的更新也将更新到所有使用 Gravatar 个人资料的站点。</string>
+    <string name="gravatar_info_title">您的 WordPress.com 个人资料由 Gravatar 提供技术支持</string>
     <string name="error_media_could_not_share_media_from_device">无法加载媒体以进行共享。 请检查此应用程序的权限\n        或使用此应用程序的媒体库。</string>
     <string name="site_monitoring_cannot_be_started">我们现在无法打开站点监控。 请稍后再试</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web 服务器日志</string>
@@ -17,7 +29,6 @@ Language: zh_CN
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">您订阅的博客最近未发布任何内容</string>
     <string name="reader_no_followed_blogs_description_subs">在“搜索”中订阅博客，或者搜索一个您已点赞过的博客。</string>
     <string name="reader_no_recommended_blogs_title">无推荐博客</string>
-    <string name="reader_no_followed_tags_title">无订阅的标签</string>
     <string name="reader_no_posts_with_this_tag">无包含此标签的文章</string>
     <string name="reader_toast_err_unable_to_block_blog">无法阻止此博客</string>
     <string name="reader_toast_posts_from_this_blog_blocked">此博客中的文章不会再显示</string>
@@ -26,20 +37,17 @@ Language: zh_CN
     <string name="reader_toast_err_unable_to_follow_blog">无法订阅此博客</string>
     <string name="reader_toast_err_already_follow_this_blog">您已订阅此博客</string>
     <string name="reader_toast_err_show_blog">无法显示此博客</string>
-    <string name="reader_toast_err_tag_already_subscribed">您已订阅此标签</string>
     <string name="reader_label_choose_interests">选择您的兴趣</string>
     <string name="reader_label_subscribers_count_single">1 位订阅者</string>
     <string name="reader_label_subscribers_count">%s 位订阅者</string>
     <string name="reader_label_subscribe_count">%,d 位订阅者</string>
     <string name="reader_label_blog_subscribed">已订阅博客</string>
     <string name="reader_hint_search_subscribed_blogs">搜索已订阅的博客</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">输入要订阅的 URL 或标签</string>
     <string name="reader_btn_subscribed">已订阅</string>
     <string name="reader_btn_subscribe">订阅</string>
     <string name="reader_menu_block_this_blog">阻止此博客</string>
     <string name="reader_menu_tags_and_blogs">编辑标签和博客</string>
     <string name="reader_page_followed_blogs_title">已订阅的博客</string>
-    <string name="reader_page_followed_tags_title">已订阅的标签</string>
     <string name="reader_title_tags">关注标签</string>
     <string name="reader_activity_title_manage_tags_blogs">管理标签和博客</string>
     <string name="reader_activity_title_tag_preview">标签</string>
@@ -57,19 +65,13 @@ Language: zh_CN
     <string name="reader_dropdown_menu_subscriptions">订阅</string>
     <string name="reader_dropdown_menu_discover">发现</string>
     <string name="reader_search_content_description">搜索</string>
-    <string name="reader_discover_no_posts_button_tags_text">订阅标签</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">尝试订阅更多标签，以扩大搜索范围</string>
-    <string name="reader_discover_empty_subtitle_subscribe">订阅标签以发现新的博客</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">要订阅的博客</string>
-    <string name="reader_filter_empty_tags_action_subscribe">订阅一个标签</string>
     <string name="reader_filter_empty_tags_action_suggested">建议标签</string>
     <string name="reader_filter_empty_blogs_action_search">搜索博客</string>
-    <string name="reader_filter_empty_tags_list_text">订阅一个标签，您就能在此处看到该标签下的最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">无标签</string>
     <string name="reader_filter_empty_blogs_list_text">在“发现”中订阅博客，您就能在此处看到他们的最新文章。 或者搜索一个您已点赞过的博客。</string>
     <string name="reader_filter_empty_blogs_list_title">无博客订阅</string>
     <string name="reader_filter_empty_blogs_action">订阅博客</string>
-    <string name="reader_filter_empty_tags_list_subscribe">您可以通过添加标签的方式来订阅特定主题的文章</string>
     <string name="reader_filter_empty_blogs_list">查看您所订阅的博客的最新文章</string>
     <string name="reader_filter_by_tag_title">按标签筛选</string>
     <string name="reader_filter_by_blog_title">按博客筛选</string>
@@ -373,7 +375,6 @@ Language: zh_CN
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">此站点</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s 使用 %2$s，尚不支持该应用程序的全部功能。 请安装 %3$s。</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">几天后将移动至 Jetpack 应用程序。</string>
     <string name="wp_jp_static_poster_footnote">切换免费，只需一会儿。</string>
     <string name="wp_jp_static_poster_button_secondary">请访问 Jetpack.com 了解详情</string>
     <string name="wp_jp_static_poster_button_primary">切换到 Jetpack 应用程序</string>
@@ -1158,7 +1159,6 @@ Language: zh_CN
     <string name="jetpack_brute_force_allowlist_title">始终允许的 IP 地址</string>
     <string name="site_settings_denylist_title">不允许的评论</string>
     <string name="gutenberg_native_add_button_text">添加按钮文本</string>
-    <string name="stories_intro_main_subtitle">在您的站点上创建、发布吸引人内容的新方法。</string>
     <string name="activity_log_backup_download_notice_dismiss_action">忽略</string>
     <string name="activity_log_backup_download_notice_download_action">下载</string>
     <string name="threat_fix_all_status_success_message_plural">已成功修复威胁。</string>
@@ -1326,7 +1326,6 @@ Language: zh_CN
     <string name="request_failed_message">处理请求时出现问题。 请稍后重试。</string>
     <string name="gutenberg_native_move_to_bottom">移到底部</string>
     <string name="gutenberg_native_change_block_position">移动区块位置</string>
-    <string name="label_control_upload">上传</string>
     <string name="jetpack_icon_content_description">图标</string>
     <string name="backup_download_complete_info">我们还通过电子邮件向您发送了文件链接。</string>
     <string name="backup_download_complete_download_share_action_button_content_description">“分享链接”按钮</string>
@@ -1427,7 +1426,6 @@ Language: zh_CN
     <string name="dialog_confirm_copy_local_message">您正尝试编辑的文章有两个版本，均与您最近编辑但暂未保存的内容有冲突。\n请先编辑文章以解决所有冲突，或请从应用程序中先复制现有的文章版本。</string>
     <string name="dialog_confirm_copy_local_title">文章同步冲突</string>
     <string name="button_copy">复制</string>
-    <string name="toast_edit_story_update_in_progress_title">故事正在保存，请稍候…</string>
     <string name="gutenberg_native_file_name">文件名</string>
     <string name="gutenberg_native_file_block_settings">文件区块设置</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">无法上传文件。\n请轻点以查看选项。</string>
@@ -1445,23 +1443,8 @@ Language: zh_CN
     <string name="reader_follow_comments_null_response">未收到任何响应</string>
     <string name="activity_log_activity_type_filter_clear">清除</string>
     <string name="activity_log_activity_type_filter_apply">应用</string>
-    <string name="dialog_edit_story_unsupported_format_message">您的故事没有添加一张或多张幻灯片，因为故事目前不支持GIF文件。 请选择静态图片或视频背景。</string>
-    <string name="dialog_edit_story_unsupported_format_title">不支持GIF文件</string>
-    <string name="dialog_edit_story_unrecoverable_message">我们在站点上找不到该故事的媒体。</string>
-    <string name="dialog_edit_story_unrecoverable_title">无法编辑故事</string>
-    <string name="dialog_edit_story_unavailable_message">无法加载该故事的媒体。 检查您的互联网连接，稍后再试。</string>
-    <string name="dialog_edit_story_unavailable_title">无法编辑故事</string>
-    <string name="dialog_edit_story_limited_message">这个故事是在其他设备上编辑的，因此编辑某些对象时可能会受到限制。</string>
-    <string name="dialog_edit_story_limited_title">受限故事编辑</string>
     <string name="cannot_retry_deleted_media_item_fatal">媒体已被删除。请尝试重新编辑您的故事。</string>
-    <string name="color_picker_label_background">背景</string>
-    <string name="color_picker_label_text">文本</string>
-    <string name="dialog_discard_story_ok_button_edit">丢弃</string>
-    <string name="dialog_discard_story_message_edit">所做的任何更改将不会保存。</string>
-    <string name="dialog_discard_story_title_edit">放弃修改</string>
     <string name="label_done_button">完成</string>
-    <string name="label_next_button">下一步</string>
-    <string name="delete_button_alt">删除</string>
     <string name="hpp_choose_error">选择主题时发生错误。</string>
     <string name="hpp_retry_error">请检查您的互联网连接，然后重试。</string>
     <string name="hpp_error_subtitle">当您恢复在线时，请点击重试。</string>
@@ -1511,14 +1494,6 @@ Language: zh_CN
     <string name="gutenberg_native_help_button">“帮助”按钮</string>
     <string name="gutenberg_native_edit_using_web_editor">使用 Web 编辑器进行编辑</string>
     <string name="gutenberg_native_choose_images">选择图片</string>
-    <string name="stories_intro_create_story_post_label">创建故事文章</string>
-    <string name="stories_intro_description_second">故事文章会以新博文的形式发布在您的站点中，确保您的受众永远不会错过任何内容。</string>
-    <string name="stories_intro_title_second">故事文章不会消失</string>
-    <string name="stories_intro_description_first">结合使用照片、视频和文字，创作您的访客一定会喜欢的引人入胜、吸引点击量的故事文章。</string>
-    <string name="stories_intro_title_first">现在，每个人都可以创作自己的故事</string>
-    <string name="stories_intro_image_caption_second">故事标题示例</string>
-    <string name="stories_intro_image_caption_first">如何创作故事文章</string>
-    <string name="stories_intro_main_title">故事文章简介</string>
     <string name="mlp_notice_blank_page_created">创建了空白页面</string>
     <string name="mlp_notice_page_created">页面已创建</string>
     <string name="media_insert_failed">媒体插入失败。</string>
@@ -1539,13 +1514,6 @@ Language: zh_CN
     <string name="gutenberg_native_add_this_link">添加此链接</string>
     <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
     <string name="suggestion_no_connection">未连接互联网。\n建议不可用。</string>
-    <string name="typeface_label_shrikhand">粗体</string>
-    <string name="typeface_label_space_mono">现代</string>
-    <string name="typeface_label_pacifico">有趣</string>
-    <string name="typeface_label_oswald">强</string>
-    <string name="typeface_label_libre_baskerville">经典</string>
-    <string name="typeface_label_nunito">休闲</string>
-    <string name="toast_capture_operation_permission_needed">您需要授予应用程序录音权限才能录制视频</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s 已选择</string>
     <string name="login_get_link_by_email">通过电子邮件获取登录链接</string>
@@ -1572,66 +1540,13 @@ Language: zh_CN
     <string name="gutenberg_native_page_title_empty">“页面”标题。 清空</string>
     <string name="toast_error_playing_video">播放您的视频时出错</string>
     <string name="camera_error">此设备不支持 Camera2 API。</string>
-    <string name="toast_error_saving_video">无法保存视频</string>
-    <string name="toast_error_saving_image">保存图片时出错</string>
-    <string name="toast_capture_operation_in_progress">操作正在进行，请重试</string>
-    <string name="toast_story_page_not_found">找不到“故事”幻灯片</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">查看存储空间</string>
-    <string name="dialog_insufficient_device_storage_error_message">我们需要先将故事保存在您的设备上，然后才能发布。 查看您的存储设置，并删除文件以释放空间。</string>
-    <string name="dialog_insufficient_device_storage_error_title">设备存储空间不足</string>
-    <string name="dialog_story_saving_error_message">请重试保存或删除幻灯片，然后再次尝试发布您的故事。</string>
-    <string name="dialog_story_saving_error_title_plural">无法保存 %1$d 张幻灯片</string>
-    <string name="dialog_story_saving_error_title_singular">无法保存 1 张幻灯片</string>
-    <string name="story_saving_failed_quick_action_manage">管理</string>
-    <string name="story_saving_failed_message_plural">%1$d 张幻灯片需要处理</string>
-    <string name="story_saving_failed_message_singular">1 张幻灯片需要处理</string>
-    <string name="story_saving_failed_title">无法上传“%1$s”</string>
-    <string name="story_saving_snackbar_finished_with_error">无法上传“%1$s”</string>
-    <string name="story_saving_snackbar_finished_successfully">“%1$s”已发布</string>
-    <string name="story_saving_snackbar_started">正在上传“%1$s”…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d 幻灯片剩余</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">剩余 1 张幻灯片</string>
-    <string name="story_saving_title_several">多个故事</string>
-    <string name="story_saving_title">正在保存“%1$s”…</string>
-    <string name="story_saving_untitled">无标题</string>
-    <string name="dialog_discard_story_ok_button">舍弃</string>
-    <string name="dialog_discard_story_message">您的故事文章将不会保存为草稿。</string>
-    <string name="dialog_discard_story_title">放弃故事文章？</string>
-    <string name="dialog_discard_page_ok_button">删除</string>
-    <string name="dialog_discard_errored_page_message">此幻灯片尚未保存。 如果删除此幻灯片，您将丢失所做的所有编辑。</string>
-    <string name="dialog_discard_page_message">此幻灯片将从您的故事中删除。</string>
-    <string name="dialog_discard_page_title">删除故事幻灯片？</string>
-    <string name="label_text_color_button">更改文本颜色</string>
-    <string name="label_text_alignment_button">更改文本对齐方式</string>
-    <string name="label_frame_errored">出错了</string>
-    <string name="label_frame_selected_border">已选择</string>
-    <string name="label_frame_unselected_border">已取消选择</string>
-    <string name="label_frame_image">滑动</string>
-    <string name="label_retry_icon">重试</string>
-    <string name="label_saved_icon">已保存</string>
     <string name="label_close_button">关闭</string>
-    <string name="label_share_to">共享至</string>
-    <string name="label_snackbar_share">分享</string>
-    <string name="label_snackbar_loop_frame_saved">已保存到相册</string>
-    <string name="label_control_retry">重试</string>
-    <string name="label_control_saved">已保存</string>
-    <string name="label_control_saving">正在保存</string>
-    <string name="label_control_flash">刷新</string>
-    <string name="label_control_flip_camera">翻转</string>
-    <string name="sound_button_alt">声音</string>
-    <string name="text_button_alt">文本</string>
-    <string name="stickers_button_alt">贴纸</string>
-    <string name="flash_button_alt">刷新</string>
-    <string name="flip_button_alt">翻转摄像头</string>
-    <string name="capture_button_alt">捕获</string>
     <string name="mlp_preview_page">预览</string>
     <string name="mlp_create_page">创建页面</string>
     <string name="mlp_create_blank_page">创建空白页面</string>
     <string name="mlp_choose_layout_subtitle">从种类繁多的预设页面布局中选择心仪的布局，开始打造自己的页面。 或者，您也可以从一个空白页面开始。</string>
     <string name="mlp_choose_layout_title">选择布局</string>
     <string name="prepublishing_nudges_story_title_hint">为您的故事设定标题</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">创建文章或故事</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">创建文章、页面或故事</string>
     <string name="quick_start_dialog_create_new_post_message_short">轻点%1$s创建。 %2$s 然后选择&lt;b&gt;博文&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">从设备中选择</string>
     <string name="my_site_bottom_sheet_add_story">故事文章</string>

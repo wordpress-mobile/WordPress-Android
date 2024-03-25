@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -84,6 +85,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -118,7 +120,6 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged;
-import org.wordpress.android.ui.reader.utils.DateProvider;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -949,28 +950,18 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 updateCurrentTag();
             }
         }
-
-        // Check last time we've bumped tags followed analytics for this user,
-        // and bumping again if > 1 hrs
-        long tagsUpdatedTimestamp = AppPrefs.getReaderAnalyticsCountTagsTimestamp();
-        long now = new DateProvider().getCurrentDate().getTime();
-        if (now - tagsUpdatedTimestamp > 1000 * 60 * 60) { // 1 hr
-            ReaderTracker.trackFollowedTagsCount(ReaderTagTable.getFollowedTags().size());
-            AppPrefs.setReaderAnalyticsCountTagsTimestamp(now);
-        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
+    public void onEventMainThread(FollowedBlogsFetched event) {
         // refresh posts if user is viewing "Followed Sites"
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+        if (event.didChange()
+            && getPostListType() == ReaderPostListType.TAG_FOLLOWED
             && hasCurrentTag()
             && (getCurrentTag().isFollowedSites() || getCurrentTag().isDefaultInMemoryTag())) {
             refreshPosts();
         }
-
-        ReaderTracker.trackSubscribedSitesCount(event.getTotalSubscriptions());
     }
 
     @Override
@@ -2331,9 +2322,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void run() {
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
-                    requireActivity().runOnUiThread(() -> updateCurrentTag());
+                    // Check the fragment is attached right after `shouldAutoUpdateTag`
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
+                    activity.runOnUiThread(() -> updateCurrentTag());
                 } else {
-                    requireActivity().runOnUiThread(() -> {
+                    // Check the fragment is attached to the activity when this Thread starts.
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
+                    activity.runOnUiThread(() -> {
                         if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(

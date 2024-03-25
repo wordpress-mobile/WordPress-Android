@@ -1,0 +1,7 @@
+24.4:
+- Vi har lagt till en ny Trafik-flik på skärmen Statistik
+- Vi har uppgraderat utformningen på aviseringarna
+- Vi har lagt till videoblocksstöd för VideoPress v5
+- Vi har åtgärdat en krasch som orsakades av automatisk bläddring i blockredigeraren
+- Vi har lagt till ett felmeddelande för misslyckade videouppladdningar
+- Vi har tagit bort bildtransparensen vid uppladdning

@@ -35,12 +35,11 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogExceptionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleUndoButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleRedoButtonListener;
@@ -73,7 +72,6 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachMediaUploadQueryListener onReattachQueryListener,
-                                  OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
                                   OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
@@ -88,8 +86,6 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
                                   ShowSuggestionsUtil showSuggestionsUtil,
-                                  OnMediaFilesCollectionBasedBlockEditorListener
-                                          onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
                                   OnGutenbergDidRequestPreviewListener
                                           onGutenbergDidRequestPreviewListener,
@@ -100,12 +96,12 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
                                   OnConnectionStatusEventListener onConnectionStatusEventListener,
                                   OnBackHandlerEventListener onBackHandlerEventListener,
+                                  OnLogExceptionListener onLogExceptionListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
-                    onStorySavingReattachQueryListener,
                     onSetFeaturedImageListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
@@ -117,7 +113,6 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
-                    onMediaFilesCollectionBasedBlockEditorListener,
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,
@@ -127,6 +122,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onToggleRedoButtonListener,
                     onConnectionStatusEventListener,
                     onBackHandlerEventListener,
+                    onLogExceptionListener,
                     isDarkMode);
     }
 

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-15 23:54:08+0000
+Translation-Revision-Date: 2024-03-06 11:54:12+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">Автоматическое воспроизведение может вызвать технические проблемы у некоторых пользователей.</string>
+    <string name="notifications_action_mark_all_as_read">Отметить все как прочитанные</string>
+    <string name="notifications_unread_content_description">Не прочитано</string>
+    <string name="qrcode_media_deeplink_error">Сайт не найден. Убедитесь в том, что выполнили вход в нужную учётную запись.</string>
+    <string name="gravatar_info_sync_done_button">Готово</string>
+    <string name="gravatar_info_sync_message">Синхронизация обновлений с вашим профилем Gravatar может занять некоторое время.</string>
+    <string name="gravatar_info_learn_more_link">Что такое Gravatar?</string>
+    <string name="gravatar_info_description">Если вы обновите свой аватар, имя пользователя и личные данные на этом сайте, всё это будет автоматически обновлено на других сайтах, где используются профили Gravatar.</string>
+    <string name="gravatar_info_title">Ваш профиль WordPress.com создан при поддержке Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Не удалось загрузить медиафайл для публикации в соцсетях. Проверьте разрешения приложения\n        или воспользуйтесь библиотекой файлов приложения.</string>
     <string name="site_monitoring_cannot_be_started">Не удалось открыть страницу мониторинга сайтов. Повторите попытку позже</string>
     <string name="site_monitoring_tab_title_web_server_logs">Журналы веб-сервера</string>
@@ -17,7 +29,6 @@ Language: ru
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось.</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
     <string name="reader_no_recommended_blogs_title">Нет рекомендуемых блогов</string>
-    <string name="reader_no_followed_tags_title">Нет подписок на теги</string>
     <string name="reader_no_posts_with_this_tag">Нет записей с этой меткой</string>
     <string name="reader_toast_err_unable_to_block_blog">Не удалось заблокировать этот блог</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Записи из этого блога больше не будут отображаться</string>
@@ -26,20 +37,17 @@ Language: ru
     <string name="reader_toast_err_unable_to_follow_blog">Не удалось подписаться на этот блог</string>
     <string name="reader_toast_err_already_follow_this_blog">Вы уже подписаны на этот блог</string>
     <string name="reader_toast_err_show_blog">Не удалось отобразить этот блог</string>
-    <string name="reader_toast_err_tag_already_subscribed">Вы уже подписаны на этот тег</string>
     <string name="reader_label_choose_interests">Выберите ваши интересы</string>
     <string name="reader_label_subscribers_count_single">1 подписчик</string>
     <string name="reader_label_subscribers_count">Подписчиков: %s</string>
     <string name="reader_label_subscribe_count">Подписчиков: %,d</string>
     <string name="reader_label_blog_subscribed">Подписка на блог оформлена</string>
     <string name="reader_hint_search_subscribed_blogs">Поиск подписок на блоги</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Введите URL-адрес или тег, на который хотите подписаться</string>
     <string name="reader_btn_subscribed">Подписка оформлена</string>
     <string name="reader_btn_subscribe">Подписаться</string>
     <string name="reader_menu_block_this_blog">Заблокировать этот блог</string>
     <string name="reader_menu_tags_and_blogs">Редактировать теги и блоги</string>
     <string name="reader_page_followed_blogs_title">Подписки на блоги</string>
-    <string name="reader_page_followed_tags_title">Подписки на теги</string>
     <string name="reader_title_tags">Подписаться на теги</string>
     <string name="reader_activity_title_manage_tags_blogs">Управление тегами и блогами</string>
     <string name="reader_activity_title_tag_preview">Метка</string>
@@ -57,19 +65,13 @@ Language: ru
     <string name="reader_dropdown_menu_subscriptions">Подписки</string>
     <string name="reader_dropdown_menu_discover">Раздел «Поиск»</string>
     <string name="reader_search_content_description">Поиск</string>
-    <string name="reader_discover_no_posts_button_tags_text">Подписаться на теги</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Подпишитесь на другие теги, чтобы расширить область поиска</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Подписывайтесь на теги, чтобы находить новые блоги</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Блоги, на которые можно подписаться</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Подписаться на тег</string>
     <string name="reader_filter_empty_tags_action_suggested">Рекомендуемые теги</string>
     <string name="reader_filter_empty_blogs_action_search">Искать блог</string>
-    <string name="reader_filter_empty_tags_list_text">Подпишитесь на тег, и лучшие записи с ним станут отображаться здесь.</string>
     <string name="reader_filter_empty_tags_list_title">Нет тегов</string>
     <string name="reader_filter_empty_blogs_list_text">Подписывайтесь на блоги в разделе «Поиск», и последние записи из них будут отображаться здесь. Или найдите блог, который вам уже понравился.</string>
     <string name="reader_filter_empty_blogs_list_title">Нет подписок на блоги</string>
     <string name="reader_filter_empty_blogs_action">Подписаться на блог</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Вы можете подписаться на определенную тему, добавив тег</string>
     <string name="reader_filter_empty_blogs_list">Просмотреть последние записи из блогов, на которые вы подписаны</string>
     <string name="reader_filter_by_tag_title">Фильтровать по тегу</string>
     <string name="reader_filter_by_blog_title">Фильтровать по блогу</string>
@@ -380,7 +382,6 @@ Language: ru
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Этот сайт</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">На %1$s используется плагин %2$s, который пока поддерживает не все функции приложения. Установите %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Через несколько дней мы переходим на приложение Jetpack.</string>
     <string name="wp_jp_static_poster_footnote">Переход бесплатен и занимает всего минуту.</string>
     <string name="wp_jp_static_poster_button_secondary">Дополнительные сведения см. на Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Перейти в новое приложение Jetpack</string>
@@ -1167,7 +1168,6 @@ Language: ru
     <string name="jetpack_brute_force_allowlist_title">Белый список IP</string>
     <string name="site_settings_denylist_title">Запрещённые комментарии</string>
     <string name="gutenberg_native_add_button_text">Добавить текст кнопки</string>
-    <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
     <string name="activity_log_backup_download_notice_download_action">Скачать</string>
     <string name="threat_fix_all_status_success_message_plural">Угрозы были успешно устранены.</string>
@@ -1336,7 +1336,6 @@ Language: ru
     <string name="request_failed_message">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
     <string name="gutenberg_native_move_to_bottom">Сдвинуть вниз</string>
     <string name="gutenberg_native_change_block_position">Переместить блок</string>
-    <string name="label_control_upload">Загрузка</string>
     <string name="jetpack_icon_content_description">значок</string>
     <string name="backup_download_complete_info">Мы также отправили вам ссылку на файл по email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Кнопка поделиться ссылкой</string>
@@ -1437,7 +1436,6 @@ Language: ru
     <string name="dialog_confirm_copy_local_message">Запись, которую вы пытаетесь скопировать имеет две конфликтующие версии или вы недавно внесли, но не сохранили изменения.\nОтредактируйте запись и решите конфликты или скопируйте версию из этого приложения.</string>
     <string name="dialog_confirm_copy_local_title">Конфликт синхронизации записей</string>
     <string name="button_copy">Дублировать</string>
-    <string name="toast_edit_story_update_in_progress_title">История сохраняется, подождите…</string>
     <string name="gutenberg_native_file_name">Имя файла</string>
     <string name="gutenberg_native_file_block_settings">Настройки блока файла</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Невозможно загрузить файлы.\nНажмите для выбора вариантов.</string>
@@ -1455,23 +1453,8 @@ Language: ru
     <string name="reader_follow_comments_null_response">Ответ не получен</string>
     <string name="activity_log_activity_type_filter_clear">Очистить</string>
     <string name="activity_log_activity_type_filter_apply">Применить</string>
-    <string name="dialog_edit_story_unsupported_format_message">К вашей истории не были добавлены один или несколько слайдов, на текущий момент истории не поддерживают GIF файлы. Выберите статическое изображение или видео для фона вместо GIF.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF файлы не поддерживаются</string>
-    <string name="dialog_edit_story_unrecoverable_message">Невозможно найти медиафайлы этой истории на сайте.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Нельзя отредактировать историю</string>
-    <string name="dialog_edit_story_unavailable_message">Невозможно загрузить медиафайлы этой истории. Проверьте ваше подключение к сети и попробуйте снова.</string>
-    <string name="dialog_edit_story_unavailable_title">Нельзя отредактировать историю</string>
-    <string name="dialog_edit_story_limited_message">Эта история редактировалась на другом устройстве. Возможности редактирования некоторых объектов могут быть ограничены.</string>
-    <string name="dialog_edit_story_limited_title">Ограниченное редактирование истории</string>
     <string name="cannot_retry_deleted_media_item_fatal">Медиафайл удалён. Попробуйте создать историю заново.</string>
-    <string name="color_picker_label_background">Фон</string>
-    <string name="color_picker_label_text">Текст</string>
-    <string name="dialog_discard_story_ok_button_edit">Отбросить</string>
-    <string name="dialog_discard_story_message_edit">Сделанные изменения не будут сохранены.</string>
-    <string name="dialog_discard_story_title_edit">Отменить изменения</string>
     <string name="label_done_button">Готово</string>
-    <string name="label_next_button">Далее</string>
-    <string name="delete_button_alt">Удалить</string>
     <string name="hpp_choose_error">При выборе темы произошла ошибка.</string>
     <string name="hpp_retry_error">Проверьте подключение к Интернету и повторите попытку.</string>
     <string name="hpp_error_subtitle">Нажмите повторить при появлении подключения к сети.</string>
@@ -1521,14 +1504,6 @@ Language: ru
     <string name="gutenberg_native_help_button">Кнопка помощи</string>
     <string name="gutenberg_native_edit_using_web_editor">Редактировать используя веб-редактор</string>
     <string name="gutenberg_native_choose_images">Выберите изображения</string>
-    <string name="stories_intro_create_story_post_label">Создать запись-историю</string>
-    <string name="stories_intro_description_second">Они публикуются как новые записи блога на вашем сайте, ваша аудитория их не пропустит, это точно!</string>
-    <string name="stories_intro_title_second">Записи истории не пропадают</string>
-    <string name="stories_intro_description_first">Комбинируйте фото, видео и текст для создания захватывающих историй с переходами, они обязательно полюбятся вашим посетителям.</string>
-    <string name="stories_intro_title_first">Истории доступны для всех</string>
-    <string name="stories_intro_image_caption_second">Пример названия истории</string>
-    <string name="stories_intro_image_caption_first">Как создать историю</string>
-    <string name="stories_intro_main_title">Представляем записи-истории</string>
     <string name="mlp_notice_blank_page_created">Создана пустая страница</string>
     <string name="mlp_notice_page_created">Страница создана</string>
     <string name="media_insert_failed">Вставка мультимедиа не удалась.</string>
@@ -1549,13 +1524,6 @@ Language: ru
     <string name="gutenberg_native_add_this_link">Добавить ссылку</string>
     <string name="gutenberg_native_add_this_email_link">Добавить ссылку на email</string>
     <string name="suggestion_no_connection">Нет подключения к сети.\nПредложения недоступны.</string>
-    <string name="typeface_label_shrikhand">Жирный</string>
-    <string name="typeface_label_space_mono">Современный</string>
-    <string name="typeface_label_pacifico">Игривый</string>
-    <string name="typeface_label_oswald">Сильный</string>
-    <string name="typeface_label_libre_baskerville">Классический</string>
-    <string name="typeface_label_nunito">Повседневный</string>
-    <string name="toast_capture_operation_permission_needed">Для записи видео вам нужно дать приложению разрешение на запись звука.</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Выбрано %s</string>
     <string name="login_get_link_by_email">Получить ссылку для входа по email</string>
@@ -1582,66 +1550,13 @@ Language: ru
     <string name="gutenberg_native_page_title_empty">Название страницы. Пустое.</string>
     <string name="toast_error_playing_video">Ошибка воспроизведения видео</string>
     <string name="camera_error">Это устройство не поддерживает Camera2 API.</string>
-    <string name="toast_error_saving_video">Не удалось сохранить видео</string>
-    <string name="toast_error_saving_image">Ошибка сохранения изображения</string>
-    <string name="toast_capture_operation_in_progress">Операция в процессе, попробуйте позже</string>
-    <string name="toast_story_page_not_found">Невозможно найти слайд истории</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Просмотр хранилища</string>
-    <string name="dialog_insufficient_device_storage_error_message">Требуется сохранить историю на вашем устройстве перед публикацией. Посмотрите настройки хранилища данных и удалите что-нибудь для освобождения места.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Недостаточно места в хранилище устройства</string>
-    <string name="dialog_story_saving_error_message">Сохраните снова или удалите слайды, потом попробуйте заново опубликовать вашу историю.</string>
-    <string name="dialog_story_saving_error_title_plural">Невозможно сохранить %1$d слайдов</string>
-    <string name="dialog_story_saving_error_title_singular">Невозможно сохранить 1 слайд</string>
-    <string name="story_saving_failed_quick_action_manage">Управление</string>
-    <string name="story_saving_failed_message_plural">Требуется действие для %1$d слайдов</string>
-    <string name="story_saving_failed_message_singular">Требуется действие для 1 слайда</string>
-    <string name="story_saving_failed_title">Загрузка не удалась для \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Загрузка не удалась для \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" опубликована</string>
-    <string name="story_saving_snackbar_started">Загружается \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">осталось %1$d слайдов</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">остался 1 слайд</string>
-    <string name="story_saving_title_several">несколько историй</string>
-    <string name="story_saving_title">Сохраняется \"%1$s\"…</string>
-    <string name="story_saving_untitled">Без названия</string>
-    <string name="dialog_discard_story_ok_button">Отбросить</string>
-    <string name="dialog_discard_story_message">Запись истории не будет сохранена в черновики.</string>
-    <string name="dialog_discard_story_title">Отбросить запись истории?</string>
-    <string name="dialog_discard_page_ok_button">Удалить</string>
-    <string name="dialog_discard_errored_page_message">Этот слайд ещё не сохранён. Если вы удалите его, то потеряете все сделанные правки.</string>
-    <string name="dialog_discard_page_message">Этот слайд будет удален из истории.</string>
-    <string name="dialog_discard_page_title">Удалить слайд истории?</string>
-    <string name="label_text_color_button">Изменить цвет текста</string>
-    <string name="label_text_alignment_button">Изменить выравнивание текста</string>
-    <string name="label_frame_errored">с ошибкой</string>
-    <string name="label_frame_selected_border">выбрано</string>
-    <string name="label_frame_unselected_border">невыбрано</string>
-    <string name="label_frame_image">Слайд</string>
-    <string name="label_retry_icon">Повторить</string>
-    <string name="label_saved_icon">Сохранено</string>
     <string name="label_close_button">Закрыть</string>
-    <string name="label_share_to">Поделиться с</string>
-    <string name="label_snackbar_share">ПОДЕЛИТЬСЯ</string>
-    <string name="label_snackbar_loop_frame_saved">Сохранено в фотографиях</string>
-    <string name="label_control_retry">Повторить</string>
-    <string name="label_control_saved">Сохранено</string>
-    <string name="label_control_saving">Сохранение</string>
-    <string name="label_control_flash">Вспышка</string>
-    <string name="label_control_flip_camera">Отразить</string>
-    <string name="sound_button_alt">Звук</string>
-    <string name="text_button_alt">Текст</string>
-    <string name="stickers_button_alt">Наклейки</string>
-    <string name="flash_button_alt">Вспышка</string>
-    <string name="flip_button_alt">Перевернуть камеру</string>
-    <string name="capture_button_alt">Захват</string>
     <string name="mlp_preview_page">Просмотреть</string>
     <string name="mlp_create_page">Создать страницу</string>
     <string name="mlp_create_blank_page">Создать пустую страницу</string>
     <string name="mlp_choose_layout_subtitle">Начните с выбора заранее подготовленных вариантов макета, или начните с пустой страницы.</string>
     <string name="mlp_choose_layout_title">Выберите макет</string>
     <string name="prepublishing_nudges_story_title_hint">Назовите вашу историю</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Создать запись или страницу</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Создать запись, страницу или историю</string>
     <string name="quick_start_dialog_create_new_post_message_short">Нажмите %1$s Создать. %2$s Затем выберите &lt;b&gt;Запись блога&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Выбрать с устройства</string>
     <string name="my_site_bottom_sheet_add_story">История</string>

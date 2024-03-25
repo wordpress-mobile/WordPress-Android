@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-02-13 14:29:51+0000
+Translation-Revision-Date: 2024-03-04 22:42:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Videountertitel. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Videountertitel. Leer</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Video bearbeiten</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">Die automatische Wiedergabe kann bei einigen Benutzern zu Problemen bei der Benutzerfreundlichkeit führen.</string>
+    <string name="notifications_action_mark_all_as_read">Alle als gelesen markieren</string>
+    <string name="notifications_unread_content_description">Ungelesen</string>
+    <string name="qrcode_media_deeplink_error">Die Website wurde nicht gefunden. Überprüfe, ob du im richtigen Konto angemeldet bist.</string>
+    <string name="gravatar_info_sync_done_button">Fertig</string>
+    <string name="gravatar_info_sync_message">Die Synchronisierung deines Gravatar-Profils mit den neuesten Updates kann einige Zeit in Anspruch nehmen.</string>
+    <string name="gravatar_info_learn_more_link">Was ist Gravatar?</string>
+    <string name="gravatar_info_description">Wenn du hier deinen Avatar, Namen und deine Informationen über dich aktualisierst, werden sie auch auf allen Websites aktualisiert, die Gravatar-Profile nutzen.</string>
+    <string name="gravatar_info_title">Dein WordPress.com-Profil wird unterstützt von Gravatar</string>
     <string name="error_media_could_not_share_media_from_device">Die Medien können nicht zum Teilen geladen werden. Bitte überprüfe die Berechtigungen der App\n    oder verwende die Mediathek der App.</string>
     <string name="site_monitoring_cannot_be_started">Wir können die Website-Überwachung im Moment nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_monitoring_tab_title_web_server_logs">Webserver-Protokolle</string>
@@ -17,7 +29,6 @@ Language: de
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Die Blogs, die du abonniert hast, haben in letzter Zeit nichts veröffentlicht</string>
     <string name="reader_no_followed_blogs_description_subs">Abonniere Blogs in Entdecken oder suche nach einem Blog, den du bereits magst.</string>
     <string name="reader_no_recommended_blogs_title">Keine empfohlenen Blogs</string>
-    <string name="reader_no_followed_tags_title">Keine abonnierten Schlagwörter</string>
     <string name="reader_no_posts_with_this_tag">Keine Beiträge mit diesem Schlagwort</string>
     <string name="reader_toast_err_unable_to_block_blog">Dieser Blog kann nicht blockiert werden</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Beiträge aus diesem Blog werden nicht mehr angezeigt</string>
@@ -26,20 +37,17 @@ Language: de
     <string name="reader_toast_err_unable_to_follow_blog">Dieser Blog kann nicht abonniert werden</string>
     <string name="reader_toast_err_already_follow_this_blog">Du hast diesen Blog bereits abonniert</string>
     <string name="reader_toast_err_show_blog">Dieser Blog kann nicht angezeigt werden</string>
-    <string name="reader_toast_err_tag_already_subscribed">Du hast dieses Schlagwort bereits abonniert</string>
     <string name="reader_label_choose_interests">Wähle deine Interessengebiete</string>
     <string name="reader_label_subscribers_count_single">1 Abonnent</string>
     <string name="reader_label_subscribers_count">%s Abonnenten</string>
     <string name="reader_label_subscribe_count">%,d Abonnenten</string>
     <string name="reader_label_blog_subscribed">Blog abonniert</string>
     <string name="reader_hint_search_subscribed_blogs">Suche in abonnierten Blogs</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Gib eine URL oder ein Schlagwort ein, das du abonnieren möchtest</string>
     <string name="reader_btn_subscribed">Abonniert</string>
     <string name="reader_btn_subscribe">Abonnieren</string>
     <string name="reader_menu_block_this_blog">Dieses Blog blockieren</string>
     <string name="reader_menu_tags_and_blogs">Schlagwörter und Blogs bearbeiten</string>
     <string name="reader_page_followed_blogs_title">Abonnierte Blogs</string>
-    <string name="reader_page_followed_tags_title">Abonnierte Schlagwörter</string>
     <string name="reader_title_tags">Schlagwörtern folgen</string>
     <string name="reader_activity_title_manage_tags_blogs">Schlagwörter und Blogs verwalten</string>
     <string name="reader_activity_title_tag_preview">Schlagwort</string>
@@ -58,19 +66,13 @@ Language: de
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Entdecken</string>
     <string name="reader_search_content_description">Suche</string>
-    <string name="reader_discover_no_posts_button_tags_text">Schlagwörter abonnieren</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Versuche, mehr Schlagwörter zu abonnieren, um die Suche zu erweitern</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Abonniere Schlagwörter, um neue Blogs zu entdecken</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs, die du abonnieren kannst</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Ein Schlagwort abonnieren</string>
     <string name="reader_filter_empty_tags_action_suggested">Vorgeschlagene Schlagwörter</string>
     <string name="reader_filter_empty_blogs_action_search">Suche nach einem Blog</string>
-    <string name="reader_filter_empty_tags_list_text">Abonniere ein Schlagwort und du siehst hier die besten Beiträge dazu.</string>
     <string name="reader_filter_empty_tags_list_title">Keine Schlagwörter</string>
     <string name="reader_filter_empty_blogs_list_text">Abonniere Blogs in Entdecken und die neuesten Beiträge werden hier angezeigt. Oder suche nach einem Blog, den du bereits magst.</string>
     <string name="reader_filter_empty_blogs_list_title">Keine Blog-Abonnements</string>
     <string name="reader_filter_empty_blogs_action">Einen Blog abonnieren</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Du kannst Beiträge zu einem bestimmten Thema abonnieren, indem du ein Schlagwort hinzufügst</string>
     <string name="reader_filter_empty_blogs_list">Sieh dir die neuesten Beiträge der Blogs an, die du abonniert hast</string>
     <string name="reader_filter_by_tag_title">Nach Schlagwort filtern</string>
     <string name="reader_filter_by_blog_title">Nach Blog filtern</string>
@@ -381,7 +383,6 @@ Language: de
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Diese Website</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s verwendet %2$s, das noch nicht alle Funktionen der App unterstützt. Bitte installiere das %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Wird in einigen Tagen in die Jetpack-App verschoben.</string>
     <string name="wp_jp_static_poster_footnote">Der Wechsel ist kostenlos und dauert nur eine Minute.</string>
     <string name="wp_jp_static_poster_button_secondary">Weitere Informationen auf Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Zur Jetpack-App wechseln</string>
@@ -1016,8 +1017,8 @@ Language: de
     <string name="scan_multisite_not_supported_subtitle">Es tut uns leid, aber Jetpack Scan ist derzeit nicht mit WordPress-Multisite-Installationen kompatibel.</string>
     <string name="scan_multisite_not_supported_title">WordPress-Multisites werden nicht unterstützt</string>
     <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">Ungültige URL. Bitte gib eine gültige URL ein.</string>
-    <string name="gutenberg_native_embed_caption_s">Beschriftung einbetten %s</string>
-    <string name="gutenberg_native_embed_caption_empty">Beschriftung einbetten Leer</string>
+    <string name="gutenberg_native_embed_caption_s">Beschriftung einbetten. %s</string>
+    <string name="gutenberg_native_embed_caption_empty">Beschriftung einbetten. Leer</string>
     <string name="activity_log_visit_our_documentation_page">besuche unsere Dokumentationsseite</string>
     <string name="activity_log_multisite_message">Jetpack Backup für Multisite-Installationen bietet Backups zum Herunterladen, keine Ein-Klick-Wiederherstellungen. Für weitere Informationen %1$s.</string>
     <string name="blogging_reminders_tip_message">Durch regelmäßige Beiträge bindest du deine Leser und lockst neue Besucher auf deine Website.</string>
@@ -1168,7 +1169,6 @@ Language: de
     <string name="jetpack_brute_force_allowlist_title">IP-Adressen auf der Liste „Immer zulassen“</string>
     <string name="site_settings_denylist_title">Gesperrte Kommentare</string>
     <string name="gutenberg_native_add_button_text">Button-Text hinzufügen.</string>
-    <string name="stories_intro_main_subtitle">Eine neue Möglichkeit, ansprechende Inhalte auf deiner Website zu erstellen und zu veröffentlichen.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Ausblenden</string>
     <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
     <string name="threat_fix_all_status_success_message_plural">Bedrohungen wurden erfolgreich behoben.</string>
@@ -1337,7 +1337,6 @@ Language: de
     <string name="request_failed_message">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="gutenberg_native_move_to_bottom">Nach unten verschieben</string>
     <string name="gutenberg_native_change_block_position">Block-Position ändern</string>
-    <string name="label_control_upload">Upload</string>
     <string name="jetpack_icon_content_description">Icon</string>
     <string name="backup_download_complete_info">Wir haben dir auch einen Link zu deiner Datei per E-Mail geschickt.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">„Link teilen“-Button</string>
@@ -1438,7 +1437,6 @@ Language: de
     <string name="dialog_confirm_copy_local_message">Der Beitrag, den du zu kopieren versuchst, hat zwei Versionen, die miteinander in Konflikt stehen, oder du hast kürzlich Änderungen vorgenommen, diese aber nicht gespeichert.\nBearbeite zuerst den Beitrag, um den Konflikt zu lösen, oder fahre mit dem Kopieren der Version aus dieser App fort.</string>
     <string name="dialog_confirm_copy_local_title">Synchronisierungskonflikt des Beitrags</string>
     <string name="button_copy">Duplizieren</string>
-    <string name="toast_edit_story_update_in_progress_title">Die Story wird gespeichert, bitte warten…</string>
     <string name="gutenberg_native_file_name">Dateiname</string>
     <string name="gutenberg_native_file_block_settings">Blockeinstellungen der Datei</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Dateien konnten nicht hochgeladen werden.\nFür Optionen hier tippen.</string>
@@ -1456,23 +1454,8 @@ Language: de
     <string name="reader_follow_comments_null_response">Keine Antwort erhalten</string>
     <string name="activity_log_activity_type_filter_clear">Löschen</string>
     <string name="activity_log_activity_type_filter_apply">Übernehmen</string>
-    <string name="dialog_edit_story_unsupported_format_message">Mindestens eine Folie wurde nicht zu deiner Story hinzugefügt, da Stories derzeit keine GIF-Dateien unterstützen. Bitte wähle stattdessen ein statisches Bild oder einen Videohintergrund aus.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF-Dateien werden nicht unterstützt</string>
-    <string name="dialog_edit_story_unrecoverable_message">Wir konnten die Medien für diese Story auf der Website nicht finden.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Story kann nicht bearbeitet werden</string>
-    <string name="dialog_edit_story_unavailable_message">Medien für diese Story können nicht geladen werden. Überprüfe deine Internetverbindung und versuche es dann erneut.</string>
-    <string name="dialog_edit_story_unavailable_title">Story kann nicht bearbeitet werden</string>
-    <string name="dialog_edit_story_limited_message">Diese Story wurde auf einem anderen Gerät bearbeitet und die Möglichkeiten, bestimmte Objekte zu bearbeiten, sind ggfs. eingeschränkt.</string>
-    <string name="dialog_edit_story_limited_title">Eingeschränkte Story-Bearbeitung</string>
     <string name="cannot_retry_deleted_media_item_fatal">Die Medien wurden entfernt. Versuche, deine Story neu zu erstellen.</string>
-    <string name="color_picker_label_background">Hintergrund</string>
-    <string name="color_picker_label_text">Text</string>
-    <string name="dialog_discard_story_ok_button_edit">Verwerfen</string>
-    <string name="dialog_discard_story_message_edit">Änderungen werden nicht gespeichert.</string>
-    <string name="dialog_discard_story_title_edit">Änderungen verwerfen?</string>
     <string name="label_done_button">Fertig</string>
-    <string name="label_next_button">Weiter</string>
-    <string name="delete_button_alt">Löschen</string>
     <string name="hpp_choose_error">Beim Auswählen des Themes ist ein Fehler aufgetreten.</string>
     <string name="hpp_retry_error">Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="hpp_error_subtitle">Tippe auf „Erneut versuchen“, wenn du wieder online bist.</string>
@@ -1522,14 +1505,6 @@ Language: de
     <string name="gutenberg_native_help_button">Hilfe-Button</string>
     <string name="gutenberg_native_edit_using_web_editor">Mit dem Webeditor bearbeiten</string>
     <string name="gutenberg_native_choose_images">Bilder auswählen</string>
-    <string name="stories_intro_create_story_post_label">Story-Beitrag erstellen</string>
-    <string name="stories_intro_description_second">Sie werden auf deiner Website als ein neuer Blogbeitrag veröffentlicht, damit deine Leserschaft nie etwas verpasst.</string>
-    <string name="stories_intro_title_second">Story-Beiträge verschwinden nicht</string>
-    <string name="stories_intro_description_first">Kombiniere Fotos, Videos und Text, um ansprechende und antippbare Story-Beiträge zu erstellen, die deine Besucher begeistern.</string>
-    <string name="stories_intro_title_first">Storys sind jetzt für alle verfügbar</string>
-    <string name="stories_intro_image_caption_second">Beispieltitel für Story</string>
-    <string name="stories_intro_image_caption_first">So erstellst du einen Story-Beitrag</string>
-    <string name="stories_intro_main_title">Neu: Story-Beiträge</string>
     <string name="mlp_notice_blank_page_created">Leere Seite erstellt</string>
     <string name="mlp_notice_page_created">Seite erstellt</string>
     <string name="media_insert_failed">Fehler beim Einfügen von Medien.</string>
@@ -1550,13 +1525,6 @@ Language: de
     <string name="gutenberg_native_add_this_link">Diesen Link hinzufügen</string>
     <string name="gutenberg_native_add_this_email_link">Diesen E-Mail-Link hinzufügen</string>
     <string name="suggestion_no_connection">Keine Internetverbindung.\nKeine Vorschläge verfügbar.</string>
-    <string name="typeface_label_shrikhand">Fett</string>
-    <string name="typeface_label_space_mono">Modern</string>
-    <string name="typeface_label_pacifico">Verspielt</string>
-    <string name="typeface_label_oswald">Stark</string>
-    <string name="typeface_label_libre_baskerville">Classic</string>
-    <string name="typeface_label_nunito">Lässig</string>
-    <string name="toast_capture_operation_permission_needed">Du musst der App die Berechtigung zur Audioaufzeichnung erteilen, um ein Video aufzunehmen</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s ausgewählt</string>
     <string name="login_get_link_by_email">Anmeldelink per E-Mail erhalten</string>
@@ -1583,66 +1551,13 @@ Language: de
     <string name="gutenberg_native_page_title_empty">Seitentitel. Leer</string>
     <string name="toast_error_playing_video">Beim Abspielen deines Videos ist ein Fehler aufgetreten</string>
     <string name="camera_error">Dieses Gerät unterstützt die Camera2-API nicht.</string>
-    <string name="toast_error_saving_video">Das Video konnte nicht gespeichert werden</string>
-    <string name="toast_error_saving_image">Fehler beim Speichern des Bilds</string>
-    <string name="toast_capture_operation_in_progress">Operation läuft, versuche es erneut</string>
-    <string name="toast_story_page_not_found">Story-Slide wurde nicht gefunden</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Speicher anzeigen</string>
-    <string name="dialog_insufficient_device_storage_error_message">Die Story muss auf deinem Gerät gespeichert werden, bevor sie veröffentlicht werden kann. Überprüfe deine Speichereinstellungen und entferne Dateien, um Platz zu schaffen.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Unzureichender Gerätespeicher</string>
-    <string name="dialog_story_saving_error_message">Versuche erneut, die Slides zu speichern oder zu löschen und dann deine Story zu veröffentlichen.</string>
-    <string name="dialog_story_saving_error_title_plural">%1$d Slides konnten nicht gespeichert werden</string>
-    <string name="dialog_story_saving_error_title_singular">1 Slide konnte nicht gespeichert werden</string>
-    <string name="story_saving_failed_quick_action_manage">Verwalten</string>
-    <string name="story_saving_failed_message_plural">%1$d Slides erfordern eine Aktion</string>
-    <string name="story_saving_failed_message_singular">1 Slide erfordert eine Aktion</string>
-    <string name="story_saving_failed_title">„%1$s“ konnte nicht hochgeladen werden</string>
-    <string name="story_saving_snackbar_finished_with_error">„%1$s“ konnte nicht hochgeladen werden</string>
-    <string name="story_saving_snackbar_finished_successfully">„%1$s“ veröffentlicht</string>
-    <string name="story_saving_snackbar_started">„%1$s“ wird hochgeladen …</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d Slides verbleiben</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 Slide verbleibt</string>
-    <string name="story_saving_title_several">mehrere Storys</string>
-    <string name="story_saving_title">„%1$s“ wird gespeichert …</string>
-    <string name="story_saving_untitled">Ohne Titel</string>
-    <string name="dialog_discard_story_ok_button">Verwerfen</string>
-    <string name="dialog_discard_story_message">Dein Story-Beitrag wird nicht als Entwurf gespeichert.</string>
-    <string name="dialog_discard_story_title">Story-Beitrag verwerfen?</string>
-    <string name="dialog_discard_page_ok_button">Löschen</string>
-    <string name="dialog_discard_errored_page_message">Dieses Slide wurde noch nicht gespeichert. Wenn du diese Slide löschst, verlierst du alle deine vorgenommenen Änderungen.</string>
-    <string name="dialog_discard_page_message">Dieses Slide wird aus deiner Story entfernt.</string>
-    <string name="dialog_discard_page_title">Story-Slide entfernen?</string>
-    <string name="label_text_color_button">Textfarbe ändern</string>
-    <string name="label_text_alignment_button">Textausrichtung ändern</string>
-    <string name="label_frame_errored">fehlerhaft</string>
-    <string name="label_frame_selected_border">ausgewählt</string>
-    <string name="label_frame_unselected_border">nicht ausgewählt</string>
-    <string name="label_frame_image">Folie</string>
-    <string name="label_retry_icon">Erneut versuchen</string>
-    <string name="label_saved_icon">Gespeichert</string>
     <string name="label_close_button">Schließen</string>
-    <string name="label_share_to">Teilen auf</string>
-    <string name="label_snackbar_share">TEILEN</string>
-    <string name="label_snackbar_loop_frame_saved">In Fotos gespeichert</string>
-    <string name="label_control_retry">Erneut versuchen</string>
-    <string name="label_control_saved">Gespeichert</string>
-    <string name="label_control_saving">Wird gespeichert …</string>
-    <string name="label_control_flash">Blitz</string>
-    <string name="label_control_flip_camera">Spiegeln</string>
-    <string name="sound_button_alt">Ton</string>
-    <string name="text_button_alt">Text</string>
-    <string name="stickers_button_alt">Sticker</string>
-    <string name="flash_button_alt">Blitz</string>
-    <string name="flip_button_alt">Kamera spiegeln</string>
-    <string name="capture_button_alt">Erfassen</string>
     <string name="mlp_preview_page">Vorschau</string>
     <string name="mlp_create_page">Seite erstellen</string>
     <string name="mlp_create_blank_page">Leere Seite erstellen</string>
     <string name="mlp_choose_layout_subtitle">Beginne mit der Auswahl eines der vielen vorgefertigten Seitenlayouts. Oder beginne einfach mit einer leeren Seite.</string>
     <string name="mlp_choose_layout_title">Layout auswählen</string>
     <string name="prepublishing_nudges_story_title_hint">Gib deiner Website einen Titel</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Erstelle einen Beitrag oder eine Story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Erstelle einen Beitrag, eine Seite oder eine Story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Tippe auf %1$s Erstellen. %2$s Wähle anschließend &lt;b&gt;Blogbeitrag&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Von Gerät auswählen</string>
     <string name="my_site_bottom_sheet_add_story">Story-Beitrag</string>
@@ -3780,7 +3695,7 @@ Language: de
     <string name="error">Fehler</string>
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
-    <string name="notification_settings">Benachrichtigungs-Einstellungen</string>
+    <string name="notification_settings">Benachrichtigungseinstellungen</string>
     <string name="add">Hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>

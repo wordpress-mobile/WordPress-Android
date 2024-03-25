@@ -158,4 +158,8 @@
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#F2F2F7</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>
+
+    <!-- Post Editing -->
+    <color name="post_editing_updating">#EDD6C5</color>
+
 </resources>

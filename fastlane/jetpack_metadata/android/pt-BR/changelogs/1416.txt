@@ -1,0 +1,7 @@
+24.4:
+- Nova guia Tráfego adicionada à tela Estatísticas
+- Design de notificações atualizado
+- Suporte de bloco de vídeo apresentado para o VideoPress v5
+- Correção de uma falha causada pela rolagem automática do editor de blocos
+- Mensagem de erro fornecida para falhas no envio de vídeo
+- Transparência de imagem removida durante o upload

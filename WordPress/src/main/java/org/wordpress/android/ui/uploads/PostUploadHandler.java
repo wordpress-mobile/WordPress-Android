@@ -341,11 +341,9 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                                 // loosely made knowing the other check ("contains blocks") is in place.
                                 // NOTE: added now first check if this post contains a WP Story and mark it created
                                 // like so.
-                                PostUtils.contentContainsWPStoryGutenbergBlocks(mPost.getContent())
-                                        ? SiteUtils.WP_STORIES_CREATOR_NAME
-                                        : (PostUtils.shouldShowGutenbergEditor(
+                                PostUtils.shouldShowGutenbergEditor(
                                                     mPost.isLocalDraft(), mPost.getContent(), selectedSite
-                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
+                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     }
                 }
                 if (hasGallery()) {
@@ -690,8 +688,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                         event.post, sCurrentUploadingPostAnalyticsProperties);
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                         PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
-                sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_WP_STORIES_BLOCKS_KEY,
-                        PostUtils.contentContainsWPStoryGutenbergBlocks(event.post.getContent()));
                 sCurrentUploadingPostAnalyticsProperties
                         .put(AnalyticsUtils.PROMPT_ID, event.post.getAnsweredPromptId());
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,

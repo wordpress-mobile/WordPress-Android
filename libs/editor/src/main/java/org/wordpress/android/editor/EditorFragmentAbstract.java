@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.automattic.android.tracks.crashlogging.JsException;
+import com.automattic.android.tracks.crashlogging.JsExceptionCallback;
 
 import org.wordpress.android.editor.gutenberg.DialogVisibilityProvider;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -220,12 +222,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         boolean onGutenbergEditorRequestFocalPointPickerTooltipShown();
         String getErrorMessageFromMedia(int mediaId);
         void showJetpackSettings();
-        void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);
-        void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles);
-        void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles);
-        void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
-        void onReplaceStoryEditedBlockActionSent();
-        void onReplaceStoryEditedBlockActionReceived();
         boolean showPreview();
         Map<String, Double> onRequestBlockTypeImpressions();
         void onSetBlockTypeImpressions(Map<String, Double> impressions);
@@ -238,6 +234,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onToggleRedo(boolean isDisabled);
 
         void onBackHandlerButton();
+
+        void onLogJsException(JsException jsException, JsExceptionCallback onSendJsException);
     }
 
     /**

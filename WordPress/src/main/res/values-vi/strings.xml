@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0
 Language: vi_VN
 -->
 <resources>
@@ -544,7 +544,6 @@ Language: vi_VN
     <string name="jetpack_brute_force_allowlist_title">Luôn cho phép những IP</string>
     <string name="site_settings_denylist_title">Cấm bình luận</string>
     <string name="gutenberg_native_add_button_text">Thêm chữ trên nút</string>
-    <string name="stories_intro_main_subtitle">Một cách mới để viết và đăng nội dung trên blog của bạn.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Bỏ qua</string>
     <string name="activity_log_backup_download_notice_download_action">Tải về</string>
     <string name="threat_fix_all_status_success_message_plural">Đã sửa mối đe dọa xong.</string>
@@ -712,7 +711,6 @@ Language: vi_VN
     <string name="request_failed_message">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
     <string name="gutenberg_native_move_to_bottom">Chuyển xuống</string>
     <string name="gutenberg_native_change_block_position">Đổi vị trí khối</string>
-    <string name="label_control_upload">Tải lên</string>
     <string name="jetpack_icon_content_description">Biểu tượng</string>
     <string name="backup_download_complete_info">Chúng tôi cũng sẽ gửi liên kết tải tập tin cho bạn qua email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Nút chia sẻ liên kết</string>
@@ -813,7 +811,6 @@ Language: vi_VN
     <string name="dialog_confirm_copy_local_message">Bài viết mà bạn sao chép có hai phiên bản đang xung đột bởi vì bạn đã chỉnh sửa nhưng chưa lưu.\nSửa bài viết để hết xung đột hoặc tiếp tục sao chép phiên bản từ ứng dụng này.</string>
     <string name="dialog_confirm_copy_local_title">Lỗi đồng bộ bài viết</string>
     <string name="button_copy">Tạo bản sao</string>
-    <string name="toast_edit_story_update_in_progress_title">Đang lưu story, xin chờ…</string>
     <string name="gutenberg_native_file_name">Tên tập tin</string>
     <string name="gutenberg_native_file_block_settings">Thiết lập khối tập tin</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Tải lên tập tin thất bại.\nNhấn để xem tùy chọn.</string>
@@ -831,23 +828,8 @@ Language: vi_VN
     <string name="reader_follow_comments_null_response">Không nhận được phản hồi</string>
     <string name="activity_log_activity_type_filter_clear">Xóa</string>
     <string name="activity_log_activity_type_filter_apply">Áp dụng</string>
-    <string name="dialog_edit_story_unsupported_format_message">Một hoặc nhiều slide đã không được thêm vào Story bởi vì Story không hỗ trợ ảnh GIF. Xin chọn ảnh tĩnh hoặc video thay thế.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Không hỗ trợ ảnh GIF</string>
-    <string name="dialog_edit_story_unrecoverable_message">Không tìm thấy media của story này.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Không thể sửa Story</string>
-    <string name="dialog_edit_story_unavailable_message">Không thể nạp media cho story này. Kiểm tra kết nối mạng và thử lại sau.</string>
-    <string name="dialog_edit_story_unavailable_title">Không thể sửa Story</string>
-    <string name="dialog_edit_story_limited_message">Story này được chỉnh sửa trên thiết bị khác nên khả năng chỉnh sửa có thể bị giới hạn.</string>
-    <string name="dialog_edit_story_limited_title">Giới hạn chỉnh sửa Story</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media đã bị xóa. Thử tạo lại Story khác.</string>
-    <string name="color_picker_label_background">Nền</string>
-    <string name="color_picker_label_text">Chữ</string>
-    <string name="dialog_discard_story_ok_button_edit">Bỏ qua</string>
-    <string name="dialog_discard_story_message_edit">Những thay đổi sẽ không được lưu.</string>
-    <string name="dialog_discard_story_title_edit">Bỏ qua thay đổi?</string>
     <string name="label_done_button">Xong</string>
-    <string name="label_next_button">Tiếp theo</string>
-    <string name="delete_button_alt">Xóa</string>
     <string name="hpp_choose_error">Xảy ra lỗi khi chọn thiết kế.</string>
     <string name="hpp_retry_error">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="hpp_error_subtitle">Nhấn thử lại khi có mạng trở lại.</string>
@@ -897,14 +879,6 @@ Language: vi_VN
     <string name="gutenberg_native_help_button">Nút trợ giúp</string>
     <string name="gutenberg_native_edit_using_web_editor">Sửa bằng trình chỉnh sửa web</string>
     <string name="gutenberg_native_choose_images">Chọn ảnh</string>
-    <string name="stories_intro_create_story_post_label">Tạo bài Story</string>
-    <string name="stories_intro_description_second">Đây là một dạng bài viết mới trên blog của bạn để độc giả không bỏ sót thứ gì từ bạn.</string>
-    <string name="stories_intro_title_second">Bài Story không biến mất</string>
-    <string name="stories_intro_description_first">Ghép ảnh, video và văn bản để tạo tương tác có thể nhấn vào.</string>
-    <string name="stories_intro_title_first">Story cho tất cả mọi người</string>
-    <string name="stories_intro_image_caption_second">Tựa đề story mẫu</string>
-    <string name="stories_intro_image_caption_first">Cách tạo bài story</string>
-    <string name="stories_intro_main_title">Giới thiệu Bài Story</string>
     <string name="mlp_notice_blank_page_created">Đã tạo trang trống</string>
     <string name="mlp_notice_page_created">Đã tạo trang</string>
     <string name="media_insert_failed">Chèn media thất bại.</string>
@@ -925,13 +899,6 @@ Language: vi_VN
     <string name="gutenberg_native_add_this_link">Thêm liên kết này</string>
     <string name="gutenberg_native_add_this_email_link">Thêm email này</string>
     <string name="suggestion_no_connection">Không có kết nối mạng.\nKhông thể tải đề xuất.</string>
-    <string name="typeface_label_shrikhand">Đậm</string>
-    <string name="typeface_label_space_mono">Hiện đại</string>
-    <string name="typeface_label_pacifico">Phóng khoáng</string>
-    <string name="typeface_label_oswald">Mạnh mẽ</string>
-    <string name="typeface_label_libre_baskerville">Cổ điển</string>
-    <string name="typeface_label_nunito">Thông dụng</string>
-    <string name="toast_capture_operation_permission_needed">Bạn cần mở quyền ghi âm âm thanh ứng dụng để quay video</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Đã chọn %s</string>
     <string name="login_get_link_by_email">Đăng nhập bằng email</string>
@@ -958,66 +925,13 @@ Language: vi_VN
     <string name="gutenberg_native_page_title_empty">Tựa đề trang. Trống</string>
     <string name="toast_error_playing_video">Xảy ra lỗi khi phát video</string>
     <string name="camera_error">Thiết bị này không hỗ trợ API Camera2.</string>
-    <string name="toast_error_saving_video">Không thể lưu video</string>
-    <string name="toast_error_saving_image">Lỗi khi lưu ảnh</string>
-    <string name="toast_capture_operation_in_progress">Hệ thống đang xử lý, xin thử lại</string>
-    <string name="toast_story_page_not_found">Không tìm thấy slide Story</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Xem dung lượng lưu trữ</string>
-    <string name="dialog_insufficient_device_storage_error_message">Chúng tôi cần lưu Story trên thiết bị của bạn trước đăng. Xem lại thiết lập dung lượng lưu trữ và xóa bớt tập tin để có thêm dung lượng.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Dung lượng thiết bị không đủ</string>
-    <string name="dialog_story_saving_error_message">Thử lưu lại hoặc xóa slide, sau đó đăng Story lại lần nữa.</string>
-    <string name="dialog_story_saving_error_title_plural">Không thể lưu %1$d slide</string>
-    <string name="dialog_story_saving_error_title_singular">Không thể lưu 1 slide</string>
-    <string name="story_saving_failed_quick_action_manage">Quản lý</string>
-    <string name="story_saving_failed_message_plural">Yêu cầu hành động trên %1$d slide</string>
-    <string name="story_saving_failed_message_singular">Yêu cầu hành động trên 1 slide</string>
-    <string name="story_saving_failed_title">Không thể tải lên \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Không thể tải lên \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">Đã đăng \"%1$s\"</string>
-    <string name="story_saving_snackbar_started">Đang tải lên \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Còn lại %1$d slide</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Còn lại 1 slide</string>
-    <string name="story_saving_title_several">nhiều story</string>
-    <string name="story_saving_title">Đang lưu \"%1$s\"…</string>
-    <string name="story_saving_untitled">Chưa có tựa đề</string>
-    <string name="dialog_discard_story_ok_button">Hủy</string>
-    <string name="dialog_discard_story_message">Story của bạn sẽ không được lưu thành nháp.</string>
-    <string name="dialog_discard_story_title">Hủy story?</string>
-    <string name="dialog_discard_page_ok_button">Xóa</string>
-    <string name="dialog_discard_errored_page_message">Chưa lưu slide này. Nếu bạn xóa slide, những sửa đổi trên đó sẽ bị mất hết.</string>
-    <string name="dialog_discard_page_message">Slide này sẽ bị xóa khỏi story.</string>
-    <string name="dialog_discard_page_title">Xóa slide story?</string>
-    <string name="label_text_color_button">Đổi màu chữ</string>
-    <string name="label_text_alignment_button">Đổi căn lề</string>
-    <string name="label_frame_errored">có lỗi</string>
-    <string name="label_frame_selected_border">đã chọn</string>
-    <string name="label_frame_unselected_border">bỏ chọn</string>
-    <string name="label_frame_image">Slide</string>
-    <string name="label_retry_icon">Thử lại</string>
-    <string name="label_saved_icon">Đã lưu</string>
     <string name="label_close_button">Đóng</string>
-    <string name="label_share_to">Chia sẻ tới</string>
-    <string name="label_snackbar_share">CHIA SẺ</string>
-    <string name="label_snackbar_loop_frame_saved">Lưu thành hình ảnh</string>
-    <string name="label_control_retry">Thử lại</string>
-    <string name="label_control_saved">Đã lưu</string>
-    <string name="label_control_saving">Đang lưu</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Lật</string>
-    <string name="sound_button_alt">Âm thanh</string>
-    <string name="text_button_alt">Văn bản</string>
-    <string name="stickers_button_alt">Sticker</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">Lật camera</string>
-    <string name="capture_button_alt">Quay</string>
     <string name="mlp_preview_page">Xem trước</string>
     <string name="mlp_create_page">Tạo trang</string>
     <string name="mlp_create_blank_page">Tạo trang trống</string>
     <string name="mlp_choose_layout_subtitle">Bắt đầu bằng cách chọn một trong những bố cục cho sẵn. Hoặc tạo một trang trống.</string>
     <string name="mlp_choose_layout_title">Chọn bố cục</string>
     <string name="prepublishing_nudges_story_title_hint">Đặt tựa đề story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Tạo bài viết hoặc story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Tạo bài viết, trang hoặc story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Chọn từ thiết bị</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>

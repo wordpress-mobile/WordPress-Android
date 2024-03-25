@@ -1,0 +1,6 @@
+24.4:
+Wir haben ein paar Änderungen am Block-Editor vorgenommen.
+
+- Die App stürzt nicht mehr ab, wenn der Editor automatisch nach unten zu einem Block scrollt.
+- Du bekommst jetzt eine Fehlermeldung, wenn ein Video nicht in Medien- und Textblöcke hochgeladen werden kann.
+- Bilder erscheinen nicht mehr teilweise transparent, während sie hochgeladen werden.

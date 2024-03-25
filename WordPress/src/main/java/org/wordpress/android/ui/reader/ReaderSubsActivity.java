@@ -41,6 +41,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedBlogsFetched;
 import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -211,9 +212,11 @@ public class ReaderSubsActivity extends LocaleAwareActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
-        AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
-        getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+    public void onEventMainThread(FollowedBlogsFetched event) {
+        if (event.didChange()) {
+            AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
+            getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+        }
     }
 
     private void performUpdate() {
@@ -297,7 +300,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_subscribed));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_following));
             return;
         }
 
@@ -558,7 +561,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags_title);
+                    return getString(R.string.reader_page_followed_tags_text_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs_title);
                 default:

@@ -82,10 +82,8 @@ class TrafficOverviewMapper @Inject constructor(
     fun buildChart(
         dates: List<VisitsAndViewsModel.PeriodData>,
         statsGranularity: StatsGranularity,
-        onBarSelected: (String?) -> Unit,
         onBarChartDrawn: (visibleBarCount: Int) -> Unit,
-        selectedType: Int,
-        selectedItemPeriod: String
+        selectedType: Int
     ): List<BlockListItem> {
         val chartItems = dates.map {
             val value = when (SelectedType.valueOf(selectedType)) {
@@ -116,15 +114,7 @@ class TrafficOverviewMapper @Inject constructor(
             chartItems
         )
 
-        result.add(
-            BlockListItem.TrafficBarChartItem(
-                chartItems,
-                selectedItem = selectedItemPeriod,
-                onBarSelected = onBarSelected,
-                onBarChartDrawn = onBarChartDrawn,
-                entryContentDescriptions = contentDescriptions
-            )
-        )
+        result.add(BlockListItem.TrafficBarChartItem(chartItems, onBarChartDrawn, contentDescriptions))
         return result
     }
 }

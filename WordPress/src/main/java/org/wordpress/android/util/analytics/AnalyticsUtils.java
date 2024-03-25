@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -77,7 +76,6 @@ public class AnalyticsUtils {
     private static final String CAUSE_OF_ISSUE_KEY = "cause_of_issue";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
-    public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     public static final String PROMPT_ID = "prompt_id";
@@ -519,7 +517,7 @@ public class AnalyticsUtils {
         }
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
-        properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
+        properties.put("action", stat.getEventName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT, properties);
     }
 

@@ -61,16 +61,6 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         }
     }
 
-    override fun onResume() {
-        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-            "arguments can't be null."
-        }
-        if (isStoryPost) {
-            requireActivity().window.decorView.requestLayout()
-        }
-        super.onResume()
-    }
-
     private fun PostPrepublishingHomeFragmentBinding.setupRecyclerView() {
         val adapter = PrepublishingHomeAdapter(requireActivity())
         // use WrappingLinearLayoutManager to properly handle recycler with wrap_content height
@@ -100,11 +90,6 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
         viewModel = ViewModelProvider(this@PrepublishingHomeFragment, viewModelFactory)
             .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.storyTitleUiState.observe(viewLifecycleOwner) { storyTitleUiState ->
-            uiHelpers.updateVisibility(storyTitleHeaderView, true)
-            storyTitleHeaderView.init(uiHelpers, imageManager, storyTitleUiState)
-        }
-
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
             uiState?.let { (actionsRecyclerView.adapter as PrepublishingHomeAdapter).update(it) }
         }
@@ -117,11 +102,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
             actionClickedListener?.onSubmitButtonClicked(publishPost)
         }
 
-        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-            "arguments can't be null."
-        }
-
-        viewModel.start(getEditPostRepository(), getSite(), isStoryPost)
+        viewModel.start(getEditPostRepository(), getSite())
     }
 
     private fun setupJetpackSocialViewModel() {
@@ -168,13 +149,7 @@ class PrepublishingHomeFragment : Fragment(R.layout.post_prepublishing_home_frag
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
-        const val IS_STORY_POST = "prepublishing_home_fragment_is_story_post"
 
-        fun newInstance(isStoryPost: Boolean) =
-            PrepublishingHomeFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(IS_STORY_POST, isStoryPost)
-                }
-            }
+        fun newInstance() = PrepublishingHomeFragment()
     }
 }

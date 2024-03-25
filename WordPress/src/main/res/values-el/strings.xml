@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-06-13 08:27:23+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.0
 Language: el_GR
 -->
 <resources>
@@ -43,14 +43,10 @@ Language: el_GR
     <string name="gutenberg_native_error">Σφάλμα </string>
     <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
     <string name="button_copy">Διπλότυπο</string>
-    <string name="toast_edit_story_update_in_progress_title">Η ιστορία αποθηκευεται, παρακαλούμε περιμένετε…</string>
     <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
     <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
     <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
     <string name="label_done_button">Ολοκληρώθηκε</string>
-    <string name="dialog_discard_story_title_edit">Απόρριψη αλλαγών;</string>
-    <string name="dialog_discard_story_ok_button_edit">Απόρριψη</string>
-    <string name="color_picker_label_background">Φόντο</string>
     <string name="prepublishing_nudges_add_category_button">Προσθήκη κατηγορίας</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Προσθήκη Νέας Κατηγορίας</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Κατηγορίες</string>
@@ -59,7 +55,6 @@ Language: el_GR
     <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
     <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
     <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
-    <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>

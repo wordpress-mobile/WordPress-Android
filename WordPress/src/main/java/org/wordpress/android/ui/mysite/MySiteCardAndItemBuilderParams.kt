@@ -34,21 +34,6 @@ sealed class MySiteCardAndItemBuilderParams {
         val isStaleMessagePresent: Boolean
     ) : MySiteCardAndItemBuilderParams()
 
-    data class QuickLinkRibbonBuilderParams(
-        val siteModel: SiteModel,
-        val onPagesClick: () -> Unit,
-        val onPostsClick: () -> Unit,
-        val onMediaClick: () -> Unit,
-        val onStatsClick: () -> Unit,
-        val onMoreClick: () -> Unit,
-        val activeTask: QuickStartTask?,
-    ) : MySiteCardAndItemBuilderParams()
-
-    data class DomainRegistrationCardBuilderParams(
-        val isDomainCreditAvailable: Boolean,
-        val domainRegistrationClick: () -> Unit
-    ) : MySiteCardAndItemBuilderParams()
-
     data class QuickStartCardBuilderParams(
         val quickStartCategories: List<QuickStartCategory>,
         val onQuickStartTaskTypeItemClick: (type: QuickStartTaskType) -> Unit,
@@ -59,20 +44,6 @@ sealed class MySiteCardAndItemBuilderParams {
             val onHideThisMenuItemClick: (type: QuickStartCardType) -> Unit,
         )
     }
-
-    data class DashboardCardsBuilderParams(
-        val showErrorCard: Boolean = false,
-        val onErrorRetryClick: () -> Unit,
-        val todaysStatsCardBuilderParams: TodaysStatsCardBuilderParams,
-        val postCardBuilderParams: PostCardBuilderParams,
-        val bloganuaryNudgeCardBuilderParams: BloganuaryNudgeCardBuilderParams,
-        val bloggingPromptCardBuilderParams: BloggingPromptCardBuilderParams,
-        val blazeCardBuilderParams: BlazeCardBuilderParams? = null,
-        val dashboardCardPlansBuilderParams: DashboardCardPlansBuilderParams,
-        val pagesCardBuilderParams: PagesCardBuilderParams,
-        val activityCardBuilderParams: ActivityCardBuilderParams,
-        val dynamicCardsBuilderParams: DynamicCardsBuilderParams,
-    ) : MySiteCardAndItemBuilderParams()
 
     data class TodaysStatsCardBuilderParams(
         val todaysStatsCard: TodaysStatsCardModel?,
@@ -188,7 +159,7 @@ sealed class MySiteCardAndItemBuilderParams {
         data class CampaignWithBlazeCardBuilderParams(
             val campaign: BlazeCampaignModel,
             val onCreateCampaignClick: () -> Unit,
-            val onCampaignClick: (campaignId: Int) -> Unit,
+            val onCampaignClick: (campaignId: String) -> Unit,
             val onCardClick: () -> Unit,
             val moreMenuParams: MoreMenuParams
         ) : BlazeCardBuilderParams() {
@@ -212,12 +183,6 @@ sealed class MySiteCardAndItemBuilderParams {
         @StringRes val textResource: Int,
         @DrawableRes val imageResource: Int,
         val onActionClick: () -> Unit
-    )
-
-    data class JetpackInstallFullPluginCardBuilderParams(
-        val site: SiteModel,
-        val onLearnMoreClick: () -> Unit,
-        val onHideMenuItemClick: () -> Unit,
     )
 
     data class PersonalizeCardBuilderParams(

@@ -10,7 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.eventToList
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.util.config.InAppReviewsFeatureConfig
 import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
@@ -18,9 +17,6 @@ class ReviewViewModelTest {
     @Rule
     @JvmField
     val rule = InstantTaskExecutorRule()
-
-    @Mock
-    lateinit var inAppReviewsFeatureConfig: InAppReviewsFeatureConfig
 
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -31,8 +27,7 @@ class ReviewViewModelTest {
 
     @Before
     fun setup() {
-        whenever(inAppReviewsFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel = ReviewViewModel(appPrefsWrapper, inAppReviewsFeatureConfig)
+        viewModel = ReviewViewModel(appPrefsWrapper)
         events = mutableListOf()
         events = viewModel.launchReview.eventToList()
     }

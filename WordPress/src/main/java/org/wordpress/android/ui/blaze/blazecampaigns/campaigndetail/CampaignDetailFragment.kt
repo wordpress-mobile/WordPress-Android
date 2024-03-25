@@ -54,10 +54,10 @@ private const val CAMPAIGN_DETAIL_CAMPAIGN_ID = "campaign_detail_campaign_id"
 @AndroidEntryPoint
 class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignDetailWebViewClientListener {
     companion object {
-        fun newInstance(campaignId: Int, source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
+        fun newInstance(campaignId: String, source: CampaignDetailPageSource) = CampaignDetailFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(CAMPAIGN_DETAIL_PAGE_SOURCE, source)
-                putInt(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
+                putString(CAMPAIGN_DETAIL_CAMPAIGN_ID, campaignId)
             }
         }
     }
@@ -110,7 +110,7 @@ class CampaignDetailFragment : Fragment(), CampaignDetailWebViewClient.CampaignD
             ?: CampaignDetailPageSource.UNKNOWN
     }
 
-    private fun getCampaignId() = requireArguments().getInt(CAMPAIGN_DETAIL_CAMPAIGN_ID)
+    private fun getCampaignId() = requireArguments().getString(CAMPAIGN_DETAIL_CAMPAIGN_ID) ?: ""
 
     override fun onRedirectToExternalBrowser(url: String) = viewModel.onRedirectToExternalBrowser(url)
 

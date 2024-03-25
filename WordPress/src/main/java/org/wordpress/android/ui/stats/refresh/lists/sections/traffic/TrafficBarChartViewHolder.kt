@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
@@ -42,24 +41,8 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val barCount = chart.draw(item)
             if (hasData(item.entries)) {
                 chart.post {
-                    val accessibilityEvent = object : BarChartAccessibilityHelper.BarChartAccessibilityEvent {
-                        override fun onHighlight(
-                            entry: BarEntry,
-                            index: Int
-                        ) {
-                            val value = entry.data as? String
-                            value?.let {
-                                item.onBarSelected?.invoke(it)
-                            }
-                        }
-                    }
-
                     val cutContentDescriptions = takeEntriesWithinGraphWidth(barCount, item.entryContentDescriptions)
-                    accessibilityHelper = BarChartAccessibilityHelper(
-                        chart,
-                        contentDescriptions = cutContentDescriptions,
-                        accessibilityEvent = accessibilityEvent
-                    )
+                    accessibilityHelper = BarChartAccessibilityHelper(chart, cutContentDescriptions)
 
                     ViewCompat.setAccessibilityDelegate(chart, accessibilityHelper)
                 }
@@ -69,20 +52,23 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun BarChart.draw(item: BlockListItem.TrafficBarChartItem): Int {
         resetChart()
+        val dataSet = getData(item)
+        val dataSets = mutableListOf<IBarDataSet>()
+        dataSets.add(dataSet)
 
-        data = BarData(getData(item))
+        data = BarData(dataSets)
 
         configureChartView()
         configureYAxis(item)
         configureXAxis(item)
 
         invalidate()
-        return data.dataSets.size
+        return dataSet.entryCount
     }
 
     private fun hasData(entries: List<Bar>) = entries.isNotEmpty() && entries.any { it.value > 0 }
 
-    private fun getData(item: BlockListItem.TrafficBarChartItem): List<IBarDataSet> {
+    private fun getData(item: BlockListItem.TrafficBarChartItem): IBarDataSet {
         val minColumnCount = 5
 
         val graphWidth = DisplayUtils.pxToDp(chart.context, chart.width)
@@ -97,10 +83,8 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             buildEmptyDataSet(chart.context, cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
-        val dataSets = mutableListOf<IBarDataSet>()
-        dataSets.add(dataSet)
 
-        return dataSets
+        return dataSet
     }
 
     private fun configureChartView() {
@@ -118,7 +102,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
             extraRightOffset = 8f
 
-            animateY(1000, Easing.EaseInSine)
+            animateY(250)
         }
     }
 
@@ -193,6 +177,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.blue_50)
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
