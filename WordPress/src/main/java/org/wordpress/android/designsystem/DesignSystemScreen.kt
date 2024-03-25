@@ -32,7 +32,8 @@ enum class DesignSystemScreen {
     Start,
     Foundation,
     Components,
-    Colors
+    Colors,
+    Fonts
 }
 
 @Composable
@@ -66,6 +67,7 @@ private fun getTitleForRoute(route: String): String {
         "Foundation" -> "Foundation"
         "Components" -> "Components"
         "Colors" -> "Colors"
+        "Fonts" -> "Fonts"
         else -> ""
     }
 }
@@ -126,6 +128,13 @@ fun DesignSystem(
             }
             composable(route = DesignSystemScreen.Colors.name) {
                 DesignSystemColorsScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                )
+            }
+            composable(route = DesignSystemScreen.Fonts.name) {
+                DesignSystemFontsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)

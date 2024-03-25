@@ -9,7 +9,7 @@ import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 
-class SiteInfoHeaderCardViewholder(
+class SiteInfoHeaderCardViewHolder(
     parent: ViewGroup,
     private val imageManager: ImageManager
 ) : MySiteCardAndItemViewHolder<MySiteInfoHeaderCardBinding>(parent.viewBinding(MySiteInfoHeaderCardBinding::inflate)) {

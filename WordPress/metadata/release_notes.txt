@@ -1,3 +1,1 @@
-* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
-* [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
-
+The best things in life are worth the wait, like fresh-baked cookies, your coffee order, and the latest releases from your favorite app. (That’s us. See you next update.)
