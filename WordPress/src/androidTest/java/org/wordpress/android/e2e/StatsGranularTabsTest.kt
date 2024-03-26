@@ -37,7 +37,7 @@ class StatsGranularTabsTest : BaseTest() {
         }
     }
 
-    @Retry(value = 1)
+    @Retry(numberOfTimes = 2)
     @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")

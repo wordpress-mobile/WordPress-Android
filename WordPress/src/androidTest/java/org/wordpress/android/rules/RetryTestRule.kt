@@ -18,7 +18,7 @@ class RetryTestRule : TestRule {
                 val retry = description?.getAnnotation(Retry::class.java)
                 if (retry != null) {
                     var lastThrown: Throwable? = null
-                    for (i in 0..retry.value) {
+                    for (i in 0..retry.numberOfTimes) {
                         try {
                             base?.evaluate()
                             return
