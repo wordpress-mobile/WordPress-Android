@@ -2,9 +2,7 @@
 
 package org.wordpress.android.ui.posts.services
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import com.bumptech.glide.request.target.BaseTarget
 import org.junit.Before

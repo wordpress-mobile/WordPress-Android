@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitemonitor
 
 import android.net.Uri
 import android.webkit.WebResourceRequest
-import android.webkit.WebView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -12,7 +11,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import android.webkit.WebResourceError
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
