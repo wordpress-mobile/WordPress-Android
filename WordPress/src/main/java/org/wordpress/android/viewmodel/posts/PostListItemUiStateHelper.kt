@@ -32,7 +32,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.HtmlUtils
-import org.wordpress.android.util.config.ViewPostListPostOnReaderActivityFeatureConfig
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.NothingToUpload
@@ -77,7 +76,6 @@ class PostListItemUiStateHelper @Inject constructor(
     private val labelColorUseCase: PostPageListLabelColorUseCase,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
-    private val viewOwnPostListPostOnReader: ViewPostListPostOnReaderActivityFeatureConfig
 ) {
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
@@ -440,7 +438,7 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowViewButton) {
             buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
-            if (viewOwnPostListPostOnReader.isEnabled() && BuildConfig.IS_JETPACK_APP) {
+            if (BuildConfig.IS_JETPACK_APP) {
                 buttonTypes.addReadAction(isLocalDraft || isLocallyChanged)
             }
         }

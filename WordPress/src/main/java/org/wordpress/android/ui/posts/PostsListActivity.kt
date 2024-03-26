@@ -275,7 +275,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    blazeFeatureUtils,
+                    blazeFeatureUtils
                 )
             }
         }
