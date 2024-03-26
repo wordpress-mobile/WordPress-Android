@@ -90,7 +90,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
         if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
             _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+            _onNavigation.value = Event(SiteNavigationAction.OpenStatsByDay(selectedSite))
         }
     }
 

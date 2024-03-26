@@ -654,10 +654,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
 
-        is SiteNavigationAction.OpenStatsInsights -> ActivityLauncher.viewBlogStatsForTimeframe(
+        is SiteNavigationAction.OpenStatsByDay -> ActivityLauncher.viewBlogStatsForTimeframe(
             requireActivity(),
             action.site,
-            StatsTimeframe.INSIGHTS,
+            StatsTimeframe.DAY,
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
