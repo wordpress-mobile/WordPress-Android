@@ -14,7 +14,6 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
-import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -421,23 +420,23 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     private fun newPostSetup(title: String? = null, content: String? = null) {
         isNewPost = true
-            if (!siteModel.isVisible) {
-                showErrorAndFinish(R.string.error_blog_hidden)
-                return
-            }
-            // Create a new post
-            editPostRepository.set {
-                val post = postStore.instantiatePostModel(
-                    siteModel, isPage, title, content,
-                    PostStatus.DRAFT.toString(), null, null, false
-                )
-                post
-            }
-            editPostRepository.savePostSnapshot()
-            EventBus.getDefault().postSticky(
-                PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
+        if (!siteModel.isVisible) {
+            showErrorAndFinish(R.string.error_blog_hidden)
+            return
+        }
+        // Create a new post
+        editPostRepository.set {
+            val post = postStore.instantiatePostModel(
+                siteModel, isPage, title, content,
+                PostStatus.DRAFT.toString(), null, null, false
             )
-            shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
+            post
+        }
+        editPostRepository.savePostSnapshot()
+        EventBus.getDefault().postSticky(
+            PostOpenedInEditor(editPostRepository.localSiteId, editPostRepository.id)
+        )
+        shortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST)
     }
 
     private fun newPostFromShareAction() {
@@ -2164,99 +2163,102 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("LongMethod")
     private fun uploadPost(publishPost: Boolean) {
-        val lambda: (UpdatePostResult?) -> Unit = fun( unusedUpdatePostResult: UpdatePostResult?) {
-            // todo: annmarie temporarily access the unused parameter - this will be addressed separately
-            AppLog.d(
-                AppLog.T.POSTS,
-                "UnusedUpdatePostResult: " + unusedUpdatePostResult?.javaClass?.simpleName
-            )
-            val account: AccountModel = accountStore.account
-            // prompt user to verify e-mail before publishing
-            if (!account.emailVerified) {
-                storePostViewModel.hideSavingProgressDialog()
-                val message: String =
-                    if (TextUtils.isEmpty(account.email)) getString(R.string.editor_confirm_email_prompt_message)
-                    else String.format(
-                        getString(R.string.editor_confirm_email_prompt_message_with_email),
-                        account.email
-                    )
-                val builder: AlertDialog.Builder = MaterialAlertDialogBuilder(this)
-                builder.setTitle(R.string.editor_confirm_email_prompt_title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok
-                    ) { _, _ ->
-                        ToastUtils.showToast(
-                            this@EditPostActivity,
-                            getString(R.string.toast_saving_post_as_draft)
-                        )
-                        savePostAndOptionallyFinish(doFinish = true, forceSave = false)
-                    }
-                    .setNegativeButton(
-                        R.string.editor_confirm_email_prompt_negative
-                    ) { _, _ ->
-                        dispatcher
-                            .dispatch(AccountActionBuilder.newSendVerificationEmailAction())
-                    }
-                builder.create().show()
-                return
-            }
-            editPostRepository.getPost()?.let {
-                if (!postUtilsWrapper.isPublishable(it)) {
-                    storePostViewModel.hideSavingProgressDialog()
-                    // TODO we don't want to show "publish" message when the user clicked on eg. save
-                    editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
-                    runOnUiThread {
-                        val message: String = getString(
-                            if (isPage) R.string.error_publish_empty_page else R.string.error_publish_empty_post
-                        )
-                        ToastUtils.showToast(
-                            this@EditPostActivity,
-                            message,
-                            ToastUtils.Duration.SHORT
-                        )
-                    }
-                    return
+        updateAndSavePostAsyncOnEditorExit(object : OnPostUpdatedFromUIListener {
+            override fun onPostUpdatedFromUI(updatePostResult: UpdatePostResult) {
+                if (shouldPerformPostUpdateAndPublish()) {
+                    performPostUpdateAndPublish(publishPost)
                 }
             }
-
-            storePostViewModel.showSavingProgressDialog()
-            val isFirstTimePublish: Boolean = isFirstTimePublish(publishPost)
-            editPostRepository.updateAsync({ postModel: PostModel ->
-                if (publishPost) {
-                    // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
-                    // otherwise we'd have an incorrect value
-                    // also re-set the published date in case it was SCHEDULED and they want to publish NOW
-                    if ((postModel.status == PostStatus.SCHEDULED.toString())) {
-                        postModel.setDateCreated(dateTimeUtils.currentTimeInIso8601())
-                    }
-                    if (uploadUtilsWrapper.userCanPublish(site)) {
-                        postModel.setStatus(PostStatus.PUBLISHED.toString())
-                    } else {
-                        postModel.setStatus(PostStatus.PENDING.toString())
-                    }
-                    postEditorAnalyticsSession?.setOutcome(Outcome.PUBLISH)
-                } else {
-                    postEditorAnalyticsSession?.setOutcome(Outcome.SAVE)
-                }
-                AppLog.d(
-                    AppLog.T.POSTS,
-                    "User explicitly confirmed changes. Post Title: " + postModel.title
+        })
+    }
+    private fun shouldPerformPostUpdateAndPublish() : Boolean {
+        val account: AccountModel = accountStore.account
+        // prompt user to verify e-mail before publishing
+        if (!account.emailVerified) {
+            storePostViewModel.hideSavingProgressDialog()
+            val message: String =
+                if (TextUtils.isEmpty(account.email)) getString(R.string.editor_confirm_email_prompt_message)
+                else String.format(
+                    getString(R.string.editor_confirm_email_prompt_message_with_email),
+                    account.email
                 )
-                // the user explicitly confirmed an intention to upload the post
-                postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode())
-                true
-            }) { _: PostImmutableModel?, result: UpdatePostResult ->
-                if (result === Updated) {
-                    val activityFinishState: ActivityFinishState = savePostOnline(isFirstTimePublish)
-                    storePostViewModel.finish(activityFinishState)
+            val builder: AlertDialog.Builder = MaterialAlertDialogBuilder(this)
+            builder.setTitle(R.string.editor_confirm_email_prompt_title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok
+                ) { _, _ ->
+                    ToastUtils.showToast(
+                        this@EditPostActivity,
+                        getString(R.string.toast_saving_post_as_draft)
+                    )
+                    savePostAndOptionallyFinish(doFinish = true, forceSave = false)
                 }
-            }
+                .setNegativeButton(
+                    R.string.editor_confirm_email_prompt_negative
+                ) { _, _ ->
+                    dispatcher
+                        .dispatch(AccountActionBuilder.newSendVerificationEmailAction())
+                }
+            builder.create().show()
+            return false
         }
 
-        // Convert the function to OnPostUpdatedFromUIListener and pass it to the method
-        updateAndSavePostAsyncOnEditorExit(lambdaToListener(lambda))
+        editPostRepository.getPost()?.let {
+            if (!postUtilsWrapper.isPublishable(it)) {
+                storePostViewModel.hideSavingProgressDialog()
+                // TODO we don't want to show "publish" message when the user clicked on eg. save
+                editPostRepository.updateStatusFromPostSnapshotWhenEditorOpened()
+                runOnUiThread {
+                    val message: String = getString(
+                        if (isPage) R.string.error_publish_empty_page else R.string.error_publish_empty_post
+                    )
+                    ToastUtils.showToast(
+                        this@EditPostActivity,
+                        message,
+                        ToastUtils.Duration.SHORT
+                    )
+                }
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun performPostUpdateAndPublish(publishPost: Boolean) {
+        storePostViewModel.showSavingProgressDialog()
+        val isFirstTimePublish: Boolean = isFirstTimePublish(publishPost)
+        editPostRepository.updateAsync( { postModel: PostModel ->
+            if (publishPost) {
+                // now set status to PUBLISHED - only do this AFTER we have run the isFirstTimePublish() check,
+                // otherwise we'd have an incorrect value
+                // also re-set the published date in case it was SCHEDULED and they want to publish NOW
+                if ((postModel.status == PostStatus.SCHEDULED.toString())) {
+                    postModel.setDateCreated(dateTimeUtils.currentTimeInIso8601())
+                }
+                if (uploadUtilsWrapper.userCanPublish(site)) {
+                    postModel.setStatus(PostStatus.PUBLISHED.toString())
+                } else {
+                    postModel.setStatus(PostStatus.PENDING.toString())
+                }
+                postEditorAnalyticsSession?.setOutcome(Outcome.PUBLISH)
+            } else {
+                postEditorAnalyticsSession?.setOutcome(Outcome.SAVE)
+            }
+            AppLog.d(
+                AppLog.T.POSTS,
+                "User explicitly confirmed changes. Post Title: " + postModel.title
+            )
+            // the user explicitly confirmed an intention to upload the post
+            postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode())
+            true
+        } ) 
+        { _: PostImmutableModel?, result: UpdatePostResult ->
+            if (result === Updated) {
+                val activityFinishState: ActivityFinishState = savePostOnline(isFirstTimePublish)
+                storePostViewModel.finish(activityFinishState)
+            }
+        }
     }
 
     private fun savePostAndOptionallyFinish(doFinish: Boolean, forceSave: Boolean) {
@@ -2735,7 +2737,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
             updateFeaturedImageUseCase.updateFeaturedImage(
                 mediaId, postRepository
-            ) { _: PostImmutableModel? -> // todo: annmarie should this be handled some how ? null
+            ) { _: PostImmutableModel? ->
              }
         } else if (editPostSettingsFragment != null) {
             editPostSettingsFragment?.updateFeaturedImage(mediaId, imagePicked)
