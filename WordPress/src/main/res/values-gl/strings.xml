@@ -22,7 +22,6 @@ Language: gl_ES
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Os blogs aos que estás subscrito non publicaron nada recientemente</string>
     <string name="reader_no_followed_blogs_description_subs">Subscríbete a blogs en Descubrir ou busca un blog que xa che guste.</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Utiliza &lt;b&gt;Descubrir&lt;/b&gt; para encontrar sitios e etiquetas. Proba a seleccionar &lt;b&gt;Subscricións&lt;/b&gt; para ver o contido subscrito e xestionar as túas subscricións.</string>
-    <string name="reader_no_followed_tags_title">Non hai subscricións a etiquetas</string>
     <string name="reader_no_recommended_blogs_title">Non hai blogs recomendados</string>
     <string name="reader_no_posts_with_this_tag">Non hai entradas con esta etiqueta</string>
     <string name="reader_toast_err_unable_to_block_blog">Non se puido bloquear este blog</string>
@@ -33,7 +32,6 @@ Language: gl_ES
     <string name="reader_label_subscribers_count_single">1 subscritor</string>
     <string name="reader_label_choose_interests">Elixe os teus intereses</string>
     <string name="reader_toast_err_show_blog">Non se pode amosar este blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Xa estás subscrito a esta etiqueta</string>
     <string name="reader_toast_err_already_follow_this_blog">Xa estás subscrito a este blog.</string>
     <string name="reader_activity_title_tag_preview">Etiqueta</string>
     <string name="reader_btn_subscribe">Subscribirse</string>
@@ -45,12 +43,10 @@ Language: gl_ES
     <string name="reader_label_subscribe_count">%,d subscritores</string>
     <string name="reader_label_blog_subscribed">Blog subscrito</string>
     <string name="reader_menu_block_this_blog">Bloquear este blog</string>
-    <string name="reader_page_followed_tags_title">Etiquetas subscritas</string>
     <string name="reader_page_followed_blogs_title">Blogs subscritos</string>
     <string name="reader_menu_tags_and_blogs">Editar etiquetas e blogs</string>
     <string name="reader_activity_title_manage_tags_blogs">Xestionar etiquetas e blogs</string>
     <string name="reader_hint_search_subscribed_blogs">Buscar blogs subscritos</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Introduce unha URL ou etiqueta á que subscribirte</string>
     <string name="reader_filter_chip_tag_one">1 etiqueta</string>
     <string name="reader_dropdown_menu_lists">Listas</string>
     <string name="reader_dropdown_menu_liked">Gustoume</string>
@@ -65,13 +61,8 @@ Language: gl_ES
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_subscriptions">Subscricións</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribirse a etiquetas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Subscribirse a unha etiqueta</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs aos que subscribirse</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Subscríbete a etiquetas para descubrir novos blogs</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Intenta subscribirte a máis etiquetas para ampliar a busca</string>
-    <string name="reader_filter_empty_tags_list_text">Subscríbete a unha etiqueta e poderás ve as mellores publicacións asociadas a ela.</string>
     <string name="reader_filter_empty_tags_list_title">Sen etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Subscríbete a blogs en Descubrir e verás as súas últimas publicacións aquí. Ou busca un blog que xa che guste.</string>
     <string name="reader_filter_by_tag_title">Filtrar por etiqueta</string>
@@ -79,7 +70,6 @@ Language: gl_ES
     <string name="reader_filter_empty_blogs_action">Subscríbete a un blog</string>
     <string name="reader_filter_empty_blogs_list_title">Non hai subscricións ao blog</string>
     <string name="reader_filter_empty_blogs_list">Ver as últimas entradas dos blogs aos que estás subscrito</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Podes subscribirte a publicacións sobre un tema específico engadindo unha etiqueta</string>
     <string name="stats_timeframe_by_day">Por día</string>
     <string name="stats_timeframe_by_year">Por ano</string>
     <string name="stats_timeframe_by_week">Por semana</string>

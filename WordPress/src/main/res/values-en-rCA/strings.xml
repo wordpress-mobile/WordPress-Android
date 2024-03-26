@@ -28,7 +28,6 @@ Language: en_CA
     <string name="site_monitoring_tab_title_metrics">Metrics</string>
     <string name="site_monitoring_tab_title_php_logs">PHP Logs</string>
     <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
-    <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_posts_with_this_tag">No posts with this tag</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_toast_err_follow_not_authorized_to_access_blog">You are not authorized to access this blog</string>
@@ -40,13 +39,11 @@ Language: en_CA
     <string name="reader_label_subscribers_count_single">1 subscriber</string>
     <string name="reader_toast_err_already_follow_this_blog">You are already subscribed to this blog</string>
     <string name="reader_toast_err_show_blog">Unable to show this blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">You\'re already subscribed to this tag</string>
     <string name="reader_activity_title_blog_preview">Reader Blog</string>
     <string name="reader_activity_title_manage_tags_blogs">Manage Tags &amp; Blogs</string>
     <string name="reader_activity_title_tag_preview">Tag</string>
     <string name="reader_btn_subscribe">Subscribe</string>
     <string name="reader_btn_subscribed">Subscribed</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Enter a URL or tag to subscribe to</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
     <string name="reader_label_blog_subscribed">Blog subscribed</string>
     <string name="reader_label_subscribe_count">%,d Subscribers</string>
@@ -54,12 +51,8 @@ Language: en_CA
     <string name="reader_menu_block_this_blog">Block this blog</string>
     <string name="reader_menu_tags_and_blogs">Edit tags and blogs</string>
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
-    <string name="reader_page_followed_tags_title">Subscribed tags</string>
     <string name="reader_subscribed_display_name">Subscribed</string>
     <string name="reader_title_tags">Follow tags</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Subscribe to tags to discover new blogs</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribe to tags</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs to subscribe to</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_discover">Discover</string>
@@ -74,9 +67,7 @@ Language: en_CA
     <string name="reader_filter_chip_tag_other">%d Tags</string>
     <string name="reader_filter_chip_tag_zero">0 Tags</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Subscribe to a tag</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
-    <string name="reader_filter_empty_tags_list_text">Subscribe to a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_search_content_description">Search</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
@@ -85,7 +76,6 @@ Language: en_CA
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
-    <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="stats_timeframe_by_day">By day</string>
     <string name="stats_timeframe_by_month">By month</string>
     <string name="stats_timeframe_by_week">By week</string>
