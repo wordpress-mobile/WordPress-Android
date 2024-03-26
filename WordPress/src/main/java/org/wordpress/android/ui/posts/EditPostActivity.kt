@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION", "NestedBlockDepth", "ComplexCondition", "SwallowedException",
+@file:Suppress("DEPRECATION", "ComplexCondition", "SwallowedException",
     "TooGenericExceptionCaught", "ReturnCount")
 package org.wordpress.android.ui.posts
 
@@ -626,84 +626,85 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
     private fun getSiteModelForExtraQuickPressBlogIdIfRequested(extras: Bundle?): SiteModel? {
-        extras?.let {
-            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
-                isActionSendOrNewMedia(intent.action) ||
-                it.containsKey(
-                    EditPostActivityConstants.EXTRA_IS_QUICKPRESS
-                )
-            ) {
-                if (it.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)) {
-                    // QuickPress might want to use a different blog than the current blog
-                    val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
-                    siteStore.getSiteByLocalId(localSiteId)?.let { model ->
-                        return model
-                    }
+        extras ?: return null
+
+        if (!extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
+            isActionSendOrNewMedia(intent.action) ||
+            extras.containsKey(
+                EditPostActivityConstants.EXTRA_IS_QUICKPRESS
+            )
+        ) {
+            if (extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)) {
+                // QuickPress might want to use a different blog than the current blog
+                val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
+                siteStore.getSiteByLocalId(localSiteId)?.let { model ->
+                    return model
                 }
             }
         }
         return null
     }
 
-    @Suppress("CyclomaticComplexMethod","NestedBlockDepth")
+    @Suppress("CyclomaticComplexMethod")
     private fun handleIntentExtras(extras: Bundle?, isRestarting: Boolean) {
+        extras ?: return
         val action = intent.action
-        extras?.let {
-            if (!it.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
-                isActionSendOrNewMedia(intent.action) ||
-                it.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
-                isPage = it.getBoolean(EditPostActivityConstants.EXTRA_IS_PAGE)
-                if (isPage && !TextUtils.isEmpty(extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE))) {
-                    newPageFromLayoutPickerSetup(
-                        extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE),
-                        extras.getString(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE)
-                    )
-                } else if ((Intent.ACTION_SEND == action)) {
-                    newPostFromShareAction()
-                } else if ((EditPostActivityConstants.ACTION_REBLOG == action)) {
-                    newReblogPostSetup()
-                } else {
-                    newPostSetup()
-                }
+
+        if (!extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
+            isActionSendOrNewMedia(intent.action) ||
+            extras.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)
+        ) {
+            isPage = extras.getBoolean(EditPostActivityConstants.EXTRA_IS_PAGE)
+            if (isPage && !TextUtils.isEmpty(extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE))) {
+                newPageFromLayoutPickerSetup(
+                    extras.getString(EditPostActivityConstants.EXTRA_PAGE_TITLE),
+                    extras.getString(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE)
+                )
+            } else if ((Intent.ACTION_SEND == action)) {
+                newPostFromShareAction()
+            } else if ((EditPostActivityConstants.ACTION_REBLOG == action)) {
+                newReblogPostSetup()
             } else {
-                editPostRepository.loadPostByLocalPostId(it.getInt(EditPostActivityConstants.EXTRA_POST_LOCAL_ID))
-                // Load post from extra's
-                if (editPostRepository.hasPost()) {
-                    if (it.getBoolean(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
-                        editPostRepository.update { postModel: PostModel ->
-                            val updateTitle = !TextUtils.isEmpty(postModel.autoSaveTitle)
-                            if (updateTitle) {
-                                postModel.setTitle(postModel.autoSaveTitle)
-                            }
-                            val updateContent = !TextUtils.isEmpty(postModel.autoSaveContent)
-                            if (updateContent) {
-                                postModel.setContent(postModel.autoSaveContent)
-                            }
-                            val updateExcerpt = !TextUtils.isEmpty(postModel.autoSaveExcerpt)
-                            if (updateExcerpt) {
-                                postModel.setExcerpt(postModel.autoSaveExcerpt)
-                            }
-                            updateTitle || updateContent || updateExcerpt
+                newPostSetup()
+            }
+        } else {
+            editPostRepository.loadPostByLocalPostId(extras.getInt(EditPostActivityConstants.EXTRA_POST_LOCAL_ID))
+            // Load post from extra's
+            if (editPostRepository.hasPost()) {
+                if (extras.getBoolean(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION)) {
+                    editPostRepository.update { postModel: PostModel ->
+                        val updateTitle = !TextUtils.isEmpty(postModel.autoSaveTitle)
+                        if (updateTitle) {
+                            postModel.setTitle(postModel.autoSaveTitle)
                         }
-                        editPostRepository.savePostSnapshot()
+                        val updateContent = !TextUtils.isEmpty(postModel.autoSaveContent)
+                        if (updateContent) {
+                            postModel.setContent(postModel.autoSaveContent)
+                        }
+                        val updateExcerpt = !TextUtils.isEmpty(postModel.autoSaveExcerpt)
+                        if (updateExcerpt) {
+                            postModel.setExcerpt(postModel.autoSaveExcerpt)
+                        }
+                        updateTitle || updateContent || updateExcerpt
                     }
-                    initializePostObject()
-                } else if (isRestarting) {
-                    newPostSetup()
+                    editPostRepository.savePostSnapshot()
                 }
+                initializePostObject()
+            } else if (isRestarting) {
+                newPostSetup()
             }
+        }
 
-            if (isRestarting && it.getBoolean(EditPostActivityConstants.EXTRA_IS_NEW_POST)) {
-                // editor was on a new post before the switch so, keep that signal.
-                // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
-                isNewPost = true
-            }
+        if (isRestarting && extras.getBoolean(EditPostActivityConstants.EXTRA_IS_NEW_POST)) {
+            // editor was on a new post before the switch so, keep that signal.
+            // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
+            isNewPost = true
+        }
 
-            // retrieve Editor session data if switched editors
-            if (isRestarting && it.containsKey(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
-                postEditorAnalyticsSession = PostEditorAnalyticsSession
-                    .fromBundle(it, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
-            }
+        // retrieve Editor session data if switched editors
+        if (isRestarting && extras.containsKey(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA)) {
+            postEditorAnalyticsSession = PostEditorAnalyticsSession
+                .fromBundle(extras, EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, analyticsTrackerWrapper)
         }
     }
 
@@ -2252,7 +2253,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             // the user explicitly confirmed an intention to upload the post
             postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode())
             true
-        } ) 
+        } )
         { _: PostImmutableModel?, result: UpdatePostResult ->
             if (result === Updated) {
                 val activityFinishState: ActivityFinishState = savePostOnline(isFirstTimePublish)
@@ -2675,35 +2676,36 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         setPostMediaFromShareAction()
     }
-
-    @Suppress("NestedBlockDepth")
     private fun setPostMediaFromShareAction() {
+        // Short-circuit the method if Intent.EXTRA_STREAM is not found
+        if (!intent.hasExtra(Intent.EXTRA_STREAM)) {
+            return
+        }
+
         // Check for shared media
-        if (intent.hasExtra(Intent.EXTRA_STREAM)) {
-            val action = intent.action
-            val sharedUris: ArrayList<Uri> = ArrayList()
-            if ((Intent.ACTION_SEND_MULTIPLE == action)) {
-                val potentialUris: ArrayList<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
-                if (potentialUris != null) {
-                    for (uri: Uri in potentialUris) {
-                        if (isMediaTypeIntent(intent, uri)) {
-                            sharedUris.add(uri)
-                        }
-                    }
-                }
-            } else {
-                // For a single media share, we only allow images and video types
-                if (isMediaTypeIntent(intent, null)) {
-                    intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let {
-                        sharedUris.add(it)
-                    }
+        val action = intent.action
+        val sharedUris: ArrayList<Uri> = ArrayList()
+
+        if ((Intent.ACTION_SEND_MULTIPLE == action)) {
+            val potentialUris: ArrayList<Uri>? = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
+            potentialUris?.forEach { uri ->
+                if (isMediaTypeIntent(intent, uri)) {
+                    sharedUris.add(uri)
                 }
             }
-            if (sharedUris.isNotEmpty()) {
-                // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
-                intent.removeExtra(Intent.EXTRA_STREAM)
-                editorMedia.addNewMediaItemsToEditorAsync(sharedUris, false)
+        } else {
+            // For a single media share, we only allow images and video types
+            if (isMediaTypeIntent(intent, null)) {
+                intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)?.let {
+                    sharedUris.add(it)
+                }
             }
+        }
+
+        if (sharedUris.isNotEmpty()) {
+            // removing this from the intent so it doesn't insert the media items again on each Activity re-creation
+            intent.removeExtra(Intent.EXTRA_STREAM)
+            editorMedia.addNewMediaItemsToEditorAsync(sharedUris, false)
         }
     }
 
@@ -2777,6 +2779,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             updatePostLoadingAndDialogState(PostLoadingState.NONE)
             return
         }
+
         if (resultCode != RESULT_OK) {
             // for all media related intents, let editor fragment know about cancellation
             when (requestCode) {
@@ -2795,11 +2798,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     editorFragment?.mediaSelectionCancelled()
                     return
                 }
-
                 else ->                     // noop
                     return
             }
         }
+
         if (data != null || (((requestCode == RequestCodes.TAKE_PHOTO) || (requestCode == RequestCodes.TAKE_VIDEO
                     ) || (requestCode == RequestCodes.PHOTO_PICKER)))
         ) {
@@ -2854,12 +2857,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                     }
                 }
 
-                RequestCodes.GIF_PICKER_SINGLE_SELECT, RequestCodes.GIF_PICKER_MULTI_SELECT -> if (data?.hasExtra(
-                        MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS
-                    ) == true
-                ) {
-                    data.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)?.let {
-                        editorMedia.addGifMediaToPostAsync(it)
+                RequestCodes.GIF_PICKER_SINGLE_SELECT, RequestCodes.GIF_PICKER_MULTI_SELECT -> {
+                    val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
+                    if (localIds != null && localIds.isNotEmpty()) {
+                        editorMedia.addGifMediaToPostAsync(localIds)
                     }
                 }
 
@@ -2899,6 +2900,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 }
             }
         }
+
         if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
             fetchSiteSettings()
         }
@@ -3326,7 +3328,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("NestedBlockDepth")
     override fun onUndoMediaCheck(undoedContent: String) {
         // here we check which elements tagged UPLOADING are there in undoedContent,
         // and check for the ones that ARE NOT being uploaded or queued in the UploadService.
@@ -3334,26 +3335,20 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val currentlyUploadingMedia: List<MediaModel> = UploadService.getPendingOrInProgressMediaUploadsForPost(
             editPostRepository.getPost()
         )
-        val mediaMarkedUploading: List<String> =
+
+        val mediaMarkedUploading: List<String?> =
             AztecEditorFragment.getMediaMarkedUploadingInPostContent(this@EditPostActivity, undoedContent)
 
         // go through the list of items marked UPLOADING within the Post content, and look in the UploadService
         // to see whether they're really being uploaded or not. If an item is not really being uploaded,
         // mark that item failed
-        for (mediaId: String? in mediaMarkedUploading) {
-            var found = false
-            for (media in currentlyUploadingMedia) {
-                if (StringUtils.stringToInt(mediaId) == media.id) {
-                    found = true
-                    break
-                }
-            }
-            if (!found) {
+        mediaMarkedUploading.forEach { mediaId ->
+            if (mediaId != null &&
+                currentlyUploadingMedia.none { media -> StringUtils.stringToInt(mediaId) == media.id }
+            ) {
                 if (editorFragment is AztecEditorFragment) {
-                    mediaId?.let { id ->
-                        editorMedia.updateDeletedMediaItemIds(id)
-                        (editorFragment as AztecEditorFragment).setMediaToFailed(id)
-                    }
+                    editorMedia.updateDeletedMediaItemIds(mediaId)
+                    (editorFragment as AztecEditorFragment).setMediaToFailed(mediaId)
                 }
             }
         }
@@ -3425,28 +3420,34 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onEditorFinalTouchesBeforeShowing()
     }
 
-    @Suppress("NestedBlockDepth")
     private fun onEditorFinalTouchesBeforeShowing() {
         refreshEditorContent()
+
+        onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
+        onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
+    }
+    private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
         // probably here is best for Gutenberg to start interacting with
-        if (showGutenbergEditor && editorFragment is GutenbergEditorFragment) {
-            refreshEditorTheme()
-            val post = editPostRepository.getPost()
-            if (post != null) {
-                val failedMedia: List<MediaModel> =
-                    mediaStore.getMediaForPostWithState(post, MediaUploadState.FAILED)
-                if (failedMedia.isNotEmpty()) {
-                    val mediaIds: HashSet<Int> = HashSet()
-                    for (media: MediaModel in failedMedia) {
-                        // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
-                        if (!media.markedLocallyAsFeatured) {
-                            mediaIds.add(media.id)
-                        }
-                    }
-                    (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
+        if (!(showGutenbergEditor && editorFragment is GutenbergEditorFragment))
+            return
+
+        refreshEditorTheme()
+
+        editPostRepository.getPost()?.let {  post ->
+            val failedMedia = mediaStore.getMediaForPostWithState(post, MediaUploadState.FAILED)
+            if (failedMedia.isEmpty()) return@let
+            val mediaIds: HashSet<Int> = HashSet()
+            failedMedia.forEach { media ->
+                // featured image isn't in the editor but in the Post Settings fragment, so we want to skip it
+                if (!media.markedLocallyAsFeatured) {
+                    mediaIds.add(media.id)
                 }
             }
-        } else if (showAztecEditor && editorFragment is AztecEditorFragment) {
+            (editorFragment as GutenbergEditorFragment).resetUploadingMediaToFailed(mediaIds)
+        }
+    }
+    private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
+        if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
                 intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
             postEditorAnalyticsSession?.start(null, themeSupportsGalleryWithImageBlocks(), entryPoint)
@@ -3591,7 +3592,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     // FluxC events
-    @Suppress("unused", "CyclomaticComplexMethod", "NestedBlockDepth")
+    @Suppress("unused", "CyclomaticComplexMethod")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMediaUploaded(event: OnMediaUploaded) {
         if (isFinishing) {
@@ -3611,40 +3612,48 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized")
             return
         }
+
         if (event.isError) {
-            val view: View? = editorFragment?.view
-            if (view != null) {
-                uploadUtilsWrapper.showSnackbarError(
-                    view,
-                    String.format(
-                        getString(R.string.error_media_upload_failed_for_reason),
-                        UploadUtils.getErrorMessageFromMedia(this, event.media as MediaModel)
-                    )
-                )
-            }
-            editorMediaUploadListener?.let { listener ->
-                event.media?.let { media ->
-                    editorMedia.onMediaUploadError(listener, media, event.error)
-                }
-            }
+            handleOnMediaUploadedError(event)
         } else if (event.completed) {
-            // if the remote url on completed is null, we consider this upload wasn't successful
-            event.media?.let { media ->
-                editorMediaUploadListener?.let { listener ->
-                    if (TextUtils.isEmpty(media.url)) {
-                        val error = MediaError(MediaErrorType.GENERIC_ERROR)
-                        if (!NetworkUtils.isNetworkAvailable(this)) {
-                            editorMedia.onMediaUploadPaused(listener, media, error)
-                        } else {
-                            editorMedia.onMediaUploadError(listener, media, error)
-                        }
-                    } else {
-                        onUploadSuccess(media)
-                    }
-                }
-            }
+            handleOnMediaUploadedCompleted(event)
         } else {
             onUploadProgress(event.media, event.progress)
+        }
+    }
+    private fun handleOnMediaUploadedError(event: OnMediaUploaded) {
+        val view: View? = editorFragment?.view
+        if (view != null) {
+            uploadUtilsWrapper.showSnackbarError(
+                view,
+                String.format(
+                    getString(R.string.error_media_upload_failed_for_reason),
+                    UploadUtils.getErrorMessageFromMedia(this, event.media as MediaModel)
+                )
+            )
+        }
+        editorMediaUploadListener?.let { listener ->
+            event.media?.let { media ->
+                editorMedia.onMediaUploadError(listener, media, event.error)
+            }
+        }
+    }
+
+    private fun handleOnMediaUploadedCompleted(event: OnMediaUploaded){
+        // if the remote url on completed is null, we consider this upload wasn't successful
+        val media = event.media ?: return
+
+        editorMediaUploadListener?.let { listener ->
+            if (TextUtils.isEmpty(media.url)) {
+                val error = MediaError(MediaErrorType.GENERIC_ERROR)
+                if (!NetworkUtils.isNetworkAvailable(this)) {
+                    editorMedia.onMediaUploadPaused(listener, media, error)
+                } else {
+                    editorMedia.onMediaUploadError(listener, media, error)
+                }
+            } else {
+                onUploadSuccess(media)
+            }
         }
     }
 
