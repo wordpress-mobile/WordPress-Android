@@ -32,6 +32,7 @@ import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Compan
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EVENT_BUS_MODULE
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EXTRA_UUID
+import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.WEBVIEW_VERSION
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.io.File
 import java.util.Locale
@@ -59,6 +60,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     private val localeManager: LocaleManagerWrapper = mock()
     private val buildConfig: BuildConfigWrapper = mock()
     private val sharedPreferences: SharedPreferences = mock()
+    private val webviewVersionProvider: WebviewVersionProvider = mock()
 
     private val wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig = mock {
         on { invoke() } doReturn PerformanceMonitoringConfig.Enabled(1.0)
@@ -66,6 +68,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        whenever(webviewVersionProvider.getVersion()).thenReturn(TEST_WEBVIEW_VERSION)
         sut = WPCrashLoggingDataProvider(
             sharedPreferences = sharedPreferences,
             resourceProvider = resourceProvider,
@@ -73,6 +76,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
             localeManager = localeManager,
             encryptedLogging = encryptedLogging,
             logFileProvider = logFileProvider,
+            webviewVersionProvider = webviewVersionProvider,
             buildConfig = buildConfig,
             appScope = testScope(),
             wpPerformanceMonitoringConfig = wpPerformanceMonitoringConfig,
@@ -114,8 +118,14 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should provide empty application context`() = runTest {
-        assertThat(sut.applicationContextProvider.first()).isEmpty()
+    fun `should provide an application context of size 1`() = runTest {
+        assertThat(sut.applicationContextProvider.first().size).isEqualTo(1)
+    }
+
+    @Test
+    fun `should provide the webview version in the application context`() = runTest {
+        val expected = mapOf(WEBVIEW_VERSION to TEST_WEBVIEW_VERSION)
+        assertThat(sut.applicationContextProvider.first()).containsAllEntriesOf(expected)
     }
 
     @Test
@@ -199,6 +209,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
         }
 
         const val TEST_UUID = "test uuid"
+        const val TEST_WEBVIEW_VERSION = "123"
         const val SEND_CRASH_SAMPLE_KEY = "send_crash"
     }
 }
