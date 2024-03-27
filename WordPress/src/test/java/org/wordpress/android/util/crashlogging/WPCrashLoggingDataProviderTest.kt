@@ -123,7 +123,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should provide the webview version in the application context1`() = runTest {
+    fun `should provide the webview version in the application context`() = runTest {
         val expected = mapOf(WEBVIEW_VERSION to TEST_WEBVIEW_VERSION)
         assertThat(sut.applicationContextProvider.first()).containsAllEntriesOf(expected)
     }
