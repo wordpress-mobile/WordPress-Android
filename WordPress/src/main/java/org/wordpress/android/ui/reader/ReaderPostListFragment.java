@@ -133,6 +133,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.SnackbarItem.Action;
@@ -181,6 +182,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
     @Inject UiHelpers mUiHelpers;
+    @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
@@ -1992,6 +1994,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     getPostListType(),
                     mImageManager,
                     mUiHelpers,
+                    mNetworkUtilsWrapper,
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);

@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.addItemDivider
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
@@ -72,6 +73,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     @Inject
     lateinit var readerTracker: ReaderTracker
+
+    @Inject
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     private lateinit var parentViewModel: ReaderViewModel
 
     @Inject
@@ -90,7 +95,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             recyclerView.adapter =
                 ReaderDiscoverAdapter(
-                    uiHelpers, imageManager, readerTracker, readerImprovementsFeatureConfig.isEnabled()
+                    uiHelpers,
+                    imageManager,
+                    readerTracker,
+                    networkUtilsWrapper,
+                    readerImprovementsFeatureConfig.isEnabled()
                 )
 
             // set the background color as we have different colors for the new and legacy designs that are not easy to

@@ -2,11 +2,11 @@ package org.wordpress.android.util.crashlogging
 
 import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
 import org.junit.Test
-import org.mockito.Mockito.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.assertj.core.api.Assertions.assertThat
+import org.mockito.kotlin.mock
 import org.wordpress.android.util.config.RemoteConfigWrapper
 
 private const val VALID_SAMPLE_RATE = 0.01

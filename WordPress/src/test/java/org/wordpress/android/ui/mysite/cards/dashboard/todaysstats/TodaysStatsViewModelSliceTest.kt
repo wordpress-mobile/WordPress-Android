@@ -74,7 +74,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
 
             params.onTodaysStatsCardClick()
 
-            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
+            assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsByDay(site))
             verify(cardsTracker).trackCardItemClicked(
                 CardsTracker.Type.STATS.label,
                 CardsTracker.StatsSubtype.TODAYS_STATS.label
@@ -120,7 +120,7 @@ class TodaysStatsViewModelSliceTest : BaseUnitTest() {
             CardsTracker.Type.STATS.label,
             TodaysStatsMenuItemType.VIEW_STATS.label
         )
-        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsInsights(site))
+        assertThat(navigationActions).containsOnly(SiteNavigationAction.OpenStatsByDay(site))
     }
 
 
