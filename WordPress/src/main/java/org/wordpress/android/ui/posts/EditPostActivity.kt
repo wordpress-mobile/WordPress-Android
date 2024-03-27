@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
