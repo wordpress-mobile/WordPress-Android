@@ -124,13 +124,13 @@
         <item name="android:dropDownListViewStyle">@style/ReaderDetailsPopupTheme.Dropdown</item>
     </style>
 
-    <style name="ReaderTheme.Paper" parent="ReaderTheme.System">
-        <item name="colorSurface">@color/reader_theme_paper_background</item>
-        <item name="colorOnSurface">@color/reader_theme_paper_text</item>
-        <item name="android:colorBackground">@color/reader_theme_paper_background</item>
-        <item name="colorOnBackground">@color/reader_theme_paper_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_paper_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_paper_text</item>
+    <style name="ReaderTheme.Soft" parent="ReaderTheme.System">
+        <item name="colorSurface">@color/reader_theme_soft_background</item>
+        <item name="colorOnSurface">@color/reader_theme_soft_text</item>
+        <item name="android:colorBackground">@color/reader_theme_soft_background</item>
+        <item name="colorOnBackground">@color/reader_theme_soft_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_soft_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_soft_text</item>
     </style>
 
     <style name="ReaderTheme.Sepia" parent="ReaderTheme.System">
@@ -142,13 +142,13 @@
         <item name="android:textColorSecondary">@color/reader_theme_sepia_text</item>
     </style>
 
-    <style name="ReaderTheme.Charcoal" parent="ReaderTheme.System">
-        <item name="colorSurface">@color/reader_theme_charcoal_background</item>
-        <item name="colorOnSurface">@color/reader_theme_charcoal_text</item>
-        <item name="android:colorBackground">@color/reader_theme_charcoal_background</item>
-        <item name="colorOnBackground">@color/reader_theme_charcoal_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_charcoal_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_charcoal_text</item>
+    <style name="ReaderTheme.Evening" parent="ReaderTheme.System">
+        <item name="colorSurface">@color/reader_theme_evening_background</item>
+        <item name="colorOnSurface">@color/reader_theme_evening_text</item>
+        <item name="android:colorBackground">@color/reader_theme_evening_background</item>
+        <item name="colorOnBackground">@color/reader_theme_evening_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_evening_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_evening_text</item>
     </style>
 
     <style name="ReaderTheme.OLED" parent="ReaderTheme.System">
@@ -158,6 +158,24 @@
         <item name="colorOnBackground">@color/reader_theme_oled_text</item>
         <item name="android:textColorPrimary">@color/reader_theme_oled_text</item>
         <item name="android:textColorSecondary">@color/reader_theme_oled_text</item>
+    </style>
+
+    <style name="ReaderTheme.h4x0r" parent="ReaderTheme.System">
+        <item name="colorSurface">@color/reader_theme_h4x0r_background</item>
+        <item name="colorOnSurface">@color/reader_theme_h4x0r_text</item>
+        <item name="android:colorBackground">@color/reader_theme_h4x0r_background</item>
+        <item name="colorOnBackground">@color/reader_theme_h4x0r_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_h4x0r_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_h4x0r_text</item>
+    </style>
+
+    <style name="ReaderTheme.Candy" parent="ReaderTheme.System">
+        <item name="colorSurface">@color/reader_theme_candy_background</item>
+        <item name="colorOnSurface">@color/reader_theme_candy_text</item>
+        <item name="android:colorBackground">@color/reader_theme_candy_background</item>
+        <item name="colorOnBackground">@color/reader_theme_candy_text</item>
+        <item name="android:textColorPrimary">@color/reader_theme_candy_text</item>
+        <item name="android:textColorSecondary">@color/reader_theme_candy_text</item>
     </style>
 
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">

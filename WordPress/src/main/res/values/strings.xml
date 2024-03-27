@@ -1702,10 +1702,12 @@
     <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
 
     <string name="reader_preferences_theme_system">Default</string>
-    <string name="reader_preferences_theme_paper">Paper</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
     <string name="reader_preferences_theme_sepia">Sepia</string>
-    <string name="reader_preferences_theme_charcoal">Charcoal</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
     <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
 
     <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
     <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>

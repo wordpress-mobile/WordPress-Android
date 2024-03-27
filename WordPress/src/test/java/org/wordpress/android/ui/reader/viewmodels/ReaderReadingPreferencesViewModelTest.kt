@@ -144,7 +144,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     @Test
     fun `when saveReadingPreferencesAndClose is called with updated preferences then it saves them`() = test {
         // Given
-        val newTheme = ReaderReadingPreferences.Theme.PAPER
+        val newTheme = ReaderReadingPreferences.Theme.SOFT
         viewModel.onThemeClick(newTheme)
 
         // When
