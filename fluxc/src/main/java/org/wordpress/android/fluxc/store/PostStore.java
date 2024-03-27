@@ -410,18 +410,28 @@ public class PostStore extends Store {
     }
 
     public enum PostErrorType {
-        UNKNOWN_POST,
-        UNKNOWN_POST_TYPE,
-        UNSUPPORTED_ACTION,
-        UNAUTHORIZED,
-        INVALID_RESPONSE,
-        OLD_REVISION,
-        GENERIC_ERROR;
+        UNKNOWN_POST("unknown_post"),
+        UNKNOWN_POST_TYPE("unknown_post_type"),
+        UNSUPPORTED_ACTION("unsupported_action"),
+        UNAUTHORIZED("unauthorized"),
+        INVALID_RESPONSE("invalid_response"),
+        OLD_REVISION("old-revision"), // Custom string value
+        GENERIC_ERROR("generic_error");
+
+        private final String mStringValue;
+
+        PostErrorType(String stringValue) {
+            this.mStringValue = stringValue;
+        }
+
+        public String getStringValue() {
+            return this.mStringValue;
+        }
 
         public static PostErrorType fromString(String string) {
             if (string != null) {
                 for (PostErrorType v : PostErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
+                    if (string.equalsIgnoreCase(v.getStringValue())) {
                         return v;
                     }
                 }
