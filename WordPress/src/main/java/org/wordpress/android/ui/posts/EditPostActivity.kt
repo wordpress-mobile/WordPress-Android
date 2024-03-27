@@ -1555,7 +1555,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
     // Menu actions
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "ReturnCount")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == android.R.id.home) {
@@ -1655,7 +1655,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         savePostAndOptionallyFinish(doFinish = false, forceSave = false)
     }
 
-    @Suppress("UseCheckOrError")
+    @Suppress("UseCheckOrError", "ReturnCount")
     private fun performSecondaryAction(): Boolean {
         if (UploadService.hasInProgressMediaUploadsForPost(editPostRepository.getPost())) {
             ToastUtils.showToast(
@@ -2177,6 +2177,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
         })
     }
+    @Suppress("ReturnCount")
     private fun shouldPerformPostUpdateAndPublish() : Boolean {
         val account: AccountModel = accountStore.account
         // prompt user to verify e-mail before publishing
@@ -2359,6 +2360,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
      */
     inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) :
         FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             when (position) {
@@ -3307,6 +3309,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         editorMedia.retryFailedMediaAsync(localMediaIds)
     }
 
+    @Suppress("ReturnCount")
     override fun onMediaRetryClicked(mediaId: String): Boolean {
         if (TextUtils.isEmpty(mediaId)) {
             AppLog.e(AppLog.T.MEDIA, "Invalid media id passed to onMediaRetryClicked")
