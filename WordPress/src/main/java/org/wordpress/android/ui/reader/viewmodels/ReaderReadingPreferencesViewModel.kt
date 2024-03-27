@@ -28,7 +28,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: SharedFlow<ActionEvent> = _actionEvents
 
-    init {
+    fun init() {
         launch {
             _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
         }

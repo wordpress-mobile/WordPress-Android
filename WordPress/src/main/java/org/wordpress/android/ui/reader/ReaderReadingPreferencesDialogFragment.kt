@@ -60,6 +60,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeActionEvents()
+        viewModel.init()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
