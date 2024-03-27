@@ -1982,17 +1982,20 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 // We don't need to log the error, since it was already logged by Aztec, instead we need to write the
                 // prefs to disable HW acceleration for it.
                 private fun isError8828(throwable: Throwable): Boolean {
-                    if (throwable !is DynamicLayoutGetBlockIndexOutOfBoundsException) {
-                        return false
+                    return when {
+                        throwable !is DynamicLayoutGetBlockIndexOutOfBoundsException ||
+                                !editPostRepository.hasPost() -> {
+                            false
+                        }
+
+                        else -> {
+                            AppPrefs.addPostWithHWAccelerationOff(
+                                editPostRepository.localSiteId,
+                                editPostRepository.id
+                            )
+                            true
+                        }
                     }
-                    if (!editPostRepository.hasPost()) {
-                        return false
-                    }
-                    AppPrefs.addPostWithHWAccelerationOff(
-                        editPostRepository.localSiteId,
-                        editPostRepository.id
-                    )
-                    return true
                 }
 
                 override fun log(message: String) {
@@ -3562,23 +3565,27 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun showPreview(): Boolean {
-       editPostRepository.getPost()?.let { post ->
-            val opResult: PreviewLogicOperationResult = remotePreviewLogicHelper.runPostPreviewLogic(
-                this,
-                siteModel,
-                post,
-                editPostActivityStrategyFunctions
-            )
-            if ((opResult === PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS
-                        ) || (opResult === PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT
-                        ) || (opResult === PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST)
-            ) {
-                return false
-            } else if (opResult === PreviewLogicOperationResult.OPENING_PREVIEW) {
-                updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post)
+        val post = editPostRepository.getPost() ?: return false
+
+        val opResult: PreviewLogicOperationResult = remotePreviewLogicHelper.runPostPreviewLogic(
+            this,
+            siteModel,
+            post,
+            editPostActivityStrategyFunctions
+        )
+
+        return when (opResult) {
+            PreviewLogicOperationResult.MEDIA_UPLOAD_IN_PROGRESS,
+            PreviewLogicOperationResult.CANNOT_SAVE_EMPTY_DRAFT,
+            PreviewLogicOperationResult.CANNOT_REMOTE_AUTO_SAVE_EMPTY_POST -> {
+                false
             }
-            return true
-        }?: return false
+            PreviewLogicOperationResult.OPENING_PREVIEW -> {
+                updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post)
+                true
+            }
+            else -> true
+        }
     }
 
     override fun onRequestBlockTypeImpressions(): Map<String, Double> {
@@ -3629,6 +3636,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (isFinishing) {
             return
         }
+
         if (event.isError && !NetworkUtils.isNetworkAvailable(this)) {
             editorMediaUploadListener?.let { listener ->
                 event.media?.let { media ->
@@ -3638,18 +3646,17 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return
         }
 
-        // event for unknown media, ignoring
-        if (event.media == null) {
+        event.media?.let {
+            if (event.isError) {
+                handleOnMediaUploadedError(event)
+            } else if (event.completed) {
+                handleOnMediaUploadedCompleted(event)
+            } else {
+                onUploadProgress(event.media, event.progress)
+            }
+        } ?: run {
+            // event for unknown media, ignoring
             AppLog.w(AppLog.T.MEDIA, "Media event carries null media object, not recognized")
-            return
-        }
-
-        if (event.isError) {
-            handleOnMediaUploadedError(event)
-        } else if (event.completed) {
-            handleOnMediaUploadedCompleted(event)
-        } else {
-            onUploadProgress(event.media, event.progress)
         }
     }
     private fun handleOnMediaUploadedError(event: OnMediaUploaded) {
