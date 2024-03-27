@@ -77,9 +77,6 @@ class BaseListUseCase(
     private val mutableListSelected = SingleLiveEvent<Unit?>()
     val listSelected: LiveData<Unit?> = mutableListSelected
 
-    private val mutableScrollTo = MutableLiveData<Event<StatsType>>()
-    val scrollTo: LiveData<Event<StatsType>> = mutableScrollTo
-
     suspend fun loadData() {
         loadData(refresh = false, forced = false)
     }
@@ -123,9 +120,6 @@ class BaseListUseCase(
                                 block.fetch(refresh, forced)
                             }
                         }
-                }
-                if (!refresh) {
-                    mutableScrollTo.postValue(Event(visibleTypes.last()))
                 }
             }
         } else {

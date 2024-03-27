@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
@@ -102,8 +101,6 @@ abstract class StatsListViewModel(
 
     val scrollTo = newsCardHandler?.scrollTo
 
-    lateinit var scrollToNewCard: LiveData<Event<StatsStore.StatsType>>
-
     override fun onCleared() {
         statsUseCase.onCleared()
         super.onCleared()
@@ -174,7 +171,6 @@ abstract class StatsListViewModel(
         uiModel = statsUseCase.data.throttle(viewModelScope, distinct = true)
         listSelected = statsUseCase.listSelected
         navigationTarget = mergeNotNull(statsUseCase.navigationTarget, mutableNavigationTarget)
-        scrollToNewCard = statsUseCase.scrollTo
         mutableUiSourceAdded.call()
     }
 
