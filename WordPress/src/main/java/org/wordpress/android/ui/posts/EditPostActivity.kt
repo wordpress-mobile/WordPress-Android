@@ -1,4 +1,3 @@
-@file:Suppress("ComplexCondition")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
@@ -1568,9 +1567,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         } else {
             // Disable other action bar buttons while a media upload is in progress
             // (unnecessary for Aztec since it supports progress reattachment)
-            if ((!(showAztecEditor || showGutenbergEditor)
-                        && (editorFragment?.isUploadingMedia == true || editorFragment?.isActionInProgress == true))
-            ) {
+            val isMediaOrActionInProgress =
+                editorFragment?.isUploadingMedia == true || editorFragment?.isActionInProgress == true
+            if ((!(showAztecEditor || showGutenbergEditor) && isMediaOrActionInProgress)) {
                 ToastUtils.showToast(this, R.string.editor_toast_uploading_please_wait, ToastUtils.Duration.SHORT)
                 return false
             }
@@ -2790,13 +2789,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return handleNotOKRequest(resultCode)
         }
 
-        if (data != null ||
-            (((requestCode == RequestCodes.TAKE_PHOTO) ||
-                    (requestCode == RequestCodes.TAKE_VIDEO) ||
-                    (requestCode == RequestCodes.PHOTO_PICKER)))
-        ) {
+        val shouldHandleRequest = (requestCode == RequestCodes.TAKE_PHOTO) ||
+                (requestCode == RequestCodes.TAKE_VIDEO) ||
+                (requestCode == RequestCodes.PHOTO_PICKER)
+
+        if (data != null || shouldHandleRequest)
             handleRequest(requestCode, data)
-        }
 
         if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
             fetchSiteSettings()
