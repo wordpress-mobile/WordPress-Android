@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION", "ComplexCondition", "SwallowedException",
+@file:Suppress("DEPRECATION", "ComplexCondition",
     "TooGenericExceptionCaught")
 package org.wordpress.android.ui.posts
 
@@ -1241,6 +1241,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return if (titleResource != null) getString(titleResource) else null
         }
 
+    @Suppress("SwallowedException")
     private fun shouldSwitchToGutenbergBeVisible(
         editorFragment: EditorFragmentAbstract?,
         site: SiteModel
@@ -1370,7 +1371,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         return true
     }
 
-    @Suppress("LongMethod", "CyclomaticComplexMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod", "SwallowedException")
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         var showMenuItems = true
         viewPager?.let {
