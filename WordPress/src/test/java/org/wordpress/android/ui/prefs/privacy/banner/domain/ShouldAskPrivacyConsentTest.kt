@@ -3,7 +3,7 @@ package org.wordpress.android.ui.prefs.privacy.banner.domain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
