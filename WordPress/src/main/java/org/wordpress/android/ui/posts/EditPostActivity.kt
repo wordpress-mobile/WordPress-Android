@@ -1,5 +1,4 @@
-@file:Suppress("DEPRECATION", "ComplexCondition",
-    "TooGenericExceptionCaught")
+@file:Suppress("DEPRECATION", "ComplexCondition")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
@@ -2951,6 +2950,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         return uris
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun addLastTakenPicture() {
         try {
             mediaCapturePath?.let { path ->
