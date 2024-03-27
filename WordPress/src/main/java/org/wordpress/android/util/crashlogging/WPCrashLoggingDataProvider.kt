@@ -33,6 +33,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val localeManager: LocaleManagerWrapper,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
+    private val webviewVersionProvider: WebviewVersionProvider,
     private val buildConfig: BuildConfigWrapper,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
     wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig,
@@ -64,7 +65,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     }
 
     override fun extraKnownKeys(): List<ExtraKnownKey> {
-        return listOf(EXTRA_UUID)
+        return listOf(EXTRA_UUID, WEBVIEW_VERSION)
     }
 
     /**
@@ -83,7 +84,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
         currentExtras: Map<ExtraKnownKey, String>,
         eventLevel: EventLevel
     ): Map<ExtraKnownKey, String> {
-        return currentExtras + if (currentExtras[EXTRA_UUID] == null) {
+        return currentExtras + appendWebViewVersion() + if (currentExtras[EXTRA_UUID] == null) {
             appendEncryptedLogsUuid(eventLevel)
         } else {
             emptyMap()
@@ -103,6 +104,10 @@ class WPCrashLoggingDataProvider @Inject constructor(
             }
         }
         return encryptedLogsUuid
+    }
+
+    private fun appendWebViewVersion(): Map<ExtraKnownKey, String> {
+        return mapOf(WEBVIEW_VERSION to webviewVersionProvider.version)
     }
 
     override fun shouldDropWrappingException(module: String, type: String, value: String): Boolean {
@@ -135,6 +140,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
 
     companion object {
         const val EXTRA_UUID = "uuid"
+        const val WEBVIEW_VERSION = "webview_version"
         const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
         const val EVENT_BUS_EXCEPTION = "EventBusException"
         const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"

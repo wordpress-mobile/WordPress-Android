@@ -32,9 +32,11 @@ import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Compan
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EVENT_BUS_MODULE
 import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.EXTRA_UUID
+import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Companion.WEBVIEW_VERSION
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.io.File
 import java.util.Locale
+import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
@@ -59,6 +61,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     private val localeManager: LocaleManagerWrapper = mock()
     private val buildConfig: BuildConfigWrapper = mock()
     private val sharedPreferences: SharedPreferences = mock()
+    private val webviewVersionProvider: WebviewVersionProvider = mock()
 
     private val wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig = mock {
         on { invoke() } doReturn PerformanceMonitoringConfig.Enabled(1.0)
@@ -73,6 +76,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
             localeManager = localeManager,
             encryptedLogging = encryptedLogging,
             logFileProvider = logFileProvider,
+            webviewVersionProvider = webviewVersionProvider,
             buildConfig = buildConfig,
             appScope = testScope(),
             wpPerformanceMonitoringConfig = wpPerformanceMonitoringConfig,
@@ -87,6 +91,16 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     @Test
     fun `should contain encrypted logs key for extra known keys`() {
         assertThat(sut.extraKnownKeys()).contains(EXTRA_UUID)
+    }
+
+    @Test
+    fun `should contain the webview version`() {
+        assertThat(sut.extraKnownKeys()).contains(WEBVIEW_VERSION)
+    }
+
+    @Test
+    fun `should contain two keys (uuid and webview version)`() {
+        assertEquals(sut.extraKnownKeys().size, 2)
     }
 
     @Test
@@ -142,7 +156,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
 
         verify(logFileProvider).getLogFiles()
         verify(encryptedLogging, never()).encryptAndUploadLogFile(any(), any())
-        assertThat(extras).isEmpty()
+        assertThat(extras.keys).doesNotContain(EXTRA_UUID)
     }
 
     @Test
