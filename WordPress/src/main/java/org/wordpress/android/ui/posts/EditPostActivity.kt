@@ -2545,7 +2545,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         )
     }
 
-    @Suppress("MagicNumber")
     private fun migrateLegacyDraft(inputContent: String): String {
         var content = inputContent
         if (content.contains("<img src=\"null\" android-uri=\"")) {
@@ -2574,9 +2573,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             val matcher = pattern.matcher(content)
             val stringBuffer = StringBuffer()
             while (matcher.find()) {
-                val group1 = matcher.group(1)
-                val group2 = matcher.group(2)
-                val group3 = matcher.group(3)
+                val group1 = matcher.group(GROUP_ONE)
+                val group2 = matcher.group(GROUP_TWO)
+                val group3 = matcher.group(GROUP_THREE)
                 if (group1 != null && group2 != null && group3 != null) {
                     val replacement = group1 + group2 + group3
                     matcher.appendReplacement(stringBuffer, replacement)
@@ -3980,5 +3979,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // Moved from EditPostContentFragment
         const val NEW_MEDIA_POST: String = "NEW_MEDIA_POST"
         const val NEW_MEDIA_POST_EXTRA_IDS: String = "NEW_MEDIA_POST_EXTRA_IDS"
+
+        const val GROUP_ONE = 1
+        const val GROUP_TWO = 2
+        const val GROUP_THREE = 3
     }
 }
