@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -57,6 +58,7 @@ class PostFetcher constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
+        Log.d("myTest","PostFetcher.onPostChanged()")
         (event.causeOfChange as? UpdatePost)?.let { updatePostCauseOfChange ->
             ongoingRequests.remove(RemoteId(updatePostCauseOfChange.remotePostId))
         }

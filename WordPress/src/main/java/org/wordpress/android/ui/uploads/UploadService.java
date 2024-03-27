@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -1112,6 +1113,8 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
+        Log.d("myTest", "UploadService.onPostUploaded(), error = " + event.error.message);
+
         stopServiceIfUploadsComplete(event.isError(), event.post);
     }
 
@@ -1121,6 +1124,7 @@ public class UploadService extends Service {
      */
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostChanged(OnPostChanged event) {
+        Log.d("myTest", "UploadService.onPostChanged()");
         if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
             PostModel post =
                     mPostStore.getPostByLocalPostId(((RemoteAutoSavePost) event.causeOfChange).getLocalPostId());

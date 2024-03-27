@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -219,12 +220,16 @@ class StorePostViewModel
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostUploaded(event: OnPostUploaded) {
+        Log.d("myTest","StorePostViewModel.onPostUploaded(), error = ${event.error.message}")
+
         hideSavingProgressDialog()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostChanged(event: OnPostChanged) {
+        Log.d("myTest","StorePostViewModel.onPostChanged()")
+
         hideSavingProgressDialog()
 
         // Refresh post content if needed

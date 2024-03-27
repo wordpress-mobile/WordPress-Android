@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -1115,6 +1116,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
+        Log.d("myTest", "ReaderPostPagerActivity.onPostUploaded()");
+
         SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(

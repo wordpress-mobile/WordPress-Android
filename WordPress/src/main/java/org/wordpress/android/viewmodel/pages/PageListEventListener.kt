@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -123,6 +124,8 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
+        Log.d("myTest","WPMainActivity.onPostUploaded()")
+
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
             handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError, event.isFirstTimePublish)

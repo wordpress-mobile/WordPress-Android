@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Video;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.annotation.NonNull;
@@ -650,6 +651,9 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
+        Log.d("myTest", "PostUploadHandler.onPostUploaded(), error = " + event.error.message);
+
+
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
             return;
@@ -659,16 +663,21 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         if (event.isError()) {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
-            Context context = WordPress.getContext();
-            String errorMessage = mUiHelpers.getTextOfUiString(context,
-                    UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
-                            event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post))).toString();
-            String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
-            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
-                    mMediaStore.getMediaForPost(event.post));
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
-            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
-            sFirstPublishPosts.remove(event.post.getId());
+
+            if (event.error.type == PostStore.PostErrorType.OLD_REVISION) {
+                Log.d("","");
+            } else {
+                Context context = WordPress.getContext();
+                String errorMessage = mUiHelpers.getTextOfUiString(context,
+                        UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
+                                event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post))).toString();
+                String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
+                mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
+                        mMediaStore.getMediaForPost(event.post));
+                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
+                mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
+                sFirstPublishPosts.remove(event.post.getId());
+            }
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());

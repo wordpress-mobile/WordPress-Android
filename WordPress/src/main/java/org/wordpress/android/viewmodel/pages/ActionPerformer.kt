@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -60,6 +61,8 @@ class ActionPerformer
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
+        Log.d("myTest","ActionPerformer.onPostUploaded()")
+
         // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
         val continuation = continuations[event.post.remotePostId to UPLOAD]
             ?: continuations[-event.post.id.toLong() to UPLOAD]
@@ -69,6 +72,8 @@ class ActionPerformer
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostChange(event: OnPostChanged) {
+        Log.d("myTest","ActionPerformer.onPostChanged()")
+
         postCauseOfChangeToPostAction(event.causeOfChange)?.let { (remoteId, localId, eventType) ->
             // negative local page ID used as a temp remote post ID for local-only pages (assigned by the PageStore)
             val continuation = continuations[remoteId to eventType] ?: continuations[-localId.toLong() to eventType]
