@@ -26,6 +26,8 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
+import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -54,7 +56,8 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener,
+    WPMainActivity.OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -376,5 +379,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private fun clearFilter() {
         val viewModel = getSubFilterViewModel() ?: return
         viewModel.setDefaultSubfilter(isClearingFilter = true)
+    }
+
+    override fun onScrollToTop() {
+        binding?.appBar?.setExpanded(true, true)
+        // Instance of ReaderPostListFragment or ReaderDiscoverFragment
+        val currentFragment = getCurrentFeedFragment()
+        if (currentFragment is OnScrollToTopListener) {
+            currentFragment.onScrollToTop()
+        }
     }
 }
