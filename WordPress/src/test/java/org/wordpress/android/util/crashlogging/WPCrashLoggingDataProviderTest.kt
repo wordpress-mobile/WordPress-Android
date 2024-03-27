@@ -3,6 +3,7 @@ package org.wordpress.android.util.crashlogging
 import android.content.SharedPreferences
 import com.automattic.android.tracks.crashlogging.EventLevel.DEBUG
 import com.automattic.android.tracks.crashlogging.PerformanceMonitoringConfig
+import com.automattic.android.tracks.crashlogging.ReleaseName
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -199,6 +200,22 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
         reinitialize()
 
         assertThat(sut.crashLoggingEnabled()).isTrue
+    }
+
+    @Test
+    fun `should assign debug release in debug`() {
+        whenever(buildConfig.isDebug()).thenReturn(true)
+        reinitialize()
+
+        assertThat(sut.releaseName).isEqualTo(ReleaseName.SetByApplication("debug"))
+    }
+
+    @Test
+    fun `should delegate release name creation to tracks in release`() {
+        whenever(buildConfig.isDebug()).thenReturn(false)
+        reinitialize()
+
+        assertThat(sut.releaseName).isEqualTo(ReleaseName.SetByTracksLibrary)
     }
 
     companion object {
