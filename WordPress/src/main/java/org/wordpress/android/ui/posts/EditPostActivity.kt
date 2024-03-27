@@ -2769,7 +2769,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    @Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "Deprecated")
+    @Suppress("Deprecated")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -2803,106 +2803,132 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             }
         }
 
-        if (data != null || (((requestCode == RequestCodes.TAKE_PHOTO) || (requestCode == RequestCodes.TAKE_VIDEO
-                    ) || (requestCode == RequestCodes.PHOTO_PICKER)))
+        if (data != null ||
+            (((requestCode == RequestCodes.TAKE_PHOTO) ||
+                    (requestCode == RequestCodes.TAKE_VIDEO) ||
+                    (requestCode == RequestCodes.PHOTO_PICKER)))
         ) {
-            when (requestCode) {
-                RequestCodes.MULTI_SELECT_MEDIA_PICKER,
-                RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> handleMediaPickerResult(
-                    data
-                )
-
-                RequestCodes.PHOTO_PICKER,
-                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT -> handlePhotoPickerResult(data)
-                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK ->
-                    if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) == true
-                ) {
-                    // pass array with single item
-                    val mediaIds = longArrayOf(data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0))
-                    editorMedia
-                        .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds)
-                }
-
-                RequestCodes.MEDIA_LIBRARY,
-                RequestCodes.PICTURE_LIBRARY,
-                RequestCodes.VIDEO_LIBRARY -> editorMedia.addNewMediaItemsToEditorAsync(
-                    WPMediaUtils.retrieveMediaUris(data),
-                    false
-                )
-
-                RequestCodes.TAKE_PHOTO -> addLastTakenPicture()
-                RequestCodes.TAKE_VIDEO -> {
-                    data?.data?.let {
-                        editorMedia.addNewMediaToEditorAsync(it, true)
-                    }
-                }
-
-                RequestCodes.MEDIA_SETTINGS -> if (editorFragment is AztecEditorFragment) {
-                    editorFragment?.onActivityResult(
-                        AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                        RESULT_OK, data
-                    )
-                }
-
-                RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> {
-                    val key = MediaBrowserActivity.RESULT_IDS
-                    if (data?.hasExtra(key) == true) {
-                        val mediaIds: LongArray? = data.getLongArrayExtra(key)
-                        mediaIds?.let {
-                            editorMedia.addExistingMediaToEditorAsync(
-                                AddExistingMediaSource.STOCK_PHOTO_LIBRARY,
-                                it
-                            )
-                        }
-                    }
-                }
-
-                RequestCodes.GIF_PICKER_SINGLE_SELECT, RequestCodes.GIF_PICKER_MULTI_SELECT -> {
-                    val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
-                    if (localIds != null && localIds.isNotEmpty()) {
-                        editorMedia.addGifMediaToPostAsync(localIds)
-                    }
-                }
-
-                RequestCodes.HISTORY_DETAIL -> if (dB?.hasParcel(KEY_REVISION) == true) {
-                    viewPager?.currentItem = PAGE_CONTENT
-                    revision = dB?.getParcel(KEY_REVISION, parcelableCreator())
-                    Handler().postDelayed(
-                        { loadRevision() },
-                        resources.getInteger(R.integer.full_screen_dialog_animation_duration).toLong()
-                    )
-                }
-
-                RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> {
-                    val uris: List<Uri> = WPMediaUtils.retrieveImageEditorResult(data)
-                    imageEditorTracker.trackAddPhoto(uris)
-                    uris.forEach { item ->
-                        item.let { editorMedia.addNewMediaToEditorAsync(it, false) }
-                    }
-                }
-
-                RequestCodes.SELECTED_USER_MENTION -> if (onGetSuggestionResult != null) {
-                    val selectedMention: String? = data?.getStringExtra(SuggestionActivity.SELECTED_VALUE)
-                    onGetSuggestionResult?.accept(selectedMention)
-                    // Clear the callback once we have gotten a result
-                    onGetSuggestionResult = null
-                }
-
-                RequestCodes.FILE_LIBRARY,
-                RequestCodes.AUDIO_LIBRARY -> if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
-                     val uriResults: List<Uri> = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-                        ?.let { convertStringArrayIntoUrisList(it) }
-                        ?: emptyList()
-
-                    uriResults.forEach { uri ->
-                        uri.let { editorMedia.addNewMediaToEditorAsync(it, false) }
-                    }
-                }
-            }
+            handleRequest(requestCode, data)
         }
 
         if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
             fetchSiteSettings()
+        }
+    }
+    private fun handleRequest(requestCode: Int, data: Intent?) {
+        when (requestCode) {
+            RequestCodes.MULTI_SELECT_MEDIA_PICKER,
+            RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> handleMediaPickerResult(data)
+            RequestCodes.PHOTO_PICKER,
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT -> handlePhotoPickerResult(data)
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK ->
+                handleStockMediaPickerSingleSelect(data)
+            RequestCodes.MEDIA_LIBRARY,
+            RequestCodes.PICTURE_LIBRARY,
+            RequestCodes.VIDEO_LIBRARY -> handleLibraries(data)
+            RequestCodes.TAKE_PHOTO -> addLastTakenPicture()
+            RequestCodes.TAKE_VIDEO -> handleTakeVideo(data)
+            RequestCodes.MEDIA_SETTINGS -> handleMediaSettings(data)
+            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT -> handleStockMediaPickerMultiSelect(data)
+            RequestCodes.GIF_PICKER_SINGLE_SELECT,
+            RequestCodes.GIF_PICKER_MULTI_SELECT -> handleGifPicker(data)
+            RequestCodes.HISTORY_DETAIL -> handleHistoryDetail()
+            RequestCodes.IMAGE_EDITOR_EDIT_IMAGE -> handleImageEditor(data)
+            RequestCodes.SELECTED_USER_MENTION -> handleUserMention(data)
+            RequestCodes.FILE_LIBRARY,
+            RequestCodes.AUDIO_LIBRARY -> handleFileOrAudioLibrary(data)
+        }
+    }
+
+    private fun handleStockMediaPickerSingleSelect(data: Intent?) {
+        if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) == true
+        ) {
+            // pass array with single item
+            val mediaIds = longArrayOf(data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0))
+            editorMedia
+                .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds)
+        }
+    }
+
+    private fun handleLibraries(data: Intent?) {
+        editorMedia.addNewMediaItemsToEditorAsync(
+            WPMediaUtils.retrieveMediaUris(data),
+            false
+        )
+    }
+
+    private fun handleTakeVideo(data: Intent?){
+        data?.data?.let {
+            editorMedia.addNewMediaToEditorAsync(it, true)
+        }
+    }
+
+    private fun handleMediaSettings(data: Intent?) {
+        if (editorFragment is AztecEditorFragment) {
+            editorFragment?.onActivityResult(
+                AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
+                RESULT_OK, data
+            )
+        }
+    }
+
+    private fun handleStockMediaPickerMultiSelect(data: Intent?) {
+        val key = MediaBrowserActivity.RESULT_IDS
+        if (data?.hasExtra(key) == true) {
+            val mediaIds: LongArray? = data.getLongArrayExtra(key)
+            mediaIds?.let {
+                editorMedia.addExistingMediaToEditorAsync(
+                    AddExistingMediaSource.STOCK_PHOTO_LIBRARY,
+                    it
+                )
+            }
+        }
+    }
+
+    private fun handleGifPicker(data: Intent?) {
+        val localIds = data?.getIntArrayExtra(MediaPickerConstants.EXTRA_SAVED_MEDIA_MODEL_LOCAL_IDS)
+        if (localIds != null && localIds.isNotEmpty()) {
+            editorMedia.addGifMediaToPostAsync(localIds)
+        }
+    }
+
+    private fun handleHistoryDetail() {
+        if (dB?.hasParcel(KEY_REVISION) == true) {
+            viewPager?.currentItem = PAGE_CONTENT
+            revision = dB?.getParcel(KEY_REVISION, parcelableCreator())
+            Handler().postDelayed(
+                { loadRevision() },
+                resources.getInteger(R.integer.full_screen_dialog_animation_duration).toLong()
+            )
+        }
+    }
+
+    private fun handleImageEditor(data: Intent?) {
+        val uris: List<Uri> = WPMediaUtils.retrieveImageEditorResult(data)
+        imageEditorTracker.trackAddPhoto(uris)
+        uris.forEach { item ->
+            item.let { editorMedia.addNewMediaToEditorAsync(it, false) }
+        }
+    }
+
+    private fun handleUserMention(data: Intent?) {
+        if (onGetSuggestionResult != null) {
+            val selectedMention: String? = data?.getStringExtra(SuggestionActivity.SELECTED_VALUE)
+            onGetSuggestionResult?.accept(selectedMention)
+            // Clear the callback once we have gotten a result
+            onGetSuggestionResult = null
+        }
+    }
+
+    private fun handleFileOrAudioLibrary(data: Intent?) {
+        if (data?.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) == true) {
+            val uriResults: List<Uri> = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
+                ?.let { convertStringArrayIntoUrisList(it) }
+                ?: emptyList()
+
+            uriResults.forEach { uri ->
+                uri.let { editorMedia.addNewMediaToEditorAsync(it, false) }
+            }
         }
     }
 
