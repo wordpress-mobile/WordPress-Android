@@ -415,6 +415,7 @@ public class PostStore extends Store {
         UNSUPPORTED_ACTION,
         UNAUTHORIZED,
         INVALID_RESPONSE,
+        OLD_REVISION,
         GENERIC_ERROR;
 
         public static PostErrorType fromString(String string) {
