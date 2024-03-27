@@ -7,6 +7,7 @@ import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -50,7 +51,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val releaseName: String = BuildConfig.VERSION_NAME
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
-    override val applicationContextProvider = MutableStateFlow<Map<String, String>>(emptyMap())
+    override val applicationContextProvider = flowOf(mapOf(WEBVIEW_VERSION to webviewVersionProvider.getVersion()))
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
@@ -65,7 +66,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     }
 
     override fun extraKnownKeys(): List<ExtraKnownKey> {
-        return listOf(EXTRA_UUID, WEBVIEW_VERSION)
+        return listOf(EXTRA_UUID)
     }
 
     /**
@@ -84,7 +85,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
         currentExtras: Map<ExtraKnownKey, String>,
         eventLevel: EventLevel
     ): Map<ExtraKnownKey, String> {
-        return currentExtras + appendWebViewVersion() + if (currentExtras[EXTRA_UUID] == null) {
+        return currentExtras + if (currentExtras[EXTRA_UUID] == null) {
             appendEncryptedLogsUuid(eventLevel)
         } else {
             emptyMap()
@@ -104,10 +105,6 @@ class WPCrashLoggingDataProvider @Inject constructor(
             }
         }
         return encryptedLogsUuid
-    }
-
-    private fun appendWebViewVersion(): Map<ExtraKnownKey, String> {
-        return mapOf(WEBVIEW_VERSION to webviewVersionProvider.version)
     }
 
     override fun shouldDropWrappingException(module: String, type: String, value: String): Boolean {
@@ -140,7 +137,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
 
     companion object {
         const val EXTRA_UUID = "uuid"
-        const val WEBVIEW_VERSION = "webview_version"
+        const val WEBVIEW_VERSION = "webview.version"
         const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
         const val EVENT_BUS_EXCEPTION = "EventBusException"
         const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"

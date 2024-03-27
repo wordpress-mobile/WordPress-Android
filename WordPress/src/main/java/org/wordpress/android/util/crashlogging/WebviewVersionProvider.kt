@@ -8,10 +8,8 @@ class WebviewVersionProvider @Inject constructor(private val packageManager: Pac
     private val webviewPackageName = "com.google.android.webview"
     private val unknownVersion = "unknown"
 
-    val version: String by lazy { getWebviewVersion() }
-
     @Suppress("SwallowedException")
-    private fun getWebviewVersion(): String = try {
+    fun getVersion(): String = try {
         packageManager.getPackageInfo(webviewPackageName, 0)?.versionName ?: unknownVersion
     } catch (e: NameNotFoundException) {
         unknownVersion

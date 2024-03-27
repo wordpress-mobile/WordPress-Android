@@ -36,7 +36,6 @@ import org.wordpress.android.util.crashlogging.WPCrashLoggingDataProvider.Compan
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.io.File
 import java.util.Locale
-import kotlin.test.assertEquals
 
 @RunWith(MockitoJUnitRunner::class)
 @ExperimentalCoroutinesApi
@@ -69,6 +68,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        whenever(webviewVersionProvider.getVersion()).thenReturn(TEST_WEBVIEW_VERSION)
         sut = WPCrashLoggingDataProvider(
             sharedPreferences = sharedPreferences,
             resourceProvider = resourceProvider,
@@ -91,16 +91,6 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     @Test
     fun `should contain encrypted logs key for extra known keys`() {
         assertThat(sut.extraKnownKeys()).contains(EXTRA_UUID)
-    }
-
-    @Test
-    fun `should contain the webview version`() {
-        assertThat(sut.extraKnownKeys()).contains(WEBVIEW_VERSION)
-    }
-
-    @Test
-    fun `should contain two keys (uuid and webview version)`() {
-        assertEquals(sut.extraKnownKeys().size, 2)
     }
 
     @Test
@@ -128,8 +118,14 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `should provide empty application context`() = runTest {
-        assertThat(sut.applicationContextProvider.first()).isEmpty()
+    fun `should provide an application context of size 1`() = runTest {
+        assertThat(sut.applicationContextProvider.first().size).isEqualTo(1)
+    }
+
+    @Test
+    fun `should provide the webview version in the application context1`() = runTest {
+        val expected = mapOf(WEBVIEW_VERSION to TEST_WEBVIEW_VERSION)
+        assertThat(sut.applicationContextProvider.first()).containsAllEntriesOf(expected)
     }
 
     @Test
@@ -156,7 +152,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
 
         verify(logFileProvider).getLogFiles()
         verify(encryptedLogging, never()).encryptAndUploadLogFile(any(), any())
-        assertThat(extras.keys).doesNotContain(EXTRA_UUID)
+        assertThat(extras).isEmpty()
     }
 
     @Test
@@ -213,6 +209,7 @@ class WPCrashLoggingDataProviderTest : BaseUnitTest() {
         }
 
         const val TEST_UUID = "test uuid"
+        const val TEST_WEBVIEW_VERSION = "123"
         const val SEND_CRASH_SAMPLE_KEY = "send_crash"
     }
 }
