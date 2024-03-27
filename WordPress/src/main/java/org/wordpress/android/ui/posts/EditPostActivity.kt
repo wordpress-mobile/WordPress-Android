@@ -2782,26 +2782,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
 
         if (resultCode != RESULT_OK) {
-            // for all media related intents, let editor fragment know about cancellation
-            when (requestCode) {
-                RequestCodes.MULTI_SELECT_MEDIA_PICKER,
-                RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
-                RequestCodes.PHOTO_PICKER,
-                RequestCodes.STORIES_PHOTO_PICKER,
-                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
-                RequestCodes.MEDIA_LIBRARY,
-                RequestCodes.PICTURE_LIBRARY,
-                RequestCodes.TAKE_PHOTO,
-                RequestCodes.VIDEO_LIBRARY,
-                RequestCodes.TAKE_VIDEO,
-                RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
-                RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
-                    editorFragment?.mediaSelectionCancelled()
-                    return
-                }
-                else ->                     // noop
-                    return
-            }
+            return handleNotOKRequest(resultCode)
         }
 
         if (data != null ||
@@ -2814,6 +2795,29 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         if (requestCode == JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE) {
             fetchSiteSettings()
+        }
+    }
+
+    private fun handleNotOKRequest(requestCode: Int) {
+        // for all media related intents, let editor fragment know about cancellation
+        when (requestCode) {
+            RequestCodes.MULTI_SELECT_MEDIA_PICKER,
+            RequestCodes.SINGLE_SELECT_MEDIA_PICKER,
+            RequestCodes.PHOTO_PICKER,
+            RequestCodes.STORIES_PHOTO_PICKER,
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT,
+            RequestCodes.MEDIA_LIBRARY,
+            RequestCodes.PICTURE_LIBRARY,
+            RequestCodes.TAKE_PHOTO,
+            RequestCodes.VIDEO_LIBRARY,
+            RequestCodes.TAKE_VIDEO,
+            RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT,
+            RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK -> {
+                editorFragment?.mediaSelectionCancelled()
+                return
+            }
+            else ->                     // noop
+                return
         }
     }
     private fun handleRequest(requestCode: Int, data: Intent?) {
@@ -3844,8 +3848,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
     fun onEditorThemeChanged(event: OnEditorThemeChanged) {
-        if (editorFragment !is EditorThemeUpdateListener) return
-        if (siteModel.id != event.siteId) return
+        if (editorFragment !is EditorThemeUpdateListener || (siteModel.id != event.siteId)) return
         val editorTheme: EditorTheme = event.editorTheme ?: return
         val editorThemeSupport: EditorThemeSupport = editorTheme.themeSupport
         (editorFragment as EditorThemeUpdateListener)
