@@ -348,15 +348,10 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             adapter = recyclerView.adapter as StatsBlockAdapter
         }
 
-        val layoutManager = recyclerView.layoutManager
-        val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
-        recyclerView.scrollToPosition(0)
 
         errorView.statsErrorView.isGone = true
         emptyView.statsEmptyView.isGone = true
         recyclerView.isVisible = true
-
-        layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }
