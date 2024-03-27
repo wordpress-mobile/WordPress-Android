@@ -284,6 +284,8 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 selectedTrafficGranularityManager.getSelectedTrafficGranularity()
             )
             dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
+
+            recyclerView.scrollToPosition(0)
         }
     }
 
