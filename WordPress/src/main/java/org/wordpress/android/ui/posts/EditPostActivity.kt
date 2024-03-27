@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION", "ComplexCondition")
+@file:Suppress("ComplexCondition")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
