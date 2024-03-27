@@ -1,5 +1,5 @@
 @file:Suppress("DEPRECATION", "ComplexCondition", "SwallowedException",
-    "TooGenericExceptionCaught", "ReturnCount")
+    "TooGenericExceptionCaught")
 package org.wordpress.android.ui.posts
 
 import android.app.ProgressDialog
@@ -626,23 +626,21 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
     private fun getSiteModelForExtraQuickPressBlogIdIfRequested(extras: Bundle?): SiteModel? {
-        extras ?: return null
-
-        if (!extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID) ||
-            isActionSendOrNewMedia(intent.action) ||
-            extras.containsKey(
-                EditPostActivityConstants.EXTRA_IS_QUICKPRESS
-            )
-        ) {
-            if (extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)) {
-                // QuickPress might want to use a different blog than the current blog
-                val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
-                siteStore.getSiteByLocalId(localSiteId)?.let { model ->
-                    return model
-                }
-            }
+        if (extras == null || extras.containsKey(EditPostActivityConstants.EXTRA_POST_LOCAL_ID)) {
+            return null
         }
-        return null
+
+        val isActionSendOrNewMedia = isActionSendOrNewMedia(intent.action)
+        val hasQuickPressFlag = extras.containsKey(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)
+        val hasQuickPressBlogId = extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)
+
+        // QuickPress might want to use a different blog than the current blog
+        return if (!isActionSendOrNewMedia && !hasQuickPressFlag && hasQuickPressBlogId) {
+            val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
+            siteStore.getSiteByLocalId(localSiteId)
+        } else {
+            null
+        }
     }
 
     @Suppress("CyclomaticComplexMethod")
@@ -1248,12 +1246,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         site: SiteModel
     ): Boolean {
         // Some guard conditions
-        if (!editPostRepository.hasPost()) {
-            AppLog.w(AppLog.T.EDITOR, "shouldSwitchToGutenbergBeVisible got a null post parameter.")
-            return false
-        }
-        if (editorFragment == null) {
-            AppLog.w(AppLog.T.EDITOR, "shouldSwitchToGutenbergBeVisible got a null editorFragment parameter.")
+        val message: String? = if (!editPostRepository.hasPost())
+            "shouldSwitchToGutenbergBeVisible got a null post parameter."
+        else if (editorFragment == null)
+            "shouldSwitchToGutenbergBeVisible got a null editorFragment parameter."
+        else null
+
+        message?.let {
+            AppLog.w(AppLog.T.EDITOR, it)
             return false
         }
 
@@ -1261,7 +1261,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         var hasBlocks = false
         var isEmpty = false
         try {
-            val content = editorFragment.getContent(editPostRepository.content) as String
+            val content = editorFragment?.getContent(editPostRepository.content) as String
             hasBlocks = PostUtils.contentContainsGutenbergBlocks(content)
             isEmpty = TextUtils.isEmpty(content)
         } catch (e: EditorFragmentNotAddedException) {
@@ -1562,6 +1562,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             return handleBackPressed()
         }
         editorPhotoPicker?.hidePhotoPicker()
+
         if (itemId == R.id.menu_primary_action) {
             performPrimaryAction()
         } else {
