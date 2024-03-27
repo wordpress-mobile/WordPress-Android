@@ -4,10 +4,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyArray
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -109,9 +108,9 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             scanStore,
             percentFormatter
         )
-        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyArray<Any?>())).thenReturn("")
-        whenever(resourceProvider.getString(anyInt())).thenReturn(DUMMY_TEXT)
-        whenever(site.name).thenReturn((""))
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), anyVararg())).thenReturn("")
+        whenever(resourceProvider.getString(any())).thenReturn(DUMMY_TEXT)
+        whenever(site.name).thenReturn("")
         whenever(site.siteId).thenReturn(TEST_SITE_ID)
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
@@ -364,7 +363,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         test {
             val clickableText = "clickable help text"
             val descriptionWithClickableText = "description with $clickableText"
-            whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyArray<Any>()))
+            whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), anyVararg()))
                 .thenReturn(descriptionWithClickableText)
             whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
 
