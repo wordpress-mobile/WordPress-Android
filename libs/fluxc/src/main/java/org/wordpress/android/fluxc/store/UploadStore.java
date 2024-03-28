@@ -259,6 +259,15 @@ public class UploadStore extends Store {
         return null;
     }
 
+    public void clearUploadErrorForPost(PostImmutableModel postModel) {
+        if (postModel == null) return;
+        PostUploadModel postUploadModel = UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId());
+        if (postUploadModel != null) {
+            postUploadModel.setPostError(null);
+            UploadSqlUtils.insertOrUpdatePost(postUploadModel);
+        }
+    }
+
     public float getUploadProgressForMedia(MediaModel mediaModel) {
         MediaUploadModel mediaUploadModel = UploadSqlUtils.getMediaUploadModelForLocalId(mediaModel.getId());
         if (mediaUploadModel != null) {
