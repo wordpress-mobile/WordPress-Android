@@ -47,7 +47,8 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                 val readerPreferences by viewModel.currentReadingPreferences.collectAsState()
                 ReadingPreferencesScreen(
                     currentReadingPreferences = readerPreferences,
-                    onCloseClick = viewModel::saveReadingPreferencesAndClose,
+                    onCloseClick = viewModel::closeWithoutSaving,
+                    onDoneClick = viewModel::saveReadingPreferencesAndClose,
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
                     onFontSizeClick = viewModel::onFontSizeClick,
