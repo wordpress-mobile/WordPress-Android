@@ -424,14 +424,14 @@ public class PostStore extends Store {
             this.mStringValue = stringValue;
         }
 
-        public String getStringValue() {
+        @NonNull @Override public String toString() {
             return this.mStringValue;
         }
 
         public static PostErrorType fromString(String string) {
             if (string != null) {
                 for (PostErrorType v : PostErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.getStringValue())) {
+                    if (string.equalsIgnoreCase(v.toString())) {
                         return v;
                     }
                 }
