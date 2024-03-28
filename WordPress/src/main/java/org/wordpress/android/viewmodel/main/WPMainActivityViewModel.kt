@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.firstOrNull
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
@@ -299,7 +300,8 @@ class WPMainActivityViewModel @Inject constructor(
                 val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
 
                 // only proceed to feature announcement logic if we are upgrading the app
-                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                if (BuildConfig.SHOW_ANNOUNCEMENT_ALWAYS ||
+                    (previousVersionCode != 0 && previousVersionCode < currentVersionCode)) {
                     if (canShowFeatureAnnouncement()) {
                         analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                         _onFeatureAnnouncementRequested.call()
@@ -339,7 +341,8 @@ class WPMainActivityViewModel @Inject constructor(
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
         return cachedAnnouncement != null &&
                 cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
-                appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
+                (BuildConfig.SHOW_ANNOUNCEMENT_ALWAYS ||
+                        appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion)
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {

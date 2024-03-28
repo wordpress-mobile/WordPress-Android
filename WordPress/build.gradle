@@ -85,6 +85,8 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
+    def localProperties = loadPropertiesFromFileIfExists(file("${rootDir}/local.properties"))
+    String alwaysShowAnnouncement = localProperties.getProperty("alwaysShowAnnouncement", "false")
 
     defaultConfig {
         applicationId "org.wordpress.android"
@@ -257,11 +259,13 @@ android {
             // but we don't obfuscate the bytecode.
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            buildConfigField "boolean", "SHOW_ANNOUNCEMENT_ALWAYS", "false"
         }
 
         debug {
             minifyEnabled false
             buildConfigField "String", "APP_PN_KEY", "\"org.wordpress.android.debug.build\""
+            buildConfigField "boolean", "SHOW_ANNOUNCEMENT_ALWAYS", alwaysShowAnnouncement
             pseudoLocalesEnabled true
         }
     }
@@ -685,6 +689,16 @@ static def loadPropertiesFromFile(inputFile) {
     def properties = new Properties()
     inputFile.withInputStream { stream ->
         properties.load(stream)
+    }
+    return properties
+}
+
+static def loadPropertiesFromFileIfExists(inputFile) {
+    def properties = new Properties()
+    if (inputFile.exists()) {
+        inputFile.withInputStream { stream ->
+            properties.load(stream)
+        }
     }
     return properties
 }
