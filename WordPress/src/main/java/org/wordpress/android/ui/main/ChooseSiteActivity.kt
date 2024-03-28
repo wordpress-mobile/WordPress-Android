@@ -29,7 +29,7 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ActivityUtils
@@ -62,6 +62,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     @Inject
     lateinit var dispatcher: Dispatcher
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -243,7 +246,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     }
 
     private fun selectSite(siteRecord: SiteRecord) {
-        AppPrefs.addRecentlyPickedSiteId(siteRecord.localId)
+        appPrefsWrapper.addRecentSiteLocalId(siteRecord.localId)
         setResult(RESULT_OK, Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.localId))
         finish()
     }

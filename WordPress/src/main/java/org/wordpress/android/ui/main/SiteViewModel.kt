@@ -53,16 +53,34 @@ class SiteViewModel @Inject constructor(
     }
 
     /**
-     * Make the pinned sites appear first in the list.
+     * Make the pinned sites appear first in the list, followed by the recent sites.
      * Then sort the list of sites by blog name or home URL.
      */
     private fun sortSites(records: List<SiteRecord>): List<SiteRecord> {
-        val sites = records.toMutableList()
+        val selectedSite = records.firstOrNull { it.localId == appPrefsWrapper.getSelectedSite() }
+        val allSites = records.toMutableList()
+
         val pinnedSites = appPrefsWrapper.pinnedSiteLocalIds
-            .mapNotNull { pinnedId -> sites.firstOrNull { it.localId == pinnedId } }
+            .mapNotNull { pinnedId -> allSites.firstOrNull { it.localId == pinnedId } }
+            .toMutableList()
+            .apply { selectedSite?.let { remove(it) } }
 
-        pinnedSites.forEach { sites.remove(it) }
+        val recentSites = appPrefsWrapper.getRecentSiteLocalIds()
+            .mapNotNull { pinnedId -> allSites.firstOrNull { it.localId == pinnedId } }
+            .toMutableList()
+            .apply {
+                selectedSite?.let { remove(it) }
+                removeAll(pinnedSites)
+            }
 
-        return pinnedSites + sites.sortedBy { it.blogNameOrHomeURL }
+        allSites.apply {
+            selectedSite?.let { remove(it) }
+            removeAll(pinnedSites)
+            removeAll(recentSites)
+        }
+
+        val selectedSites = selectedSite?.let { listOf(it) } ?: emptyList()
+
+        return selectedSites + pinnedSites + recentSites + allSites.sortedBy { it.blogNameOrHomeURL }
     }
 }

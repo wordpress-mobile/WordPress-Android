@@ -475,6 +475,11 @@ class AppPrefsWrapper @Inject constructor() {
         get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
         set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))
 
+    fun getRecentSiteLocalIds(): MutableSet<Int> = AppPrefs.getRecentlyPickedSiteIds().toMutableSet()
+    fun addRecentSiteLocalId(siteLocalId: Int) {
+        AppPrefs.addRecentlyPickedSiteId(siteLocalId)
+    }
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

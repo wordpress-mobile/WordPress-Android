@@ -33,21 +33,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
         )
 
-        when {
-            previousSite == null && site.isPinned() -> {
-                binding.header.text = itemView.context.getString(R.string.pinned_sites)
-                binding.header.isVisible = true
-            }
-
-            (previousSite == null || previousSite.isPinned()) && site.isPinned().not() -> {
-                binding.header.text = itemView.context.getString(R.string.all_sites)
-                binding.header.isVisible = true
-            }
-
-            else -> {
-                binding.header.isVisible = false
-            }
-        }
+        handleHeader(previousSite, site, selectedId)
 
         binding.textTitle.text = site.blogNameOrHomeURL
         binding.textDomain.text = site.homeURL
@@ -78,6 +64,38 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         handleHighlight(site, selectedId)
     }
 
+    private fun handleHeader(previousSite: SiteRecord?, site: SiteRecord, selectedId: Int?) {
+        when {
+            previousSite == null && site.isSelected(selectedId) -> {
+                binding.header.isVisible = false
+            }
+
+            (previousSite == null || previousSite.isSelected(selectedId)) && site.isPinned() -> {
+                binding.header.text = itemView.context.getString(R.string.pinned_sites)
+                binding.header.isVisible = true
+            }
+
+            (previousSite == null || previousSite.isPinned() || previousSite.isSelected(selectedId)) &&
+                    site.isPinned().not() &&
+                    site.isSelected(selectedId).not() -> {
+                binding.header.text = itemView.context.getString(R.string.recent_sites)
+                binding.header.isVisible = true
+            }
+
+            (previousSite == null || previousSite.isRecent() || previousSite.isPinned() || previousSite.isSelected(selectedId)) &&
+                    site.isPinned().not() &&
+                    site.isRecent().not() &&
+                    site.isSelected(selectedId).not() -> {
+                binding.header.text = itemView.context.getString(R.string.all_sites)
+                binding.header.isVisible = true
+            }
+
+            else -> {
+                binding.header.isVisible = false
+            }
+        }
+    }
+
     private fun handleHighlight(site: SiteRecord, selectedId: Int?) {
         val isSelected = site.localId == (selectedId ?: appPrefs.getSelectedSite())
         if (isSelected) {
@@ -99,5 +117,17 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     private fun SiteRecord?.isPinned(): Boolean = when (this) {
         null -> false
         else -> appPrefs.pinnedSiteLocalIds.contains(localId)
+    }
+
+    private fun SiteRecord?.isSelected(selectedId: Int?): Boolean =
+        if (this == null) {
+            false
+        } else {
+            localId == selectedId
+        }
+
+    private fun SiteRecord?.isRecent(): Boolean = when (this) {
+        null -> false
+        else -> appPrefs.getRecentSiteLocalIds().contains(localId)
     }
 }
