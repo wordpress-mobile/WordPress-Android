@@ -32,7 +32,7 @@ ext {
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 
     // debug
-    flipperVersion = '0.245.0'
+    flipperVersion = '0.247.0'
     soLoaderVersion = '0.10.5'
 
     // main
