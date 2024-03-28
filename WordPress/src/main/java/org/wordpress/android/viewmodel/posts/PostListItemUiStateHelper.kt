@@ -64,6 +64,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_READ
 import javax.inject.Inject
 
 /**
@@ -74,7 +75,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
 ) {
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
@@ -437,6 +438,9 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowViewButton) {
             buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
+            if (BuildConfig.IS_JETPACK_APP) {
+                buttonTypes.addReadAction(isLocalDraft || isLocallyChanged)
+            }
         }
 
         if (canShowStats) {
@@ -473,6 +477,12 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
         add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
+    }
+
+    private fun MutableList<PostListButtonType>.addReadAction(isPreview: Boolean) {
+        if (!isPreview) {
+            add(BUTTON_READ)
+        }
     }
 
     private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(

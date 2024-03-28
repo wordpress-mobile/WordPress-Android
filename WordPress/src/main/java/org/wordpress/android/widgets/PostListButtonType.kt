@@ -173,6 +173,14 @@ enum class PostListButtonType constructor(
         MaterialR.attr.colorOnSurface,
         NAVIGATE_GROUP_ID,
         2
+    ),
+    BUTTON_READ(
+        20,
+        R.string.button_read,
+        R.drawable.ic_reader_glasses_white_24dp,
+        MaterialR.attr.colorOnSurface,
+        VIEW_GROUP_ID,
+        1
     );
 
     companion object {
