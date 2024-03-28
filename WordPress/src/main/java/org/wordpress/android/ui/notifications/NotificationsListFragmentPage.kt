@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -124,7 +122,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
-        notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
+        notesAdapter = NotesAdapter(inlineActionEvents = viewModel.inlineActionEvents).apply {
             onNoteClicked = { noteId -> handleNoteClick(noteId) }
             onNotesLoaded = {
                 itemCount -> updateEmptyLayouts(itemCount)
@@ -135,7 +133,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 .launchIn(viewLifecycleOwner.lifecycleScope)
         }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManagerWrapper(view.context)
+            notificationsList.layoutManager = LinearLayoutManager(view.context)
+            // setting itemAnimator as null fixes a bug that blocks the UI thread
+            // when we perform the first click on the Like inline actions
+            notificationsList.itemAnimator = null
             notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
@@ -568,27 +569,5 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             )
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
-    }
-
-    /**
-     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that blocks the UI thread
-     * when we perform the first click on the inline actions in the notifications list.
-     */
-    internal class LinearLayoutManagerWrapper : LinearLayoutManager {
-        constructor(context: Context) : super(context)
-        constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(
-            context,
-            orientation,
-            reverseLayout
-        )
-
-        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
-            context,
-            attrs,
-            defStyleAttr,
-            defStyleRes
-        )
-
-        override fun supportsPredictiveItemAnimations(): Boolean = false
     }
 }
