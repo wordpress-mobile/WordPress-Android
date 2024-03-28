@@ -157,7 +157,7 @@ public class PublicizeTable {
     }
 
     public static boolean onlyExternalConnections(String serviceId) {
-        if (serviceId == null && serviceId.isEmpty()) {
+        if (serviceId == null || serviceId.isEmpty()) {
             return false;
         }
 
