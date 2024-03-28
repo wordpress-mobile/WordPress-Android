@@ -215,7 +215,7 @@ To make a view focusable for accessible you can utilize :
 
 #### Focus Guidelines
 * It is important that you manage how focus is being set. Ensure you don't confuse keyboard focus/input focus with accessibility focus, as you can end up in a situation where you set `focusable` to true for accessibility reasons and it impacts the user experience for users using the app without TalkBack. 
-* Do not attempt to force TalkBack to focus on a specific view, as it breaks predictable navigation and you might make the app more inaccessible. TalkBack also attaches itself late in the activity lifecyle so it might be difficult to get this to work properly without a hacky solution. 
+* Do not attempt to force TalkBack to focus on a specific view, as it breaks predictable navigation and you might make the app more inaccessible. TalkBack also attaches itself late in the activity lifecycle so it might be difficult to get this to work properly without a hacky solution. 
 
 ### <a name="horizontal-scrolling"></a>Horizontal Scrolling
 
