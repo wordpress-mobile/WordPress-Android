@@ -5,6 +5,7 @@ import com.automattic.android.tracks.crashlogging.CrashLoggingDataProvider
 import com.automattic.android.tracks.crashlogging.CrashLoggingUser
 import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
+import com.automattic.android.tracks.crashlogging.ReleaseName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
@@ -48,7 +49,11 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val enableCrashLoggingLogs: Boolean = false
     override val locale: Locale
         get() = localeManager.getLocale()
-    override val releaseName: String = BuildConfig.VERSION_NAME
+    override val releaseName: ReleaseName = if (buildConfig.isDebug()) {
+        ReleaseName.SetByApplication("debug")
+    } else {
+        ReleaseName.SetByTracksLibrary
+    }
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
     override val applicationContextProvider = flowOf(mapOf(WEBVIEW_VERSION to webviewVersionProvider.getVersion()))
