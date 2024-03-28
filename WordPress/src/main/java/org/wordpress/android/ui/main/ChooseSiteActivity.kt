@@ -165,6 +165,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 menuEditPin.isVisible = false
+                binding.layoutAddSite.isVisible = false
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
                         if (!DeviceUtils.getInstance().hasHardwareKeyboard(this@ChooseSiteActivity)) {
@@ -187,7 +188,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
                 searchKeyword = null
                 searchView.setOnQueryTextListener(null)
                 viewModel.loadSites(mode)
-                menuEditPin.isVisible = true
                 invalidateOptionsMenu()
                 return true
             }
@@ -234,7 +234,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private fun setupRecycleView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter.apply {
-            onReload = { viewModel.loadSites(this@ChooseSiteActivity.mode) }
+            onReload = { viewModel.loadSites(this@ChooseSiteActivity.mode, searchKeyword) }
             onSiteClicked = { selectSite(it) }
             onSiteLongClicked = { onSiteLongClick(it) }
         }
