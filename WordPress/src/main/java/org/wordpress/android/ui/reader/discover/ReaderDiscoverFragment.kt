@@ -18,6 +18,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -55,7 +56,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
+class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout), OnScrollToTopListener {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
     @Inject
@@ -281,5 +282,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             )
             viewModel.onReblogSiteSelected(siteLocalId)
         }
+    }
+
+    override fun onScrollToTop() {
+        binding?.recyclerView?.smoothScrollToPosition(0)
     }
 }
