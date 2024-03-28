@@ -148,6 +148,7 @@ android {
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
         buildConfigField "boolean", "STATS_TRAFFIC_TAB", "false"
         buildConfigField "boolean", "READER_DISCOVER_NEW_ENDPOINT", "false"
+        buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"

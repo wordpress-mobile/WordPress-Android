@@ -1698,6 +1698,25 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
+    <string name="reader_preferences_screen_preview_title" translatable="false">The quick brown fox jumps over the lazy dog</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">dogs,fox,design,writing</string>
+    <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
+
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+
+    <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
+    <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>
+    <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
+
+    <string name="reader_preferences_font_family_preview" translatable="false">Aa</string>
+    <string name="reader_preferences_font_size_preview" translatable="false">A</string>
+
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_page_saved_online">Page saved online</string>
@@ -2114,6 +2133,7 @@
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_block_user">Block user</string>
+    <string name="reader_menu_reading_preferences">Reading Preferences</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>

@@ -202,6 +202,7 @@ public class AppPrefs {
         SHOULD_HIDE_BLOGANUARY_NUDGE_CARD,
         SHOULD_HIDE_SOTW2023_NUDGE_CARD,
         SHOULD_HIDE_DYNAMIC_CARD,
+        READER_READING_PREFERENCES_JSON,
     }
 
     /**
@@ -1768,5 +1769,18 @@ public class AppPrefs {
 
     public static boolean getShouldHideDynamicCard(@NonNull final String id) {
         return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_DYNAMIC_CARD.name() + id, false);
+    }
+
+    @Nullable
+    public static String getReaderReadingPreferencesJson() {
+        return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
+    }
+
+    public static void setReaderReadingPreferencesJson(@Nullable String json) {
+        if (json == null) {
+            remove(DeletablePrefKey.READER_READING_PREFERENCES_JSON);
+        } else {
+            setString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, json);
+        }
     }
 }
