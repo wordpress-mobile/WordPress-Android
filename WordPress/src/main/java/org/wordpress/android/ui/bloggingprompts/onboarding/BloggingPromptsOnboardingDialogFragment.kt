@@ -25,8 +25,8 @@ import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboar
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment.DialogType.ONBOARDING
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingUiState.Ready
 import org.wordpress.android.ui.featureintroduction.FeatureIntroductionDialogFragment
-import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.BLOGGING_PROMPTS_MODE
+import org.wordpress.android.ui.main.ChooseSiteActivity
+import org.wordpress.android.ui.main.SitePickerMode
 import org.wordpress.android.ui.main.UpdateSelectedSiteListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.posts.PostUtils.EntryPoint.BLOGGING_PROMPTS_INTRODUCTION
@@ -52,7 +52,7 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
     private val sitePickerLauncher = registerForActivityResult(StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val selectedSiteLocalId = result.data?.getIntExtra(
-                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                 SelectedSiteRepository.UNAVAILABLE
             ) ?: SelectedSiteRepository.UNAVAILABLE
             viewModel.onSiteSelected(selectedSiteLocalId)
@@ -180,9 +180,9 @@ class BloggingPromptsOnboardingDialogFragment : FeatureIntroductionDialogFragmen
                 }
 
                 is OpenSitePicker -> {
-                    val intent = Intent(context, SitePickerActivity::class.java).apply {
-                        putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, action.selectedSite)
-                        putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, BLOGGING_PROMPTS_MODE)
+                    val intent = Intent(context, ChooseSiteActivity::class.java).apply {
+                        action.selectedSite?.id?.let { putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, it) }
+                        putExtra(ChooseSiteActivity.KEY_SITE_PICKER_MODE, SitePickerMode.SIMPLE.name)
                     }
                     sitePickerLauncher.launch(intent)
                 }

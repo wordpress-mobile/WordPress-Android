@@ -24,7 +24,7 @@ import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueListener;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment;
-import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 
@@ -126,7 +126,7 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
     }
 
     private void selectSite(int localId) {
-        setResult(RESULT_OK, new Intent().putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, localId));
+        setResult(RESULT_OK, new Intent().putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, localId));
         finish();
     }
 
@@ -167,16 +167,16 @@ public class LoginEpilogueActivity extends LocaleAwareActivity implements LoginE
             && data != null
         ) {
             int newSiteLocalID = data.getIntExtra(
-                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
             boolean isTitleTaskCompleted = data.getBooleanExtra(
-                    SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED,
+                    ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED,
                     false
             );
             setResult(RESULT_OK, new Intent()
-                    .putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSiteLocalID)
-                    .putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskCompleted)
+                    .putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, newSiteLocalID)
+                    .putExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskCompleted)
                     .putExtra(KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, true)
             );
             finish();

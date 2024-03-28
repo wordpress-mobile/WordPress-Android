@@ -16,7 +16,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord
+import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartPromptDialogViewModel
 import org.wordpress.android.util.DisplayUtils
@@ -92,7 +92,7 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.siteRecord = SiteRecord(selectedSiteRepository.getSelectedSite())
+        this.siteRecord = SiteRecord(selectedSiteRepository.getSelectedSite()!!)
         if (savedInstanceState != null) {
             fragmentTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
             title = requireNotNull(savedInstanceState.getString(STATE_KEY_TITLE))

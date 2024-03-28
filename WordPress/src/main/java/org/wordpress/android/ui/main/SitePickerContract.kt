@@ -10,14 +10,14 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 class SitePickerContract (private val siteStoreProvider: () -> SiteStore) : ActivityResultContract<Unit, SiteModel?>() {
     override fun createIntent(context: Context, input: Unit) =
-        Intent(context, SitePickerActivity::class.java).apply {
-            putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, SitePickerAdapter.SitePickerMode.SIMPLE_MODE)
+        Intent(context, ChooseSiteActivity::class.java).apply {
+            putExtra(ChooseSiteActivity.KEY_SITE_PICKER_MODE, SitePickerMode.WPCOM_SITES_ONLY.name)
         }
 
     override fun parseResult(resultCode: Int, intent: Intent?) =
         if (resultCode == AppCompatActivity.RESULT_OK) {
             intent?.getIntExtra(
-                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                 SelectedSiteRepository.UNAVAILABLE,
             )?.let { siteLocalId ->
                 siteStoreProvider().getSiteByLocalId(siteLocalId)

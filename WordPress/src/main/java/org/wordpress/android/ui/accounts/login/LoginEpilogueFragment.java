@@ -31,16 +31,16 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.OnDataLoadedListener;
 import org.wordpress.android.ui.main.SitePickerAdapter.OnSiteClickListener;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.ui.main.SiteRecord;
 import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -255,7 +255,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             }
 
             @Override
-            public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
+            public void onBindViewHolder(LoginHeaderViewHolder holder, List<SiteRecord> sites) {
                 bindHeaderViewHolder(holder, sites);
             }
         };
@@ -275,7 +275,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 }
 
                 @Override
-                public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+                public void onBindViewHolder(LoginFooterViewHolder holder, List<SiteRecord> sites) {
                     bindFooterViewHolder(holder, sites);
                 }
             };
@@ -321,7 +321,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         mParentViewModel.onLoginEpilogueResume(mDoLoginUpdate);
     }
 
-    private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
+    private void bindHeaderViewHolder(LoginHeaderViewHolder holder, List<SiteRecord> sites) {
         if (!isAdded()) {
             return;
         }
@@ -354,7 +354,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+    private void bindFooterViewHolder(LoginFooterViewHolder holder, List<SiteRecord> sites) {
         holder.itemView.setVisibility((mShowAndReturn || BuildConfig.IS_JETPACK_APP) ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {

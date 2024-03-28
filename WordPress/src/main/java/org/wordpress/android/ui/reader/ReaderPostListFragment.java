@@ -78,7 +78,7 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository;
@@ -2832,7 +2832,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
             int siteLocalId = data.getIntExtra(
-                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
             mViewModel.onReblogSiteSelected(siteLocalId);
