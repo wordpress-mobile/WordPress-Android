@@ -1085,6 +1085,10 @@ public class PostStore extends Store {
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
+            if (payload.error.type == PostErrorType.OLD_REVISION) {
+                payload.post.setStatus(PostStatus.OLD_REVISION.toString());
+                updatePost(payload.post, false);
+            }
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post, payload.isFirstTimePublish);
             onPostUploaded.error = payload.error;
             emitChange(onPostUploaded);
