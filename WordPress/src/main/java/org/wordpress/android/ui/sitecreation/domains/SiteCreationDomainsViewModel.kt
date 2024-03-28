@@ -122,7 +122,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
                 }
 
                 else -> {
-                    AppLog.d(AppLog.T.DOMAIN_REGISTRATION, result.products.toString())
                     products = result.products.orEmpty().associateBy { it.productId }
                 }
             }
