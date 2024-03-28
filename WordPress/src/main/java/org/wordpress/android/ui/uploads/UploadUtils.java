@@ -97,6 +97,8 @@ public class UploadUtils {
             case UNAUTHORIZED:
                 return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
                         : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case OLD_REVISION:
+                return new UiStringRes(R.string.local_post_is_conflicted);
             case UNSUPPORTED_ACTION:
             case INVALID_RESPONSE:
             case GENERIC_ERROR:

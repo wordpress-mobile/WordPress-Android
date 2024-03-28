@@ -1964,6 +1964,7 @@
     <string name="error_restoring_post">An error occurred while restoring the post</string>
 
     <string name="error_refresh_unauthorized_pages">You don\'t have permission to view or edit pages</string>
+
     <string name="error_refresh_unauthorized_posts">You don\'t have permission to view or edit posts</string>
     <string name="error_fetch_my_profile" tools:ignore="UnusedResources" a8c-src-lib="login">Couldn\'t retrieve your profile</string>
     <string name="error_fetch_account_settings">Couldn\'t retrieve your account settings</string>

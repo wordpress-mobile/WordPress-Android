@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.OLD_REVISION
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
@@ -151,7 +152,7 @@ class PostListItemUiStateHelper @Inject constructor(
                     )
                 }
 
-                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
+                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED, OLD_REVISION -> onAction.invoke(
                     post,
                     BUTTON_EDIT,
                     POST_LIST_ITEM_SELECTED
@@ -200,7 +201,7 @@ class PostListItemUiStateHelper @Inject constructor(
         if (isSearch) {
             val postStatusText = when (postStatus) {
                 UNKNOWN -> R.string.unknown
-                PUBLISHED -> R.string.post_status_post_published
+                PUBLISHED, OLD_REVISION -> R.string.post_status_post_published
                 DRAFT -> R.string.post_status_draft
                 PRIVATE -> R.string.post_status_post_private
                 PENDING -> R.string.post_status_pending_review
@@ -290,7 +291,7 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun getWaitingForConnectionStatus(postStatus: PostStatus): UiString? {
         return when (postStatus) {
-            UNKNOWN, PUBLISHED -> (UiStringRes(R.string.post_waiting_for_connection_publish))
+            UNKNOWN, PUBLISHED, OLD_REVISION -> (UiStringRes(R.string.post_waiting_for_connection_publish))
             PRIVATE -> (UiStringRes(R.string.post_waiting_for_connection_private))
             PENDING -> (UiStringRes(R.string.post_waiting_for_connection_pending))
             SCHEDULED -> (UiStringRes(R.string.post_waiting_for_connection_scheduled))
@@ -365,7 +366,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private fun getMediaUploadErrorMessage(uploadUiState: UploadFailed, postStatus: PostStatus): UiStringRes {
         return when {
             uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
-                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_retrying_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
@@ -373,7 +374,7 @@ class PostListItemUiStateHelper @Inject constructor(
             }
 
             uploadUiState.retryWillPushChanges -> when (postStatus) {
-                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
+                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_post_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)

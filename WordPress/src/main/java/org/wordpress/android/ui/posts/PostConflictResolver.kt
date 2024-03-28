@@ -1,11 +1,15 @@
 package org.wordpress.android.ui.posts
 
+import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils.Duration
@@ -23,7 +27,8 @@ class PostConflictResolver(
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
-    private val showToast: (ToastMessageHolder) -> Unit
+    private val showToast: (ToastMessageHolder) -> Unit,
+    private val uploadStore: UploadStore
 ) {
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
@@ -36,6 +41,12 @@ class PostConflictResolver(
 
         val post = getPostByLocalPostId.invoke(localPostId)
         if (post != null) {
+            // Todo: is there a case that we should turn to different status?
+            if (post.status == PostStatus.OLD_REVISION.toString()) {
+                post.setStatus(PostStatus.PUBLISHED.toString())
+                post.error = null
+                uploadStore.clearUploadErrorForPost(post)
+            }
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
@@ -54,6 +65,13 @@ class PostConflictResolver(
         invalidateList.invoke()
 
         val post = getPostByLocalPostId.invoke(localPostId) ?: return
+
+        // Todo: is there a case that we should turn to different status?
+        if (post.status == PostStatus.OLD_REVISION.toString()) {
+            post.setStatus(PostStatus.PUBLISHED.toString())
+            post.error = null
+            uploadStore.clearUploadErrorForPost(post)
+        }
 
         // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
@@ -82,10 +100,11 @@ class PostConflictResolver(
     }
 
     fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
+        val isOldRevision = post.status == PostStatus.OLD_REVISION.toString()
         // If we are fetching the remote version of a conflicted post, it means it's already being handled
         val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
                 localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
-        return !isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post)
+        return isOldRevision || (!isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post))
     }
 
     fun hasUnhandledAutoSave(post: PostModel): Boolean {

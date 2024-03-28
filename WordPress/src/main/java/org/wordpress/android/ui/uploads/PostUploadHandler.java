@@ -666,6 +666,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
 
             if (event.error.type == PostStore.PostErrorType.OLD_REVISION) {
                 Log.d("","");
+                // todo pantelis : should I set a status here like "old_revision"?
+                // event.post.setStatus();
             } else {
                 Context context = WordPress.getContext();
                 String errorMessage = mUiHelpers.getTextOfUiString(context,

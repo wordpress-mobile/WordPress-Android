@@ -21,7 +21,7 @@ class EditorActionsProvider @Inject constructor() {
                 PostStatus.SCHEDULED -> PrimaryEditorAction.SCHEDULE
                 PostStatus.DRAFT -> PrimaryEditorAction.PUBLISH_NOW
                 PostStatus.PENDING, PostStatus.TRASHED -> PrimaryEditorAction.SAVE
-                PostStatus.PUBLISHED ->
+                PostStatus.PUBLISHED, PostStatus.OLD_REVISION ->
                     if (isLandingEditor) PrimaryEditorAction.CONTINUE else PrimaryEditorAction.UPDATE
                 PostStatus.PRIVATE, PostStatus.UNKNOWN -> PrimaryEditorAction.UPDATE
             }
@@ -39,6 +39,7 @@ class EditorActionsProvider @Inject constructor() {
                     PrimaryEditorAction.SAVE
                 }
                 PostStatus.PUBLISHED,
+                PostStatus.OLD_REVISION,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
                     AppLog.e(
@@ -59,7 +60,7 @@ class EditorActionsProvider @Inject constructor() {
             when (postStatus) {
                 PostStatus.DRAFT -> SecondaryEditorAction.SAVE
                 PostStatus.PENDING, PostStatus.SCHEDULED -> SecondaryEditorAction.PUBLISH_NOW
-                PostStatus.PRIVATE, PostStatus.PUBLISHED -> SecondaryEditorAction.NONE
+                PostStatus.PRIVATE, PostStatus.PUBLISHED, PostStatus.OLD_REVISION -> SecondaryEditorAction.NONE
                 PostStatus.TRASHED, PostStatus.UNKNOWN -> SecondaryEditorAction.SAVE_AS_DRAFT
             }
         } else {
@@ -76,6 +77,7 @@ class EditorActionsProvider @Inject constructor() {
                     SecondaryEditorAction.SAVE_AS_DRAFT
                 }
                 PostStatus.PUBLISHED,
+                PostStatus.OLD_REVISION,
                 PostStatus.SCHEDULED,
                 PostStatus.PRIVATE -> {
                     AppLog.e(
