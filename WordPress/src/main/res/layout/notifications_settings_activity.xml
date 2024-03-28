@@ -10,6 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         app:liftOnScrollTargetViewId="@android:id/list"
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -28,6 +29,7 @@
                 app:theme="@style/WordPress.ActionBar">
 
                 <TextView
+                    android:id="@+id/toolbar_title"
                     style="@style/TextAppearance.App.Toolbar.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,16 +41,13 @@
                 android:id="@+id/main_switch"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
-
                 app:mainContentDescription="@string/notification_settings_switch_desc"
                 app:mainHintOff="@string/notification_settings_main_hint_off"
                 app:mainHintOn="@string/notification_settings_main_hint_on"
                 app:mainTitleOff="@string/notification_settings_main_status_off"
                 app:mainTitleOn="@string/notification_settings_main_status_on" />
 
-
         </LinearLayout>
-
 
     </com.google.android.material.appbar.AppBarLayout>
 

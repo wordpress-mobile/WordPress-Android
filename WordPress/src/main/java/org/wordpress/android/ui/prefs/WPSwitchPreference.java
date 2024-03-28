@@ -19,6 +19,7 @@ import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
 
+/**@see WPSwitchPreferenceX*/
 public class WPSwitchPreference extends SwitchPreference implements PreferenceHint {
     private String mHint;
     private ColorStateList mTint;

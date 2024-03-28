@@ -26,7 +26,20 @@ public class NotificationsSettings {
     public enum Channel {
         OTHER,
         BLOGS,
-        WPCOM
+        WPCOM;
+
+        public static Channel toNotificationChannel(Integer ordinal) {
+            switch (ordinal) {
+                case 0:
+                    return OTHER;
+                case 1:
+                    return BLOGS;
+                case 2:
+                    return WPCOM;
+                default:
+                    throw new IllegalArgumentException("Ordinal does not conform to any existing enum.");
+            }
+        }
     }
 
     // The notification setting type, used in BLOGS and OTHER channels
@@ -34,6 +47,19 @@ public class NotificationsSettings {
         TIMELINE,
         EMAIL,
         DEVICE;
+
+        public static Type toNotificationType(Integer ordinal) {
+            switch (ordinal) {
+                case 0:
+                    return TIMELINE;
+                case 1:
+                    return EMAIL;
+                case 2:
+                    return DEVICE;
+                default:
+                    throw new IllegalArgumentException("Ordinal does not conform to any existing enum.");
+            }
+        }
 
         public String toString() {
             switch (this) {
