@@ -1697,9 +1697,12 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
-    <string name="reader_preferences_screen_preview_title" translatable="false">The quick brown fox jumps over the lazy dog</string>
-    <string name="reader_preferences_screen_preview_tags" translatable="false">dogs,fox,design,writing</string>
-    <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
+    <!-- translators: %s is replaced with the string at reader_preferences_screen_preview_text_feedback, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text">Choose the right colors, fonts and sizes for you. Preview the changes here, and tap ‘Done’ when you’re ready to read.\n\nThis is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback">send your feedback</string>
+    <string name="reader_preferences_screen_feedback_url" translatable="false">https://automattic.survey.fm/reader-customization-survey</string>
 
     <string name="reader_preferences_theme_system">Default</string>
     <string name="reader_preferences_theme_soft">Soft</string>

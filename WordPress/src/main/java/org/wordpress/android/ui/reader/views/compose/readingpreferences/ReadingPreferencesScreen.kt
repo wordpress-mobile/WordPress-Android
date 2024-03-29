@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -32,10 +33,14 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
@@ -65,6 +70,7 @@ fun ReadingPreferencesScreen(
     val backgroundColor by animateColorAsState(Color(themeValues.intBackgroundColor), label = "backgroundColor")
     val baseTextColor by animateColorAsState(Color(themeValues.intBaseTextColor), label = "baseTextColor")
     val textColor by animateColorAsState(Color(themeValues.intTextColor), label = "textColor")
+    val linkColor by animateColorAsState(Color(themeValues.intLinkColor), label = "linkColor")
 
     SideEffect {
         // update background color based on value animation and notify the parent
@@ -111,6 +117,15 @@ fun ReadingPreferencesScreen(
                 style = getTitleTextStyle(fontFamily, fontSizeMultiplier, baseTextColor),
             )
 
+            // Content
+            ReadingPreferencesPreviewContent(
+                onSendFeedbackClick = { /*TODO*/ },
+                fontFamily = fontFamily,
+                fontSize = fontSize,
+                textColor = textColor,
+                linkColor = linkColor,
+            )
+
             // Tags
             FlowRow(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,18 +143,6 @@ fun ReadingPreferencesScreen(
                         )
                     }
             }
-
-            // Content
-            Text(
-                text = stringResource(R.string.reader_preferences_screen_preview_text),
-                style = TextStyle(
-                    fontFamily = fontFamily,
-                    fontSize = fontSize,
-                    fontWeight = FontWeight.Normal,
-                    color = textColor,
-                    lineHeight = fontSize * TEXT_LINE_HEIGHT_MULTIPLIER,
-                ),
-            )
         }
 
         // Preferences section
@@ -211,6 +214,60 @@ fun ReadingPreferencesScreen(
             )
         }
     }
+}
+
+@Composable
+private fun ReadingPreferencesPreviewContent(
+    onSendFeedbackClick: () -> Unit,
+    fontFamily: FontFamily,
+    fontSize: TextUnit,
+    textColor: Color,
+    linkColor: Color,
+) {
+    val feedbackString = stringResource(R.string.reader_preferences_screen_preview_text_feedback)
+    val contentString = stringResource(R.string.reader_preferences_screen_preview_text, feedbackString)
+    val annotatedString = buildAnnotatedString {
+        append(contentString)
+
+        val startIndex = contentString.indexOf(feedbackString)
+        val endIndex = startIndex + feedbackString.length
+
+        addStyle(
+            style = SpanStyle(
+                color = linkColor,
+                textDecoration = TextDecoration.Underline,
+            ),
+            start = startIndex,
+            end = endIndex,
+        )
+
+        addStringAnnotation(
+            tag = "url",
+            annotation = "feedback",
+            start = startIndex,
+            end = endIndex,
+        )
+    }
+
+    ClickableText(
+        text = annotatedString,
+        style = TextStyle(
+            fontFamily = fontFamily,
+            fontSize = fontSize,
+            fontWeight = FontWeight.Normal,
+            color = textColor,
+            lineHeight = fontSize * TEXT_LINE_HEIGHT_MULTIPLIER,
+        ),
+        onClick = { offset ->
+            annotatedString.getStringAnnotations(tag = "url", start = offset, end = offset)
+                .firstOrNull()
+                ?.let { annotation ->
+                    if (annotation.item == "feedback") {
+                        onSendFeedbackClick()
+                    }
+                }
+        },
+    )
 }
 
 private fun getTitleTextStyle(
