@@ -99,11 +99,9 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             ).let { color ->
                 binding.layoutContainer.setBackgroundColor(color)
             }
-            binding.textTitle.setTypeface(null, Typeface.BOLD)
         } else {
             // clear the highlight
             binding.layoutContainer.background = null
-            binding.textTitle.setTypeface(null, Typeface.NORMAL)
         }
     }
 
