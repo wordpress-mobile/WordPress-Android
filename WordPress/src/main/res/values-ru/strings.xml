@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 11:54:12+0000
+Translation-Revision-Date: 2024-03-21 17:03:39+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.0
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Вы можете копировать текст своей записи на случай, если ваш контент окажется повреждён. Скопируйте данные об ошибке, чтобы сообщить их инженерам поддержки и устранить неполадку.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора.</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Нажмите здесь, чтобы скопировать текст записи</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Нажмите здесь, чтобы скопировать данные об ошибке</string>
+    <string name="gutenberg_native_copy_post_text">Скопировать текст записи</string>
+    <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
+    <string name="editor_updating_post_failed">Не удалось обновить содержимое записи</string>
+    <string name="editor_updating_post">Обновление содержимого записи</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>
@@ -60,6 +70,7 @@ Language: ru
     <string name="reader_filter_chip_blog_one">1 блог</string>
     <string name="reader_filter_chip_blog_zero">Блоги: 0</string>
     <string name="reader_dropdown_menu_lists">Списки</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_liked">Понравилось</string>
     <string name="reader_dropdown_menu_saved">Сохранено</string>
     <string name="reader_dropdown_menu_subscriptions">Подписки</string>
@@ -943,11 +954,6 @@ Language: ru
     <string name="gutenberg_native_embed_options">Параметры встраивания</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Нажмите дважды, чтобы просмотреть возможности встраивания.</string>
     <string name="quick_start_list_create_site_message">Сайт создан! Выполните ещё задачу.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блоггерам&lt;/a&gt; это нравится.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;Одному блоггеру&lt;/a&gt; это нравится.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вам и еще %1$s блоггерам&lt;/a&gt; это нравится.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вам и еще одному блоггеру&lt;/a&gt; это нравится.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вам&lt;/a&gt; это нравится.</string>
     <string name="gutenberg_native_line_height">Высота строки</string>
     <string name="domains_free_plan_get_your_domain_title">Получите собственный домен</string>
     <string name="recommend_app_generic_get_template_error">Возникла неизвестная ошибка получания шаблона приложения рекомендаций</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-11 15:54:08+0000
+Translation-Revision-Date: 2024-03-20 17:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.0
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">يمكنك نسخ نص تدوينتك في حال تأثر محتواك. انسخ تفاصيل الخطأ لتصحيح الأخطاء ومشاركتها مع الدعم.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">واجه المحرر خطأ غير متوقع</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">الضغط هنا لنسخ نص التدوينة</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">الضغط هنا لنسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_copy_post_text">نسخ نص التدوينة</string>
+    <string name="gutenberg_native_copy_error_details">نسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_button_to_copy_post_text">زر نسخ نص التدوينة</string>
+    <string name="gutenberg_native_button_to_copy_error_details">زر نسخ تفاصيل الخطأ</string>
+    <string name="editor_updating_post_failed">فشل تحديث محتوى التدوينة</string>
+    <string name="editor_updating_post">تحديث محتوى التدوينة</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">تسمية الفيديو. فارغ</string>
     <string name="gutenberg_native_edit_video_024aee6d">تحرير الفيديو</string>
@@ -935,11 +945,6 @@ Language: ar
     <string name="gutenberg_native_embed_options">خيارات التضمين</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">اضغط ضغطًا مزدوجًا لعرض خيارات التضمين.</string>
     <string name="quick_start_list_create_site_message">تم إنشاء الموقع! قم بإكمال مهمة أخرى.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;مدوّن واحد&lt;/a&gt; معجب بهذا.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;أنت و مدوِّن واحد&lt;/a&gt; معجبان بهذا.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;أنت و⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;أنت&lt;/a&gt; معجب بهذا.</string>
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>

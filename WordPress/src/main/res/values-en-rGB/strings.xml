@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-04 22:08:04+0000
+Translation-Revision-Date: 2024-03-18 19:40:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">The editor has encountered an unexpected error</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Tap here to copy post text</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Tap here to copy error details</string>
+    <string name="gutenberg_native_copy_post_text">Copy post text</string>
+    <string name="gutenberg_native_copy_error_details">Copy error details</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Button to copy post text</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Button to copy error details</string>
+    <string name="editor_updating_post_failed">Failed to update post content</string>
+    <string name="editor_updating_post">Updating post content</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video caption. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video caption. Empty</string>
     <string name="gutenberg_native_edit_video_024aee6d">Edit video</string>
@@ -944,11 +954,6 @@ Language: en_GB
     <string name="gutenberg_native_embed_options">Embed options</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Double tap to view embed options.</string>
     <string name="quick_start_list_create_site_message">Site created! Complete another task.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s bloggers&lt;/a&gt; like this.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;one blogger&lt;/a&gt; likes this.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;You and one blogger&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;You&lt;/a&gt; like this.</string>
     <string name="gutenberg_native_line_height">Line Height</string>
     <string name="domains_free_plan_get_your_domain_title">Get your domain</string>
     <string name="recommend_app_generic_get_template_error">Unknown error fetching recommended app template</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 10:54:10+0000
+Translation-Revision-Date: 2024-03-20 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Anda dapat menyalin teks pos seandainya konten Anda terdampak. Salin detail error untuk di-debug dan dibagikan kepada dukungan.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Editor mengalami error tak terduga</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Ketuk di sini untuk menyalin teks pos</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Ketuk di sini untuk menyalin detail error</string>
+    <string name="gutenberg_native_copy_post_text">Salin teks pos</string>
+    <string name="gutenberg_native_copy_error_details">Salin detail error</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Tombol untuk menyalin teks pos</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Tombol untuk menyalin detail error</string>
+    <string name="editor_updating_post_failed">Gagal memperbarui konten pos</string>
+    <string name="editor_updating_post">Memperbarui konten pos</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Keterangan video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Keterangan video. Kosong</string>
     <string name="gutenberg_native_edit_video_024aee6d">Sunting video</string>
@@ -934,11 +944,6 @@ Language: id
     <string name="gutenberg_native_embed_options">Pilihan sematan</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Ketuk dua kali untuk melihat pilihan sematan.</string>
     <string name="quick_start_list_create_site_message">Situs telah dibuat! Selesaikan tugas lain.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blogger&lt;/a&gt; menyukai ini.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogger&lt;/a&gt; menyukai ini.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Anda dan %1$s blogger&lt;/a&gt; menyukai ini.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Anda dan 1 blogger&lt;/a&gt; menyukai ini.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Anda&lt;/a&gt; menyukai ini.</string>
     <string name="gutenberg_native_line_height">Ketinggian Baris</string>
     <string name="domains_free_plan_get_your_domain_title">Dapatkan domain Anda</string>
     <string name="recommend_app_generic_get_template_error">Terjadi error yang tidak diketahui saat memuat templat rekomendasikan aplikasi</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 22:31:04+0000
+Translation-Revision-Date: 2024-03-20 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Du kan kopiera din inläggstext om ditt innehåll påverkas. Kopiera felinformation så att du kan felsöka och dela med dig till supporten.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Redigeraren har stött på ett oväntat fel</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Klicka här för att kopiera inläggstext</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Klicka här för att kopiera felinformation</string>
+    <string name="gutenberg_native_copy_post_text">Kopiera inläggstext</string>
+    <string name="gutenberg_native_copy_error_details">Kopiera felinformation</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Knapp för att kopiera inläggstext</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Knapp för att kopiera felinformation</string>
+    <string name="editor_updating_post_failed">Uppdatering av inläggsinnehållet misslyckades</string>
+    <string name="editor_updating_post">Inläggsinnehållet uppdateras</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
     <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>
@@ -944,11 +954,6 @@ Language: sv_SE
     <string name="gutenberg_native_embed_options">Inbäddningsalternativ</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Dubbeltryck för att visa inbäddningsalternativ.</string>
     <string name="quick_start_list_create_site_message">Webbplatsen skapad! Slutför någon annan uppgift.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s bloggare&lt;/a&gt; gillar detta.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;En bloggare&lt;/a&gt; gillar detta.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Du och ytterligare %1$s bloggare&lt;/a&gt; gillar detta.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Du och ytterligare en bloggare&lt;/a&gt; gillar detta.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Du&lt;/a&gt; gillar detta.</string>
     <string name="gutenberg_native_line_height">Radhöjd</string>
     <string name="domains_free_plan_get_your_domain_title">Skaffa din egen domän</string>
     <string name="recommend_app_generic_get_template_error">Okänt fel vid hämtning av rekommenderad app-mall</string>

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 11:54:11+0000
+Translation-Revision-Date: 2024-03-20 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Vous pouvez copier le texte de votre article au cas où votre contenu serait affecté. Copier les détails de l’erreur pour débuguer et les partager avec l’assistance.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">L’éditeur a rencontré une erreur inattendue</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Appuyer ici pour copier le texte de l’article</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Appuyer ici pour copier les détails de l’erreur</string>
+    <string name="gutenberg_native_copy_post_text">Copier le texte de l’article</string>
+    <string name="gutenberg_native_copy_error_details">Copier les détails de l’erreur</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Bouton permettant de copier le texte de l’article</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Bouton permettant de copier les détails de l’erreur</string>
+    <string name="editor_updating_post_failed">Échec de la mise à jour du contenu de l\'article</string>
+    <string name="editor_updating_post">Mise à jour du contenu de l\'article</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>
@@ -936,11 +946,6 @@ Language: fr
     <string name="gutenberg_native_embed_options">Options d’intégration</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Appuyez deux fois pour afficher les options d’intégration.</string>
     <string name="quick_start_list_create_site_message">Le site a bien été créé ! Terminez une autre tâche.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blogueurs&lt;/a&gt; aiment ceci.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogueur&lt;/a&gt; aime ceci.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Vous et %1$s blogueurs&lt;/a&gt; aimez ceci.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Vous et 1 blogueur&lt;/a&gt; aimez ceci.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>

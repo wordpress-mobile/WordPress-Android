@@ -938,11 +938,6 @@ Language: gl_ES
     <string name="gutenberg_native_embed_options">Opcións de incrustación</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Dobre toque para ver as opcións de incrustación.</string>
     <string name="quick_start_list_create_site_message">Sitio creado! Completa outra tarefa.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 blogueiro&lt;/a&gt; gústalle.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogueiros&lt;/a&gt; gústalles.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A ti e a 1 blogueiro&lt;/a&gt; gústavos.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A ti e a %1$s blogueiros&lt;/a&gt; gústavos.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; gústache.</string>
     <string name="gutenberg_native_line_height">Altura da liña</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén o teu dominio</string>
     <string name="recommend_app_generic_get_template_error">Erro descoñecido ao recuperar o modelo recomendado da aplicación</string>
