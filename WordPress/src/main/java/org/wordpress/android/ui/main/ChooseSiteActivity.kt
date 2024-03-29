@@ -167,7 +167,6 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private fun setupSearchView(searchView: SearchView) {
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                menuEditPin.isVisible = false
                 binding.layoutAddSite.isVisible = false
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
