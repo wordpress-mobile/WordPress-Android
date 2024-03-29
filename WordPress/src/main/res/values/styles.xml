@@ -132,58 +132,58 @@
         <item name="android:dropDownListViewStyle">@style/ReaderDetailsPopupTheme.Dropdown</item>
     </style>
 
-    <style name="ReaderTheme.Soft" parent="ReaderTheme.System">
+    <style name="ReaderTheme.Custom" parent="ReaderTheme.System">
+        <item name="android:colorBackground">?attr/colorSurface</item>
+        <item name="colorOnBackground">?attr/colorOnSurface</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
+
+        <item name="readerFollowButtonBackground">?attr/colorOnSurface</item>
+        <item name="readerFollowButtonForeground">?attr/colorSurface</item>
+        <item name="readerFollowButtonSelectedBackground">@color/transparent</item>
+        <item name="readerFollowButtonSelectedForeground">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTheme.Soft" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_soft_background</item>
         <item name="colorOnSurface">@color/reader_theme_soft_text</item>
-        <item name="android:colorBackground">@color/reader_theme_soft_background</item>
-        <item name="colorOnBackground">@color/reader_theme_soft_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_soft_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_soft_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
     </style>
 
-    <style name="ReaderTheme.Sepia" parent="ReaderTheme.System">
+    <style name="ReaderTheme.Sepia" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_sepia_background</item>
         <item name="colorOnSurface">@color/reader_theme_sepia_text</item>
-        <item name="android:colorBackground">@color/reader_theme_sepia_background</item>
-        <item name="colorOnBackground">@color/reader_theme_sepia_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_sepia_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_sepia_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
     </style>
 
-    <style name="ReaderTheme.Evening" parent="ReaderTheme.System">
+    <style name="ReaderTheme.Evening" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_evening_background</item>
         <item name="colorOnSurface">@color/reader_theme_evening_text</item>
-        <item name="android:colorBackground">@color/reader_theme_evening_background</item>
-        <item name="colorOnBackground">@color/reader_theme_evening_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_evening_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_evening_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
     </style>
 
-    <style name="ReaderTheme.OLED" parent="ReaderTheme.System">
+    <style name="ReaderTheme.OLED" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_oled_background</item>
         <item name="colorOnSurface">@color/reader_theme_oled_text</item>
-        <item name="android:colorBackground">@color/reader_theme_oled_background</item>
-        <item name="colorOnBackground">@color/reader_theme_oled_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_oled_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_oled_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
     </style>
 
-    <style name="ReaderTheme.h4x0r" parent="ReaderTheme.System">
+    <style name="ReaderTheme.h4x0r" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_h4x0r_background</item>
         <item name="colorOnSurface">@color/reader_theme_h4x0r_text</item>
-        <item name="android:colorBackground">@color/reader_theme_h4x0r_background</item>
-        <item name="colorOnBackground">@color/reader_theme_h4x0r_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_h4x0r_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_h4x0r_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
     </style>
 
-    <style name="ReaderTheme.Candy" parent="ReaderTheme.System">
+    <style name="ReaderTheme.Candy" parent="ReaderTheme.Custom">
         <item name="colorSurface">@color/reader_theme_candy_background</item>
         <item name="colorOnSurface">@color/reader_theme_candy_text</item>
-        <item name="android:colorBackground">@color/reader_theme_candy_background</item>
-        <item name="colorOnBackground">@color/reader_theme_candy_text</item>
-        <item name="android:textColorPrimary">@color/reader_theme_candy_text</item>
-        <item name="android:textColorSecondary">@color/reader_theme_candy_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
     </style>
 
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
