@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -56,6 +57,10 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
                 _actionEvents.emit(ActionEvent.Close(isDirty = false))
             }
         }
+    }
+
+    fun onSendFeedbackClick() {
+        // TODO
     }
 
     sealed interface ActionEvent {

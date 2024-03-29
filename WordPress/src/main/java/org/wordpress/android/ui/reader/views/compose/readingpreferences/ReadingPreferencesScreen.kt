@@ -60,6 +60,7 @@ private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
     onCloseClick: () -> Unit,
+    onSendFeedbackClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
@@ -119,7 +120,7 @@ fun ReadingPreferencesScreen(
 
             // Content
             ReadingPreferencesPreviewContent(
-                onSendFeedbackClick = { /*TODO*/ },
+                onSendFeedbackClick = onSendFeedbackClick,
                 fontFamily = fontFamily,
                 fontSize = fontSize,
                 textColor = textColor,
@@ -295,6 +296,7 @@ private fun ReadingPreferencesScreenPreview() {
         ReadingPreferencesScreen(
             currentReadingPreferences = readingPreferences,
             onCloseClick = {},
+            onSendFeedbackClick = {},
             onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },
             onFontFamilyClick = { readingPreferences = readingPreferences.copy(fontFamily = it) },
             onFontSizeClick = { readingPreferences = readingPreferences.copy(fontSize = it) },

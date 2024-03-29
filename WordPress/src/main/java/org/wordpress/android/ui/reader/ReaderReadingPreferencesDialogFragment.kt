@@ -48,6 +48,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                 ReadingPreferencesScreen(
                     currentReadingPreferences = readerPreferences,
                     onCloseClick = viewModel::saveReadingPreferencesAndClose,
+                    onSendFeedbackClick = viewModel::onSendFeedbackClick,
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
                     onFontSizeClick = viewModel::onFontSizeClick,
