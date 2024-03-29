@@ -27,6 +27,7 @@
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+        <item name="snackbarActionColor">@color/primary_30</item>
         <item name="snackbarStyle">@style/WordPress.Snackbar</item>
         <item name="snackbarButtonStyle">@style/WordPress.SnackbarButton</item>
         <item name="snackbarTextViewStyle">@style/WordPress.SnackbarText</item>
@@ -142,6 +143,8 @@
         <item name="readerFollowButtonForeground">?attr/colorSurface</item>
         <item name="readerFollowButtonSelectedBackground">@color/transparent</item>
         <item name="readerFollowButtonSelectedForeground">?attr/colorOnSurface</item>
+
+        <item name="snackbarActionColor">?attr/colorSurface</item>
     </style>
 
     <style name="ReaderTheme.Soft" parent="ReaderTheme.Custom">
@@ -433,7 +436,7 @@
     </style>
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/primary_30</item>
+        <item name="android:textColor">?attr/snackbarActionColor</item>
     </style>
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
