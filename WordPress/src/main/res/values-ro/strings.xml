@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-10 16:54:42+0000
+Translation-Revision-Date: 2024-03-19 10:41:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.0
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Dacă conținutul tău este afectat, poți să copiezi textul articolului. Copiază detaliile despre erori pentru a depana și partaja cu suportul.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Editorul a găsit o eroare neașteptată</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Atinge aici pentru a copia textul articolului</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Atinge aici pentru a copia detaliile despre erori</string>
+    <string name="gutenberg_native_copy_post_text">Copiază textul articolului</string>
+    <string name="gutenberg_native_copy_error_details">Copiază detaliile despre erori</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Buton pentru a copia textul articolului</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Buton pentru a copia detaliile despre erori</string>
+    <string name="editor_updating_post_failed">Actualizarea conținutul articolului a eșuat</string>
+    <string name="editor_updating_post">Actualizez conținutul articolului</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Subtitrare video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editează videoul</string>
@@ -29,7 +39,6 @@ Language: ro
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blogurile la care te-ai abonat nu au publicat nimic recent</string>
     <string name="reader_no_followed_blogs_description_subs">Abonează-te la bloguri în Descoperă sau caută un blog care ți-a plăcut.</string>
     <string name="reader_no_recommended_blogs_title">Niciun blog recomandat</string>
-    <string name="reader_no_followed_tags_title">Nu te-ai abonat la nicio etichetă</string>
     <string name="reader_no_posts_with_this_tag">Nu există articole cu această etichetă</string>
     <string name="reader_toast_err_unable_to_block_blog">Nu pot să blochez acest blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Articolele din acest blog nu vor mai fi arătate</string>
@@ -38,20 +47,17 @@ Language: ro
     <string name="reader_toast_err_unable_to_follow_blog">Nu pot face abonarea la acest blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Te-ai abonat deja la acest blog</string>
     <string name="reader_toast_err_show_blog">Nu pot să arăt acest blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Te-ai abonat deja la această etichetă</string>
     <string name="reader_label_choose_interests">Alege ce te interesează</string>
     <string name="reader_label_subscribers_count_single">1 abonat</string>
     <string name="reader_label_subscribers_count">%s abonați</string>
     <string name="reader_label_subscribe_count">%d abonați</string>
     <string name="reader_label_blog_subscribed">Blog la care te-ai abonat</string>
     <string name="reader_hint_search_subscribed_blogs">Caută bloguri la care te-ai abonat</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Introdu un URL-ul sau o etichetă la care să te abonezi</string>
     <string name="reader_btn_subscribed">Te-ai abonat</string>
     <string name="reader_btn_subscribe">Abonează-te</string>
     <string name="reader_menu_block_this_blog">Blochează acest blog</string>
     <string name="reader_menu_tags_and_blogs">Editează etichetele și blogurile</string>
     <string name="reader_page_followed_blogs_title">Bloguri la care te-ai abonat</string>
-    <string name="reader_page_followed_tags_title">Etichete la care te-ai abonat</string>
     <string name="reader_title_tags">Urmărește etichetele</string>
     <string name="reader_activity_title_manage_tags_blogs">Administrează etichetele și blogurile</string>
     <string name="reader_activity_title_tag_preview">Etichetă</string>
@@ -70,19 +76,13 @@ Language: ro
     <string name="reader_dropdown_menu_subscriptions">Abonamente</string>
     <string name="reader_dropdown_menu_discover">Descoperă</string>
     <string name="reader_search_content_description">Caută</string>
-    <string name="reader_discover_no_posts_button_tags_text">Abonează-te la etichete</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Încearcă să te abonezi la mai multe etichete ca să extinzi căutarea</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Abonează-te la etichete ca să descoperi bloguri noi</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloguri la care să te abonezi</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Abonează-te la o etichetă</string>
     <string name="reader_filter_empty_tags_action_suggested">Etichete sugerate</string>
     <string name="reader_filter_empty_blogs_action_search">Caută un blog</string>
-    <string name="reader_filter_empty_tags_list_text">Abonează-te la o etichetă și vei putea să vezi aici cele mai bune articole cu această etichetă.</string>
     <string name="reader_filter_empty_tags_list_title">Nicio etichetă</string>
     <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
     <string name="reader_filter_empty_blogs_list_title">Niciun abonament la bloguri</string>
     <string name="reader_filter_empty_blogs_action">Abonează-te la un blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Poți să te abonezi la articole despre un anumit subiect prin adăugarea unei etichete</string>
     <string name="reader_filter_empty_blogs_list">Vezi cele mai noi articole pe blogurile la care te-ai abonat</string>
     <string name="reader_filter_by_tag_title">Filtrează după etichetă</string>
     <string name="reader_filter_by_blog_title">Filtrează după blog</string>
@@ -954,11 +954,6 @@ Language: ro
     <string name="gutenberg_native_embed_options">Opțiuni de înglobare</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Atinge de două ori pentru a vedea opțiunile de înglobare.</string>
     <string name="quick_start_list_create_site_message">Site-ul a fost creat! Finalizează o altă sarcină.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s bloggeri&lt;/a&gt; au apreciat asta.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;Un blogger&lt;/a&gt; a apreciat asta.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Tu și alți %1$s bloggeri&lt;/a&gt; ați apreciat asta.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Tu și un alt blogger&lt;/a&gt; ați apreciat asta.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ai&lt;/a&gt; apreciat asta.</string>
     <string name="gutenberg_native_line_height">Înălțime linie</string>
     <string name="domains_free_plan_get_your_domain_title">Ia-ți domeniul</string>
     <string name="recommend_app_generic_get_template_error">Eroare necunoscută la aducerea șablonului recomandat pentru aplicație</string>
@@ -2861,8 +2856,8 @@ Language: ro
     <string name="error_upload_page_param">A fost o eroare la încărcarea acestei pagini: %s.</string>
     <string name="editor_uploading_post">Articolul tău se încarcă</string>
     <string name="uploading_media">Încarc media…</string>
-    <string name="page_scheduled">Pagină programată</string>
-    <string name="post_scheduled">Articolul este programat</string>
+    <string name="page_scheduled">Am programat pagina</string>
+    <string name="post_scheduled">Am programat articolul</string>
     <string name="button_retry">Reîncearcă</string>
     <string name="post_queued">Articolul este în coada de așteptare</string>
     <string name="uploading_post">Încarc „%s”</string>
@@ -3392,8 +3387,8 @@ Language: ro
     <string name="current_theme">Temă curentă</string>
     <string name="page_updated">Am actualizat pagina</string>
     <string name="post_updated">Am actualizat articolul</string>
-    <string name="page_published">Pagina a fost publicată</string>
-    <string name="post_published">Articolul a fost publicat</string>
+    <string name="page_published">Am publicat pagina</string>
+    <string name="post_published">Am publicat articolul</string>
     <string name="theme_no_search_result_found">Regret, nu am găsit nicio temă.</string>
     <string name="reader_label_gap_marker">Încarcă mai multe articole</string>
     <string name="notifications_no_search_results">Niciun site nu se potrivește cu „%s”</string>

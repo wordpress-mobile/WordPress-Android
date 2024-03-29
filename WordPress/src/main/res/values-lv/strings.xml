@@ -728,11 +728,6 @@ Language: lv
     <string name="gutenberg_native_embed_options">Iegulšanas opcijas</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Veiciet dubultskārienu, lai skatītu iegulšanas opcijas.</string>
     <string name="quick_start_list_create_site_message">Vietne izveidota! Pabeidziet citu uzdevumu.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s emuāru autoriem&lt;/a&gt; patīk šis.</string>
-    <string name="like_faces_one_blogger_likes_text">Šis patīk &lt;a href=\"\"&gt;1 emuāra autoram&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Jums un %1$s emuāru autoriem&lt;/a&gt; patīk šis.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Jums un 1 emuāra autoram&lt;/a&gt; patīk šis.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Jums&lt;/a&gt; tas patīk.</string>
     <string name="gutenberg_native_line_height">Līnijas augstums</string>
     <string name="domains_free_plan_get_your_domain_title">Iegūstiet savu domēnu</string>
     <string name="recommend_app_generic_get_template_error">Nezināma kļūda, ienesot ieteicamās lietotnes veidni</string>
