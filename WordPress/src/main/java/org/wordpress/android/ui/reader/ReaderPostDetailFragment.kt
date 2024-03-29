@@ -684,9 +684,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.reloadFragment.observeEvent(viewLifecycleOwner) {
             if (isAdded) {
-                // TODO thomashortadev this works but looks a bit bad since the post and images are reloaded
-                //  I also only tested on SDK 34 and based on my research some people did that in a single transaction
-                //  and it worked in the past, but I had to do it in two transactions
+                //  Based on my research some people did that in a single transaction and it worked in the past,
+                //  but I tested on SDK 34 and I had to do it in two transactions for getting it to work properly.
                 parentFragmentManager.commit(allowStateLoss = true) {
                     detach(this@ReaderPostDetailFragment)
                 }
