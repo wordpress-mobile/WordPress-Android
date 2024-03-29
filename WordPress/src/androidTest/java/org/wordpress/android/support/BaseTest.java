@@ -34,6 +34,7 @@ import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.editor.Utils;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
+import org.wordpress.android.rules.RetryTestRule;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.wiremock.WireMockStub;
 
@@ -76,6 +77,9 @@ public class BaseTest {
 
     @Rule(order = 4)
     public WireMockRule wireMockRule;
+
+    @Rule(order = 5)
+    public RetryTestRule retryTestRule = new RetryTestRule();
 
     public BaseTest() {
         this(null);

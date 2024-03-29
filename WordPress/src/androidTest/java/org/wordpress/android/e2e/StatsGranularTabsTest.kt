@@ -11,6 +11,7 @@ import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.MySitesPage
+import org.wordpress.android.rules.Retry
 import org.wordpress.android.support.BaseTest
 import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
@@ -37,8 +38,8 @@ class StatsGranularTabsTest : BaseTest() {
         }
     }
 
-    @Test
     @Ignore("The 'Days' screen might occasionally not load. Disabled until tests rerun is implemented.")
+    @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
         val postsList: List<StatsKeyValueData> = StatsMocksReader().readDayTopPostsToList()
