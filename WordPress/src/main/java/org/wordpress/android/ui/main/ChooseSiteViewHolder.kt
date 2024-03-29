@@ -33,7 +33,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
         )
 
-        handleHeader(previousSite, site, selectedId)
+        handleHeader(previousSite, site)
 
         binding.textTitle.text = site.blogNameOrHomeURL
         binding.textDomain.text = site.homeURL
@@ -64,28 +64,21 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         handleHighlight(site, selectedId)
     }
 
-    private fun handleHeader(previousSite: SiteRecord?, site: SiteRecord, selectedId: Int?) {
+    private fun handleHeader(previousSite: SiteRecord?, site: SiteRecord) {
         when {
-            previousSite == null && site.isSelected(selectedId) -> {
-                binding.header.isVisible = false
-            }
-
-            (previousSite == null || previousSite.isSelected(selectedId)) && site.isPinned() -> {
+            previousSite == null && site.isPinned() -> {
                 binding.header.text = itemView.context.getString(R.string.pinned_sites)
                 binding.header.isVisible = true
             }
 
-            (previousSite == null || previousSite.isPinned() || previousSite.isSelected(selectedId)) &&
-                    site.isPinned().not() &&
-                    site.isSelected(selectedId).not() -> {
+            (previousSite == null || previousSite.isPinned()) && site.isPinned().not() -> {
                 binding.header.text = itemView.context.getString(R.string.recent_sites)
                 binding.header.isVisible = true
             }
 
-            (previousSite == null || previousSite.isRecent() || previousSite.isPinned() || previousSite.isSelected(selectedId)) &&
+            (previousSite == null || previousSite.isRecent() || previousSite.isPinned()) &&
                     site.isPinned().not() &&
-                    site.isRecent().not() &&
-                    site.isSelected(selectedId).not() -> {
+                    site.isRecent().not() -> {
                 binding.header.text = itemView.context.getString(R.string.all_sites)
                 binding.header.isVisible = true
             }
@@ -118,13 +111,6 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         null -> false
         else -> appPrefs.pinnedSiteLocalIds.contains(localId)
     }
-
-    private fun SiteRecord?.isSelected(selectedId: Int?): Boolean =
-        if (this == null) {
-            false
-        } else {
-            localId == selectedId
-        }
 
     private fun SiteRecord?.isRecent(): Boolean = when (this) {
         null -> false

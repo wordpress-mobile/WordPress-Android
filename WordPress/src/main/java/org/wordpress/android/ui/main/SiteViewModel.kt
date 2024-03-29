@@ -57,30 +57,22 @@ class SiteViewModel @Inject constructor(
      * Then sort the list of sites by blog name or home URL.
      */
     private fun sortSites(records: List<SiteRecord>): List<SiteRecord> {
-        val selectedSite = records.firstOrNull { it.localId == appPrefsWrapper.getSelectedSite() }
         val allSites = records.toMutableList()
 
         val pinnedSites = appPrefsWrapper.pinnedSiteLocalIds
             .mapNotNull { pinnedId -> allSites.firstOrNull { it.localId == pinnedId } }
             .toMutableList()
-            .apply { selectedSite?.let { remove(it) } }
 
         val recentSites = appPrefsWrapper.getRecentSiteLocalIds()
             .mapNotNull { pinnedId -> allSites.firstOrNull { it.localId == pinnedId } }
             .toMutableList()
-            .apply {
-                selectedSite?.let { remove(it) }
-                removeAll(pinnedSites)
-            }
+            .apply { removeAll(pinnedSites) }
 
         allSites.apply {
-            selectedSite?.let { remove(it) }
             removeAll(pinnedSites)
             removeAll(recentSites)
         }
 
-        val selectedSites = selectedSite?.let { listOf(it) } ?: emptyList()
-
-        return selectedSites + pinnedSites + recentSites + allSites.sortedBy { it.blogNameOrHomeURL }
+        return pinnedSites + recentSites + allSites.sortedBy { it.blogNameOrHomeURL }
     }
 }
