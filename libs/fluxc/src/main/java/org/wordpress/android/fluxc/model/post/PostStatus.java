@@ -13,8 +13,7 @@ public enum PostStatus {
     PRIVATE,
     PENDING,
     TRASHED,
-    SCHEDULED, // NOTE: Only recognized for .com REST posts - XML-RPC returns scheduled posts with status 'publish'
-    OLD_REVISION;
+    SCHEDULED; // NOTE: Only recognized for .com REST posts - XML-RPC returns scheduled posts with status 'publish'
 
     public String toString() {
         switch (this) {
@@ -30,8 +29,6 @@ public enum PostStatus {
                 return "trash";
             case SCHEDULED:
                 return "future";
-            case OLD_REVISION:
-                return "old-revision";
             default:
                 return "";
         }
@@ -58,8 +55,6 @@ public enum PostStatus {
             return TRASHED;
         } else if (value.equals("future")) {
             return SCHEDULED;
-        } else if (value.equals("old-revision")) {
-            return OLD_REVISION;
         } else {
             return UNKNOWN;
         }
