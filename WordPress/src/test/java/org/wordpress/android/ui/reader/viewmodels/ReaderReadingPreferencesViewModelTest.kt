@@ -13,7 +13,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -128,7 +127,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when saveReadingPreferencesAndClose is called with updated preferences then it emits Close action event`() =
+    fun `when saveReadingPreferencesAndClose is called with updated preferences then it emit Close action event`() =
         test {
             // Given
             val newTheme = ReaderReadingPreferences.Theme.SEPIA
@@ -153,39 +152,6 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
 
         // Then
         verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
-    }
-
-    @Test
-    fun `when closeWithoutSaving is called then it emits Close action event`() = test {
-        // When
-        viewModel.closeWithoutSaving()
-
-        // Then
-        val closeEvent = collectedEvents.last() as ActionEvent.Close
-        assertThat(closeEvent.isDirty).isFalse()
-    }
-
-    @Test
-    fun `when closeWithoutSaving is called with updated preferences then it emits Close action event`() = test {
-        // Given
-        val newTheme = ReaderReadingPreferences.Theme.SOFT
-        viewModel.onThemeClick(newTheme)
-
-        // When
-        viewModel.closeWithoutSaving()
-
-        // Then
-        val closeEvent = collectedEvents.last() as ActionEvent.Close
-        assertThat(closeEvent.isDirty).isFalse()
-    }
-
-    @Test
-    fun `when closeWithoutSaving is called then it does not save the preferences`() = test {
-        // When
-        viewModel.closeWithoutSaving()
-
-        // Then
-        verifyNoInteractions(saveReadingPreferences)
     }
 
     companion object {
