@@ -60,11 +60,18 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     fun onSendFeedbackClick() {
-        // TODO
+        launch {
+            _actionEvents.emit(ActionEvent.OpenWebView(FEEDBACK_URL))
+        }
     }
 
     sealed interface ActionEvent {
         data class Close(val isDirty: Boolean) : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
+        data class OpenWebView(val url: String) : ActionEvent
+    }
+
+    companion object {
+        private const val FEEDBACK_URL = "https://automattic.survey.fm/reader-customization-survey"
     }
 }

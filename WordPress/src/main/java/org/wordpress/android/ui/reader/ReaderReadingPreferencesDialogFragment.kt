@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.R
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
@@ -74,6 +75,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
             when (it) {
                 is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
                 is ActionEvent.Close -> handleClose(it.isDirty)
+                is ActionEvent.OpenWebView -> handleOpenWebView(it.url)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -87,6 +89,12 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         val context = requireContext()
         val themeValues = ReaderReadingPreferences.ThemeValues.from(context, theme)
         dialog?.window?.setWindowStatusBarColor(themeValues.intBackgroundColor)
+    }
+
+    private fun handleOpenWebView(url: String) {
+        context?.let { context ->
+            WPWebViewActivity.openURL(context, url)
+        }
     }
 
     companion object {
