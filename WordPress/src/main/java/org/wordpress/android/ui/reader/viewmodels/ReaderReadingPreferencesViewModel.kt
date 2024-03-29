@@ -58,12 +58,6 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         }
     }
 
-    fun closeWithoutSaving() {
-        launch {
-            _actionEvents.emit(ActionEvent.Close(isDirty = false))
-        }
-    }
-
     sealed interface ActionEvent {
         data class Close(val isDirty: Boolean) : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent

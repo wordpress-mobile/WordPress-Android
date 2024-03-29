@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -57,7 +55,6 @@ private const val TEXT_LINE_HEIGHT_MULTIPLIER = 1.6f
 fun ReadingPreferencesScreen(
     currentReadingPreferences: ReaderReadingPreferences,
     onCloseClick: () -> Unit,
-    onDoneClick: () -> Unit,
     onThemeClick: (ReaderReadingPreferences.Theme) -> Unit,
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
@@ -212,23 +209,6 @@ fun ReadingPreferencesScreen(
                     onFontSizeClick(it)
                 },
             )
-
-            // Done button
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = Margin.ExtraLarge.value),
-                elevation = null,
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.onSurface,
-                    contentColor = MaterialTheme.colors.surface,
-                ),
-                onClick = onDoneClick,
-            ) {
-                Text(
-                    text = stringResource(R.string.reader_preferences_screen_preview_done_button),
-                )
-            }
         }
     }
 }
@@ -258,7 +238,6 @@ private fun ReadingPreferencesScreenPreview() {
         ReadingPreferencesScreen(
             currentReadingPreferences = readingPreferences,
             onCloseClick = {},
-            onDoneClick = {},
             onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },
             onFontFamilyClick = { readingPreferences = readingPreferences.copy(fontFamily = it) },
             onFontSizeClick = { readingPreferences = readingPreferences.copy(fontSize = it) },
