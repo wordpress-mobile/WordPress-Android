@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.main
 
 import android.graphics.Typeface
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
+import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -69,11 +71,13 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             previousSite == null && site.isPinned() -> {
                 binding.header.text = itemView.context.getString(R.string.pinned_sites)
                 binding.header.isVisible = true
+                setHeaderTopMargin(previousSite)
             }
 
             (previousSite == null || previousSite.isPinned()) && site.isPinned().not() -> {
                 binding.header.text = itemView.context.getString(R.string.recent_sites)
                 binding.header.isVisible = true
+                setHeaderTopMargin(previousSite)
             }
 
             (previousSite == null || previousSite.isRecent() || previousSite.isPinned()) &&
@@ -81,12 +85,25 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
                     site.isRecent().not() -> {
                 binding.header.text = itemView.context.getString(R.string.all_sites)
                 binding.header.isVisible = true
+                setHeaderTopMargin(previousSite)
             }
 
             else -> {
                 binding.header.isVisible = false
             }
         }
+    }
+
+    private fun setHeaderTopMargin(previousSite: SiteRecord?) {
+        val resId = previousSite?.let { R.dimen.margin_extra_large } ?: R.dimen.margin_small
+        (binding.header.layoutParams as MarginLayoutParams).apply {
+            setMargins(
+                leftMargin,
+                itemView.context.resources.getDimensionPixelSize(resId),
+                rightMargin,
+                bottomMargin
+            )
+        }.let { binding.header.layoutParams = it }
     }
 
     private fun handleHighlight(site: SiteRecord, selectedId: Int?) {
