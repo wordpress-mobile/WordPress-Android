@@ -416,7 +416,7 @@ public class ReaderPostRenderer {
               .append(" margin-left: 0px; ")
               .append(" border-left: 3px solid var(--color-neutral-50); }")
               // show links in the same color they are elsewhere in the app
-              .append(" a { text-decoration: none; color: var(--main-link-color); }")
+              .append(" a { text-decoration: underline; color: var(--main-link-color); }")
               // make sure images aren't wider than the display, strictly enforced for images without size
               .append(" img { max-width: 100%; width: auto; height: auto; }")
               .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
