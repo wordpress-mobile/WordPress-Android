@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.viewmodels
 
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
