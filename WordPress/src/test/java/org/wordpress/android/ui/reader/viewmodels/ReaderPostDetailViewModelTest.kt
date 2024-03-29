@@ -109,6 +109,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -199,6 +200,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 
+    @Mock
+    private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
+
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
@@ -246,7 +250,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             networkUtilsWrapper,
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
-            readerCommentServiceStarterWrapper
+            readerCommentServiceStarterWrapper,
+            readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)

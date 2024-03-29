@@ -229,5 +229,6 @@ enum class ReaderPostCardActionType {
     REPORT_POST,
     REPORT_USER,
     TOGGLE_SEEN_STATUS,
-    SPACER_NO_ACTION
+    SPACER_NO_ACTION,
+    READING_PREFERENCES,
 }
