@@ -1636,7 +1636,6 @@
     <string name="reader_filter_by_blog_title">Filter by blog</string>
     <string name="reader_filter_by_tag_title">Filter by tag</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
-    <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Log in to WordPress.com to see the latest posts from tags you\'re subscribed to</string>
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
@@ -1644,10 +1643,8 @@
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
-    <string name="reader_filter_empty_tags_list_text">Subscribe to a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Subscribe to a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
@@ -1660,11 +1657,8 @@
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Subscribe to tags to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribe to tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -2103,7 +2097,6 @@
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags_title">Subscribed tags</string>
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
 
     <!-- menu text -->
@@ -2146,7 +2139,6 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Enter a URL or tag to subscribe to</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
 
@@ -2197,7 +2189,6 @@
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_tag_already_subscribed">You\'re already subscribed to this tag</string>
     <string name="reader_toast_err_tag_not_valid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_adding_tag">Unable to add this tag</string>
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
@@ -2238,7 +2229,6 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
-    <string name="reader_no_followed_tags_title">No subscribed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>

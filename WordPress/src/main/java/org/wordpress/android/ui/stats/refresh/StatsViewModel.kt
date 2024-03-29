@@ -196,7 +196,14 @@ class StatsViewModel
                 tapSource = launchedFrom?.value ?: ""
             )
 
-            initialSection?.let { statsSectionManager.setSelectedSection(it) }
+            initialSection?.let {
+                statsSectionManager.setSelectedSection(it)
+
+                val trafficGranularity = it.toStatsGranularity()
+                if (statsTrafficTabFeatureConfig.isEnabled() && trafficGranularity != null) {
+                    selectedTrafficGranularityManager.setSelectedTrafficGranularity(trafficGranularity)
+                }
+            }
             granularity?.let {
                 if (it != selectedTrafficGranularityManager.getSelectedTrafficGranularity()) {
                     selectedTrafficGranularityManager.setSelectedTrafficGranularity(it)

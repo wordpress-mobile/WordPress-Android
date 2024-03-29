@@ -51,6 +51,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_READ
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -94,6 +95,7 @@ class PostActionHandler(
             }
             BUTTON_SUBMIT -> publishPost(post.id)
             BUTTON_VIEW -> triggerPostListAction.invoke(ViewPost(site, post))
+            BUTTON_READ -> triggerPostListAction.invoke(PostListAction.ReadPost(site, post))
             BUTTON_PREVIEW -> triggerPostListAction.invoke(
                 PreviewPost(
                     site = site,

@@ -3,9 +3,9 @@ package org.wordpress.android.ui.mysite.cards.jetpackfeature
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
+import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseThree
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString
@@ -110,7 +110,8 @@ class JetpackFeatureCardHelper @Inject constructor(
     }
 
     fun shouldShowSwitchToJetpackMenuCard(): Boolean {
-        return shouldShowSwitchToJetpackMenuCardInCurrentPhase() &&
+        return !buildConfigWrapper.isJetpackApp &&
+                shouldShowSwitchToJetpackMenuCardInCurrentPhase() &&
                 exceedsShowFrequencyAndResetSwitchToJetpackMenuLastShownTimestampIfNeeded() &&
                 !isSwitchToJetpackMenuCardHiddenByUser()
     }
