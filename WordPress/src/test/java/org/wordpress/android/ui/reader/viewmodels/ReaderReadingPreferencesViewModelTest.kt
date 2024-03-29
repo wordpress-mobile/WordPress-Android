@@ -154,7 +154,18 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
     }
 
+    @Test
+    fun `when onSendFeedbackClick is called then it emits OpenWebView action event`() = test {
+        // When
+        viewModel.onSendFeedbackClick()
+
+        // Then
+        val openWebViewEvent = collectedEvents.last() as ActionEvent.OpenWebView
+        assertThat(openWebViewEvent.url).isEqualTo(EXPECTED_FEEDBACK_URL)
+    }
+
     companion object {
         private val DEFAULT_READING_PREFERENCES = ReaderReadingPreferences()
+        private const val EXPECTED_FEEDBACK_URL = "https://automattic.survey.fm/reader-customization-survey"
     }
 }
