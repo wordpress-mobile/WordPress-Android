@@ -119,11 +119,22 @@ fun ReadingPreferencesScreen(
             )
 
             // Content
-            ReadingPreferencesPreviewContent(
-                onSendFeedbackClick = onSendFeedbackClick,
+            val contentStyle = TextStyle(
                 fontFamily = fontFamily,
                 fontSize = fontSize,
-                textColor = textColor,
+                fontWeight = FontWeight.Normal,
+                color = textColor,
+                lineHeight = fontSize * TEXT_LINE_HEIGHT_MULTIPLIER,
+            )
+
+            Text(
+                text = stringResource(R.string.reader_preferences_screen_preview_text),
+                style = contentStyle,
+            )
+
+            ReadingPreferencesPreviewFeedback(
+                onSendFeedbackClick = onSendFeedbackClick,
+                textStyle = contentStyle,
                 linkColor = linkColor,
             )
 
@@ -218,20 +229,18 @@ fun ReadingPreferencesScreen(
 }
 
 @Composable
-private fun ReadingPreferencesPreviewContent(
+private fun ReadingPreferencesPreviewFeedback(
     onSendFeedbackClick: () -> Unit,
-    fontFamily: FontFamily,
-    fontSize: TextUnit,
-    textColor: Color,
+    textStyle: TextStyle,
     linkColor: Color,
 ) {
-    val feedbackString = stringResource(R.string.reader_preferences_screen_preview_text_feedback)
-    val contentString = stringResource(R.string.reader_preferences_screen_preview_text, feedbackString)
+    val linkString = stringResource(R.string.reader_preferences_screen_preview_text_feedback_link)
+    val feedbackString = stringResource(R.string.reader_preferences_screen_preview_text_feedback, linkString)
     val annotatedString = buildAnnotatedString {
-        append(contentString)
+        append(feedbackString)
 
-        val startIndex = contentString.indexOf(feedbackString)
-        val endIndex = startIndex + feedbackString.length
+        val startIndex = feedbackString.indexOf(linkString)
+        val endIndex = startIndex + linkString.length
 
         addStyle(
             style = SpanStyle(
@@ -252,13 +261,7 @@ private fun ReadingPreferencesPreviewContent(
 
     ClickableText(
         text = annotatedString,
-        style = TextStyle(
-            fontFamily = fontFamily,
-            fontSize = fontSize,
-            fontWeight = FontWeight.Normal,
-            color = textColor,
-            lineHeight = fontSize * TEXT_LINE_HEIGHT_MULTIPLIER,
-        ),
+        style = textStyle,
         onClick = { offset ->
             annotatedString.getStringAnnotations(tag = "url", start = offset, end = offset)
                 .firstOrNull()

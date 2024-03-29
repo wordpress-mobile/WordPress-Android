@@ -1699,9 +1699,11 @@
 
     <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
     <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
-    <!-- translators: %s is replaced with the string at reader_preferences_screen_preview_text_feedback, so please translate both in a way that the full final sentence make sense -->
-    <string name="reader_preferences_screen_preview_text">Choose the right colors, fonts and sizes for you. Preview the changes here, and tap ‘Done’ when you’re ready to read.\n\nThis is a new feature still in development. To help us improve it %s.</string>
-    <string name="reader_preferences_screen_preview_text_feedback">send your feedback</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colors, fonts and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+
+    <!-- translators: %s is replaced with the string in reader_preferences_screen_preview_text_feedback_link, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
 
     <string name="reader_preferences_theme_system">Default</string>
     <string name="reader_preferences_theme_soft">Soft</string>
