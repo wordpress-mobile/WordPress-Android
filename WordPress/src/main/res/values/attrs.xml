@@ -42,6 +42,9 @@
     <attr name="readerFollowButtonSelectedTextAlpha" format="float" />
     <attr name="readerFollowButtonSelectedStrokeAlpha" format="reference|float" />
 
+    <!-- Snackbar colors -->
+    <attr name="snackbarActionColor" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
