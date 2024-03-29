@@ -64,6 +64,7 @@ fun ReadingPreferencesScreen(
     onFontFamilyClick: (ReaderReadingPreferences.FontFamily) -> Unit,
     onFontSizeClick: (ReaderReadingPreferences.FontSize) -> Unit,
     onBackgroundColorUpdate: (Int) -> Unit,
+    isFeedbackEnabled: Boolean,
     isHapticsFeedbackEnabled: Boolean = true,
 ) {
     val themeValues = ReaderReadingPreferences.ThemeValues.from(LocalContext.current, currentReadingPreferences.theme)
@@ -131,11 +132,13 @@ fun ReadingPreferencesScreen(
                 style = contentStyle,
             )
 
-            ReadingPreferencesPreviewFeedback(
-                onSendFeedbackClick = onSendFeedbackClick,
-                textStyle = contentStyle,
-                linkColor = linkColor,
-            )
+            if (isFeedbackEnabled) {
+                ReadingPreferencesPreviewFeedback(
+                    onSendFeedbackClick = onSendFeedbackClick,
+                    textStyle = contentStyle,
+                    linkColor = linkColor,
+                )
+            }
 
             // Tags
             FlowRow(
@@ -302,6 +305,7 @@ private fun ReadingPreferencesScreenPreview() {
             onThemeClick = { readingPreferences = readingPreferences.copy(theme = it) },
             onFontFamilyClick = { readingPreferences = readingPreferences.copy(fontFamily = it) },
             onFontSizeClick = { readingPreferences = readingPreferences.copy(fontSize = it) },
+            isFeedbackEnabled = true,
             onBackgroundColorUpdate = {},
         )
     }
