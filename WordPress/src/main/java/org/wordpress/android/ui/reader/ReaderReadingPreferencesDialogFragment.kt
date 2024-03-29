@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.ComponentDialog
+import androidx.activity.addCallback
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -66,6 +68,10 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
             (this as? BottomSheetDialog)?.fillScreen()
+
+            (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@ReaderReadingPreferencesDialogFragment) {
+                viewModel.saveReadingPreferencesAndClose()
+            }
         }
 
     private fun observeActionEvents() {
