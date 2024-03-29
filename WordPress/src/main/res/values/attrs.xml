@@ -34,7 +34,7 @@
     <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
     <attr name="mlpDividerColor" format="reference|color" />
 
-    <!-- Reader colors -->
+    <!-- Reader attributes -->
     <attr name="readerFollowButtonBackground" format="reference|color" />
     <attr name="readerFollowButtonForeground" format="reference|color" />
     <attr name="readerFollowButtonSelectedBackground" format="reference|color" />
