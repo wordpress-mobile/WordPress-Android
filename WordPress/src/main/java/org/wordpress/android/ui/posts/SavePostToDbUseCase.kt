@@ -35,7 +35,6 @@ class SavePostToDbUseCase
                         post.setStatus(PostStatus.PENDING.toString())
                     PostStatus.DRAFT,
                     PostStatus.PENDING,
-                    PostStatus.OLD_REVISION,
                     PostStatus.TRASHED -> {
                     }
                 }

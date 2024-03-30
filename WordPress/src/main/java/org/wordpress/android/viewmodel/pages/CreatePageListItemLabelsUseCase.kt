@@ -5,7 +5,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.OLD_REVISION
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
@@ -88,11 +87,6 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
                         "Developer error: This state shouldn't happen. Trashed pages is in " +
                                 "UploadWaitingForConnection state."
                     )
-                    OLD_REVISION ->  AppLog.e(
-                        PAGES,
-                        "Developer error: This state shouldn't happen. Pages should not be in " +
-                                "OLD_REVISION state"
-                    )
                 }
             }
             hasUnhandledConflicts -> labels.add(UiStringRes(R.string.local_page_is_conflicted))
@@ -146,14 +140,14 @@ class CreatePageListItemLabelsUseCase @Inject constructor(
     ): UiStringRes {
         return when {
             uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
-                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_page_not_published_retrying)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_page_not_published_retrying)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_page_not_published_retrying_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_page_not_scheduled_retrying)
                 PENDING -> UiStringRes(R.string.error_media_recover_page_not_submitted_retrying)
                 DRAFT, TRASHED, UNKNOWN -> UiStringRes(R.string.error_generic_error_retrying)
             }
             uploadUiState.retryWillPushChanges -> when (postStatus) {
-                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_page_not_published)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_page_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_page_not_published_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_page_not_scheduled)
                 PENDING -> UiStringRes(R.string.error_media_recover_page_not_submitted)

@@ -188,10 +188,10 @@ class PostListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         Log.d("myTest","PostListEventListener.onPostUploaded(), error = ${event.error.message}")
 
-        if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
+       /* if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
             Log.d("","")
             return
-        }
+        }*/
 
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {

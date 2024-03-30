@@ -41,12 +41,11 @@ class PostConflictResolver(
 
         val post = getPostByLocalPostId.invoke(localPostId)
         if (post != null) {
-            // Todo: is there a case that we should turn to different status?
-            if (post.status == PostStatus.OLD_REVISION.toString()) {
-                post.setStatus(PostStatus.PUBLISHED.toString())
-                post.error = null
-                uploadStore.clearUploadErrorForPost(post)
-            }
+
+            // todo : do we need something more here?
+            post.error = null
+            uploadStore.clearUploadErrorForPost(post)
+
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
@@ -66,12 +65,10 @@ class PostConflictResolver(
 
         val post = getPostByLocalPostId.invoke(localPostId) ?: return
 
-        // Todo: is there a case that we should turn to different status?
-        if (post.status == PostStatus.OLD_REVISION.toString()) {
-            post.setStatus(PostStatus.PUBLISHED.toString())
-            post.error = null
-            uploadStore.clearUploadErrorForPost(post)
-        }
+        // todo : do we need something more here?
+        post.error = null
+        uploadStore.clearUploadErrorForPost(post)
+
 
         // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
@@ -100,11 +97,24 @@ class PostConflictResolver(
     }
 
     fun doesPostHaveUnhandledConflict(post: PostModel): Boolean {
-        val isOldRevision = post.status == PostStatus.OLD_REVISION.toString()
+        Log.d("uiState", "doesPostHaveUnhandledConflict() entered for post: ${post.title}")
+        var isOldRevision = false
+        val uploadError = uploadStore.getUploadErrorForPost(post)
+        if (uploadError != null) {
+            if (uploadError.postError.type == PostErrorType.OLD_REVISION) {
+                isOldRevision = true
+            }
+        }
+       /* val isOldRevision = uploadStore.getUploadErrorForPost(post)?.postError?.type.toString() ==
+                PostErrorType.OLD_REVISION.toString()*/
+
         // If we are fetching the remote version of a conflicted post, it means it's already being handled
         val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
                 localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
-        return isOldRevision || (!isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post))
+        val x = isOldRevision || (!isFetchingConflictedPost && PostUtils.isPostInConflictWithRemote(post))
+        Log.d("uiState", "doesPostHaveUnhandledConflict() exited for post: ${post.title} with value: $x")
+
+        return x
     }
 
     fun hasUnhandledAutoSave(post: PostModel): Boolean {

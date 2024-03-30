@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.posts
 
+import android.util.Log
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -12,7 +13,6 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.OLD_REVISION
 import org.wordpress.android.fluxc.model.post.PostStatus.PENDING
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
@@ -97,6 +97,9 @@ class PostListItemUiStateHelper @Inject constructor(
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
 
+        Log.d("uiState", "PostListItemUiStateHelper.createPostListItemUiState(): uploadUiState = $uploadUiState")
+
+
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
         }
@@ -152,7 +155,7 @@ class PostListItemUiStateHelper @Inject constructor(
                     )
                 }
 
-                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED, OLD_REVISION -> onAction.invoke(
+                UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
                     post,
                     BUTTON_EDIT,
                     POST_LIST_ITEM_SELECTED
@@ -180,11 +183,18 @@ class PostListItemUiStateHelper @Inject constructor(
             disableRippleEffect = postStatus == TRASHED
         )
 
-        return PostListItemUiState(
+        val state = PostListItemUiState(
             data = itemUiData,
             moreActions = moreActions,
             onSelected = onSelected
         )
+
+        /*return PostListItemUiState(
+            data = itemUiData,
+            moreActions = moreActions,
+            onSelected = onSelected
+        )*/
+        return state
     }
 
     @Suppress("LongParameterList")
@@ -201,7 +211,7 @@ class PostListItemUiStateHelper @Inject constructor(
         if (isSearch) {
             val postStatusText = when (postStatus) {
                 UNKNOWN -> R.string.unknown
-                PUBLISHED, OLD_REVISION -> R.string.post_status_post_published
+                PUBLISHED -> R.string.post_status_post_published
                 DRAFT -> R.string.post_status_draft
                 PRIVATE -> R.string.post_status_post_private
                 PENDING -> R.string.post_status_pending_review
@@ -291,7 +301,7 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun getWaitingForConnectionStatus(postStatus: PostStatus): UiString? {
         return when (postStatus) {
-            UNKNOWN, PUBLISHED, OLD_REVISION -> (UiStringRes(R.string.post_waiting_for_connection_publish))
+            UNKNOWN, PUBLISHED -> (UiStringRes(R.string.post_waiting_for_connection_publish))
             PRIVATE -> (UiStringRes(R.string.post_waiting_for_connection_private))
             PENDING -> (UiStringRes(R.string.post_waiting_for_connection_pending))
             SCHEDULED -> (UiStringRes(R.string.post_waiting_for_connection_scheduled))
@@ -366,7 +376,7 @@ class PostListItemUiStateHelper @Inject constructor(
     private fun getMediaUploadErrorMessage(uploadUiState: UploadFailed, postStatus: PostStatus): UiStringRes {
         return when {
             uploadUiState.isEligibleForAutoUpload -> when (postStatus) {
-                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published_retrying)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_retrying_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled_retrying)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted_retrying)
@@ -374,7 +384,7 @@ class PostListItemUiStateHelper @Inject constructor(
             }
 
             uploadUiState.retryWillPushChanges -> when (postStatus) {
-                PUBLISHED, OLD_REVISION -> UiStringRes(R.string.error_media_recover_post_not_published)
+                PUBLISHED -> UiStringRes(R.string.error_media_recover_post_not_published)
                 PRIVATE -> UiStringRes(R.string.error_media_recover_post_not_published_private)
                 SCHEDULED -> UiStringRes(R.string.error_media_recover_post_not_scheduled)
                 PENDING -> UiStringRes(R.string.error_media_recover_post_not_submitted)
