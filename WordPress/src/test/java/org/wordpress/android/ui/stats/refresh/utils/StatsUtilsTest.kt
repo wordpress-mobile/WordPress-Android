@@ -278,12 +278,12 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with infinite positive difference`() {
-        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("∞")
+        whenever(percentFormatter.format(100)).thenReturn("100")
         val previousValue = 0L
         val value = 20L
         val positive = true
-        val expectedChange = "+20 (∞%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
+        val expectedChange = "+20 (100%)"
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("100")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
