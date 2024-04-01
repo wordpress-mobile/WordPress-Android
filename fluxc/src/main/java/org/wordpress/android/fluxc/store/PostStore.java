@@ -1250,6 +1250,22 @@ public class PostStore extends Store {
         mPostSqlUtils.insertOrUpdateLocalRevision(localRevision, localDiffs);
     }
 
+    public void removeLocalRevision(PostModel post) {
+        post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
+        int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(
+                post.getId(),
+                post.getRemotePostId(),
+                false
+        );
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        emitChange(onPostChanged);
+
+        mDispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(
+                PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId())));
+    }
+
+
 
     public RevisionModel getLocalRevision(SiteModel site, PostModel post) {
         List<LocalRevisionModel> localRevisions = mPostSqlUtils.getLocalRevisions(site, post);
