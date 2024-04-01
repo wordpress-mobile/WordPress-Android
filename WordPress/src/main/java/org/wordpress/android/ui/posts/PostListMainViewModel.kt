@@ -163,7 +163,8 @@ class PostListMainViewModel @Inject constructor(
             checkNetworkConnection = this::checkNetworkConnection,
             showSnackbar = { _snackBarMessage.postValue(it) },
             showToast = { _toastMessage.postValue(it) },
-            uploadStore = uploadStore
+            uploadStore = uploadStore,
+            postStore = postStore
         )
     }
 

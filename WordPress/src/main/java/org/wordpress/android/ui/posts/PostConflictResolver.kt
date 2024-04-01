@@ -6,7 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
@@ -28,7 +28,8 @@ class PostConflictResolver(
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit,
-    private val uploadStore: UploadStore
+    private val uploadStore: UploadStore,
+    private val postStore: PostStore
 ) {
     private var originalPostCopyForConflictUndo: PostModel? = null
     private var localPostIdForFetchingRemoteVersionOfConflictedPost: Int? = null
@@ -45,8 +46,12 @@ class PostConflictResolver(
             // todo : do we need something more here?
             post.error = null
             uploadStore.clearUploadErrorForPost(post)
-
+            post.setIsLocallyChanged(false)
+            post.setAutoSaveExcerpt(null)
+            post.setAutoSaveRevisionId(0)
+            postStore.removeLocalRevision(post)
             originalPostCopyForConflictUndo = post.clone()
+
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
@@ -132,20 +137,12 @@ class PostConflictResolver(
     }
 
     private fun conflictedPostUpdatedWithRemoteVersion() {
-        val undoAction = {
-            // here replace the post with whatever we had before, again
-            if (originalPostCopyForConflictUndo != null) {
-                dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(originalPostCopyForConflictUndo))
-            }
-        }
         val onDismissAction = { _: Int ->
             originalPostCopyForConflictUndo = null
         }
         val snackBarHolder = SnackbarMessageHolder(
             UiStringRes(R.string.snackbar_conflict_local_version_discarded),
-            UiStringRes(R.string.snackbar_conflict_undo),
-            undoAction,
-            onDismissAction
+            onDismissAction = onDismissAction
         )
         showSnackbar.invoke(snackBarHolder)
     }
