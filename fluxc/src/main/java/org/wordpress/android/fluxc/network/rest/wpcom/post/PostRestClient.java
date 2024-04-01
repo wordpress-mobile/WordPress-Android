@@ -306,7 +306,12 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushPost(final PostModel post, final SiteModel site, final boolean isFirstTimePublish) {
+    public void pushPost(
+            final PostModel post,
+            final SiteModel site,
+            final boolean isFirstTimePublish,
+            final boolean isConflictResolution
+    ) {
         String url;
 
         if (post.isLocalDraft()) {
@@ -315,7 +320,7 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
-        Map<String, Object> body = postModelToParams(post);
+        Map<String, Object> body = postModelToParams(post, isConflictResolution);
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 PostWPComRestResponse.class,
@@ -608,7 +613,7 @@ public class PostRestClient extends BaseWPComRestClient {
         return post;
     }
 
-    private Map<String, Object> postModelToParams(PostModel post) {
+    private Map<String, Object> postModelToParams(PostModel post, boolean isConflictResolution) {
         Map<String, Object> params = new HashMap<>();
 
         params.put("status", StringUtils.notNullStr(post.getStatus()));
@@ -616,7 +621,11 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("content", StringUtils.notNullStr(post.getContent()));
         params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
         params.put("slug", StringUtils.notNullStr(post.getSlug()));
-        params.put("if_not_modified_since", post.getLastModified());
+
+        // if isConflictResolution is true we do not want to send "if_not_modified_since"
+        if (!isConflictResolution) {
+            params.put("if_not_modified_since", post.getLastModified());
+        }
 
         if (post.getAuthorId() > 0) {
             params.put("author", String.valueOf(post.getAuthorId()));

@@ -168,6 +168,9 @@ public class PostStore extends Store {
         public SiteModel site;
         public boolean isFirstTimePublish;
 
+        // if this is true, the post will overwrite the existing one, even if it is not the last revision
+        public boolean isConflictResolution;
+
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
@@ -1126,7 +1129,12 @@ public class PostStore extends Store {
 
     private void pushPost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.pushPost(payload.post, payload.site, payload.isFirstTimePublish);
+            mPostRestClient.pushPost(
+                    payload.post,
+                    payload.site,
+                    payload.isFirstTimePublish,
+                    payload.isConflictResolution
+            );
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             PostModel postToPush = payload.post;
