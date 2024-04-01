@@ -95,7 +95,10 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             dispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()))
         }
 
-        adapter.selectedSiteId = localId
+        localId?.let {
+            appPrefsWrapper.addRecentSiteLocalId(it)
+            adapter.selectedSiteId = it
+        }
 
         viewModel.loadSites(mode)
     }
