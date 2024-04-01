@@ -27,6 +27,7 @@
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+        <item name="snackbarActionColor">@color/primary_30</item>
         <item name="snackbarStyle">@style/WordPress.Snackbar</item>
         <item name="snackbarButtonStyle">@style/WordPress.SnackbarButton</item>
         <item name="snackbarTextViewStyle">@style/WordPress.SnackbarText</item>
@@ -107,6 +108,85 @@
         <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
+
+        <!-- Reader Subscribe Button -->
+        <item name="readerFollowButtonBackground">@color/reader_follow_button</item>
+        <item name="readerFollowButtonForeground">@color/reader_follow_button_foreground</item>
+        <item name="readerFollowButtonSelectedBackground">@color/transparent</item>
+        <item name="readerFollowButtonSelectedForeground">@color/reader_following_button_foreground</item>
+        <item name="readerFollowButtonSelectedTextAlpha">@dimen/reader_follow_button_text_alpha</item>
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha</item>
+    </style>
+
+    <style name="ReaderDetailsPopupTheme.Popup" parent="Widget.MaterialComponents.PopupMenu.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/popup_background_surface</item>
+    </style>
+
+    <style name="ReaderDetailsPopupTheme.Dropdown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/transparent</item>
+        <item name="android:scrollbarThumbVertical">@drawable/bg_rectangle_on_surface_emphasis_lowest</item>
+    </style>
+
+    <style name="ReaderTheme.System" parent="Base.Wordpress">
+        <item name="listPopupWindowStyle">@style/ReaderDetailsPopupTheme.Popup</item>
+        <item name="android:listPopupWindowStyle">@style/ReaderDetailsPopupTheme.Popup</item>
+        <item name="android:dropDownListViewStyle">@style/ReaderDetailsPopupTheme.Dropdown</item>
+    </style>
+
+    <style name="ReaderTheme.Custom" parent="ReaderTheme.System">
+        <item name="android:colorBackground">?attr/colorSurface</item>
+        <item name="colorOnBackground">?attr/colorOnSurface</item>
+        <item name="android:textColorPrimary">?attr/colorOnSurface</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
+
+        <item name="readerFollowButtonBackground">?attr/colorOnSurface</item>
+        <item name="readerFollowButtonForeground">?attr/colorSurface</item>
+        <item name="readerFollowButtonSelectedBackground">@color/transparent</item>
+        <item name="readerFollowButtonSelectedForeground">?attr/colorOnSurface</item>
+
+        <item name="snackbarActionColor">?attr/colorSurface</item>
+    </style>
+
+    <style name="ReaderTheme.Soft" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_soft_background</item>
+        <item name="colorOnSurface">@color/reader_theme_soft_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
+    </style>
+
+    <style name="ReaderTheme.Sepia" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_sepia_background</item>
+        <item name="colorOnSurface">@color/reader_theme_sepia_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
+    </style>
+
+    <style name="ReaderTheme.Evening" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_evening_background</item>
+        <item name="colorOnSurface">@color/reader_theme_evening_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
+    </style>
+
+    <style name="ReaderTheme.OLED" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_oled_background</item>
+        <item name="colorOnSurface">@color/reader_theme_oled_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
+    </style>
+
+    <style name="ReaderTheme.h4x0r" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_h4x0r_background</item>
+        <item name="colorOnSurface">@color/reader_theme_h4x0r_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_dark</item>
+    </style>
+
+    <style name="ReaderTheme.Candy" parent="ReaderTheme.Custom">
+        <item name="colorSurface">@color/reader_theme_candy_background</item>
+        <item name="colorOnSurface">@color/reader_theme_candy_text</item>
+
+        <item name="readerFollowButtonSelectedStrokeAlpha">@dimen/reader_follow_button_stroke_alpha_light</item>
     </style>
 
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
@@ -356,7 +436,7 @@
     </style>
 
     <style name="WordPress.SnackbarButton" parent="Widget.MaterialComponents.Button.TextButton.Snackbar">
-        <item name="android:textColor">@color/primary_30</item>
+        <item name="android:textColor">?attr/snackbarActionColor</item>
     </style>
 
     <style name="WordPress.SnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
@@ -1283,6 +1363,14 @@
     </style>
 
     <style name="JetpackFullPluginInstallOnboardingDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">
+            @style/SlideDialogFragmentAnimation
+        </item>
+    </style>
+
+    <style name="ReaderReadingPreferencesDialogFragment" parent="WordPress.NoActionBar">
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowAnimationStyle">

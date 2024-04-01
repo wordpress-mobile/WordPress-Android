@@ -203,6 +203,7 @@ public class AppPrefs {
         SHOULD_HIDE_SOTW2023_NUDGE_CARD,
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
+        READER_READING_PREFERENCES_JSON,
     }
 
     /**
@@ -1777,5 +1778,18 @@ public class AppPrefs {
 
     public static void setPinnedSiteLocalIds(@NonNull final String ids) {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
+    }
+
+    @Nullable
+    public static String getReaderReadingPreferencesJson() {
+        return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
+    }
+
+    public static void setReaderReadingPreferencesJson(@Nullable String json) {
+        if (json == null) {
+            remove(DeletablePrefKey.READER_READING_PREFERENCES_JSON);
+        } else {
+            setString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, json);
+        }
     }
 }

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 11:54:11+0000
+Translation-Revision-Date: 2024-03-20 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.0
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Vous pouvez copier le texte de votre article au cas où votre contenu serait affecté. Copier les détails de l’erreur pour débuguer et les partager avec l’assistance.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">L’éditeur a rencontré une erreur inattendue</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Appuyer ici pour copier le texte de l’article</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Appuyer ici pour copier les détails de l’erreur</string>
+    <string name="gutenberg_native_copy_post_text">Copier le texte de l’article</string>
+    <string name="gutenberg_native_copy_error_details">Copier les détails de l’erreur</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Bouton permettant de copier le texte de l’article</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Bouton permettant de copier les détails de l’erreur</string>
+    <string name="editor_updating_post_failed">Échec de la mise à jour du contenu de l\'article</string>
+    <string name="editor_updating_post">Mise à jour du contenu de l\'article</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>
@@ -29,7 +39,6 @@ Language: fr
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Les blogs auxquels vous êtes abonné(e) n’ont rien publié récemment</string>
     <string name="reader_no_followed_blogs_description_subs">Abonnez-vous à des blogs dans Découvrir ou cherchez un blog que vous aimez déjà.</string>
     <string name="reader_no_recommended_blogs_title">Aucun blog recommandé</string>
-    <string name="reader_no_followed_tags_title">Aucune étiquette dans vos abonnements</string>
     <string name="reader_no_posts_with_this_tag">Pas d’articles avec cette étiquette</string>
     <string name="reader_toast_err_unable_to_block_blog">Impossible de bloquer ce blog</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Les articles de ce blog ne seront plus affichés</string>
@@ -38,20 +47,17 @@ Language: fr
     <string name="reader_toast_err_unable_to_follow_blog">Impossible de s’abonner à ce blog</string>
     <string name="reader_toast_err_already_follow_this_blog">Ce blog fait déjà partie de vos abonnements</string>
     <string name="reader_toast_err_show_blog">Impossible d’afficher ce blog</string>
-    <string name="reader_toast_err_tag_already_subscribed">Cette étiquette fait déjà partie de vos abonnements</string>
     <string name="reader_label_choose_interests">Choisissez vos centres d’intérêt</string>
     <string name="reader_label_subscribers_count_single">1 abonné</string>
     <string name="reader_label_subscribers_count">%s abonnés</string>
     <string name="reader_label_subscribe_count">%,d abonnés</string>
     <string name="reader_label_blog_subscribed">Abonné(e) au blog</string>
     <string name="reader_hint_search_subscribed_blogs">Rechercher parmi les blogs auxquels vous êtes abonné(e)</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Saisir l’URL ou une étiquette auxquels s’abonner</string>
     <string name="reader_btn_subscribed">Abonné(e)</string>
     <string name="reader_btn_subscribe">S’abonner</string>
     <string name="reader_menu_block_this_blog">Bloquer ce blog</string>
     <string name="reader_menu_tags_and_blogs">Modifier les étiquettes et les blogs</string>
     <string name="reader_page_followed_blogs_title">Abonné(e) à ces blogs</string>
-    <string name="reader_page_followed_tags_title">Abonné(e) à ces étiquettes</string>
     <string name="reader_title_tags">Suivre les étiquettes</string>
     <string name="reader_activity_title_manage_tags_blogs">Gérer les étiquettes et les blogs</string>
     <string name="reader_activity_title_tag_preview">Étiquette</string>
@@ -69,19 +75,13 @@ Language: fr
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Découvrir</string>
     <string name="reader_search_content_description">Rechercher</string>
-    <string name="reader_discover_no_posts_button_tags_text">S’abonner aux étiquettes</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Essayer de s’abonner à d’autres étiquettes pour élargir la recherche</string>
-    <string name="reader_discover_empty_subtitle_subscribe">S’abonner à des étiquettes pour découvrir de nouveaux blogs</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs auxquels s’abonner</string>
-    <string name="reader_filter_empty_tags_action_subscribe">S’abonner à une étiquette</string>
     <string name="reader_filter_empty_tags_action_suggested">Étiquettes suggérées</string>
     <string name="reader_filter_empty_blogs_action_search">Chercher un blog</string>
-    <string name="reader_filter_empty_tags_list_text">Abonnez-vous à une étiquette et vous verrez les meilleurs articles sur le sujet apparaître ici.</string>
     <string name="reader_filter_empty_tags_list_title">Aucune étiquette</string>
     <string name="reader_filter_empty_blogs_list_text">Abonnez-vous à des blogs dans Découvrir et vous verrez apparaître ici leurs derniers articles. Ou cherchez un blog que vous aimez déjà.</string>
     <string name="reader_filter_empty_blogs_list_title">Aucun abonnement à un blog</string>
     <string name="reader_filter_empty_blogs_action">S’abonner à un blog</string>
-    <string name="reader_filter_empty_tags_list_subscribe">Vous pouvez vous abonner aux articles relatifs à un sujet particulier en ajoutant une étiquette</string>
     <string name="reader_filter_empty_blogs_list">Voir les articles les plus récents des blogs auxquels vous êtes abonné(e)</string>
     <string name="reader_filter_by_tag_title">Filtrer par étiquette</string>
     <string name="reader_filter_by_blog_title">Filtrer par blog</string>
@@ -946,11 +946,6 @@ Language: fr
     <string name="gutenberg_native_embed_options">Options d’intégration</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Appuyez deux fois pour afficher les options d’intégration.</string>
     <string name="quick_start_list_create_site_message">Le site a bien été créé ! Terminez une autre tâche.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blogueurs&lt;/a&gt; aiment ceci.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogueur&lt;/a&gt; aime ceci.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Vous et %1$s blogueurs&lt;/a&gt; aimez ceci.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Vous et 1 blogueur&lt;/a&gt; aimez ceci.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Vous&lt;/a&gt; aimez ceci.</string>
     <string name="gutenberg_native_line_height">hauteur de ligne</string>
     <string name="domains_free_plan_get_your_domain_title">Obtenir votre domaine</string>
     <string name="recommend_app_generic_get_template_error">Erreur inconnue lors de la récupération du modèle de recommandation d’application</string>

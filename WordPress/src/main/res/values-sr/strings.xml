@@ -120,11 +120,6 @@ Language: sr_RS
     <string name="comment_edit_user_name">Име</string>
     <string name="comment_edit_menu_done">Готово</string>
     <string name="gutenberg_native_embed_options">Могућности угнежђавања</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
     <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
     <string name="gutenberg_native_selected_s">Одабрано: %s</string>

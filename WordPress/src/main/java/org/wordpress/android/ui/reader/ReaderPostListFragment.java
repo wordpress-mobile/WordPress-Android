@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -132,6 +133,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SnackbarItem;
 import org.wordpress.android.util.SnackbarItem.Action;
@@ -180,6 +182,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
     @Inject UiHelpers mUiHelpers;
+    @Inject NetworkUtilsWrapper mNetworkUtilsWrapper;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
@@ -1991,6 +1994,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     getPostListType(),
                     mImageManager,
                     mUiHelpers,
+                    mNetworkUtilsWrapper,
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
@@ -2321,9 +2325,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
             @Override
             public void run() {
                 if (ReaderTagTable.shouldAutoUpdateTag(getCurrentTag()) && isAdded()) {
-                    requireActivity().runOnUiThread(() -> updateCurrentTag());
+                    // Check the fragment is attached right after `shouldAutoUpdateTag`
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
+                    activity.runOnUiThread(() -> updateCurrentTag());
                 } else {
-                    requireActivity().runOnUiThread(() -> {
+                    // Check the fragment is attached to the activity when this Thread starts.
+                    FragmentActivity activity = getActivity();
+                    if (activity == null) {
+                        return;
+                    }
+                    activity.runOnUiThread(() -> {
                         if (isBookmarksList() && isPostAdapterEmpty() && isAdded()) {
                             setEmptyTitleAndDescriptionForBookmarksList();
                             mActionableEmptyView.image.setImageResource(

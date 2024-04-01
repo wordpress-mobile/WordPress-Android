@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-            android:text="@string/reader_filter_empty_tags_list_text"
+            android:text="@string/reader_filter_empty_tags_list_follow_text"
             app:fixWidowWords="true" />
 
         <com.google.android.material.button.MaterialButton
@@ -66,7 +66,7 @@
             android:layout_gravity="center_horizontal"
             android:minHeight="@dimen/default_dialog_button_height"
             android:visibility="visible"
-            android:text="@string/reader_filter_empty_tags_action_subscribe" />
+            android:text="@string/reader_filter_empty_tags_action_follow" />
 
     </LinearLayout>
 </RelativeLayout>
