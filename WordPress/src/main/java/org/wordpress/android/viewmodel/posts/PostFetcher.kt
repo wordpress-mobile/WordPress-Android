@@ -58,7 +58,6 @@ class PostFetcher constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     fun onPostChanged(event: OnPostChanged) {
-        Log.d("myTest","PostFetcher.onPostChanged()")
         (event.causeOfChange as? UpdatePost)?.let { updatePostCauseOfChange ->
             ongoingRequests.remove(RemoteId(updatePostCauseOfChange.remotePostId))
         }

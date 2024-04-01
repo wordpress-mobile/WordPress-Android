@@ -422,8 +422,6 @@ class MySiteViewModel @Inject constructor(
     // FluxC events
     @Subscribe(threadMode = MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
-        Log.d("myTest","MySiteViewModel.onPostUploaded()")
-
         if (!event.isError) {
             event.post?.let {
                 if (event.post.answeredPromptId > 0 && event.isFirstTimePublish) {

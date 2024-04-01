@@ -59,7 +59,8 @@ class UploadUtilsWrapper @Inject constructor(
         post: PostModel?,
         errorMessage: String?,
         site: SiteModel?,
-        onPublishingCallback: OnPublishingCallback? = null
+        onPublishingCallback: OnPublishingCallback? = null,
+        showRetry: Boolean = true
     ) = UploadUtils.onPostUploadedSnackbarHandler(
         activity,
         snackbarAttachView,
@@ -70,7 +71,8 @@ class UploadUtilsWrapper @Inject constructor(
         site,
         dispatcher,
         sequencer,
-        onPublishingCallback
+        onPublishingCallback,
+        showRetry
     )
 
     @JvmOverloads

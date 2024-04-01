@@ -651,9 +651,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
-        Log.d("myTest", "PostUploadHandler.onPostUploaded(), error = " + event.error.message);
-
-
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
             return;
@@ -664,7 +661,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
 
-            if (event.error.type == PostStore.PostErrorType.OLD_REVISION) {
+            if (event.isError() && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
                 Log.d("","");
             } else {
                 Context context = WordPress.getContext();

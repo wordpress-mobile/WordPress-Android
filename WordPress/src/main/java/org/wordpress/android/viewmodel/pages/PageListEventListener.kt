@@ -124,8 +124,6 @@ class PageListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
-        Log.d("myTest","WPMainActivity.onPostUploaded()")
-
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
             handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError, event.isFirstTimePublish)
