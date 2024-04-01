@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSaveReadingPreferencesUseCase
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeedbackFeatureConfig
 
 @ExperimentalCoroutinesApi
 class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
@@ -27,6 +28,9 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var saveReadingPreferences: ReaderSaveReadingPreferencesUseCase
+
+    @Mock
+    lateinit var readerReadingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig
 
     private val viewModelDispatcher = UnconfinedTestDispatcher(testDispatcher().scheduler)
     private lateinit var viewModel: ReaderReadingPreferencesViewModel
@@ -40,6 +44,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         viewModel = ReaderReadingPreferencesViewModel(
             getReadingPreferences,
             saveReadingPreferences,
+            readerReadingPreferencesFeedbackFeatureConfig,
             viewModelDispatcher,
         )
 
@@ -154,7 +159,44 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
     }
 
+    @Test
+    fun `when onSendFeedbackClick is called then it emits OpenWebView action event`() = test {
+        // When
+        viewModel.onSendFeedbackClick()
+
+        // Then
+        val openWebViewEvent = collectedEvents.last() as ActionEvent.OpenWebView
+        assertThat(openWebViewEvent.url).isEqualTo(EXPECTED_FEEDBACK_URL)
+    }
+
+    @Test
+    fun `when readerReadingPreferencesFeedbackFeatureConfig is true then isFeedbackEnabled emits true`() = test {
+        // Given
+        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(true)
+
+        // When
+        viewModel.init()
+
+        // Then
+        val isFeedbackEnabled = viewModel.isFeedbackEnabled.first()
+        assertThat(isFeedbackEnabled).isTrue()
+    }
+
+    @Test
+    fun `when readerReadingPreferencesFeedbackFeatureConfig is false then isFeedbackEnabled emits false`() = test {
+        // Given
+        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(false)
+
+        // When
+        viewModel.init()
+
+        // Then
+        val isFeedbackEnabled = viewModel.isFeedbackEnabled.first()
+        assertThat(isFeedbackEnabled).isFalse()
+    }
+
     companion object {
         private val DEFAULT_READING_PREFERENCES = ReaderReadingPreferences()
+        private const val EXPECTED_FEEDBACK_URL = "https://automattic.survey.fm/reader-customization-survey"
     }
 }
