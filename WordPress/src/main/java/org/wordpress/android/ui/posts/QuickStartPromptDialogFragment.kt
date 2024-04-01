@@ -20,6 +20,7 @@ import org.wordpress.android.ui.main.SiteRecord
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartPromptDialogViewModel
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPTextView
 import javax.inject.Inject
@@ -92,6 +93,11 @@ class QuickStartPromptDialogFragment : AppCompatDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (selectedSiteRepository.getSelectedSite() == null) {
+            ToastUtils.showToast(activity, R.string.scan_request_failed_title, ToastUtils.Duration.LONG);
+            dismiss()
+            return
+        }
         this.siteRecord = SiteRecord(selectedSiteRepository.getSelectedSite()!!)
         if (savedInstanceState != null) {
             fragmentTag = requireNotNull(savedInstanceState.getString(STATE_KEY_TAG))
