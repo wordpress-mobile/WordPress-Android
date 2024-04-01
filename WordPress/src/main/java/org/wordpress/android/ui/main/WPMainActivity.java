@@ -1666,7 +1666,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
-        if (mViewModel.getHasMultipleSites()) {
+        if (mViewModel.getHasMultipleSites() && !ChooseSiteActivity.isRunning()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
         }
     }

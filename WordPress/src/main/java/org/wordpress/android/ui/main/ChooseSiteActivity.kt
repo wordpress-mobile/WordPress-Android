@@ -103,6 +103,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     override fun onStart() {
         super.onStart()
         dispatcher.register(this)
+        isRunning = true
     }
 
     override fun onResume() {
@@ -112,6 +113,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     override fun onStop() {
         dispatcher.unregister(this)
+        isRunning = false
         super.onStop()
     }
 
@@ -316,6 +318,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         const val KEY_SITE_PICKER_MODE = "key_site_picker_mode"
         const val KEY_SITE_TITLE_TASK_COMPLETED = "key_site_title_task_completed"
         const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
+
+        @JvmStatic
+        var isRunning = false
     }
 }
 
