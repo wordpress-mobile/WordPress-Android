@@ -100,7 +100,7 @@ class PostConflictResolver(
                 isOldRevision = true
             }
         }
-        
+
         // If we are fetching the remote version of a conflicted post, it means it's already being handled
         val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
                 localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
