@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.store.UploadStore
@@ -41,11 +40,8 @@ class PostConflictResolver(
 
         val post = getPostByLocalPostId.invoke(localPostId)
         if (post != null) {
-
-            // todo : do we need something more here?
             post.error = null
             uploadStore.clearUploadErrorForPost(post)
-
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
@@ -64,11 +60,8 @@ class PostConflictResolver(
         invalidateList.invoke()
 
         val post = getPostByLocalPostId.invoke(localPostId) ?: return
-
-        // todo : do we need something more here?
         post.error = null
         uploadStore.clearUploadErrorForPost(post)
-
 
         // and now show a snackBar, acting as if the Post was pushed, but effectively push it after the snackbar is gone
         var isUndoed = false
@@ -84,7 +77,9 @@ class PostConflictResolver(
             if (!isUndoed) {
                 localPostIdForFetchingRemoteVersionOfConflictedPost = null
                 PostUtils.trackSavePostAnalytics(post, site)
-                dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+                val remotePostPayload = RemotePostPayload(post, site)
+                remotePostPayload.isConflictResolution = true
+                dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
             }
         }
         val snackBarHolder = SnackbarMessageHolder(
@@ -105,9 +100,7 @@ class PostConflictResolver(
                 isOldRevision = true
             }
         }
-       /* val isOldRevision = uploadStore.getUploadErrorForPost(post)?.postError?.type.toString() ==
-                PostErrorType.OLD_REVISION.toString()*/
-
+        
         // If we are fetching the remote version of a conflicted post, it means it's already being handled
         val isFetchingConflictedPost = localPostIdForFetchingRemoteVersionOfConflictedPost != null &&
                 localPostIdForFetchingRemoteVersionOfConflictedPost == post.id
