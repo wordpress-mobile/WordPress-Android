@@ -46,7 +46,18 @@ class ChooseSiteAdapter : RecyclerView.Adapter<ChooseSiteViewHolder>() {
 /**
  * For displaying the UI of "Edit Pins"
  */
-sealed class ActionMode {
-    data object None : ActionMode()
-    data object Pin : ActionMode()
+sealed class ActionMode(val value: String) {
+    data object None : ActionMode(NONE)
+    data object Pin : ActionMode(PIN)
+
+    companion object {
+        fun from(value: String): ActionMode = when (value) {
+            PIN -> Pin
+            NONE -> None
+            else -> throw IllegalArgumentException("Unknown value: $value")
+        }
+
+        private const val PIN = "pin"
+        private const val NONE = "none"
+    }
 }

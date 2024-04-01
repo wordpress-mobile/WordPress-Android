@@ -153,13 +153,16 @@ class ChooseSiteActivity : LocaleAwareActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
-        val searchView = menuSearch.actionView as SearchView
-        setupSearchView(searchView)
-        setupVisibility()
+        if (adapter.mode == ActionMode.Pin) {
+            // restore state
+            enablePinSitesMode()
+        }
+        setupMenuVisibility()
+        setupSearchView()
         return true
     }
 
-    private fun setupVisibility() {
+    private fun setupMenuVisibility() {
         if (mode == SitePickerMode.DEFAULT) {
             menuEditPin.isVisible = true
             binding.layoutAddSite.isVisible = true
@@ -169,7 +172,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         }
     }
 
-    private fun setupSearchView(searchView: SearchView) {
+    private fun setupSearchView() {
+        val searchView = menuSearch.actionView as SearchView
+        searchView.maxWidth = Integer.MAX_VALUE
         menuSearch.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
             override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 binding.layoutAddSite.isVisible = false
@@ -199,6 +204,16 @@ class ChooseSiteActivity : LocaleAwareActivity() {
                 return true
             }
         })
+
+        // Restore search keyword
+        if (searchKeyword != null) {
+            // this is a workaround to set the search keyword after the search view is expanded
+            // due to searchKeyword will be cleared after the search view has been expanded first time
+            val keyword = searchKeyword // copy the keyword
+            menuSearch.expandActionView()
+            searchView.post { searchView.setQuery(keyword, true) }
+            searchView.clearFocus()
+        }
     }
 
     @Suppress("ReturnCount")
@@ -222,9 +237,8 @@ class ChooseSiteActivity : LocaleAwareActivity() {
      * Enable pin sites mode via menu items
      */
     private fun enablePinSitesMode() {
-        menuSearch.isVisible = false
         menuEditPin.setIcon(null)
-        menuEditPin.title = "Done"
+        menuEditPin.title = getString(R.string.label_done_button)
         adapter.setActionMode(ActionMode.Pin)
     }
 
@@ -314,6 +328,22 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         WPDialogSnackbar.make(binding.coordinatorLayout, message, duration).show()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_SEARCH_KEYWORD, searchKeyword)
+        outState.putString(KEY_ACTION_MODE, adapter.mode.value)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        searchKeyword = savedInstanceState.getString(KEY_SEARCH_KEYWORD)
+
+        savedInstanceState.getString(KEY_ACTION_MODE)?.let { actionMode ->
+            adapter.setActionMode(ActionMode.from(actionMode))
+        }
+    }
+
     companion object {
         const val KEY_ARG_SITE_CREATION_SOURCE = "ARG_SITE_CREATION_SOURCE"
         const val KEY_SOURCE = "source"
@@ -321,6 +351,8 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         const val KEY_SITE_PICKER_MODE = "key_site_picker_mode"
         const val KEY_SITE_TITLE_TASK_COMPLETED = "key_site_title_task_completed"
         const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
+        const val KEY_SEARCH_KEYWORD = "key_search_keyword"
+        const val KEY_ACTION_MODE = "key_action_mode"
 
         @JvmStatic
         var isRunning = false
