@@ -1,16 +1,17 @@
 package org.wordpress.android.ui.main
 
-import android.graphics.Typeface
+import android.content.res.ColorStateList
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
-import androidx.core.view.marginTop
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ItemChooseSiteBinding
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.extensions.getColorFromAttribute
+import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -30,10 +31,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     }
 
     fun bind(mode: ActionMode, previousSite: SiteRecord?, site: SiteRecord, selectedId: Int?) {
-        imageManager.loadImageWithCorners(
-            binding.avatar, site.blavatarType, site.blavatarUrl,
-            itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
-        )
+        handleAvatar(site)
 
         handleHeader(previousSite, site)
 
@@ -64,6 +62,20 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         }
 
         handleHighlight(site, selectedId)
+    }
+
+    private fun handleAvatar(site: SiteRecord) {
+        imageManager.loadImageWithCorners(
+            binding.avatar, site.blavatarType, site.blavatarUrl,
+            itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
+        )
+        val isDarkTheme = itemView.resources.configuration.isDarkTheme()
+        val borderColor = ContextCompat.getColor(
+            itemView.context,
+            if (isDarkTheme) R.color.white
+            else R.color.black_translucent_10
+        )
+        binding.avatar.strokeColor = ColorStateList.valueOf(borderColor)
     }
 
     private fun handleHeader(previousSite: SiteRecord?, site: SiteRecord) {
