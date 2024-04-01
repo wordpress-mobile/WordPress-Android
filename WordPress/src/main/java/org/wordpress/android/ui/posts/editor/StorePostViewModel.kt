@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
