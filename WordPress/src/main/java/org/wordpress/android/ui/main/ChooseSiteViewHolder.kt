@@ -5,6 +5,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -39,16 +40,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         binding.textDomain.text = site.homeURL
         binding.pin.isVisible = mode is ActionMode.Pin
 
-        val isPinned = site.isPinned()
-        binding.pin.setImageResource(if (isPinned) R.drawable.pin_filled else R.drawable.pin)
-        binding.pin.setOnClickListener {
-            if (isPinned) {
-                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { remove(site.localId) }
-            } else {
-                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { add(site.localId) }
-            }
-            onPinUpdated(site)
-        }
+        handlePinButton(site)
 
         if (mode is ActionMode.Pin) {
             binding.layoutContainer.setOnClickListener(null)
@@ -62,6 +54,22 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         }
 
         handleHighlight(site, selectedId)
+    }
+
+    private fun handlePinButton(site: SiteRecord) {
+        val isPinned = site.isPinned()
+        binding.pin.setImageResource(if (isPinned) R.drawable.pin_filled else R.drawable.pin)
+        binding.pin.setOnClickListener {
+            if (isPinned) {
+                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { remove(site.localId) }
+            } else {
+                appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { add(site.localId) }
+            }
+            onPinUpdated(site)
+        }
+        val color = if (isPinned) binding.root.context.getColor(R.color.inline_action_filled)
+        else binding.root.context.getColorFromAttribute(R.attr.wpColorOnSurfaceMedium)
+        ImageViewCompat.setImageTintList(binding.pin, ColorStateList.valueOf(color))
     }
 
     private fun handleAvatar(site: SiteRecord) {
