@@ -3673,8 +3673,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostChanged(OnPostChanged event) {
-        Log.d("myTest", "EditPostActivity.onPostChanged()");
-
         if (event.causeOfChange instanceof CauseOfOnPostChanged.UpdatePost) {
             if (!event.isError()) {
                 // here update the menu if it's not a draft anymore
@@ -3748,8 +3746,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        Log.d("myTest", "EditPostActivity.onPostUploaded()");
-
         final PostModel post = event.post;
         if (post != null && post.getId() == mEditPostRepository.getId()) {
             if (!isRemotePreviewingFromEditor()) {

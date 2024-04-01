@@ -651,9 +651,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
-        Log.d("myTest", "PostUploadHandler.onPostUploaded(), error = " + event.error.message);
-
-
         // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
         if (!isPostUploading(event.post)) {
             return;

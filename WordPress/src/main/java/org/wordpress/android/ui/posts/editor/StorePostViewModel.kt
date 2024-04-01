@@ -220,16 +220,12 @@ class StorePostViewModel
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostUploaded(event: OnPostUploaded) {
-        Log.d("myTest","StorePostViewModel.onPostUploaded(), error = ${event.error.message}")
-
         hideSavingProgressDialog()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onPostChanged(event: OnPostChanged) {
-        Log.d("myTest","StorePostViewModel.onPostChanged()")
-
         hideSavingProgressDialog()
 
         // Refresh post content if needed

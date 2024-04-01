@@ -1116,8 +1116,6 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        Log.d("myTest", "ReaderPostPagerActivity.onPostUploaded()");
-
         SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
         if (site != null && event.post != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(

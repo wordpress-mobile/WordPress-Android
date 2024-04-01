@@ -105,8 +105,6 @@ class PostListEventListener(
     @Suppress("unused", "LongMethod", "ComplexMethod")
     @Subscribe(threadMode = MAIN, priority = 5)
     fun onPostChanged(event: OnPostChanged) {
-        Log.d("myTest","PostListEventListener.onPostChanged()")
-
         // We need to subscribe on the MAIN thread, in order to ensure the priority parameter is taken into account.
         // However, we want to perform the body of the method on a background thread.
         launch {
@@ -186,7 +184,6 @@ class PostListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
-        Log.d("myTest","PostListEventListener.onPostUploaded(), error = ${event.error.message}")
 
        /* if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
             Log.d("","")

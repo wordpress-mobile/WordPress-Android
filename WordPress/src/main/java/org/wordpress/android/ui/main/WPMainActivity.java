@@ -1737,7 +1737,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-        Log.d("myTest", "WPMainActivity§.onPostUploaded()");
 
         // WPMainActivity never stops listening for the Dispatcher events and as a result it tries to show the
         // SnackBar even when another activity is in the foreground. However, this has a tricky side effect, as if
