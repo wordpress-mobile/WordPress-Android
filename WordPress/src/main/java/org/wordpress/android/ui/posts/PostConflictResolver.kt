@@ -41,6 +41,7 @@ class PostConflictResolver(
         val post = getPostByLocalPostId.invoke(localPostId)
         if (post != null) {
             post.error = null
+            post.setIsLocallyChanged(false)
             uploadStore.clearUploadErrorForPost(post)
             originalPostCopyForConflictUndo = post.clone()
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
