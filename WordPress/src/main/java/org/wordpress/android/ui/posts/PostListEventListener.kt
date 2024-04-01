@@ -193,7 +193,7 @@ class PostListEventListener(
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
 
-                if (event.error.type == PostStore.PostErrorType.OLD_REVISION) {
+                if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
                     triggerPostUploadAction.invoke(
                         PostUploadedSnackbar(
                             dispatcher,
