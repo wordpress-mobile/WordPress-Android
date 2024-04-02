@@ -2597,7 +2597,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         editorFragment?.setFeaturedImageSupported(siteModel.isFeaturedImageSupported)
 
         // Special actions - these only make sense for empty posts that are going to be populated now
-        if (TextUtils.isEmpty(editPostRepository.content)) {
+        if (editPostRepository.hasPost() && TextUtils.isEmpty(editPostRepository.content)) {
             val action = intent.action
             if ((Intent.ACTION_SEND_MULTIPLE == action)) {
                 setPostContentFromShareAction()
