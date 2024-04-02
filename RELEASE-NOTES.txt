@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.7
+-----
+
+
 24.6
 -----
 * [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]

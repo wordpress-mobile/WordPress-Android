@@ -1,1 +1,3 @@
-The best things in life are worth the wait, like fresh-baked cookies, your coffee order, and the latest releases from your favorite app. (That’s us. See you next update.)
+* [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]
+* [*] Block editor: Fixes an Aztec editor crash occurring on some occasions when the keyboard suggestions are used [https://github.com/wordpress-mobile/WordPress-Android/pull/20518]
+
