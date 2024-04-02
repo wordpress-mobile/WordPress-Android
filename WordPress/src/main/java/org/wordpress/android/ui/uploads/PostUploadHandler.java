@@ -668,13 +668,18 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                 String errorMessage = mUiHelpers.getTextOfUiString(context,
                         UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
                                 event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post))).toString();
-                String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
+                String notificationMessage = UploadUtils.getErrorMessage(
+                        context,
+                        event.post.isPage(),
+                        errorMessage,
+                        false
+                );
                 mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
                         mMediaStore.getMediaForPost(event.post));
                 mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
                 mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
-                sFirstPublishPosts.remove(event.post.getId());
             }
+            sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
