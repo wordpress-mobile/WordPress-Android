@@ -101,6 +101,13 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on start if retrying to fetch the site succeeds but retrieving from fb fails show error`() = testWith(FETCH_SUCCESS) {
+        whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(null)
+        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotCreatedErrorUiState::class.java)
+    }
+
+    @Test
     fun `on start does not show preview when fetching fails`() = testWith(FETCH_ERROR) {
         startViewModel()
         verify(siteStore, never()).getSiteBySiteId(SITE_REMOTE_ID)
