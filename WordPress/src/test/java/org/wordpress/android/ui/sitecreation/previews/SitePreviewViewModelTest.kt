@@ -102,7 +102,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on start if retrying to fetch the site succeeds but retrieving from fb fails show error`() = testWith(FETCH_SUCCESS) {
+    fun `on start if site is created but cannot be retrieved from fb fails show error`() = testWith(FETCH_SUCCESS) {
         whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(null)
         startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
         assertThat(viewModel.uiState.value).isInstanceOf(SiteNotFoundInDbUiState::class.java)
