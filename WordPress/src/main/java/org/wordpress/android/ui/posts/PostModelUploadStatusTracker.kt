@@ -31,7 +31,6 @@ class PostModelUploadStatusTracker @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
 
     fun getUploadStatus(post: PostModel, siteModel: SiteModel): PostListItemUploadStatus {
-
         // todo: den eketeleitai pote edw an exei klhthei kai faei fail meta
         uploadStatusMap[post.id]?.let { return it }
 

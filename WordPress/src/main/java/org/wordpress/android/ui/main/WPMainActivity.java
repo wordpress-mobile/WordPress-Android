@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -1737,7 +1736,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
-
         // WPMainActivity never stops listening for the Dispatcher events and as a result it tries to show the
         // SnackBar even when another activity is in the foreground. However, this has a tricky side effect, as if
         // the Activity in the foreground is showing a Snackbar the SnackBar is dismissed as soon as the

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -184,15 +183,8 @@ class PostListEventListener(
     @Suppress("unused")
     @Subscribe(threadMode = BACKGROUND)
     fun onPostUploaded(event: OnPostUploaded) {
-
-       /* if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
-            Log.d("","")
-            return
-        }*/
-
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
-
                 if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
                     triggerPostUploadAction.invoke(
                         PostUploadedSnackbar(

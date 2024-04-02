@@ -3,7 +3,6 @@
 package org.wordpress.android.ui.mysite
 
 import android.net.Uri
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

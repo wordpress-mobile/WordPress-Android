@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

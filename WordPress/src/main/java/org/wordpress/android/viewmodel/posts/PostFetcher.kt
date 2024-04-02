@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
