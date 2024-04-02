@@ -1724,6 +1724,11 @@
     <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
 
     <string name="reader_preferences_screen_font_size_label">Font Size</string>
+    <string name="reader_preferences_font_size_extra_small">Extra small</string>
+    <string name="reader_preferences_font_size_small">Small</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_large">Large</string>
+    <string name="reader_preferences_font_size_extra_large">Extra large</string>
     <string name="reader_preferences_screen_font_size_preview" translatable="false">A</string>
 
     <!-- editor -->

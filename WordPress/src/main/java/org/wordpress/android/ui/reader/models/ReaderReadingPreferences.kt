@@ -168,14 +168,32 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         ),
     }
 
-    enum class FontSize(val value: Int) {
-        EXTRA_SMALL(10),
-        SMALL(12),
+    enum class FontSize(
+        @StringRes val displayNameRes: Int,
+        val value: Int,
+    ) {
+        EXTRA_SMALL(
+            displayNameRes = R.string.reader_preferences_font_size_extra_small,
+            value = 10,
+        ),
+        SMALL(
+            displayNameRes = R.string.reader_preferences_font_size_small,
+            value = 12,
+        ),
 
         @FallbackValue
-        NORMAL(16),
-        LARGE(20),
-        EXTRA_LARGE(24);
+        NORMAL(
+            displayNameRes = R.string.reader_preferences_font_size_normal,
+            value = 16,
+        ),
+        LARGE(
+            displayNameRes = R.string.reader_preferences_font_size_large,
+            value = 20,
+        ),
+        EXTRA_LARGE(
+            displayNameRes = R.string.reader_preferences_font_size_extra_large,
+            value = 24,
+        );
 
         val multiplier: Float
             get() = value / DEFAULT.value.toFloat()
