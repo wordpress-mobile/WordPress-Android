@@ -2617,7 +2617,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
 
         // Special actions - these only make sense for empty posts that are going to be populated now
-        if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
+        if (mEditPostRepository.hasPost() && TextUtils.isEmpty(mEditPostRepository.getContent())) {
             String action = getIntent().getAction();
             if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
