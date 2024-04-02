@@ -94,6 +94,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     uiHelpers.updateVisibility(sitePreviewWebError, ui.webViewErrorVisibility)
                     uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, ui.shimmerVisibility)
                 }
+                ui.errorTitle?.let { error ->
+                    siteCreationPreviewHeaderItem.sitePreviewTitle.text =
+                        uiHelpers.getTextOfUiString(requireContext(), error)
+                }
             }
         }
     }

@@ -191,6 +191,7 @@ class SitePreviewViewModel @Inject constructor(
         val shimmerVisibility: Boolean = false,
         val subtitle: UiString,
         val caption: UiString?,
+        val errorTitle: UiString? = null,
     ) {
         data class SitePreviewContentUiState(
             val isFree: Boolean,
@@ -220,6 +221,7 @@ class SitePreviewViewModel @Inject constructor(
             webViewErrorVisibility = true,
             subtitle = UiStringRes(R.string.site_creation_error_generic_title),
             caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
+            errorTitle = UiStringRes(R.string.error),
         )
 
         data class SitePreviewLoadingShimmerState(
