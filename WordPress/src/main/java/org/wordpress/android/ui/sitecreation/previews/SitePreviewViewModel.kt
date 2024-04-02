@@ -139,7 +139,9 @@ class SitePreviewViewModel @Inject constructor(
         return if (!onSiteFetched.isError) {
             val site = siteStore.getSiteBySiteId(remoteSiteId)
             if (site == null) {
-                updateUiState(SiteNotFoundInDbUiState)
+                withContext(mainDispatcher) {
+                    updateUiState(SiteNotFoundInDbUiState)
+                }
             }
             site
         } else {
