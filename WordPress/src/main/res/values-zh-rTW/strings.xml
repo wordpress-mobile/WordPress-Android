@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 11:54:10+0000
+Translation-Revision-Date: 2024-03-20 12:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">為預防內容受影響，你可以複製文章文字。 複製錯誤詳細資料，以便除錯並與支援團隊分享。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">編輯器發生未知錯誤</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">點選此處即可複製文章文字</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">點選此處即可複製錯誤詳細資料</string>
+    <string name="gutenberg_native_copy_post_text">複製文章文字</string>
+    <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
+    <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
+    <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
+    <string name="editor_updating_post_failed">無法更新文章內容</string>
+    <string name="editor_updating_post">正在更新文章內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
@@ -29,7 +39,6 @@ Language: zh_TW
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">你訂閱的網誌最近未張貼任何文章</string>
     <string name="reader_no_followed_blogs_description_subs">訂閱「探索」中的網誌或搜尋你已按讚的網誌。</string>
     <string name="reader_no_recommended_blogs_title">沒有推薦的網誌</string>
-    <string name="reader_no_followed_tags_title">沒有訂閱的標籤</string>
     <string name="reader_no_posts_with_this_tag">沒有任何含有此標籤的文章</string>
     <string name="reader_toast_err_unable_to_block_blog">無法封鎖此網誌</string>
     <string name="reader_toast_posts_from_this_blog_blocked">將不再顯示此網誌的文章</string>
@@ -38,20 +47,17 @@ Language: zh_TW
     <string name="reader_toast_err_unable_to_follow_blog">無法訂閱此網誌</string>
     <string name="reader_toast_err_already_follow_this_blog">你已訂閱此網誌</string>
     <string name="reader_toast_err_show_blog">無法顯示此網誌</string>
-    <string name="reader_toast_err_tag_already_subscribed">你已訂閱此標籤</string>
     <string name="reader_label_choose_interests">選擇你的興趣</string>
     <string name="reader_label_subscribers_count_single">1 名訂閱者</string>
     <string name="reader_label_subscribers_count">%s 名訂閱者</string>
     <string name="reader_label_subscribe_count">%,d 名訂閱者</string>
     <string name="reader_label_blog_subscribed">網誌已訂閱</string>
     <string name="reader_hint_search_subscribed_blogs">搜尋已訂閱的網誌</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">輸入要訂閱的 URL 或標籤</string>
     <string name="reader_btn_subscribed">已訂閱</string>
     <string name="reader_btn_subscribe">訂閱</string>
     <string name="reader_menu_block_this_blog">封鎖此網誌</string>
     <string name="reader_menu_tags_and_blogs">編輯標籤和網誌</string>
     <string name="reader_page_followed_blogs_title">已訂閱的網誌</string>
-    <string name="reader_page_followed_tags_title">已訂閱的標籤</string>
     <string name="reader_title_tags">關注標籤</string>
     <string name="reader_activity_title_manage_tags_blogs">管理標籤和網誌</string>
     <string name="reader_activity_title_tag_preview">標籤</string>
@@ -70,19 +76,13 @@ Language: zh_TW
     <string name="reader_dropdown_menu_subscriptions">訂閱</string>
     <string name="reader_dropdown_menu_discover">探索</string>
     <string name="reader_search_content_description">搜尋</string>
-    <string name="reader_discover_no_posts_button_tags_text">訂閱標籤</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">嘗試訂閱更多標籤，即可擴大搜尋範圍</string>
-    <string name="reader_discover_empty_subtitle_subscribe">訂閱標籤即可探索新網誌</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">可訂閱的網誌</string>
-    <string name="reader_filter_empty_tags_action_subscribe">訂閱標籤</string>
     <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
     <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
-    <string name="reader_filter_empty_tags_list_text">只要訂閱標籤，就能從此處看到最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">無標籤</string>
     <string name="reader_filter_empty_blogs_list_text">在「探索」中訂閱網誌，就會於此處看到網誌的最新文章。 或者搜尋你已按讚的網誌。</string>
     <string name="reader_filter_empty_blogs_list_title">無網誌訂閱</string>
     <string name="reader_filter_empty_blogs_action">訂閱網誌</string>
-    <string name="reader_filter_empty_tags_list_subscribe">你可以新增標籤以訂閱特定主題的文章</string>
     <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
     <string name="reader_filter_by_tag_title">依標籤篩選</string>
     <string name="reader_filter_by_blog_title">依網誌篩選</string>
@@ -948,11 +948,6 @@ Language: zh_TW
     <string name="gutenberg_native_embed_options">嵌入選項</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
     <string name="quick_start_list_create_site_message">網站已建立！ 完成另一項任務。</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s 位部落客&lt;/a&gt;說這個讚。</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 位部落客&lt;/a&gt;說這個讚。</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;你和其他 %1$s 位部落客&lt;/a&gt;都說這個讚。</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;你和 1 位部落客&lt;/a&gt;都說這個讚。</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;你&lt;/a&gt;說這個讚。</string>
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>

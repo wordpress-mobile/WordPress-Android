@@ -141,7 +141,7 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
         if (mSource == JetpackConnectionSource.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
-            ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site, StatsLaunchedFrom.JETPACK_CONNECTION);
+            ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site, StatsLaunchedFrom.QUICK_ACTIONS);
         }
         finish();
     }

@@ -226,7 +226,7 @@ class StatsUtils @Inject constructor(
             val difference = value - previousValue
             val percentage = when (previousValue) {
                 value -> "0"
-                0L -> "∞"
+                0L -> percentFormatter.format(value = 100)
                 else -> {
                     val percentageValue = difference.toFloat() / previousValue
                     percentFormatter.format(value = percentageValue, rounding = HALF_UP)

@@ -8,7 +8,8 @@ import com.bumptech.glide.request.transition.Transition
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Test
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 
@@ -35,15 +36,15 @@ class GlidePopTransitionOptionsTest : BaseUnitTest() {
     @Test
     fun testTransition() {
         val glidePopTransition = GlidePopTransition()
-        val drawable: Drawable = Mockito.mock()
-        val viewAdapter: Transition.ViewAdapter = Mockito.mock()
-        val view: View = Mockito.mock()
+        val drawable: Drawable = mock()
+        val viewAdapter: Transition.ViewAdapter = mock()
+        val view: View = mock()
         whenever(viewAdapter.view).thenReturn(view)
-        whenever(view.context).thenReturn(Mockito.mock())
+        whenever(view.context).thenReturn(mock())
 
         val result = glidePopTransition.transition(drawable, viewAdapter)
 
         TestCase.assertTrue(result)
-        Mockito.verify(viewAdapter).setDrawable(drawable)
+        verify(viewAdapter).setDrawable(drawable)
     }
 }

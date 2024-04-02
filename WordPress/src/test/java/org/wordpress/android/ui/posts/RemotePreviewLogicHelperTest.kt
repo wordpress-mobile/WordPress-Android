@@ -6,7 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.lenient
+import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
@@ -111,7 +111,7 @@ class RemotePreviewLogicHelperTest {
     fun `preview not available for self hosted sites not using WPComRestApi`() {
         // Given
         // next stub not used (made lenient) in case we update future logic.
-        lenient().doReturn(false).whenever(site).isUsingWpComRestApi
+        Mockito.lenient().doReturn(false).whenever(site).isUsingWpComRestApi
 
         // When
         val result = remotePreviewLogicHelper.runPostPreviewLogic(activity, site, post, helperFunctions)
@@ -258,7 +258,7 @@ class RemotePreviewLogicHelperTest {
     fun `preview available for Jetpack sites on a post post without modification`() {
         // Given
         // next stub not used (made lenient) in case we update future logic
-        lenient().doReturn(true).whenever(site).isJetpackConnected
+        Mockito.lenient().doReturn(true).whenever(site).isJetpackConnected
         doReturn(false).whenever(post).isLocallyChanged
 
         // When
@@ -272,7 +272,7 @@ class RemotePreviewLogicHelperTest {
     @Test
     fun `preview available for Jetpack sites on a post without modification`() {
         // Given
-        lenient().doReturn(true).whenever(site).isJetpackConnected
+        Mockito.lenient().doReturn(true).whenever(site).isJetpackConnected
         doReturn(false).whenever(post).isLocallyChanged
 
         // When

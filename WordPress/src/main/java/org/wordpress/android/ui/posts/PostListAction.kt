@@ -38,6 +38,7 @@ sealed class PostListAction {
 
     class ViewStats(val site: SiteModel, val post: PostModel) : PostListAction()
     class ViewPost(val site: SiteModel, val post: PostModel) : PostListAction()
+    class ReadPost(val site: SiteModel, val post: PostModel) : PostListAction()
     class DismissPendingNotification(val pushId: Int) : PostListAction()
     class ShowPromoteWithBlaze(val post: PostModel) : PostListAction()
     class ShowComments(val site: SiteModel, val post: PostModel) : PostListAction()
@@ -50,7 +51,7 @@ fun handlePostListAction(
     action: PostListAction,
     remotePreviewLogicHelper: RemotePreviewLogicHelper,
     previewStateHelper: PreviewStateHelper,
-    blazeFeatureUtils: BlazeFeatureUtils
+    blazeFeatureUtils: BlazeFeatureUtils,
 ) {
     when (action) {
         is PostListAction.EditPost -> {
@@ -86,6 +87,9 @@ fun handlePostListAction(
         }
         is PostListAction.ViewPost -> {
             ActivityLauncher.browsePostOrPage(activity, action.site, action.post)
+        }
+        is PostListAction.ReadPost-> {
+            ReaderActivityLauncher.showReaderPostDetail(activity, action.site.siteId, action.post.remotePostId)
         }
         is PostListAction.DismissPendingNotification -> {
             NativeNotificationsUtils.dismissNotification(action.pushId, activity)

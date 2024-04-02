@@ -40,7 +40,6 @@ enum class StatsLaunchedFrom(val value: String) {
     LINK("link"),
     SHORTCUT("shortcut"),
     ACTIVITY_LOG("activity_log"),
-    JETPACK_CONNECTION("jetpack_connection")
 }
 
 fun AnalyticsTrackerWrapper.trackStatsAccessed(site: SiteModel, tapSource: String) =

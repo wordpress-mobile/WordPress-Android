@@ -75,12 +75,15 @@ class DynamicCardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var tracker: DynamicCardsAnalyticsTracker
 
+    @Mock
+    private lateinit var dynamicCardsBuilder: DynamicCardsBuilder
+
     private lateinit var viewModelSlice: DynamicCardsViewModelSlice
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers, tracker)
+        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers, tracker, dynamicCardsBuilder)
     }
 
     @Test

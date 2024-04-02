@@ -300,7 +300,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_subscribed));
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_already_following));
             return;
         }
 
@@ -561,7 +561,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case TAB_IDX_FOLLOWED_TAGS:
-                    return getString(R.string.reader_page_followed_tags_title);
+                    return getString(R.string.reader_page_followed_tags_text_title);
                 case TAB_IDX_FOLLOWED_BLOGS:
                     return getString(R.string.reader_page_followed_blogs_title);
                 default:

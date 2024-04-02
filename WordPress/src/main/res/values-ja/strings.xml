@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 09:54:14+0000
+Translation-Revision-Date: 2024-03-21 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">エディターで予期しないエラーが発生しました。</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">投稿内容をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">エラーの詳細をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_copy_post_text">投稿内容をコピー</string>
+    <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
+    <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
+    <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
+    <string name="editor_updating_post_failed">投稿コンテンツの更新に失敗しました。</string>
+    <string name="editor_updating_post">投稿コンテンツを更新しています</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
@@ -29,7 +39,6 @@ Language: ja_JP
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">購読しているブログには、最近の投稿はありません</string>
     <string name="reader_no_followed_blogs_description_subs">「ディスカバー」でブログを購読するか、すでに気に入っているブログを検索します。</string>
     <string name="reader_no_recommended_blogs_title">おすすめのブログはありません</string>
-    <string name="reader_no_followed_tags_title">購読しているタグはありません</string>
     <string name="reader_no_posts_with_this_tag">このタグを使った投稿はありません</string>
     <string name="reader_toast_err_unable_to_block_blog">このブログをブロックできませんでした</string>
     <string name="reader_toast_posts_from_this_blog_blocked">このブログからの投稿は今後表示されません</string>
@@ -38,20 +47,17 @@ Language: ja_JP
     <string name="reader_toast_err_unable_to_follow_blog">このブログを購読できません</string>
     <string name="reader_toast_err_already_follow_this_blog">このブログをすでに購読済みです</string>
     <string name="reader_toast_err_show_blog">このブログを表示できません</string>
-    <string name="reader_toast_err_tag_already_subscribed">このタグをすでに購読済みです</string>
     <string name="reader_label_choose_interests">関心のあるものを選択</string>
     <string name="reader_label_subscribers_count_single">1人の購読者</string>
     <string name="reader_label_subscribers_count">%s人の購読者</string>
     <string name="reader_label_subscribe_count">%,d人の購読者</string>
     <string name="reader_label_blog_subscribed">購読済みのブログ</string>
     <string name="reader_hint_search_subscribed_blogs">購読済みのブログを検索</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">購読する URL またはタグを入力</string>
     <string name="reader_btn_subscribed">購読済み</string>
     <string name="reader_btn_subscribe">購読</string>
     <string name="reader_menu_block_this_blog">このブログをブロック</string>
     <string name="reader_menu_tags_and_blogs">タグとブログを編集</string>
     <string name="reader_page_followed_blogs_title">購読済みのブログ</string>
-    <string name="reader_page_followed_tags_title">購読済みのタグ</string>
     <string name="reader_title_tags">タグをフォロー</string>
     <string name="reader_activity_title_manage_tags_blogs">タグとブログを管理</string>
     <string name="reader_activity_title_tag_preview">タグ</string>
@@ -70,19 +76,13 @@ Language: ja_JP
     <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
     <string name="reader_dropdown_menu_discover">ディスカバー</string>
     <string name="reader_search_content_description">検索</string>
-    <string name="reader_discover_no_posts_button_tags_text">タグを購読</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">もっと多くのタグを購読して、検索を広げてみてください</string>
-    <string name="reader_discover_empty_subtitle_subscribe">タグを購読して新しいブログを見つける</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">購読するブログ</string>
-    <string name="reader_filter_empty_tags_action_subscribe">タグを購読</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
-    <string name="reader_filter_empty_tags_list_text">タグを購読すると、そのタグで最適の投稿がこちらに表示されます。</string>
     <string name="reader_filter_empty_tags_list_title">タグなし</string>
     <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
     <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>
     <string name="reader_filter_empty_blogs_action">ブログを購読</string>
-    <string name="reader_filter_empty_tags_list_subscribe">タグを追加することで、特定の内容に関する投稿を購読できます</string>
     <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
     <string name="reader_filter_by_tag_title">タグで絞り込む</string>
     <string name="reader_filter_by_blog_title">ブログで絞り込む</string>
@@ -948,11 +948,6 @@ Language: ja_JP
     <string name="gutenberg_native_embed_options">埋め込みオプション</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
     <string name="quick_start_list_create_site_message">サイトを作成しました。 別のタスクを完了します。</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;あなたと%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;あなたと1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;あなた&lt;/a&gt;が「いいね」をつけています。</string>
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>

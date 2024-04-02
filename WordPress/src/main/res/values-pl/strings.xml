@@ -385,11 +385,6 @@ Language: pl
     <string name="gutenberg_native_embed_options">Opcje zagnieżdzania</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Stuknij dwukrotnie aby podejrzeć opcje zagnieżdzania.</string>
     <string name="quick_start_list_create_site_message">Utworzono witrynę! Ukończ kolejne zadanie.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blogujących &lt;/a&gt; lubi to.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogujący&lt;/a&gt; lubi to.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Ty oraz %1$s blogujących&lt;/a&gt; lubi to.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Ty oraz 1 blogujący&lt;/a&gt; lubicie to.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ty&lt;/a&gt; to polubiłeś.</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
     <string name="gutenberg_native_line_height">Interlinia</string>

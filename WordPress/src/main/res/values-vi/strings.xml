@@ -330,11 +330,6 @@ Language: vi_VN
     <string name="gutenberg_native_embed_options">Tùy chọn nhúng</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Nhấn hai lần để xem tùy chọn nhúng.</string>
     <string name="quick_start_list_create_site_message">Đã tạo blog! Tiếp tục nhiệm vụ khác.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Bạn và %1$s người khác&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Bạn và 1 người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Bạn&lt;/a&gt; thích bài này.</string>
     <string name="gutenberg_native_line_height">Khoảng cách dòng</string>
     <string name="domains_free_plan_get_your_domain_title">Tên miền miễn phí</string>
     <string name="recommend_app_generic_get_template_error">Xảy ra lỗi khi tải mẫu ứng dụng đề xuất</string>
