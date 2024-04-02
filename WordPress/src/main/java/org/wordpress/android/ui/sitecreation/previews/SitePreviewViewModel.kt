@@ -24,6 +24,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotFoundInDbUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.UrlData
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
@@ -138,7 +139,7 @@ class SitePreviewViewModel @Inject constructor(
         return if (!onSiteFetched.isError) {
             val site = siteStore.getSiteBySiteId(remoteSiteId)
             if (site == null) {
-                updateUiState(SiteNotCreatedErrorUiState)
+                updateUiState(SiteNotFoundInDbUiState)
             }
             site
         } else {
@@ -224,6 +225,14 @@ class SitePreviewViewModel @Inject constructor(
             subtitle = UiStringRes(R.string.site_creation_error_generic_title),
             caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
             errorTitle = UiStringRes(R.string.error),
+        )
+
+        data object SiteNotFoundInDbUiState : SitePreviewUiState(
+            urlData = UrlData("", "", 0 to 0, 0 to 0),
+            webViewVisibility = false,
+            webViewErrorVisibility = true,
+            subtitle = UiStringRes(R.string.site_creation_error_generic_title),
+            caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
         )
 
         data class SitePreviewLoadingShimmerState(

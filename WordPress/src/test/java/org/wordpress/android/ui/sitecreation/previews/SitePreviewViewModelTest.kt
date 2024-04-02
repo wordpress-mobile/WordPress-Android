@@ -40,6 +40,7 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotFoundInDbUiState
 import org.wordpress.android.ui.sitecreation.progress.LOADING_STATE_TEXT_ANIMATION_DELAY
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -104,7 +105,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     fun `on start if retrying to fetch the site succeeds but retrieving from fb fails show error`() = testWith(FETCH_SUCCESS) {
         whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(null)
         startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
-        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotCreatedErrorUiState::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotFoundInDbUiState::class.java)
     }
 
     @Test
