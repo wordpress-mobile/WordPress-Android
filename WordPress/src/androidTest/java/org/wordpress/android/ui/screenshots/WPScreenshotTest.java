@@ -19,6 +19,7 @@ import org.wordpress.android.e2e.pages.PostsListPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.support.DemoModeEnabler;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.UiTestingUtils;
 import org.wordpress.android.util.image.ImageType;
 
