@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_MODEL
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
 import org.wordpress.android.ui.sitecreation.progress.LOADING_STATE_TEXT_ANIMATION_DELAY
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -84,6 +86,12 @@ class SitePreviewViewModelTest : BaseUnitTest() {
         whenever(urlUtils.extractSubDomain(any())).thenReturn(SUB_DOMAIN)
         whenever(urlUtils.addUrlSchemeIfNeeded(any(), eq(true))).thenReturn(URL)
         whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(SITE_MODEL)
+    }
+
+    @Test
+    fun `on start show error when result is not created`() = testWith(FETCH_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(result = SiteCreationResult.NotCreated))
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotCreatedErrorUiState::class.java)
     }
 
     @Test

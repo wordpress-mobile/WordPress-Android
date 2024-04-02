@@ -23,6 +23,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.UrlData
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
@@ -81,7 +82,10 @@ class SitePreviewViewModel @Inject constructor(
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return else isStarted = true
-        require(siteCreationState.result is Created)
+        if (siteCreationState.result !is Created) {
+            updateUiState(SiteNotCreatedErrorUiState)
+            return
+        }
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         isFree = requireNotNull(siteCreationState.domain).isFree
@@ -208,6 +212,14 @@ class SitePreviewViewModel @Inject constructor(
             webViewErrorVisibility = true,
             subtitle = getSubtitle(isFree),
             caption = getCaption(isFree),
+        )
+
+        data object SiteNotCreatedErrorUiState : SitePreviewUiState(
+            urlData = UrlData("", "", 0 to 0, 0 to 0),
+            webViewVisibility = false,
+            webViewErrorVisibility = true,
+            subtitle = UiStringRes(R.string.site_creation_error_generic_title),
+            caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
         )
 
         data class SitePreviewLoadingShimmerState(
