@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;

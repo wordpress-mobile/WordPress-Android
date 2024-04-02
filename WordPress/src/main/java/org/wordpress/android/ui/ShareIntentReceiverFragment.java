@@ -22,6 +22,7 @@ import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageManager;
 
 import javax.inject.Inject;

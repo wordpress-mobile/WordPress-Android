@@ -34,6 +34,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;

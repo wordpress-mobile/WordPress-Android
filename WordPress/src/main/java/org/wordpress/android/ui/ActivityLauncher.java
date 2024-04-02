@@ -85,6 +85,7 @@ import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;

@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;

@@ -53,6 +53,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
