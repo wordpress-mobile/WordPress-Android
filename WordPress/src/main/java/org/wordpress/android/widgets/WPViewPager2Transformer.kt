@@ -37,11 +37,7 @@ class WPViewPager2Transformer(private val mTransformType: TransformType) : ViewP
                 // this is the page to the left
                 scale = (abs((abs(position.toDouble()) - 1)) * (1.0f - SCALE_FACTOR_SLIDE) + SCALE_FACTOR_SLIDE)
                     .toFloat()
-                alpha = max(
-                    MIN_ALPHA_SLIDE.toDouble(),
-                    (1 - abs(position.toDouble()))
-                )
-                    .toFloat()
+                alpha = max(MIN_ALPHA_SLIDE.toDouble(), (1 - abs(position.toDouble()))).toFloat()
                 val pageWidth = page.width
                 val translateValue = position * -pageWidth
                 translationX = if (translateValue > -pageWidth) {
@@ -68,13 +64,8 @@ class WPViewPager2Transformer(private val mTransformType: TransformType) : ViewP
             }
 
             Zoom -> if (position >= -1 && position <= 1) {
-                scale = max(
-                    MIN_SCALE_ZOOM.toDouble(),
-                    (1 - abs(position.toDouble()))
-                )
-                    .toFloat()
-                alpha = (MIN_ALPHA_ZOOM
-                        + (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM))
+                scale = max(MIN_SCALE_ZOOM.toDouble(), (1 - abs(position.toDouble()))).toFloat()
+                alpha = (MIN_ALPHA_ZOOM + (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM))
                 val vMargin = (page.height * (1 - scale) / 2)
                 val hMargin = (page.width * (1 - scale) / 2)
                 translationX = if (position < 0) {
