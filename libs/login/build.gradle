@@ -12,6 +12,7 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
+            includeGroup "com.gravatar"
         }
     }
     mavenCentral()
@@ -49,6 +50,7 @@ dependencies {
     implementation ("org.wordpress:utils:$wordpressUtilsVersion") {
         exclude group: "com.android.volley"
     }
+    implementation ("com.gravatar:gravatar:$gravatarSdkVersion")
 
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectorDrawableAnimatedVersion"
