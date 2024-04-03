@@ -1,3 +1,0 @@
-24.3:
-Accedi al tuo sito con le credenziali di Google, i dispositivi fisici e le chiavi di accesso di terze parti. Non preoccuparti, il sito è più sicuro di una ricetta segreta.
-Abbiamo nascosto l'icona del menu nelle schermate delle statistiche, in modo che sia visibile solo dalla scheda Panoramica. Modalità ninja: attiva.

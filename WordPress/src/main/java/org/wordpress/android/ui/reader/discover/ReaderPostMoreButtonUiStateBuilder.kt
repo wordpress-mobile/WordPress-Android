@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_S
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.READING_PREFERENCES
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
@@ -41,13 +42,14 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<ReaderPostCardAction> {
         return withContext(bgDispatcher) {
-            buildMoreMenuItemsBlocking(post, includeBookmark, onButtonClicked)
+            buildMoreMenuItemsBlocking(post, includeBookmark, false, onButtonClicked)
         }
     }
 
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
         includeBookmark: Boolean,
+        includeReadingPreferences: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<ReaderPostCardAction> {
         val menuItems = mutableListOf<ReaderPostCardAction>()
@@ -60,6 +62,10 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         if (includeBookmark) menuItems.add(buildBookmark(isPostBookmarked, onButtonClicked))
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
+        if (includeReadingPreferences) {
+            menuItems.add(SpacerNoAction())
+            menuItems.add(buildReadingPreferences(onButtonClicked))
+        }
         menuItems.add(SpacerNoAction())
         menuItems.add(buildBlockSite(onButtonClicked))
         menuItems.add(buildReportPost(onButtonClicked))
@@ -220,6 +226,16 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             labelColor = R.attr.wpColorError,
             iconRes = R.drawable.ic_block_white_24dp,
             iconColor = R.attr.wpColorError,
+            onClicked = onButtonClicked
+        )
+
+    private fun buildReadingPreferences(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
+        SecondaryAction(
+            type = READING_PREFERENCES,
+            label = UiStringRes(R.string.reader_menu_reading_preferences),
+            labelColor = MaterialR.attr.colorOnSurface,
+            iconRes = R.drawable.ic_reader_preferences,
+            iconColor = R.attr.wpColorOnSurfaceMedium,
             onClicked = onButtonClicked
         )
 

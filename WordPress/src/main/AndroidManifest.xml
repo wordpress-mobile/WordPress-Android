@@ -249,7 +249,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
         </activity>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"

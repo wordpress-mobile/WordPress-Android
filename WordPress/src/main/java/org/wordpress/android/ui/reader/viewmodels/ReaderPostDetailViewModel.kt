@@ -92,6 +92,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -127,7 +128,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper,
+    private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -155,6 +157,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _reloadFragment = MutableLiveData<Event<Unit>>()
+    val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -445,7 +450,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                        post, false, this@ReaderPostDetailViewModel::onButtonClicked
+                        post,
+                        includeBookmark = false,
+                        includeReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
+                        onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -987,6 +995,10 @@ class ReaderPostDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onReadingPreferencesThemeChanged() {
+        _reloadFragment.value = Event(Unit)
     }
 
     override fun onCleared() {

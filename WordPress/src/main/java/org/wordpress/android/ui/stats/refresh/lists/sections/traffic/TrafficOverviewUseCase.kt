@@ -254,7 +254,6 @@ class TrafficOverviewUseCase(
         val likes = selectedItem?.likes ?: 0
         val comments = selectedItem?.comments ?: 0
 
-        items.add(BlockListItem.Title(R.string.stats_timeframe_today))
         items.add(
             BlockListItem.QuickScanItem(
                 BlockListItem.QuickScanItem.Column(

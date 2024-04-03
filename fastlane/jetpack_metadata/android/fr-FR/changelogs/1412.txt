@@ -1,3 +1,0 @@
-24.3 :
-Connectez-vous à votre site avec des identifiants Google, des appareils physiques et des clés d’accès de tiers. Rassurez-vous, votre site est toujours plus protégé que la recette secrète du Colonel.
-Nous avons masqué l’icône du menu sur l’écran Statistiques pour qu’elle ne soit visible que dans l’onglet Tendances. Mode ninja activé.

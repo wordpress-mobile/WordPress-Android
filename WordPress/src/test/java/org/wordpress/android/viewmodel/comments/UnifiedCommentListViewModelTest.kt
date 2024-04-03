@@ -9,7 +9,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
@@ -110,9 +109,9 @@ class UnifiedCommentListViewModelTest : BaseUnitTest() {
         localCommentCacheUpdateUseCase = LocalCommentCacheUpdateUseCase()
         localCommentCacheUpdateHandler = LocalCommentCacheUpdateHandler(localCommentCacheUpdateUseCase)
 
-        `when`(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
+        whenever(commentStore.fetchCommentsPage(any(), any(), eq(0), any(), any()))
             .thenReturn(testCommentsPayload30)
-        `when`(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
+        whenever(commentStore.fetchCommentsPage(any(), any(), eq(30), any(), any()))
             .thenReturn(testCommentsPayload60)
 
         commentListUiModelHelper = CommentListUiModelHelper(resourceProvider, dateTimeUtilsWrapper, networkUtilsWrapper)

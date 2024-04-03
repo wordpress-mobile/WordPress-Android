@@ -201,7 +201,7 @@ public class ReaderCommentService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating comments");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,

@@ -78,7 +78,7 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor(
     }
 
     fun parseNextPageHandle(jsonObject: JSONObject): String =
-        jsonObject.getString(ReaderConstants.JSON_NEXT_PAGE_HANDLE)
+        jsonObject.optString(ReaderConstants.JSON_NEXT_PAGE_HANDLE)
 
     fun convertListOfJsonArraysIntoSingleJsonArray(jsons: List<String>): JSONArray {
         val arrays = jsons.map { JSONArray(it) }

@@ -10,8 +10,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import javax.inject.Inject
 
@@ -33,9 +31,9 @@ class SelectedSectionManager
         }
 
     fun getSelectedSection(): StatsSection {
-        val defaultValue = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        val defaultValue = if (statsTrafficTabFeatureConfig.isEnabled()) StatsSection.TRAFFIC else StatsSection.INSIGHTS
         val value = sharedPrefs.getString(SELECTED_SECTION_KEY, defaultValue.name)
-        return value?.let { StatsSection.valueOf(value) } ?: INSIGHTS
+        return value?.let { StatsSection.valueOf(value) } ?: StatsSection.INSIGHTS
     }
 
     fun setSelectedSection(selectedSection: StatsSection) {
@@ -60,15 +58,6 @@ fun StatsSection.toStatsGranularity(): StatsGranularity? {
         StatsSection.WEEKS -> WEEKS
         StatsSection.MONTHS -> MONTHS
         StatsSection.YEARS -> YEARS
-    }
-}
-
-fun StatsGranularity.toStatsSection(): StatsSection {
-    return when (this) {
-        DAYS -> StatsSection.DAYS
-        WEEKS -> StatsSection.WEEKS
-        MONTHS -> StatsSection.MONTHS
-        YEARS -> StatsSection.YEARS
     }
 }
 

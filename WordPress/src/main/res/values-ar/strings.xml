@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-11 15:54:08+0000
+Translation-Revision-Date: 2024-03-20 17:54:09+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/4.0.0-rc.1
+Generator: GlotPress/4.0.0
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">يمكنك نسخ نص تدوينتك في حال تأثر محتواك. انسخ تفاصيل الخطأ لتصحيح الأخطاء ومشاركتها مع الدعم.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">واجه المحرر خطأ غير متوقع</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">الضغط هنا لنسخ نص التدوينة</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">الضغط هنا لنسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_copy_post_text">نسخ نص التدوينة</string>
+    <string name="gutenberg_native_copy_error_details">نسخ تفاصيل الخطأ</string>
+    <string name="gutenberg_native_button_to_copy_post_text">زر نسخ نص التدوينة</string>
+    <string name="gutenberg_native_button_to_copy_error_details">زر نسخ تفاصيل الخطأ</string>
+    <string name="editor_updating_post_failed">فشل تحديث محتوى التدوينة</string>
+    <string name="editor_updating_post">تحديث محتوى التدوينة</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">تسمية الفيديو. فارغ</string>
     <string name="gutenberg_native_edit_video_024aee6d">تحرير الفيديو</string>
@@ -28,7 +38,6 @@ Language: ar
     <string name="reader_empty_followed_blogs_button_subscriptions">الانتقال إلى الاشتراكات</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">لم تنشر المدونات التي اشتركتَ فيها أي شيء مؤخرًا</string>
     <string name="reader_no_followed_blogs_description_subs">اشترك في المدونات ضمن \"اكتشاف\" أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
-    <string name="reader_no_followed_tags_title">لا توجد وسوم تم الاشتراك فيها</string>
     <string name="reader_no_posts_with_this_tag">لا توجد تدوينات تحمل هذا الوسم</string>
     <string name="reader_toast_err_unable_to_block_blog">يتعذر حظر هذه المدونة</string>
     <string name="reader_toast_posts_from_this_blog_blocked">لن تظهر التدوينات الواردة من هذه المدونة بعد الآن</string>
@@ -38,20 +47,17 @@ Language: ar
     <string name="reader_no_recommended_blogs_title">لا توجد مدونات موصى بها</string>
     <string name="reader_toast_err_already_follow_this_blog">لقد اشتركت في هذه المدونة بالفعل</string>
     <string name="reader_toast_err_show_blog">يتعذر إظهار هذه المدونة</string>
-    <string name="reader_toast_err_tag_already_subscribed">أنت مشترك بالفعل في هذه المدونة</string>
     <string name="reader_label_choose_interests">اختيار اهتماماتك</string>
     <string name="reader_label_subscribers_count_single">مشترك واحد</string>
     <string name="reader_label_subscribers_count">%s من المشتركين</string>
     <string name="reader_label_subscribe_count">%,d من المشتركين</string>
     <string name="reader_label_blog_subscribed">تم الاشتراك في المدونة</string>
     <string name="reader_hint_search_subscribed_blogs">البحث عن المدونات التي تم الاشتراك فيها</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">إدخال عنوان URL أو وسم للاشتراك فيها</string>
     <string name="reader_btn_subscribed">مشترك</string>
     <string name="reader_btn_subscribe">اشترك</string>
     <string name="reader_menu_block_this_blog">حظر هذه المدونة</string>
     <string name="reader_menu_tags_and_blogs">تحرير الوسوم والمدونات</string>
     <string name="reader_page_followed_blogs_title">المدونات التي تم الاشتراك فيها</string>
-    <string name="reader_page_followed_tags_title">الوسوم التي تم الاشتراك فيها</string>
     <string name="reader_title_tags">اتباع الوسوم</string>
     <string name="reader_activity_title_manage_tags_blogs">إدارة الوسوم والمدونات</string>
     <string name="reader_activity_title_tag_preview">الوسم</string>
@@ -69,20 +75,14 @@ Language: ar
     <string name="reader_dropdown_menu_subscriptions">الاشتراكات</string>
     <string name="reader_dropdown_menu_discover">اكتشاف</string>
     <string name="reader_search_content_description">البحث</string>
-    <string name="reader_discover_no_posts_button_tags_text">الاشتراك في الوسوم</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">محاولة الاشتراك في مزيد من الوسوم لتوسيع نطاق البحث</string>
-    <string name="reader_discover_empty_subtitle_subscribe">الاشتراك في الوسوم لاكتشاف مدونات جديدة</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">المدونات المطلوب الاشتراك فيها</string>
-    <string name="reader_filter_empty_tags_action_subscribe">الاشتراك في وسم</string>
     <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
     <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
-    <string name="reader_filter_empty_tags_list_text">اشترك في وسم وستتمكن من الاطلاع على أفضل التدوينات الواردة منه هنا.</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_filter_empty_tags_list_title">لا توجد وسوم</string>
     <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
     <string name="reader_filter_empty_blogs_list_title">لا توجد اشتراكات في المدونة</string>
     <string name="reader_filter_empty_blogs_action">الاشتراك في المدونة</string>
-    <string name="reader_filter_empty_tags_list_subscribe">يمكنك الاشتراك في التدوينات الموجودة حول موضوع معيَّن عن طريق إضافة وسم</string>
     <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
     <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
     <string name="stats_timeframe_by_year">حسب العام</string>
@@ -945,11 +945,6 @@ Language: ar
     <string name="gutenberg_native_embed_options">خيارات التضمين</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">اضغط ضغطًا مزدوجًا لعرض خيارات التضمين.</string>
     <string name="quick_start_list_create_site_message">تم إنشاء الموقع! قم بإكمال مهمة أخرى.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;مدوّن واحد&lt;/a&gt; معجب بهذا.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;أنت و مدوِّن واحد&lt;/a&gt; معجبان بهذا.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;أنت و⁦%1$s⁩ من المدونين&lt;/a&gt; معجبون بهذا.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;أنت&lt;/a&gt; معجب بهذا.</string>
     <string name="gutenberg_native_line_height">ارتفاع السطر</string>
     <string name="domains_free_plan_get_your_domain_title">الحصول على نطاقك</string>
     <string name="recommend_app_generic_get_template_error">خطأ غير معروف في أثناء إحضار قالب توصية التطبيق</string>
