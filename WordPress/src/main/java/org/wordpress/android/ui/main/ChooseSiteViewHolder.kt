@@ -80,7 +80,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         val isDarkTheme = itemView.resources.configuration.isDarkTheme()
         val borderColor = ContextCompat.getColor(
             itemView.context,
-            if (isDarkTheme) R.color.white
+            if (isDarkTheme) R.color.white_translucent_10
             else R.color.black_translucent_10
         )
         binding.avatar.strokeColor = ColorStateList.valueOf(borderColor)
