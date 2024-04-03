@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 11:54:10+0000
+Translation-Revision-Date: 2024-03-20 12:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">為預防內容受影響，你可以複製文章文字。 複製錯誤詳細資料，以便除錯並與支援團隊分享。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">編輯器發生未知錯誤</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">點選此處即可複製文章文字</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">點選此處即可複製錯誤詳細資料</string>
+    <string name="gutenberg_native_copy_post_text">複製文章文字</string>
+    <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
+    <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
+    <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
+    <string name="editor_updating_post_failed">無法更新文章內容</string>
+    <string name="editor_updating_post">正在更新文章內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
@@ -938,11 +948,6 @@ Language: zh_TW
     <string name="gutenberg_native_embed_options">嵌入選項</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">按兩下即可查看嵌入選項。</string>
     <string name="quick_start_list_create_site_message">網站已建立！ 完成另一項任務。</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s 位部落客&lt;/a&gt;說這個讚。</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 位部落客&lt;/a&gt;說這個讚。</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;你和其他 %1$s 位部落客&lt;/a&gt;都說這個讚。</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;你和 1 位部落客&lt;/a&gt;都說這個讚。</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;你&lt;/a&gt;說這個讚。</string>
     <string name="gutenberg_native_line_height">行高</string>
     <string name="domains_free_plan_get_your_domain_title">取得你的網域</string>
     <string name="recommend_app_generic_get_template_error">擷取建議的應用程式範本時發生未知錯誤</string>

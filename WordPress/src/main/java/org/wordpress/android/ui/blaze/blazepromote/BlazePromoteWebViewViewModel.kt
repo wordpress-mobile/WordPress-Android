@@ -129,6 +129,9 @@ class BlazePromoteWebViewViewModel @Inject constructor(
     }
 
     private fun onHeaderCancelActionClick() {
+        if (::blazeFlowStep.isInitialized.not()) {
+            blazeFlowStep = BlazeFlowStep.UNSPECIFIED
+        }
         blazeFeatureUtils.trackFlowCanceled(blazeFlowSource, blazeFlowStep)
         postActionEvent(BlazeActionEvent.FinishActivity)
     }
@@ -258,6 +261,10 @@ class BlazePromoteWebViewViewModel @Inject constructor(
     fun handleOnBackPressed() {
         val nonDismissibleStep = nonDismissableHashConfig.getValue<String>()
         val completedStep = completedStepHashConfig.getValue<String>()
+
+        if (::blazeFlowStep.isInitialized.not()) {
+            blazeFlowStep = BlazeFlowStep.UNSPECIFIED
+        }
 
         if (blazeFlowStep.label == nonDismissibleStep) return
 

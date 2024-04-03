@@ -296,6 +296,7 @@
     <string name="button_publish">Publish</string>
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
+    <string name="button_read">Read</string>
     <string name="button_preview">Preview</string>
     <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
@@ -1697,6 +1698,29 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colors, fonts and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+
+    <!-- translators: %s is replaced with the string in reader_preferences_screen_preview_text_feedback_link, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
+
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+
+    <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
+    <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>
+    <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
+
+    <string name="reader_preferences_font_family_preview" translatable="false">Aa</string>
+    <string name="reader_preferences_font_size_preview" translatable="false">A</string>
+
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_page_saved_online">Page saved online</string>
@@ -2113,6 +2137,7 @@
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_block_user">Block user</string>
+    <string name="reader_menu_reading_preferences">Reading Preferences</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -4803,4 +4828,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
 </resources>

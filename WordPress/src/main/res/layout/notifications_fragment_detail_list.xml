@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:scaleType="centerCrop"
+        android:visibility="gone"
         app:lottie_autoPlay="false"
         app:lottie_loop="false"
         app:lottie_rawRes="@raw/confetti" />

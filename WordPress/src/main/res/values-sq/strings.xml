@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-07 10:11:07+0000
+Translation-Revision-Date: 2024-03-20 07:21:45+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Mund ta kopjoni tekstin e  postimit tuaj, në rast se preket lënda juaj. Kopjoni hollësi gabimi, për diagnostikim dhe për t’ia dhënë asistencës.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Përpunuesi hasi një gabim të papritur</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Prekeni këtu, që të kopjohet tekstin e postimit</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Prekeni këtu, që të kopjohen hollësi gabimi</string>
+    <string name="gutenberg_native_copy_post_text">Kopjo tekst postimi</string>
+    <string name="gutenberg_native_copy_error_details">Kopjo hollësi gabimi</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Buton për “Kopjo tekst postimi”</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Buton për “Kopjo hollësi gabimi”</string>
+    <string name="editor_updating_post_failed">S’u arrit të përditësohet lëndë postimi</string>
+    <string name="editor_updating_post">Po përditësohet lëndë postimi</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Legjendë videoje. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Legjendë videoje. E zbrazët</string>
     <string name="gutenberg_native_edit_video_024aee6d">Përpunoni video</string>
@@ -939,11 +949,6 @@ Language: sq_AL
     <string name="gutenberg_native_embed_options">Mundësi trupëzimi</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Prekeni dy herë që të shihni mundësi trupëzimi.</string>
     <string name="quick_start_list_create_site_message">Sajti u krijua! Plotësoni hap tjetër.</string>
-    <string name="like_faces_others_like_text">Këtë e pëlqejnë &lt;a href=\"\"&gt;%1$s blogues&lt;/a&gt;.</string>
-    <string name="like_faces_one_blogger_likes_text">Këtë e pëlqen &lt;a href=\"\"&gt;1 blogues&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_others_like_text">Këtë e pëlqejnë &lt;a href=\"\"&gt;%1$s blogues dhe ju&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_one_like_text">Këtë e pëlqen &lt;a href=\"\"&gt;1 blogues dhe ju&lt;/a&gt;.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ju&lt;/a&gt; pëlqen kjo.</string>
     <string name="gutenberg_native_line_height">Lartësi Rreshti</string>
     <string name="domains_free_plan_get_your_domain_title">Merrni përkatësinë tuaj</string>
     <string name="recommend_app_generic_get_template_error">Gabim i panjohur në prurje gjedheje aplikacioni të rekomanduar</string>

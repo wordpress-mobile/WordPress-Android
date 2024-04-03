@@ -94,6 +94,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getNotificationsPermissionsWarningDismissed()
         set(dismissed) = AppPrefs.setNotificationsPermissionWarningDismissed(dismissed)
 
+    var readerReadingPreferencesJson: String?
+        get() = AppPrefs.getReaderReadingPreferencesJson()
+        set(json) = AppPrefs.setReaderReadingPreferencesJson(json)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

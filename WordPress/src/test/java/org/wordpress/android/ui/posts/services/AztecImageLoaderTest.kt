@@ -2,15 +2,13 @@
 
 package org.wordpress.android.ui.posts.services
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import com.bumptech.glide.request.target.BaseTarget
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
 import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -27,10 +25,10 @@ class AztecImageLoaderTest {
 
     @Before
     fun setUp() {
-        callback = mock(ImageGetter.Callbacks::class.java)
-        imageManager = mock(ImageManager::class.java)
-        imageLoader = AztecImageLoader(mock(Context::class.java), imageManager, mock(Drawable::class.java))
-        bitmap = mock(Bitmap::class.java)
+        callback = mock()
+        imageManager = mock()
+        imageLoader = AztecImageLoader(mock(), imageManager, mock())
+        bitmap = mock()
     }
 
     @Test
@@ -86,7 +84,7 @@ class AztecImageLoaderTest {
             .thenAnswer { invocation ->
                 run {
                     @Suppress("DEPRECATION", "UNCHECKED_CAST")
-                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock(Drawable::class.java))
+                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadFailed(mock())
                 }
             }
     }
@@ -106,7 +104,7 @@ class AztecImageLoaderTest {
             .thenAnswer { invocation ->
                 run {
                     @Suppress("DEPRECATION", "UNCHECKED_CAST")
-                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock(Drawable::class.java))
+                    (invocation.arguments[1] as BaseTarget<Bitmap>).onLoadStarted(mock())
                 }
             }
     }

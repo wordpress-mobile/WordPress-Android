@@ -34,6 +34,17 @@
     <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
     <attr name="mlpDividerColor" format="reference|color" />
 
+    <!-- Reader attributes -->
+    <attr name="readerFollowButtonBackground" format="reference|color" />
+    <attr name="readerFollowButtonForeground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedBackground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedForeground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedTextAlpha" format="float" />
+    <attr name="readerFollowButtonSelectedStrokeAlpha" format="reference|float" />
+
+    <!-- Snackbar colors -->
+    <attr name="snackbarActionColor" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />

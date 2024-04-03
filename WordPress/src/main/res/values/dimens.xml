@@ -770,4 +770,10 @@
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
 
+    <!-- Reader Follow Button -->
+    <dimen name="reader_follow_button_stroke_alpha_light" format="float">0.12</dimen>
+    <dimen name="reader_follow_button_stroke_alpha_dark" format="float">0.25</dimen>
+
+    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_light</dimen>
+    <dimen name="reader_follow_button_text_alpha" format="float">0.6</dimen>
 </resources>

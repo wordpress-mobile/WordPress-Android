@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 13:54:10+0000
+Translation-Revision-Date: 2024-03-20 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Puoi copiare il testo dell\'articolo nel caso in cui il contenuto ne sia influenzato. Copia i dettagli dell\'errore per eseguire il correggerli e condividerli con il supporto.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">L\'editor ha riscontrato un errore inaspettato</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Clicca qui per copiare il testo dell\'articolo</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Clicca qui per copiare i dettagli dell\'errore</string>
+    <string name="gutenberg_native_copy_post_text">Copia il testo dell\'articolo</string>
+    <string name="gutenberg_native_copy_error_details">Copia i dettagli dell\'errore</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Pulsante per copiare il testo dell\'articolo</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Pulsante per copiare i dettagli dell\'errore</string>
+    <string name="editor_updating_post_failed">Impossibile aggiornare il contenuto dell\'articolo</string>
+    <string name="editor_updating_post">Aggiornamento del contenuto dell\'articolo</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Didascalia del video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Didascalia del video. Vuoto</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifica video</string>
@@ -940,11 +950,6 @@ Language: it
     <string name="gutenberg_native_embed_options">Incorpora le opzioni</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Tocca due volte per visualizzare le opzioni incorporate.</string>
     <string name="quick_start_list_create_site_message">Sito creato. Completa un\'altra attività.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogger&lt;/a&gt; piace questo.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 blogger&lt;/a&gt; piace questo.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A te e %1$s blogger&lt;/a&gt; piace questo.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A te e 1 blogger&lt;/a&gt; piace questo.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A te&lt;/a&gt; piace questo.</string>
     <string name="gutenberg_native_line_height">Altezza linea</string>
     <string name="domains_free_plan_get_your_domain_title">Ottieni il dominio</string>
     <string name="recommend_app_generic_get_template_error">Errore sconosciuto durante il recupero del modello dell\'app consigliato</string>

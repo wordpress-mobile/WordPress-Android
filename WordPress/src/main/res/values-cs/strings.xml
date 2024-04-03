@@ -598,11 +598,6 @@ Language: cs_CZ
     <string name="gutenberg_native_embed_options">Možnosti vložení</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Dvojitým klepnutím zobrazíte možnosti vložení.</string>
     <string name="quick_start_list_create_site_message">Stránka vytvořena! Dokončete další úkol.</string>
-    <string name="like_faces_others_like_text">Toto se líbí &lt;a href=\"\"&gt;%1$s blogerům&lt;/a&gt;.</string>
-    <string name="like_faces_one_blogger_likes_text">To se líbí &lt;a href=\"\"&gt;1 blogerovi&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_others_like_text">Toto se líbí &lt;a href=\"\"&gt;vám a %1$s bloggerům&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;To se líbí vám a 1 bloggerovi&lt;/a&gt;.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;To se vám&lt;/a&gt; líbí.</string>
     <string name="gutenberg_native_line_height">Výška řádku</string>
     <string name="domains_free_plan_get_your_domain_title">Získejte svou doménu</string>
     <string name="recommend_app_generic_get_template_error">Neznámá chyba při načítání šablony doporučené aplikace</string>

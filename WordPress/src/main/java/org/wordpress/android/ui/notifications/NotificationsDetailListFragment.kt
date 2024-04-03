@@ -133,8 +133,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             showErrorToastAndFinish()
         }
 
+        val animation = view?.findViewById<LottieAnimationView>(R.id.confetti)
         if (note?.isViewMilestoneType == true) {
-            view?.findViewById<LottieAnimationView>(R.id.confetti)?.playAnimation()
+            animation?.visibility = View.VISIBLE
+            animation?.playAnimation()
+        } else {
+            animation?.visibility = View.GONE
         }
     }
 

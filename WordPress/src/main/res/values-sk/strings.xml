@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-01-07 08:57:55+0000
+Translation-Revision-Date: 2024-03-17 11:41:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.0
 Language: sk
@@ -20,6 +20,7 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
     <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
+    <string name="reader_filter_empty_tags_add_action">Pridať značku</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="scheduled_for">Naplánované na: %s</string>
@@ -147,6 +148,7 @@ Language: sk
     <string name="login_error_email_not_found_v2">Neexistuje žiaden účet na WordPress.com, ktorý zopodvedá tomuto Google účtu.</string>
     <string name="site_picker_remove_site_empty">Žiadna webová stránka nezodpovedá vyhľadávaniu.</string>
     <string name="page_parent_changed">Strana predlohy sa zmenila</string>
+    <string name="reader_no_followed_blogs_search_title">Žiadne blogy zodpovedajúce vášmu vyhľadávaniu</string>
     <string name="page_moved_to_draft">Stránka bola presunutá do Koncepty</string>
     <string name="top_level">Najvyššia úroveň</string>
     <string name="page_delete_dialog_message">Naozaj chcete vymazať stránku %s? </string>
@@ -175,6 +177,7 @@ Language: sk
     <string name="quick_start_button_negative">Teraz nie</string>
     <string name="my_site_create_new_site_title">Nemáte žiadne webové stránky</string>
     <string name="content_description_more">Viac</string>
+    <string name="reader_empty_subscribed_tags_subtitle">Pridajte značky a nájdite články o témach, ktoré vás zaujímajú.</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Najčastejšie otázky Jetpack</string>
     <string name="login_to_to_connect_jetpack">Prihláste sa do účtu WordPress.com. ktorý používate na pripojenie Jetpack.</string>
@@ -194,6 +197,7 @@ Language: sk
     <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
+    <string name="reader_no_followed_blogs_button_discover">Objavte blogy</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
     <string name="activity_log_limited_content_on_free_plan">Keďže máte voľný plán, uvidíte vo svojich aktivitách obmedzené udalosti.</string>
@@ -271,6 +275,8 @@ Language: sk
     <string name="cookie_policy_learn_more_header">Pravidlá pre cookie</string>
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
+    <string name="reader_btn_blog_notifications_on">Zapnutie upozornení na blog</string>
+    <string name="reader_btn_blog_notifications_off">Vypnutie oznámení blogu</string>
     <string name="post_submitted">Článok bol odoslaný</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Vlastnosť pluginu vyžaduje, aby bola webová stránka v dobrom stave.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcia pluginu vyžaduje, aby predplatenie primárnej domény bolo spojené s týmto používateľom.</string>
@@ -939,6 +945,7 @@ Language: sk
     <string name="person_remove_confirmation_title">Odstrániť %1$s</string>
     <string name="people">Ľudia</string>
     <string name="role">Rola</string>
+    <string name="reader_empty_blogs_posts_in_custom_list">Blogy v tomto zozname v poslednom čase nič nezverejnili</string>
     <string name="error_remove_user">Nepodarilo sa odstrániť daného používateľa</string>
     <string name="error_update_role">Nepodarilo sa aktualizovať používateľskú rolu</string>
     <string name="error_fetch_viewers_list">Nepodarilo sa získať návštevníkov stránky</string>
@@ -1213,6 +1220,7 @@ Language: sk
     <string name="button_view">Zobraziť</string>
     <string name="button_publish">Zverejniť</string>
     <string name="post_trashed">Článok presunutý do koša</string>
+    <string name="reader_toast_err_follow_blog_could_not_be_found">Tento blog sa nepodarilo nájsť</string>
     <string name="undo">Zrušiť zmenu</string>
     <string name="push_auth_expired">Platnosť požiadavky uplynula. Prihláste sa na stránku WordPress.com a skúste to znova.</string>
     <string name="stats_insights_best_ever">Najlepšie zobrazenia</string>
@@ -1259,6 +1267,7 @@ Language: sk
     <string name="reader_label_new_posts">Nové príspevky</string>
     <string name="logs_copied_to_clipboard">Záznamy aplikácie boli skopírované do schránky</string>
     <string name="post_uploading">Nahrávanie príspevku</string>
+    <string name="reader_no_posts_in_blog">Tento blog je prázdny</string>
     <string name="themes_fetching">Načítavajú sa témy</string>
     <string name="stats_followers_a_month">Mesiac</string>
     <string name="stats_followers_an_hour_ago">Pred hodinou</string>
@@ -1375,6 +1384,8 @@ Language: sk
     <string name="file_not_found">Nepodarilo sa nájsť súbor na nahrávanie. Bol odstránený alebo presunutý?</string>
     <string name="delete_page">Vymazať stránku?</string>
     <string name="delete_post">Vymazať príspevok?</string>
+    <string name="reader_toast_err_adding_tag">Túto značku nie je možné pridať</string>
+    <string name="reader_toast_err_removing_tag">Túto značku nie je možné odstrániť</string>
     <string name="share_link">Zdieľať odkaz</string>
     <string name="reader_empty_posts_in_tag_updating">Načítavajú sa príspevky</string>
     <string name="cant_share_no_visible_blog">Nemôžete zdieľať na WordPress bez viditeľného blogu</string>
@@ -1399,6 +1410,7 @@ Language: sk
     <string name="reader_likes_one">Jeden lajk</string>
     <string name="reader_hint_comment_on_comment">Odpovedajte na komentár…</string>
     <string name="comments_empty_list">Zatiaľ žiadne komentáre</string>
+    <string name="reader_toast_err_tag_not_valid">Toto nie je platná značka</string>
     <string name="themes">Témy</string>
     <string name="stats_timeframe_days">Dní</string>
     <string name="stats_timeframe_weeks">Týždňov</string>

@@ -40,6 +40,7 @@ import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndivid
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingDialogFragment
 import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -91,7 +92,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
     FullScreenDialogFragment.OnConfirmListener,
-    FullScreenDialogFragment.OnDismissListener {
+    FullScreenDialogFragment.OnDismissListener,
+    OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -856,5 +858,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
+    }
+
+    override fun onScrollToTop() {
+        binding?.recyclerView?.smoothScrollToPosition(0)
     }
 }

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 17:54:09+0000
+Translation-Revision-Date: 2024-03-20 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.0
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">אפשר להעתיק את הטקסט של הפוסט במקרה שהתוכן נפגע. פרטים של שגיאת ההעתקה לצורך איתור באגים ושיתוף עם התמיכה.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">העורך נתקל בשגיאה בלתי צפויה</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">יש להקיש כאן כדי להעתיק את הטקסט של הפוסט</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">יש להקיש כאן כדי להעתיק את פרטי השגיאה</string>
+    <string name="gutenberg_native_copy_post_text">להעתיק את הטקסט של הפוסט</string>
+    <string name="gutenberg_native_copy_error_details">הפרטים של שגיאת ההעתקה</string>
+    <string name="gutenberg_native_button_to_copy_post_text">כפתור להעתקת הטקסט של הפוסט</string>
+    <string name="gutenberg_native_button_to_copy_error_details">כפתור להעתקה של פרטי השגיאה</string>
+    <string name="editor_updating_post_failed">עדכון התוכן של הפוסט נכשל</string>
+    <string name="editor_updating_post">מעדכן את תוכן הפוסט</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
     <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>
@@ -938,11 +948,6 @@ Language: he_IL
     <string name="gutenberg_native_embed_options">אפשרויות הטמעה</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">יש להקיש פעמיים כדי להציג את אפשרויות ההטמעה.</string>
     <string name="quick_start_list_create_site_message">האתר נוצר! להשלים משימה אחרת.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;⁦%1$s⁩ בלוגרים&lt;/a&gt; סימנו לזה לייק.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;בלוגר אחד&lt;/a&gt; סימן לזה לייק.</string>
-    <string name="like_faces_you_plus_others_like_text">הפוסט קיבל לייק &lt;a href=\"\"&gt;ממך ומ-⁦%1$s⁩ בלוגרים&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;המשתמש שלך ועוד בלוגר אחד&lt;/a&gt; סימנו לזה לייק.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;סימנת&lt;/a&gt; לזה לייק.</string>
     <string name="gutenberg_native_line_height">גובה השורה</string>
     <string name="domains_free_plan_get_your_domain_title">לקבל דומיין</string>
     <string name="recommend_app_generic_get_template_error">שגיאה לא ידועה בהבאת תבנית האפליקציה המומלצת</string>

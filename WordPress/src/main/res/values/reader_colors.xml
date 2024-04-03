@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <!-- Soft Theme -->
+    <color name="reader_theme_soft_background">#EEECED</color>
+    <color name="reader_theme_soft_text">#302F2F</color>
+
+    <!-- Sepia Theme -->
+    <color name="reader_theme_sepia_background">#F7EAD2</color>
+    <color name="reader_theme_sepia_text">#583624</color>
+
+    <!-- Evening Theme -->
+    <color name="reader_theme_evening_background">#222222</color>
+    <color name="reader_theme_evening_text">#ABAAB2</color>
+
+    <!-- OLED Theme -->
+    <color name="reader_theme_oled_background">@color/black</color>
+    <color name="reader_theme_oled_text">@color/white</color>
+
+    <!-- h4x0r Theme -->
+    <color name="reader_theme_h4x0r_background">@color/black</color>
+    <color name="reader_theme_h4x0r_text">#00FF00</color>
+
+    <!-- candy Theme -->
+    <color name="reader_theme_candy_background">#FFE8FD</color>
+    <color name="reader_theme_candy_text">#0066FF</color>
+</resources>

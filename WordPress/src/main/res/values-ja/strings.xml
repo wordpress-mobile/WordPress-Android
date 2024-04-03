@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-06 09:54:14+0000
+Translation-Revision-Date: 2024-03-21 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.0
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">エディターで予期しないエラーが発生しました。</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">投稿内容をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">エラーの詳細をコピーするには、ここをタップします</string>
+    <string name="gutenberg_native_copy_post_text">投稿内容をコピー</string>
+    <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
+    <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
+    <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
+    <string name="editor_updating_post_failed">投稿コンテンツの更新に失敗しました。</string>
+    <string name="editor_updating_post">投稿コンテンツを更新しています</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
@@ -938,11 +948,6 @@ Language: ja_JP
     <string name="gutenberg_native_embed_options">埋め込みオプション</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">ダブルタップして埋め込みオプションを表示します。</string>
     <string name="quick_start_list_create_site_message">サイトを作成しました。 別のタスクを完了します。</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;あなたと%1$s人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;あなたと1人のブロガー&lt;/a&gt;が「いいね」をつけています。</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;あなた&lt;/a&gt;が「いいね」をつけています。</string>
     <string name="gutenberg_native_line_height">行の高さ</string>
     <string name="domains_free_plan_get_your_domain_title">ドメインを取得</string>
     <string name="recommend_app_generic_get_template_error">おすすめのアプリテンプレートの取得中に不明なエラーが発生しました</string>
