@@ -208,18 +208,9 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
+    private fun buildEmptyDataSet(count: Int): BarDataSet {
         val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
         val dataSet = BarDataSet(emptyValues, "Empty")
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.primary_5
-            ), ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = false
