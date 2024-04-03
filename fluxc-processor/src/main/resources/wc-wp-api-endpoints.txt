@@ -44,6 +44,9 @@
 /reports/products/totals/
 /reports/revenue/stats/
 
+/reports/bundles/
+/reports/bundles/stats/
+
 /settings/general/
 /settings/products/
 /settings/<group_id>#String/<id>#String
