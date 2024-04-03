@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.net.Uri;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -10,6 +9,9 @@ import com.gravatar.AvatarQueryOptions;
 import com.gravatar.AvatarUrl;
 import com.gravatar.DefaultAvatarOption;
 import com.gravatar.DefaultAvatarOption.MysteryPerson;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * This file contains utility functions for working with avatar urls coming from WordPress accounts.
@@ -39,8 +41,12 @@ public class WPAvatarUtils {
         if (!imageUrl.contains("gravatar.com")) {
             return PhotonUtils.getPhotonImageUrl(imageUrl, avatarSz, avatarSz);
         } else {
-            return new AvatarUrl(Uri.parse(imageUrl),
-                    new AvatarQueryOptions(avatarSz, defaultImage, null, null)).uri().toString();
+            try {
+                return new AvatarUrl(new URL(imageUrl),
+                        new AvatarQueryOptions(avatarSz, defaultImage, null, null)).url().toString();
+            } catch (MalformedURLException e) {
+                return "";
+            }
         }
     }
 

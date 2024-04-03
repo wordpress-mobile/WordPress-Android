@@ -86,7 +86,7 @@ class UnifiedCommentViewHolder(
             AvatarUrl(
                 Email(comment.authorEmail),
                 AvatarQueryOptions(preferredSize = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium))
-            ).uri().toString()
+            ).url().toString()
         } else {
             ""
         }
