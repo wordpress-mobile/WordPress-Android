@@ -110,7 +110,7 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return printWeek(startCalendar, endCalendar)
+                return printWeek(startCalendar, endCalendar, true)
             }
             MONTHS -> outputMonthFormat.format(date)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
