@@ -37,8 +37,9 @@ class ReaderTopBarMenuHelper @Inject constructor() {
                     text = readerTagsList[followedP2sIndex].tagTitle,
                 ))
             }
-            // "Tags" should be the last item before "Lists", that's why the index determined by `size`
-            add(createTagsItem(getMenuItemIdFromReaderTagIndex(size)))
+            readerTagsList.indexOrNull { it.isTags }?.let { tagsIndex ->
+                add(createTagsItem(getMenuItemIdFromReaderTagIndex(tagsIndex)))
+            }
             readerTagsList
                 .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
                     if (readerTag.tagType == ReaderTagType.CUSTOM_LIST) {

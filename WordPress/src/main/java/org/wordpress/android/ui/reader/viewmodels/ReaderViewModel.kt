@@ -140,7 +140,7 @@ class ReaderViewModel @Inject constructor(
     @JvmOverloads
     fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
-            val tagList = loadReaderTabsUseCase.loadTabs()
+            val tagList = loadReaderTabsUseCase.load()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
                 updateTopBarUiState(savedInstanceState)

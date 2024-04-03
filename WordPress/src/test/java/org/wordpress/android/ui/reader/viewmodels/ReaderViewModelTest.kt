@@ -156,7 +156,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             state = it
         }
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
+        whenever(loadReaderTabsUseCase.load()).thenReturn(ReaderTagList())
         // Act
         triggerContentDisplay()
         // Assert
@@ -562,14 +562,14 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(emptyReaderTagList)
+            whenever(loadReaderTabsUseCase.load()).thenReturn(emptyReaderTagList)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(nonEmptyReaderTagList)
+            whenever(loadReaderTabsUseCase.load()).thenReturn(nonEmptyReaderTagList)
             block()
         }
     }
@@ -579,7 +579,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(readerTags)
+            whenever(loadReaderTabsUseCase.load()).thenReturn(readerTags)
             block()
         }
     }
