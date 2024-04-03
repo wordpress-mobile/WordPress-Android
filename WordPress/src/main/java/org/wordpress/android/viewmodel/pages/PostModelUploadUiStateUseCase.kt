@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.util.Log
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -26,7 +25,7 @@ class PostModelUploadUiStateUseCase @Inject constructor() {
     ): PostUploadUiState {
         val postStatus = PostStatus.fromPost(post)
         val uploadStatus = uploadStatusTracker.getUploadStatus(post, site)
-        val x = when {
+        return when {
             // the upload error is not null on retry -> it needs to be evaluated after UploadingMedia and UploadingPost
             uploadStatus.uploadError != null -> UploadFailed(
                 uploadStatus.uploadError,
@@ -45,10 +44,6 @@ class PostModelUploadUiStateUseCase @Inject constructor() {
             uploadStatus.isEligibleForAutoUpload -> UploadWaitingForConnection(postStatus)
             else -> NothingToUpload
         }
-
-        Log.d("uiState", "PostModelUploadUiStateUseCase.createUploadUiState(): returns PostUploadUiState = $x")
-
-        return x
     }
 
     /**

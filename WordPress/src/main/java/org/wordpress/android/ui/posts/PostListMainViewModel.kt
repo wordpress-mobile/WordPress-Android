@@ -82,7 +82,7 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter,
+    private val uploadStarter: UploadStarter
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)

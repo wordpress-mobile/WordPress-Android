@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.util.Log
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -96,10 +95,6 @@ class PostListItemUiStateHelper @Inject constructor(
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
-
-        Log.d("uiState", "PostListItemUiStateHelper.createPostListItemUiState(): uploadUiState = $uploadUiState")
-
-
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
         }
@@ -183,18 +178,11 @@ class PostListItemUiStateHelper @Inject constructor(
             disableRippleEffect = postStatus == TRASHED
         )
 
-        val state = PostListItemUiState(
+        return PostListItemUiState(
             data = itemUiData,
             moreActions = moreActions,
             onSelected = onSelected
         )
-
-        /*return PostListItemUiState(
-            data = itemUiData,
-            moreActions = moreActions,
-            onSelected = onSelected
-        )*/
-        return state
     }
 
     @Suppress("LongParameterList")

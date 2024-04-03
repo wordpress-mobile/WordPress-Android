@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
-import android.util.Log
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.UploadStore
@@ -31,13 +30,8 @@ class PostModelUploadStatusTracker @Inject constructor(
     private val uploadStatusMap = HashMap<Int, PostListItemUploadStatus>()
 
     fun getUploadStatus(post: PostModel, siteModel: SiteModel): PostListItemUploadStatus {
-        // todo: den eketeleitai pote edw an exei klhthei kai faei fail meta
         uploadStatusMap[post.id]?.let { return it }
-
         val uploadError = uploadStore.getUploadErrorForPost(post)
-
-        Log.d("uiState", "PostModelUploadStatusTracker.getUploadStatus(): uploadError = $uploadError")
-
         val isUploadingOrQueued = UploadService.isPostUploadingOrQueued(post)
         val hasInProgressMediaUpload = UploadService.hasInProgressMediaUploadsForPost(post)
         val newStatus = PostListItemUploadStatus(
@@ -53,13 +47,6 @@ class PostModelUploadStatusTracker @Inject constructor(
             uploadWillPushChanges = uploadActionUseCase.uploadWillPushChanges(post)
         )
         uploadStatusMap[post.id] = newStatus
-
-        Log.d("uiState", "PostModelUploadStatusTracker.getUploadStatus(): returns  status = " +
-                "isUploading = ${newStatus.isUploading}, uploadError = ${newStatus.uploadError}, " +
-                "isQueued = ${newStatus.isQueued}, " +
-                "isUploadFailed = ${newStatus.isUploadFailed}, " +
-                "isEligibleForAutoUpload = ${newStatus.isEligibleForAutoUpload}")
-
         return newStatus
     }
 
