@@ -1652,7 +1652,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mCategoryPref.setEntries(entries);
         mCategoryPref.setEntryValues(values);
         mCategoryPref.setValue(String.valueOf(mSiteSettings.getDefaultCategory()));
-        mCategoryPref.setSummary(mSiteSettings.getDefaultCategoryForDisplay());
+        mCategoryPref.setSummary(mSiteSettings.getDefaultCategoryForDisplay().replace("%", "%%"));
     }
 
     private void setPostFormats() {
