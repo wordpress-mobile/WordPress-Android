@@ -145,4 +145,11 @@ class NonceRestClient @Inject constructor(
         return HtmlUtils.fastStripHtml(errorHtml)
             .trim(' ', '\n')
     }
+
+    private fun hasInvalidCredentialsPattern(htmlResponse: String) =
+        htmlResponse.contains(INVALID_CREDENTIAL_HTML_PATTERN)
+
+    companion object {
+        const val INVALID_CREDENTIAL_HTML_PATTERN = "document.querySelector('form').classList.add('shake')"
+    }
 }
