@@ -39,7 +39,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
-import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
+import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
@@ -69,7 +69,7 @@ class ReaderViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateProvider: DateProvider,
-    private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
+    private val loadReaderItemsUseCase: LoadReaderItemsUseCase,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
@@ -140,7 +140,7 @@ class ReaderViewModel @Inject constructor(
     @JvmOverloads
     fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
-            val tagList = loadReaderTabsUseCase.load()
+            val tagList = loadReaderItemsUseCase.load()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
                 updateTopBarUiState(savedInstanceState)

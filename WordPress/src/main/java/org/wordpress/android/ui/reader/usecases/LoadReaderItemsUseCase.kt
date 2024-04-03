@@ -20,7 +20,7 @@ import javax.inject.Named
  * Loads list of items that should be displayed in the Reader dropdown menu.
  */
 @Reusable
-class LoadReaderTabsUseCase @Inject constructor(
+class LoadReaderItemsUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val stringProvider: StringProvider,
