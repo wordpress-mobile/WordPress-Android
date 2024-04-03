@@ -1,6 +1,5 @@
 package org.wordpress.android.widgets;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
@@ -34,68 +33,48 @@ public class WPSwipeSnackbar {
     public static Snackbar show(@NonNull ViewPager2 viewPager) {
         SwipeArrows arrows;
         Adapter<?> adapter = viewPager.getAdapter();
-        if (adapter == null || adapter.getItemCount() <= 1) {
+        if (adapter == null) {
             arrows = SwipeArrows.NONE;
-        } else if (viewPager.getCurrentItem() == 0) {
-            arrows = SwipeArrows.RIGHT;
-        } else if (viewPager.getCurrentItem() == (adapter.getItemCount() - 1)) {
-            arrows = SwipeArrows.LEFT;
         } else {
-            arrows = SwipeArrows.BOTH;
+            arrows = getSwipeArrows(adapter.getItemCount(), viewPager.getCurrentItem());
         }
         return show(viewPager, arrows);
     }
 
-    public static Snackbar show(@NonNull ViewPager viewPager) {
+    @NonNull public static Snackbar show(@NonNull ViewPager viewPager) {
         SwipeArrows arrows;
         PagerAdapter adapter = viewPager.getAdapter();
-        if (adapter == null || adapter.getCount() <= 1) {
+        if (adapter == null) {
             arrows = SwipeArrows.NONE;
-        } else if (viewPager.getCurrentItem() == 0) {
-            arrows = SwipeArrows.RIGHT;
-        } else if (viewPager.getCurrentItem() == (adapter.getCount() - 1)) {
-            arrows = SwipeArrows.LEFT;
         } else {
-            arrows = SwipeArrows.BOTH;
+            arrows = getSwipeArrows(adapter.getCount(), viewPager.getCurrentItem());
         }
         return show(viewPager, arrows);
     }
 
-    // BaseTransientBottomBar.LENGTH_LONG is pointing to Snackabr.LENGTH_LONG which confuses checkstyle
-    @SuppressLint("WrongConstant")
-    private static Snackbar show(@NonNull ViewPager viewPager, @NonNull SwipeArrows arrows) {
-        Context context = viewPager.getContext();
-        String swipeText = context.getResources().getString(R.string.swipe_for_more);
-        String arrowLeft = context.getResources().getString(R.string.previous_button);
-        String arrowRight = context.getResources().getString(R.string.next_button);
-
-        String text;
-        switch (arrows) {
-            case LEFT:
-                text = arrowLeft + " " + swipeText;
-                break;
-            case RIGHT:
-                text = swipeText + " " + arrowRight;
-                break;
-            case BOTH:
-                text = arrowLeft + " " + swipeText + " " + arrowRight;
-                break;
-            default:
-                text = swipeText;
-                break;
+    @NonNull private static SwipeArrows getSwipeArrows(int itemCount, int currentItem) {
+        SwipeArrows arrows;
+        if (itemCount <= 1) {
+            arrows = SwipeArrows.NONE;
+        } else if (currentItem == 0) {
+            arrows = SwipeArrows.RIGHT;
+        } else if (currentItem == (itemCount - 1)) {
+            arrows = SwipeArrows.LEFT;
+        } else {
+            arrows = SwipeArrows.BOTH;
         }
+        return arrows;
+    }
 
-        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
+    @NonNull private static Snackbar show(@NonNull View view, @NonNull SwipeArrows arrows) {
+        String text = getSwipeText(view.getContext(), arrows);
+        Snackbar snackbar = WPSnackbar.make(view, text, BaseTransientBottomBar.LENGTH_LONG);
         centerSnackbarText(snackbar);
         snackbar.show();
-
         return snackbar;
     }
 
-    /** {@link ViewPager2}-based clone of the original helper method: {@link #show(ViewPager, SwipeArrows)} */
-    @NonNull
-    private static Snackbar show(@NonNull ViewPager2 viewPager, @NonNull SwipeArrows arrows) {
-        Context context = viewPager.getContext();
+    @NonNull private static String getSwipeText(@NonNull Context context, @NonNull SwipeArrows arrows) {
         String swipeText = context.getResources().getString(R.string.swipe_for_more);
         String arrowLeft = context.getResources().getString(R.string.previous_button);
         String arrowRight = context.getResources().getString(R.string.next_button);
@@ -116,12 +95,7 @@ public class WPSwipeSnackbar {
                 text = swipeText;
                 break;
         }
-
-        Snackbar snackbar = Snackbar.make(viewPager, text, BaseTransientBottomBar.LENGTH_LONG); // CHECKSTYLE IGNORE
-        centerSnackbarText(snackbar);
-        snackbar.show();
-
-        return snackbar;
+        return text;
     }
 
     /*
