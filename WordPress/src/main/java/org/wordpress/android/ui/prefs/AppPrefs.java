@@ -47,7 +47,7 @@ public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
     // store twice as many recent sites as we show
-    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
 
     private static final Gson GSON = new Gson();
