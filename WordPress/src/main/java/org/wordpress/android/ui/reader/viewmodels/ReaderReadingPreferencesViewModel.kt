@@ -11,6 +11,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSaveReadingPreferencesUseCase
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeedbackFeatureConfig
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,17 +20,22 @@ import javax.inject.Named
 class ReaderReadingPreferencesViewModel @Inject constructor(
     getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase,
     private val saveReadingPreferences: ReaderSaveReadingPreferencesUseCase,
+    private val readerReadingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val originalReadingPreferences = getReadingPreferences()
     private val _currentReadingPreferences = MutableStateFlow(originalReadingPreferences)
     val currentReadingPreferences: StateFlow<ReaderReadingPreferences> = _currentReadingPreferences
 
+    private val _isFeedbackEnabled = MutableStateFlow(false)
+    val isFeedbackEnabled: StateFlow<Boolean> = _isFeedbackEnabled
+
     private val _actionEvents = MutableSharedFlow<ActionEvent>()
     val actionEvents: SharedFlow<ActionEvent> = _actionEvents
 
     fun init() {
         launch {
+            _isFeedbackEnabled.emit(readerReadingPreferencesFeedbackFeatureConfig.isEnabled())
             _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
         }
     }
@@ -58,8 +64,19 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         }
     }
 
+    fun onSendFeedbackClick() {
+        launch {
+            _actionEvents.emit(ActionEvent.OpenWebView(FEEDBACK_URL))
+        }
+    }
+
     sealed interface ActionEvent {
         data class Close(val isDirty: Boolean) : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
+        data class OpenWebView(val url: String) : ActionEvent
+    }
+
+    companion object {
+        private const val FEEDBACK_URL = "https://automattic.survey.fm/reader-customization-survey"
     }
 }

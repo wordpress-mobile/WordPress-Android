@@ -1698,9 +1698,13 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
-    <string name="reader_preferences_screen_preview_title" translatable="false">The quick brown fox jumps over the lazy dog</string>
-    <string name="reader_preferences_screen_preview_tags" translatable="false">dogs,fox,design,writing</string>
-    <string name="reader_preferences_screen_preview_text" translatable="false">Once upon a time, in a quaint little village nestled between rolling hills and lush greenery, there lived a quick brown fox named Jasper.</string>
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colors, fonts and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+
+    <!-- translators: %s is replaced with the string in reader_preferences_screen_preview_text_feedback_link, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
 
     <string name="reader_preferences_theme_system">Default</string>
     <string name="reader_preferences_theme_soft">Soft</string>
@@ -4827,4 +4831,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
 </resources>
