@@ -854,9 +854,58 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 <details>
     <summary>Why & How</summary>
 
-- TODO
-- TODO
-- TODO
+`sentryVersion` in this project relates to Sentry Gradle Plugin only. Sentry SDK is bundled with
+[Automattic-Tracks-Android](https://github.com/Automattic/Automattic-Tracks-Android).
+
+#### Why?
+We use Sentry Gradle Plugin to send ProGuard mapping files and source context files to Sentry. It
+makes stacktrace readable on Sentry dashboard. This should be the main focus when testing after
+bumping `sentryVersion`.
+
+#### To Test
+
+Please build the release variant (`vanillaRelease`) of both WordPress and Jetpack flavors and verify if issues are sent correctly. You can use the following snippet.
+
+<details><summary>PATCH (warning: it'll probably have some conflicts in the future when `WPMainActivityViewModel` change. It's more for an idea:</summary>
+
+```PATCH
+Subject: [PATCH] tests: add a test for features in development generation
+---
+Index: WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt b/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt
+--- a/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt	(revision 806913d9fb807250cecd5b24b36001d55ea4c255)
++++ b/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt	(date 1710772966823)
+@@ -5,6 +5,7 @@
+ import androidx.lifecycle.LiveData
+ import androidx.lifecycle.MutableLiveData
+ import androidx.lifecycle.distinctUntilChanged
++import com.automattic.android.tracks.crashlogging.CrashLogging
+ import kotlinx.coroutines.CoroutineDispatcher
+ import kotlinx.coroutines.flow.firstOrNull
+ import org.wordpress.android.R
+@@ -67,6 +68,7 @@
+     private val bloggingPromptsStore: BloggingPromptsStore,
+     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
++    private val crashLogging: CrashLogging,
+ ) : ScopedViewModel(mainDispatcher) {
+     private var isStarted = false
+
+@@ -161,6 +163,7 @@
+         launch { loadMainActions(site) }
+
+         updateFeatureAnnouncements()
++        crashLogging.sendReport(Throwable("Test crash"))
+     }
+
+     @Suppress("LongMethod")
+```
+</details>
+
 
 </details>
 

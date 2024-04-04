@@ -10,6 +10,12 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_245"
+msgid ""
+"24.5:\n"
+"The best things in life are worth the wait, like fresh-baked cookies, your coffee order, and the latest releases from your favorite app. (That’s us. See you next update.)\n"
+msgstr ""
+
 msgctxt "release_note_244"
 msgid ""
 "24.4:\n"
@@ -18,12 +24,6 @@ msgid ""
 "- The app won’t crash anymore when the editor auto-scrolls down to a block.\n"
 "- You’ll now see an error message when a video fails to upload to media and text blocks.\n"
 "- Images no longer appear partly transparent while they’re being uploaded.\n"
-msgstr ""
-
-msgctxt "release_note_243"
-msgid ""
-"24.3:\n"
-"You can log in to your WordPress website using Google credentials, physical devices, and other third-party passkeys. Don’t worry, your site is still locked down tighter than the Colonel’s secret recipe.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

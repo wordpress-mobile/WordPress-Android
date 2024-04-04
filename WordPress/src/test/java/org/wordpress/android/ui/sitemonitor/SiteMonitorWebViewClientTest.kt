@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitemonitor
 
 import android.net.Uri
 import android.webkit.WebResourceRequest
-import android.webkit.WebView
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -12,9 +11,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import android.webkit.WebResourceError
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito.mock
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 
 @ExperimentalCoroutinesApi
@@ -35,24 +33,24 @@ class SiteMonitorWebViewClientTest : BaseUnitTest() {
 
     @Test
     fun `when onPageFinished, then should invoke on web view page loaded`() {
-        webViewClient.onPageFinished(mock(WebView::class.java), "https://example.com")
+        webViewClient.onPageFinished(mock(), "https://example.com")
 
         verify(mockListener).onWebViewPageLoaded("https://example.com", SiteMonitorType.METRICS)
     }
 
     @Test
     fun `when onReceivedError, then should invoke on web view error received`() {
-        val mockRequest = mock(WebResourceRequest::class.java)
+        val mockRequest: WebResourceRequest = mock()
         whenever(mockRequest.isForMainFrame).thenReturn(true)
         val url = "https://some.domain"
         whenever(uri.toString()).thenReturn(url)
         whenever(mockRequest.url).thenReturn(uri)
 
-        webViewClient.onPageStarted(mock(WebView::class.java), url, null)
+        webViewClient.onPageStarted(mock(), url, null)
         webViewClient.onReceivedError(
-            mock(WebView::class.java),
+            mock(),
             mockRequest,
-            mock(WebResourceError::class.java)
+            mock()
         )
 
         verify(mockListener).onWebViewReceivedError(url, SiteMonitorType.METRICS)
@@ -62,7 +60,7 @@ class SiteMonitorWebViewClientTest : BaseUnitTest() {
     fun `when onPageFinished, then should not invoke OnReceivedError`() {
         val url = "https://some.domain"
 
-        webViewClient.onPageFinished(mock(WebView::class.java), url)
+        webViewClient.onPageFinished(mock(), url)
 
         verify(mockListener, never()).onWebViewReceivedError(anyString(), any())
     }

@@ -67,4 +67,6 @@ sealed class ReaderNavigationEvents {
         val postId: Long,
         val headerData: HeaderData
     ) : ReaderNavigationEvents()
+
+    data object ShowReadingPreferences : ReaderNavigationEvents()
 }

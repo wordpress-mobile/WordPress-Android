@@ -398,10 +398,11 @@ public class ReaderBlogActions {
         };
 
         if (hasBlogId) {
-            WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
+            WordPress.getRestClientUtilsV1_1().getWithLocale("read/sites/" + blogId, listener, errorListener);
         } else {
             WordPress.getRestClientUtilsV1_1()
-                     .get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
+                     .getWithLocale("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener,
+                             errorListener);
         }
     }
 
@@ -438,7 +439,7 @@ public class ReaderBlogActions {
         } else {
             path = "read/feed/" + UrlUtils.urlEncode(feedUrl);
         }
-        WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, listener, errorListener);
     }
 
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {

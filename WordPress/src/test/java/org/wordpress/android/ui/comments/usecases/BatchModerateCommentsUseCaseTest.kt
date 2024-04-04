@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.notification.Failure
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
@@ -65,11 +64,11 @@ class BatchModerateCommentsUseCaseTest : BaseUnitTest() {
         )
         whenever(moderateCommentsResourceProvider.bgDispatcher).thenReturn(NoDelayCoroutineDispatcher())
 
-        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
+        whenever(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
             .thenReturn(listOf(approvedComment))
-        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(2)))
+        whenever(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(2)))
             .thenReturn(listOf(pendingComment))
-        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(3)))
+        whenever(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(3)))
             .thenReturn(listOf(trashedComment))
 
         batchModerateCommentsUseCase = BatchModerateCommentsUseCase(moderateCommentsResourceProvider)

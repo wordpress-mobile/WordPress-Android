@@ -1,2 +1,0 @@
-24.3 :
-Vous pouvez vous connecter à votre site WordPress avec des identifiants Google, des appareils physiques et autres clés d’accès de tiers. Rassurez-vous, votre site est toujours plus protégé que la recette secrète du Colonel.

@@ -3,15 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_reading_preferences"
+        android:icon="@drawable/ic_reader_preferences"
+        android:title="@string/reader_menu_reading_preferences"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/menu_browse"
         android:icon="@drawable/ic_globe_white_24dp"
         android:title="@string/view_in_browser"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_action"
+        android:visible="false"
         app:showAsAction="always" />
 
     <item

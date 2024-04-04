@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
 
+import androidx.annotation.NonNull;
+
 import org.jsoup.Jsoup;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences;
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences.ThemeValues;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap.ImageSize;
 import org.wordpress.android.ui.reader.utils.ReaderEmbedScanner;
@@ -50,11 +54,12 @@ public class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
     private ReaderCssProvider mCssProvider;
-    private boolean mUseSansSerifForContent = false;
+    private ReaderReadingPreferences mReadingPreferences;
+    private ReaderReadingPreferences.ThemeValues mReadingPreferencesTheme;
 
     @SuppressLint("SetJavaScriptEnabled")
     public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider,
-                              boolean useSansSerifForContent) {
+                              ReaderReadingPreferences readingPreferences) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -62,11 +67,12 @@ public class ReaderPostRenderer {
             throw new IllegalArgumentException("ReaderPostRenderer requires a post");
         }
 
-        mUseSansSerifForContent = useSansSerifForContent;
         mPost = post;
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
         mCssProvider = cssProvider;
+        mReadingPreferences = readingPreferences;
+        mReadingPreferencesTheme = ThemeValues.from(webView.getContext(), mReadingPreferences.getTheme());
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
@@ -371,13 +377,11 @@ public class ReaderPostRenderer {
               .append("<style type='text/css'>");
         appendMappedColors(sbHtml);
 
-        String contentFontFamily = mUseSansSerifForContent ? "sans-serif" : "'Noto Serif', serif";
+        String contentTextProperties = getContentTextProperties();
               // force font style and 1px margin from the right to avoid elements being cut off
-        sbHtml.append(" body.reader-full-post__story-content { font-family: ")
-              .append(contentFontFamily)
-              .append("; ")
-              .append("font-weight: 400; ")
-              .append("font-size: 16px; margin: 0px; padding: 0px; margin-right: 1px; }")
+        sbHtml.append(" body.reader-full-post__story-content { ")
+              .append(contentTextProperties)
+              .append("margin: 0px; padding: 0px; margin-right: 1px; }")
               .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
@@ -412,7 +416,7 @@ public class ReaderPostRenderer {
               .append(" margin-left: 0px; ")
               .append(" border-left: 3px solid var(--color-neutral-50); }")
               // show links in the same color they are elsewhere in the app
-              .append(" a { text-decoration: none; color: var(--main-link-color); }")
+              .append(" a { text-decoration: underline; color: var(--main-link-color); }")
               // make sure images aren't wider than the display, strictly enforced for images without size
               .append(" img { max-width: 100%; width: auto; height: auto; }")
               .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
@@ -547,14 +551,14 @@ public class ReaderPostRenderer {
 
     private void appendMappedColors(StringBuilder sb) {
         sb.append(" :root { ")
-          .append("--color-text: ").append(mResourceVars.mTextColor).append("; ")
-          .append("--color-neutral-0: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
-          .append("--color-neutral-5: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
-          .append("--color-neutral-10: ").append(mResourceVars.mGreyDisabledStr).append("; ")
-          .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
-          .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
-          .append("--color-neutral-70: ").append(mResourceVars.mTextColor).append("; ")
-          .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("--color-text: ").append(mReadingPreferencesTheme.getCssTextColor()).append("; ")
+          .append("--color-neutral-0: ").append(mReadingPreferencesTheme.getCssTextMediumColor()).append("; ")
+          .append("--color-neutral-5: ").append(mReadingPreferencesTheme.getCssTextExtraLightColor()).append("; ")
+          .append("--color-neutral-10: ").append(mReadingPreferencesTheme.getCssTextDisabledColor()).append("; ")
+          .append("--color-neutral-20: ").append(mReadingPreferencesTheme.getCssTextExtraLightColor()).append("; ")
+          .append("--color-neutral-50: ").append(mReadingPreferencesTheme.getCssTextLightColor()).append("; ")
+          .append("--color-neutral-70: ").append(mReadingPreferencesTheme.getCssTextColor()).append("; ")
+          .append("--main-link-color: ").append(mReadingPreferencesTheme.getCssLinkColor()).append("; ")
           .append("} ");
     }
 
@@ -623,5 +627,12 @@ public class ReaderPostRenderer {
     private boolean isRTL(String content) {
         Bidi bidi = new Bidi(content, Bidi.DIRECTION_DEFAULT_LEFT_TO_RIGHT);
         return bidi.isRightToLeft() || bidi.isMixed();
+    }
+
+    @NonNull
+    private String getContentTextProperties() {
+        return "font-family: " + mReadingPreferences.getFontFamily().getValue() + "; "
+               + "font-weight: 400; "
+               + "font-size: " + mReadingPreferences.getFontSize().getValue() + "px; ";
     }
 }

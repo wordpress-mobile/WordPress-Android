@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.views
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver.OnPreDrawListener
@@ -14,7 +15,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
@@ -62,28 +65,37 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
-    fun updateUi(tagsUiState: List<TagUiState>) {
+    fun updateUi(
+        tagsUiState: List<TagUiState>,
+        readingPreferences: ReaderReadingPreferences? = null
+    ) {
         if (this.tagsUiState != null && this.tagsUiState == tagsUiState) {
             return
         }
         this.tagsUiState = tagsUiState
         removeAllViews()
-        addOverflowIndicatorChip()
-        addTagChips(tagsUiState)
+        addOverflowIndicatorChip(readingPreferences)
+        addTagChips(tagsUiState, readingPreferences)
         expandLayout(false)
     }
 
-    private fun addOverflowIndicatorChip() {
+    private fun addOverflowIndicatorChip(readingPreferences: ReaderReadingPreferences?) {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val chip = inflater.inflate(chipStyle.overflowChipLayoutRes, this, false) as Chip
         chip.setOnCheckedChangeListener { _, isChecked ->
             readerTracker.track(Stat.READER_CHIPS_MORE_TOGGLED)
             expandLayout(isChecked)
         }
+
+        readingPreferences?.let {
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * it.fontSize.multiplier)
+            chip.typeface = it.fontFamily.toTypeface()
+        }
+
         addView(chip)
     }
 
-    private fun addTagChips(tagsUiState: List<TagUiState>) {
+    private fun addTagChips(tagsUiState: List<TagUiState>, readingPreferences: ReaderReadingPreferences?) {
         tagsUiState.forEachIndexed { index, tagUiState ->
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val chip = inflater.inflate(chipStyle.chipLayoutRes, this, false) as Chip
@@ -95,6 +107,12 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                     onClick.invoke(tagUiState.slug)
                 }
             }
+
+            readingPreferences?.let { prefs ->
+                chip.setTextSize(TypedValue.COMPLEX_UNIT_PX, chip.textSize * prefs.fontSize.multiplier)
+                chip.typeface = prefs.fontFamily.toTypeface()
+            }
+
             addView(chip, index)
         }
     }

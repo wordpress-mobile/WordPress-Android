@@ -47,6 +47,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
@@ -68,7 +69,8 @@ import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
+class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener,
+    OnScrollToTopListener {
     @Inject
     lateinit var accountStore: AccountStore
 
@@ -85,6 +87,8 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
+
+    private var containerId: Int? = null
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -377,6 +381,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
+        this.containerId = containerId
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
@@ -384,7 +389,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                val scrollableView = getRecyclerViewById() ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
@@ -401,6 +406,18 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                     }
                 }
             }
+        }
+    }
+
+    private fun getRecyclerViewById() =
+        containerId?.let {
+            binding?.root?.findViewById<View>(it) as? RecyclerView
+        }
+
+    override fun onScrollToTop() {
+        if (isAdded) {
+            getRecyclerViewById()?.smoothScrollToPosition(0)
+            binding?.appBar?.setExpanded(true, true)
         }
     }
 }

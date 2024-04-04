@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.HideItemDivider
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 
 private const val POST_VIEW_TYPE: Int = 1
@@ -28,13 +29,20 @@ class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val readerTracker: ReaderTracker,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val isReaderImprovementsEnabled: Boolean,
 ) : Adapter<ReaderViewHolder<*>>() {
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
         return when (viewType) {
             POST_VIEW_TYPE -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
-            POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(uiHelpers, imageManager, readerTracker, parent)
+            POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(
+                uiHelpers,
+                imageManager,
+                readerTracker,
+                networkUtilsWrapper,
+                parent
+            )
             INTEREST_VIEW_TYPE -> {
                 if (isReaderImprovementsEnabled) {
                     ReaderInterestsCardNewViewHolder(uiHelpers, parent)

@@ -1,2 +1,0 @@
-24.3:
-Puedes acceder a tu sitio web WordPress utilizando credenciales de Google, dispositivos físicos y otras claves de acceso de terceros. No te preocupes, tu sitio sigue estando más bloqueado que la receta secreta del coronel.

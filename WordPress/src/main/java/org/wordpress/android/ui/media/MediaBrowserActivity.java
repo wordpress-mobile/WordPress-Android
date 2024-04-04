@@ -1149,7 +1149,13 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 intent.putExtra(MediaDeleteService.MEDIA_LIST_KEY, mediaToDelete);
                 doBindDeleteService(intent);
             }
-            startService(intent);
+            try {
+                startService(intent);
+            } catch (IllegalStateException e) {
+                // This can happen if the app still appears to be running in the background
+                // see: https://github.com/wordpress-mobile/WordPress-Android/issues/18638
+                AppLog.e(AppLog.T.MEDIA, "Unable to start MediaDeleteService: " + e.getMessage());
+            }
         }
     }
 

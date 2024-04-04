@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.todaysstats
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.TodaysStatsCardModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.TodaysStatsCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -15,13 +17,18 @@ class TodaysStatsViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val todaysStatsCardBuilder: TodaysStatsCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.TodaysStatsCard?>()
+    val uiModel = _uiModel as LiveData<MySiteCardAndItem.Card.TodaysStatsCard?>
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
+    fun buildTodaysStatsCard(todaysStatsCardModel: TodaysStatsCardModel?) {
+        _uiModel.postValue(todaysStatsCardBuilder.build(getTodaysStatsBuilderParams(todaysStatsCardModel)))
+    }
 
     fun getTodaysStatsBuilderParams(todaysStatsCardModel: TodaysStatsCardModel?): TodaysStatsCardBuilderParams {
         return TodaysStatsCardBuilderParams(
@@ -67,7 +74,7 @@ class TodaysStatsViewModelSlice @Inject constructor(
             TodaysStatsMenuItemType.HIDE_THIS.label
         )
         appPrefsWrapper.setShouldHideTodaysStatsDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
-        _refresh.postValue(Event(true))
+        _uiModel.value = null
     }
 
     private fun onViewStatsMenuItemClick() {
@@ -83,8 +90,12 @@ class TodaysStatsViewModelSlice @Inject constructor(
         if (jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage()) {
             _onNavigation.value = Event(SiteNavigationAction.ShowJetpackRemovalStaticPostersView)
         } else {
-            _onNavigation.value = Event(SiteNavigationAction.OpenStatsInsights(selectedSite))
+            _onNavigation.value = Event(SiteNavigationAction.OpenStatsByDay(selectedSite))
         }
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
 

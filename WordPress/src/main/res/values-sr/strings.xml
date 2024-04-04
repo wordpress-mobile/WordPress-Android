@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-rc.1
+Generator: GlotPress/4.0.0
 Language: sr_RS
 -->
 <resources>
@@ -120,11 +120,6 @@ Language: sr_RS
     <string name="comment_edit_user_name">Име</string>
     <string name="comment_edit_menu_done">Готово</string>
     <string name="gutenberg_native_embed_options">Могућности угнежђавања</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
     <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
     <string name="gutenberg_native_selected_s">Одабрано: %s</string>
