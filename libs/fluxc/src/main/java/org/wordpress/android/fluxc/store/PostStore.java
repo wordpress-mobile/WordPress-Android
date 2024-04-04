@@ -168,6 +168,9 @@ public class PostStore extends Store {
         public SiteModel site;
         public boolean isFirstTimePublish;
 
+        // if this is true, the post will overwrite the existing one, even if it is not the last revision
+        public boolean shouldSkipConflictResolutionCheck;
+
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
             this.site = site;
@@ -410,17 +413,28 @@ public class PostStore extends Store {
     }
 
     public enum PostErrorType {
-        UNKNOWN_POST,
-        UNKNOWN_POST_TYPE,
-        UNSUPPORTED_ACTION,
-        UNAUTHORIZED,
-        INVALID_RESPONSE,
-        GENERIC_ERROR;
+        UNKNOWN_POST("unknown_post"),
+        UNKNOWN_POST_TYPE("unknown_post_type"),
+        UNSUPPORTED_ACTION("unsupported_action"),
+        UNAUTHORIZED("unauthorized"),
+        INVALID_RESPONSE("invalid_response"),
+        OLD_REVISION("old-revision"), // Custom string value
+        GENERIC_ERROR("generic_error");
+
+        private final String mStringValue;
+
+        PostErrorType(String stringValue) {
+            this.mStringValue = stringValue;
+        }
+
+        @NonNull @Override public String toString() {
+            return this.mStringValue;
+        }
 
         public static PostErrorType fromString(String string) {
             if (string != null) {
                 for (PostErrorType v : PostErrorType.values()) {
-                    if (string.equalsIgnoreCase(v.name())) {
+                    if (string.equalsIgnoreCase(v.toString())) {
                         return v;
                     }
                 }
@@ -1115,7 +1129,12 @@ public class PostStore extends Store {
 
     private void pushPost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.pushPost(payload.post, payload.site, payload.isFirstTimePublish);
+            mPostRestClient.pushPost(
+                    payload.post,
+                    payload.site,
+                    payload.isFirstTimePublish,
+                    payload.shouldSkipConflictResolutionCheck
+            );
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             PostModel postToPush = payload.post;
@@ -1230,6 +1249,22 @@ public class PostStore extends Store {
 
         mPostSqlUtils.insertOrUpdateLocalRevision(localRevision, localDiffs);
     }
+
+    public void removeLocalRevision(PostModel post) {
+        post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
+        int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
+        CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(
+                post.getId(),
+                post.getRemotePostId(),
+                false
+        );
+        OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        emitChange(onPostChanged);
+
+        mDispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(
+                PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId())));
+    }
+
 
 
     public RevisionModel getLocalRevision(SiteModel site, PostModel post) {
