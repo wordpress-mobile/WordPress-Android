@@ -45,7 +45,6 @@ class PostConflictResolver(
             post.setIsLocallyChanged(false)
             post.setAutoSaveExcerpt(null)
             post.setAutoSaveRevisionId(0)
-            postStore.removeLocalRevision(post)
             dispatcher.dispatch(PostActionBuilder.newFetchPostAction(RemotePostPayload(post, site)))
             showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, Duration.SHORT))
         }
@@ -88,6 +87,7 @@ class PostConflictResolver(
             originalPostId = null
             // Conflicted post has been successfully updated with its remote version
             uploadStore.clearUploadErrorForPost(updatedPost)
+            postStore.removeLocalRevision(updatedPost)
             if (!PostUtils.isPostInConflictWithRemote(updatedPost)) {
                 conflictedPostUpdatedWithRemoteVersion()
             }
