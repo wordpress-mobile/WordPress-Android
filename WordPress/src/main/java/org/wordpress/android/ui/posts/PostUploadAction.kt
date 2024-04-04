@@ -29,7 +29,8 @@ sealed class PostUploadAction {
         val post: PostModel,
         val isError: Boolean,
         val isFirstTimePublish: Boolean,
-        val errorMessage: String?
+        val errorMessage: String?,
+        val showRetry: Boolean = true
     ) : PostUploadAction()
 
     class MediaUploadedSnackbar(
@@ -89,7 +90,8 @@ fun handleUploadAction(
                 action.post,
                 action.errorMessage,
                 action.site,
-                onPublishingCallback
+                onPublishingCallback,
+                action.showRetry
             )
         }
         is PostUploadAction.MediaUploadedSnackbar -> {

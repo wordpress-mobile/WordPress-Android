@@ -73,7 +73,8 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
             postListEventListenerFactory = mock(),
             uploadStarter = mock(),
             uploadActionUseCase = mock(),
-            savePostToDbUseCase = mock()
+            savePostToDbUseCase = mock(),
+            syncPublishingFeatureUtils = mock()
         )
         viewModel.postListAction.observeForever(onPostListActionObserver)
 
