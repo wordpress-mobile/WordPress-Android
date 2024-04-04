@@ -145,6 +145,7 @@ class PostConflictResolverTest : BaseUnitTest() {
 
         verify(uploadStore).clearUploadErrorForPost(updatedPost)
         verify(showSnackbar).invoke(expectedSnackbarMessage)
+        verify(postStore).removeLocalRevision(updatedPost)
     }
 }
 
