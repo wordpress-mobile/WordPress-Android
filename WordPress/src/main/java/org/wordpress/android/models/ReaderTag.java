@@ -184,6 +184,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return tagType == ReaderTagType.BOOKMARKED;
     }
 
+    public boolean isTags() {
+        return tagType == ReaderTagType.TAGS;
+    }
+
     public boolean isDiscover() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(DISCOVER_PATH);
     }

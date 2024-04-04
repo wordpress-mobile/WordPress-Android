@@ -37,6 +37,9 @@ class ReaderTopBarMenuHelper @Inject constructor() {
                     text = readerTagsList[followedP2sIndex].tagTitle,
                 ))
             }
+            readerTagsList.indexOrNull { it.isTags }?.let { tagsIndex ->
+                add(createTagsItem(getMenuItemIdFromReaderTagIndex(tagsIndex)))
+            }
             readerTagsList
                 .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
                     if (readerTag.tagType == ReaderTagType.CUSTOM_LIST) {
@@ -95,6 +98,14 @@ class ReaderTopBarMenuHelper @Inject constructor() {
         return MenuElementData.Item.Single(
             id = id,
             text = UiString.UiStringText(text),
+        )
+    }
+
+    private fun createTagsItem(id: String): MenuElementData.Item.Single {
+        return MenuElementData.Item.Single(
+            id = id,
+            text = UiString.UiStringRes(R.string.reader_dropdown_menu_tags),
+            leadingIcon = R.drawable.ic_reader_tags_24dp,
         )
     }
 

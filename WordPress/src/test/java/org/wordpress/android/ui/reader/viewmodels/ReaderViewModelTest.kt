@@ -33,7 +33,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartType
 import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
+import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
@@ -59,7 +59,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     lateinit var dateProvider: DateProvider
 
     @Mock
-    lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+    lateinit var loadReaderItemsUseCase: LoadReaderItemsUseCase
 
     @Mock
     lateinit var readerTracker: ReaderTracker
@@ -100,7 +100,7 @@ class ReaderViewModelTest : BaseUnitTest() {
             testDispatcher(),
             appPrefsWrapper,
             dateProvider,
-            loadReaderTabsUseCase,
+            loadReaderItemsUseCase,
             readerTracker,
             accountStore,
             quickStartRepository,
@@ -156,7 +156,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             state = it
         }
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
+        whenever(loadReaderItemsUseCase.load()).thenReturn(ReaderTagList())
         // Act
         triggerContentDisplay()
         // Assert
@@ -562,14 +562,14 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(emptyReaderTagList)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(emptyReaderTagList)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(nonEmptyReaderTagList)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(nonEmptyReaderTagList)
             block()
         }
     }
@@ -579,7 +579,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(readerTags)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(readerTags)
             block()
         }
     }
