@@ -200,6 +200,82 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         assertThat(isFeedbackEnabled).isFalse()
     }
 
+    // analytics tests
+    @Test
+    fun `when onScreenOpened is called then it should track the screen opened event`() = test {
+        ReaderReadingPreferencesTracker.Source.values().forEach { source ->
+            // When
+            viewModel.onScreenOpened(source)
+
+            // Then
+            verify(readingPreferencesTracker).trackScreenOpened(source)
+        }
+    }
+
+    @Test
+    fun `when onScreenClosed is called then it should track the screen closed event`() = test {
+        // When
+        viewModel.onScreenClosed()
+
+        // Then
+        verify(readingPreferencesTracker).trackScreenClosed()
+    }
+
+    @Test
+    fun `when onSendFeedbackClick is called then it should track the feedback tapped event`() = test {
+        // When
+        viewModel.onSendFeedbackClick()
+
+        // Then
+        verify(readingPreferencesTracker).trackFeedbackTapped()
+    }
+
+    @Test
+    fun `when onThemeClick is called then it should track the theme tapped event`() = test {
+        ReaderReadingPreferences.Theme.values().forEach { theme ->
+            // When
+            viewModel.onThemeClick(theme)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(theme)
+        }
+    }
+
+    @Test
+    fun `when onFontFamilyClick is called then it should track the font family tapped event`() = test {
+        ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
+            // When
+            viewModel.onFontFamilyClick(fontFamily)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(fontFamily)
+        }
+    }
+
+    @Test
+    fun `when onFontSizeClick is called then it should track the font size tapped event`() = test {
+        ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
+            // When
+            viewModel.onFontSizeClick(fontSize)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(fontSize)
+        }
+    }
+
+    @Test
+    fun `when saveReadingPreferencesAndClose is called then it should track the saved event`() = test {
+        // Given
+        val newTheme = ReaderReadingPreferences.Theme.SOFT
+        viewModel.onThemeClick(newTheme)
+
+        // When
+        viewModel.saveReadingPreferencesAndClose()
+
+        // Then
+        verify(readingPreferencesTracker).trackSaved(argThat { theme == newTheme })
+    }
+
     companion object {
         private val DEFAULT_READING_PREFERENCES = ReaderReadingPreferences()
         private const val EXPECTED_FEEDBACK_URL = "https://automattic.survey.fm/reader-customization-survey"
