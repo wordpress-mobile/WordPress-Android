@@ -30,6 +30,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils.Duration
+import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
@@ -73,7 +74,8 @@ class PostActionHandler(
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit,
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
-    private val copyPost: (SiteModel, PostModel, Boolean) -> Unit
+    private val copyPost: (SiteModel, PostModel, Boolean) -> Unit,
+    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -207,7 +209,9 @@ class PostActionHandler(
             return
         }
         post.setStatus(DRAFT.toString())
-        dispatcher.dispatch(PostActionBuilder.newPushPostAction(RemotePostPayload(post, site)))
+        dispatcher.dispatch(PostActionBuilder.newPushPostAction(
+            syncPublishingFeatureConfig.getRemotePostPayloadForPush(RemotePostPayload(post, site))
+        ))
 
         val localPostId = LocalId(post.id)
         criticalPostActionTracker.add(localPostId, MOVING_POST_TO_DRAFT)
