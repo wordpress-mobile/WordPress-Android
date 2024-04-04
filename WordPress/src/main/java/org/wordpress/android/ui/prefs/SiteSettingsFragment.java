@@ -807,7 +807,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setDefaultCategory(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mCategoryPref,
                     newValue.toString(),
-                    mSiteSettings.getDefaultCategoryForDisplay());
+                    mSiteSettings.getDefaultCategoryForDisplay().replace("%", "%%"));
         } else if (preference == mFormatPref) {
             mSiteSettings.setDefaultFormat(newValue.toString());
             setDetailListPreferenceValue(mFormatPref,
