@@ -26,6 +26,10 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -79,8 +83,17 @@ fun ReadingPreferencesFontSizeSlider(
             val sliderColors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colors.onSurface,
             )
+
+            val contentDescriptionLabel = stringResource(R.string.reader_preferences_screen_font_size_label)
+            val selectedFontSizeLabel = stringResource(selectedFontSize.displayNameRes)
+
             Slider(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics {
+                        contentDescription = contentDescriptionLabel
+                        stateDescription = selectedFontSizeLabel
+                    },
                 value = selectedIndex.toFloat(),
                 onValueChange = {
                     val newIndex = it.toInt()
@@ -116,13 +129,15 @@ private fun FontSizePreviewLabels(
 ) {
     val sliderPaddingX = with(LocalDensity.current) { totalThumbSize.toPx() / 2 }
     Layout(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clearAndSetSemantics { },
         content = {
             ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
                 val isSelected = fontSize == selectedFontSize
 
                 Text(
-                    text = stringResource(R.string.reader_preferences_font_size_preview),
+                    text = stringResource(R.string.reader_preferences_screen_font_size_preview),
                     style = TextStyle(
                         fontFamily = previewFontFamily,
                         fontSize = fontSize.value.sp,

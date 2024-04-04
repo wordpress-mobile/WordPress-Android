@@ -33,6 +33,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -261,6 +263,7 @@ private fun ReadingPreferencesPreviewFeedback(
         )
     }
 
+    val buttonLabel = stringResource(R.string.reader_preferences_screen_preview_text_feedback_label)
     ClickableText(
         text = annotatedString,
         style = textStyle,
@@ -272,6 +275,14 @@ private fun ReadingPreferencesPreviewFeedback(
                         onSendFeedbackClick()
                     }
                 }
+        },
+        modifier = Modifier.semantics {
+            onClick(
+                label = buttonLabel,
+            ) {
+                onSendFeedbackClick()
+                true
+            }
         },
     )
 }
