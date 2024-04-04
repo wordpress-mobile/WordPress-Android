@@ -4,6 +4,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -98,6 +100,26 @@ fun ReadingPreferencesScreen(
             onNavigationIconClick = onCloseClick,
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
+            actions = {
+                Box(
+                    modifier = Modifier
+                        .background(baseTextColor, shape = CircleShape)
+                        .padding(
+                            vertical = Margin.Medium.value,
+                            horizontal = Margin.Large.value,
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = "Experimental",
+                        style = TextStyle(
+                            color = backgroundColor,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                        ),
+                    )
+                }
+            }
         )
 
         // Preview section
