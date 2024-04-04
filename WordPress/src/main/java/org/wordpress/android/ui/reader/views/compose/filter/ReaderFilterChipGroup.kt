@@ -48,6 +48,7 @@ import androidx.compose.material3.MaterialTheme as Material3Theme
 
 private val roundedShape = RoundedCornerShape(100)
 
+@Suppress("CyclomaticComplexMethod")
 @Composable
 fun ReaderFilterChipGroup(
     blogsFilterCount: Int,
