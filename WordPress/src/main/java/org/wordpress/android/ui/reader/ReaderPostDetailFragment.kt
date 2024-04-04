@@ -29,6 +29,7 @@ import android.widget.ImageView.ScaleType.CENTER_CROP
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -423,6 +424,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         // Fixes viewpager not displaying menu items for first fragment
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.hide()
         toolBar.inflateMenu(R.menu.reader_detail)
         toolBar.setOnMenuItemClickListener { handleMenuItemSelected(it)}
 
