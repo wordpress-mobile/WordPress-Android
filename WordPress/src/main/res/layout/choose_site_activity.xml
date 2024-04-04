@@ -18,6 +18,7 @@
             app:navigationIcon="@drawable/ic_cross_white_24dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:contentInsetStartWithNavigation="0dp"
             app:theme="@style/WordPress.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
