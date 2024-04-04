@@ -9,6 +9,7 @@ import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ItemChooseSiteBinding
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.extensions.getColorFromAttribute
@@ -62,8 +63,22 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
         binding.pin.setOnClickListener {
             if (isPinned) {
                 appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { remove(site.localId) }
+                AnalyticsTracker.track(
+                    AnalyticsTracker.Stat.SITE_SWITCHER_PIN_UPDATED,
+                    mapOf(
+                        TRACK_PROPERTY_BLOG_ID to site.siteId,
+                        TRACK_PROPERTY_PINNED to false
+                    )
+                )
             } else {
                 appPrefs.pinnedSiteLocalIds = appPrefs.pinnedSiteLocalIds.apply { add(site.localId) }
+                AnalyticsTracker.track(
+                    AnalyticsTracker.Stat.SITE_SWITCHER_PIN_UPDATED,
+                    mapOf(
+                        TRACK_PROPERTY_BLOG_ID to site.siteId,
+                        TRACK_PROPERTY_PINNED to true
+                    )
+                )
             }
             onPinUpdated(site)
         }
@@ -150,5 +165,10 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     private fun SiteRecord?.isRecent(): Boolean = when (this) {
         null -> false
         else -> appPrefs.getRecentSiteLocalIds().contains(localId)
+    }
+
+    companion object {
+        private const val TRACK_PROPERTY_BLOG_ID = "blog_id"
+        private const val TRACK_PROPERTY_PINNED = "pinned"
     }
 }

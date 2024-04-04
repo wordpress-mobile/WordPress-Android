@@ -72,6 +72,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbarMain)
+        if (savedInstanceState == null) {
+            AnalyticsTracker.track(Stat.SITE_SWITCHER_DISPLAYED)
+        }
         binding.toolbarMain.setNavigationOnClickListener {
             AnalyticsTracker.track(Stat.SITE_SWITCHER_DISMISSED)
             finish()
@@ -222,8 +225,16 @@ class ChooseSiteActivity : LocaleAwareActivity() {
             R.id.menu_pin -> {
                 if (adapter.mode is ActionMode.Pin) {
                     disablePinSitesMode()
+                    AnalyticsTracker.track(
+                        Stat.SITE_SWITCHER_TOGGLED_PIN_TAPPED,
+                        mapOf(TRACK_PROPERTY_STATE to TRACK_PROPERTY_STATE_DONE)
+                    )
                 } else {
                     enablePinSitesMode()
+                    AnalyticsTracker.track(
+                        Stat.SITE_SWITCHER_TOGGLED_PIN_TAPPED,
+                        mapOf(TRACK_PROPERTY_STATE to TRACK_PROPERTY_STATE_EDIT)
+                    )
                 }
                 return true
             }
@@ -353,6 +364,9 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         const val KEY_SITE_CREATED_BUT_NOT_FETCHED = "key_site_created_but_not_fetched"
         const val KEY_SEARCH_KEYWORD = "key_search_keyword"
         const val KEY_ACTION_MODE = "key_action_mode"
+        private const val TRACK_PROPERTY_STATE = "state"
+        private const val TRACK_PROPERTY_STATE_EDIT = "edit"
+        private const val TRACK_PROPERTY_STATE_DONE = "done"
 
         @JvmStatic
         var isRunning = false
