@@ -84,7 +84,7 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
-    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    private val syncPublishingFeatureUtils: SyncPublishingFeatureUtils
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -187,7 +187,7 @@ class PostListMainViewModel @Inject constructor(
             showToast = { _toastMessage.postValue(it) },
             triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
             copyPost = this::copyPost,
-            syncPublishingFeatureConfig = syncPublishingFeatureConfig
+            syncPublishingFeatureUtils = syncPublishingFeatureUtils
         )
     }
 

@@ -75,7 +75,7 @@ class PostActionHandler(
     private val showToast: (ToastMessageHolder) -> Unit,
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
     private val copyPost: (SiteModel, PostModel, Boolean) -> Unit,
-    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    private val syncPublishingFeatureUtils: SyncPublishingFeatureUtils
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -210,7 +210,7 @@ class PostActionHandler(
         }
         post.setStatus(DRAFT.toString())
         dispatcher.dispatch(PostActionBuilder.newPushPostAction(
-            syncPublishingFeatureConfig.getRemotePostPayloadForPush(RemotePostPayload(post, site))
+            syncPublishingFeatureUtils.getRemotePostPayloadForPush(RemotePostPayload(post, site))
         ))
 
         val localPostId = LocalId(post.id)

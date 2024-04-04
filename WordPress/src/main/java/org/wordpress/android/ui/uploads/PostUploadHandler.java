@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.SyncPublishingFeatureUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.FetchPostStatusFailed;
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaveFailed;
@@ -48,7 +49,6 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject AutoSavePostIfNotDraftUseCase mAutoSavePostIfNotDraftUseCase;
     @Inject PostMediaHandler mPostMediaHandler;
-    @Inject SyncPublishingFeatureConfig mSyncPublishingFeatureConfig;
+    @Inject SyncPublishingFeatureUtils mSyncPublishingFeatureUtils;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -289,7 +289,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(
                             PostActionBuilder.newPushPostAction(
-                                    mSyncPublishingFeatureConfig.getRemotePostPayloadForPush(payload)
+                                    mSyncPublishingFeatureUtils.getRemotePostPayloadForPush(payload)
                             )
                     );
                     break;
@@ -297,7 +297,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                     mPost.setStatus(PostStatus.DRAFT.toString());
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD_AS_DRAFT. Post: " + mPost.getTitle());
                     mDispatcher.dispatch(PostActionBuilder.newPushPostAction(
-                            mSyncPublishingFeatureConfig.getRemotePostPayloadForPush(payload)
+                            mSyncPublishingFeatureUtils.getRemotePostPayloadForPush(payload)
                     ));
                     break;
                 case REMOTE_AUTO_SAVE:
@@ -646,7 +646,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             post.setStatus(PostStatus.DRAFT.toString());
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
             mDispatcher.dispatch(PostActionBuilder.newPushPostAction(
-                    mSyncPublishingFeatureConfig.getRemotePostPayloadForPush(new RemotePostPayload(post, site))
+                    mSyncPublishingFeatureUtils.getRemotePostPayloadForPush(new RemotePostPayload(post, site))
             ));
         } else {
             throw new IllegalStateException("All AutoSavePostIfNotDraftResult types must be handled");
