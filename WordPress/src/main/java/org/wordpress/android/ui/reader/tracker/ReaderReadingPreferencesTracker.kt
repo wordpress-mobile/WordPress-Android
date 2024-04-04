@@ -50,14 +50,24 @@ class ReaderReadingPreferencesTracker @Inject constructor(
     }
 
     fun trackSaved(preferences: ReaderReadingPreferences) {
-        val props = mapOf(
-            PROP_IS_DEFAULT_KEY to preferences.isDefault(),
-            PROP_TYPE_THEME to propValueFor(preferences.theme),
-            PROP_TYPE_FONT_FAMILY to propValueFor(preferences.fontFamily),
-            PROP_TYPE_FONT_SIZE to propValueFor(preferences.fontSize),
+        analyticsTrackerWrapper.track(
+            AnalyticsTracker.Stat.READER_READING_PREFERENCES_SAVED,
+            getPropertiesForPreferences(preferences)
         )
+    }
 
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_READING_PREFERENCES_SAVED, props)
+    fun getPropertiesForPreferences(
+        preferences: ReaderReadingPreferences,
+        prefix: String? = null,
+    ): MutableMap<String, Any> {
+        fun String.withPrefix() = prefix?.let { "${it}_$this" } ?: this
+
+        return mutableMapOf(
+            PROP_IS_DEFAULT_KEY.withPrefix() to preferences.isDefault(),
+            PROP_TYPE_THEME.withPrefix() to propValueFor(preferences.theme),
+            PROP_TYPE_FONT_FAMILY.withPrefix() to propValueFor(preferences.fontFamily),
+            PROP_TYPE_FONT_SIZE.withPrefix() to propValueFor(preferences.fontSize),
+        )
     }
 
     private fun ReaderReadingPreferences.isDefault(): Boolean {
