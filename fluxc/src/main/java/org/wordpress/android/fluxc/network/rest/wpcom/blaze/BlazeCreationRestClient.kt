@@ -341,8 +341,8 @@ private class BlazeAdSuggestionListResponse(
 }
 
 private class BlazeAdForecastNetworkModel(
-    @SerializedName("total_impressions_min") val minImpressions: Int,
-    @SerializedName("total_impressions_max") val maxImpressions: Int,
+    @SerializedName("total_impressions_min") val minImpressions: Long,
+    @SerializedName("total_impressions_max") val maxImpressions: Long,
 ) {
     fun toDomainModel(): BlazeAdForecast = BlazeAdForecast(
         minImpressions = minImpressions,
