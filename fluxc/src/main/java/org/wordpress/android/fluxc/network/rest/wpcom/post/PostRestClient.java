@@ -310,7 +310,7 @@ public class PostRestClient extends BaseWPComRestClient {
             final PostModel post,
             final SiteModel site,
             final boolean isFirstTimePublish,
-            final boolean isConflictResolution
+            final boolean shouldSkipConflictResolutionCheck
     ) {
         String url;
 
@@ -320,7 +320,7 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
-        Map<String, Object> body = postModelToParams(post, isConflictResolution);
+        Map<String, Object> body = postModelToParams(post, shouldSkipConflictResolutionCheck);
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 PostWPComRestResponse.class,
@@ -613,7 +613,7 @@ public class PostRestClient extends BaseWPComRestClient {
         return post;
     }
 
-    private Map<String, Object> postModelToParams(PostModel post, boolean isConflictResolution) {
+    private Map<String, Object> postModelToParams(PostModel post, boolean shouldSkipConflictResolutionCheck) {
         Map<String, Object> params = new HashMap<>();
 
         params.put("status", StringUtils.notNullStr(post.getStatus()));
@@ -622,8 +622,11 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
         params.put("slug", StringUtils.notNullStr(post.getSlug()));
 
-        // if isConflictResolution is true we do not want to send "if_not_modified_since"
-        if (!isConflictResolution) {
+        // Should only send "if_not_modified_since" when we want to run the conflict resolution check on the BE
+        // For instance, we have showed the conflict resolution dialog and the user wants to push their local changes;
+        // setting this field to true, would not add the modified date and won't trigger a check for latest version
+        // on the remote host.
+        if (!shouldSkipConflictResolutionCheck) {
             params.put("if_not_modified_since", post.getLastModified());
         }
 
