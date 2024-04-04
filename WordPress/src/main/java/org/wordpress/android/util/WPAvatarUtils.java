@@ -19,6 +19,9 @@ import java.net.URL;
  * see https://docs.gravatar.com/general/images/
  */
 public class WPAvatarUtils {
+    private WPAvatarUtils() {
+        throw new IllegalStateException("Utility class");
+    }
     public static final DefaultAvatarOption DEFAULT_AVATAR = MysteryPerson.INSTANCE;
 
     /**
