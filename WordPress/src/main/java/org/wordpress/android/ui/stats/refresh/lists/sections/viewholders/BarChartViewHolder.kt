@@ -90,7 +90,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
         } else {
-            buildEmptyDataSet(context, cutEntries.size)
+            buildEmptyDataSet(cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
