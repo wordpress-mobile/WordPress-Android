@@ -306,7 +306,12 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushPost(final PostModel post, final SiteModel site, final boolean isFirstTimePublish) {
+    public void pushPost(
+            final PostModel post,
+            final SiteModel site,
+            final boolean isFirstTimePublish,
+            final boolean shouldSkipConflictResolutionCheck
+    ) {
         String url;
 
         if (post.isLocalDraft()) {
@@ -315,7 +320,7 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
-        Map<String, Object> body = postModelToParams(post);
+        Map<String, Object> body = postModelToParams(post, shouldSkipConflictResolutionCheck);
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 PostWPComRestResponse.class,
@@ -608,7 +613,7 @@ public class PostRestClient extends BaseWPComRestClient {
         return post;
     }
 
-    private Map<String, Object> postModelToParams(PostModel post) {
+    private Map<String, Object> postModelToParams(PostModel post, boolean shouldSkipConflictResolutionCheck) {
         Map<String, Object> params = new HashMap<>();
 
         params.put("status", StringUtils.notNullStr(post.getStatus()));
@@ -616,6 +621,15 @@ public class PostRestClient extends BaseWPComRestClient {
         params.put("content", StringUtils.notNullStr(post.getContent()));
         params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
         params.put("slug", StringUtils.notNullStr(post.getSlug()));
+
+        // Should only send "if_not_modified_since" when we want to run the conflict resolution check on the BE
+        // For instance, we have showed the conflict resolution dialog and the user wants to push their local changes;
+        // setting this field to true, would not add the modified date and won't trigger a check for latest version
+        // on the remote host.
+        if (!shouldSkipConflictResolutionCheck) {
+            params.put("if_not_modified_since", post.getLastModified());
+        }
+
         if (post.getAuthorId() > 0) {
             params.put("author", String.valueOf(post.getAuthorId()));
         }
