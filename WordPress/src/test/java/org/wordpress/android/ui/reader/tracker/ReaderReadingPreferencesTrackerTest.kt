@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.tracker
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -137,8 +138,48 @@ class ReaderReadingPreferencesTrackerTest {
         )
     }
 
+    @Test
+    fun `given all possible combinations, when getPropertiesForPreferences is called, return expected properties`() {
+        val defaultPreferences = ReaderReadingPreferences()
+
+        ReaderReadingPreferences.Theme.values().forEach { theme ->
+            ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
+                ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
+                    val preferences = ReaderReadingPreferences(theme, fontFamily, fontSize)
+                    val expectedProperties = mapOf(
+                        "is_default" to (preferences == defaultPreferences),
+                        "color_scheme" to propValueFor(theme),
+                        "font" to propValueFor(fontFamily),
+                        "font_size" to propValueFor(fontSize)
+                    )
+
+                    val result = tracker.getPropertiesForPreferences(preferences)
+
+                    assertThat(result).isEqualTo(expectedProperties)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun `given a prefix, when getPropertiesForPreferences is called, return expected properties with prefix`() {
+        val prefix = "my_prefix"
+
+        val preferences = ReaderReadingPreferences()
+        val expectedProperties = mapOf(
+            "my_prefix_is_default" to true,
+            "my_prefix_color_scheme" to propValueFor(preferences.theme),
+            "my_prefix_font" to propValueFor(preferences.fontFamily),
+            "my_prefix_font_size" to propValueFor(preferences.fontSize)
+        )
+
+        val result = tracker.getPropertiesForPreferences(preferences, prefix)
+
+        assertThat(result).isEqualTo(expectedProperties)
+    }
+
     // region helper methods (note: they match the implementation but they are duplicated here for reliable testing)
-    private fun propValueFor(theme: ReaderReadingPreferences.Theme) = when(theme) {
+    private fun propValueFor(theme: ReaderReadingPreferences.Theme) = when (theme) {
         ReaderReadingPreferences.Theme.SYSTEM -> "default"
         ReaderReadingPreferences.Theme.SOFT -> "soft"
         ReaderReadingPreferences.Theme.SEPIA -> "sepia"
@@ -148,13 +189,13 @@ class ReaderReadingPreferencesTrackerTest {
         ReaderReadingPreferences.Theme.CANDY -> "candy"
     }
 
-    private fun propValueFor(fontFamily: ReaderReadingPreferences.FontFamily) = when(fontFamily) {
+    private fun propValueFor(fontFamily: ReaderReadingPreferences.FontFamily) = when (fontFamily) {
         ReaderReadingPreferences.FontFamily.SANS -> "sans"
         ReaderReadingPreferences.FontFamily.SERIF -> "serif"
         ReaderReadingPreferences.FontFamily.MONO -> "mono"
     }
 
-    private fun propValueFor(fontSize: ReaderReadingPreferences.FontSize) = when(fontSize) {
+    private fun propValueFor(fontSize: ReaderReadingPreferences.FontSize) = when (fontSize) {
         ReaderReadingPreferences.FontSize.EXTRA_SMALL -> "extra_small"
         ReaderReadingPreferences.FontSize.SMALL -> "small"
         ReaderReadingPreferences.FontSize.NORMAL -> "normal"
