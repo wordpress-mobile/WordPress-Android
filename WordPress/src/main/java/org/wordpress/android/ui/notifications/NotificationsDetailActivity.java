@@ -384,7 +384,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
         if (mBinding != null) {
             mBinding.viewpager.setAdapter(adapter);
-            mBinding.viewpager.setCurrentItem(NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()));
+            mBinding.viewpager.setCurrentItem(
+                    NotificationsUtils.findNoteInNoteArray(filteredNotes, note.getId()), false);
         }
 
         return adapter;
