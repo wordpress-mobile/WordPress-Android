@@ -69,7 +69,7 @@ class PostConflictResolver(
 
         PostUtils.trackSavePostAnalytics(post, site)
         val remotePostPayload = RemotePostPayload(post, site)
-        remotePostPayload.isConflictResolution = true
+        remotePostPayload.shouldSkipConflictResolutionCheck = true
         dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
     }
 

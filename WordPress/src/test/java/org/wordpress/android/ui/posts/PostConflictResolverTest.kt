@@ -98,7 +98,7 @@ class PostConflictResolverTest : BaseUnitTest() {
 
     @Suppress("MaxLineLength")
     @Test
-    fun `given upload store with no unhandled conflict, when does post have unhandled conflict is invoked, then false`() {
+    fun `given upload store with no unhandled conflict, when post have unhandled conflict is invoked, then false`() {
         val post = PostModel()
         whenever(uploadStore.getUploadErrorForPost(post)).thenReturn(null)
 
