@@ -10,10 +10,13 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.extensions.indexOrNull
 import javax.inject.Inject
 
-class ReaderTopBarMenuHelper @Inject constructor() {
+class ReaderTopBarMenuHelper @Inject constructor(
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
+) {
     fun createMenu(readerTagsList: ReaderTagList): List<MenuElementData> {
         return mutableListOf<MenuElementData>().apply {
             readerTagsList.indexOrNull { it.isDiscover }?.let { discoverIndex ->
@@ -37,8 +40,10 @@ class ReaderTopBarMenuHelper @Inject constructor() {
                     text = readerTagsList[followedP2sIndex].tagTitle,
                 ))
             }
-            readerTagsList.indexOrNull { it.isTags }?.let { tagsIndex ->
-                add(createTagsItem(getMenuItemIdFromReaderTagIndex(tagsIndex)))
+            if (readerTagsFeedFeatureConfig.isEnabled()) {
+                readerTagsList.indexOrNull { it.isTags }?.let { tagsIndex ->
+                    add(createTagsItem(getMenuItemIdFromReaderTagIndex(tagsIndex)))
+                }
             }
             readerTagsList
                 .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
