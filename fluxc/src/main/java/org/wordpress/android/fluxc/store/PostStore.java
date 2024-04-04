@@ -169,7 +169,7 @@ public class PostStore extends Store {
         public boolean isFirstTimePublish;
 
         // if this is true, the post will overwrite the existing one, even if it is not the last revision
-        public boolean isConflictResolution;
+        public boolean shouldSkipConflictResolutionCheck;
 
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
@@ -1133,7 +1133,7 @@ public class PostStore extends Store {
                     payload.post,
                     payload.site,
                     payload.isFirstTimePublish,
-                    payload.isConflictResolution
+                    payload.shouldSkipConflictResolutionCheck
             );
         } else {
             // TODO: check for WP-REST-API plugin and use it here
