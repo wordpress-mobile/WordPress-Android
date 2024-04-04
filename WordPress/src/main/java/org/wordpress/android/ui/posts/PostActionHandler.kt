@@ -30,7 +30,6 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.ToastUtils.Duration
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD

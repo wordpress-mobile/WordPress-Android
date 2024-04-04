@@ -47,7 +47,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
