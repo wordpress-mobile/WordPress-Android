@@ -14,8 +14,8 @@ import java.util.Locale
 import com.google.android.material.R as MaterialR
 
 data class ReaderReadingPreferences @JvmOverloads constructor(
-    val theme: Theme = Theme.SYSTEM,
-    val fontFamily: FontFamily = FontFamily.SANS,
+    val theme: Theme = Theme.DEFAULT,
+    val fontFamily: FontFamily = FontFamily.DEFAULT,
     val fontSize: FontSize = FontSize.DEFAULT,
 ) {
     enum class Theme(
@@ -74,7 +74,11 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
             backgroundColorRes = R.color.reader_theme_candy_background,
             baseTextColorRes = R.color.reader_theme_candy_text,
             linkColorRes = R.color.reader_theme_candy_text,
-        ),
+        );
+
+        companion object {
+            val DEFAULT = SYSTEM
+        }
     }
 
     @Suppress("MagicNumber")
@@ -165,7 +169,11 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         MONO(
             displayNameRes = R.string.reader_preferences_font_family_mono,
             value = "monospace",
-        ),
+        );
+
+        companion object {
+            val DEFAULT = SANS
+        }
     }
 
     enum class FontSize(
