@@ -60,6 +60,7 @@ fun ReaderFilterChipGroup(
     showBlogsFilter: Boolean = blogsFilterCount > 0,
     showTagsFilter: Boolean = tagsFilterCount > 0,
     chipHeight: Dp = 36.dp,
+    showTagsChip: Boolean,
 ) {
     Row(
         modifier = modifier,
@@ -97,17 +98,19 @@ fun ReaderFilterChipGroup(
         }
 
         // tags filter chip
-        AnimatedVisibility(
-            modifier = Modifier.clip(roundedShape),
-            visible = isTagChipVisible,
-        ) {
-            ReaderFilterChip(
-                text = tagChipText,
-                onClick = if (isTagSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.TAG) }),
-                onDismissClick = if (isTagSelected) onSelectedItemDismissClick else null,
-                isSelectedItem = isTagSelected,
-                height = chipHeight,
-            )
+        if (showTagsChip) {
+            AnimatedVisibility(
+                modifier = Modifier.clip(roundedShape),
+                visible = isTagChipVisible,
+            ) {
+                ReaderFilterChip(
+                    text = tagChipText,
+                    onClick = if (isTagSelected) onSelectedItemClick else ({ onFilterClick(ReaderFilterType.TAG) }),
+                    onDismissClick = if (isTagSelected) onSelectedItemDismissClick else null,
+                    isSelectedItem = isTagSelected,
+                    height = chipHeight,
+                )
+            }
         }
 
         AnimatedVisibility(visible = isBlogChipVisible && isTagChipVisible) {
@@ -242,6 +245,7 @@ fun ReaderFilterChipGroupPreview() {
             onSelectedItemDismissClick = {
                 selectedItem = null
             },
+            showTagsChip = true,
         )
     }
 }
