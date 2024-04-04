@@ -281,14 +281,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
     }
 
     public void showHideToolbar(boolean hide) {
+        if (mBinding != null) {
+            setSupportActionBar(mBinding.toolbarMain);
+        }
         if (getSupportActionBar() != null) {
             if (hide) {
                 getSupportActionBar().hide();
             } else {
-                if (mBinding != null) {
-                    setSupportActionBar(mBinding.toolbarMain);
-                    getSupportActionBar().show();
-                }
+                getSupportActionBar().show();
             }
             getSupportActionBar().setDisplayShowTitleEnabled(!hide);
         }
