@@ -22,7 +22,6 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import kotlin.test.Test
 import org.wordpress.android.R
-import org.wordpress.android.util.ToastUtils
 
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
@@ -97,6 +96,7 @@ class PostConflictResolverTest : BaseUnitTest() {
         assertTrue(result)
     }
 
+    @Suppress("MaxLineLength")
     @Test
     fun `given upload store with no unhandled conflict, when does post have unhandled conflict is invoked, then false`() {
         val post = PostModel()
