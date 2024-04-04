@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSaveReadingPreferencesUseCase
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
@@ -30,7 +31,10 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     lateinit var saveReadingPreferences: ReaderSaveReadingPreferencesUseCase
 
     @Mock
-    lateinit var readerReadingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig
+    lateinit var readingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig
+
+    @Mock
+    lateinit var readingPreferencesTracker: ReaderReadingPreferencesTracker
 
     private val viewModelDispatcher = UnconfinedTestDispatcher(testDispatcher().scheduler)
     private lateinit var viewModel: ReaderReadingPreferencesViewModel
@@ -44,7 +48,8 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         viewModel = ReaderReadingPreferencesViewModel(
             getReadingPreferences,
             saveReadingPreferences,
-            readerReadingPreferencesFeedbackFeatureConfig,
+            readingPreferencesFeedbackFeatureConfig,
+            readingPreferencesTracker,
             viewModelDispatcher,
         )
 
@@ -172,7 +177,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     @Test
     fun `when readerReadingPreferencesFeedbackFeatureConfig is true then isFeedbackEnabled emits true`() = test {
         // Given
-        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(readingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(true)
 
         // When
         viewModel.init()
@@ -185,7 +190,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     @Test
     fun `when readerReadingPreferencesFeedbackFeatureConfig is false then isFeedbackEnabled emits false`() = test {
         // Given
-        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(readingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(false)
 
         // When
         viewModel.init()

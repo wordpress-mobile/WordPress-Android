@@ -29,8 +29,8 @@ class ReaderReadingPreferencesTrackerTest {
             tracker.trackScreenOpened(source)
 
             val expectedSource = when (source) {
-                Source.POST_DETAILS_TOP_BAR -> "post_details_top_bar"
-                Source.POST_DETAILS_MORE_MENU -> "post_details_more_menu"
+                Source.POST_DETAIL_TOOLBAR -> "post_detail_toolbar"
+                Source.POST_DETAIL_MORE_MENU -> "post_detail_more_menu"
             }
 
             verify(analyticsTrackerWrapper).track(
@@ -102,15 +102,13 @@ class ReaderReadingPreferencesTrackerTest {
     @Test
     fun `given default preferences, when trackSaved is called, then track event`() {
         val preferences = ReaderReadingPreferences()
-        val hasChanged = true
 
-        tracker.trackSaved(preferences, hasChanged)
+        tracker.trackSaved(preferences)
 
         verify(analyticsTrackerWrapper).track(
             Stat.READER_READING_PREFERENCES_SAVED,
             mapOf(
                 "is_default" to true,
-                "has_changed" to hasChanged,
                 "color_scheme" to propValueFor(preferences.theme),
                 "font" to propValueFor(preferences.fontFamily),
                 "font_size" to propValueFor(preferences.fontSize)
@@ -125,34 +123,13 @@ class ReaderReadingPreferencesTrackerTest {
             fontFamily = ReaderReadingPreferences.FontFamily.SERIF,
             fontSize = ReaderReadingPreferences.FontSize.LARGE
         )
-        val hasChanged = true
 
-        tracker.trackSaved(preferences, hasChanged)
+        tracker.trackSaved(preferences)
 
         verify(analyticsTrackerWrapper).track(
             Stat.READER_READING_PREFERENCES_SAVED,
             mapOf(
                 "is_default" to false,
-                "has_changed" to hasChanged,
-                "color_scheme" to propValueFor(preferences.theme),
-                "font" to propValueFor(preferences.fontFamily),
-                "font_size" to propValueFor(preferences.fontSize)
-            )
-        )
-    }
-
-    @Test
-    fun `given no changes, when trackSaved is called, then track event`() {
-        val preferences = ReaderReadingPreferences()
-        val hasChanged = false
-
-        tracker.trackSaved(preferences, hasChanged)
-
-        verify(analyticsTrackerWrapper).track(
-            Stat.READER_READING_PREFERENCES_SAVED,
-            mapOf(
-                "is_default" to true,
-                "has_changed" to hasChanged,
                 "color_scheme" to propValueFor(preferences.theme),
                 "font" to propValueFor(preferences.fontFamily),
                 "font_size" to propValueFor(preferences.fontSize)
@@ -180,7 +157,7 @@ class ReaderReadingPreferencesTrackerTest {
     private fun propValueFor(fontSize: ReaderReadingPreferences.FontSize) = when(fontSize) {
         ReaderReadingPreferences.FontSize.EXTRA_SMALL -> "extra_small"
         ReaderReadingPreferences.FontSize.SMALL -> "small"
-        ReaderReadingPreferences.FontSize.NORMAL -> "default"
+        ReaderReadingPreferences.FontSize.NORMAL -> "normal"
         ReaderReadingPreferences.FontSize.LARGE -> "large"
         ReaderReadingPreferences.FontSize.EXTRA_LARGE -> "extra_large"
     }

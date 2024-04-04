@@ -49,10 +49,9 @@ class ReaderReadingPreferencesTracker @Inject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_READING_PREFERENCES_ITEM_TAPPED, props)
     }
 
-    fun trackSaved(preferences: ReaderReadingPreferences, hasChanged: Boolean) {
+    fun trackSaved(preferences: ReaderReadingPreferences) {
         val props = mapOf(
             PROP_IS_DEFAULT_KEY to preferences.isDefault(),
-            PROP_HAS_CHANGED_KEY to hasChanged,
             PROP_TYPE_THEME to propValueFor(preferences.theme),
             PROP_TYPE_FONT_FAMILY to propValueFor(preferences.fontFamily),
             PROP_TYPE_FONT_SIZE to propValueFor(preferences.fontSize),
@@ -68,8 +67,8 @@ class ReaderReadingPreferencesTracker @Inject constructor(
     }
 
     enum class Source(val value: String) {
-        POST_DETAILS_TOP_BAR("post_details_top_bar"),
-        POST_DETAILS_MORE_MENU("post_details_more_menu");
+        POST_DETAIL_TOOLBAR("post_detail_toolbar"),
+        POST_DETAIL_MORE_MENU("post_detail_more_menu");
 
         companion object {
             const val KEY = "source"
@@ -78,7 +77,6 @@ class ReaderReadingPreferencesTracker @Inject constructor(
 
     companion object {
         private const val PROP_IS_DEFAULT_KEY = "is_default"
-        private const val PROP_HAS_CHANGED_KEY = "has_changed"
 
         private const val PROP_TYPE_KEY = "type"
         const val PROP_TYPE_THEME = "color_scheme"
@@ -106,7 +104,7 @@ class ReaderReadingPreferencesTracker @Inject constructor(
         private fun propValueFor(fontSize: ReaderReadingPreferences.FontSize) = when(fontSize) {
             ReaderReadingPreferences.FontSize.EXTRA_SMALL -> "extra_small"
             ReaderReadingPreferences.FontSize.SMALL -> "small"
-            ReaderReadingPreferences.FontSize.NORMAL -> "default"
+            ReaderReadingPreferences.FontSize.NORMAL -> "normal"
             ReaderReadingPreferences.FontSize.LARGE -> "large"
             ReaderReadingPreferences.FontSize.EXTRA_LARGE -> "extra_large"
         }
