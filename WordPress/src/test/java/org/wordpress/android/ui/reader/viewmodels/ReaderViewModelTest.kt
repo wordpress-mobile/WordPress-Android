@@ -112,7 +112,8 @@ class ReaderViewModelTest : BaseUnitTest() {
             snackbarSequencer,
             jetpackFeatureRemovalOverlayUtil,
             readerTopBarMenuHelper,
-            urlUtilsWrapper
+            urlUtilsWrapper,
+            readerTagsFeedFeatureConfig,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
