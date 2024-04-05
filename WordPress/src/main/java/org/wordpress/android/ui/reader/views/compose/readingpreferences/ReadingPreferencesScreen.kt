@@ -101,6 +101,7 @@ fun ReadingPreferencesScreen(
             actions = {
                 ExperimentalBadge(
                     contentColor = textColor,
+                    fontFamily = fontFamily,
                     modifier = Modifier.padding(end = Margin.Large.value),
                 )
             }
@@ -241,6 +242,7 @@ fun ReadingPreferencesScreen(
 @Composable
 private fun ExperimentalBadge(
     contentColor: Color,
+    fontFamily: FontFamily,
     modifier: Modifier = Modifier,
 ) {
     Text(
@@ -249,7 +251,7 @@ private fun ExperimentalBadge(
         style = TextStyle(
             color = contentColor.copy(alpha = 0.6f),
             fontWeight = FontWeight.Medium,
-            fontFamily = FontFamily.Monospace,
+            fontFamily = fontFamily,
         ),
     )
 }
