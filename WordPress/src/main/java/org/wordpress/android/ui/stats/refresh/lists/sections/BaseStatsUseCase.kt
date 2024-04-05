@@ -94,7 +94,7 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
                 if (!state.cached) {
                     val updatedCachedData = loadCachedData()
                     if (domainModel != updatedCachedData) {
-                        domainModel = updatedCachedData
+                        domainModel = state.model
                         updateState()
                     }
                 }
