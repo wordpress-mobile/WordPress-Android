@@ -19,6 +19,7 @@ sealed interface Nonce {
     enum class CookieNonceErrorType {
         NOT_AUTHENTICATED,
         INVALID_RESPONSE,
+        INVALID_CREDENTIALS,
         CUSTOM_LOGIN_URL,
         CUSTOM_ADMIN_URL,
         INVALID_NONCE,
