@@ -259,7 +259,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     private fun disablePinSitesMode() {
         menuSearch.isVisible = true
         menuEditPin.setIcon(R.drawable.pin_filled)
-        menuEditPin.title = "Edit Pins"
+        menuEditPin.title = getString(R.string.site_picker_edit_pins)
         adapter.setActionMode(ActionMode.None)
     }
 
@@ -275,6 +275,10 @@ class ChooseSiteActivity : LocaleAwareActivity() {
     }
 
     private fun selectSite(siteRecord: SiteRecord) {
+        AnalyticsTracker.track(
+            Stat.SITE_SWITCHER_SITE_TAPPED,
+            mapOf(TRACK_PROPERTY_SECTION to viewModel.getSection(siteRecord.localId))
+        )
         appPrefsWrapper.addRecentSiteLocalId(siteRecord.localId)
         setResult(RESULT_OK, Intent().putExtra(KEY_SITE_LOCAL_ID, siteRecord.localId))
         finish()
@@ -367,6 +371,7 @@ class ChooseSiteActivity : LocaleAwareActivity() {
         private const val TRACK_PROPERTY_STATE = "state"
         private const val TRACK_PROPERTY_STATE_EDIT = "edit"
         private const val TRACK_PROPERTY_STATE_DONE = "done"
+        private const val TRACK_PROPERTY_SECTION = "section"
 
         @JvmStatic
         var isRunning = false

@@ -75,4 +75,13 @@ class SiteViewModel @Inject constructor(
 
         return pinnedSites + recentSites + allSites.sortedBy { it.blogNameOrHomeURL }
     }
+
+    /**
+     * @return the section name for the site with the given local ID.
+     */
+    fun getSection(localId: Int): String = when {
+        appPrefsWrapper.pinnedSiteLocalIds.contains(localId) -> "pinned"
+        appPrefsWrapper.getRecentSiteLocalIds().contains(localId) -> "recent"
+        else -> "all"
+    }
 }
