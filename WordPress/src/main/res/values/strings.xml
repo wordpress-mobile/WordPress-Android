@@ -2482,9 +2482,9 @@
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
     <string name="site_picker_edit_pins">Edit Pins</string>
-    <string name="pinned_sites">Pinned Sites</string>
-    <string name="all_sites">All Sites</string>
-    <string name="recent_sites">Recent Sites</string>
+    <string name="site_picker_pinned_sites">Pinned Sites</string>
+    <string name="site_picker_all_sites">All Sites</string>
+    <string name="site_picker_recent_sites">Recent Sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

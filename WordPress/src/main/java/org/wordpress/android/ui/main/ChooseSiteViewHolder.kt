@@ -104,13 +104,13 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     private fun handleHeader(previousSite: SiteRecord?, site: SiteRecord) {
         when {
             previousSite == null && site.isPinned() -> {
-                binding.header.text = itemView.context.getString(R.string.pinned_sites)
+                binding.header.text = itemView.context.getString(R.string.site_picker_pinned_sites)
                 binding.header.isVisible = true
                 setHeaderTopMargin(previousSite)
             }
 
             (previousSite == null || previousSite.isPinned()) && site.isPinned().not() -> {
-                binding.header.text = itemView.context.getString(R.string.recent_sites)
+                binding.header.text = itemView.context.getString(R.string.site_picker_recent_sites)
                 binding.header.isVisible = true
                 setHeaderTopMargin(previousSite)
             }
@@ -118,7 +118,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
             (previousSite == null || previousSite.isRecent() || previousSite.isPinned()) &&
                     site.isPinned().not() &&
                     site.isRecent().not() -> {
-                binding.header.text = itemView.context.getString(R.string.all_sites)
+                binding.header.text = itemView.context.getString(R.string.site_picker_all_sites)
                 binding.header.isVisible = true
                 setHeaderTopMargin(previousSite)
             }
