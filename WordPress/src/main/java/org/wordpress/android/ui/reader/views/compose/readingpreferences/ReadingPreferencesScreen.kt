@@ -4,7 +4,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -101,24 +99,10 @@ fun ReadingPreferencesScreen(
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
             actions = {
-                Box(
-                    modifier = Modifier
-                        .background(baseTextColor, shape = CircleShape)
-                        .padding(
-                            vertical = Margin.Medium.value,
-                            horizontal = Margin.Large.value,
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "Experimental",
-                        style = TextStyle(
-                            color = backgroundColor,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                        ),
-                    )
-                }
+                ExperimentalBadge(
+                    contentColor = textColor,
+                    modifier = Modifier.padding(end = Margin.Large.value),
+                )
             }
         )
 
@@ -252,6 +236,22 @@ fun ReadingPreferencesScreen(
             )
         }
     }
+}
+
+@Composable
+private fun ExperimentalBadge(
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(R.string.experimental_badge),
+        modifier = modifier,
+        style = TextStyle(
+            color = contentColor.copy(alpha = 0.6f),
+            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily.Monospace,
+        ),
+    )
 }
 
 @Composable
