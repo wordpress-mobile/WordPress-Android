@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.TopBarUiState
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -85,7 +86,9 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
-    private val readerTopBarMenuHelper: ReaderTopBarMenuHelper = ReaderTopBarMenuHelper()
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig = mock()
+
+    private val readerTopBarMenuHelper: ReaderTopBarMenuHelper = ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig)
 
 
     private val emptyReaderTagList = ReaderTagList()
@@ -109,7 +112,8 @@ class ReaderViewModelTest : BaseUnitTest() {
             snackbarSequencer,
             jetpackFeatureRemovalOverlayUtil,
             readerTopBarMenuHelper,
-            urlUtilsWrapper
+            urlUtilsWrapper,
+            readerTagsFeedFeatureConfig,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))

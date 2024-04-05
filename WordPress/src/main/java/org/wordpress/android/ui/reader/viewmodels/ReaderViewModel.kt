@@ -52,6 +52,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -79,6 +80,7 @@ class ReaderViewModel @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
     // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -372,6 +374,7 @@ class ReaderViewModel @Inject constructor(
                     selectedItem = selectedItem,
                     filterUiState = filterUiState,
                     onDropdownMenuClick = ::onDropdownMenuClick,
+                    showTagsChip = !readerTagsFeedFeatureConfig.isEnabled(),
                     isSearchActionVisible = isSearchSupported(),
                 )
             )
@@ -523,6 +526,7 @@ class ReaderViewModel @Inject constructor(
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
         val onDropdownMenuClick: () -> Unit,
+        val showTagsChip: Boolean,
         val isSearchActionVisible: Boolean = false,
     ) {
         @Parcelize

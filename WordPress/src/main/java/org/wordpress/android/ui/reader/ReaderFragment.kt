@@ -137,6 +137,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                         onClearFilterClick = ::clearFilter,
                         isSearchVisible = state.isSearchActionVisible,
                         onSearchClick = viewModel::onSearchActionClicked,
+                        showTagsChip = state.showTagsChip,
                     )
                 }
             }
