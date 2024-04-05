@@ -5,8 +5,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.clearInvocations
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -48,7 +50,7 @@ class ReaderReadingPreferencesRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `getReadingPreferencesSync should return saved preferences if feature is enabled`() {
+    fun `getReadingPreferencesSync should return saved preferences the first time it's called`() {
         // Given
         whenever(readingPreferencesFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.readerReadingPreferencesJson).thenReturn(READER_PREFERENCES_JSON)
@@ -57,6 +59,23 @@ class ReaderReadingPreferencesRepositoryTest : BaseUnitTest() {
         val result = repository.getReadingPreferencesSync()
 
         // Then
+        verify(appPrefsWrapper).readerReadingPreferencesJson
+        assertThat(result).isEqualTo(READER_PREFERENCES)
+    }
+
+    @Test
+    fun `getReadingPreferencesSync should return cached preferences the second time it's called`() {
+        // Given
+        whenever(readingPreferencesFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.readerReadingPreferencesJson).thenReturn(READER_PREFERENCES_JSON)
+
+        // When
+        repository.getReadingPreferencesSync()
+        clearInvocations(appPrefsWrapper)
+        val result = repository.getReadingPreferencesSync()
+
+        // Then
+        verifyNoInteractions(appPrefsWrapper)
         assertThat(result).isEqualTo(READER_PREFERENCES)
     }
 

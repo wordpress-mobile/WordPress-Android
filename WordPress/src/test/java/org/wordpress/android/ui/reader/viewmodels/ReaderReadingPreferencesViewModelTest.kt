@@ -16,6 +16,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSaveReadingPreferencesUseCase
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
@@ -30,7 +31,10 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     lateinit var saveReadingPreferences: ReaderSaveReadingPreferencesUseCase
 
     @Mock
-    lateinit var readerReadingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig
+    lateinit var readingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig
+
+    @Mock
+    lateinit var readingPreferencesTracker: ReaderReadingPreferencesTracker
 
     private val viewModelDispatcher = UnconfinedTestDispatcher(testDispatcher().scheduler)
     private lateinit var viewModel: ReaderReadingPreferencesViewModel
@@ -44,7 +48,8 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         viewModel = ReaderReadingPreferencesViewModel(
             getReadingPreferences,
             saveReadingPreferences,
-            readerReadingPreferencesFeedbackFeatureConfig,
+            readingPreferencesFeedbackFeatureConfig,
+            readingPreferencesTracker,
             viewModelDispatcher,
         )
 
@@ -172,7 +177,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     @Test
     fun `when readerReadingPreferencesFeedbackFeatureConfig is true then isFeedbackEnabled emits true`() = test {
         // Given
-        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(readingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(true)
 
         // When
         viewModel.init()
@@ -185,7 +190,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     @Test
     fun `when readerReadingPreferencesFeedbackFeatureConfig is false then isFeedbackEnabled emits false`() = test {
         // Given
-        whenever(readerReadingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(readingPreferencesFeedbackFeatureConfig.isEnabled()).thenReturn(false)
 
         // When
         viewModel.init()
@@ -193,6 +198,82 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         // Then
         val isFeedbackEnabled = viewModel.isFeedbackEnabled.first()
         assertThat(isFeedbackEnabled).isFalse()
+    }
+
+    // analytics tests
+    @Test
+    fun `when onScreenOpened is called then it should track the screen opened event`() = test {
+        ReaderReadingPreferencesTracker.Source.values().forEach { source ->
+            // When
+            viewModel.onScreenOpened(source)
+
+            // Then
+            verify(readingPreferencesTracker).trackScreenOpened(source)
+        }
+    }
+
+    @Test
+    fun `when onScreenClosed is called then it should track the screen closed event`() = test {
+        // When
+        viewModel.onScreenClosed()
+
+        // Then
+        verify(readingPreferencesTracker).trackScreenClosed()
+    }
+
+    @Test
+    fun `when onSendFeedbackClick is called then it should track the feedback tapped event`() = test {
+        // When
+        viewModel.onSendFeedbackClick()
+
+        // Then
+        verify(readingPreferencesTracker).trackFeedbackTapped()
+    }
+
+    @Test
+    fun `when onThemeClick is called then it should track the theme tapped event`() = test {
+        ReaderReadingPreferences.Theme.values().forEach { theme ->
+            // When
+            viewModel.onThemeClick(theme)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(theme)
+        }
+    }
+
+    @Test
+    fun `when onFontFamilyClick is called then it should track the font family tapped event`() = test {
+        ReaderReadingPreferences.FontFamily.values().forEach { fontFamily ->
+            // When
+            viewModel.onFontFamilyClick(fontFamily)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(fontFamily)
+        }
+    }
+
+    @Test
+    fun `when onFontSizeClick is called then it should track the font size tapped event`() = test {
+        ReaderReadingPreferences.FontSize.values().forEach { fontSize ->
+            // When
+            viewModel.onFontSizeClick(fontSize)
+
+            // Then
+            verify(readingPreferencesTracker).trackItemTapped(fontSize)
+        }
+    }
+
+    @Test
+    fun `when saveReadingPreferencesAndClose is called then it should track the saved event`() = test {
+        // Given
+        val newTheme = ReaderReadingPreferences.Theme.SOFT
+        viewModel.onThemeClick(newTheme)
+
+        // When
+        viewModel.saveReadingPreferencesAndClose()
+
+        // Then
+        verify(readingPreferencesTracker).trackSaved(argThat { theme == newTheme })
     }
 
     companion object {
