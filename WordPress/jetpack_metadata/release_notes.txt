@@ -1,4 +1,3 @@
-* [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]
-* [*] Block editor: Fixes an Aztec editor crash occurring on some occasions when the keyboard suggestions are used [https://github.com/wordpress-mobile/WordPress-Android/pull/20518]
-* [*] [Jetpack-only] Change "∞" symbol with "100%" on stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20564]
-
+- We fixed a handful of issues with highlighted text formatting.
+- The app now supports text suggestions that are longer than the visible space in the editor.
+- We changed the infinity symbol to “100%” on the Stats screen. And in that moment, I swear we were 100%.
