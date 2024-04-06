@@ -162,7 +162,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         dataSet.setGradientColor(
             ContextCompat.getColor(
                 context,
-                R.color.primary_5
+                android.R.color.transparent
             ), ContextCompat.getColor(
                 context,
                 android.R.color.transparent
