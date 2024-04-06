@@ -6,12 +6,10 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Assume.assumeTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.e2e.pages.MySitesPage
-import org.wordpress.android.rules.Retry
 import org.wordpress.android.support.BaseTest
 import org.wordpress.android.support.ComposeEspressoLink
 import org.wordpress.android.support.WPSupportUtils
@@ -38,7 +36,6 @@ class StatsGranularTabsTest : BaseTest() {
         }
     }
 
-    @Ignore("The 'Days' screen might occasionally not load. Disabled until tests rerun is implemented.")
     @Test
     fun e2eAllDayStatsLoad() {
         val todayVisits = StatsVisitsData("97", "28", "14", "11")
