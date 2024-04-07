@@ -8,6 +8,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
@@ -359,6 +360,13 @@ class PostsListActivity : LocaleAwareActivity(),
     private fun PostListActivityBinding.setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
+        }
+        viewModel.conflictResolutionAction.observe(this@PostsListActivity) {
+            // todo: annmarie - this is the dialog, but we want to show the new one not the old one
+            Log.i(javaClass.simpleName, "***=> got the event - see if the dialog shows")
+                        PostResolutionOverlayFragment
+                            .newInstance(it)
+                            .show(supportFragmentManager, PostResolutionOverlayFragment.TAG)
         }
         viewModel.postUploadAction.observe(this@PostsListActivity) {
             it?.let { uploadAction ->

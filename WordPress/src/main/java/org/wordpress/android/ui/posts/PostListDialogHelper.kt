@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED
@@ -28,7 +29,8 @@ private const val POST_TYPE = "post_type"
 class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val checkNetworkConnection: () -> Boolean,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val showImprovedDialog: ((PostModel) -> Unit)? = null
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -123,7 +125,10 @@ class PostListDialogHelper(
             negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
         )
         localPostIdForConflictResolutionDialog = post.id
-        showDialog.invoke(dialogHolder)
+        Log.i(javaClass.simpleName, "***=> show the improved dialog ${dialogHolder.javaClass.simpleName}")
+        showImprovedDialog?.invoke(post)
+        // todo: annmarie - show the improved
+        // showDialog.invoke(dialogHolder)
     }
 
     fun showAutoSaveRevisionDialog(post: PostModel) {

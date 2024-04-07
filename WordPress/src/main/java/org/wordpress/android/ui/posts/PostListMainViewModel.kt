@@ -128,6 +128,10 @@ class PostListMainViewModel @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
+    // todo: annmarie a holder for the post resolution overlay
+    private val _conflictResolutionAction = SingleLiveEvent<PostModel>()
+    val conflictResolutionAction: LiveData<PostModel> = _conflictResolutionAction
+
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
@@ -150,6 +154,8 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
+            // todo: annmarie
+            showImprovedDialog = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
             analyticsTracker = analyticsTracker
         )
