@@ -31,10 +31,10 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartType
-import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
@@ -86,10 +86,8 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
-    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig = mock()
-
-    private val readerTopBarMenuHelper: ReaderTopBarMenuHelper = ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig)
-
+    @Mock
+    lateinit var readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -111,8 +109,9 @@ class ReaderViewModelTest : BaseUnitTest() {
             jetpackBrandingUtils,
             snackbarSequencer,
             jetpackFeatureRemovalOverlayUtil,
-            readerTopBarMenuHelper,
-            urlUtilsWrapper
+            ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
+            urlUtilsWrapper,
+            readerTagsFeedFeatureConfig,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
