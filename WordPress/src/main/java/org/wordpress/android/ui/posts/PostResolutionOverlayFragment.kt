@@ -197,7 +197,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
 
                     Spacer(Modifier.height(Margin.ExtraExtraMediumLarge.value))
 
-                    // Bullet points
+                    // Device information
                     OverlayContent(
                         items = uiState.content,
                         onSelected = uiState.onSelected,
@@ -230,7 +230,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                         contentColor = MaterialTheme.colors.surface,
                     ),
                 ) {
-                    Text(text = "Cancel")
+                    Text(text = stringResource(R.string.cancel))
                 }
                 Button(
                     onClick = { uiState.actionClick() },
@@ -245,7 +245,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                         contentColor = MaterialTheme.colors.surface,
                     ),
                 ) {
-                    Text(text = "Save")
+                    Text(text = stringResource(R.string.confirm))
                 }
             }
 
