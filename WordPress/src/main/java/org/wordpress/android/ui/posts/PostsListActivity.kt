@@ -79,7 +79,8 @@ class PostsListActivity : LocaleAwareActivity(),
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface,
     BasicDialogOnDismissByOutsideTouchInterface,
-    ScrollableViewInitializedListener {
+    ScrollableViewInitializedListener,
+    PostResolutionOverlayListener {
     @Inject
     internal lateinit var siteStore: SiteStore
 
@@ -665,5 +666,19 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             return intent
         }
+    }
+
+
+    // PostResolutionOverlayListener Callbacks
+    override fun onSaveAction(tag: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCancelAction(tag: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onDismissAction(tag: String) {
+        TODO("Not yet implemented")
     }
 }
