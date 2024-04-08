@@ -19,7 +19,6 @@ import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +36,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
-import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
@@ -45,7 +43,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -172,7 +169,6 @@ import com.google.android.material.R as MaterialR
 @Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
     WPMainActivity.OnActivityBackPressedListener,
-    MenuProvider,
     ScrollDirectionListener,
     ReaderCustomViewListener,
     ReaderWebViewPageFinishedListener,
@@ -416,7 +412,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
-        toolBar.setVisible(true)
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
@@ -429,7 +424,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         // Fixes viewpager not displaying menu items for first fragment
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.hide()
         toolBar.inflateMenu(R.menu.reader_detail)
+        toolBar.setOnMenuItemClickListener { handleMenuItemSelected(it)}
 
         // for related posts, show an X in the toolbar which closes the activity
         if (isRelatedPost) {
@@ -534,24 +532,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         activity?.window?.setWindowNavigationBarColor(themeValues.intBackgroundColor)
     }
 
-    override fun onResume() {
-        super.onResume()
-        replaceActivityToolbarWithCollapsingToolbar()
-    }
-
-    private fun replaceActivityToolbarWithCollapsingToolbar() {
-        val activity = activity as? AppCompatActivity
-        activity?.supportActionBar?.hide()
-
-        toolBar.setVisible(true)
-        activity?.setSupportActionBar(toolBar)
-
-        activity?.supportActionBar?.setDisplayShowTitleEnabled(isRelatedPost)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
@@ -865,7 +847,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
-        activity?.invalidateOptionsMenu()
+        prepareMenu(toolBar.menu)
 
         viewModel.post?.let {
             if (handleDirectOperation()) return
@@ -1079,12 +1061,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenuPopup?.dismiss()
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menu.clear()
-        menuInflater.inflate(R.menu.reader_detail, menu)
-    }
-
-    override fun onPrepareMenu(menu: Menu) {
+    private fun prepareMenu(menu: Menu) {
         val postHasUrl = viewModel.post?.hasUrl() == true
         val menuBrowse = menu.findItem(R.id.menu_browse)
         // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
@@ -1097,7 +1074,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         menuReadingPreferences?.isVisible = readingPreferencesFeatureConfig.isEnabled()
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+    private fun handleMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.menu_browse -> {
             val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {

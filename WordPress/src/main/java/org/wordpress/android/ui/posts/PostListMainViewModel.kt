@@ -82,7 +82,8 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter
+    private val uploadStarter: UploadStarter,
+    private val syncPublishingFeatureUtils: SyncPublishingFeatureUtils
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -162,7 +163,9 @@ class PostListMainViewModel @Inject constructor(
             invalidateList = this::invalidateAllLists,
             checkNetworkConnection = this::checkNetworkConnection,
             showSnackbar = { _snackBarMessage.postValue(it) },
-            showToast = { _toastMessage.postValue(it) }
+            showToast = { _toastMessage.postValue(it) },
+            uploadStore = uploadStore,
+            postStore = postStore
         )
     }
 
@@ -182,7 +185,8 @@ class PostListMainViewModel @Inject constructor(
             showSnackbar = { _snackBarMessage.postValue(it) },
             showToast = { _toastMessage.postValue(it) },
             triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
-            copyPost = this::copyPost
+            copyPost = this::copyPost,
+            syncPublishingFeatureUtils = syncPublishingFeatureUtils
         )
     }
 
