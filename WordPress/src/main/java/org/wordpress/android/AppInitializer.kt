@@ -365,9 +365,7 @@ class AppInitializer @Inject constructor(
             initAppOpsManager()
         }
 
-        userAgentString = userAgent.toString()
-
-        AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgentString")
+        AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgent")
 
         initialized = true
     }
@@ -1057,9 +1055,6 @@ class AppInitializer @Inject constructor(
                 RestClient.REST_CLIENT_VERSIONS.V0
             )
         }
-
-        // Note: this variable is used only for testing now (see AppInitializerTest)
-        var userAgentString: String? = null
 
         fun getBitmapCache(): BitmapLruCache {
             if (bitmapCache == null) {
