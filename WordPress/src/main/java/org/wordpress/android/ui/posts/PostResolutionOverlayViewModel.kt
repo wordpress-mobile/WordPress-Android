@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DateUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PostResolutionOverlayViewModel @Inject constructor(
@@ -21,6 +22,10 @@ class PostResolutionOverlayViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableLiveData<PostResolutionOverlayUiState>()
     val uiState: LiveData<PostResolutionOverlayUiState> = _uiState
+
+    // todo: This needs to get the real data - not a string
+    private val _triggerListeners =  MutableLiveData<Event<String>>()
+    val triggerListeners:  MutableLiveData<Event<String>> = _triggerListeners
 
     // todo: annmarie set an event for the dismiss
 //    private val _dismissDialog = SingleLiveEvent<Boolean>()
@@ -155,6 +160,13 @@ data class PostResolutionOverlayUiState(
     val content: List<ContentItem>,
     val selectedContentItem: ContentItem? = null,
     val onSelected: (ContentItem) -> Unit,
+    // todo: annmarie - there are four actions that can be taken on the view
+    // Tap X to close the dialog
+    // Tap Cancel to not do anything and close the dialog
+    // Swipe the dialog closed
+    // Tap the action button
+    // This goes back to how we want to capture tracking events
+    // The existing dialogs have three actions: swipe outside to close, positive or negative action
     val closeClick: () -> Unit,
     val cancelClick: () -> Unit,
     val actionClick: () -> Unit
@@ -178,7 +190,7 @@ enum class ContentItemType {
     ) {
         DISMISS(analyticsLabel = "dismiss"),
         CANCEL(analyticsLabel = "cancel"),
-        CLOSE(analyticsLabel = "cancel"),
+        CLOSE(analyticsLabel = "close"),
         SAVE(analyticsLabel = "save")
     }
 
