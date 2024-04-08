@@ -2,8 +2,10 @@ package org.wordpress.android.ui.posts
 
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +54,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -66,7 +67,6 @@ import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.extensions.fillScreen
-import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 private val contentIconForegroundColor: Color
@@ -119,15 +119,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        // todo: annmarie break this out into separate functions - keep it clean!
-        viewModel = ViewModelProvider(this, viewModelFactory)[PostResolutionOverlayViewModel::class.java]
-
-        // todo: annmarie this needs to change - just note it here
-        viewModel.triggerListeners.observeEvent(this) {
-            listener.onSaveAction("this is my tag")
-        }
-
-        viewModel.start(postModel)
+        initializeViewModelAndStart()
         return ComposeView(requireContext()).apply {
             setContent {
                 AppTheme {
@@ -137,6 +129,26 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
             }
         }
     }
+    private fun initializeViewModelAndStart() {
+        viewModel = ViewModelProvider(this, viewModelFactory)[PostResolutionOverlayViewModel::class.java]
+
+        viewModel.triggerListeners.observe(viewLifecycleOwner) {
+            // todo: annmarie - this need to be changed once the data class is created
+            listener.onOverlayAction(PostResolutionOverlayAction.TO_BE_DETERMINED)
+        }
+
+        viewModel.dismissDialog.observe(viewLifecycleOwner) {
+            dismiss()
+        }
+
+        viewModel.start(postModel)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        Log.i(javaClass.simpleName, "***=> onDismiss captured")
+        viewModel.onDialogDismissed()
+    }
 
     companion object {
         const val TAG = "PostResolutionOverlayFragment"
@@ -144,8 +156,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
         // todo: annmarie maybe not send the entire post model
         private const val ARG_POST_MODEL = "arg_post_model"
 
-        // todo: annmarie add the parameters here - then add the values
-        // todo: annmarie will the parameters require not null - should we add that here?
+        // todo: annmarie will the parameters require not null - should we not worry about that????
         fun newInstance(postModel: PostModel) = PostResolutionOverlayFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(ARG_POST_MODEL, postModel)

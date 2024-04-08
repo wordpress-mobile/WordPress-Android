@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DateUtilsWrapper
-import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class PostResolutionOverlayViewModel @Inject constructor(
@@ -24,32 +24,33 @@ class PostResolutionOverlayViewModel @Inject constructor(
     val uiState: LiveData<PostResolutionOverlayUiState> = _uiState
 
     // todo: This needs to get the real data - not a string
-    private val _triggerListeners =  MutableLiveData<Event<String>>()
-    val triggerListeners:  MutableLiveData<Event<String>> = _triggerListeners
+    private val _triggerListeners =  MutableLiveData<String>()
+    val triggerListeners:  MutableLiveData<String> = _triggerListeners
 
-    // todo: annmarie set an event for the dismiss
-//    private val _dismissDialog = SingleLiveEvent<Boolean>()
-//    val dismissDialog = _dismissDialog as LiveData<Boolean>
+    private val _dismissDialog = SingleLiveEvent<Boolean>()
+    val dismissDialog = _dismissDialog as LiveData<Boolean>
 
     private var isStarted = false
 
     fun start(postModel: PostModel?) {
         if (isStarted) return
 
-// todo: annmarie - add an event here that will dismiss the dialog if post is null
-        val post = postModel?:return
+        val post = postModel?: run {
+            _dismissDialog.postValue(true)
+            return
+        }
 
-        // todo: use the post to get the type
+        // todo: use the post to get the type - easy enough to do
         val resolutionType = getPostResolutionConflictType()
         val uiState = when (resolutionType) {
-            PostResolutionType.VERSION_SYNC -> getPostResolutionOverlayUiStateForVersionSync(post)
-            PostResolutionType.AUTO_SAVE_SYNC -> getPostResolutionOverlayUiStateForAutosaveSync(post)
+            PostResolutionType.VERSION_SYNC -> getUiStateForVersionConflict(post)
+            PostResolutionType.AUTO_SAVE_SYNC -> getUiStateForAutosaveConflict(post)
         }
 
         _uiState.postValue(uiState)
     }
 
-    private fun getPostResolutionOverlayUiStateForVersionSync(post: PostModel): PostResolutionOverlayUiState {
+    private fun getUiStateForVersionConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
             titleResId = R.string.dialog_post_conflict_title,
             bodyResId = R.string.dialog_post_conflict_body,
@@ -61,7 +62,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
         )
     }
 
-    private fun getPostResolutionOverlayUiStateForAutosaveSync(post: PostModel): PostResolutionOverlayUiState {
+    private fun getUiStateForAutosaveConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
             titleResId = R.string.dialog_post_conflict_title,
             bodyResId = R.string.dialog_post_conflict_body,
@@ -105,34 +106,32 @@ class PostResolutionOverlayViewModel @Inject constructor(
         return PostResolutionType.VERSION_SYNC
     }
 
-    // todo: annmarie - do I need another click action? I want to know the difference between the "x", the
-    // dialog dismiss (swipe down) and the "cancel" so they can be tracked properly .. all lead to onDismiss
-    fun onActionClick() {
+    private fun onActionClick() {
         Log.i(javaClass.simpleName, "***=> onActionClick")
         // todo: add logging
         // todo: annmarie figure out how this is going to get executed via the handler
+        _triggerListeners.value = "Action button clicked"
     }
 
-    fun onCloseClick() {
+    private fun onCloseClick() {
         Log.i(javaClass.simpleName, "***=> onCloseClick")
         // todo: add logging
-        onDialogDismissed()
-       // todo:  _dismissDialog.value = true
+        _dismissDialog.value = true
     }
 
-    fun onCancelClick() {
+    private fun onCancelClick() {
         Log.i(javaClass.simpleName, "***=> onCancelClick")
         // todo: add logging
-        onDialogDismissed()
-        // todo:  _dismissDialog.value = true
+        _dismissDialog.value = true
     }
 
     fun onDialogDismissed() {
         Log.i(javaClass.simpleName, "***=> onDialogDismissed")
+        _dismissDialog.value = true
         // todo: add logging
     }
 
-    fun onItemSelected(selectedItem: ContentItem) {
+    private fun onItemSelected(selectedItem: ContentItem) {
         Log.i(javaClass.simpleName, "***=> onItemSelected $selectedItem")
         val selectedState = selectedItem.isSelected
 
@@ -160,13 +159,6 @@ data class PostResolutionOverlayUiState(
     val content: List<ContentItem>,
     val selectedContentItem: ContentItem? = null,
     val onSelected: (ContentItem) -> Unit,
-    // todo: annmarie - there are four actions that can be taken on the view
-    // Tap X to close the dialog
-    // Tap Cancel to not do anything and close the dialog
-    // Swipe the dialog closed
-    // Tap the action button
-    // This goes back to how we want to capture tracking events
-    // The existing dialogs have three actions: swipe outside to close, positive or negative action
     val closeClick: () -> Unit,
     val cancelClick: () -> Unit,
     val actionClick: () -> Unit
@@ -184,14 +176,10 @@ enum class ContentItemType {
     LOCAL_DEVICE,
     OTHER_DEVICE
 }
-// todo: use this for tracking - could create a separate tracking util
-    enum class PostResolutionOverlayAction(
-        val analyticsLabel: String
-    ) {
-        DISMISS(analyticsLabel = "dismiss"), // Swipe closed
-        CANCEL(analyticsLabel = "cancel"), // Tapped the cancel action
-        CLOSE(analyticsLabel = "close"), // Tapped the close X icon
-        CONFIRM(analyticsLabel = "save") // Tapped the Confirm action button
+// todo: build out the actions - this might SHOULD to change to a data class so we can
+// include the tag that is in PostListDialogHelper or something similar
+    enum class PostResolutionOverlayAction() {
+        TO_BE_DETERMINED
     }
 
     enum class PostResolutionType {
