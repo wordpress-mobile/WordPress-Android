@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 12:54:09+0000
+Translation-Revision-Date: 2024-04-03 05:56:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Rensa vald färg</string>
+    <string name="reader_no_followed_tags_text_title">Inga följda etiketter</string>
+    <string name="reader_toast_err_tag_already_following">Du följer redan denna etikett</string>
+    <string name="reader_menu_reading_preferences">Läspreferenser</string>
+    <string name="reader_page_followed_tags_text_title">Följda taggar</string>
+    <string name="reader_preferences_theme_candy">Godis</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Kväll</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Mjuk</string>
+    <string name="reader_preferences_theme_system">Standard</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">skicka din feedback</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Detta är en ny funktion som fortfarande är under utveckling. För att hjälpa oss att förbättra det %s.</string>
+    <string name="reader_preferences_screen_preview_text">Välj dina färger, typsnitt och storlekar. Förhandsgranska ditt val här och läs inlägg med dina stilar när du är klar.</string>
+    <string name="reader_preferences_screen_preview_title">Läspreferenser</string>
+    <string name="reader_filter_empty_tags_action_follow">Följ en etikett</string>
+    <string name="button_read">Läst</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Du kan kopiera din inläggstext om ditt innehåll påverkas. Kopiera felinformation så att du kan felsöka och dela med dig till supporten.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Redigeraren har stött på ett oväntat fel</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Klicka här för att kopiera inläggstext</string>
@@ -76,9 +94,11 @@ Language: sv_SE
     <string name="reader_dropdown_menu_subscriptions">Prenumerationer</string>
     <string name="reader_dropdown_menu_discover">Upptäck</string>
     <string name="reader_search_content_description">Sök</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Prenumerera på etiketter</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloggar att prenumerera på</string>
     <string name="reader_filter_empty_tags_action_suggested">Föreslagna etiketter</string>
     <string name="reader_filter_empty_blogs_action_search">Sök efter en blogg</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Prenumerera på en etikett så kommer du att se dess bästa inlägg här.</string>
     <string name="reader_filter_empty_tags_list_title">Inga etiketter</string>
     <string name="reader_filter_empty_blogs_list_text">Prenumerera på bloggar i Upptäck så kommer du att se deras senaste inlägg här. Eller så kan du söka efter en blogg som du redan gillar.</string>
     <string name="reader_filter_empty_blogs_list_title">Inga bloggprenumerationer</string>
@@ -1467,6 +1487,7 @@ Language: sv_SE
     <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
     <string name="continue_site_credentials">Fortsätt med butiksautentiseringsuppgifter</string>
     <string name="login_find_your_connected_email">Hitta din anslutna e-postadress</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Försök att följa fler etiketter för att söka bredare</string>
     <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
     <string name="reader_discover_empty_title">Välkommen!</string>
     <string name="scan">Skanna</string>
@@ -1517,6 +1538,7 @@ Language: sv_SE
     <string name="photo_picker_wordpress_media_library">Välj ur mediabiblioteket i WordPress</string>
     <string name="reader_label_toolbar_back">Tillbaka</string>
     <string name="reader_discover_empty_button_text">Kom igång</string>
+    <string name="reader_discover_empty_subtitle_follow">Följ etiketter för att upptäcka nya bloggar</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Denna hänvisande webbplats går inte att avmarkera som skräp</string>
     <string name="stats_referrer_popup_unmark_as_spam">Ta bort markering som skräppost</string>
@@ -3524,6 +3546,7 @@ Language: sv_SE
     <string name="reader_toast_err_generic">Kunde inte genomföra denna åtgärd</string>
     <string name="schedule_verb">Tidinställ</string>
     <string name="update_verb">Uppdatera</string>
+    <string name="reader_hint_add_tag_or_url_follow">Ange en URL eller etikett du vill följa</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>
     <string name="help">Hjälp</string>

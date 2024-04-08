@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-21 17:03:39+0000
+Translation-Revision-Date: 2024-04-02 21:16:19+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Очистить выбранный цвет</string>
+    <string name="reader_no_followed_tags_text_title">Нет подписок на метки</string>
+    <string name="reader_toast_err_tag_already_following">Вы уже подписаны на эту метку</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_filter_empty_tags_action_follow">Подписаться на метку</string>
+    <string name="button_read">Читать</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Вы можете копировать текст своей записи на случай, если ваш контент окажется повреждён. Скопируйте данные об ошибке, чтобы сообщить их инженерам поддержки и устранить неполадку.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора.</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Нажмите здесь, чтобы скопировать текст записи</string>
@@ -56,16 +62,16 @@ Language: ru
     <string name="reader_btn_subscribed">Подписка оформлена</string>
     <string name="reader_btn_subscribe">Подписаться</string>
     <string name="reader_menu_block_this_blog">Заблокировать этот блог</string>
-    <string name="reader_menu_tags_and_blogs">Редактировать теги и блоги</string>
+    <string name="reader_menu_tags_and_blogs">Редактировать метки и блоги</string>
     <string name="reader_page_followed_blogs_title">Подписки на блоги</string>
-    <string name="reader_title_tags">Подписаться на теги</string>
+    <string name="reader_title_tags">Подписаться на метки</string>
     <string name="reader_activity_title_manage_tags_blogs">Управление тегами и блогами</string>
     <string name="reader_activity_title_tag_preview">Метка</string>
     <string name="reader_activity_title_blog_preview">Блог в разделе «Чтиво»</string>
     <string name="reader_subscribed_display_name">Подписка оформлена</string>
-    <string name="reader_filter_chip_tag_other">Теги: %d</string>
-    <string name="reader_filter_chip_tag_one">1 тег</string>
-    <string name="reader_filter_chip_tag_zero">Теги: 0</string>
+    <string name="reader_filter_chip_tag_other">Метки: %d</string>
+    <string name="reader_filter_chip_tag_one">1 метка</string>
+    <string name="reader_filter_chip_tag_zero">Нет меток</string>
     <string name="reader_filter_chip_blog_other">Блоги: %d</string>
     <string name="reader_filter_chip_blog_one">1 блог</string>
     <string name="reader_filter_chip_blog_zero">Блоги: 0</string>
@@ -76,15 +82,17 @@ Language: ru
     <string name="reader_dropdown_menu_subscriptions">Подписки</string>
     <string name="reader_dropdown_menu_discover">Раздел «Поиск»</string>
     <string name="reader_search_content_description">Поиск</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Подписаться на метки</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Блоги, на которые можно подписаться</string>
-    <string name="reader_filter_empty_tags_action_suggested">Рекомендуемые теги</string>
+    <string name="reader_filter_empty_tags_action_suggested">Рекомендуемые метки</string>
     <string name="reader_filter_empty_blogs_action_search">Искать блог</string>
-    <string name="reader_filter_empty_tags_list_title">Нет тегов</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Подпишитесь на метку, и лучшие записи с ней станут отображаться здесь.</string>
+    <string name="reader_filter_empty_tags_list_title">Нет меток</string>
     <string name="reader_filter_empty_blogs_list_text">Подписывайтесь на блоги в разделе «Поиск», и последние записи из них будут отображаться здесь. Или найдите блог, который вам уже понравился.</string>
     <string name="reader_filter_empty_blogs_list_title">Нет подписок на блоги</string>
     <string name="reader_filter_empty_blogs_action">Подписаться на блог</string>
     <string name="reader_filter_empty_blogs_list">Просмотреть последние записи из блогов, на которые вы подписаны</string>
-    <string name="reader_filter_by_tag_title">Фильтровать по тегу</string>
+    <string name="reader_filter_by_tag_title">Фильтр по метке</string>
     <string name="reader_filter_by_blog_title">Фильтровать по блогу</string>
     <string name="stats_timeframe_by_year">По году</string>
     <string name="stats_timeframe_by_month">По месяцу</string>
@@ -1467,6 +1475,7 @@ Language: ru
     <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
     <string name="continue_site_credentials">Продолжить с учетными данными магазина</string>
     <string name="login_find_your_connected_email">Узнать адрес привязанной эл. почты</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Для расширения поиска попробуйте подписаться на больше меток</string>
     <string name="reader_discover_no_posts_title">Нет свежих записей</string>
     <string name="reader_discover_empty_title">Добро пожаловать!</string>
     <string name="scan">Сканировать</string>
@@ -1517,6 +1526,7 @@ Language: ru
     <string name="photo_picker_wordpress_media_library">Выберите из медиатеки WordPress</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_discover_empty_button_text">Начните</string>
+    <string name="reader_discover_empty_subtitle_follow">Подписывайтесь на метки для того, чтобы найти новые блоги</string>
     <string name="reader_post_details_header_by_author_name">От автора</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Этот реферер не может быть отмечен как спам</string>
     <string name="stats_referrer_popup_unmark_as_spam">Убрать отметку спам</string>
@@ -3524,6 +3534,7 @@ Language: ru
     <string name="reader_toast_err_generic">Не удалось совершить это действие</string>
     <string name="schedule_verb">Запланировать</string>
     <string name="update_verb">Обновить</string>
+    <string name="reader_hint_add_tag_or_url_follow">Введите URL или метку для подписки</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="help">Помощь</string>
