@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
@@ -52,6 +51,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -79,6 +79,7 @@ class ReaderViewModel @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
     // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
@@ -511,11 +512,14 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable
+        return readerTag.isFilterable && readerTag.isFollowedSites
     }
 
     private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable && readerTag.organization == Organization.NO_ORGANIZATION
+        val showForFollowedSites = readerTag.isFollowedSites && !readerTagsFeedFeatureConfig.isEnabled()
+        val showForTags = readerTag.isTags
+
+        return readerTag.isFilterable && (showForFollowedSites || showForTags)
     }
 
     data class TopBarUiState(
