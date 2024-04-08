@@ -637,6 +637,11 @@ class PostsListActivity : LocaleAwareActivity(),
         binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 
+    // PostResolutionOverlayListener Callbacks
+    override fun onOverlayAction(action: PostResolutionOverlayAction) {
+        viewModel.onPostResolutionOverlayAction(action)
+    }
+
     companion object {
         private const val BLOGGING_REMINDERS_FRAGMENT_TAG = "blogging_reminders_fragment_tag"
         private const val ACTIONS_SHOWN_BY_DEFAULT = "actions_shown_by_default"
@@ -666,19 +671,5 @@ class PostsListActivity : LocaleAwareActivity(),
             }
             return intent
         }
-    }
-
-
-    // PostResolutionOverlayListener Callbacks
-    override fun onSaveAction(tag: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCancelAction(tag: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onDismissAction(tag: String) {
-        TODO("Not yet implemented")
     }
 }

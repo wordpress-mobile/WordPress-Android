@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -482,6 +483,12 @@ class PostListMainViewModel @Inject constructor(
             editLocalPost = this::editLocalPost,
             copyLocalPost = this::copyLocalPost
         )
+    }
+
+    // Post Resolution Overlay Actions
+    fun onPostResolutionOverlayAction(action: PostResolutionOverlayAction) {
+        // todo: annmarie - implement this and remove the log
+        Log.i(javaClass.simpleName, "***=> onPostResolutionOverlayAction for ${action.name}")
     }
 
     private fun showPrepublishingBottomSheet(post: PostModel) {
