@@ -181,7 +181,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_only,
                 statsUtils.toFormattedString(data!!.views)
@@ -199,7 +199,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_comments,
                 statsUtils.toFormattedString(data!!.views),
@@ -218,7 +218,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_likes,
                 statsUtils.toFormattedString(data!!.views),
@@ -237,7 +237,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_all,
                 statsUtils.toFormattedString(data!!.views),
