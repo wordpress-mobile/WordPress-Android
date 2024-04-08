@@ -42,8 +42,8 @@ class PostResolutionOverlayViewModel @Inject constructor(
         // todo: use the post to get the type
         val resolutionType = getPostResolutionConflictType()
         val uiState = when (resolutionType) {
-            PostConflictResolutionType.VERSION_SYNC -> getPostResolutionOverlayUiStateForVersionSync(post)
-            PostConflictResolutionType.AUTO_SAVE_SYNC -> getPostResolutionOverlayUiStateForAutosaveSync(post)
+            PostResolutionType.VERSION_SYNC -> getPostResolutionOverlayUiStateForVersionSync(post)
+            PostResolutionType.AUTO_SAVE_SYNC -> getPostResolutionOverlayUiStateForAutosaveSync(post)
         }
 
         _uiState.postValue(uiState)
@@ -101,8 +101,8 @@ class PostResolutionOverlayViewModel @Inject constructor(
                 id = ContentItemType.OTHER_DEVICE)
         )
     }
-    private fun getPostResolutionConflictType(): PostConflictResolutionType {
-        return PostConflictResolutionType.VERSION_SYNC
+    private fun getPostResolutionConflictType(): PostResolutionType {
+        return PostResolutionType.VERSION_SYNC
     }
 
     // todo: annmarie - do I need another click action? I want to know the difference between the "x", the
@@ -188,13 +188,13 @@ enum class ContentItemType {
     enum class PostResolutionOverlayAction(
         val analyticsLabel: String
     ) {
-        DISMISS(analyticsLabel = "dismiss"),
-        CANCEL(analyticsLabel = "cancel"),
-        CLOSE(analyticsLabel = "close"),
-        SAVE(analyticsLabel = "save")
+        DISMISS(analyticsLabel = "dismiss"), // Swipe closed
+        CANCEL(analyticsLabel = "cancel"), // Tapped the cancel action
+        CLOSE(analyticsLabel = "close"), // Tapped the close X icon
+        CONFIRM(analyticsLabel = "save") // Tapped the Confirm action button
     }
 
-    enum class PostConflictResolutionType {
+    enum class PostResolutionType {
         VERSION_SYNC,
         AUTO_SAVE_SYNC
         // todo: annmarie there are others - can I figure this out from the post? I probably can, so ignore this in the
