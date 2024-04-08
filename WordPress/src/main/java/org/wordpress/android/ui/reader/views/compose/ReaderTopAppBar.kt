@@ -56,7 +56,6 @@ fun ReaderTopAppBar(
     onClearFilterClick: () -> Unit,
     isSearchVisible: Boolean,
     onSearchClick: () -> Unit = {},
-    showTagsChip: Boolean,
 ) {
     var selectedItem by remember { mutableStateOf(topBarUiState.selectedItem) }
     var isFilterShown by remember { mutableStateOf(topBarUiState.filterUiState != null) }
@@ -121,7 +120,6 @@ fun ReaderTopAppBar(
                             modifier = Modifier
                                 // use padding instead of Spacer for a nicer animation
                                 .padding(start = Margin.Medium.value),
-                            showTagsChip = showTagsChip,
                         )
                     }
                 }
@@ -151,7 +149,6 @@ private fun Filter(
     onFilterClick: (ReaderFilterType) -> Unit,
     onClearFilterClick: () -> Unit,
     modifier: Modifier = Modifier,
-    showTagsChip: Boolean,
 ) {
     ReaderFilterChipGroup(
         modifier = modifier,
@@ -164,7 +161,6 @@ private fun Filter(
         onSelectedItemClick = { filterUiState.selectedItem?.type?.let(onFilterClick) },
         onSelectedItemDismissClick = onClearFilterClick,
         chipHeight = chipHeight,
-        showTagsChip = showTagsChip,
     )
 }
 
@@ -215,7 +211,6 @@ fun ReaderTopAppBarPreview() {
                 menuItems = menuItems,
                 selectedItem = menuItems.first() as MenuElementData.Item.Single,
                 onDropdownMenuClick = {},
-                showTagsChip = true,
             )
         )
     }
@@ -237,7 +232,6 @@ fun ReaderTopAppBarPreview() {
                 onClearFilterClick = {},
                 isSearchVisible = true,
                 onSearchClick = {},
-                showTagsChip = true,
             )
         }
     }
