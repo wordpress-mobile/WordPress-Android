@@ -155,7 +155,7 @@ class PostListMainViewModel @Inject constructor(
         PostListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
             // todo: annmarie
-            showImprovedDialog = { _conflictResolutionAction.postValue(it) },
+            showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
             analyticsTracker = analyticsTracker
         )

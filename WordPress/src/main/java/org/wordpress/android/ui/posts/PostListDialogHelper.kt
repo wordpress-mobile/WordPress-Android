@@ -30,7 +30,7 @@ class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val showImprovedDialog: ((PostModel) -> Unit)? = null
+    private val showConflictResolutionOverlay: ((PostModel) -> Unit)? = null
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -116,6 +116,7 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    // todo: THis is the one  ... maybe the dialog holder can be passed instead
     fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
             tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
@@ -126,7 +127,7 @@ class PostListDialogHelper(
         )
         localPostIdForConflictResolutionDialog = post.id
         Log.i(javaClass.simpleName, "***=> show the improved dialog ${dialogHolder.javaClass.simpleName}")
-        showImprovedDialog?.invoke(post)
+        showConflictResolutionOverlay?.invoke(post)
         // todo: annmarie - show the improved
         // showDialog.invoke(dialogHolder)
     }
@@ -177,6 +178,7 @@ class PostListDialogHelper(
                 localPostIdForScheduledPostSyncDialog = null
                 publishPost(it)
             }
+            // todo: annmarie
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 localPostIdForConflictResolutionDialog = null
                 // here load version from remote
@@ -194,6 +196,7 @@ class PostListDialogHelper(
                 localPostIdForMoveTrashedPostToDraftDialog = null
                 moveTrashedPostToDraft(it)
             }
+            // todo: annmarie
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
                 localPostIdForAutosaveRevisionResolutionDialog = null
@@ -222,9 +225,11 @@ class PostListDialogHelper(
             CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog = null
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithUnsavedChangesDialog = null
+            // todo: annmarie
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
             }
+            // todo: annmarie
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
