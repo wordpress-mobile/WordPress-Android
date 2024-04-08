@@ -2,7 +2,7 @@
 
 24.7
 -----
-
+* [*] [internal] Updates the way the app retrieves the User-Agent request header [https://github.com/wordpress-mobile/WordPress-Android/pull/20603]
 
 24.6
 -----
