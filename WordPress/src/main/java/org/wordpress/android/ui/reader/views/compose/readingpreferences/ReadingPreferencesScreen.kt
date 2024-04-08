@@ -98,6 +98,13 @@ fun ReadingPreferencesScreen(
             onNavigationIconClick = onCloseClick,
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
+            actions = {
+                ExperimentalBadge(
+                    contentColor = textColor,
+                    fontFamily = fontFamily,
+                    modifier = Modifier.padding(end = Margin.Large.value),
+                )
+            }
         )
 
         // Preview section
@@ -230,6 +237,23 @@ fun ReadingPreferencesScreen(
             )
         }
     }
+}
+
+@Composable
+private fun ExperimentalBadge(
+    contentColor: Color,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(R.string.experimental_badge),
+        modifier = modifier,
+        style = TextStyle(
+            color = contentColor.copy(alpha = 0.6f),
+            fontWeight = FontWeight.Medium,
+            fontFamily = fontFamily,
+        ),
+    )
 }
 
 @Composable
