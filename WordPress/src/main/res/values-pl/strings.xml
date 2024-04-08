@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-08 09:40:32+0000
+Translation-Revision-Date: 2024-04-04 10:37:13+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: pl
 -->
 <resources>
+    <string name="stats_traffic">Ruch</string>
+    <string name="gutenberg_native_font_size_1_s">Rozmiar liter, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Plik nie jest obsługiwany jako plik mediów.</string>
+    <string name="media_cannot_be_started">Nie można odtworzyć pliku mediów. Spróbuj ponownie później</string>
+    <string name="domains_just_search_for_a_domain_button">Wyszukaj domenę</string>
+    <string name="domains_site_domain_never_expires">Nigdy nie wygasa</string>
+    <string name="domains_site_other_domains">Pozostałe domeny dla %s</string>
+    <string name="domains_site_domain">%s</string>
+    <string name="domains_upgrade_to_a_plan_button">Uaktualnij do planu</string>
+    <string name="domains_upgrade_to_plan_caption">Uzyskaj bezpłatną roczną rejestrację domeny lub transfer z dowolnym płatnym planem rocznym.</string>
+    <string name="domains_free_domain">Twoja darmowa subdomena na WordPress.com</string>
+    <string name="domains_primary_site_domain_chip">Domena główna</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transferuj domenę</string>
+    <string name="purchase_domain_screen_error_title">Błąd</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / rocznie</string>
+    <string name="post_status_post_edited">Edytowano</string>
+    <string name="personalization_screen_cards_tab_title">Zakładki</string>
+    <string name="domain_management_purchase_a_domain">Kup domenę</string>
+    <string name="site_creation_plans_selection_title">Wybierz plan</string>
+    <string name="reader_secondary_bookmark">Zapisz</string>
+    <string name="reader_secondary_bookmarked">Zapisano</string>
+    <string name="reader_discover_recommended_header_new">Może polubisz</string>
+    <string name="pages_no_site_something_went_wrong">Coś poszło nie tak. Proszę spróbować później.</string>
     <string name="missing_splits_dialog_button">ZAMKNIJ</string>
     <string name="gutenberg_native_insert_video_block">Wstaw blok filmu</string>
     <string name="gutenberg_native_insert_image_block">Wstaw blok obrazka</string>
@@ -59,6 +82,7 @@ Language: pl
     <string name="account_closure_dialog_error_atomic_site">Konto użytkownika nie może zostać natychmiast zamknięte, ponieważ ma aktywne zakupy. Skontaktuj się z naszym zespołem pomocy technicznej, aby dokończyć jego usuwanie.</string>
     <string name="account_closure_dialog_error_unauthorized">Brak uprawnień do zamknięcia konta.</string>
     <string name="account_closure_dialog_title">Potwierdź zamknięcie konta…</string>
+    <string name="account_closure_dialog_error_title">Nie możesz automatycznie zamknąć konta!</string>
     <string name="account_closure_dialog_message">Aby potwierdzić, wprowadź ponownie swoją nazwę użytkownika przed zamknięciem konta.</string>
     <string name="close_account">Zamknij konto</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Dowiedz się więcej</string>
@@ -670,6 +694,7 @@ Language: pl
     <string name="people_optional_custom_message_helper_text">Opcjonalne: wprowadź własną wiadomość, która zostanie wysłana wraz z zaproszeniem.</string>
     <string name="gutenberg_native_audio_caption_s">Podpis pliku audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Podpis pliku audio. Pusty</string>
+    <string name="gutenberg_native_add_audio">Dodaj plik audio</string>
     <string name="people_learn_more_about_roles">Dowiedz się więcej o rolach</string>
     <string name="threat_found_header">Znaleziono</string>
     <string name="threat_status_fixed">Naprawiono</string>
@@ -1055,6 +1080,7 @@ Language: pl
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
     <string name="gutenberg_native_move_to_top">Przenieś na górę</string>
     <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
@@ -1168,6 +1194,7 @@ Language: pl
     <string name="editor_page_saved_online">Strona zapisana online</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
+    <string name="gutenberg_native_warning_message">Wiadomość ostrzeżenia</string>
     <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
@@ -1306,6 +1333,7 @@ Language: pl
     <string name="gutenberg_native_add_description">Dodaj opis</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
+    <string name="gutenberg_native_add_video">Dodaj film</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
@@ -2400,6 +2428,8 @@ Language: pl
     <string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
     <string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
     <string name="media_upload_state_uploaded">Wysłano</string>
+    <string name="media_encoder_quality_maximum">Maksymalnie</string>
+    <string name="media_encoder_quality_medium">Średnio</string>
     <string name="media_upload_state_deleted">Usunięto</string>
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>

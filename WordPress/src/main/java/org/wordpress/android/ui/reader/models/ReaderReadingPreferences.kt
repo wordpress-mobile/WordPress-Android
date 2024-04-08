@@ -14,8 +14,8 @@ import java.util.Locale
 import com.google.android.material.R as MaterialR
 
 data class ReaderReadingPreferences @JvmOverloads constructor(
-    val theme: Theme = Theme.SYSTEM,
-    val fontFamily: FontFamily = FontFamily.SANS,
+    val theme: Theme = Theme.DEFAULT,
+    val fontFamily: FontFamily = FontFamily.DEFAULT,
     val fontSize: FontSize = FontSize.DEFAULT,
 ) {
     enum class Theme(
@@ -74,7 +74,11 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
             backgroundColorRes = R.color.reader_theme_candy_background,
             baseTextColorRes = R.color.reader_theme_candy_text,
             linkColorRes = R.color.reader_theme_candy_text,
-        ),
+        );
+
+        companion object {
+            val DEFAULT = SYSTEM
+        }
     }
 
     @Suppress("MagicNumber")
@@ -165,17 +169,39 @@ data class ReaderReadingPreferences @JvmOverloads constructor(
         MONO(
             displayNameRes = R.string.reader_preferences_font_family_mono,
             value = "monospace",
-        ),
+        );
+
+        companion object {
+            val DEFAULT = SANS
+        }
     }
 
-    enum class FontSize(val value: Int) {
-        EXTRA_SMALL(10),
-        SMALL(12),
+    enum class FontSize(
+        @StringRes val displayNameRes: Int,
+        val value: Int,
+    ) {
+        EXTRA_SMALL(
+            displayNameRes = R.string.reader_preferences_font_size_extra_small,
+            value = 10,
+        ),
+        SMALL(
+            displayNameRes = R.string.reader_preferences_font_size_small,
+            value = 12,
+        ),
 
         @FallbackValue
-        NORMAL(16),
-        LARGE(20),
-        EXTRA_LARGE(24);
+        NORMAL(
+            displayNameRes = R.string.reader_preferences_font_size_normal,
+            value = 16,
+        ),
+        LARGE(
+            displayNameRes = R.string.reader_preferences_font_size_large,
+            value = 20,
+        ),
+        EXTRA_LARGE(
+            displayNameRes = R.string.reader_preferences_font_size_extra_large,
+            value = 24,
+        );
 
         val multiplier: Float
             get() = value / DEFAULT.value.toFloat()

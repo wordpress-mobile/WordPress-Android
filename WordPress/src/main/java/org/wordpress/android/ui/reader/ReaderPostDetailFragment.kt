@@ -107,6 +107,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
@@ -932,7 +933,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
 
             ReaderNavigationEvents.ShowReadingPreferences ->
-                ReaderReadingPreferencesDialogFragment.show(childFragmentManager)
+                ReaderReadingPreferencesDialogFragment.show(
+                    childFragmentManager,
+                    ReaderReadingPreferencesTracker.Source.POST_DETAIL_MORE_MENU,
+                )
 
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
@@ -1105,7 +1109,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             true
         }
         R.id.menu_reading_preferences -> {
-            ReaderReadingPreferencesDialogFragment.show(childFragmentManager)
+            ReaderReadingPreferencesDialogFragment.show(
+                childFragmentManager,
+                ReaderReadingPreferencesTracker.Source.POST_DETAIL_TOOLBAR,
+            )
             true
         }
         else -> false

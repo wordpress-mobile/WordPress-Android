@@ -32,6 +32,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.READING_PREFERENCES
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
@@ -1213,6 +1215,22 @@ class ReaderPostCardActionsHandlerTest : BaseUnitTest() {
     }
 
     /** COMMENTS ACTION end **/
+
+    /** READING PREFERENCES ACTION begin **/
+    @Test
+    fun `Reading preferences screen shown when the user clicks on reading preferences button`() = test {
+        // Arrange
+        val observedValues = startObserving()
+        // Act
+        actionHandler.onAction(
+            mock(),
+            READING_PREFERENCES,
+            false,
+            SOURCE
+        )
+        // Assert
+        assertThat(observedValues.navigation[0]).isInstanceOf(ShowReadingPreferences::class.java)
+    }
 
     @Test
     fun `Clicking on a post opens post detail`() = test {

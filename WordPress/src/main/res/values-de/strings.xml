@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-28 19:18:57+0000
+Translation-Revision-Date: 2024-04-03 07:25:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Ausgewählte Farbe löschen</string>
+    <string name="reader_no_followed_tags_text_title">Keine abonnierten Schlagwörter</string>
+    <string name="reader_toast_err_tag_already_following">Du folgst diesem Schlagwort bereits</string>
+    <string name="reader_menu_reading_preferences">Lesepräferenzen</string>
+    <string name="reader_page_followed_tags_text_title">Abonnierte Schlagwörter</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Abendstimmung</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_system">Standard</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">sende dein Feedback</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Dies ist eine neue Funktion, die noch in der Entwicklung ist. Um uns zu helfen, sie zu verbessern %s.</string>
+    <string name="reader_preferences_screen_preview_text">Wähle deine Farben, Schriften und Größen. Hier kannst du eine Vorschau deiner Auswahl sehen und Beiträge mit deinen Stilen lesen, sobald du fertig bist.</string>
+    <string name="reader_preferences_screen_preview_title">Lesepräferenzen</string>
+    <string name="reader_filter_empty_tags_action_follow">Einem Schlagwort folgen</string>
+    <string name="button_read">Lesen</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Du kannst den Text deines Beitrags kopieren, falls dein Inhalt betroffen ist. Kopiere die Fehlerdetails zur Fehlerbehebung und teile sie dem Support mit.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Im Editor ist ein unerwarteter Fehler aufgetreten</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Hier tippen, um den Beitragstext zu kopieren</string>
@@ -76,9 +94,11 @@ Language: de
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Entdecken</string>
     <string name="reader_search_content_description">Suche</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Schlagwörter abonnieren</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs, die du abonnieren kannst</string>
     <string name="reader_filter_empty_tags_action_suggested">Vorgeschlagene Schlagwörter</string>
     <string name="reader_filter_empty_blogs_action_search">Suche nach einem Blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Abonniere ein Schlagwort und du siehst hier die besten Beiträge dazu.</string>
     <string name="reader_filter_empty_tags_list_title">Keine Schlagwörter</string>
     <string name="reader_filter_empty_blogs_list_text">Abonniere Blogs in Entdecken und die neuesten Beiträge werden hier angezeigt. Oder suche nach einem Blog, den du bereits magst.</string>
     <string name="reader_filter_empty_blogs_list_title">Keine Blog-Abonnements</string>
@@ -1467,6 +1487,7 @@ Language: de
     <string name="hpp_error_title">Layouts sind offline nicht verfügbar</string>
     <string name="continue_site_credentials">Mit Store-Anmeldedaten fortfahren</string>
     <string name="login_find_your_connected_email">Verbundene E-Mail-Adresse suchen</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Folge mehreren Schlagwörtern, um deine Suche zu erweitern</string>
     <string name="reader_discover_no_posts_title">Keine aktuellen Beiträge</string>
     <string name="reader_discover_empty_title">Willkommen!</string>
     <string name="scan">Scannen</string>
@@ -1517,6 +1538,7 @@ Language: de
     <string name="photo_picker_wordpress_media_library">Wähle aus der WordPress-Mediathek</string>
     <string name="reader_label_toolbar_back">Zurück</string>
     <string name="reader_discover_empty_button_text">Erste Schritte</string>
+    <string name="reader_discover_empty_subtitle_follow">Folge Schlagwörtern, um neue Blogs zu entdecken</string>
     <string name="reader_post_details_header_by_author_name">Von</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Dieser Referrer kann nicht als Spam markiert werden</string>
     <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>
@@ -3524,6 +3546,7 @@ Language: de
     <string name="reader_toast_err_generic">Konnte diese Aktion nicht ausführen</string>
     <string name="schedule_verb">Zeitplan</string>
     <string name="update_verb">Aktualisieren</string>
+    <string name="reader_hint_add_tag_or_url_follow">Gib eine URL oder ein Schlagwort ein, dem du folgen möchtest</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
     <string name="help">Hilfe</string>

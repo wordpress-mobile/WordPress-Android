@@ -28,6 +28,12 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,10 +71,16 @@ private fun ReadingPreferenceButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     verticalSpacing: Dp = buttonSpacing,
+    buttonTypeContentDescription: String? = null,
     preview: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
+            .semantics {
+                role = Role.Button
+                if (isSelected) selected = true
+                buttonTypeContentDescription?.let { contentDescription = it }
+            }
             .width(buttonWidth)
             .background(
                 color = MaterialTheme.colors.surface,
@@ -113,6 +125,7 @@ fun ReadingPreferencesThemeButton(
     ReadingPreferenceButton(
         label = stringResource(theme.displayNameRes),
         isSelected = isSelected,
+        buttonTypeContentDescription = stringResource(R.string.reader_preferences_screen_theme_label),
         onClick = onClick,
     ) {
         Column(
@@ -148,10 +161,11 @@ fun ReadingPreferencesFontFamilyButton(
         label = stringResource(fontFamily.displayNameRes),
         isSelected = isSelected,
         verticalSpacing = 0.dp,
+        buttonTypeContentDescription = stringResource(R.string.reader_preferences_screen_font_family_label),
         onClick = onClick,
     ) {
         Text(
-            text = stringResource(R.string.reader_preferences_font_family_preview),
+            text = stringResource(R.string.reader_preferences_screen_font_family_preview),
             style = TextStyle(
                 fontFamily = fontFamily.toComposeFontFamily(),
                 fontSize = fontFamilyButtonPreviewSize,
@@ -159,7 +173,8 @@ fun ReadingPreferencesFontFamilyButton(
                 platformStyle = PlatformTextStyle(
                     includeFontPadding = false
                 )
-            )
+            ),
+            modifier = Modifier.clearAndSetSemantics { },
         )
     }
 }

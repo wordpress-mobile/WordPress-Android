@@ -397,7 +397,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleReadingPreferencesClicked() {
-        // TODO add analytics readerTracker.track(AnalyticsTracker.Stat.READER_READING_PREFERENCES_OPENED)
         _navigationEvents.postValue(Event(ShowReadingPreferences))
     }
 
