@@ -78,7 +78,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `prints a week date in string format in granular stats screen`() {
+    fun `prints a week date in the same year in string format with stats traffic tab enabled`() {
         whenever(statsTrafficTabFeatureConfig.isEnabled()).thenReturn(true)
         val unparsedDate = "2018W12W19"
         val result = "Dec 17 - Dec 23, 2018"
@@ -96,7 +96,7 @@ class StatsDateFormatterTest : BaseUnitTest() {
     }
 
     @Test
-    fun `prints a week date in string format in traffic tab`() {
+    fun `prints a week date in two different years in string format with traffic tab enabled`() {
         whenever(statsTrafficTabFeatureConfig.isEnabled()).thenReturn(true)
         val unparsedDate = "2018W12W31"
         val result = "Dec 31, 2018 - Jan 6, 2019"
