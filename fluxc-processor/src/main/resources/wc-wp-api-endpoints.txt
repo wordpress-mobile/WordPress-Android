@@ -47,6 +47,8 @@
 /reports/bundles/
 /reports/bundles/stats/
 
+/reports/giftcards/used/stats/
+
 /settings/general/
 /settings/products/
 /settings/<group_id>#String/<id>#String
