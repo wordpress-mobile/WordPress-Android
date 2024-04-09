@@ -6,7 +6,7 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
 @HiltAndroidTest
-class WPAvatarUtil {
+class WPAvatarUtilsTest {
     @Test
     fun rewriteAvatarUrlReplaceNonGravatarUrlToPhotonUrl() {
         assertEquals(
