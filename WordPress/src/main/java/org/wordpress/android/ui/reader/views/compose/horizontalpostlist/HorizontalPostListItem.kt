@@ -30,8 +30,9 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun HorizontalPostListItem(
-    postTitle: String,
+    siteName: String,
     postDateLine: String,
+    postTitle: String,
     onPostSiteImageClick: () -> Unit,
     onPostMoreMenuClick: () -> Unit,
 ) {
@@ -46,7 +47,7 @@ fun HorizontalPostListItem(
             // Site image
             HorizontalPostListItemSiteImage(
                 modifier = Modifier.padding(
-                    horizontal = Margin.Small.value
+                    end = Margin.Small.value
                 ),
                 imageUrl = "",
                 onClick = { onPostSiteImageClick() },
@@ -54,7 +55,7 @@ fun HorizontalPostListItem(
             // Site name
             Text(
                 modifier = Modifier.weight(1F),
-                text = postTitle,
+                text = siteName,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = AppColor.Black,
@@ -98,6 +99,18 @@ fun HorizontalPostListItem(
                 )
             }
         }
+        // Post title
+        Text(
+            modifier = Modifier.padding(top = Margin.Medium.value),
+            text = postTitle,
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.SemiBold,
+            color = AppColor.Black,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            lineHeight = 25.sp,
+        )
     }
 }
 
@@ -112,8 +125,9 @@ fun HorizontalPostListItemPreview() {
                 .fillMaxHeight()
         ) {
             HorizontalPostListItem(
-                postTitle = "This is a really long post title used for testing",
+                siteName = "This is a really long site name used for testing",
                 postDateLine = "1h",
+                postTitle = "This is a really really really long post title used for testing",
                 onPostMoreMenuClick = {},
                 onPostSiteImageClick = {},
             )
