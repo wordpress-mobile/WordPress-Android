@@ -44,6 +44,7 @@ repositories {
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
+            includeGroup "com.gravatar"
         }
     }
     maven {
@@ -388,6 +389,7 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
+    implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
@@ -438,7 +440,6 @@ dependencies {
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
-    implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
