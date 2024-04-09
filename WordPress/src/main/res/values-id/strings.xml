@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 10:54:08+0000
+Translation-Revision-Date: 2024-04-02 10:22:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources>
@@ -31,12 +31,15 @@ Language: id
     <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
     <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>
+    <string name="site_monitoring_tab_title_php_logs">Log PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Metrik</string>
     <string name="site_monitoring">Pemantauan Situs</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gunakan &lt;b&gt;Temukan&lt;/b&gt; untuk menemukan situs dan tag. Coba pilih &lt;b&gt;Langganan&lt;/b&gt; untuk melihat konten langganan dan mengelola langganan Anda.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Buka langganan</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blog langganan Anda belum mengeposkan apa pun akhir-akhir ini</string>
     <string name="reader_no_followed_blogs_description_subs">Langganan blog di Temukan atau cari blog yang sudah Anda sukai.</string>
     <string name="reader_no_recommended_blogs_title">Tidak ada blog rekomendasi</string>
+    <string name="reader_no_posts_with_this_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_toast_err_unable_to_block_blog">Tidak dapat memblokir blog ini</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Pos dari blog ini tidak akan ditampilkan lagi</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Tidak dapat berhenti berlangganan blog</string>
@@ -44,6 +47,7 @@ Language: id
     <string name="reader_toast_err_unable_to_follow_blog">Tidak dapat berlangganan blog ini</string>
     <string name="reader_toast_err_already_follow_this_blog">Anda sudah berlangganan blog ini</string>
     <string name="reader_toast_err_show_blog">Tidak dapat menampilkan blog ini</string>
+    <string name="reader_label_choose_interests">Pilih minat Anda</string>
     <string name="reader_label_subscribers_count_single">1 pelanggan</string>
     <string name="reader_label_subscribers_count">%s pelanggan</string>
     <string name="reader_label_subscribe_count">%,d Pelanggan</string>
@@ -51,10 +55,12 @@ Language: id
     <string name="reader_hint_search_subscribed_blogs">Cari blog langganan</string>
     <string name="reader_btn_subscribed">Telah berlangganan</string>
     <string name="reader_btn_subscribe">Berlangganan</string>
+    <string name="reader_menu_block_this_blog">Blokir blog ini</string>
     <string name="reader_menu_tags_and_blogs">Sunting tag dan blog</string>
     <string name="reader_page_followed_blogs_title">Telah berlangganan blog</string>
     <string name="reader_title_tags">Ikuti tag</string>
     <string name="reader_activity_title_manage_tags_blogs">Kelola Tag &amp; Blog</string>
+    <string name="reader_activity_title_tag_preview">Tag</string>
     <string name="reader_activity_title_blog_preview">Blog Pembaca</string>
     <string name="reader_subscribed_display_name">Telah berlangganan</string>
     <string name="reader_filter_chip_tag_other">%d Tag</string>
@@ -99,6 +105,7 @@ Language: id
     <string name="domains_free_domain">Domain WordPress.com gratis</string>
     <string name="domains_site_other_domains">Domain lain untuk %s</string>
     <string name="domains_primary_site_domain_chip">Domain utama</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary telah hadir!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Ayo mulai!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Nyalakan prompt blogging</string>
@@ -110,6 +117,7 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Selama bulan Januari, prompt blogging akan datang dari Bloganuary — tantangan kami untuk komunitas guna membentuk kebiasaan blogging di tahun yang baru.</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary segera hadir!</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
@@ -199,6 +207,8 @@ Language: id
     <string name="personalization_screen_draft_posts_card_description">Konsep pos terbaru Anda.</string>
     <string name="personalization_screen_draft_posts_card_title">Buat konsep pos</string>
     <string name="personalization_screen_stats_card_description">Kunjungan, Pengunjung, dan suka</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Kartu bisa saja menampilkan konten berbeda, tergantung pada apa yang terjadi di situs Anda</string>
+    <string name="personalization_screen_tab_cards_description">Tambahkan atau sembunyikan Kartu</string>
     <string name="personalization_screen_title"> Sesuaikan tab beranda</string>
     <string name="personalize_card_content_description">Ketuk untuk mempersonalisasikan tab beranda Anda</string>
     <string name="personalize_card_text">Personalisasikan tab beranda Anda</string>
@@ -3013,6 +3023,10 @@ Language: id
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_high">Tinggi</string>
+    <string name="media_encoder_quality_medium">Sedang</string>
+    <string name="media_encoder_quality_low">Rendah</string>
     <string name="media_upload_state_uploaded">Diunggah</string>
     <string name="media_upload_state_failed">Unggahan Gagal</string>
     <string name="media_upload_state_deleted">Dihapus</string>

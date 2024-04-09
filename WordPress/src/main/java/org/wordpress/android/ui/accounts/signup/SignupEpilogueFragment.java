@@ -32,6 +32,10 @@ import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.gravatar.services.AvatarService;
+import com.gravatar.services.ErrorType;
+import com.gravatar.services.GravatarListener;
+import com.gravatar.types.Email;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -52,7 +56,6 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
-import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
@@ -69,10 +72,10 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
@@ -88,11 +91,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW;
+
+import kotlin.Unit;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener, OnShownListener {
@@ -147,6 +153,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SignupUtils mSignupUtils;
     @Inject protected MediaPickerLauncher mMediaPickerLauncher;
+    @Inject protected AvatarService mAvatarService;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -724,16 +731,16 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected void startGravatarUpload(final String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
             final File file = new File(filePath);
-
             if (file.exists()) {
                 startProgress(false);
-
-                GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                        new GravatarApi.GravatarUploadListener() {
+                mAvatarService.upload(file, new Email(mAccountStore.getAccount().getEmail()),
+                        Objects.requireNonNull(mAccountStore.getAccessToken()),
+                        new GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 endProgress();
-                                mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
+                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
+                                mPhotoUrl = WPAvatarUtils.rewriteAvatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
                                 loadAvatar(mPhotoUrl, filePath);
                                 mHeaderAvatarAdd.setVisibility(View.GONE);
@@ -741,9 +748,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(@NonNull ErrorType errorType) {
                                 endProgress();
                                 showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar));
+                                Map<String, Object> properties = new HashMap<>();
+                                properties.put("error_type", errorType);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
@@ -825,16 +835,20 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             try {
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
-                GravatarApi.uploadGravatar(file, mEmail, mToken,
-                        new GravatarApi.GravatarUploadListener() {
+                mAvatarService.upload(file, new Email(mEmail), mToken,
+                        new GravatarListener<Unit>() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(@NonNull Unit response) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                                AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED);
                             }
 
                             @Override
-                            public void onError() {
+                            public void onError(@NonNull ErrorType errorType) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                                Map<String, Object> properties = new HashMap<>();
+                                properties.put("error_type", errorType);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
                             }
                         });
             } catch (NullPointerException | URISyntaxException exception) {

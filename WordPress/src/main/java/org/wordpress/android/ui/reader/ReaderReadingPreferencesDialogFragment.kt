@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +23,13 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderReadingPreferencesViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.readingpreferences.ReadingPreferencesScreen
 import org.wordpress.android.util.extensions.fillScreen
+import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.setWindowStatusBarColor
 
 @AndroidEntryPoint
@@ -38,6 +41,13 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int {
         return R.style.ReaderReadingPreferencesDialogFragment
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getSerializableCompat<ReaderReadingPreferencesTracker.Source>(ARG_SOURCE)?.let {
+            viewModel.onScreenOpened(it)
+        }
     }
 
     override fun onCreateView(
@@ -78,6 +88,11 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onScreenClosed()
+    }
+
     private fun observeActionEvents() {
         viewModel.actionEvents.onEach {
             when (it) {
@@ -106,13 +121,23 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        const val TAG = "READER_READING_PREFERENCES_FRAGMENT"
+        private const val TAG = "READER_READING_PREFERENCES_FRAGMENT"
+        private const val ARG_SOURCE = "source"
 
         @JvmStatic
-        fun newInstance(): ReaderReadingPreferencesDialogFragment = ReaderReadingPreferencesDialogFragment()
+        fun newInstance(
+            source: ReaderReadingPreferencesTracker.Source,
+        ): ReaderReadingPreferencesDialogFragment = ReaderReadingPreferencesDialogFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(ARG_SOURCE, source)
+            }
+        }
 
         @JvmStatic
-        fun show(fm: FragmentManager): ReaderReadingPreferencesDialogFragment = newInstance().also {
+        fun show(
+            fm: FragmentManager,
+            source: ReaderReadingPreferencesTracker.Source,
+        ): ReaderReadingPreferencesDialogFragment = newInstance(source).also {
             it.show(fm, TAG)
         }
     }

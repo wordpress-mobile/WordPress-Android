@@ -185,16 +185,30 @@ class PostListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.localSiteId == site.id) {
             if (!isRemotePreviewingFromPostsList.invoke() && !isRemotePreviewingFromEditor(event.post)) {
-                triggerPostUploadAction.invoke(
-                    PostUploadedSnackbar(
-                        dispatcher,
-                        site,
-                        event.post,
-                        event.isError,
-                        event.isFirstTimePublish,
-                        null
+                if (event.isError && event.error.type == PostStore.PostErrorType.OLD_REVISION) {
+                    triggerPostUploadAction.invoke(
+                        PostUploadedSnackbar(
+                            dispatcher,
+                            site,
+                            event.post,
+                            event.isError,
+                            event.isFirstTimePublish,
+                            event.error.message,
+                            showRetry = false
+                        )
                     )
-                )
+                } else {
+                    triggerPostUploadAction.invoke(
+                        PostUploadedSnackbar(
+                            dispatcher,
+                            site,
+                            event.post,
+                            event.isError,
+                            event.isFirstTimePublish,
+                            null
+                        )
+                    )
+                }
             }
 
             uploadStatusChanged(event.post.id)

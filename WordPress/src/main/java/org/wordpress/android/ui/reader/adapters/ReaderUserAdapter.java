@@ -17,7 +17,7 @@ import org.wordpress.android.models.ReaderUserList;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderInterfaces.DataLoadedListener;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -95,7 +95,7 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
         }
 
         mImageManager.loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
-                GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz));
+                WPAvatarUtils.rewriteAvatarUrl(user.getAvatarUrl(), mAvatarSz));
     }
 
     @Override

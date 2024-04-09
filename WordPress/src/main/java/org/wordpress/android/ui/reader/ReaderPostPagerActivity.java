@@ -64,6 +64,7 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase;
 import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -176,6 +177,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private JetpackFeatureFullScreenOverlayViewModel mJetpackFullScreenViewModel;
     @Inject AccountStore mAccountStore;
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
+    @Inject ReaderGetReadingPreferencesSyncUseCase mGetReadingPreferencesSyncUseCase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -766,7 +768,8 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // analytics tracking
         mReaderTracker.trackPost(
                 AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
-                mReaderPostTableWrapper.getBlogPost(blogId, postId, true)
+                mReaderPostTableWrapper.getBlogPost(blogId, postId, true),
+                mGetReadingPreferencesSyncUseCase.invoke()
         );
     }
 

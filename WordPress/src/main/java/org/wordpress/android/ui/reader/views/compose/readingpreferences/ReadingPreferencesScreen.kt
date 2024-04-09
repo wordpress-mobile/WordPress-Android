@@ -33,6 +33,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -96,6 +98,13 @@ fun ReadingPreferencesScreen(
             onNavigationIconClick = onCloseClick,
             backgroundColor = backgroundColor,
             contentColor = baseTextColor,
+            actions = {
+                ExperimentalBadge(
+                    contentColor = textColor,
+                    fontFamily = fontFamily,
+                    modifier = Modifier.padding(end = Margin.Large.value),
+                )
+            }
         )
 
         // Preview section
@@ -231,6 +240,23 @@ fun ReadingPreferencesScreen(
 }
 
 @Composable
+private fun ExperimentalBadge(
+    contentColor: Color,
+    fontFamily: FontFamily,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = stringResource(R.string.experimental_badge),
+        modifier = modifier,
+        style = TextStyle(
+            color = contentColor.copy(alpha = 0.6f),
+            fontWeight = FontWeight.Medium,
+            fontFamily = fontFamily,
+        ),
+    )
+}
+
+@Composable
 private fun ReadingPreferencesPreviewFeedback(
     onSendFeedbackClick: () -> Unit,
     textStyle: TextStyle,
@@ -261,6 +287,7 @@ private fun ReadingPreferencesPreviewFeedback(
         )
     }
 
+    val buttonLabel = stringResource(R.string.reader_preferences_screen_preview_text_feedback_label)
     ClickableText(
         text = annotatedString,
         style = textStyle,
@@ -272,6 +299,14 @@ private fun ReadingPreferencesPreviewFeedback(
                         onSendFeedbackClick()
                     }
                 }
+        },
+        modifier = Modifier.semantics {
+            onClick(
+                label = buttonLabel,
+            ) {
+                onSendFeedbackClick()
+                true
+            }
         },
     )
 }

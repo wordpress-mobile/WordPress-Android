@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-19 10:41:31+0000
+Translation-Revision-Date: 2024-04-03 19:27:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Șterge culoarea selectată</string>
+    <string name="reader_no_followed_tags_text_title">Nicio etichetă urmărită</string>
+    <string name="reader_toast_err_tag_already_following">Deja urmărești această etichetă</string>
+    <string name="reader_menu_reading_preferences">Preferințe pentru citire</string>
+    <string name="reader_page_followed_tags_text_title">Etichete urmărite</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Seara</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Delicat</string>
+    <string name="reader_preferences_theme_system">Implicită</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">trimite impresiile</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Aceasta este o funcționalitate nouă, încă în dezvoltare. Pentru a ne ajuta să o îmbunătățim %s.</string>
+    <string name="reader_preferences_screen_preview_text">Alegi culorile, fonturile și dimensiunile. După ce ai terminat, previzualizezi aici ce ai selectat și citești articolele în stilul tău.</string>
+    <string name="reader_preferences_screen_preview_title">Preferințe pentru citire</string>
+    <string name="reader_filter_empty_tags_action_follow">Urmărește o etichetă</string>
+    <string name="button_read">Citește</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Dacă conținutul tău este afectat, poți să copiezi textul articolului. Copiază detaliile despre erori pentru a depana și partaja cu suportul.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Editorul a găsit o eroare neașteptată</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Atinge aici pentru a copia textul articolului</string>
@@ -76,9 +94,11 @@ Language: ro
     <string name="reader_dropdown_menu_subscriptions">Abonamente</string>
     <string name="reader_dropdown_menu_discover">Descoperă</string>
     <string name="reader_search_content_description">Caută</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Urmărește etichetele</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Bloguri la care să te abonezi</string>
     <string name="reader_filter_empty_tags_action_suggested">Etichete sugerate</string>
     <string name="reader_filter_empty_blogs_action_search">Caută un blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Urmărește o etichetă și vei putea să vezi aici cele mai bune articole cu această etichetă.</string>
     <string name="reader_filter_empty_tags_list_title">Nicio etichetă</string>
     <string name="reader_filter_empty_blogs_list_text">Abonează-te la bloguri în Descoperă și vei vedea aici ultimele articole publicate pe ele. Sau caută un blog care ți-a plăcut.</string>
     <string name="reader_filter_empty_blogs_list_title">Niciun abonament la bloguri</string>
@@ -1467,6 +1487,7 @@ Language: ro
     <string name="hpp_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
     <string name="continue_site_credentials">Continuă cu datele de conectare la magazin</string>
     <string name="login_find_your_connected_email">Găsește emailul conectat</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Încearcă să urmărești mai multe etichete pentru a extinde căutarea</string>
     <string name="reader_discover_no_posts_title">Niciun articol recent</string>
     <string name="reader_discover_empty_title">Bine ai venit!</string>
     <string name="scan">Scanează</string>
@@ -1517,6 +1538,7 @@ Language: ro
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
     <string name="reader_label_toolbar_back">Înapoi</string>
     <string name="reader_discover_empty_button_text">Începe</string>
+    <string name="reader_discover_empty_subtitle_follow">Urmărește etichetele ca să descoperi bloguri noi</string>
     <string name="reader_post_details_header_by_author_name">De</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Acest referent nu poate fi marcat ca spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Anulează marcarea ca spam</string>
@@ -3524,6 +3546,7 @@ Language: ro
     <string name="reader_toast_err_generic">Nu pot face acestă acțiune</string>
     <string name="schedule_verb">Programează</string>
     <string name="update_verb">Actualizează</string>
+    <string name="reader_hint_add_tag_or_url_follow">Introdu un URL sau o etichetă pentru urmărire</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest site, această eroare poate să însemne că cineva încearcă să se substituie site-ului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>
     <string name="help">Ajutor</string>
@@ -3683,7 +3706,7 @@ Language: ro
     <string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
     <string name="pages_private">Private</string>
     <string name="title">Titlu</string>
-    <string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>
+    <string name="tags_separate_with_commas">Separă etichetele cu virgule</string>
     <string name="categories">Categorii</string>
     <string name="sdcard_title">Cardul SD e necesar</string>
     <string name="media">Media</string>

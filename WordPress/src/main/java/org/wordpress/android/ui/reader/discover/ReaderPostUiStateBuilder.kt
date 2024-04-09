@@ -50,7 +50,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
@@ -66,7 +66,7 @@ private const val READER_RECOMMENDED_BLOGS_LIST_SIZE_LIMIT = 3
 class ReaderPostUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val urlUtilsWrapper: UrlUtilsWrapper,
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
@@ -326,7 +326,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
             isAuthorAvatarVisible = isP2Post || (isReaderImprovementsEnabled && post.hasBlogImageUrl()),
             blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
-            authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+            authorAvatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
                 post.postAvatar,
                 R.dimen.avatar_sz_medium
             ),
@@ -348,7 +348,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
             isAuthorAvatarVisible = isP2Post,
             blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
-            authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+            authorAvatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
                 post.postAvatar,
                 R.dimen.avatar_sz_medium
             ),
@@ -452,7 +452,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
         post.takeIf { it.hasBlogImageUrl() }
             ?.blogImageUrl
-            ?.let { gravatarUtilsWrapper.fixGravatarUrlWithResource(it, R.dimen.avatar_sz_medium) }
+            ?.let { avatarUtilsWrapper.rewriteAvatarUrlWithResource(it, R.dimen.avatar_sz_medium) }
 
     private fun buildDateLine(post: ReaderPost) =
         dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
@@ -463,7 +463,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
         val discoverText = discoverData.attributionHtml
-        val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+        val discoverAvatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
             discoverData.avatarUrl,
             R.dimen.avatar_sz_small
         )
