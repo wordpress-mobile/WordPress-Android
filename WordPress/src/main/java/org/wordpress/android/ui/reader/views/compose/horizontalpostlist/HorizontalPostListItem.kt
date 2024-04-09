@@ -39,11 +39,16 @@ fun HorizontalPostListItem(
     postTitle: String,
     postExcerpt: String,
     postImageUrl: String,
+    postNumberOfLikesText: String,
+    postNumberOfCommentsText: String,
     onSiteImageClick: () -> Unit,
     onPostImageClick: () -> Unit,
 ) {
     val primaryElementColor = AppColor.Black.copy(
         alpha = 0.87F
+    )
+    val secondaryElementColor = MaterialTheme.colorScheme.onSurface.copy(
+        alpha = 0.6F
     )
     Column(modifier = Modifier.width(240.dp)) {
         Row(
@@ -66,9 +71,6 @@ fun HorizontalPostListItem(
                 color = primaryElementColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-            )
-            val secondaryElementColor = MaterialTheme.colorScheme.onSurface.copy(
-                alpha = 0.6F
             )
             // "•" separator
             Text(
@@ -112,6 +114,32 @@ fun HorizontalPostListItem(
             imageUrl = postImageUrl,
             onClick = onPostImageClick,
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Number of likes
+            Text(
+                text = postNumberOfLikesText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = secondaryElementColor,
+            )
+            // "•" separator
+            Text(
+                modifier = Modifier.padding(
+                    horizontal = Margin.Small.value
+                ),
+                text = "•",
+                style = MaterialTheme.typography.bodyMedium,
+                color = secondaryElementColor,
+            )
+            // Number of comments
+            Text(
+                text = postNumberOfCommentsText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = secondaryElementColor,
+            )
+        }
     }
 }
 
@@ -177,6 +205,8 @@ fun HorizontalPostListItemPreview() {
                 postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien" +
                         " sed urna fermentum posuere. Vivamus in pretium nisl.",
                 postImageUrl = "",
+                postNumberOfLikesText = "15 likes",
+                postNumberOfCommentsText = "4 comments",
                 onSiteImageClick = {},
                 onPostImageClick = {},
             )
