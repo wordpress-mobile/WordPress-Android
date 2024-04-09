@@ -679,7 +679,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             return
         }
         binding?.showGravatarProgressBar(true)
-        avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken!!,
+        avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken.orEmpty(),
             object : GravatarListener<Unit> {
                 override fun onSuccess(response: Unit) {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
