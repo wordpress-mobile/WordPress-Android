@@ -97,7 +97,10 @@ fun HorizontalPostListItem(
         )
         // Post excerpt
         Text(
-            modifier = Modifier.padding(top = Margin.Small.value),
+            modifier = Modifier.padding(
+                top = Margin.Small.value,
+                bottom = Margin.Small.value,
+            ),
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
