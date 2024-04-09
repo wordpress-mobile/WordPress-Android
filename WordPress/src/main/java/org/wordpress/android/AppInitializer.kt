@@ -114,6 +114,7 @@ import org.wordpress.android.widgets.AppRatingDialog
 import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -404,9 +405,15 @@ class AppInitializer @Inject constructor(
         WorkManager.initialize(application, configBuilder.build())
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun enableLogRecording() {
         AppLog.enableRecording(true)
-        AppLog.enableLogFilePersistence(application.baseContext, MAX_LOG_COUNT)
+        try {
+            AppLog.enableLogFilePersistence(application.baseContext, MAX_LOG_COUNT)
+        } catch (e: Exception) {
+            AppLog.enableRecording(false)
+            AppLog.e(T.UTILS, "Error enabling log file persistence", e)
+        }
         AppLog.addListener { tag, logLevel, message ->
             val sb = StringBuffer()
             sb.append(logLevel.toString())
