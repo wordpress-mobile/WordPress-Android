@@ -2,8 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.text.TextUtils
 import android.text.format.DateUtils
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -173,55 +171,4 @@ class PostResolutionOverlayViewModel @Inject constructor(
         )
         _uiState.postValue(updatedUiState)
     }
-}
-
-// todo: annmarie - you can move all of these into individual classes if you want
-data class PostResolutionOverlayUiState(
-    @StringRes val titleResId: Int,
-    @StringRes val bodyResId: Int,
-    val actionEnabled: Boolean = false,
-    val content: List<ContentItem>,
-    val selectedContentItem: ContentItem? = null,
-    val onSelected: (ContentItem) -> Unit,
-    val closeClick: () -> Unit,
-    val cancelClick: () -> Unit,
-    val confirmedClick: () -> Unit
-)
-
-data class ContentItem(
-    val id: ContentItemType,
-    @DrawableRes val iconResId: Int = R.drawable.ic_pages_white_24dp,
-    @StringRes val headerResId: Int,
-    val dateLine: UiString,
-    val isSelected: Boolean,
-)
-
-enum class ContentItemType {
-    LOCAL_DEVICE,
-    OTHER_DEVICE
-}
-
-fun ContentItemType.toPostResolutionConfirmationType(): PostResolutionConfirmationType {
-    return when (this) {
-        ContentItemType.LOCAL_DEVICE -> PostResolutionConfirmationType.CONFIRM_LOCAL
-        ContentItemType.OTHER_DEVICE -> PostResolutionConfirmationType.CONFIRM_OTHER
-    }
-}
-
-enum class PostResolutionType {
-    SYNC_CONFLICT,
-    AUTOSAVE_REVISION_CONFLICT
-}
-
-enum class PostResolutionConfirmationType {
-    CONFIRM_LOCAL,
-    CONFIRM_OTHER
-}
-
-sealed class PostResolutionOverlayActionEvent {
-    data class ShowDialogAction(val postModel: PostModel, val postResolutionType: PostResolutionType)
-    data class PostResolutionConfirmationEvent(
-        val postResolutionType: PostResolutionType,
-        val postResolutionConfirmationType: PostResolutionConfirmationType
-    )
 }
