@@ -129,9 +129,8 @@ class PostListMainViewModel @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
-    // todo: annmarie a holder for the post resolution overlay
-    private val _conflictResolutionAction = SingleLiveEvent<PostModel>()
-    val conflictResolutionAction: LiveData<PostModel> = _conflictResolutionAction
+    private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> = _conflictResolutionAction
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
@@ -486,9 +485,16 @@ class PostListMainViewModel @Inject constructor(
     }
 
     // Post Resolution Overlay Actions
-    fun onPostResolutionOverlayAction(action: PostResolutionOverlayAction) {
-        // todo: annmarie - implement this and remove the log
-        Log.i(javaClass.simpleName, "***=> onPostResolutionOverlayAction for ${action.name}")
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        Log.i(javaClass.simpleName, "***=> onPostResolutionConfirmed ")
+        // todo: annmarie
+        postListDialogHelper.onPostResolutionConfirmed(
+            event = event,
+            updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+            editRestoredAutoSavePost = this::editRestoredAutoSavePost,
+            editLocalPost = this::editLocalPost,
+            updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
+        )
     }
 
     private fun showPrepublishingBottomSheet(post: PostModel) {
