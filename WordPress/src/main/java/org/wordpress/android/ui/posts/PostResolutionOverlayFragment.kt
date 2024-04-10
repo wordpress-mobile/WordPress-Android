@@ -98,6 +98,10 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     private val postModel: PostModel? by lazy {
         arguments?.getSerializable(ARG_POST_MODEL) as? PostModel
     }
+
+    private val postResolutionType: PostResolutionType? by lazy {
+        arguments?.getSerializable(ARG_POST_RESOLUTION_TYPE) as? PostResolutionType
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PostResolutionOverlayListener) {
@@ -133,15 +137,14 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[PostResolutionOverlayViewModel::class.java]
 
         viewModel.triggerListeners.observe(viewLifecycleOwner) {
-            // todo: annmarie - this need to be changed once the data class is created
-            listener.onOverlayAction(PostResolutionOverlayAction.TO_BE_DETERMINED)
+            listener.onPostResolutionConfirmed(it)
         }
 
         viewModel.dismissDialog.observe(viewLifecycleOwner) {
             dismiss()
         }
 
-        viewModel.start(postModel)
+        viewModel.start(postModel, postResolutionType)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -153,15 +156,16 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "PostResolutionOverlayFragment"
 
-        // todo: annmarie maybe not send the entire post model
         private const val ARG_POST_MODEL = "arg_post_model"
+        private const val ARG_POST_RESOLUTION_TYPE = "arg_post_resolution_type"
 
-        // todo: annmarie will the parameters require not null - should we not worry about that????
-        fun newInstance(postModel: PostModel) = PostResolutionOverlayFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(ARG_POST_MODEL, postModel)
+        fun newInstance(postModel: PostModel, postResolutionType: PostResolutionType) =
+            PostResolutionOverlayFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(ARG_POST_MODEL, postModel)
+                    putSerializable(ARG_POST_RESOLUTION_TYPE, postResolutionType)
+                }
             }
-        }
     }
 
     @Composable
@@ -265,7 +269,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                     Text(text = stringResource(R.string.cancel))
                 }
                 Button(
-                    onClick = { uiState.actionClick() },
+                    onClick = { uiState.confirmedClick() },
                     enabled = uiState.actionEnabled,
                     modifier = Modifier
                         .weight(1f)
@@ -375,7 +379,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                     titleResId = R.string.dialog_post_conflict_title,
                     bodyResId = R.string.dialog_post_conflict_body,
                     actionEnabled = false,
-                    actionClick = {},
+                    confirmedClick = {},
                     closeClick = {},
                     cancelClick = {},
                     onSelected = {},

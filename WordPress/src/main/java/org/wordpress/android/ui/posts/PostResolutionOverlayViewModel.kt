@@ -23,51 +23,52 @@ class PostResolutionOverlayViewModel @Inject constructor(
     private val _uiState = MutableLiveData<PostResolutionOverlayUiState>()
     val uiState: LiveData<PostResolutionOverlayUiState> = _uiState
 
-    // todo: This needs to get the real data - not a string
-    private val _triggerListeners =  MutableLiveData<String>()
-    val triggerListeners:  MutableLiveData<String> = _triggerListeners
+    private val _triggerListeners = MutableLiveData<PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent>()
+    val triggerListeners: MutableLiveData<PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent> =
+        _triggerListeners
 
     private val _dismissDialog = SingleLiveEvent<Boolean>()
     val dismissDialog = _dismissDialog as LiveData<Boolean>
 
     private var isStarted = false
+    private lateinit var resolutionType: PostResolutionType
 
-    fun start(postModel: PostModel?) {
+    fun start(postModel: PostModel?, postResolutionType: PostResolutionType?) {
         if (isStarted) return
 
-        val post = postModel?: run {
+        if (postModel == null || postResolutionType == null) {
             _dismissDialog.postValue(true)
             return
         }
 
-        // todo: use the post to get the type - easy enough to do
-        val resolutionType = getPostResolutionConflictType()
+        resolutionType = postResolutionType
+
         val uiState = when (resolutionType) {
-            PostResolutionType.VERSION_SYNC -> getUiStateForVersionConflict(post)
-            PostResolutionType.AUTO_SAVE_SYNC -> getUiStateForAutosaveConflict(post)
+            PostResolutionType.SYNC_CONFLICT -> getUiStateForSyncConflict(postModel)
+            PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> getUiStateForAutosaveRevisionConflict(postModel)
         }
 
         _uiState.postValue(uiState)
     }
 
-    private fun getUiStateForVersionConflict(post: PostModel): PostResolutionOverlayUiState {
+    private fun getUiStateForSyncConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
             titleResId = R.string.dialog_post_conflict_title,
-            bodyResId = R.string.dialog_post_conflict_body,
+            bodyResId = if (post.isPage) R.string.dialog_post_conflict_body_for_page else R.string.dialog_post_conflict_body,
             content = buildContentItemsForVersionSync(post),
-            actionClick = ::onActionClick,
+            confirmedClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
             closeClick = ::onCloseClick,
             onSelected = ::onItemSelected
         )
     }
 
-    private fun getUiStateForAutosaveConflict(post: PostModel): PostResolutionOverlayUiState {
+    private fun getUiStateForAutosaveRevisionConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
-            titleResId = R.string.dialog_post_conflict_title,
-            bodyResId = R.string.dialog_post_conflict_body,
-            content = buildContentItemsForVersionSync(post),
-            actionClick = ::onActionClick,
+            titleResId = R.string.dialog_post_autosave_title,
+            bodyResId = if (post.isPage) R.string.dialog_post_autosave_body_for_page else R.string.dialog_post_autosave_body,
+            content = buildContentItemsForAutosaveSync(post),
+            confirmedClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
             closeClick = ::onCloseClick,
             onSelected = ::onItemSelected
@@ -102,15 +103,43 @@ class PostResolutionOverlayViewModel @Inject constructor(
                 id = ContentItemType.OTHER_DEVICE)
         )
     }
-    private fun getPostResolutionConflictType(): PostResolutionType {
-        return PostResolutionType.VERSION_SYNC
+
+    private fun buildContentItemsForAutosaveSync(post: PostModel): List<ContentItem> {
+        val localLastModifiedString =
+            if (TextUtils.isEmpty(post.dateLocallyChanged)) post.lastModified else post.dateLocallyChanged
+        val autoSaveModifiedString = post.autoSaveModified as String // todo: annmarie
+        val localLastModifiedAsLong = dateTimeUtilsWrapper.timestampFromIso8601Millis(localLastModifiedString)
+        val autoSaveModifiedAsLong = dateTimeUtilsWrapper.timestampFromIso8601Millis(autoSaveModifiedString)
+
+        val flags = (DateUtils.FORMAT_SHOW_TIME or
+                DateUtils.FORMAT_SHOW_WEEKDAY or
+                DateUtils.FORMAT_SHOW_DATE or
+                DateUtils.FORMAT_ABBREV_RELATIVE)
+
+        val localModifiedDateTime = dateUtilsWrapper.formatDateTime(localLastModifiedAsLong, flags )
+
+        val remoteModifiedDateTime = dateUtilsWrapper.formatDateTime(autoSaveModifiedAsLong, flags )
+
+        return listOf(
+            ContentItem(headerResId = R.string.dialog_post_autosave_current_device,
+                dateLine = UiString.UiStringText(localModifiedDateTime),
+                isSelected = false,
+                id = ContentItemType.LOCAL_DEVICE),
+            ContentItem(headerResId = R.string.dialog_post_autosave_another_device,
+                dateLine = UiString.UiStringText(remoteModifiedDateTime),
+                isSelected = false,
+                id = ContentItemType.OTHER_DEVICE)
+        )
     }
 
-    private fun onActionClick() {
-        Log.i(javaClass.simpleName, "***=> onActionClick")
+    private fun onConfirmClick() {
+        Log.i(javaClass.simpleName, "***=> onConfirmClick")
         // todo: add logging
-        // todo: annmarie figure out how this is going to get executed via the handler
-        _triggerListeners.value = "Action button clicked"
+        _uiState.value?.selectedContentItem?.let {
+            _triggerListeners.value = PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent(resolutionType,
+                it.id.toPostResolutionConfirmationType())
+        }
+        _dismissDialog.value = true
     }
 
     private fun onCloseClick() {
@@ -161,7 +190,7 @@ data class PostResolutionOverlayUiState(
     val onSelected: (ContentItem) -> Unit,
     val closeClick: () -> Unit,
     val cancelClick: () -> Unit,
-    val actionClick: () -> Unit
+    val confirmedClick: () -> Unit
 )
 
 data class ContentItem(
@@ -176,15 +205,28 @@ enum class ContentItemType {
     LOCAL_DEVICE,
     OTHER_DEVICE
 }
-// todo: build out the actions - this might SHOULD to change to a data class so we can
-// include the tag that is in PostListDialogHelper or something similar
-    enum class PostResolutionOverlayAction() {
-        TO_BE_DETERMINED
-    }
 
-    enum class PostResolutionType {
-        VERSION_SYNC,
-        AUTO_SAVE_SYNC
-        // todo: annmarie there are others - can I figure this out from the post? I probably can, so ignore this in the
+fun ContentItemType.toPostResolutionConfirmationType(): PostResolutionConfirmationType {
+    return when (this) {
+        ContentItemType.LOCAL_DEVICE -> PostResolutionConfirmationType.CONFIRM_LOCAL
+        ContentItemType.OTHER_DEVICE -> PostResolutionConfirmationType.CONFIRM_OTHER
     }
+}
 
+enum class PostResolutionType {
+    SYNC_CONFLICT,
+    AUTOSAVE_REVISION_CONFLICT
+}
+
+enum class PostResolutionConfirmationType {
+    CONFIRM_LOCAL,
+    CONFIRM_OTHER
+}
+
+sealed class PostResolutionOverlayActionEvent {
+    data class ShowDialogAction(val postModel: PostModel, val postResolutionType: PostResolutionType)
+    data class PostResolutionConfirmationEvent(
+        val postResolutionType: PostResolutionType,
+        val postResolutionConfirmationType: PostResolutionConfirmationType
+    )
+}
