@@ -226,14 +226,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
 
         childFragmentManager.beginTransaction().apply {
-            val fragment = if (uiState.selectedReaderTag.isDiscover) {
-                ReaderDiscoverFragment()
-            } else {
-                ReaderPostListFragment.newInstanceForTag(
-                    uiState.selectedReaderTag,
+            val selectedTag = uiState.selectedReaderTag
+            val fragment = when {
+                selectedTag.isDiscover -> ReaderDiscoverFragment()
+                selectedTag.isTags -> ReaderTagsFeedFragment()
+                else -> ReaderPostListFragment.newInstanceForTag(
+                    selectedTag,
                     ReaderTypes.ReaderPostListType.TAG_FOLLOWED,
                     true,
-                    uiState.selectedReaderTag.isFilterable
+                    selectedTag.isFilterable
                 )
             }
             replace(R.id.container, fragment, uiState.selectedReaderTag.tagSlug)
