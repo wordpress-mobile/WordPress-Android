@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.extensions.fillScreen
 import javax.inject.Inject
+
 @Suppress("DEPRECATION")
 class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     @Inject

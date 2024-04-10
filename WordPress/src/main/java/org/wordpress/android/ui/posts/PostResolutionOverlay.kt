@@ -168,7 +168,7 @@ fun PostResolutionOverlay(
                 Text(text = stringResource(R.string.cancel))
             }
             Button(
-                onClick = { uiState.confirmedClick() },
+                onClick = { uiState.confirmClick() },
                 enabled = uiState.actionEnabled,
                 modifier = Modifier
                     .weight(1f)
@@ -277,7 +277,7 @@ private fun PostResolutionOverlayPreview() {
                 titleResId = R.string.dialog_post_conflict_title,
                 bodyResId = R.string.dialog_post_conflict_body,
                 actionEnabled = false,
-                confirmedClick = {},
+                confirmClick = {},
                 closeClick = {},
                 cancelClick = {},
                 onSelected = {},

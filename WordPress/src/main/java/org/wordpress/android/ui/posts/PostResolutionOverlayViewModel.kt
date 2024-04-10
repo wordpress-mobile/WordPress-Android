@@ -54,7 +54,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
             bodyResId = if (post.isPage)
                 R.string.dialog_post_conflict_body_for_page else R.string.dialog_post_conflict_body,
             content = buildContentItemsForVersionSync(post),
-            confirmedClick = ::onConfirmClick,
+            confirmClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
             closeClick = ::onCloseClick,
             onSelected = ::onItemSelected
@@ -67,7 +67,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
             bodyResId = if (post.isPage)
                 R.string.dialog_post_autosave_body_for_page else R.string.dialog_post_autosave_body,
             content = buildContentItemsForAutosaveSync(post),
-            confirmedClick = ::onConfirmClick,
+            confirmClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
             closeClick = ::onCloseClick,
             onSelected = ::onItemSelected
@@ -75,7 +75,6 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     private fun buildContentItemsForVersionSync(post: PostModel): List<ContentItem> {
-        // todo: annmarie - make this reusable and testable - use "Wrappers" not static methods
         val localLastModifiedString =
             if (TextUtils.isEmpty(post.dateLocallyChanged)) post.lastModified else post.dateLocallyChanged
         val remoteLastModifiedString = post.remoteLastModified
@@ -106,7 +105,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
     private fun buildContentItemsForAutosaveSync(post: PostModel): List<ContentItem> {
         val localLastModifiedString =
             if (TextUtils.isEmpty(post.dateLocallyChanged)) post.lastModified else post.dateLocallyChanged
-        val autoSaveModifiedString = post.autoSaveModified as String // todo: annmarie
+        val autoSaveModifiedString = post.autoSaveModified as String
         val localLastModifiedAsLong = dateTimeUtilsWrapper.timestampFromIso8601Millis(localLastModifiedString)
         val autoSaveModifiedAsLong = dateTimeUtilsWrapper.timestampFromIso8601Millis(autoSaveModifiedString)
 

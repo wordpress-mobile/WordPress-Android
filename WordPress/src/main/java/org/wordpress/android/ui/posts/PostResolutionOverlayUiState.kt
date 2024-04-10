@@ -15,7 +15,7 @@ data class PostResolutionOverlayUiState(
     val onSelected: (ContentItem) -> Unit,
     val closeClick: () -> Unit,
     val cancelClick: () -> Unit,
-    val confirmedClick: () -> Unit
+    val confirmClick: () -> Unit
 )
 
 data class ContentItem(
