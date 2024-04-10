@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.util.Log
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED
@@ -30,7 +29,7 @@ class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val showConflictResolutionOverlay: ((PostModel) -> Unit)? = null,
+    private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
     private val isSyncPublishingEnabled: Boolean
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
@@ -117,11 +116,15 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    // todo: annmarie THis is the one  ... maybe the dialog holder can be passed instead
     fun showConflictedPostResolutionDialog(post: PostModel) {
         localPostIdForConflictResolutionDialog = post.id
         if (isSyncPublishingEnabled) {
-            showConflictResolutionOverlay?.invoke(post)
+            showConflictResolutionOverlay?.invoke(
+                PostResolutionOverlayActionEvent.ShowDialogAction(
+                    post,
+                    PostResolutionType.SYNC_CONFLICT
+                )
+            )
         } else {
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
@@ -138,7 +141,11 @@ class PostListDialogHelper(
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
         localPostIdForAutosaveRevisionResolutionDialog = post.id
         if (isSyncPublishingEnabled) {
-            showConflictResolutionOverlay?.invoke(post)
+            showConflictResolutionOverlay?.invoke(
+                PostResolutionOverlayActionEvent.ShowDialogAction(
+                    post, PostResolutionType.AUTOSAVE_REVISION_CONFLICT
+                )
+            )
         } else {
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
@@ -184,7 +191,6 @@ class PostListDialogHelper(
                 localPostIdForScheduledPostSyncDialog = null
                 publishPost(it)
             }
-            // todo: annmarie
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 localPostIdForConflictResolutionDialog = null
                 // here load version from remote
@@ -202,7 +208,6 @@ class PostListDialogHelper(
                 localPostIdForMoveTrashedPostToDraftDialog = null
                 moveTrashedPostToDraft(it)
             }
-            // todo: annmarie
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
                 localPostIdForAutosaveRevisionResolutionDialog = null
@@ -231,11 +236,9 @@ class PostListDialogHelper(
             CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog = null
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithUnsavedChangesDialog = null
-            // todo: annmarie
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
             }
-            // todo: annmarie
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
@@ -270,6 +273,81 @@ class PostListDialogHelper(
                 editLocalPost = editLocalPost,
                 copyLocalPost = copyLocalPost
             )
+        }
+    }
+
+    fun onPostResolutionConfirmed(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit,
+        editRestoredAutoSavePost: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionType) {
+            PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> {
+                handleAutosaveRevisionConflict(event, editRestoredAutoSavePost, editLocalPost)
+            }
+
+            PostResolutionType.SYNC_CONFLICT -> {
+                handleSyncRevisionConflict(
+                    event,
+                    updateConflictedPostWithLocalVersion,
+                    updateConflictedPostWithRemoteVersion
+                )
+            }
+        }
+    }
+
+    private fun handleAutosaveRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        editRestoredAutoSavePost: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                localPostIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the local post (don't use the auto save version)
+                    editLocalPost(it)
+                    analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "post")
+                    )
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                localPostIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the restored auto save
+                    localPostIdForAutosaveRevisionResolutionDialog = null
+                    editRestoredAutoSavePost(it)
+                    analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "post")
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleSyncRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                localPostIdForConflictResolutionDialog?.let {
+                    updateConflictedPostWithLocalVersion(it)
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                localPostIdForConflictResolutionDialog?.let {
+                    localPostIdForConflictResolutionDialog = null
+                    // here load version from remote
+                    updateConflictedPostWithRemoteVersion(it)
+                }
+            }
         }
     }
 }
