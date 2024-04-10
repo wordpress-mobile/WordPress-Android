@@ -93,6 +93,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.BitmapLruCache
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
@@ -115,6 +116,7 @@ import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
 import java.lang.Exception
+import java.net.CookieManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -186,7 +188,12 @@ class AppInitializer @Inject constructor(
     lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
 
     @Inject
-    lateinit var debugCookieManager: DebugCookieManager
+    lateinit var cookieManager: CookieManager
+
+    @Inject
+    lateinit var buildConfig: BuildConfigWrapper
+
+    private lateinit var debugCookieManager: DebugCookieManager
 
     @Inject
     @Named(APPLICATION_SCOPE)
@@ -358,7 +365,10 @@ class AppInitializer @Inject constructor(
 
         exPlat.forceRefresh()
 
-        debugCookieManager.sync()
+        if (buildConfig.isDebugSettingsEnabled()) {
+            debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
+            debugCookieManager.sync()
+        }
 
         if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
             initAppOpsManager()
