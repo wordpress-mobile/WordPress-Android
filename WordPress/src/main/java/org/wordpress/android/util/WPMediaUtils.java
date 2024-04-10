@@ -461,6 +461,10 @@ public class WPMediaUtils {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/20615
             AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri + ": ", e);
             return null;
+        } catch (SecurityException e) {
+            // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/19438
+            AppLog.e(AppLog.T.UTILS, "Can't access the image at: " + mediaUri + ": ", e);
+            return null;
         }
     }
 
