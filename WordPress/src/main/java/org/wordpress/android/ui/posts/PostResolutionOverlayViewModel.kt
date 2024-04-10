@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.text.TextUtils
 import android.text.format.DateUtils
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -54,7 +53,8 @@ class PostResolutionOverlayViewModel @Inject constructor(
     private fun getUiStateForSyncConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
             titleResId = R.string.dialog_post_conflict_title,
-            bodyResId = if (post.isPage) R.string.dialog_post_conflict_body_for_page else R.string.dialog_post_conflict_body,
+            bodyResId = if (post.isPage)
+                R.string.dialog_post_conflict_body_for_page else R.string.dialog_post_conflict_body,
             content = buildContentItemsForVersionSync(post),
             confirmedClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
@@ -66,7 +66,8 @@ class PostResolutionOverlayViewModel @Inject constructor(
     private fun getUiStateForAutosaveRevisionConflict(post: PostModel): PostResolutionOverlayUiState {
         return PostResolutionOverlayUiState(
             titleResId = R.string.dialog_post_autosave_title,
-            bodyResId = if (post.isPage) R.string.dialog_post_autosave_body_for_page else R.string.dialog_post_autosave_body,
+            bodyResId = if (post.isPage)
+                R.string.dialog_post_autosave_body_for_page else R.string.dialog_post_autosave_body,
             content = buildContentItemsForAutosaveSync(post),
             confirmedClick = ::onConfirmClick,
             cancelClick = ::onCancelClick,
@@ -133,7 +134,6 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     private fun onConfirmClick() {
-        Log.i(javaClass.simpleName, "***=> onConfirmClick")
         // todo: add logging
         _uiState.value?.selectedContentItem?.let {
             _triggerListeners.value = PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent(resolutionType,
@@ -143,25 +143,21 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     private fun onCloseClick() {
-        Log.i(javaClass.simpleName, "***=> onCloseClick")
         // todo: add logging
         _dismissDialog.value = true
     }
 
     private fun onCancelClick() {
-        Log.i(javaClass.simpleName, "***=> onCancelClick")
         // todo: add logging
         _dismissDialog.value = true
     }
 
     fun onDialogDismissed() {
-        Log.i(javaClass.simpleName, "***=> onDialogDismissed")
         _dismissDialog.value = true
         // todo: add logging
     }
 
     private fun onItemSelected(selectedItem: ContentItem) {
-        Log.i(javaClass.simpleName, "***=> onItemSelected $selectedItem")
         val selectedState = selectedItem.isSelected
 
         // Update the isSelected property of the selected item within the content list
@@ -175,7 +171,6 @@ class PostResolutionOverlayViewModel @Inject constructor(
             content = updatedContent,
             actionEnabled = selectedState
         )
-        Log.i(javaClass.simpleName, "***=> updatedState $updatedUiState")
         _uiState.postValue(updatedUiState)
     }
 }
@@ -198,7 +193,7 @@ data class ContentItem(
     @DrawableRes val iconResId: Int = R.drawable.ic_pages_white_24dp,
     @StringRes val headerResId: Int,
     val dateLine: UiString,
-    var isSelected: Boolean,
+    val isSelected: Boolean,
 )
 
 enum class ContentItemType {

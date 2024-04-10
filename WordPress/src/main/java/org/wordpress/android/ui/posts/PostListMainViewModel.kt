@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -130,7 +129,8 @@ class PostListMainViewModel @Inject constructor(
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
     private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
-    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> = _conflictResolutionAction
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> =
+        _conflictResolutionAction
 
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
@@ -486,8 +486,6 @@ class PostListMainViewModel @Inject constructor(
 
     // Post Resolution Overlay Actions
     fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
-        Log.i(javaClass.simpleName, "***=> onPostResolutionConfirmed ")
-        // todo: annmarie
         postListDialogHelper.onPostResolutionConfirmed(
             event = event,
             updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,6 +101,8 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     private val postResolutionType: PostResolutionType? by lazy {
         arguments?.getSerializable(ARG_POST_RESOLUTION_TYPE) as? PostResolutionType
     }
+
+    @Suppress("TooGenericExceptionThrown")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PostResolutionOverlayListener) {
@@ -149,7 +150,6 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        Log.i(javaClass.simpleName, "***=> onDismiss captured")
         viewModel.onDialogDismissed()
     }
 
@@ -245,7 +245,6 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                     // min spacing
                     Spacer(Modifier.height(Margin.ExtraLarge.value))
                     Spacer(Modifier.weight(1f))
-
                 }
             }
 
@@ -284,7 +283,6 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                     Text(text = stringResource(R.string.confirm))
                 }
             }
-
         }
     }
 
@@ -341,7 +339,6 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
                     .weight(1f)
                     .padding(vertical = Margin.ExtraLarge.value)
             ) {
-
                 ContentAlphaProvider(contentTextEmphasis) {
                     Text(
                         stringResource(item.headerResId),
