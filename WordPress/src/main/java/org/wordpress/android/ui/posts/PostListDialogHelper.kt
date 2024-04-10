@@ -30,7 +30,8 @@ class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val showConflictResolutionOverlay: ((PostModel) -> Unit)? = null
+    private val showConflictResolutionOverlay: ((PostModel) -> Unit)? = null,
+    private val isSyncPublishingEnabled: Boolean
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -116,33 +117,38 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    // todo: THis is the one  ... maybe the dialog holder can be passed instead
+    // todo: annmarie THis is the one  ... maybe the dialog holder can be passed instead
     fun showConflictedPostResolutionDialog(post: PostModel) {
-        val dialogHolder = DialogHolder(
-            tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-            title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
-            message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
-            positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
-            negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
-        )
         localPostIdForConflictResolutionDialog = post.id
-        Log.i(javaClass.simpleName, "***=> show the improved dialog ${dialogHolder.javaClass.simpleName}")
-        showConflictResolutionOverlay?.invoke(post)
-        // todo: annmarie - show the improved
-        // showDialog.invoke(dialogHolder)
+        if (isSyncPublishingEnabled) {
+            showConflictResolutionOverlay?.invoke(post)
+        } else {
+            val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
+            )
+            showDialog.invoke(dialogHolder)
+        }
     }
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
-        val dialogHolder = DialogHolder(
-            tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
-            title = UiStringRes(R.string.dialog_confirm_autosave_title),
-            message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
-            positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
-            negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
-        )
         localPostIdForAutosaveRevisionResolutionDialog = post.id
-        showDialog.invoke(dialogHolder)
+        if (isSyncPublishingEnabled) {
+            showConflictResolutionOverlay?.invoke(post)
+        } else {
+            val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_autosave_title),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
+                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+            )
+            showDialog.invoke(dialogHolder)
+        }
     }
 
     fun showCopyConflictDialog(post: PostModel) {

@@ -155,10 +155,10 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
-            // todo: annmarie
             showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            isSyncPublishingEnabled = syncPublishingFeatureUtils.isSyncPublishingEnabled()
         )
     }
 
