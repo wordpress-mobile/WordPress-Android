@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -50,6 +49,7 @@ fun HorizontalPostListItem(
     postImageUrl: String,
     postNumberOfLikesText: String,
     postNumberOfCommentsText: String,
+    isPostLiked: Boolean,
     onSiteImageClick: () -> Unit,
     onPostImageClick: () -> Unit,
     onPostLikeClick: () -> Unit,
@@ -159,14 +159,26 @@ fun HorizontalPostListItem(
         ) {
             // Like action
             TextButton(
-                modifier = Modifier.defaultMinSize(minHeight = 24.dp, minWidth = 24.dp),
+                modifier = Modifier.defaultMinSize(minHeight = 24.dp),
                 contentPadding = PaddingValues(0.dp),
                 onClick = { onPostLikeClick() },
             ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
-                    painter = painterResource(R.drawable.ic_reader_liked_24dp),
-                    contentDescription = null,
+                    painter = painterResource(
+                        if (isPostLiked) {
+                            R.drawable.ic_like_fill_new_24dp
+                        } else {
+                            R.drawable.ic_like_outline_new_24dp
+                        }
+                    ),
+                    contentDescription = stringResource(
+                        if (isPostLiked) {
+                            R.string.mnu_comment_liked
+                        } else {
+                            R.string.reader_label_like
+                        }
+                    ),
                     tint = secondaryElementColor,
                 )
                 Text(
@@ -256,6 +268,7 @@ fun HorizontalPostListItemPreview() {
                 postImageUrl = "",
                 postNumberOfLikesText = "15 likes",
                 postNumberOfCommentsText = "4 comments",
+                isPostLiked = true,
                 onSiteImageClick = {},
                 onPostImageClick = {},
                 onPostLikeClick = {},
