@@ -208,7 +208,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isFilterable() {
-        return this.isFollowedSites() || this.isA8C() || this.isP2();
+        return this.isFollowedSites() || this.isA8C() || this.isP2() || this.isTags();
     }
 
     public boolean isListTopic() {

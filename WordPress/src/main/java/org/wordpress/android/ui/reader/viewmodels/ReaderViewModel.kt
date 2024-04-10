@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
@@ -374,7 +373,6 @@ class ReaderViewModel @Inject constructor(
                     selectedItem = selectedItem,
                     filterUiState = filterUiState,
                     onDropdownMenuClick = ::onDropdownMenuClick,
-                    showTagsChip = !readerTagsFeedFeatureConfig.isEnabled(),
                     isSearchActionVisible = isSearchSupported(),
                 )
             )
@@ -514,11 +512,14 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable
+        return readerTag.isFilterable && readerTag.isFollowedSites
     }
 
     private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable && readerTag.organization == Organization.NO_ORGANIZATION
+        val showForFollowedSites = readerTag.isFollowedSites && !readerTagsFeedFeatureConfig.isEnabled()
+        val showForTags = readerTag.isTags
+
+        return readerTag.isFilterable && (showForFollowedSites || showForTags)
     }
 
     data class TopBarUiState(
@@ -526,7 +527,6 @@ class ReaderViewModel @Inject constructor(
         val selectedItem: MenuElementData.Item.Single,
         val filterUiState: FilterUiState? = null,
         val onDropdownMenuClick: () -> Unit,
-        val showTagsChip: Boolean,
         val isSearchActionVisible: Boolean = false,
     ) {
         @Parcelize
