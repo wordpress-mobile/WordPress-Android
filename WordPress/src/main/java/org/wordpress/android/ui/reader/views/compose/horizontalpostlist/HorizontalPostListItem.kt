@@ -4,7 +4,10 @@ import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,13 +17,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +52,8 @@ fun HorizontalPostListItem(
     postNumberOfCommentsText: String,
     onSiteImageClick: () -> Unit,
     onPostImageClick: () -> Unit,
+    onPostLikeClick: () -> Unit,
+    onPostMoreMenuClick: () -> Unit,
 ) {
     val primaryElementColor = AppColor.Black.copy(
         alpha = 0.87F
@@ -101,7 +112,7 @@ fun HorizontalPostListItem(
         Text(
             modifier = Modifier.padding(
                 top = Margin.Small.value,
-                bottom = Margin.Small.value,
+                bottom = Margin.Medium.value,
             ),
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
@@ -115,7 +126,9 @@ fun HorizontalPostListItem(
             onClick = onPostImageClick,
         )
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Number of likes
@@ -139,6 +152,42 @@ fun HorizontalPostListItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = secondaryElementColor,
             )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Like action
+            TextButton(
+                modifier = Modifier.defaultMinSize(minHeight = 24.dp, minWidth = 24.dp),
+                contentPadding = PaddingValues(0.dp),
+                onClick = { onPostLikeClick() },
+            ) {
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(R.drawable.ic_reader_liked_24dp),
+                    contentDescription = null,
+                    tint = secondaryElementColor,
+                )
+                Text(
+                    text = stringResource(R.string.reader_label_like),
+                    color = secondaryElementColor,
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            // More menu ("…")
+            IconButton(
+                modifier = Modifier.size(24.dp),
+                onClick = {
+                    onPostMoreMenuClick()
+                },
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
+                    contentDescription = stringResource(R.string.show_more_desc),
+                    tint = secondaryElementColor,
+                )
+            }
         }
     }
 }
@@ -209,6 +258,8 @@ fun HorizontalPostListItemPreview() {
                 postNumberOfCommentsText = "4 comments",
                 onSiteImageClick = {},
                 onPostImageClick = {},
+                onPostLikeClick = {},
+                onPostMoreMenuClick = {},
             )
         }
     }
