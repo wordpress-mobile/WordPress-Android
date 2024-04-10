@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.utils.extensions.putIfNotNull
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -55,7 +56,9 @@ class JetpackAIRestClient @Inject constructor(
     suspend fun fetchJetpackAITextCompletion(
         token: JWTToken,
         prompt: String,
-        feature: String
+        feature: String,
+        format: ResponseFormat? = null,
+        model: String? = null
     ): JetpackAICompletionsResponse {
         val url = WPCOMV2.text_completion.url
         val body = mutableMapOf<String, String>()
@@ -64,6 +67,7 @@ class JetpackAIRestClient @Inject constructor(
             put("prompt", prompt)
             put("feature", feature)
             put("_fields", FIELDS_TO_REQUEST)
+            putIfNotNull("response_format" to format?.value, "model" to model)
         }
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
@@ -159,6 +163,11 @@ class JetpackAIRestClient @Inject constructor(
         INVALID_RESPONSE,
         TIMEOUT,
         NETWORK_ERROR
+    }
+
+    enum class ResponseFormat(val value: String) {
+        JSON("json_object"),
+        TEXT("text")
     }
 
     private fun WPComGsonNetworkError.toJetpackAICompletionsError() =
