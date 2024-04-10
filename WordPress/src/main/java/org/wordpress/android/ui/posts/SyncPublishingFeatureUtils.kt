@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SyncPublishingFeatureUtils @Inject constructor(
     private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
 ) {
-    private fun isSyncPublishingEnabled(): Boolean {
+    fun isSyncPublishingEnabled(): Boolean {
         return syncPublishingFeatureConfig.isEnabled()
     }
 
