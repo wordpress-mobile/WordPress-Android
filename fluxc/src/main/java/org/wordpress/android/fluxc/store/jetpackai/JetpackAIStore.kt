@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.ResponseFormat
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -70,7 +71,9 @@ class JetpackAIStore @Inject constructor(
     suspend fun fetchJetpackAICompletions(
         site: SiteModel,
         prompt: String,
-        feature: String
+        feature: String,
+        responseFormat: ResponseFormat? = null,
+        model: String? = null
     ): JetpackAICompletionsResponse = coroutineEngine.withDefaultContext(
         tag = AppLog.T.API,
         caller = this,
@@ -93,14 +96,20 @@ class JetpackAIStore @Inject constructor(
                 }
             }
 
-        val result = jetpackAIRestClient.fetchJetpackAITextCompletion(token, prompt, feature)
+        val result = jetpackAIRestClient.fetchJetpackAITextCompletion(
+            token,
+            prompt,
+            feature,
+            responseFormat,
+            model
+        )
 
         return@withDefaultContext when {
             // Fetch token anew if using existing token returns AUTH_ERROR
             result is JetpackAICompletionsResponse.Error && result.type == AUTH_ERROR -> {
                 // Remove cached token
                 this@JetpackAIStore.token = null
-                fetchJetpackAICompletions(site, prompt, feature)
+                fetchJetpackAICompletions(site, prompt, feature, responseFormat, model)
             }
 
             else -> result
