@@ -9,6 +9,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
@@ -25,6 +27,9 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var dateUtilsWrapper: DateUtilsWrapper
+
+    @Mock
+    lateinit var tracker: PostResolutionOverlayAnalyticsTracker
 
     lateinit var viewModel: PostResolutionOverlayViewModel
 
@@ -57,7 +62,7 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        viewModel = PostResolutionOverlayViewModel(dateTimeUtilsWrapper, dateUtilsWrapper)
+        viewModel = PostResolutionOverlayViewModel(dateTimeUtilsWrapper, dateUtilsWrapper, tracker)
         dismissDialog = mutableListOf()
         uiStates = mutableListOf()
         triggerListener = mutableListOf()
@@ -123,6 +128,16 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `when on close click, then close is tracked`() {
+        viewModel.start(postModel, PostResolutionType.AUTOSAVE_REVISION_CONFLICT)
+
+        val uiState = uiStates.last()
+        uiState.closeClick.invoke()
+
+        verify(tracker, times(1)).trackClose(any())
+    }
+
+    @Test
     fun `when on cancel click, then dialog dismiss event is posted`() {
         viewModel.start(postModel, PostResolutionType.AUTOSAVE_REVISION_CONFLICT)
 
@@ -133,10 +148,22 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when on dialog dismissed click, then dialog dismiss event is posted`() {
+    fun `when on cancel click, then cancel is tracked`() {
+        viewModel.start(postModel, PostResolutionType.AUTOSAVE_REVISION_CONFLICT)
+
+        val uiState = uiStates.last()
+        uiState.cancelClick.invoke()
+
+        verify(tracker, times(1)).trackCancel(any())
+    }
+
+    @Test
+    fun `when on dialog dismissed click, then dialog dismiss is tracked`() {
+        viewModel.start(postModel, PostResolutionType.AUTOSAVE_REVISION_CONFLICT)
+
         viewModel.onDialogDismissed()
 
-        assertThat(dismissDialog.last()).isTrue()
+        verify(tracker, times(1)).trackDismissed(any())
     }
 
     @Test
@@ -147,6 +174,17 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
         uiState.confirmClick.invoke()
 
         assertThat(dismissDialog.last()).isTrue()
+    }
+
+    @Test
+    fun `when on confirm click, then confirm is tracked`() {
+        viewModel.start(postModel, PostResolutionType.AUTOSAVE_REVISION_CONFLICT)
+
+        val uiState = uiStates.last()
+        uiState.onSelected.invoke(selectedContentItem)
+        uiState.confirmClick.invoke()
+
+        verify(tracker, times(1)).trackConfirm(any(), any())
     }
 
     @Test
