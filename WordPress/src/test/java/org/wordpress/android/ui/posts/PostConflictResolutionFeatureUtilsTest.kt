@@ -11,39 +11,39 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
+import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 
 @ExperimentalCoroutinesApi
-class SyncPublishingFeatureUtilsTest : BaseUnitTest() {
+class PostConflictResolutionFeatureUtilsTest : BaseUnitTest() {
     @Mock
-    lateinit var syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    lateinit var mPostConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
     private val site: SiteModel = mock()
     private val post: PostModel = mock()
 
-    private lateinit var syncPublishingFeatureUtils: SyncPublishingFeatureUtils
+    private lateinit var mPostConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
 
     @Before
     fun setUp() {
-        syncPublishingFeatureUtils = SyncPublishingFeatureUtils(syncPublishingFeatureConfig)
+        mPostConflictResolutionFeatureUtils = PostConflictResolutionFeatureUtils(mPostConflictResolutionFeatureConfig)
     }
 
     @Test
     fun `given feature is enabled, when request for payload, then shouldSkipConflictResolution to false`() {
-        whenever(syncPublishingFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(mPostConflictResolutionFeatureConfig.isEnabled()).thenReturn(true)
         val remotePostPayload = RemotePostPayload(post, site)
 
-        val result = syncPublishingFeatureUtils.getRemotePostPayloadForPush(remotePostPayload)
+        val result = mPostConflictResolutionFeatureUtils.getRemotePostPayloadForPush(remotePostPayload)
 
         assertThat(result.shouldSkipConflictResolutionCheck).isFalse
     }
 
     @Test
     fun `given feature is disabled, when request for payload, then sets shouldSkipConflictResolution to true`() {
-        whenever(syncPublishingFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(mPostConflictResolutionFeatureConfig.isEnabled()).thenReturn(false)
         val remotePostPayload = RemotePostPayload(post, site)
 
-        val result = syncPublishingFeatureUtils.getRemotePostPayloadForPush(remotePostPayload)
+        val result = mPostConflictResolutionFeatureUtils.getRemotePostPayloadForPush(remotePostPayload)
 
         assertThat(result.shouldSkipConflictResolutionCheck).isTrue
     }

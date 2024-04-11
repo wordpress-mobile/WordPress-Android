@@ -83,7 +83,7 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
-    private val syncPublishingFeatureUtils: SyncPublishingFeatureUtils
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
 ) : ViewModel(), CoroutineScope {
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
@@ -157,7 +157,7 @@ class PostListMainViewModel @Inject constructor(
             showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
             analyticsTracker = analyticsTracker,
-            isSyncPublishingEnabled = syncPublishingFeatureUtils.isSyncPublishingEnabled()
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled()
         )
     }
 
@@ -192,7 +192,7 @@ class PostListMainViewModel @Inject constructor(
             showToast = { _toastMessage.postValue(it) },
             triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
             copyPost = this::copyPost,
-            syncPublishingFeatureUtils = syncPublishingFeatureUtils
+            postConflictResolutionFeatureUtils = postConflictResolutionFeatureUtils
         )
     }
 

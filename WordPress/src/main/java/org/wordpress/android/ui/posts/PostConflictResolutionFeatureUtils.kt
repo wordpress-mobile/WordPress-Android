@@ -1,14 +1,14 @@
 package org.wordpress.android.ui.posts
 
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
+import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import javax.inject.Inject
 
-class SyncPublishingFeatureUtils @Inject constructor(
-    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+class PostConflictResolutionFeatureUtils @Inject constructor(
+    private val postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 ) {
-    fun isSyncPublishingEnabled(): Boolean {
-        return syncPublishingFeatureConfig.isEnabled()
+    fun isPostConflictResolutionEnabled(): Boolean {
+        return postConflictResolutionFeatureConfig.isEnabled()
     }
 
     /**
@@ -21,7 +21,7 @@ class SyncPublishingFeatureUtils @Inject constructor(
      * the remote version.
      */
     fun getRemotePostPayloadForPush(payload: RemotePostPayload): RemotePostPayload {
-        if (isSyncPublishingEnabled().not()) {
+        if (isPostConflictResolutionEnabled().not()) {
             payload.shouldSkipConflictResolutionCheck = true
         }
         return payload

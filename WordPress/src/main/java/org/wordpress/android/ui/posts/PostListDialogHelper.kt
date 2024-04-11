@@ -30,7 +30,7 @@ class PostListDialogHelper(
     private val checkNetworkConnection: () -> Boolean,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
-    private val isSyncPublishingEnabled: Boolean
+    private val isPostConflictResolutionEnabled: Boolean
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -118,7 +118,7 @@ class PostListDialogHelper(
 
     fun showConflictedPostResolutionDialog(post: PostModel) {
         localPostIdForConflictResolutionDialog = post.id
-        if (isSyncPublishingEnabled) {
+        if (isPostConflictResolutionEnabled) {
             showConflictResolutionOverlay?.invoke(
                 PostResolutionOverlayActionEvent.ShowDialogAction(
                     post,
@@ -140,7 +140,7 @@ class PostListDialogHelper(
     fun showAutoSaveRevisionDialog(post: PostModel) {
         analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
         localPostIdForAutosaveRevisionResolutionDialog = post.id
-        if (isSyncPublishingEnabled) {
+        if (isPostConflictResolutionEnabled) {
             showConflictResolutionOverlay?.invoke(
                 PostResolutionOverlayActionEvent.ShowDialogAction(
                     post, PostResolutionType.AUTOSAVE_REVISION_CONFLICT
