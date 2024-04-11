@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 class PostResolutionOverlayViewModel @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val dateUtilsWrapper: DateUtilsWrapper
+    private val dateUtilsWrapper: DateUtilsWrapper,
+    private val tracker: PostResolutionOverlayAnalyticsTracker
 ) : ViewModel() {
     private val _uiState = MutableLiveData<PostResolutionOverlayUiState>()
     val uiState: LiveData<PostResolutionOverlayUiState> = _uiState
@@ -41,6 +42,8 @@ class PostResolutionOverlayViewModel @Inject constructor(
 
         resolutionType = postResolutionType
         post = postModel
+
+        onDialogShown()
 
         val uiState = when (resolutionType) {
             PostResolutionType.SYNC_CONFLICT -> getUiStateForSyncConflict(postModel)
@@ -133,26 +136,31 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     private fun onConfirmClick() {
-        // todo: add logging
         _uiState.value?.selectedContentItem?.let {
+            val confirmationType = it.id.toPostResolutionConfirmationType()
+            tracker.trackConfirm(resolutionType, confirmationType)
             _triggerListeners.value = PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent(resolutionType,
-                it.id.toPostResolutionConfirmationType())
+                confirmationType)
         }
         _dismissDialog.value = true
     }
 
     private fun onCloseClick() {
-        // todo: add logging
+        tracker.trackClose(resolutionType)
         _dismissDialog.value = true
     }
 
     private fun onCancelClick() {
-        // todo: add logging
+        tracker.trackCancel(resolutionType)
         _dismissDialog.value = true
     }
 
     fun onDialogDismissed() {
-        // todo: add logging
+        tracker.trackDismissed(resolutionType)
+    }
+
+    private fun onDialogShown() {
+        tracker.trackShown(resolutionType)
     }
 
     private fun onItemSelected(selectedItem: ContentItem) {

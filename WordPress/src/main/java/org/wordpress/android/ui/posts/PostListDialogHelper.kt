@@ -138,7 +138,6 @@ class PostListDialogHelper(
     }
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
-        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
         localPostIdForAutosaveRevisionResolutionDialog = post.id
         if (isPostConflictResolutionEnabled) {
             showConflictResolutionOverlay?.invoke(
@@ -147,6 +146,7 @@ class PostListDialogHelper(
                 )
             )
         } else {
+            analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
             val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
@@ -308,10 +308,6 @@ class PostListDialogHelper(
                 localPostIdForAutosaveRevisionResolutionDialog?.let {
                     // open the editor with the local post (don't use the auto save version)
                     editLocalPost(it)
-                    analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "post")
-                    )
                 }
             }
 
@@ -320,10 +316,6 @@ class PostListDialogHelper(
                     // open the editor with the restored auto save
                     localPostIdForAutosaveRevisionResolutionDialog = null
                     editRestoredAutoSavePost(it)
-                    analyticsTracker.track(
-                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
-                        mapOf(POST_TYPE to "post")
-                    )
                 }
             }
         }

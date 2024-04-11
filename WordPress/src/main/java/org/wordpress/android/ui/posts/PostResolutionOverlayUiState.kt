@@ -43,9 +43,9 @@ enum class PostResolutionType {
     AUTOSAVE_REVISION_CONFLICT
 }
 
-enum class PostResolutionConfirmationType {
-    CONFIRM_LOCAL,
-    CONFIRM_OTHER
+enum class PostResolutionConfirmationType(val analyticsLabel: String) {
+    CONFIRM_LOCAL("local_version"),
+    CONFIRM_OTHER("remote_version")
 }
 
 sealed class PostResolutionOverlayActionEvent {
