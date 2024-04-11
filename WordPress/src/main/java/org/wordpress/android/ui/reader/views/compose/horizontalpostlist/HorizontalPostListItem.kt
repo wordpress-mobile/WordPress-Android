@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
@@ -46,7 +47,7 @@ fun HorizontalPostListItem(
     postDateLine: String,
     postTitle: String,
     postExcerpt: String,
-    postImageUrl: String,
+    postImageUrl: String?,
     postNumberOfLikesText: String,
     postNumberOfCommentsText: String,
     isPostLiked: Boolean,
@@ -61,7 +62,9 @@ fun HorizontalPostListItem(
     val secondaryElementColor = MaterialTheme.colorScheme.onSurface.copy(
         alpha = 0.6F
     )
-    Column(modifier = Modifier.width(240.dp)) {
+    Column(modifier = Modifier
+        .width(240.dp)
+        .height(340.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -110,21 +113,29 @@ fun HorizontalPostListItem(
         )
         // Post excerpt
         Text(
-            modifier = Modifier.padding(
-                top = Margin.Small.value,
-                bottom = Margin.Medium.value,
-            ),
+            modifier = Modifier
+                .padding(
+                    top = Margin.Small.value,
+                    bottom = Margin.Medium.value,
+                )
+                .conditionalThen(
+                    predicate = postImageUrl == null,
+                    other = Modifier.height(180.dp)
+                ),
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
-            maxLines = 2,
+            maxLines = if (postImageUrl != null) 2 else Int.MAX_VALUE,
             overflow = TextOverflow.Ellipsis,
         )
         // Post image
-        PostImage(
-            imageUrl = postImageUrl,
-            onClick = onPostImageClick,
-        )
+        postImageUrl?.let {
+            PostImage(
+                imageUrl = it,
+                onClick = onPostImageClick,
+            )
+        }
+        Spacer(Modifier.weight(1f))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -232,14 +243,11 @@ fun PostImage(
 ) {
     AsyncImage(
         modifier = modifier
-            .width(240.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
             .clickable { onClick() },
         model = ImageRequest.Builder(LocalContext.current)
             .data(imageUrl)
-            // TODO RenanLukas: placeholder
-            // .error(R.drawable.bg_oval_placeholder_image_32dp)
             .crossfade(true)
             .build(),
         contentDescription = null
@@ -249,7 +257,7 @@ fun PostImage(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HorizontalPostListItemPreview() {
+fun HorizontalPostListItemWithPostImagePreview() {
     AppTheme {
         Box(
             modifier = Modifier
@@ -265,7 +273,49 @@ fun HorizontalPostListItemPreview() {
                         "sed urna fermentum posuere. Vivamus in pretium nisl.",
                 postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien" +
                         " sed urna fermentum posuere. Vivamus in pretium nisl.",
-                postImageUrl = "",
+                postImageUrl = "postImageUrl",
+                postNumberOfLikesText = "15 likes",
+                postNumberOfCommentsText = "4 comments",
+                isPostLiked = true,
+                onSiteImageClick = {},
+                onPostImageClick = {},
+                onPostLikeClick = {},
+                onPostMoreMenuClick = {},
+            )
+        }
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun HorizontalPostListItemWithoutPostImagePreview() {
+    AppTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
+            HorizontalPostListItem(
+                siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                        " urna fermentum posuere. Vivamus in pretium nisl.",
+                siteImageUrl = "",
+                postDateLine = "1h",
+                postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
+                        "sed urna fermentum posuere. Vivamus in pretium nisl.",
+                postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
+                        "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                        "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                        " in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                        "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
+                        "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                        "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                        " Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
+                        "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
+                        "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                        "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
+                        "pretium nisl.",
+                postImageUrl = null,
                 postNumberOfLikesText = "15 likes",
                 postNumberOfCommentsText = "4 comments",
                 isPostLiked = true,
