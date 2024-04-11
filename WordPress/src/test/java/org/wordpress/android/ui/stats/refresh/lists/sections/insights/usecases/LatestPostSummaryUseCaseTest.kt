@@ -32,6 +32,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -62,6 +63,9 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
     lateinit var statsUtils: StatsUtils
     private lateinit var useCase: LatestPostSummaryUseCase
 
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Before
     fun setUp() = test {
         useCase = LatestPostSummaryUseCase(
@@ -73,7 +77,8 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
             tracker,
             popupMenuHandler,
             statsUtils,
-            contentDescriptionHelper
+            contentDescriptionHelper,
+            buildConfigWrapper
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         useCase.navigationTarget.observeForever {}
@@ -84,6 +89,7 @@ class LatestPostSummaryUseCaseTest : BaseUnitTest() {
             )
         ).thenReturn("likes: 10")
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test

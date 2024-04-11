@@ -7,6 +7,8 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.isNull
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -139,7 +141,6 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
     fun `manage edge condition with data available but empty list`() = test {
         val forced = false
 
-        whenever(emptyModel.dayViews).thenReturn(listOf())
         whenever(model.dayViews).thenReturn(listOf(Day("2019-10-10", 50)))
         whenever(store.getPostDetail(site, postId)).thenReturn(emptyModel)
         whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
@@ -151,7 +152,14 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         val result = loadData(true, forced)
 
         assertThat(result.state).isEqualTo(SUCCESS)
-        assertThat(result.data).isEmpty()
+
+        verify(mapper, times(1)).buildTitle(model.dayViews.first(), null, true)
+        verify(mapper, times(1)).buildChart(
+            model.dayViews,
+            "2019-10-10",
+            useCase::onBarSelected,
+            useCase::onBarChartDrawn
+        )
     }
 
     @Test

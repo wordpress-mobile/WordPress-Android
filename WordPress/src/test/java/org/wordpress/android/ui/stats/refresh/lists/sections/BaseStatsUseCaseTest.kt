@@ -55,11 +55,11 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         block.fetch(false, false)
         advanceUntilIdle()
 
-        assertData(0, localData)
+        assertData(0, remoteData)
     }
 
     @Test
-    fun `on fetch returns null item when DB is empty`() = test {
+    fun `on fetch uses remote data when DB is empty`() = test {
         assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
@@ -67,7 +67,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result).hasSize(1)
-        assertThat(result[0]!!.data).isNull()
+        assertData(0, remoteData)
         assertThat(result[0]!!.state).isEqualTo(UseCaseState.SUCCESS)
     }
 
@@ -79,7 +79,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         advanceUntilIdle()
 
         assertThat(result.size).isEqualTo(1)
-        assertData(0, localData)
+        assertData(0, remoteData)
     }
 
     @Test
@@ -87,7 +87,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
         block.fetch(false, false)
         advanceUntilIdle()
 
-        assertData(0, localData)
+        assertData(0, remoteData)
 
         block.clear()
         advanceUntilIdle()

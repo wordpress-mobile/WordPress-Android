@@ -135,7 +135,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
             assertThat(this[1]).isEqualTo(barChartItem)
             assertThat(this[2]).isEqualTo(columns)
         }
-        verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateViewsWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateWeekViewsWidget(siteId)
     }
 
     @Test
