@@ -661,6 +661,11 @@ public class UploadUtils {
         // Check if the autoSaveModified field is not empty.
         boolean isAutoSaveModifiedNotEmpty = !TextUtils.isEmpty(post.getAutoSaveModified());
 
+        // If autoSaveModified is null, return false immediately.
+        if (!isAutoSaveModifiedNotEmpty) {
+            return false;
+        }
+
         // Parse dates from ISO8601 format.
         Date dateLocallyChanged = DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged());
         Date autoSaveModified = DateTimeUtils.dateFromIso8601(post.getAutoSaveModified());
