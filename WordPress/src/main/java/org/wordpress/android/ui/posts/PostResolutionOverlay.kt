@@ -74,7 +74,6 @@ fun PostResolutionOverlay(
     modifier: Modifier = Modifier
 ) {
     if (uiState == null) return
-    // todo: annmarie ^^ that is wrong lol
     Column(modifier) {
         IconButton(
             onClick = uiState.closeClick,
