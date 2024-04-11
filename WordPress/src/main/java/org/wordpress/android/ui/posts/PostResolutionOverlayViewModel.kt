@@ -29,6 +29,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
 
     private var isStarted = false
     private lateinit var resolutionType: PostResolutionType
+    private lateinit var post: PostModel
 
     fun start(postModel: PostModel?, postResolutionType: PostResolutionType?) {
         if (isStarted) return
@@ -39,13 +40,14 @@ class PostResolutionOverlayViewModel @Inject constructor(
         }
 
         resolutionType = postResolutionType
+        post = postModel
 
         val uiState = when (resolutionType) {
             PostResolutionType.SYNC_CONFLICT -> getUiStateForSyncConflict(postModel)
             PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> getUiStateForAutosaveRevisionConflict(postModel)
         }
-
         _uiState.postValue(uiState)
+        isStarted = true
     }
 
     private fun getUiStateForSyncConflict(post: PostModel): PostResolutionOverlayUiState {
@@ -150,7 +152,6 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     fun onDialogDismissed() {
-        _dismissDialog.value = true
         // todo: add logging
     }
 
