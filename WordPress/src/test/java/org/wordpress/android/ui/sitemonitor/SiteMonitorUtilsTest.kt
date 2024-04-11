@@ -8,10 +8,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.verify
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteMonitorUtilsTest {
+    @Mock
+    lateinit var userAgent: UserAgent
+
     @Mock
     lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
@@ -19,7 +23,7 @@ class SiteMonitorUtilsTest {
 
     @Before
     fun setup() {
-        siteMonitorUtils = SiteMonitorUtils(analyticsTrackerWrapper)
+        siteMonitorUtils = SiteMonitorUtils(userAgent, analyticsTrackerWrapper)
     }
 
     @Test

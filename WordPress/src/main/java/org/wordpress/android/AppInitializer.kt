@@ -22,9 +22,7 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
-import android.util.AndroidRuntimeException
 import android.util.Log
-import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
@@ -55,6 +53,7 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -125,6 +124,9 @@ class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
     private val application: Application
 ) : DefaultLifecycleObserver {
+    @Inject
+    lateinit var userAgent: UserAgent
+
     @Inject
     lateinit var dispatcher: Dispatcher
 
@@ -306,7 +308,7 @@ class AppInitializer @Inject constructor(
                 .installDefaultEventBus()
         }
 
-        RestClientUtils.setUserAgent(userAgent)
+        RestClientUtils.setUserAgent(userAgent.toString())
 
         if (!initialized) {
             zendeskHelper.setupZendesk(
@@ -363,6 +365,8 @@ class AppInitializer @Inject constructor(
         if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
             initAppOpsManager()
         }
+
+        AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgent")
 
         initialized = true
     }
@@ -1057,55 +1061,6 @@ class AppInitializer @Inject constructor(
                 null,
                 RestClient.REST_CLIENT_VERSIONS.V0
             )
-        }
-
-        /**
-         * Device's default User-Agent string.
-         * E.g.:
-         * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-         * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-         * Safari/537.36"
-         */
-        @Suppress("SwallowedException")
-        val defaultUserAgent: String by lazy {
-            try {
-                WebSettings.getDefaultUserAgent(context)
-            } catch (e: AndroidRuntimeException) {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            } catch (expected: NullPointerException) {
-                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            } catch (e: IllegalArgumentException) {
-                // Catch IllegalArgumentException that could be raised by WebSettings.getDefaultUserAgent()
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/9015
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            }
-        }
-
-        /**
-         * User-Agent string when making HTTP connections, for both API traffic and WebViews. Appends
-         * "wp-android/version" to WebView's default User-Agent string for the webservers to get the full feature list
-         * of the browser and serve content accordingly, e.g.:
-         * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-         * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-         * Safari/537.36 wp-android/4.7"
-         * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
-         **/
-        val userAgent: String by lazy {
-            if (TextUtils.isEmpty(defaultUserAgent)) {
-                WordPress.USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context)
-            } else {
-                (defaultUserAgent + " " + WordPress.USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context))
-            }
         }
 
         fun getBitmapCache(): BitmapLruCache {

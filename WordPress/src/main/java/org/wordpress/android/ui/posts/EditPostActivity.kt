@@ -54,7 +54,6 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.WordPress.Companion.getContext
-import org.wordpress.android.WordPress.Companion.getUserAgent
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.editor.AztecEditorFragment
@@ -94,6 +93,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -322,6 +322,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var updatingPostArea: FrameLayout? = null
 
     @Inject lateinit var dispatcher: Dispatcher
+
+    @Inject lateinit var userAgent: UserAgent
 
     @Inject lateinit var accountStore: AccountStore
 
@@ -2387,7 +2389,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                             siteModel.password,
                             siteModel.isUsingWpComRestApi,
                             siteModel.webEditor,
-                            getUserAgent(),
+                            userAgent.toString(),
                             isJetpackSsoEnabled
                         )
                     return GutenbergEditorFragment.newInstance(
@@ -2424,7 +2426,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                         editorMediaUploadListener = editorFragment as EditorMediaUploadListener?
 
                         // Set up custom headers for the visual editor's internal WebView
-                        editorFragment?.setCustomHttpHeader("User-Agent", getUserAgent())
+                        editorFragment?.setCustomHttpHeader("User-Agent", userAgent.toString())
                         reattachUploadingMediaForAztec()
                     }
                 }
