@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views.compose.horizontalpostlist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -56,10 +57,11 @@ fun HorizontalPostListItem(
     onPostLikeClick: () -> Unit,
     onPostMoreMenuClick: () -> Unit,
 ) {
-    val primaryElementColor = AppColor.Black.copy(
+    val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+    val primaryElementColor = baseColor.copy(
         alpha = 0.87F
     )
-    val secondaryElementColor = MaterialTheme.colorScheme.onSurface.copy(
+    val secondaryElementColor = baseColor.copy(
         alpha = 0.6F
     )
     Column(modifier = Modifier
@@ -107,7 +109,7 @@ fun HorizontalPostListItem(
             modifier = Modifier.padding(top = Margin.Medium.value),
             text = postTitle,
             style = MaterialTheme.typography.titleMedium,
-            color = AppColor.Black,
+            color = baseColor,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
         )
