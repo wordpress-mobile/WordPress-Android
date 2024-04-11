@@ -99,6 +99,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
         private const val ARG_POST_MODEL = "arg_post_model"
         private const val ARG_POST_RESOLUTION_TYPE = "arg_post_resolution_type"
 
+        @JvmStatic
         fun newInstance(postModel: PostModel, postResolutionType: PostResolutionType) =
             PostResolutionOverlayFragment().apply {
                 arguments = Bundle().apply {
