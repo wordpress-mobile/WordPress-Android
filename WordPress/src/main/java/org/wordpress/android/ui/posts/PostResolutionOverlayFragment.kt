@@ -26,7 +26,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: PostResolutionOverlayViewModel
 
-    internal lateinit var listener: PostResolutionOverlayListener
+    private var listener: PostResolutionOverlayListener? = null
 
     private val postModel: PostModel? by lazy {
         arguments?.getSerializable(ARG_POST_MODEL) as? PostModel
@@ -73,7 +73,7 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)[PostResolutionOverlayViewModel::class.java]
 
         viewModel.triggerListeners.observe(viewLifecycleOwner) {
-            listener.onPostResolutionConfirmed(it)
+            listener?.onPostResolutionConfirmed(it)
         }
 
         viewModel.dismissDialog.observe(viewLifecycleOwner) {
@@ -86,6 +86,11 @@ class PostResolutionOverlayFragment : BottomSheetDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         viewModel.onDialogDismissed()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
     }
 
     companion object {
