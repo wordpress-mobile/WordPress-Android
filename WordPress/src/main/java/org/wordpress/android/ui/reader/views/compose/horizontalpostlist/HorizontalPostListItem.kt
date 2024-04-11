@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -127,7 +128,7 @@ fun HorizontalPostListItem(
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
-            maxLines = if (postImageUrl != null) 2 else Int.MAX_VALUE,
+            maxLines = if (postImageUrl != null) 3 else Int.MAX_VALUE,
             overflow = TextOverflow.Ellipsis,
         )
         // Post image
@@ -245,6 +246,7 @@ fun PostImage(
 ) {
     AsyncImage(
         modifier = modifier
+            .fillMaxWidth()
             .height(150.dp)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
             .clickable { onClick() },
@@ -252,7 +254,8 @@ fun PostImage(
             .data(imageUrl)
             .crossfade(true)
             .build(),
-        contentDescription = null
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
     )
 }
 
