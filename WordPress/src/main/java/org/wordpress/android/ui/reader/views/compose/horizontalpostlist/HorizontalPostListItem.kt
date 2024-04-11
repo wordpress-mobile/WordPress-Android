@@ -45,7 +45,7 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun HorizontalPostListItem(
     siteName: String,
-    siteImageUrl: String,
+    blogAvatarUrl: String,
     postDateLine: String,
     postTitle: String,
     postExcerpt: String,
@@ -53,7 +53,7 @@ fun HorizontalPostListItem(
     postNumberOfLikesText: String,
     postNumberOfCommentsText: String,
     isPostLiked: Boolean,
-    onSiteImageClick: () -> Unit,
+    onBlogAvatarClick: () -> Unit,
     onPostImageClick: () -> Unit,
     onPostLikeClick: () -> Unit,
     onPostMoreMenuClick: () -> Unit,
@@ -72,13 +72,13 @@ fun HorizontalPostListItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Site image
-            SiteImage(
+            // Blog avatar
+            BlogAvatar(
                 modifier = Modifier.padding(
-                    end = Margin.Small.value,
+                    end = Margin.Medium.value,
                 ),
-                imageUrl = siteImageUrl,
-                onClick = { onSiteImageClick() },
+                imageUrl = blogAvatarUrl,
+                onClick = { onBlogAvatarClick() },
             )
             // Site name
             Text(
@@ -219,7 +219,7 @@ fun HorizontalPostListItem(
 }
 
 @Composable
-fun SiteImage(
+fun BlogAvatar(
     imageUrl: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -234,7 +234,8 @@ fun SiteImage(
             .error(R.drawable.bg_oval_placeholder_image_32dp)
             .crossfade(true)
             .build(),
-        contentDescription = null
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
     )
 }
 
@@ -272,7 +273,7 @@ fun HorizontalPostListItemWithPostImagePreview() {
             HorizontalPostListItem(
                 siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
                         " urna fermentum posuere. Vivamus in pretium nisl.",
-                siteImageUrl = "",
+                blogAvatarUrl = "",
                 postDateLine = "1h",
                 postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
                         "sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -282,7 +283,7 @@ fun HorizontalPostListItemWithPostImagePreview() {
                 postNumberOfLikesText = "15 likes",
                 postNumberOfCommentsText = "4 comments",
                 isPostLiked = true,
-                onSiteImageClick = {},
+                onBlogAvatarClick = {},
                 onPostImageClick = {},
                 onPostLikeClick = {},
                 onPostMoreMenuClick = {},
@@ -304,7 +305,7 @@ fun HorizontalPostListItemWithoutPostImagePreview() {
             HorizontalPostListItem(
                 siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
                         " urna fermentum posuere. Vivamus in pretium nisl.",
-                siteImageUrl = "",
+                blogAvatarUrl = "",
                 postDateLine = "1h",
                 postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
                         "sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -324,7 +325,7 @@ fun HorizontalPostListItemWithoutPostImagePreview() {
                 postNumberOfLikesText = "15 likes",
                 postNumberOfCommentsText = "4 comments",
                 isPostLiked = true,
-                onSiteImageClick = {},
+                onBlogAvatarClick = {},
                 onPostImageClick = {},
                 onPostLikeClick = {},
                 onPostMoreMenuClick = {},
