@@ -85,6 +85,8 @@ class PostListMainViewModel @Inject constructor(
     private val uploadStarter: UploadStarter,
     private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
 ) : ViewModel(), CoroutineScope {
+    private var isStarted = false
+
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
@@ -241,6 +243,7 @@ class PostListMainViewModel @Inject constructor(
         currentBottomSheetPostId: LocalId,
         editPostRepository: EditPostRepository
     ) {
+        if (isStarted) return
         this.site = site
         this.editPostRepository = editPostRepository
 
@@ -300,6 +303,8 @@ class PostListMainViewModel @Inject constructor(
                 savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
+
+        isStarted = true
     }
 
     override fun onCleared() {
