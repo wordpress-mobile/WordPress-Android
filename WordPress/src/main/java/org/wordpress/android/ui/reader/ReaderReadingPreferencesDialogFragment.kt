@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import android.app.Dialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -81,7 +83,27 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         super.onCreateDialog(savedInstanceState).apply {
-            (this as? BottomSheetDialog)?.fillScreen()
+            (this as? BottomSheetDialog)?.apply {
+                fillScreen(isDraggable = true)
+
+                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    private var isStatusBarTransparent = false
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        if (newState == BottomSheetBehavior.STATE_EXPANDED && isStatusBarTransparent) {
+                            isStatusBarTransparent = false
+                            val currentTheme = viewModel.currentReadingPreferences.value.theme
+                            handleUpdateStatusBarColor(currentTheme)
+                        } else if (newState != BottomSheetBehavior.STATE_EXPANDED && !isStatusBarTransparent) {
+                            isStatusBarTransparent = true
+                            dialog?.window?.setWindowStatusBarColor(Color.TRANSPARENT)
+                        }
+                    }
+
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        // no-op
+                    }
+                })
+            }
 
             (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@ReaderReadingPreferencesDialogFragment) {
                 viewModel.saveReadingPreferencesAndClose()
