@@ -55,19 +55,17 @@ rather than strict requirements.
     4. [PlayServicesAuth](#playservicesauth)
     5. [PlayServicesCoreScanner](#playservicescodescanner)
     6. [PlayReview](#playreview)
-5. Network
-    1. [Okio](#okio)
-6. Tool
+5. Tool
     1. [Zendesk](#zendesk)
     2. [JSoup](#jsoup)
-7. Other Core
+6. Other Core
     1. [AutoService](#autoservice)
     2. [KotlinPoet](#kotlinpoet)
-8. Other UI
+7. Other UI
     1. [Lottie](#lottie)
     2. [UCrop](#ucrop)
-9. [Smoke Test](#smoke-test)
-10. [Special](#special)
+8. [Smoke Test](#smoke-test)
+9. [Special](#special)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -430,21 +428,6 @@ Step.3:
 - Perform a clean install.
 - Publish three (`ReviewViewModel.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
 - Verify that there are no crashes.
-
-</details>
-
------
-
-### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="okio"></a>
-
-<details>
-    <summary>1. [JP/WP] Me Screen [GravatarApi.java + StreamingRequest.java]</summary>
-
-- Go to `Me` tab.
-- From the `Me` screen you are in, click on your profile's icon (`CHANGE PHOTO`).
-- Choose an image and wait for the `Edit Photo` screen to appear.
-- Crop the image and click the `done` menu option (top right).
-- Verify the image is updated accordingly.
 
 </details>
 

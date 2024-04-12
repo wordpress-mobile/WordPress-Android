@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-18 19:40:09+0000
+Translation-Revision-Date: 2024-04-02 21:11:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Clear selected colour</string>
+    <string name="reader_no_followed_tags_text_title">No followed tags</string>
+    <string name="reader_toast_err_tag_already_following">You\'re already following this tag</string>
+    <string name="reader_menu_reading_preferences">Reading Preferences</string>
+    <string name="reader_page_followed_tags_text_title">Followed tags</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colours, fonts, and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_filter_empty_tags_action_follow">Follow a tag</string>
+    <string name="button_read">Read</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Tap here to copy post text</string>
@@ -76,9 +94,11 @@ Language: en_GB
     <string name="reader_dropdown_menu_subscriptions">Subscriptions</string>
     <string name="reader_dropdown_menu_discover">Discover</string>
     <string name="reader_search_content_description">Search</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs to which to subscribe</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Follow a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
@@ -1467,6 +1487,7 @@ Language: en_GB
     <string name="hpp_error_title">Layouts not available while offline</string>
     <string name="continue_site_credentials">Continue with store credentials</string>
     <string name="login_find_your_connected_email">Find your connected email</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
     <string name="reader_discover_empty_title">Welcome!</string>
     <string name="scan">Scan</string>
@@ -1517,6 +1538,7 @@ Language: en_GB
     <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
     <string name="reader_label_toolbar_back">Back</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
+    <string name="reader_discover_empty_subtitle_follow">Follow tags to discover new blogs</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">This referrer can\'t be marked as spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Unmark as Spam</string>
@@ -3524,6 +3546,7 @@ Language: en_GB
     <string name="reader_toast_err_generic">Unable to perform this action</string>
     <string name="schedule_verb">Schedule</string>
     <string name="update_verb">Update</string>
+    <string name="reader_hint_add_tag_or_url_follow">Enter a URL or tag to follow</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="help">Help</string>

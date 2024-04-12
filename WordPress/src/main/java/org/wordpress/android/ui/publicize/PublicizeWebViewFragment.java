@@ -19,6 +19,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
@@ -38,6 +39,8 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     private int mConnectionId;
     private WebView mWebView;
     private ProgressBar mProgress;
+
+    @Inject UserAgent mUserAgent;
 
     @Inject AccountStore mAccountStore;
 
@@ -106,7 +109,7 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        mWebView.getSettings().setUserAgentString(mUserAgent.toString());
 
         return rootView;
     }

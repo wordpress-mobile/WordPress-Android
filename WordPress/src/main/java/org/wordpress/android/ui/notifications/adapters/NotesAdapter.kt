@@ -22,7 +22,7 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
     RecyclerView.Adapter<NoteViewHolder>() {
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private var reloadLocalNotesJob: Job? = null
-    val filteredNotes = ArrayList<Note>()
+    var filteredNotes = ArrayList<Note>()
     var onNoteClicked = { _: String -> }
     var onNotesLoaded = { _: Int -> }
     var onScrolledToBottom = { _: Long -> }
@@ -49,9 +49,8 @@ class NotesAdapter(context: Context, private val inlineActionEvents: MutableShar
     @SuppressLint("NotifyDataSetChanged")
     fun addAll(notes: List<Note>) = coroutineScope.launch {
         val newNotes = buildFilteredNotesList(notes, currentFilter)
-        filteredNotes.clear()
-        filteredNotes.addAll(newNotes)
         withContext(Dispatchers.Main) {
+            filteredNotes = newNotes
             notifyDataSetChanged()
             onNotesLoaded(newNotes.size)
         }

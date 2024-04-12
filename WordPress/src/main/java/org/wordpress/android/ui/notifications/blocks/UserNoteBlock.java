@@ -13,7 +13,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.FormattableContentUtilsKt;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -93,7 +93,7 @@ public class UserNoteBlock extends NoteBlock {
 
         String imageUrl = "";
         if (hasImageMediaItem()) {
-            imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
+            imageUrl = WPAvatarUtils.rewriteAvatarUrl(getNoteMediaItem().getUrl(), getAvatarSize());
             if (!TextUtils.isEmpty(getUserUrl())) {
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);

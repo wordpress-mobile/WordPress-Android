@@ -3,13 +3,14 @@
 24.7
 -----
 * [**] Site picker: Added the feature to pin sites, redesigned the UI, and deprecated the Show/Hide sites functionality. [https://github.com/wordpress-mobile/WordPress-Android/pull/20521]
-
+* [*] [internal] Updates the way the app retrieves the User-Agent request header [https://github.com/wordpress-mobile/WordPress-Android/pull/20603]
 
 24.6
 -----
 * [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]
 * [*] Block editor: Fixes an Aztec editor crash occurring on some occasions when the keyboard suggestions are used [https://github.com/wordpress-mobile/WordPress-Android/pull/20518]
 * [*] [Jetpack-only] Change "∞" symbol with "100%" on stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20564]
+* [**] [Jetpack-only] Reader: introduce "reading preferences", an experimental feature that allows users to customize their Reader post content screen with the color, font, and size that they like the most. [https://github.com/wordpress-mobile/WordPress-Android/pull/20567]
 
 24.5
 -----

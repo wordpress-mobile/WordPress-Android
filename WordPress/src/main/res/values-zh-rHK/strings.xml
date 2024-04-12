@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 12:54:09+0000
+Translation-Revision-Date: 2024-03-30 07:37:05+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
@@ -1648,7 +1648,7 @@ Language: zh_TW
     <string name="ccpa_privacy_notice_caption">根據《加州消費者隱私保護法》(以下稱「CCPA」) 規定，我們必須提供加州使用者一些額外資訊，說明我們收集和分享的個人資訊種類、從哪裡取得這些資訊，以及這些資訊的使用方式及用途。</string>
     <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
-    <string name="update_now">馬上更新</string>
+    <string name="update_now">立即更新</string>
     <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
     <string name="gutenberg_native_move_to_top">移至頂端</string>

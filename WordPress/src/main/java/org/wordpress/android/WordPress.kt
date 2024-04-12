@@ -70,11 +70,5 @@ abstract class WordPress : Application() {
         fun getRestClientUtilsV2() = AppInitializer.restClientUtilsV2
 
         fun getRestClientUtilsV0() = AppInitializer.restClientUtilsV0
-
-        @JvmStatic
-        fun getDefaultUserAgent() = AppInitializer.defaultUserAgent
-
-        @JvmStatic
-        fun getUserAgent() = AppInitializer.userAgent
     }
 }

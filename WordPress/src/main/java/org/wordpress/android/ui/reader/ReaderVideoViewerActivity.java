@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
+
+import javax.inject.Inject;
 
 /**
  * Full screen landscape video player for the reader
@@ -21,6 +23,8 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;
+
+    @Inject UserAgent mUserAgent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
 
         mWebView.setBackgroundColor(Color.TRANSPARENT);
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        mWebView.getSettings().setUserAgentString(mUserAgent.toString());
 
         mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(
                 mWebView,

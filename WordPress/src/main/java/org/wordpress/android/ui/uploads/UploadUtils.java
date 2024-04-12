@@ -97,6 +97,8 @@ public class UploadUtils {
             case UNAUTHORIZED:
                 return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
                         : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case OLD_REVISION:
+                return new UiStringRes(R.string.local_post_is_conflicted);
             case UNSUPPORTED_ACTION:
             case INVALID_RESPONSE:
             case GENERIC_ERROR:
@@ -468,19 +470,21 @@ public class UploadUtils {
         return !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
     }
 
-    public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+    public static void onPostUploadedSnackbarHandler(final Activity activity,
+                                                     View snackbarAttachView,
                                                      boolean isError,
                                                      boolean isFirstTimePublish,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
                                                      SnackbarSequencer sequencer,
-                                                     @Nullable OnPublishingCallback onPublishingCallback) {
+                                                     @Nullable OnPublishingCallback onPublishingCallback,
+                                                     final boolean showRetry) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
-                if (AppPrefs.isAztecEditorEnabled()) {
+                if (AppPrefs.isAztecEditorEnabled() && showRetry) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
                             new View.OnClickListener() {
                                 @Override

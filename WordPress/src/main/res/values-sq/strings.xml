@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 07:21:45+0000
+Translation-Revision-Date: 2024-04-05 12:14:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Hiqe ngjyrën e përzgjedhur</string>
+    <string name="reader_no_followed_tags_text_title">Pa etiketa të ndjekura</string>
+    <string name="reader_toast_err_tag_already_following">E ndiqni tashmë këtë etiketë.</string>
+    <string name="reader_menu_reading_preferences">Parapëlqime Leximi</string>
+    <string name="reader_page_followed_tags_text_title">Etiketa të ndjekura</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Mbrëmje</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Butë</string>
+    <string name="reader_preferences_theme_system">Parazgjedhje</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">jepni përshtypjet tuaja</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Kjo është veçori e re ende në zhvillim. Që të na ndihmoni ta përmirësojmë, %s.</string>
+    <string name="reader_preferences_screen_preview_text">Zgjidhni ngjyra, shkronja dhe madhësi tuajat. Bëni këtu paraparje të përzgjedhjes tuaj dhe lexoni postime me stilet tuaja, pasi të keni mbaruar.</string>
+    <string name="reader_preferences_screen_preview_title">Parapëlqime Leximi</string>
+    <string name="reader_filter_empty_tags_action_follow">Ndiqni një etiketë</string>
+    <string name="button_read">Lexoni</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Mund ta kopjoni tekstin e  postimit tuaj, në rast se preket lënda juaj. Kopjoni hollësi gabimi, për diagnostikim dhe për t’ia dhënë asistencës.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Përpunuesi hasi një gabim të papritur</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Prekeni këtu, që të kopjohet tekstin e postimit</string>
@@ -76,9 +93,11 @@ Language: sq_AL
     <string name="reader_dropdown_menu_subscriptions">Pajtime</string>
     <string name="reader_dropdown_menu_discover">Zbuloni</string>
     <string name="reader_search_content_description">Kërko</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Ndiqni etiketa</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogje ku të pajtoheni</string>
     <string name="reader_filter_empty_tags_action_suggested">Etiketa të sugjeruara</string>
     <string name="reader_filter_empty_blogs_action_search">Kërkoni për një blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Ndiqni një etiketë dhe do të jeni në gjendje të shihni këtu postimet më të mira.</string>
     <string name="reader_filter_empty_tags_list_title">Pa etiketa</string>
     <string name="reader_filter_empty_blogs_list_text">Pajtohuni në blogje te Zbuloni dhe do të shihni këtu postimet e tyre më të reja. Ose kërkoni për një blog që ju pëlqen tashmë.</string>
     <string name="reader_filter_empty_blogs_list_title">S’ka pajtime në blog</string>
@@ -1459,6 +1478,7 @@ Language: sq_AL
     <string name="hpp_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
     <string name="continue_site_credentials">Vazhdo me kredenciale shitoreje</string>
     <string name="login_find_your_connected_email">Gjeni email-in tuaj të lidhur</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Provoni të ndiqni më tepër etiketa që të zgjerohet kërkimi</string>
     <string name="reader_discover_no_posts_title">Pa postime së fundi</string>
     <string name="reader_discover_empty_title">Mirë se vini!</string>
     <string name="scan">Skanoje</string>
@@ -1509,6 +1529,7 @@ Language: sq_AL
     <string name="photo_picker_wordpress_media_library">Zgjidhni prej Mediatekës WordPress</string>
     <string name="reader_label_toolbar_back">Mbrapsht</string>
     <string name="reader_discover_empty_button_text">Fillojani</string>
+    <string name="reader_discover_empty_subtitle_follow">Ndiqni etiketa, që të zbuloni blogje të rinj</string>
     <string name="reader_post_details_header_by_author_name">Nga</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Këtij referuesi s’mund t’i vihet shenjë si i padëshiruar</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hiqja Shenjën Si i Padëshiruar</string>
@@ -3516,6 +3537,7 @@ Language: sq_AL
     <string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
     <string name="schedule_verb">Planifikoje</string>
     <string name="update_verb">Përditësoje</string>
+    <string name="reader_hint_add_tag_or_url_follow">Jepni një URL, ose etiketë, që të ndiqet</string>
     <string name="ssl_certificate_ask_trust">Nëse zakonisht lidheni te ky sajt pa probleme, ky gabim mund të thotë që dikush po provon të hiqet si ky sajt, dhe s’duhet të vazhdoni. Doni të besohet dëshmia, sido qoftë?</string>
     <string name="ssl_certificate_error">Dëshmi SSL e pavlefshme</string>
     <string name="help">Ndihmë</string>

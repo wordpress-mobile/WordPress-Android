@@ -40,7 +40,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -59,7 +59,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val htmlUtilsWrapper: HtmlUtilsWrapper,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val threadedCommentsUtils: ThreadedCommentsUtils,
     resourceProvider: ResourceProvider
 ) {
@@ -141,7 +141,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                             readerComment.published
                         )
                     ),
-                    avatarUrl = gravatarUtilsWrapper.fixGravatarUrl(
+                    avatarUrl = avatarUtilsWrapper.rewriteAvatarUrl(
                         readerComment.authorAvatar,
                         contextProvider.getContext().resources.getDimensionPixelSize(
                             R.dimen.avatar_sz_extra_small
