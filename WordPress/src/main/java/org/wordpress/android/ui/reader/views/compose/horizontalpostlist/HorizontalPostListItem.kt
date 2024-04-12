@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.views.compose.horizontalpostlist
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -282,24 +281,25 @@ fun HorizontalPostListItemPreview() {
             ) {
                 item {
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
+                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
+                                "Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer pellentesque sapien " +
                                 "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                " in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                " Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
-                                "pretium nisl.",
+                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
+                                " Vivamus in pretium nisl. Lorem ipsum dolor " +
+                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                " adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
+                                "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
+                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                "urna fermentum posuere. Vivamus in pretium nisl.",
                         postImageUrl = "https://picsum.photos/200/300",
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
@@ -311,22 +311,24 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                " in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                " Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
+                                "ipsum dolor sit amet, " +
+                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
+                                "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                                "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
+                                " consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
                                 "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
                                 "pretium nisl.",
                         postImageUrl = null,
@@ -340,8 +342,8 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
@@ -357,8 +359,8 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
@@ -374,12 +376,12 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl.",
+                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postExcerpt = "Lorem ipsum dolor sit amet.",
                         postImageUrl = "https://picsum.photos/200/300",
                         postNumberOfLikesText = "15 likes",
@@ -392,12 +394,12 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl.",
+                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postExcerpt = "Lorem ipsum dolor sit amet.",
                         postImageUrl = null,
                         postNumberOfLikesText = "15 likes",
@@ -410,23 +412,24 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                " in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                " Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
-                                "pretium nisl.",
+                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit" +
+                                "amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
+                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
+                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
+                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
+                                "posuere. Vivamus in pretium nisl.",
                         postImageUrl = "https://picsum.photos/200/300",
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
@@ -438,23 +441,23 @@ fun HorizontalPostListItemPreview() {
                     )
                     Spacer(Modifier.width(12.dp))
                     HorizontalPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                " urna fermentum posuere. Vivamus in pretium nisl.",
+                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                " in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                " Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna " +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
-                                "pretium nisl.",
+                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor" +
+                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postImageUrl = null,
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
