@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-02 21:16:19+0000
+Translation-Revision-Date: 2024-04-09 18:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
@@ -9,7 +9,18 @@ Language: ru
     <string name="gutenberg_native_clear_selected_color">Очистить выбранный цвет</string>
     <string name="reader_no_followed_tags_text_title">Нет подписок на метки</string>
     <string name="reader_toast_err_tag_already_following">Вы уже подписаны на эту метку</string>
+    <string name="reader_menu_reading_preferences">Читательские предпочтения</string>
+    <string name="reader_page_followed_tags_text_title">Отслеживаемые метки</string>
+    <string name="reader_preferences_theme_candy">Карамель</string>
     <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Вечер</string>
+    <string name="reader_preferences_theme_sepia">Сепия</string>
+    <string name="reader_preferences_theme_soft">Мягкий</string>
+    <string name="reader_preferences_theme_system">По умолчанию</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">отправить отзыв</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Эта новая функция ещё на стадии разработки. Помогите нам её улучшить: %s.</string>
+    <string name="reader_preferences_screen_preview_text">Выберите цвета, шрифты и размеры. Вы можете предварительно просмотреть результаты здесь, а затем, когда сделаете выбор, читать записи в блоге в избранном оформлении.</string>
+    <string name="reader_preferences_screen_preview_title">Читательские предпочтения</string>
     <string name="reader_filter_empty_tags_action_follow">Подписаться на метку</string>
     <string name="button_read">Читать</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Вы можете копировать текст своей записи на случай, если ваш контент окажется повреждён. Скопируйте данные об ошибке, чтобы сообщить их инженерам поддержки и устранить неполадку.</string>
