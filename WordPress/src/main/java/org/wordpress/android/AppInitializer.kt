@@ -367,10 +367,7 @@ class AppInitializer @Inject constructor(
 
         exPlat.forceRefresh()
 
-        if (buildConfig.isDebugSettingsEnabled()) {
-            debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
-            debugCookieManager.sync()
-        }
+        initDebugCookieManager()
 
         if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
             initAppOpsManager()
@@ -379,6 +376,13 @@ class AppInitializer @Inject constructor(
         AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgent")
 
         initialized = true
+    }
+
+    private fun initDebugCookieManager() {
+        if (buildConfig.isDebugSettingsEnabled()) {
+            debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
+            debugCookieManager.sync()
+        }
     }
 
     /**
