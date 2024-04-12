@@ -34,7 +34,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
+import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -53,7 +53,7 @@ class StorePostViewModel
     private val networkUtils: NetworkUtilsWrapper,
     private val dispatcher: Dispatcher,
     private val postFreshnessChecker: IPostFreshnessChecker,
-    private val syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    private val postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 ) : ScopedViewModel(uiCoroutineDispatcher), DialogVisibilityProvider {
     private var debounceCounter = 0
     private var saveJob: Job? = null
@@ -232,7 +232,7 @@ class StorePostViewModel
     }
 
     private fun handlePostRefreshedIfNeeded(event: OnPostChanged) {
-        if (syncPublishingFeatureConfig.isEnabled().not()) return
+        if (postConflictResolutionFeatureConfig.isEnabled().not()) return
 
         // Refresh post content if needed
         (event.causeOfChange as? CauseOfOnPostChanged.UpdatePost)?.let { updatePost ->

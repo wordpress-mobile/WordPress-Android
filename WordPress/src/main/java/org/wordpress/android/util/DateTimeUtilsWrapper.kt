@@ -61,4 +61,6 @@ class DateTimeUtilsWrapper @Inject constructor(
     }
 
     fun getInstantNow(): Instant = Instant.now()
+
+    fun timestampFromIso8601Millis(date: String) = DateTimeUtils.timestampFromIso8601Millis(date)
 }
