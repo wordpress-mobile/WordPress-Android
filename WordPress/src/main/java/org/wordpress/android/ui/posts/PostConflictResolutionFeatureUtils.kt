@@ -19,9 +19,11 @@ class PostConflictResolutionFeatureUtils @Inject constructor(
      * that is sent to the backend through PostActionBuilder.newPushPostAction(). By setting the
      * shouldSkipConflictResolutionCheck = true, "if_not_modified_since" is not sent to server and the post overwrites
      * the remote version.
+     *
+     * Until pages conflict resolution is complete, we need to set shouldSkipConflictResolutionCheck = true for pages.
      */
     fun getRemotePostPayloadForPush(payload: RemotePostPayload): RemotePostPayload {
-        if (isPostConflictResolutionEnabled().not()) {
+        if (isPostConflictResolutionEnabled().not() || payload.post.isPage) {
             payload.shouldSkipConflictResolutionCheck = true
         }
         return payload
