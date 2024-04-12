@@ -267,7 +267,7 @@ fun PostImage(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HorizontalPostListItemWithPostImagePreview() {
+fun HorizontalPostListItemPreview() {
     AppTheme {
         Box(
             modifier = Modifier
