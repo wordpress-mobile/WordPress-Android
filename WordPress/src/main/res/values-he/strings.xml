@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 18:54:09+0000
+Translation-Revision-Date: 2024-04-12 07:32:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">גדול מאוד</string>
+    <string name="reader_preferences_font_size_large">גדול</string>
+    <string name="reader_preferences_font_size_normal">רגיל</string>
+    <string name="reader_preferences_font_size_small">קטן</string>
+    <string name="reader_preferences_font_size_extra_small">קטן מאוד</string>
+    <string name="reader_preferences_screen_font_size_label">גודל הגופן</string>
+    <string name="reader_preferences_screen_font_family_label">גופן</string>
+    <string name="reader_preferences_screen_theme_label">ערכת צבעים</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">לשלוח משוב</string>
+    <string name="gutenberg_native_clear_selected_color">למחוק את הצבע שנבחר</string>
+    <string name="reader_no_followed_tags_text_title">אין תגיות במעקב</string>
+    <string name="reader_toast_err_tag_already_following">כבר בחרת לעקוב אחרי התגית הזאת</string>
+    <string name="reader_menu_reading_preferences">העדפות קריאה</string>
+    <string name="reader_page_followed_tags_text_title">תגיות במעקב</string>
+    <string name="reader_preferences_theme_candy">מתקתק</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">ערב</string>
+    <string name="reader_preferences_theme_sepia">ספיה</string>
+    <string name="reader_preferences_theme_soft">רך</string>
+    <string name="reader_preferences_theme_system">ברירת מחדל</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">לשלוח משוב</string>
+    <string name="reader_preferences_screen_preview_text_feedback">האפשרות הזאת עדיין נמצאת בפיתוח. כדי לעזור לנו לשפר אותה, %s.</string>
+    <string name="reader_preferences_screen_preview_text">לבחור צבעים, גופנים וממדים. ניתן לראות כאן תצוגה מקדימה של הבחירה שלך ולקרוא פוסטים לפי הסגנונות שקבעת.</string>
+    <string name="reader_preferences_screen_preview_title">העדפות קריאה</string>
+    <string name="reader_filter_empty_tags_action_follow">לעקוב אחרי תגית</string>
+    <string name="button_read">קריאה</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">אפשר להעתיק את הטקסט של הפוסט במקרה שהתוכן נפגע. פרטים של שגיאת ההעתקה לצורך איתור באגים ושיתוף עם התמיכה.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">העורך נתקל בשגיאה בלתי צפויה</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">יש להקיש כאן כדי להעתיק את הטקסט של הפוסט</string>
@@ -75,9 +102,11 @@ Language: he_IL
     <string name="reader_dropdown_menu_subscriptions">מינויים</string>
     <string name="reader_dropdown_menu_discover">היכרות</string>
     <string name="reader_search_content_description">חיפוש</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">לעקוב אחרי תגיות</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">בלוגים שכדאי להירשם לעדכונים מהם</string>
     <string name="reader_filter_empty_tags_action_suggested">תגיות מומלצות</string>
     <string name="reader_filter_empty_blogs_action_search">לחפש בלוג</string>
+    <string name="reader_filter_empty_tags_list_follow_text">אפשר לעקוב אחרי תגית, והפוסטים המומלצים עם התגית הזאת יוצגו כאן.</string>
     <string name="reader_filter_empty_tags_list_title">ללא תגיות</string>
     <string name="reader_filter_empty_blogs_list_text">ניתן להירשם לעדכונים מבלוגים במקטע \'היכרות\' כדי להציג את הפוסטים האחרונים שלהם כאן. לחלופין, אפשר לחפש בלוג שכבר מצא חן בעיניך.</string>
     <string name="reader_filter_empty_blogs_list_title">אין מינויים לבלוגים</string>
@@ -1458,6 +1487,7 @@ Language: he_IL
     <string name="hpp_error_title">הפריסות אינן זמינות במצב לא מקוון</string>
     <string name="continue_site_credentials">להמשיך עם פרטי הכניסה של החנות</string>
     <string name="login_find_your_connected_email">למצוא את כתובת האימייל המחוברת שלך</string>
+    <string name="reader_discover_no_posts_follow_subtitle">כדאי לעקוב אחרי תגיות נוספות כדי להרחיב את החיפוש</string>
     <string name="reader_discover_no_posts_title">אין פוסטים אחרונים</string>
     <string name="reader_discover_empty_title">ברוך בואך!</string>
     <string name="scan">לסרוק</string>
@@ -1508,6 +1538,7 @@ Language: he_IL
     <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
     <string name="reader_label_toolbar_back">חזרה</string>
     <string name="reader_discover_empty_button_text">מתחילים כאן</string>
+    <string name="reader_discover_empty_subtitle_follow">לעקוב אחרי תגיות כדי להיחשף לבלוגים חדשים</string>
     <string name="reader_post_details_header_by_author_name">לפי</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">לא ניתן לסמן את מקור ההפניה כזבל</string>
     <string name="stats_referrer_popup_unmark_as_spam">לבטל את הסימון כתגובת זבל</string>
@@ -3512,6 +3543,7 @@ Language: he_IL
     <string name="reader_toast_err_generic">לא ניתן לבצע את הפעולה</string>
     <string name="schedule_verb">תזמן</string>
     <string name="update_verb">עדכן</string>
+    <string name="reader_hint_add_tag_or_url_follow">יש להזין כתובת URL או תגית למעקב</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>
     <string name="help">עזרה</string>

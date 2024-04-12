@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-21 09:54:09+0000
+Translation-Revision-Date: 2024-04-12 07:32:25+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">特大</string>
+    <string name="reader_preferences_font_size_large">大</string>
+    <string name="reader_preferences_font_size_normal">通常</string>
+    <string name="reader_preferences_font_size_small">小</string>
+    <string name="reader_preferences_font_size_extra_small">極小</string>
+    <string name="reader_preferences_screen_font_size_label">フォントサイズ</string>
+    <string name="reader_preferences_screen_font_family_label">フォント</string>
+    <string name="reader_preferences_screen_theme_label">配色</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">フィードバックを送る</string>
+    <string name="reader_toast_err_tag_already_following">すでにこのタグをフォローしています</string>
+    <string name="reader_menu_reading_preferences">閲覧の設定</string>
+    <string name="reader_page_followed_tags_text_title">フォロー中のタグ</string>
+    <string name="reader_preferences_theme_candy">キャンディー</string>
+    <string name="reader_preferences_theme_evening">イヴニング</string>
+    <string name="reader_preferences_theme_sepia">セピア</string>
+    <string name="reader_preferences_theme_soft">ソフト</string>
+    <string name="reader_preferences_theme_system">デフォルト</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">フィードバックを送る</string>
+    <string name="reader_preferences_screen_preview_text_feedback">これはまだ開発中の新機能です。 改善にご協力ください%s。</string>
+    <string name="reader_preferences_screen_preview_text">カラー、フォント、サイズを選択します。 ここで選択内容をプレビューし、完成後にスタイルを適用して投稿を読むことができます。</string>
+    <string name="reader_preferences_screen_preview_title">閲覧の設定</string>
+    <string name="reader_filter_empty_tags_action_follow">タグをフォローする</string>
+    <string name="button_read">読む</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">エディターで予期しないエラーが発生しました。</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">投稿内容をコピーするには、ここをタップします</string>
@@ -76,9 +99,11 @@ Language: ja_JP
     <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
     <string name="reader_dropdown_menu_discover">ディスカバー</string>
     <string name="reader_search_content_description">検索</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">タグをフォローする</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">購読するブログ</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
+    <string name="reader_filter_empty_tags_list_follow_text">タグをフォローすると、そのタグの最適の投稿がこちらに表示されます。</string>
     <string name="reader_filter_empty_tags_list_title">タグなし</string>
     <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
     <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>
@@ -1243,6 +1268,7 @@ Language: ja_JP
     <string name="gutenberg_native_audio_file">音声ファイル</string>
     <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
+    <string name="gutenberg_native_add_audio">音声ファイルを追加</string>
     <string name="continue_with_wpcom">WordPress.com でログインまたは登録</string>
     <string name="photo_picker_use_audio">この音声を使用</string>
     <string name="photo_picker_choose_audio">端末から音声を選択</string>
@@ -1460,6 +1486,7 @@ Language: ja_JP
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
     <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
     <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
+    <string name="reader_discover_no_posts_follow_subtitle">もっと多くのタグをフォローして、検索範囲を広げてみてください</string>
     <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
     <string name="reader_discover_empty_title">ようこそ !</string>
     <string name="scan">スキャン</string>
@@ -1510,6 +1537,7 @@ Language: ja_JP
     <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
     <string name="reader_label_toolbar_back">戻る</string>
     <string name="reader_discover_empty_button_text">今すぐ始める</string>
+    <string name="reader_discover_empty_subtitle_follow">タグをフォローして新しいブログを見つける</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">このリファラーはスパムとしてマークできません</string>
     <string name="stats_referrer_popup_unmark_as_spam">スパムとしてのマークを解除</string>
@@ -3517,6 +3545,7 @@ Language: ja_JP
     <string name="reader_toast_err_generic">操作を実行できませんでした</string>
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>
+    <string name="reader_hint_add_tag_or_url_follow">フォローする URL またはタグを入力</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
     <string name="help">ヘルプ</string>
