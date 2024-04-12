@@ -49,7 +49,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on fetch loads data from DB when current value is null`() = test {
+    fun `on fetch loads data from remote when current value is null`() = test {
         assertThat(result).isEmpty()
 
         block.fetch(false, false)
@@ -59,7 +59,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on fetch uses remote data when DB is empty`() = test {
+    fun `on fetch returns remote data when DB is empty`() = test {
         assertThat(result).isEmpty()
         whenever(localDataProvider.get()).thenReturn(null)
 
