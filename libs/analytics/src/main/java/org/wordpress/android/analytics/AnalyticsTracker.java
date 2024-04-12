@@ -1107,8 +1107,17 @@ public final class AnalyticsTracker {
         NOTIFICATION_MENU_TAPPED,
         NOTIFICATIONS_MARK_ALL_READ_TAPPED,
         NOTIFICATIONS_INLINE_ACTION_TAPPED,
-        WEBVIEW_TOO_LARGE_PAYLOAD_ERROR;
-
+        WEBVIEW_TOO_LARGE_PAYLOAD_ERROR,
+        RESOLVE_CONFLICT_SCREEN_SHOWN,
+        RESOLVE_CONFLICT_CONFIRM_TAPPED,
+        RESOLVE_CONFLICT_CANCEL_TAPPED,
+        RESOLVE_CONFLICT_CLOSE_TAPPED,
+        RESOLVE_CONFLICT_DISMISSED,
+        RESOLVE_AUTOSAVE_CONFLICT_SCREEN_SHOWN,
+        RESOLVE_AUTOSAVE_CONFLICT_CONFIRM_TAPPED,
+        RESOLVE_AUTOSAVE_CONFLICT_CANCEL_TAPPED,
+        RESOLVE_AUTOSAVE_CONFLICT_CLOSE_TAPPED,
+        RESOLVE_AUTOSAVE_CONFLICT_DISMISSED;
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.

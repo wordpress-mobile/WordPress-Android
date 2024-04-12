@@ -234,7 +234,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
+import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
@@ -403,7 +403,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
-    @Inject lateinit var syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -593,7 +593,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         updatingPostArea = findViewById(R.id.updating)
 
         // check if post content needs updating
-        if (syncPublishingFeatureConfig.isEnabled()) {
+        if (postConflictResolutionFeatureConfig.isEnabled()) {
             storePostViewModel.checkIfUpdatedPostVersionExists((editPostRepository), siteModel)
         }
     }
