@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
@@ -31,6 +32,7 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -56,9 +58,11 @@ import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.PostConflictResolutionFeatureUtils
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.getAuthorFilterItems
@@ -115,7 +119,7 @@ class PagesViewModel
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val autoSaveConflictResolver: AutoSaveConflictResolver,
+    private val pageConflictResolver: PageConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     private val siteOptionsStore: SiteOptionsStore,
@@ -124,7 +128,9 @@ class PagesViewModel
     private val prefs: AppPrefsWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
+    private val uploadStore: UploadStore
 ) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -205,6 +211,10 @@ class PagesViewModel
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
+    private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> =
+        _conflictResolutionAction
+
     private var _site: SiteModel? = null
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
@@ -225,7 +235,9 @@ class PagesViewModel
     private val pageListDialogHelper: PageListDialogHelper by lazy {
         PageListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled(),
+            showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
         )
     }
 
@@ -599,7 +611,7 @@ class PagesViewModel
 
     private fun copyPage(pageId: Long, performChecks: Boolean = false) {
         pageMap[pageId]?.let {
-            if (performChecks && autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
+            if (performChecks && pageConflictResolver.hasUnhandledAutoSave(it.post)) {
                 pageListDialogHelper.showCopyConflictDialog(it.post)
                 return
             }
@@ -694,8 +706,14 @@ class PagesViewModel
     }
 
     private fun checkAndEdit(page: PageModel) {
-        if (autoSaveConflictResolver.hasUnhandledAutoSave(page.post)) {
+        if (pageConflictResolver.hasUnhandledAutoSave(page.post)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page.post)
+            return
+        }
+
+        if (postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled() &&
+            pageConflictResolver.doesPageHaveUnhandledConflict(page.post)) {
+            pageListDialogHelper.showConflictedPostResolutionDialog(page.post)
             return
         }
 
@@ -1037,6 +1055,16 @@ class PagesViewModel
         }
     }
 
+    // Post Resolution Overlay Actions
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        pageListDialogHelper.onPostResolutionConfirmed(
+            event = event,
+            editPage = this::editPage,
+            updateConflictedPostWithRemoteVersion = this::updateConflictedPostWithRemoteVersion,
+            updateConflictedPostWithLocalVersion = this::updateConflictedPostWithLocalVersion
+        )
+    }
+
     private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
         val page = pageMap.getValue(pageId.value)
         val result = if (page.post.isLocalDraft) {
@@ -1047,6 +1075,43 @@ class PagesViewModel
         _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
     }
 
+    private fun updateConflictedPostWithRemoteVersion(pageId: RemoteId) {
+        // todo: annmarie - I have NO idea if this will work
+        performIfNetworkAvailable {
+            val page = pageMap.getValue(pageId.value)
+            val post = postStore.getPostByLocalPostId(page.pageId)
+            if (post != null) {
+                post.error = null
+                post.setIsLocallyChanged(false)
+                post.setAutoSaveExcerpt(null)
+                post.setAutoSaveRevisionId(0)
+                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(PostStore.RemotePostPayload(post, site)))
+                // todo: annmarie show an updating message ? This is what post does
+                //  showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, ToastUtils.Duration.SHORT))
+            }
+        }
+    }
+
+    private fun updateConflictedPostWithLocalVersion(pageId: RemoteId) {
+        // todo: annmarie - I have NO idea if this will work
+        performIfNetworkAvailable {
+            // todo: annmarie Post does this -> invalidateList.invoke()
+            val page = pageMap.getValue(pageId.value)
+            val post = postStore.getPostByLocalPostId(page.pageId) ?: return@performIfNetworkAvailable
+            post.error = null
+            uploadStore.clearUploadErrorForPost(post)
+            // todo: annmarie post list shows a snackbar message
+//            val snackBarHolder = SnackbarMessageHolder(
+//                UiStringRes(R.string.snackbar_conflict_web_version_discarded)
+//            )
+//            showSnackbar.invoke(snackBarHolder)
+            // postList also updates some info - I'm not sure if we need to do this for pages or there is a separate
+//            postUtils.trackSavePostAnalytics(post, site)
+            val remotePostPayload = PostStore.RemotePostPayload(post, site)
+            remotePostPayload.shouldSkipConflictResolutionCheck = true
+            dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
+        }
+    }
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
             _previewState.value != PostListRemotePreviewState.NONE
 
