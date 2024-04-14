@@ -144,7 +144,7 @@ class PagesViewModelTest : BaseUnitTest() {
             previewStateHelper = mock(),
             analyticsTracker = analyticsTracker,
             uploadStatusTracker = mock(),
-            autoSaveConflictResolver = mock(),
+            pageConflictResolver = mock(),
             uiDispatcher = testDispatcher(),
             defaultDispatcher = testDispatcher(),
             eventBusWrapper = mock(),
