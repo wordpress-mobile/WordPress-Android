@@ -48,6 +48,8 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LA
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
+import org.wordpress.android.ui.posts.PostResolutionOverlayFragment
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
@@ -476,6 +478,15 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         }
 
+        viewModel.conflictResolutionAction.observe(viewLifecycleOwner) {
+            val fragment = requireActivity().supportFragmentManager.findFragmentByTag(PostResolutionOverlayFragment.TAG)
+            if (fragment == null) {
+                PostResolutionOverlayFragment
+                    .newInstance(it.postModel, it.postResolutionType)
+                    .show(requireActivity().supportFragmentManager, PostResolutionOverlayFragment.TAG)
+            }
+        }
+
         viewModel.postUploadAction.observe(viewLifecycleOwner) {
             it?.let { (post, site, data) ->
                 uploadUtilsWrapper.handleEditPostResultSnackbars(
@@ -672,6 +683,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
             appbarMain.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
         }
+    }
+
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        viewModel.onPostResolutionConfirmed(event)
     }
 }
 
