@@ -97,6 +97,7 @@ class PagesActivity : LocaleAwareActivity(),
         }
     }
 
+    @Suppress("UseCheckOrError")
     override fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is PagesFragment) {

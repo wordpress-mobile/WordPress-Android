@@ -1086,8 +1086,8 @@ class PagesViewModel
                 post.setAutoSaveExcerpt(null)
                 post.setAutoSaveRevisionId(0)
                 dispatcher.dispatch(PostActionBuilder.newFetchPostAction(PostStore.RemotePostPayload(post, site)))
-                // todo: annmarie show an updating message ? This is what post does
-                //  showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, ToastUtils.Duration.SHORT))
+          // todo: annmarie show an updating message ? This is what post does
+         // todo: showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, ToastUtils.Duration.SHORT))
             }
         }
     }
