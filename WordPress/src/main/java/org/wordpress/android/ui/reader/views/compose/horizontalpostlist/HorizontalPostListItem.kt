@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -131,8 +130,7 @@ fun HorizontalPostListItem(
         Spacer(Modifier.weight(1f))
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = Margin.Medium.value),
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Number of likes
@@ -141,6 +139,7 @@ fun HorizontalPostListItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = secondaryElementColor,
             )
+            Spacer(Modifier.height(Margin.Medium.value))
             // "•" separator
             Text(
                 modifier = Modifier.padding(
@@ -157,6 +156,7 @@ fun HorizontalPostListItem(
                 color = secondaryElementColor,
             )
         }
+        Spacer(Modifier.height(Margin.Medium.value))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -165,7 +165,7 @@ fun HorizontalPostListItem(
         ) {
             // Like action
             TextButton(
-                modifier = Modifier.defaultMinSize(minHeight = 24.dp),
+                modifier = Modifier.height(24.dp),
                 contentPadding = PaddingValues(0.dp),
                 onClick = { onPostLikeClick() },
             ) {
@@ -240,12 +240,12 @@ fun HorizontalPostListItemPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .padding(top = 16.dp, bottom = 16.dp)
         ) {
             LazyRow(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp),
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 24.dp),
             ) {
                 item {
                     HorizontalPostListItem(
@@ -275,7 +275,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -304,7 +304,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -319,7 +319,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -334,7 +334,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -350,7 +350,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -366,7 +366,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -393,7 +393,7 @@ fun HorizontalPostListItemPreview() {
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(24.dp))
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
