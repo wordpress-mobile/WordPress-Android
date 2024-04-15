@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.8
+-----
+
+
 24.7
 -----
 * [**] Site picker: Added the feature to pin sites, redesigned the UI, and deprecated the Show/Hide sites functionality. [https://github.com/wordpress-mobile/WordPress-Android/pull/20521]
