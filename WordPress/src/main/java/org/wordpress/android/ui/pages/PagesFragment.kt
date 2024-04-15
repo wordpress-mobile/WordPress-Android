@@ -520,15 +520,19 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
-            it?.let { (page, isError, isFirstTimePublish) ->
+            it?.let { (page, errorWrapper, isFirstTimePublish) ->
+                val errorMessage = errorWrapper.errorMessage?.let {
+                    uiHelpers.getTextOfUiString(activity, it).toString()
+                }
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     activity,
                     activity.findViewById(R.id.coordinator),
-                    isError,
+                    errorWrapper.isError,
                     isFirstTimePublish,
                     page.post,
-                    null,
-                    page.site
+                    errorMessage,
+                    page.site,
+                    showRetry = errorWrapper.retry
                 )
             }
         }

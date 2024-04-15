@@ -174,8 +174,8 @@ class PagesViewModel
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
 
-    private val _uploadFinishedAction = SingleLiveEvent<Triple<PageModel, Boolean, Boolean>>()
-    val uploadFinishedAction: LiveData<Triple<PageModel, Boolean, Boolean>> = _uploadFinishedAction
+    private val _uploadFinishedAction = SingleLiveEvent<Triple<PageModel, PageUploadErrorWrapper, Boolean>>()
+    val uploadFinishedAction: LiveData<Triple<PageModel, PageUploadErrorWrapper, Boolean>> = _uploadFinishedAction
 
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
@@ -1133,9 +1133,9 @@ class PagesViewModel
         }
     }
 
-    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean, isFirstTimePublish: Boolean) {
+    private fun postUploadedFinished(remoteId: RemoteId, errorWrapper: PageUploadErrorWrapper, isFirstTimePublish: Boolean) {
         pageMap[remoteId.value]?.let {
-            _uploadFinishedAction.postValue(Triple(it, isError, isFirstTimePublish))
+            _uploadFinishedAction.postValue(Triple(it, errorWrapper, isFirstTimePublish))
         }
     }
 
