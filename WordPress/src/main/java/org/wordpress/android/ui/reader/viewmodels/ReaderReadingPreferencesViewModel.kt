@@ -48,7 +48,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     fun onScreenClosed() {
         if (isDirty()) {
-            // let's assume it already saved the preferences
+            // here we assume the code for saving preferences has been called before reaching this point
             launch {
                 _actionEvents.emit(ActionEvent.UpdatePostDetails)
             }
@@ -71,14 +71,22 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         readingPreferencesTracker.trackItemTapped(fontSize)
     }
 
-    fun saveReadingPreferencesAndClose() {
+    /**
+     * An exit action has been triggered by the user. This means that we need to save the current preferences and emit
+     * the close event, so the dialog is dismissed.
+     */
+    fun onExitActionClick() {
         launch {
             saveReadingPreferencesInternal()
             _actionEvents.emit(ActionEvent.Close)
         }
     }
 
-    fun saveReadingPreferences() {
+    /**
+     * The bottom sheet has been hidden by the user, which means the dismiss process is already on its way. All we need
+     * to do is save the current preferences.
+     */
+    fun onBottomSheetHidden() {
         launch {
             saveReadingPreferencesInternal()
         }

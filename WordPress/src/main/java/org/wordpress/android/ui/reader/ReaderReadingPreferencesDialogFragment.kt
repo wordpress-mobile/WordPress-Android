@@ -63,7 +63,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                 val isFeedbackEnabled by viewModel.isFeedbackEnabled.collectAsState()
                 ReadingPreferencesScreen(
                     currentReadingPreferences = readerPreferences,
-                    onCloseClick = viewModel::saveReadingPreferencesAndClose,
+                    onCloseClick = viewModel::onExitActionClick,
                     onSendFeedbackClick = viewModel::onSendFeedbackClick,
                     onThemeClick = viewModel::onThemeClick,
                     onFontFamilyClick = viewModel::onFontFamilyClick,
@@ -99,7 +99,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                         }
 
                         if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                            viewModel.saveReadingPreferences()
+                            viewModel.onBottomSheetHidden()
                         }
                     }
 
@@ -110,7 +110,7 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
             }
 
             (this as ComponentDialog).onBackPressedDispatcher.addCallback(this@ReaderReadingPreferencesDialogFragment) {
-                viewModel.saveReadingPreferencesAndClose()
+                viewModel.onExitActionClick()
             }
         }
 
