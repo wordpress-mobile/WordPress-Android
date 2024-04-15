@@ -14,8 +14,6 @@ Language: ar
     <string name="gutenberg_native_copy_error_details">نسخ تفاصيل الخطأ</string>
     <string name="gutenberg_native_button_to_copy_post_text">زر نسخ نص التدوينة</string>
     <string name="gutenberg_native_button_to_copy_error_details">زر نسخ تفاصيل الخطأ</string>
-    <string name="editor_updating_post_failed">فشل تحديث محتوى التدوينة</string>
-    <string name="editor_updating_post">تحديث محتوى التدوينة</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">تسمية الفيديو. فارغ</string>
     <string name="gutenberg_native_edit_video_024aee6d">تحرير الفيديو</string>
