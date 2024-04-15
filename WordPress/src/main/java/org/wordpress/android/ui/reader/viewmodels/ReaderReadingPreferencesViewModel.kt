@@ -47,6 +47,12 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     fun onScreenClosed() {
+        if (isDirty()) {
+            // let's assume it already saved the preferences
+            launch {
+                _actionEvents.emit(ActionEvent.UpdatePostDetails)
+            }
+        }
         readingPreferencesTracker.trackScreenClosed()
     }
 
@@ -67,13 +73,14 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     fun saveReadingPreferencesAndClose() {
         launch {
-            val currentPreferences = currentReadingPreferences.value
-            val isDirty = currentPreferences != originalReadingPreferences
-            if (isDirty) {
-                saveReadingPreferences(currentPreferences)
-                readingPreferencesTracker.trackSaved(currentPreferences)
-            }
-            _actionEvents.emit(ActionEvent.Close(isDirty))
+            saveReadingPreferencesInternal()
+            _actionEvents.emit(ActionEvent.Close)
+        }
+    }
+
+    fun saveReadingPreferences() {
+        launch {
+            saveReadingPreferencesInternal()
         }
     }
 
@@ -84,8 +91,21 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         }
     }
 
+    private suspend fun saveReadingPreferencesInternal() {
+        val currentPreferences = currentReadingPreferences.value
+        if (isDirty()) {
+            saveReadingPreferences(currentPreferences)
+            readingPreferencesTracker.trackSaved(currentPreferences)
+        }
+    }
+
+    private fun isDirty(): Boolean {
+        return currentReadingPreferences.value != originalReadingPreferences
+    }
+
     sealed interface ActionEvent {
-        data class Close(val isDirty: Boolean) : ActionEvent
+        data object Close : ActionEvent
+        data object UpdatePostDetails : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
         data class OpenWebView(val url: String) : ActionEvent
     }

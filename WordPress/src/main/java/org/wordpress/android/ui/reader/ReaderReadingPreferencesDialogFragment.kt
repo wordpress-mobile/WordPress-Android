@@ -97,6 +97,10 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
                             isStatusBarTransparent = true
                             dialog?.window?.setWindowStatusBarColor(Color.TRANSPARENT)
                         }
+
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            viewModel.saveReadingPreferences()
+                        }
                     }
 
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -111,23 +115,19 @@ class ReaderReadingPreferencesDialogFragment : BottomSheetDialogFragment() {
         }
 
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
         viewModel.onScreenClosed()
+        super.onDismiss(dialog)
     }
 
     private fun observeActionEvents() {
         viewModel.actionEvents.onEach {
             when (it) {
+                is ActionEvent.Close -> dismiss()
+                is ActionEvent.UpdatePostDetails -> postDetailViewModel.onReadingPreferencesThemeChanged()
                 is ActionEvent.UpdateStatusBarColor -> handleUpdateStatusBarColor(it.theme)
-                is ActionEvent.Close -> handleClose(it.isDirty)
                 is ActionEvent.OpenWebView -> handleOpenWebView(it.url)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleClose(isDirty: Boolean) {
-        if (isDirty) postDetailViewModel.onReadingPreferencesThemeChanged()
-        dismiss()
     }
 
     private fun handleUpdateStatusBarColor(theme: ReaderReadingPreferences.Theme) {
