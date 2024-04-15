@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScrollTargetViewId="@+id/recycler_view">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            app:navigationIcon="@drawable/ic_cross_white_24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentInsetStartWithNavigation="0dp"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevTitle="@string/site_picker_remove_site_empty"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:visibility="visible" />
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/site_list_item_height"
+            android:scrollbars="vertical" />
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/layout_add_site"
+        android:layout_width="match_parent"
+        android:background="?colorSurface"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:alpha="0.6"
+            android:background="#3C3C43"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.SitePicker.Button"
+            android:id="@+id/button_add_site"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_extra_large"
+            android:layout_marginVertical="@dimen/margin_medium"
+            android:text="@string/site_picker_add_a_site"/>
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

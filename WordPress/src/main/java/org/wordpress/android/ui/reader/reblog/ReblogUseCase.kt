@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_REBLOG
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
+import org.wordpress.android.ui.main.SitePickerMode
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
@@ -70,7 +70,7 @@ class ReblogUseCase @Inject constructor(
     fun convertReblogStateToNavigationEvent(state: ReblogState): ReaderNavigationEvents? {
         return when (state) {
             is NoSite -> ShowNoSitesToReblog
-            is MultipleSites -> ShowSitePickerForResult(state.defaultSite, state.post, REBLOG_SELECT_MODE)
+            is MultipleSites -> ShowSitePickerForResult(state.defaultSite, state.post, SitePickerMode.SIMPLE)
             is SingleSite -> OpenEditorForReblog(state.site, state.post, POST_FROM_REBLOG)
             Unknown -> null
         }

@@ -2497,7 +2497,7 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
-    <string name="site_picker_add_site">Add new site</string>
+    <string name="site_picker_add_a_site">Add a site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
@@ -2505,6 +2505,10 @@
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="site_picker_edit_pins">Edit Pins</string>
+    <string name="site_picker_pinned_sites">Pinned Sites</string>
+    <string name="site_picker_all_sites">All Sites</string>
+    <string name="site_picker_recent_sites">Recent Sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

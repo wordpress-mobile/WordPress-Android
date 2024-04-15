@@ -1337,7 +1337,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void setSite(Intent data) {
         if (data != null) {
             int siteLocalId = data.getIntExtra(
-                    SitePickerActivity.KEY_SITE_LOCAL_ID,
+                    ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                     SelectedSiteRepository.UNAVAILABLE
             );
             SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
@@ -1396,7 +1396,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
                     int newSiteLocalID = data.getIntExtra(
-                            SitePickerActivity.KEY_SITE_LOCAL_ID,
+                            ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                             SelectedSiteRepository.UNAVAILABLE
                     );
                     SiteUtils.enableBlockEditorOnSiteCreation(mDispatcher, mSiteStore, newSiteLocalID);
@@ -1430,7 +1430,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.SITE_PICKER:
                 boolean isSameSiteSelected = data != null
                                              && data.getIntExtra(
-                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                         SelectedSiteRepository.UNAVAILABLE
                 ) == mSelectedSiteRepository.getSelectedSiteLocalId();
 
@@ -1666,7 +1666,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             showSignInForResultBasedOnIsJetpackAppBuildConfig(this);
             return;
         }
-        if (mViewModel.getHasMultipleSites()) {
+        if (mViewModel.getHasMultipleSites() && !ChooseSiteActivity.isRunning()) {
             ActivityLauncher.showSitePickerForResult(this, mViewModel.getFirstSite());
         }
     }
