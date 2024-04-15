@@ -93,6 +93,7 @@ import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
+import org.wordpress.android.ui.posts.PostResolutionOverlayFragment;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
@@ -558,4 +559,6 @@ public interface AppComponent {
     void inject(WeekWidgetBlockListProviderFactory object);
 
     void inject(WPMainNavigationView object);
+
+    void inject(PostResolutionOverlayFragment object);
 }

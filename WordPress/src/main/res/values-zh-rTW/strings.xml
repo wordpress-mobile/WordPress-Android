@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-30 07:37:05+0000
+Translation-Revision-Date: 2024-04-12 07:32:16+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">超大</string>
+    <string name="reader_preferences_font_size_large">大</string>
+    <string name="reader_preferences_font_size_normal">一般</string>
+    <string name="reader_preferences_font_size_small">小</string>
+    <string name="reader_preferences_font_size_extra_small">超小</string>
+    <string name="reader_preferences_screen_font_size_label">字型大小</string>
+    <string name="reader_preferences_screen_font_family_label">字型</string>
+    <string name="reader_preferences_screen_theme_label">顏色配置</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">傳送你的意見回饋</string>
+    <string name="gutenberg_native_clear_selected_color">清除已選取的顏色</string>
+    <string name="reader_no_followed_tags_text_title">尚未有追蹤的標籤</string>
+    <string name="reader_toast_err_tag_already_following">你已追蹤此標籤</string>
+    <string name="reader_menu_reading_preferences">閱讀喜好</string>
+    <string name="reader_page_followed_tags_text_title">追蹤的標籤</string>
+    <string name="reader_preferences_theme_candy">糖果</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">晚上</string>
+    <string name="reader_preferences_theme_sepia">深褐色</string>
+    <string name="reader_preferences_theme_soft">柔和</string>
+    <string name="reader_preferences_theme_system">預設</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">傳送你的意見回饋</string>
+    <string name="reader_preferences_screen_preview_text_feedback">這個新功能仍在開發階段。 協助我們強化 %s。</string>
+    <string name="reader_preferences_screen_preview_text">選擇你的顏色、字型和大小。 預覽你的選取內容，並在設定完畢後以你的樣式閱讀文章。</string>
+    <string name="reader_preferences_screen_preview_title">閱讀喜好</string>
+    <string name="reader_filter_empty_tags_action_follow">追蹤標籤</string>
+    <string name="button_read">閱讀</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">為預防內容受影響，你可以複製文章文字。 複製錯誤詳細資料，以便除錯並與支援團隊分享。</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">編輯器發生未知錯誤</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">點選此處即可複製文章文字</string>
@@ -76,9 +103,11 @@ Language: zh_TW
     <string name="reader_dropdown_menu_subscriptions">訂閱</string>
     <string name="reader_dropdown_menu_discover">探索</string>
     <string name="reader_search_content_description">搜尋</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">追蹤標籤</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">可訂閱的網誌</string>
     <string name="reader_filter_empty_tags_action_suggested">已建議的標籤</string>
     <string name="reader_filter_empty_blogs_action_search">搜尋網誌</string>
+    <string name="reader_filter_empty_tags_list_follow_text">只要追蹤標籤，就能從此處看到最佳文章。</string>
     <string name="reader_filter_empty_tags_list_title">無標籤</string>
     <string name="reader_filter_empty_blogs_list_text">在「探索」中訂閱網誌，就會於此處看到網誌的最新文章。 或者搜尋你已按讚的網誌。</string>
     <string name="reader_filter_empty_blogs_list_title">無網誌訂閱</string>
@@ -1459,6 +1488,7 @@ Language: zh_TW
     <string name="hpp_error_title">版面配置在離線時無法使用</string>
     <string name="continue_site_credentials">使用商店憑證繼續</string>
     <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
+    <string name="reader_discover_no_posts_follow_subtitle">嘗試追蹤更多標籤，即可擴大搜尋範圍</string>
     <string name="reader_discover_no_posts_title">沒有近期文章</string>
     <string name="reader_discover_empty_title">歡迎！</string>
     <string name="scan">掃瞄</string>
@@ -1509,6 +1539,7 @@ Language: zh_TW
     <string name="photo_picker_wordpress_media_library">從 WordPress 媒體庫選擇</string>
     <string name="reader_label_toolbar_back">返回</string>
     <string name="reader_discover_empty_button_text">開始使用</string>
+    <string name="reader_discover_empty_subtitle_follow">追蹤標籤即可探索新網誌</string>
     <string name="reader_post_details_header_by_author_name">發表者：</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">此推薦連結不能被標記為垃圾郵件</string>
     <string name="stats_referrer_popup_unmark_as_spam">取消標記為垃圾郵件</string>
@@ -3512,6 +3543,7 @@ Language: zh_TW
     <string name="reader_toast_err_generic">無法執行此動作</string>
     <string name="schedule_verb">排程</string>
     <string name="update_verb">更新</string>
+    <string name="reader_hint_add_tag_or_url_follow">輸入要追蹤的 URL 或標籤</string>
     <string name="ssl_certificate_ask_trust">如果你通常能夠順利連線至此網站，則此錯誤可能代表有人正嘗試冒充該網站，因此請勿繼續操作。是否仍然要信任憑證？</string>
     <string name="ssl_certificate_error">無效的 SSL 憑證</string>
     <string name="help">說明</string>

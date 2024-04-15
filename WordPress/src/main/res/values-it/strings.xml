@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 15:54:09+0000
+Translation-Revision-Date: 2024-04-09 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Cancella il colore selezionato</string>
+    <string name="reader_no_followed_tags_text_title">Nessun tag seguito</string>
+    <string name="reader_toast_err_tag_already_following">Segui già questo tag</string>
+    <string name="reader_menu_reading_preferences">Preferenze di lettura</string>
+    <string name="reader_page_followed_tags_text_title">Tag seguiti</string>
+    <string name="reader_preferences_theme_candy">Caramella</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Sera</string>
+    <string name="reader_preferences_theme_sepia">Seppia</string>
+    <string name="reader_preferences_theme_soft">Tenue</string>
+    <string name="reader_preferences_theme_system">Predefinito</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">invia il tuo feedback</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Questa è una nuova funzionalità ancora in fase di sviluppo. Per aiutarci a migliorarla %s.</string>
+    <string name="reader_preferences_screen_preview_text">Scegli i colori, i caratteri e le dimensioni. Visualizza l\'anteprima della tua selezione qui e leggi gli articoli con il tuo stile una volta terminato.</string>
+    <string name="reader_preferences_screen_preview_title">Preferenze di lettura</string>
+    <string name="reader_filter_empty_tags_action_follow">Segui un tag</string>
+    <string name="button_read">Leggi</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Puoi copiare il testo dell\'articolo nel caso in cui il contenuto ne sia influenzato. Copia i dettagli dell\'errore per eseguire il correggerli e condividerli con il supporto.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">L\'editor ha riscontrato un errore inaspettato</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Clicca qui per copiare il testo dell\'articolo</string>
@@ -79,6 +97,7 @@ Language: it
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blog da seguire</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag suggeriti</string>
     <string name="reader_filter_empty_blogs_action_search">Cerca un blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Segui un tag e potrai vedere qui i migliori articoli correlati.</string>
     <string name="reader_filter_empty_tags_list_title">Nessun tag</string>
     <string name="reader_filter_empty_blogs_list_text">Segui i blog della sezione Scopri e vedrai i loro ultimi articoli qui. Oppure cerca un blog che già ti piace.</string>
     <string name="reader_filter_empty_blogs_list_title">Nessun abbonamento ai blog</string>
@@ -1463,6 +1482,7 @@ Language: it
     <string name="hpp_error_title">Layout non disponibili in modalità offline</string>
     <string name="continue_site_credentials">Continua con le credenziali del negozio</string>
     <string name="login_find_your_connected_email">Trova l\'email connessa</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Prova a seguire più tag per estendere la ricerca</string>
     <string name="reader_discover_no_posts_title">Nessun articolo recente</string>
     <string name="reader_discover_empty_title">Benvenuto!</string>
     <string name="scan">Scansiona</string>
@@ -1513,6 +1533,7 @@ Language: it
     <string name="photo_picker_wordpress_media_library">Scegli dalla Libreria multimediale di WordPress</string>
     <string name="reader_label_toolbar_back">Indietro</string>
     <string name="reader_discover_empty_button_text">Inizia ora</string>
+    <string name="reader_discover_empty_subtitle_follow">Segui i tag per scoprire nuovi blog</string>
     <string name="reader_post_details_header_by_author_name">Da</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Questo referrer non può essere contrassegnato come spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Annulla contrassegno come spam</string>
@@ -3514,6 +3535,7 @@ Language: it
     <string name="reader_toast_err_generic">Impossibile eseguire questa azione</string>
     <string name="schedule_verb">Pianifica</string>
     <string name="update_verb">Aggiorna</string>
+    <string name="reader_hint_add_tag_or_url_follow">Inserisci un URL o un tag da seguire</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>
     <string name="ssl_certificate_error">Certificato SSL non valido</string>
     <string name="help">Aiuto</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-02 20:56:12+0000
+Translation-Revision-Date: 2024-04-10 07:16:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
@@ -63,6 +63,8 @@ Language: gl_ES
     <string name="reader_filter_empty_tags_action_suggested">Etiquetas recomendadas</string>
     <string name="reader_filter_empty_blogs_action_search">Buscar un blog</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs aos que subscribirse</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Seguir etiquetas</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Sigue unha etiqueta e poderás ve as mellores publicacións asociadas a ela.</string>
     <string name="reader_filter_empty_tags_list_title">Sen etiquetas</string>
     <string name="reader_filter_empty_blogs_list_text">Subscríbete a blogs en Descubrir e verás as súas últimas publicacións aquí. Ou busca un blog que xa che guste.</string>
     <string name="reader_filter_by_tag_title">Filtrar por etiqueta</string>
@@ -1454,6 +1456,7 @@ Language: gl_ES
     <string name="reader_discover_no_posts_title">Non hai entradas recentes</string>
     <string name="login_find_your_connected_email">Encontra o teu correo electrónico conectado</string>
     <string name="continue_site_credentials">Continuar coas credenciais da tenda</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Proba a seguir máis etiquetas para ampliar a busca</string>
     <string name="login_prologue_third_subtitle_one">A &lt;b&gt;Madison Ruíz&lt;/b&gt; gustoullea túa entrada</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Xan Vilaboi&lt;/b&gt; respondeu na túa entrada</string>
     <string name="login_prologue_third_subtitle_two">Hoxe recibiches &lt;b&gt;50 gústame&lt;/b&gt; no teu sitio</string>
@@ -1502,6 +1505,7 @@ Language: gl_ES
     <string name="reader_label_toolbar_back">Volver</string>
     <string name="reader_post_details_header_by_author_name">por</string>
     <string name="reader_discover_empty_button_text">Primeiros pasos</string>
+    <string name="reader_discover_empty_subtitle_follow">Segue etiquetas para descubrir novos blogs</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Marcar como spam</string>
     <string name="stats_referrer_popup_menu_open_website">Abrir a web</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -3508,6 +3512,7 @@ Language: gl_ES
     <string name="reader_toast_err_generic">Non foi posible realizar esta acción</string>
     <string name="update_verb">Actualizar</string>
     <string name="schedule_verb">Programar</string>
+    <string name="reader_hint_add_tag_or_url_follow">Introduce unha URL ou etiqueta para seguir</string>
     <string name="help">Axuda</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
