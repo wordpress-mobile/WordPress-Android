@@ -44,13 +44,6 @@ fun HorizontalPostListItemLoading() {
         ) {
             ShimmerBox(
                 modifier = Modifier
-                    .size(20.dp)
-                    .aspectRatio(1f)
-                    .background(loadingColor, shape = CircleShape),
-                isLoadingCompleted = false,
-            )
-            ShimmerBox(
-                modifier = Modifier
                     .padding(start = Margin.Small.value)
                     .width(99.dp)
                     .height(8.dp)
