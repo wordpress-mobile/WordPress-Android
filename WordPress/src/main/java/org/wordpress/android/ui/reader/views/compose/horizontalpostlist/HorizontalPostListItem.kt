@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -46,7 +45,6 @@ import org.wordpress.android.ui.compose.unit.Margin
 @Composable
 fun HorizontalPostListItem(
     siteName: String,
-    blogAvatarUrl: String,
     postDateLine: String,
     postTitle: String,
     postExcerpt: String,
@@ -54,7 +52,6 @@ fun HorizontalPostListItem(
     postNumberOfLikesText: String,
     postNumberOfCommentsText: String,
     isPostLiked: Boolean,
-    onBlogAvatarClick: () -> Unit,
     onPostImageClick: () -> Unit,
     onPostLikeClick: () -> Unit,
     onPostMoreMenuClick: () -> Unit,
@@ -73,14 +70,6 @@ fun HorizontalPostListItem(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Blog avatar
-            BlogAvatar(
-                modifier = Modifier.padding(
-                    end = Margin.Medium.value,
-                ),
-                imageUrl = blogAvatarUrl,
-                onClick = { onBlogAvatarClick() },
-            )
             // Site name
             Text(
                 modifier = Modifier.weight(1F),
@@ -129,7 +118,7 @@ fun HorizontalPostListItem(
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
-            maxLines = if (!postImageUrl.isNullOrBlank()) 3 else Int.MAX_VALUE,
+            maxLines = if (!postImageUrl.isNullOrBlank()) 2 else Int.MAX_VALUE,
             overflow = TextOverflow.Ellipsis,
         )
         // Post image
@@ -222,27 +211,6 @@ fun HorizontalPostListItem(
 }
 
 @Composable
-fun BlogAvatar(
-    imageUrl: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    AsyncImage(
-        modifier = modifier
-            .size(20.dp)
-            .clip(CircleShape)
-            .clickable { onClick() },
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(imageUrl)
-            .error(R.drawable.bg_oval_placeholder_image_32dp)
-            .crossfade(true)
-            .build(),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
-    )
-}
-
-@Composable
 fun PostImage(
     imageUrl: String,
     onClick: () -> Unit,
@@ -283,7 +251,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
                                 " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
                                 "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -304,7 +271,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -313,7 +279,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -335,7 +300,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -344,7 +308,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
                         postExcerpt = "Lorem ipsum dolor sit amet.",
@@ -352,7 +315,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -361,7 +323,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
                         postExcerpt = "Lorem ipsum dolor sit amet.",
@@ -369,7 +330,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -378,7 +338,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -387,7 +346,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -396,7 +354,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
@@ -405,7 +362,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -414,7 +370,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
                         postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -434,7 +389,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
@@ -443,7 +397,6 @@ fun HorizontalPostListItemPreview() {
                     HorizontalPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        blogAvatarUrl = "https://picsum.photos/200/300",
                         postDateLine = "1h",
                         postTitle = "Lorem ipsum dolor sit amet.",
                         postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -462,7 +415,6 @@ fun HorizontalPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onBlogAvatarClick = {},
                         onPostImageClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
