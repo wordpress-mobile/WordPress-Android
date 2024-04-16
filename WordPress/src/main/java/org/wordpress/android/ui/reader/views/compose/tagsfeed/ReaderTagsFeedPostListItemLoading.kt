@@ -24,7 +24,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun HorizontalPostListItemLoading() {
+fun ReaderTagsFeedPostListItemLoading() {
     Column(
         modifier = Modifier
             .width(240.dp)
@@ -94,7 +94,7 @@ fun HorizontalPostListItemLoading() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HorizontalPostListItemLoadingPreview() {
+fun ReaderTagsFeedPostListItemLoadingPreview() {
     AppTheme {
         Box(
             modifier = Modifier
@@ -108,13 +108,13 @@ fun HorizontalPostListItemLoadingPreview() {
                 contentPadding = PaddingValues(horizontal = 12.dp),
             ) {
                 item {
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                 }
             }
         }

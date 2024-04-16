@@ -43,7 +43,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun HorizontalPostListItem(
+fun ReaderTagsFeedPostListItem(
     siteName: String,
     postDateLine: String,
     postTitle: String,
@@ -234,7 +234,7 @@ fun PostImage(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HorizontalPostListItemPreview() {
+fun ReaderTagsFeedPostListItemPreview() {
     AppTheme {
         Box(
             modifier = Modifier
@@ -248,7 +248,7 @@ fun HorizontalPostListItemPreview() {
                 contentPadding = PaddingValues(horizontal = 24.dp),
             ) {
                 item {
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
                                 " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -276,7 +276,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -305,7 +305,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -320,7 +320,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -335,7 +335,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -351,7 +351,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -367,7 +367,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
@@ -394,7 +394,7 @@ fun HorizontalPostListItemPreview() {
                         onPostMoreMenuClick = {},
                     )
                     Spacer(Modifier.width(24.dp))
-                    HorizontalPostListItem(
+                    ReaderTagsFeedPostListItem(
                         siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
                                 "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
                         postDateLine = "1h",
