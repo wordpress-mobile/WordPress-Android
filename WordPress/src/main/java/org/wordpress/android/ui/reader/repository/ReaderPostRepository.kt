@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.repository
 
-import android.text.TextUtils
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
 import org.json.JSONObject
@@ -59,7 +58,7 @@ class ReaderPostRepository @Inject constructor(
             ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> null
         }
 
-        if (!TextUtils.isEmpty(beforeDate)) {
+        if (!beforeDate.isNullOrBlank()) {
             sb.append("&before=").append(UrlUtils.urlEncode(beforeDate))
         }
         sb.append("&meta=site,likes")
@@ -93,7 +92,7 @@ class ReaderPostRepository @Inject constructor(
         // append the date of the oldest cached post in this blog when requesting older posts
         if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInBlog(blogId)
-            if (!TextUtils.isEmpty(dateOldest)) {
+            if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
             }
         }
@@ -121,7 +120,7 @@ class ReaderPostRepository @Inject constructor(
         var path = "read/feed/$feedId/posts/?meta=site,likes"
         if (updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER) {
             val dateOldest = ReaderPostTable.getOldestPubDateInFeed(feedId)
-            if (!TextUtils.isEmpty(dateOldest)) {
+            if (!dateOldest.isNullOrBlank()) {
                 path += "&before=" + UrlUtils.urlEncode(dateOldest)
             }
         }
