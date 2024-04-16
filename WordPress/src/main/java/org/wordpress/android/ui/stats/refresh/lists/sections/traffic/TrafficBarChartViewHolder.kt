@@ -168,10 +168,8 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 android.R.color.transparent
             )
         )
-        dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = false
-        dataSet.highLightAlpha = 255
         return dataSet
     }
 
