@@ -1142,7 +1142,11 @@ public class PostStore extends Store {
             if (TextUtils.isEmpty(postToPush.getStatus())) {
                 postToPush.setStatus(PostStatus.PUBLISHED.toString());
             }
-            mPostXMLRPCClient.pushPost(postToPush, payload.site, payload.isFirstTimePublish);
+            mPostXMLRPCClient.pushPost(
+                    postToPush,
+                    payload.site,
+                    payload.isFirstTimePublish,
+                    payload.shouldSkipConflictResolutionCheck);
         }
     }
 
