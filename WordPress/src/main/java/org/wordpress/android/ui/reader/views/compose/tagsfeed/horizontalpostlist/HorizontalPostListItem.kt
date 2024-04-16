@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.views.compose.horizontalpostlist
+package org.wordpress.android.ui.reader.views.compose.tagsfeed.horizontalpostlist
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
