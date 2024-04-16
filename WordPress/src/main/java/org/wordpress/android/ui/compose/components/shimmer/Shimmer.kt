@@ -14,6 +14,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.ui.compose.theme.AppColor
 
+object Shimmer {
+    val color = AppColor.Black.copy(
+        alpha = 0.08F
+    )
+}
+
 /**
  * Taken from https://github.com/canerkaseler/jetpack-compose-shimmer-loading-animation
  */

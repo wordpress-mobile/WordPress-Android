@@ -27,9 +27,6 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun HorizontalPostListItemLoading() {
-    val loadingColor = AppColor.Black.copy(
-        alpha = 0.08F
-    )
     Column(
         modifier = Modifier
             .width(240.dp)
@@ -43,8 +40,7 @@ fun HorizontalPostListItemLoading() {
                 modifier = Modifier
                     .width(99.dp)
                     .height(8.dp)
-                    .clip(shape = RoundedCornerShape(16.dp))
-                    .background(loadingColor),
+                    .clip(shape = RoundedCornerShape(16.dp)),
                 isLoadingCompleted = false,
             )
         }
@@ -53,8 +49,7 @@ fun HorizontalPostListItemLoading() {
                 .padding(top = Margin.Large.value)
                 .width(204.dp)
                 .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(loadingColor),
+                .clip(shape = RoundedCornerShape(16.dp)),
             isLoadingCompleted = false,
         )
         ShimmerBox(
@@ -62,8 +57,7 @@ fun HorizontalPostListItemLoading() {
                 .padding(top = Margin.Large.value)
                 .width(140.dp)
                 .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(loadingColor),
+                .clip(shape = RoundedCornerShape(16.dp)),
             isLoadingCompleted = false,
         )
         ShimmerBox(
@@ -71,8 +65,7 @@ fun HorizontalPostListItemLoading() {
                 .padding(top = Margin.Large.value)
                 .fillMaxWidth()
                 .height(150.dp)
-                .clip(shape = RoundedCornerShape(8.dp))
-                .background(loadingColor),
+                .clip(shape = RoundedCornerShape(8.dp)),
             isLoadingCompleted = false,
         )
         ShimmerBox(
@@ -83,8 +76,7 @@ fun HorizontalPostListItemLoading() {
                 )
                 .width(170.dp)
                 .height(8.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(loadingColor),
+                .clip(shape = RoundedCornerShape(16.dp)),
             isLoadingCompleted = false,
         )
         ShimmerBox(
@@ -95,8 +87,7 @@ fun HorizontalPostListItemLoading() {
                 )
                 .width(170.dp)
                 .height(8.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(loadingColor),
+                .clip(shape = RoundedCornerShape(16.dp)),
             isLoadingCompleted = false,
         )
     }
