@@ -377,6 +377,18 @@
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
 
+    <!-- Post Resolution Overlay -->
+    <string name="dialog_post_conflict_title">Resolve Conflict</string>
+    <string name="dialog_post_conflict_body">The post was modified on another device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_conflict_body_for_page">The page was modified on another device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_conflict_current_device">Current Device</string>
+    <string name="dialog_post_conflict_another_device">Another Device</string>
+    <string name="dialog_post_autosave_title">Autosave Available</string>
+    <string name="dialog_post_autosave_body">You\'ve made unsaved changes to this post from a different device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_autosave_body_for_page">You\'ve made unsaved changes to this page from a different device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_autosave_current_device" translatable="false">@string/dialog_post_conflict_current_device</string>
+    <string name="dialog_post_autosave_another_device" translatable="false">@string/dialog_post_conflict_another_device</string>
+
     <!-- post autosave revision dialog -->
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
     <string name="dialog_confirm_autosave_body_first_part">You recently made changes to this post but didn\'t save them. Choose a version to load:\n\n</string>
@@ -2485,7 +2497,7 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
-    <string name="site_picker_add_site">Add new site</string>
+    <string name="site_picker_add_a_site">Add a site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
@@ -2493,6 +2505,10 @@
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="site_picker_edit_pins">Edit Pins</string>
+    <string name="site_picker_pinned_sites">Pinned Sites</string>
+    <string name="site_picker_all_sites">All Sites</string>
+    <string name="site_picker_recent_sites">Recent Sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -4210,9 +4226,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Last week you had %1$s views, 1 like, and %2$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Last week you had %1$s views, %2$s likes, and 1 comment.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Last week you had %1$s views, 1 like, and 1 comment.</string>
     <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Last week you had %1$s views and 1 like</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_comment">Last week you had %1$s views and 1 comment</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>

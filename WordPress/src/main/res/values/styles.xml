@@ -1826,4 +1826,14 @@
     <style name="PagesList.Item.Body" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
+
+    <style name="Widget.SitePicker.Button" parent="Widget.LoginFlow.Button.Primary">
+        <item name="android:textColor">?attr/colorSurface</item>
+        <item name="android:backgroundTint">?attr/colorOnBackground</item>
+    </style>
+
+    <style name="AvatarShapeAppearanceOverlay">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/avatar_sz_medium_radius</item>
+    </style>
 </resources>

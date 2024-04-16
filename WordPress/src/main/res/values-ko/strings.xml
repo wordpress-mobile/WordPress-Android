@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 11:54:09+0000
+Translation-Revision-Date: 2024-04-09 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">선택한 색상 지우기</string>
+    <string name="reader_no_followed_tags_text_title">팔로우한 태그 없음</string>
+    <string name="reader_toast_err_tag_already_following">이미 이 태그 팔로우 중</string>
+    <string name="reader_menu_reading_preferences">읽기 기본 설정</string>
+    <string name="reader_page_followed_tags_text_title">팔로우한 태그</string>
+    <string name="reader_preferences_theme_candy">사탕</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">저녁</string>
+    <string name="reader_preferences_theme_sepia">세피아</string>
+    <string name="reader_preferences_theme_soft">부드러운</string>
+    <string name="reader_preferences_theme_system">기본</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">피드백 보내기</string>
+    <string name="reader_preferences_screen_preview_text_feedback">아직 개발 중인 새 기능입니다. 개선에 동참해 주세요(%s).</string>
+    <string name="reader_preferences_screen_preview_text">색상, 글꼴과 크기를 선택하세요. 선택한 상태를 여기에서 미리 보며 완료한 후 스타일이 적용된 글을 읽어보세요.</string>
+    <string name="reader_preferences_screen_preview_title">읽기 기본 설정</string>
+    <string name="reader_filter_empty_tags_action_follow">태그 팔로우</string>
+    <string name="button_read">읽기</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">콘텐츠가 영향을 받는 때를 대비하여 글 텍스트를 복사할 수 있습니다. 디버깅할 오류 상세 정보를 복사하고 지원팀과 공유하세요.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">편집기에서 예기치 않은 오류가 발생했습니다.</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">여기를 눌러 글 텍스트 복사</string>
@@ -75,9 +93,11 @@ Language: ko_KR
     <string name="reader_dropdown_menu_subscriptions">구독</string>
     <string name="reader_dropdown_menu_discover">발견</string>
     <string name="reader_search_content_description">검색</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">태그 팔로우</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
+    <string name="reader_filter_empty_tags_list_follow_text">태그를 팔로우하면 여기에서 인기 글을 확인할 수 있습니다.</string>
     <string name="reader_filter_empty_tags_list_title">태그 없음</string>
     <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
     <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>
@@ -1460,6 +1480,7 @@ Language: ko_KR
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
     <string name="continue_site_credentials">상점 자격증명으로 계속하기</string>
     <string name="login_find_your_connected_email">연결한 이메일 찾기</string>
+    <string name="reader_discover_no_posts_follow_subtitle">검색 범위가 넓어지도록 추가 태그를 팔로우해 보세요.</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
     <string name="scan">검색하기</string>
@@ -1510,6 +1531,7 @@ Language: ko_KR
     <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
     <string name="reader_label_toolbar_back">돌아가기</string>
     <string name="reader_discover_empty_button_text">시작하기</string>
+    <string name="reader_discover_empty_subtitle_follow">태그를 팔로우하여 새 블로그 발견하기</string>
     <string name="reader_post_details_header_by_author_name">작성자</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
@@ -3512,6 +3534,7 @@ Language: ko_KR
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>
+    <string name="reader_hint_add_tag_or_url_follow">팔로우할 태그 또는 URL 입력</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="help">도우미</string>

@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 import java.text.ParseException
@@ -30,7 +31,11 @@ private const val YEARS_FORMAT = "MMM"
 private const val REMOVE_YEAR = "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*"
 
 class StatsDateFormatter
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper, val resourceProvider: ResourceProvider) {
+@Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    val resourceProvider: ResourceProvider,
+    val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+) {
     private val inputFormat: SimpleDateFormat
         get() {
             return SimpleDateFormat(STATS_INPUT_FORMAT, localeManagerWrapper.getLocale())
@@ -110,7 +115,7 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return printWeek(startCalendar, endCalendar)
+                return printWeek(startCalendar, endCalendar, statsTrafficTabFeatureConfig.isEnabled())
             }
             MONTHS -> outputMonthFormat.format(date)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }

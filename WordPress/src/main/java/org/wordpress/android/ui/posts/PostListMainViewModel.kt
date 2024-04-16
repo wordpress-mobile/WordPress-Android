@@ -83,8 +83,10 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
-    private val syncPublishingFeatureUtils: SyncPublishingFeatureUtils
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
 ) : ViewModel(), CoroutineScope {
+    private var isStarted = false
+
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
@@ -128,6 +130,10 @@ class PostListMainViewModel @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
+    private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> =
+        _conflictResolutionAction
+
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
@@ -150,8 +156,10 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
+            showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled()
         )
     }
 
@@ -186,7 +194,7 @@ class PostListMainViewModel @Inject constructor(
             showToast = { _toastMessage.postValue(it) },
             triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
             copyPost = this::copyPost,
-            syncPublishingFeatureUtils = syncPublishingFeatureUtils
+            postConflictResolutionFeatureUtils = postConflictResolutionFeatureUtils
         )
     }
 
@@ -235,6 +243,7 @@ class PostListMainViewModel @Inject constructor(
         currentBottomSheetPostId: LocalId,
         editPostRepository: EditPostRepository
     ) {
+        if (isStarted) return
         this.site = site
         this.editPostRepository = editPostRepository
 
@@ -294,6 +303,8 @@ class PostListMainViewModel @Inject constructor(
                 savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
+
+        isStarted = true
     }
 
     override fun onCleared() {
@@ -475,6 +486,17 @@ class PostListMainViewModel @Inject constructor(
             updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
             editLocalPost = this::editLocalPost,
             copyLocalPost = this::copyLocalPost
+        )
+    }
+
+    // Post Resolution Overlay Actions
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        postListDialogHelper.onPostResolutionConfirmed(
+            event = event,
+            updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+            editRestoredAutoSavePost = this::editRestoredAutoSavePost,
+            editLocalPost = this::editLocalPost,
+            updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
         )
     }
 

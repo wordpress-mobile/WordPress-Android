@@ -1,15 +1,16 @@
 package org.wordpress.android.ui.sitemonitor
 
-import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class SiteMonitorUtils @Inject constructor(
+    private val userAgent: UserAgent,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
-    fun getUserAgent() = WordPress.getUserAgent()
+    fun getUserAgent() = userAgent.toString()
 
     fun getAuthenticationPostData(authenticationUrl: String,
                                   urlToLoad: String,

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-26 19:01:24+0000
+Translation-Revision-Date: 2024-04-08 16:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Seçilen rengi temizle</string>
+    <string name="reader_no_followed_tags_text_title">Takip edilen etiket yok</string>
+    <string name="reader_toast_err_tag_already_following">Bu etiketi zaten takip ediyorsunuz</string>
+    <string name="reader_menu_reading_preferences">Okuma Tercihleri</string>
+    <string name="reader_page_followed_tags_text_title">Takip edilen etiketler</string>
+    <string name="reader_preferences_theme_candy">Şeker</string>
+    <string name="reader_preferences_theme_evening">Akşam</string>
+    <string name="reader_preferences_theme_sepia">Sepya</string>
+    <string name="reader_preferences_theme_soft">Yumuşak</string>
+    <string name="reader_preferences_theme_system">Varsayılan</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">geri bildiriminizi gönderin</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Bu, hala geliştirme aşamasında olan yeni bir özelliktir. Bunu iyileştirmemize yardımcı olmak için %s.</string>
+    <string name="reader_preferences_screen_preview_text">Renklerinizi, yazı tiplerinizi ve boyutlarınızı seçin. Seçiminizi buradan önizleyin ve işiniz bittiğinde gönderileri okuyun.</string>
+    <string name="reader_preferences_screen_preview_title">Okuma Tercihleri</string>
+    <string name="reader_filter_empty_tags_action_follow">Bir etiket takip edin</string>
+    <string name="button_read">Okundu</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">İçeriğinizin etkilenmesi durumunda gönderi metninizi kopyalayabilirsiniz. Hata ayıklamak ve destek ekibiyle paylaşmak için hata ayrıntılarını kopyalayın.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Düzenleyici beklenmeyen bir hatayla karşılaştı</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Gönderi metnini kopyalamak için buraya dokunun</string>
@@ -76,9 +92,11 @@ Language: tr
     <string name="reader_dropdown_menu_subscriptions">Abonelikler</string>
     <string name="reader_dropdown_menu_discover">Keşfet</string>
     <string name="reader_search_content_description">Ara</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Etiketleri takip edin</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Abone olunacak bloglar</string>
     <string name="reader_filter_empty_tags_action_suggested">Önerilen etiketler</string>
     <string name="reader_filter_empty_blogs_action_search">Blog ara</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Bir etiketi takip ettiğinizde en iyi gönderiler burada görünür.</string>
     <string name="reader_filter_empty_tags_list_title">Etiket yok</string>
     <string name="reader_filter_empty_blogs_list_text">Keşfet bölümünden bloglara abone olduğunuzda en son yazılar burada görüntülenir. Zaten sevdiğiniz bir blogu da arayabilirsiniz.</string>
     <string name="reader_filter_empty_blogs_list_title">Abone olunan blog yok</string>
@@ -1467,6 +1485,7 @@ Language: tr
     <string name="hpp_error_title">Çevrim dışıyken yerleşimler kullanılamaz</string>
     <string name="continue_site_credentials">Mağaza kimlik doğrulama bilgileriyle ilerleyin</string>
     <string name="login_find_your_connected_email">Bağlı e-postanızı bulun</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Arama kapsamını genişletmek için daha fazla etiketi takip etmeyi deneyin</string>
     <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
     <string name="reader_discover_empty_title">Hoş geldiniz!</string>
     <string name="scan">Tarama</string>
@@ -1517,6 +1536,7 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress ortam kitaplığından seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
+    <string name="reader_discover_empty_subtitle_follow">Yeni bloglar keşfetmek için etiketler takip edin</string>
     <string name="reader_post_details_header_by_author_name">Gönderen</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen e-posta işaretini kaldır</string>
@@ -3524,6 +3544,7 @@ Language: tr
     <string name="reader_toast_err_generic">Bu işlem yapılamıyor</string>
     <string name="schedule_verb">Zamanla</string>
     <string name="update_verb">Güncelle</string>
+    <string name="reader_hint_add_tag_or_url_follow">Takip etmek için etiket veya adres girin</string>
     <string name="ssl_certificate_ask_trust">Bu siteye genellikle sorunsuz bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">SSL sertifikası geçersiz</string>
     <string name="help">Yardım</string>

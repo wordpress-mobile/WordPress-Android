@@ -51,6 +51,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -657,9 +658,22 @@ public class UploadUtils {
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostImmutableModel post) {
-        return !TextUtils.isEmpty(post.getAutoSaveModified())
-               && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
-                               .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
+        // Check if the autoSaveModified field is not empty.
+        boolean isAutoSaveModifiedNotEmpty = !TextUtils.isEmpty(post.getAutoSaveModified());
+
+        // If autoSaveModified is null, return false immediately.
+        if (!isAutoSaveModifiedNotEmpty) {
+            return false;
+        }
+
+        // Parse dates from ISO8601 format.
+        Date dateLocallyChanged = DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged());
+        Date autoSaveModified = DateTimeUtils.dateFromIso8601(post.getAutoSaveModified());
+
+        // Check if dateLocallyChanged is not after autoSaveModified (it is before or the same).
+        boolean isDateLocallyChangedNotAfter = !dateLocallyChanged.after(autoSaveModified);
+
+        return isAutoSaveModifiedNotEmpty && isDateLocallyChangedNotAfter;
     }
 
     public static int cancelPendingAutoUpload(PostModel post, Dispatcher dispatcher) {

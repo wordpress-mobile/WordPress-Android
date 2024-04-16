@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 12:54:09+0000
+Translation-Revision-Date: 2024-04-09 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_clear_selected_color">Effacer la couleur sélectionnée</string>
+    <string name="reader_no_followed_tags_text_title">Aucune étiquette suivie</string>
+    <string name="reader_toast_err_tag_already_following">Vous suivez déjà cette étiquette</string>
+    <string name="reader_menu_reading_preferences">Préférences de lecture</string>
+    <string name="reader_page_followed_tags_text_title">Étiquettes suivies</string>
+    <string name="reader_preferences_theme_candy">Bonbon</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Nuit</string>
+    <string name="reader_preferences_theme_sepia">Sépia</string>
+    <string name="reader_preferences_theme_soft">Doux</string>
+    <string name="reader_preferences_theme_system">Par défaut</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">envoyez vos commentaires</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Cette fonctionnalité est encore en cours de développement. Pour nous aider à l’améliorer, %s.</string>
+    <string name="reader_preferences_screen_preview_text">Choisissez vos couleurs, polices et tailles. Prévisualisez votre sélection ici et lisez des articles avec vos styles une fois que vous aurez terminé.</string>
+    <string name="reader_preferences_screen_preview_title">Préférences de lecture</string>
+    <string name="reader_filter_empty_tags_action_follow">Suivre une étiquette</string>
+    <string name="button_read">Lu</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Vous pouvez copier le texte de votre article au cas où votre contenu serait affecté. Copier les détails de l’erreur pour débuguer et les partager avec l’assistance.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">L’éditeur a rencontré une erreur inattendue</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Appuyer ici pour copier le texte de l’article</string>
@@ -75,9 +93,11 @@ Language: fr
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
     <string name="reader_dropdown_menu_discover">Découvrir</string>
     <string name="reader_search_content_description">Rechercher</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Suivre des étiquettes</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs auxquels s’abonner</string>
     <string name="reader_filter_empty_tags_action_suggested">Étiquettes suggérées</string>
     <string name="reader_filter_empty_blogs_action_search">Chercher un blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Suivez une étiquette et vous verrez les meilleurs articles sur le sujet apparaître ici.</string>
     <string name="reader_filter_empty_tags_list_title">Aucune étiquette</string>
     <string name="reader_filter_empty_blogs_list_text">Abonnez-vous à des blogs dans Découvrir et vous verrez apparaître ici leurs derniers articles. Ou cherchez un blog que vous aimez déjà.</string>
     <string name="reader_filter_empty_blogs_list_title">Aucun abonnement à un blog</string>
@@ -1458,6 +1478,7 @@ Language: fr
     <string name="hpp_error_title">Mises en page non disponibles hors connexion</string>
     <string name="continue_site_credentials">Continuer avec les identifiants de connexion de la boutique</string>
     <string name="login_find_your_connected_email">Trouver votre e-mail connecté</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Essayez de suivre plus d’étiquettes pour élargir la recherche</string>
     <string name="reader_discover_no_posts_title">Pas d’articles récents.</string>
     <string name="reader_discover_empty_title">Bienvenue !</string>
     <string name="scan">Analyser</string>
@@ -1508,6 +1529,7 @@ Language: fr
     <string name="photo_picker_wordpress_media_library">Choisir dans la bibliothèque des médias WordPress</string>
     <string name="reader_label_toolbar_back">Retour</string>
     <string name="reader_discover_empty_button_text">Premiers pas</string>
+    <string name="reader_discover_empty_subtitle_follow">Suivre des étiquettes pour découvrir de nouveaux blogs</string>
     <string name="reader_post_details_header_by_author_name">Par</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Ce référent ne peut pas être marqué comme indésirable</string>
     <string name="stats_referrer_popup_unmark_as_spam">Marquer comme sain</string>
@@ -3513,6 +3535,7 @@ Language: fr
     <string name="reader_toast_err_generic">Impossible d\'effectuer cette action</string>
     <string name="schedule_verb">Programmer</string>
     <string name="update_verb">Mettre à jour</string>
+    <string name="reader_hint_add_tag_or_url_follow">Saisir une URL ou une étiquette à suivre</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>
     <string name="help">Aide</string>

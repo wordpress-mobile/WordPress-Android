@@ -32,7 +32,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.config.SyncPublishingFeatureConfig
+import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -65,7 +65,7 @@ class StorePostViewModelTest : BaseUnitTest() {
     lateinit var postFreshnessChecker: IPostFreshnessChecker
 
     @Mock
-    lateinit var syncPublishingFeatureConfig: SyncPublishingFeatureConfig
+    lateinit var mPostConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
 
     private lateinit var viewModel: StorePostViewModel
     private val title = "title"
@@ -89,7 +89,7 @@ class StorePostViewModelTest : BaseUnitTest() {
             networkUtils,
             dispatcher,
             postFreshnessChecker,
-            syncPublishingFeatureConfig
+            mPostConflictResolutionFeatureConfig
         )
         postModel.setId(postId)
         postModel.setTitle(title)

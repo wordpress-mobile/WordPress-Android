@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 17:54:09+0000
+Translation-Revision-Date: 2024-04-12 07:31:58+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">كبير جداً</string>
+    <string name="reader_preferences_font_size_large">كبير</string>
+    <string name="reader_preferences_font_size_normal">عادي</string>
+    <string name="reader_preferences_font_size_small">صغير</string>
+    <string name="reader_preferences_font_size_extra_small">صغير جدًا</string>
+    <string name="reader_preferences_screen_font_size_label">حجم الخط</string>
+    <string name="reader_preferences_screen_font_family_label">الخط</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">أرسل ملاحظاتك</string>
+    <string name="reader_preferences_screen_theme_label">نظام الألوان</string>
+    <string name="gutenberg_native_clear_selected_color">مسح لون محدد</string>
+    <string name="reader_no_followed_tags_text_title">لا توجد وسوم تمت متابعتها</string>
+    <string name="reader_toast_err_tag_already_following">أنت تتابع هذا الوسم بالفعل</string>
+    <string name="reader_menu_reading_preferences">تفضيلات القراءة</string>
+    <string name="reader_page_followed_tags_text_title">وسوم تمت متابعتها</string>
+    <string name="reader_preferences_theme_candy">حلوى</string>
+    <string name="reader_preferences_theme_evening">المساء</string>
+    <string name="reader_preferences_theme_sepia">بني</string>
+    <string name="reader_preferences_theme_soft">لين</string>
+    <string name="reader_preferences_theme_system">افتراضي</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">إرسال الملاحظات</string>
+    <string name="reader_preferences_screen_preview_text_feedback">هذه ميزة جديدة لا تزال قيد التطوير. لمساعدتنا على تسحينها %s.</string>
+    <string name="reader_preferences_screen_preview_text">اختر ألوانك وخطوطك وأحجامك. قم بمعاينة التحديد الخاص بك هنا، واقرأ التدوينات باستخدام أنماطك بمجرد الانتهاء منها.</string>
+    <string name="reader_preferences_screen_preview_title">تفضيلات القراءة</string>
+    <string name="reader_filter_empty_tags_action_follow">متابعة وسم</string>
+    <string name="button_read">قراءة</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">يمكنك نسخ نص تدوينتك في حال تأثر محتواك. انسخ تفاصيل الخطأ لتصحيح الأخطاء ومشاركتها مع الدعم.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">واجه المحرر خطأ غير متوقع</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">الضغط هنا لنسخ نص التدوينة</string>
@@ -79,6 +104,8 @@ Language: ar
     <string name="reader_filter_empty_tags_action_suggested">الوسوم المقترحة</string>
     <string name="reader_filter_empty_blogs_action_search">البحث في مدونة</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">متابعة الوسوم</string>
+    <string name="reader_filter_empty_tags_list_follow_text">تابع وسمًا وستتمكن من الاطلاع على أفضل التدوينات الواردة منه هنا.</string>
     <string name="reader_filter_empty_tags_list_title">لا توجد وسوم</string>
     <string name="reader_filter_empty_blogs_list_text">اشترك في المدونات ضمن \"اكتشاف\" وسترى أحدث تدوينات فيها هنا. أو ابحث عن مدونة تنال إعجابك بالفعل.</string>
     <string name="reader_filter_empty_blogs_list_title">لا توجد اشتراكات في المدونة</string>
@@ -104,6 +131,7 @@ Language: ar
     <string name="domains_free_domain">نطاق ووردبريس.كوم المجاني الخاص بك</string>
     <string name="domains_site_other_domains">نطاقات أخرى لـ %s</string>
     <string name="domains_primary_site_domain_chip">النطاق الأساسي</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">أصبحت Bloganuary هنا!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">هيا بنا!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">تشغيل موجّهات التدوين</string>
@@ -1461,6 +1489,7 @@ Language: ar
     <string name="reader_discover_no_posts_title">لا توجد مقالات حديثة</string>
     <string name="login_find_your_connected_email">العثور على بريدك الإلكتروني المتصل</string>
     <string name="continue_site_credentials">الاستمرار في تخزين بيانات الاعتماد</string>
+    <string name="reader_discover_no_posts_follow_subtitle">حاول متابعة مزيد من الوسوم لتوسيع نطاق البحث</string>
     <string name="login_prologue_third_subtitle_one">أُعجب &lt;b&gt;Madison Ruiz&lt;/b&gt; بمقالتك</string>
     <string name="login_prologue_third_subtitle_two">لقد تلقيت &lt;b&gt;50 إعجاب&lt;/b&gt; على موقعك اليوم</string>
     <string name="login_prologue_third_subtitle_three">قام &lt;b&gt;Johan Brandt&lt;/b&gt; بالردّ على مقالتك</string>
@@ -1509,6 +1538,7 @@ Language: ar
     <string name="reader_label_toolbar_back">رجوع</string>
     <string name="reader_discover_empty_button_text">البدء</string>
     <string name="reader_post_details_header_by_author_name">بواسطة</string>
+    <string name="reader_discover_empty_subtitle_follow">متابعة الوسوم لاكتشاف مدونات جديدة</string>
     <string name="stats_referrer_popup_menu_open_website">فتح الموقع الإلكتروني</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">يتعر وسم هذا المرجع بأنه بريد مزعج</string>
     <string name="stats_referrer_popup_unmark_as_spam">عدم الوسم بأنه بريد مزعج</string>
@@ -2354,6 +2384,7 @@ Language: ar
     <string name="page_status_change_error">حدثت مشكلة أثناء تغيير حالة الصفحة</string>
     <string name="page_delete_error">حدثت مشكلة أثناء حذف الصفحة</string>
     <string name="set_parent">تعيين الأصل</string>
+    <string name="dismiss">تجاهل</string>
     <string name="quick_start_focus_point_description">انقر هنا</string>
     <string name="quick_start_list_create_site_title">إنشاء موقعك</string>
     <string name="quick_start_list_create_site_subtitle">اجعل موقعك جاهزًا للعمل.</string>
@@ -3509,6 +3540,7 @@ Language: ar
     <string name="reader_toast_err_generic">غير قادر على تنفيذ هذا الإجراء</string>
     <string name="update_verb">تحديث</string>
     <string name="schedule_verb">جدولة</string>
+    <string name="reader_hint_add_tag_or_url_follow">إدخال عنوان URL أو الضغط للمتابعة</string>
     <string name="help">المساعدة</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>

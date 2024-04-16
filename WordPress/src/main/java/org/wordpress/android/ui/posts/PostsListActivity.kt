@@ -78,7 +78,8 @@ class PostsListActivity : LocaleAwareActivity(),
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface,
     BasicDialogOnDismissByOutsideTouchInterface,
-    ScrollableViewInitializedListener {
+    ScrollableViewInitializedListener,
+    PostResolutionOverlayListener {
     @Inject
     internal lateinit var siteStore: SiteStore
 
@@ -360,6 +361,14 @@ class PostsListActivity : LocaleAwareActivity(),
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
         }
+        viewModel.conflictResolutionAction.observe(this@PostsListActivity) {
+            val fragment = supportFragmentManager.findFragmentByTag(PostResolutionOverlayFragment.TAG)
+            if (fragment == null) {
+                PostResolutionOverlayFragment
+                    .newInstance(it.postModel, it.postResolutionType)
+                    .show(supportFragmentManager, PostResolutionOverlayFragment.TAG)
+            }
+        }
         viewModel.postUploadAction.observe(this@PostsListActivity) {
             it?.let { uploadAction ->
                 handleUploadAction(
@@ -439,11 +448,10 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
     }
-
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -455,7 +463,6 @@ class PostsListActivity : LocaleAwareActivity(),
                         data, this, site,
                         data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
-
                     // a restart will happen so, no need to continue here
                     return
                 }
@@ -626,6 +633,11 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onScrollableViewInitialized(containerId: Int) {
         binding.appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
+    }
+
+    // PostResolutionOverlayListener Callbacks
+    override fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        viewModel.onPostResolutionConfirmed(event)
     }
 
     companion object {

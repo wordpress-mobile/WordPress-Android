@@ -33,6 +33,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.PostResolutionOverlayViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
@@ -79,7 +80,6 @@ import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
-import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -314,11 +314,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SitePickerViewModel.class)
-    abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(ReaderViewModel.class)
     abstract ViewModel readerParentPostListViewModel(ReaderViewModel viewModel);
 
@@ -539,4 +534,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditorJetpackSocialViewModel.class)
     abstract ViewModel editorJetpackSocialViewModel(EditorJetpackSocialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostResolutionOverlayViewModel.class)
+    abstract ViewModel postResolutionOverlayViewModel(PostResolutionOverlayViewModel viewModel);
 }

@@ -650,7 +650,7 @@
         </activity>
 
         <activity
-            android:name=".ui.main.SitePickerActivity"
+            android:name=".ui.main.ChooseSiteActivity"
             android:label="@string/site_picker_title"
             android:theme="@style/WordPress.NoActionBar" />
 
