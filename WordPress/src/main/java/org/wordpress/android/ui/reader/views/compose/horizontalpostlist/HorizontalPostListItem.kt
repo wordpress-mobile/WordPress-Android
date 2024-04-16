@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -161,11 +162,10 @@ fun HorizontalPostListItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(24.dp),
-            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Like action
             TextButton(
-                modifier = Modifier.height(24.dp),
+                modifier = Modifier.defaultMinSize(minWidth = 1.dp),
                 contentPadding = PaddingValues(0.dp),
                 onClick = { onPostLikeClick() },
             ) {
