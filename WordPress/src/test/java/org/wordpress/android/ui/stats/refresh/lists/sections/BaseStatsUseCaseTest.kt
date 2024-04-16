@@ -72,7 +72,7 @@ class BaseStatsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `on refresh calls loads data from DB and later from API`() = test {
+    fun `on refresh calls loads data from API`() = test {
         assertThat(result).isEmpty()
 
         block.fetch(true, false)
