@@ -683,12 +683,18 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
         // Convert GenericErrorType to PostErrorType where applicable
 
-        if (error.volleyError.getCause() instanceof XMLRPCFault) {
-            int code = ((XMLRPCFault) error.volleyError.getCause()).getFaultCode();
-            if (code == 409) {
-                return new PostError(PostErrorType.OLD_REVISION, error.message);
+        // Handles specific XMLRPC faults with precise error codes
+        if (error.volleyError != null && error.volleyError.getCause() instanceof XMLRPCFault) {
+            XMLRPCFault fault = (XMLRPCFault) error.volleyError.getCause();
+            if (fault != null) {
+                int code = fault.getFaultCode();
+                if (code == 409) {
+                    return new PostError(PostErrorType.OLD_REVISION, error.message);
+                }
             }
         }
+
+        // Handles general network errors based on type
         switch (error.type) {
             case AUTHORIZATION_REQUIRED:
                 return new PostError(PostErrorType.UNAUTHORIZED, error.message);
