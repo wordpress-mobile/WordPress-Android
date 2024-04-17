@@ -41,7 +41,6 @@ fun HorizontalPostListItemLoading() {
                     .width(99.dp)
                     .height(8.dp)
                     .clip(shape = RoundedCornerShape(16.dp)),
-                isLoadingCompleted = false,
             )
         }
         ShimmerBox(
@@ -50,7 +49,6 @@ fun HorizontalPostListItemLoading() {
                 .width(204.dp)
                 .height(18.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -58,7 +56,6 @@ fun HorizontalPostListItemLoading() {
                 .width(140.dp)
                 .height(18.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -66,7 +63,6 @@ fun HorizontalPostListItemLoading() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .clip(shape = RoundedCornerShape(8.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -77,7 +73,6 @@ fun HorizontalPostListItemLoading() {
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -88,7 +83,6 @@ fun HorizontalPostListItemLoading() {
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
     }
 }
