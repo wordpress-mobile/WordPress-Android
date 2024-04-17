@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.xmlrpc.BaseXMLRPCClient;
+import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCFault;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -225,17 +226,26 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushPost(final PostModel post, final SiteModel site, boolean isFirstTimePublish) {
-        pushPostInternal(post, site, false, isFirstTimePublish);
+    public void pushPost(
+            final PostModel post,
+            final SiteModel site,
+            boolean isFirstTimePublish,
+            boolean shouldSkipConflictResolutionCheck
+    ) {
+        pushPostInternal(post, site, false, isFirstTimePublish, shouldSkipConflictResolutionCheck);
     }
 
     public void restorePost(final PostModel post, final SiteModel site) {
-        pushPostInternal(post, site, true, false);
+        pushPostInternal(post, site, true, false, true);
     }
 
-    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost,
-                                  final boolean isFirstTimePublish) {
-        Map<String, Object> contentStruct = postModelToContentStruct(post);
+    private void pushPostInternal(
+            final PostModel post,
+            final SiteModel site,
+            final boolean isRestoringPost,
+            final boolean isFirstTimePublish,
+            boolean shouldSkipConflictResolutionCheck) {
+        Map<String, Object> contentStruct = postModelToContentStruct(post, shouldSkipConflictResolutionCheck);
 
         if (post.isLocalDraft()) {
             // For first time publishing, set the comment status (open or closed) to the default value for the site
@@ -462,7 +472,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return post;
     }
 
-    private static Map<String, Object> postModelToContentStruct(PostModel post) {
+    private static Map<String, Object> postModelToContentStruct(
+            PostModel post,
+            boolean shouldSkipConflictResolutionCheck
+    ) {
         Map<String, Object> contentStruct = new HashMap<>();
 
         // Post format
@@ -477,6 +490,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         contentStruct.put("post_type", post.isPage() ? "page" : "post");
         contentStruct.put("post_title", post.getTitle());
 
+
         String dateCreated = post.getDateCreated();
         Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
         if (date != null) {
@@ -484,6 +498,18 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             // Redundant, but left in just in case
             // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
             contentStruct.put("post_date_gmt", date);
+        }
+
+        // Should only send "if_not_modified_since" when we want to run the conflict resolution check on the BE
+        // For instance, we have showed the conflict resolution dialog and the user wants to push their local changes;
+        // setting this field to true, would not add the modified date and won't trigger a check for latest version
+        // on the remote host.
+        if (!shouldSkipConflictResolutionCheck) {
+            String dateLastModifiedStr = post.getLastModified();
+            Date dateLastModified = DateTimeUtils.dateUTCFromIso8601(dateLastModifiedStr);
+            if (dateLastModified != null) {
+                contentStruct.put("if_not_modified_since", dateLastModified);
+            }
         }
 
         // We are not adding `lastModified` date to the params because that should be updated by the server when there
@@ -656,6 +682,19 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         // 404 - "Invalid attachment ID." (invalid featured image)
         // TODO: Check the error message and flag this as UNKNOWN_POST if applicable
         // Convert GenericErrorType to PostErrorType where applicable
+
+        // Handles specific XMLRPC faults with precise error codes
+        if (error.volleyError != null && error.volleyError.getCause() instanceof XMLRPCFault) {
+            XMLRPCFault fault = (XMLRPCFault) error.volleyError.getCause();
+            if (fault != null) {
+                int code = fault.getFaultCode();
+                if (code == 409) {
+                    return new PostError(PostErrorType.OLD_REVISION, error.message);
+                }
+            }
+        }
+
+        // Handles general network errors based on type
         switch (error.type) {
             case AUTHORIZATION_REQUIRED:
                 return new PostError(PostErrorType.UNAUTHORIZED, error.message);
