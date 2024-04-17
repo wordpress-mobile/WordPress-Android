@@ -30,7 +30,7 @@
         android:id="@+id/legends"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_extra_extra_large"
+        android:layout_marginHorizontal="@dimen/margin_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
