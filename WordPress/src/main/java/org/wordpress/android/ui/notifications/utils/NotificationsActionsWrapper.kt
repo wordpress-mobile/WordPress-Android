@@ -28,7 +28,7 @@ class NotificationsActionsWrapper @Inject constructor(
                 it.id.toLong()
             } catch (ex: Exception) {
                 // id might be empty
-                AppLog.e(AppLog.T.NOTIFS, "Error parsing note id: ${it.id}")
+                AppLog.e(AppLog.T.NOTIFS, "Error parsing note id: ${it.id}", ex)
                 -1L
             }
         }.filter { it != -1L }
