@@ -134,7 +134,7 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
         val uiState = uiStates.last()
         uiState.closeClick.invoke()
 
-        verify(tracker, times(1)).trackClose(any())
+        verify(tracker, times(1)).trackClose(any(), any())
     }
 
     @Test
@@ -154,7 +154,7 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
         val uiState = uiStates.last()
         uiState.cancelClick.invoke()
 
-        verify(tracker, times(1)).trackCancel(any())
+        verify(tracker, times(1)).trackCancel(any(), any())
     }
 
     @Test
@@ -163,7 +163,7 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
 
         viewModel.onDialogDismissed()
 
-        verify(tracker, times(1)).trackDismissed(any())
+        verify(tracker, times(1)).trackDismissed(any(), any())
     }
 
     @Test
@@ -184,7 +184,7 @@ class PostResolutionOverlayViewModelTest : BaseUnitTest() {
         uiState.onSelected.invoke(selectedContentItem)
         uiState.confirmClick.invoke()
 
-        verify(tracker, times(1)).trackConfirm(any(), any())
+        verify(tracker, times(1)).trackConfirm(any(), any(), any())
     }
 
     @Test
