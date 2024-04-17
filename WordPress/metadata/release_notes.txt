@@ -1,2 +1,3 @@
-- We fixed a handful of issues with highlighted text formatting. We don’t know about you, but that’s the highlight of our week.
-- The app now supports text suggestions that are longer than the visible space in the editor. No crashes—just predictive text, as far as the eye can see.
+* [**] Site picker: Added the feature to pin sites, redesigned the UI, and deprecated the Show/Hide sites functionality. [https://github.com/wordpress-mobile/WordPress-Android/pull/20521]
+* [*] [internal] Updates the way the app retrieves the User-Agent request header [https://github.com/wordpress-mobile/WordPress-Android/pull/20603]
+

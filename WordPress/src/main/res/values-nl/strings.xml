@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-02 21:54:21+0000
+Translation-Revision-Date: 2024-04-08 17:20:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">Extra groot</string>
+    <string name="reader_preferences_font_size_large">Groot</string>
+    <string name="reader_preferences_font_size_normal">Normaal</string>
+    <string name="reader_preferences_font_size_small">Klein</string>
+    <string name="reader_preferences_font_size_extra_small">Extra klein</string>
+    <string name="reader_preferences_screen_font_size_label">Lettertype grootte</string>
+    <string name="reader_preferences_screen_font_family_label">Lettertype</string>
+    <string name="reader_preferences_screen_theme_label">Kleurenschema</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">verzend je feedback</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Wis geselecteerde kleur</string>
     <string name="reader_no_followed_tags_text_title">Geen gevolgde tags</string>
     <string name="reader_toast_err_tag_already_following">Je volgt deze tag al</string>

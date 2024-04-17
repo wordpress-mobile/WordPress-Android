@@ -80,7 +80,6 @@ import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
-import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -312,11 +311,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FeatureAnnouncementViewModel.class)
     abstract ViewModel featureAnnouncementViewModel(FeatureAnnouncementViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SitePickerViewModel.class)
-    abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
 
     @Binds
     @IntoMap

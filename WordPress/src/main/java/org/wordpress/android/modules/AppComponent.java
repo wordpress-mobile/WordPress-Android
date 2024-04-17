@@ -41,6 +41,7 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment;
 import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
+import org.wordpress.android.ui.main.ChooseSiteViewHolder;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -221,6 +222,8 @@ public interface AppComponent {
     void inject(AccountSettingsFragment object);
 
     void inject(SitePickerAdapter object);
+
+    void inject(ChooseSiteViewHolder object);
 
     void inject(SiteSettingsFragment object);
 

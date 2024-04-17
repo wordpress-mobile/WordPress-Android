@@ -71,9 +71,9 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
-import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
+import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -209,7 +209,7 @@ public class ActivityLauncher {
      * @param site     the preselected site
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
+        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
@@ -234,9 +234,9 @@ public class ActivityLauncher {
      * @return the site picker intent
      */
     private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
-        Intent intent = new Intent(context, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, site.getId());
-        intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
+        Intent intent = new Intent(context, ChooseSiteActivity.class);
+        intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, site.getId());
+        intent.putExtra(ChooseSiteActivity.KEY_SITE_PICKER_MODE, mode.name());
         return intent;
     }
 

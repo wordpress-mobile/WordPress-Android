@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
@@ -33,6 +34,8 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ToastUtilsWrapper
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
@@ -76,7 +79,13 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     private lateinit var commentStore: CommentsStore
 
     @Mock
-    private lateinit var  accountStore: AccountStore
+    private lateinit var accountStore: AccountStore
+
+    @Mock
+    private lateinit var toastUtilsWrapper: ToastUtilsWrapper
+
+    @Mock
+    private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
     private lateinit var action: ActionHandler
@@ -87,9 +96,12 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     fun setup() {
         viewModel = NotificationsListViewModel(
             testDispatcher(),
+            testDispatcher(),
             appPrefsWrapper,
             jetpackFeatureRemovalOverlayUtil,
             gcmMessageHandler,
+            networkUtilsWrapper,
+            toastUtilsWrapper,
             notificationsUtilsWrapper,
             appLogWrapper,
             siteStore,
@@ -104,33 +116,37 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN marking a note as read THEN the note is marked as read and the notification removed from system bar`() {
+    fun `WHEN marking a note as read THEN the note is marked as read and the notification removed from system bar`() =
+        test {
+            // Given
+            val noteId = "1"
+            val context: Context = mock()
+            val note = mock<Note>()
+            val notes = listOf(note)
+            whenever(note.id).thenReturn(noteId)
+            whenever(note.isUnread).thenReturn(true)
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+            // When
+            viewModel.markNoteAsRead(context, notes)
+
+            // Then
+            verify(gcmMessageHandler, times(1)).removeNotificationWithNoteIdFromSystemBar(context, noteId)
+            verify(note, times(1)).setRead()
+            verify(notificationsActionsWrapper).markNoteAsRead(notes)
+            verify(notificationsTableWrapper, times(1)).saveNotes(notes, false)
+            verify(eventBusWrapper, times(1)).post(any())
+        }
+
+    @Test
+    fun `WHEN marking a note as read THEN the read note is saved`() = test {
         // Given
         val noteId = "1"
         val context: Context = mock()
         val note = mock<Note>()
         whenever(note.id).thenReturn(noteId)
         whenever(note.isUnread).thenReturn(true)
-
-        // When
-        viewModel.markNoteAsRead(context, listOf(note))
-
-        // Then
-        verify(gcmMessageHandler, times(1)).removeNotificationWithNoteIdFromSystemBar(context, noteId)
-        verify(notificationsActionsWrapper, times(1)).markNoteAsRead(note)
-        verify(note, times(1)).setRead()
-        verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note), false)
-        verify(eventBusWrapper, times(1)).post(any())
-    }
-
-    @Test
-    fun `WHEN marking a note as read THEN the read note is saved`() {
-        // Given
-        val noteId = "1"
-        val context: Context = mock()
-        val note = mock<Note>()
-        whenever(note.id).thenReturn(noteId)
-        whenever(note.isUnread).thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         // When
         viewModel.markNoteAsRead(context, listOf(note))
@@ -141,7 +157,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `WHEN marking all as read THEN only the unread notes are marked as read and saved`() {
+    fun `WHEN marking all as read THEN only the unread notes are marked as read and saved`() = test {
         // Given
         val noteId1 = "1"
         val noteId2 = "2"
@@ -151,19 +167,57 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(note1.id).thenReturn(noteId1)
         whenever(note1.isUnread).thenReturn(true)
         whenever(note2.isUnread).thenReturn(false)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
 
         // When
         viewModel.markNoteAsRead(context, listOf(note1, note2))
 
         // Then
         verify(gcmMessageHandler, times(1)).removeNotificationWithNoteIdFromSystemBar(context, noteId1)
-        verify(notificationsActionsWrapper, times(1)).markNoteAsRead(note1)
         verify(note1, times(1)).setRead()
         verify(gcmMessageHandler, times(0)).removeNotificationWithNoteIdFromSystemBar(context, noteId2)
-        verify(notificationsActionsWrapper, times(0)).markNoteAsRead(note2)
         verify(note2, times(0)).setRead()
         verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note1), false)
         verify(eventBusWrapper, times(1)).post(any())
+        verify(notificationsActionsWrapper, times(1)).markNoteAsRead(listOf(note1))
+    }
+
+    @Test
+    fun `GIVEN a interrupted network WHEN marking a note as read THEN show a network error toast`() = test {
+        // Given
+        val note = mock<Note>()
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        // When
+        viewModel.markNoteAsRead(mock(), listOf(note))
+
+        // Then
+        verify(toastUtilsWrapper, times(1)).showToast(any())
+    }
+
+    @Test
+    fun `GIVEN a stable network WHEN making a note as read fails THEN show a generic error toast`() = test {
+        // Given
+        val note = mock<Note>()
+        whenever(note.id).thenReturn("123")
+        whenever(note.isUnread).thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(notificationsActionsWrapper.markNoteAsRead(listOf(note))).thenReturn(
+            NotificationStore.OnNotificationChanged(1).apply {
+                error = NotificationStore.NotificationError(
+                    NotificationStore.NotificationErrorType.GENERIC_ERROR, "error"
+                )
+            }
+        )
+
+        // When
+        viewModel.markNoteAsRead(mock(), listOf(note))
+
+        // Then
+        verify(gcmMessageHandler).removeNotificationWithNoteIdFromSystemBar(any(), eq("123"))
+        verify(notificationsTableWrapper, times(2)).saveNotes(any(), eq(false))
+        verify(eventBusWrapper, times(2)).post(any())
+        verify(toastUtilsWrapper, times(1)).showToast(any())
     }
 
     @Test
@@ -230,7 +284,8 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         whenever(note.commentId).thenReturn(commentId)
         whenever(commentStore.likeComment(site, commentId, null, true)).thenReturn(
             CommentsStore.CommentsActionPayload(
-                CommentStore.CommentError(CommentStore.CommentErrorType.GENERIC_ERROR,"error"), null)
+                CommentStore.CommentError(CommentStore.CommentErrorType.GENERIC_ERROR, "error"), null
+            )
         )
 
         // When

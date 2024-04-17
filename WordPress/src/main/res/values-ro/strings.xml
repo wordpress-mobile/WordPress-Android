@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-03 19:27:16+0000
+Translation-Revision-Date: 2024-04-08 20:30:23+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="reader_preferences_font_size_extra_large">Foarte mare</string>
+    <string name="reader_preferences_font_size_large">Mare</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_small">Mic</string>
+    <string name="reader_preferences_font_size_extra_small">Foarte mic</string>
+    <string name="reader_preferences_screen_font_size_label">Dimensiune font</string>
+    <string name="reader_preferences_screen_font_family_label">Font</string>
+    <string name="reader_preferences_screen_theme_label">Schemă de culori</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">trimite impresiile</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Șterge culoarea selectată</string>
     <string name="reader_no_followed_tags_text_title">Nicio etichetă urmărită</string>
     <string name="reader_toast_err_tag_already_following">Deja urmărești această etichetă</string>
