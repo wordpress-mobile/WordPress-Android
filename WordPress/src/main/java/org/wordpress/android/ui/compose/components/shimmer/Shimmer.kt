@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.compose.components.shimmer
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
@@ -26,6 +24,7 @@ object Shimmer {
     )
 }
 
+@Suppress("MagicNumber")
 fun Modifier.shimmerLoadingAnimation(): Modifier = composed {
     var size by remember {
         mutableStateOf(IntSize.Zero)
