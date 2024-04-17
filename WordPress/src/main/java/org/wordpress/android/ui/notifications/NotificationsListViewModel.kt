@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.withContext
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -16,6 +18,7 @@ import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Notification.PostLike
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.push.GCMMessageHandler
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.NOTIFICATIONS
@@ -28,6 +31,8 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -36,9 +41,12 @@ import javax.inject.Named
 @HiltViewModel
 class NotificationsListViewModel @Inject constructor(
     @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val gcmMessageHandler: GCMMessageHandler,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val toastUtilsWrapper: ToastUtilsWrapper,
     private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
     private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
@@ -81,16 +89,34 @@ class NotificationsListViewModel @Inject constructor(
         appPrefsWrapper.notificationPermissionsWarningDismissed = false
     }
 
-    fun markNoteAsRead(context: Context, notes: List<Note>) {
+    fun markNoteAsRead(context: Context, notes: List<Note>) = launch {
+        if (networkUtilsWrapper.isNetworkAvailable().not()) {
+            withContext(mainDispatcher) {
+                toastUtilsWrapper.showToast(R.string.error_network_connection)
+            }
+            return@launch
+        }
         notes.filter { it.isUnread }
             .map {
                 gcmMessageHandler.removeNotificationWithNoteIdFromSystemBar(context, it.id)
-                notificationsActionsWrapper.markNoteAsRead(it)
-                it.setRead()
-                it
-            }.takeIf { it.isNotEmpty() }?.let {
-                notificationsTableWrapper.saveNotes(it, false)
+                it.apply { setRead() }
+            }.takeIf { it.isNotEmpty() }?.let { notes ->
+                // update the UI before the API request
+                notificationsTableWrapper.saveNotes(notes, false)
                 eventBusWrapper.post(NotificationsChanged())
+                // mark notes as read, this might wait for a long time
+                notificationsActionsWrapper.markNoteAsRead(notes)?.let { result ->
+                    if (result.isError) {
+                        appLogWrapper.e(AppLog.T.NOTIFS, "Failed to mark notes as read: ${result.error}")
+                        // revert the UI changes and display the error message
+                        val revertedNotes = notes.map { it.apply { setUnread() } }
+                        notificationsTableWrapper.saveNotes(revertedNotes, false)
+                        eventBusWrapper.post(NotificationsChanged())
+                        withContext(mainDispatcher) {
+                            toastUtilsWrapper.showToast(R.string.error_generic)
+                        }
+                    }
+                }
             }
     }
 
