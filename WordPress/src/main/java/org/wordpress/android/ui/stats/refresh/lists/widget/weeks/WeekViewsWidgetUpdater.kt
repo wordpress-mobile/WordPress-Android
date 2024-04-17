@@ -20,7 +20,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ class WeekViewsWidgetUpdater @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val widgetUtils: WidgetUtils,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
@@ -53,8 +53,8 @@ class WeekViewsWidgetUpdater @Inject constructor(
         views.setTextViewText(R.id.widget_title, resourceProvider.getString(R.string.stats_widget_weekly_views_name))
         val hasAccessToken = accountStore.hasAccessToken()
         val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
-        val timeframe = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
-        val granularity = if (statsTrafficTabFeatureConfig.isEnabled()) StatsGranularity.WEEKS else null
+        val timeframe = if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        val granularity = if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) StatsGranularity.WEEKS else null
         if (networkAvailable && hasAccessToken && siteModel != null) {
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
             siteModel.let {
