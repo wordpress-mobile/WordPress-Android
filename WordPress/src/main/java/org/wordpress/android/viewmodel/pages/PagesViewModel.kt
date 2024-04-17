@@ -1076,7 +1076,6 @@ class PagesViewModel
     }
 
     private fun updateConflictedPostWithRemoteVersion(pageId: RemoteId) {
-        // todo: annmarie - I have NO idea if this will work
         performIfNetworkAvailable {
             val page = pageMap.getValue(pageId.value)
             val post = postStore.getPostByLocalPostId(page.pageId)
@@ -1086,30 +1085,25 @@ class PagesViewModel
                 post.setAutoSaveExcerpt(null)
                 post.setAutoSaveRevisionId(0)
                 dispatcher.dispatch(PostActionBuilder.newFetchPostAction(PostStore.RemotePostPayload(post, site)))
-          // todo: annmarie show an updating message ? This is what post does
-         // todo: showToast.invoke(ToastMessageHolder(R.string.toast_conflict_updating_post, ToastUtils.Duration.SHORT))
+                _showSnackbarMessage.postValue(
+                    SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_local_version_discarded))
+                )
             }
         }
     }
 
     private fun updateConflictedPostWithLocalVersion(pageId: RemoteId) {
-        // todo: annmarie - I have NO idea if this will work
         performIfNetworkAvailable {
-            // todo: annmarie Post does this -> invalidateList.invoke()
             val page = pageMap.getValue(pageId.value)
             val post = postStore.getPostByLocalPostId(page.pageId) ?: return@performIfNetworkAvailable
             post.error = null
             uploadStore.clearUploadErrorForPost(post)
-            // todo: annmarie post list shows a snackbar message
-//            val snackBarHolder = SnackbarMessageHolder(
-//                UiStringRes(R.string.snackbar_conflict_web_version_discarded)
-//            )
-//            showSnackbar.invoke(snackBarHolder)
-            // postList also updates some info - I'm not sure if we need to do this for pages or there is a separate
-//            postUtils.trackSavePostAnalytics(post, site)
             val remotePostPayload = PostStore.RemotePostPayload(post, site)
             remotePostPayload.shouldSkipConflictResolutionCheck = true
             dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
+            _showSnackbarMessage.postValue(
+                SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_web_version_discarded))
+            )
         }
     }
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
