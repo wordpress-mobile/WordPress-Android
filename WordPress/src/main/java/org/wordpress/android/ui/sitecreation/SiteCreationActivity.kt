@@ -118,7 +118,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.preloadThumbnails(this)
 
         observeVMState()
-        observeOverlayEvents(savedInstanceState)
+        observeOverlayEvents()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -169,20 +169,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
         previewViewModel.onOkButtonClicked.observe(this, mainViewModel::onWizardFinished)
     }
 
-    private fun observeOverlayEvents(savedInstanceState: Bundle?) {
+    private fun observeOverlayEvents() {
         if(BuildConfig.IS_JETPACK_APP)
             return
 
-        val fragment =  if (savedInstanceState == null) {
-            JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                    isSiteCreationOverlay = true,
-                    siteCreationSource = getSiteCreationSource()
-                )
-        }else {
-            supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
-                    as JetpackFeatureFullScreenOverlayFragment
-        }
+        val fragment = supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
+                    as? JetpackFeatureFullScreenOverlayFragment ?: JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(isSiteCreationOverlay = true, siteCreationSource = getSiteCreationSource())
 
         jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()
