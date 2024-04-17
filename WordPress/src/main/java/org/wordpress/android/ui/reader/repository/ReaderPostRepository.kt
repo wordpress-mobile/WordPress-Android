@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.repository
 
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONObject
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
 import org.wordpress.android.datasets.ReaderPostTable
@@ -21,10 +22,30 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.UrlUtils
 import java.util.Locale
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class ReaderPostRepository @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper
 ) {
+    /**
+     * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
+     * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
+     */
+    suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 7): ReaderPostList {
+        return suspendCancellableCoroutine { cont ->
+            val resultListener = UpdateResultListener { result ->
+                if (result == ReaderActions.UpdateResult.FAILED) {
+                    cont.resumeWithException(Exception("Failed to fetch newer posts for tag"))
+                } else {
+                    val posts = ReaderPostTable.getPostsWithTag(tag, maxPosts, false)
+                    cont.resume(posts)
+                }
+            }
+            requestPostsWithTag(tag, ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER, resultListener)
+        }
+    }
+
     fun requestPostsWithTag(
         tag: ReaderTag,
         updateAction: ReaderPostServiceStarter.UpdateAction,
@@ -140,7 +161,7 @@ class ReaderPostRepository @Inject constructor(
         getRestClientUtilsV1_2().getWithLocale(path, null, null, listener, errorListener)
     }
 
-    /*
+    /**
      * called after requesting posts with a specific tag or in a specific blog/feed
      */
     private fun handleUpdatePostsResponse(
@@ -229,7 +250,7 @@ class ReaderPostRepository @Inject constructor(
         }.start()
     }
 
-    /*
+    /**
      * returns the endpoint to use when requesting posts with the passed tag
      */
     private fun getRelativeEndpointForTag(tag: ReaderTag): String? {
@@ -250,7 +271,7 @@ class ReaderPostRepository @Inject constructor(
         return String.format(Locale.US, "read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tagSlug))
     }
 
-    /*
+    /**
      * returns the passed endpoint without the unnecessary path - this is
      * needed because as of 20-Feb-2015 the /read/menu/ call returns the
      * full path but we don't want to use the full path since it may change
