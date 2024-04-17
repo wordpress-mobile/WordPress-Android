@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -16,6 +17,10 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
+import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
+import org.wordpress.android.ui.utils.UiString
 
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
@@ -26,8 +31,8 @@ fun ReaderTagsFeed(uiState: UiState) {
     ) {
         when (uiState) {
             is UiState.Loaded -> Loaded(uiState)
-            is UiState.Loading -> Loading()
-            is UiState.Empty -> Empty()
+            UiState.Loading -> Loading()
+            UiState.Empty -> Empty()
         }
     }
 }
@@ -37,18 +42,26 @@ private fun Loaded(uiState: UiState.Loaded) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .padding(
+                start = Margin.Large.value,
+                end = Margin.Large.value,
+            )
     ) {
         items(
             items = uiState.items,
             key = { it.tag.tagDisplayName },
         ) { tagsFeedItem ->
+            ReaderFilterChip(
+                text = UiString.UiStringText(tagsFeedItem.tag.tagTitle),
+                onClick = tagsFeedItem.onTagClicked,
+                height = 36.dp,
+            )
             when (tagsFeedItem) {
                 // If item is Success, show posts list
                 is TagsFeedItem.Success -> {
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        contentPadding = PaddingValues(horizontal = 24.dp),
                     ) {
                         items(
                             items = tagsFeedItem.posts,
@@ -109,15 +122,18 @@ sealed class UiState {
 
 sealed class TagsFeedItem(
     open val tag: ReaderTag,
+    open val onTagClicked: () -> Unit,
 ) {
     data class Success(
         override val tag: ReaderTag,
+        override val onTagClicked: () -> Unit,
         val posts: List<TagsFeedPostItem>,
-    ) : TagsFeedItem(tag)
+    ) : TagsFeedItem(tag, onTagClicked)
 
     data class Error(
         override val tag: ReaderTag,
-    ) : TagsFeedItem(tag)
+        override val onTagClicked: () -> Unit,
+    ) : TagsFeedItem(tag, onTagClicked)
 }
 
 data class TagsFeedPostItem(
@@ -217,6 +233,7 @@ fun ReaderTagsFeedLoaded() {
                                 onPostMoreMenuClick = {},
                             ),
                         ),
+                        onTagClicked = {},
                     ),
                     TagsFeedItem.Success(
                         tag = ReaderTag(
@@ -293,6 +310,7 @@ fun ReaderTagsFeedLoaded() {
                                 onPostMoreMenuClick = {},
                             ),
                         ),
+                        onTagClicked = {},
                     ),
                     TagsFeedItem.Error(
                         tag = ReaderTag(
@@ -302,6 +320,7 @@ fun ReaderTagsFeedLoaded() {
                             "Tag 3",
                             ReaderTagType.TAGS,
                         ),
+                        onTagClicked = {},
                     ),
                     TagsFeedItem.Success(
                         tag = ReaderTag(
@@ -378,6 +397,7 @@ fun ReaderTagsFeedLoaded() {
                                 onPostMoreMenuClick = {},
                             ),
                         ),
+                        onTagClicked = {},
                     ),
                 )
             )
