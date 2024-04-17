@@ -4,6 +4,7 @@ import dagger.Reusable
 import org.wordpress.android.fluxc.model.notification.NotificationModel
 import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.models.Note
+import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -20,12 +21,14 @@ class NotificationsActionsWrapper @Inject constructor(
                 { continuation.resume(true) })
         }
 
+    @Suppress("TooGenericExceptionCaught")
     suspend fun markNoteAsRead(notes: List<Note>): NotificationStore.OnNotificationChanged? {
         val noteIds = notes.map {
             try {
                 it.id.toLong()
             } catch (ex: Exception) {
                 // id might be empty
+                AppLog.e(AppLog.T.NOTIFS, "Error parsing note id: ${it.id}")
                 -1L
             }
         }.filter { it != -1L }

@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentsStore
+import org.wordpress.android.fluxc.store.NotificationStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.models.Note
@@ -179,6 +180,44 @@ class NotificationsListViewModelTest : BaseUnitTest() {
         verify(notificationsTableWrapper, times(1)).saveNotes(listOf(note1), false)
         verify(eventBusWrapper, times(1)).post(any())
         verify(notificationsActionsWrapper, times(1)).markNoteAsRead(listOf(note1))
+    }
+
+    @Test
+    fun `GIVEN a interrupted network WHEN marking a note as read THEN show a network error toast`() = test {
+        // Given
+        val note = mock<Note>()
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        // When
+        viewModel.markNoteAsRead(mock(), listOf(note))
+
+        // Then
+        verify(toastUtilsWrapper, times(1)).showToast(any())
+    }
+
+    @Test
+    fun `GIVEN a stable network WHEN making a note as read fails THEN show a generic error toast`() = test {
+        // Given
+        val note = mock<Note>()
+        whenever(note.id).thenReturn("123")
+        whenever(note.isUnread).thenReturn(true)
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(notificationsActionsWrapper.markNoteAsRead(listOf(note))).thenReturn(
+            NotificationStore.OnNotificationChanged(1).apply {
+                error = NotificationStore.NotificationError(
+                    NotificationStore.NotificationErrorType.GENERIC_ERROR, "error"
+                )
+            }
+        )
+
+        // When
+        viewModel.markNoteAsRead(mock(), listOf(note))
+
+        // Then
+        verify(gcmMessageHandler).removeNotificationWithNoteIdFromSystemBar(any(), eq("123"))
+        verify(notificationsTableWrapper, times(2)).saveNotes(any(), eq(false))
+        verify(eventBusWrapper, times(2)).post(any())
+        verify(toastUtilsWrapper, times(1)).showToast(any())
     }
 
     @Test
