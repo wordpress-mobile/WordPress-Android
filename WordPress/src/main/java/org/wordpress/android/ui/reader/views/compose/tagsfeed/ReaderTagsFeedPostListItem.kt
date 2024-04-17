@@ -139,6 +139,7 @@ fun ReaderTagsFeedPostListItem(
                 text = postNumberOfLikesText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = secondaryElementColor,
+                maxLines = 1,
             )
             Spacer(Modifier.height(Margin.Medium.value))
             // "•" separator
@@ -155,6 +156,7 @@ fun ReaderTagsFeedPostListItem(
                 text = postNumberOfCommentsText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = secondaryElementColor,
+                maxLines = 1,
             )
         }
         Spacer(Modifier.height(Margin.Medium.value))

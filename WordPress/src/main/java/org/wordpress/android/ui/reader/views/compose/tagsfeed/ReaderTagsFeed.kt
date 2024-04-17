@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -141,7 +142,243 @@ fun ReaderTagsFeedLoaded() {
         ReaderTagsFeed(
             uiState = UiState.Loaded(
                 items = listOf(
-
+                    TagsFeedItem.Success(
+                        tag = ReaderTag(
+                            "Tag 1",
+                            "Tag 1",
+                            "Tag 1",
+                            "Tag 1",
+                            ReaderTagType.TAGS,
+                        ),
+                        posts = listOf(
+                            TagsFeedPostItem(
+                                siteName = "siteName1",
+                                postDateLine = "postDateLine1",
+                                postTitle = "postTitle1",
+                                postExcerpt = "postExcerpt1",
+                                postImageUrl = "postImageUrl1",
+                                postNumberOfLikesText = "postNumberOfLikesText1",
+                                postNumberOfCommentsText = "postNumberOfCommentsText1",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName3",
+                                postDateLine = "postDateLine3",
+                                postTitle = "postTitle3",
+                                postExcerpt = "postExcerpt3",
+                                postImageUrl = "postImageUrl3",
+                                postNumberOfLikesText = "postNumberOfLikesText3",
+                                postNumberOfCommentsText = "postNumberOfCommentsText3",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName4",
+                                postDateLine = "postDateLine4",
+                                postTitle = "postTitle4",
+                                postExcerpt = "postExcerpt4",
+                                postImageUrl = "postImageUrl4",
+                                postNumberOfLikesText = "postNumberOfLikesText4",
+                                postNumberOfCommentsText = "postNumberOfCommentsText4",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                        ),
+                    ),
+                    TagsFeedItem.Success(
+                        tag = ReaderTag(
+                            "Tag 2",
+                            "Tag 2",
+                            "Tag 2",
+                            "Tag 2",
+                            ReaderTagType.TAGS,
+                        ),
+                        posts = listOf(
+                            TagsFeedPostItem(
+                                siteName = "siteName1",
+                                postDateLine = "postDateLine1",
+                                postTitle = "postTitle1",
+                                postExcerpt = "postExcerpt1",
+                                postImageUrl = "postImageUrl1",
+                                postNumberOfLikesText = "postNumberOfLikesText1",
+                                postNumberOfCommentsText = "postNumberOfCommentsText1",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName3",
+                                postDateLine = "postDateLine3",
+                                postTitle = "postTitle3",
+                                postExcerpt = "postExcerpt3",
+                                postImageUrl = "postImageUrl3",
+                                postNumberOfLikesText = "postNumberOfLikesText3",
+                                postNumberOfCommentsText = "postNumberOfCommentsText3",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName4",
+                                postDateLine = "postDateLine4",
+                                postTitle = "postTitle4",
+                                postExcerpt = "postExcerpt4",
+                                postImageUrl = "postImageUrl4",
+                                postNumberOfLikesText = "postNumberOfLikesText4",
+                                postNumberOfCommentsText = "postNumberOfCommentsText4",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                        ),
+                    ),
+                    TagsFeedItem.Error(
+                        tag = ReaderTag(
+                            "Tag 3",
+                            "Tag 3",
+                            "Tag 3",
+                            "Tag 3",
+                            ReaderTagType.TAGS,
+                        ),
+                    ),
+                    TagsFeedItem.Success(
+                        tag = ReaderTag(
+                            "Tag 4",
+                            "Tag 4",
+                            "Tag 4",
+                            "Tag 4",
+                            ReaderTagType.TAGS,
+                        ),
+                        posts = listOf(
+                            TagsFeedPostItem(
+                                siteName = "siteName1",
+                                postDateLine = "postDateLine1",
+                                postTitle = "postTitle1",
+                                postExcerpt = "postExcerpt1",
+                                postImageUrl = "postImageUrl1",
+                                postNumberOfLikesText = "postNumberOfLikesText1",
+                                postNumberOfCommentsText = "postNumberOfCommentsText1",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName2",
+                                postDateLine = "postDateLine2",
+                                postTitle = "postTitle2",
+                                postExcerpt = "postExcerpt2",
+                                postImageUrl = "postImageUrl2",
+                                postNumberOfLikesText = "postNumberOfLikesText2",
+                                postNumberOfCommentsText = "postNumberOfCommentsText2",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName3",
+                                postDateLine = "postDateLine3",
+                                postTitle = "postTitle3",
+                                postExcerpt = "postExcerpt3",
+                                postImageUrl = "postImageUrl3",
+                                postNumberOfLikesText = "postNumberOfLikesText3",
+                                postNumberOfCommentsText = "postNumberOfCommentsText3",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                            TagsFeedPostItem(
+                                siteName = "siteName4",
+                                postDateLine = "postDateLine4",
+                                postTitle = "postTitle4",
+                                postExcerpt = "postExcerpt4",
+                                postImageUrl = "postImageUrl4",
+                                postNumberOfLikesText = "postNumberOfLikesText4",
+                                postNumberOfCommentsText = "postNumberOfCommentsText4",
+                                isPostLiked = true,
+                                onPostImageClick = {},
+                                onPostLikeClick = {},
+                                onPostMoreMenuClick = {},
+                            ),
+                        ),
+                    ),
                 )
             )
         )
@@ -155,6 +392,17 @@ fun ReaderTagsFeedLoading() {
     AppTheme {
         ReaderTagsFeed(
             uiState = UiState.Loading
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ReaderTagsFeedEmpty() {
+    AppTheme {
+        ReaderTagsFeed(
+            uiState = UiState.Empty
         )
     }
 }
