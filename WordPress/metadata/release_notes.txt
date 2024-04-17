@@ -1,3 +1,2 @@
-* [**] Site picker: Added the feature to pin sites, redesigned the UI, and deprecated the Show/Hide sites functionality. [https://github.com/wordpress-mobile/WordPress-Android/pull/20521]
-* [*] [internal] Updates the way the app retrieves the User-Agent request header [https://github.com/wordpress-mobile/WordPress-Android/pull/20603]
-
+We redesigned the site picker screen. You can now pin your favorite sites, see recently accessed sites, and more. We also removed the ability to show and hide sites.
+(Did we say the word “sites” enough? We think so.)
