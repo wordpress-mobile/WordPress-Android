@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel.SiteUiModel
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -36,13 +37,17 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
     private val siteUrl = "wordpress.com"
     private val iconUrl = "icon.jpg"
 
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Before
     fun setUp() {
         viewModel = StatsSiteSelectionViewModel(
             testDispatcher(),
             siteStore,
             accountStore,
-            appPrefsWrapper
+            appPrefsWrapper,
+            buildConfigWrapper,
         )
         wpComSite = SiteModel()
         wpComSite.siteId = siteId
@@ -65,6 +70,7 @@ class StatsSiteSelectionViewModelTest : BaseUnitTest() {
         nonJetpackSite.iconUrl = iconUrl
         nonJetpackSite.setIsJetpackConnected(false)
         nonJetpackSite.setIsWPCom(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test

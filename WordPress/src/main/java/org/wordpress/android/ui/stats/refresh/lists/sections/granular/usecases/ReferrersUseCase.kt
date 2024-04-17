@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
@@ -46,6 +45,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.ui.utils.ListItemInteraction.Companion.create
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -69,6 +69,7 @@ class ReferrersUseCase(
     private val resourceProvider: ResourceProvider,
     private val useCaseMode: UseCaseMode,
     private val popupMenuHandler: ReferrerPopupMenuHandler,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) : GranularStatefulUseCase<ReferrersModel, SelectedGroup>(
     REFERRERS,
     mainDispatcher,
@@ -122,7 +123,7 @@ class ReferrersUseCase(
             items.add(Empty(R.string.stats_no_data_for_period))
         } else {
             val header = Header(R.string.stats_referrer_label, R.string.stats_referrer_views_label)
-            if (BuildConfig.IS_JETPACK_APP && useCaseMode == BLOCK_DETAIL) {
+            if (buildConfigWrapper.isJetpackApp && useCaseMode == BLOCK_DETAIL) {
                 items.add(buildPieChartItem(domainModel))
             }
             items.add(header)
@@ -349,7 +350,8 @@ class ReferrersUseCase(
         private val statsUtils: StatsUtils,
         private val resourceProvider: ResourceProvider,
         private val analyticsTracker: AnalyticsTrackerWrapper,
-        private val popupMenuHandler: ReferrerPopupMenuHandler
+        private val popupMenuHandler: ReferrerPopupMenuHandler,
+        private val buildConfigWrapper: BuildConfigWrapper,
     ) : GranularUseCaseFactory {
         override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
             ReferrersUseCase(
@@ -364,7 +366,8 @@ class ReferrersUseCase(
                 statsUtils,
                 resourceProvider,
                 useCaseMode,
-                popupMenuHandler
+                popupMenuHandler,
+                buildConfigWrapper,
             )
     }
 

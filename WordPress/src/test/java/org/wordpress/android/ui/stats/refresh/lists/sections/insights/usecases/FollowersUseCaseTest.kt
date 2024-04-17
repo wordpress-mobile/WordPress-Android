@@ -319,7 +319,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         useCase.liveData.observeForever { if (it != null) updatedResult = it }
 
-        whenever(insightsStore.getEmailFollowers(site, LimitMode.All)).thenReturn(updatedEmailModel)
         button.loadMore()
         updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
