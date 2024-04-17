@@ -1127,7 +1127,11 @@ class PagesViewModel
         }
     }
 
-    private fun postUploadedFinished(remoteId: RemoteId, errorWrapper: PageUploadErrorWrapper, isFirstTimePublish: Boolean) {
+    private fun postUploadedFinished(
+        remoteId: RemoteId,
+        errorWrapper: PageUploadErrorWrapper,
+        isFirstTimePublish: Boolean
+    ) {
         pageMap[remoteId.value]?.let {
             _uploadFinishedAction.postValue(Triple(it, errorWrapper, isFirstTimePublish))
         }

@@ -32,7 +32,6 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
-
 /**
  * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
  */

@@ -73,6 +73,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         (uploadUiState is UploadWaitingForConnection ||
                 (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
 
+    @Suppress("LongParameterList")
     private fun getPublishedPageActions(
         siteModel: SiteModel,
         remoteId: Long,
