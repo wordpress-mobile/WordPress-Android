@@ -39,7 +39,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                     .width(99.dp)
                     .height(8.dp)
                     .clip(shape = RoundedCornerShape(16.dp)),
-                isLoadingCompleted = false,
             )
         }
         ShimmerBox(
@@ -48,7 +47,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                 .width(204.dp)
                 .height(18.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -56,7 +54,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                 .width(140.dp)
                 .height(18.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -64,7 +61,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                 .fillMaxWidth()
                 .height(150.dp)
                 .clip(shape = RoundedCornerShape(8.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -75,7 +71,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
         ShimmerBox(
             modifier = Modifier
@@ -86,7 +81,6 @@ fun ReaderTagsFeedPostListItemLoading() {
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp)),
-            isLoadingCompleted = false,
         )
     }
 }
