@@ -13,6 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:paddingEnd="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_small"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:drawablePadding="@dimen/margin_medium"
         app:drawableStartCompat="@drawable/ic_dot_white_12dp"
         tools:text="@string/unknown" />
