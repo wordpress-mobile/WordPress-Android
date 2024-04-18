@@ -332,7 +332,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     private fun StatsListFragmentBinding.updateInsights(statsState: List<StatsBlock>) {
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager, statsTrafficSubscribersTabFeatureConfig.isEnabled())
+            adapter = StatsBlockAdapter(imageManager)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter
