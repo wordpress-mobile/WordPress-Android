@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose.horizontalpostlist
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,14 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.compose.components.shimmer.ShimmerBox
+import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun HorizontalPostListItemLoading() {
+    val backgroundColor = AppColor.Black.copy(alpha = 0.08F)
     Column(
         modifier = Modifier
             .width(240.dp)
@@ -34,35 +38,39 @@ fun HorizontalPostListItemLoading() {
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ShimmerBox(
+            Box(
                 modifier = Modifier
                     .width(99.dp)
                     .height(8.dp)
-                    .clip(shape = RoundedCornerShape(16.dp)),
+                    .clip(shape = RoundedCornerShape(16.dp))
+                    .background(backgroundColor),
             )
         }
-        ShimmerBox(
+        Box(
             modifier = Modifier
                 .padding(top = Margin.Large.value)
                 .width(204.dp)
                 .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
+                .clip(shape = RoundedCornerShape(16.dp))
+                .background(backgroundColor),
         )
-        ShimmerBox(
+        Box(
             modifier = Modifier
                 .padding(top = Margin.Large.value)
                 .width(140.dp)
                 .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
+                .clip(shape = RoundedCornerShape(16.dp))
+                .background(backgroundColor),
         )
-        ShimmerBox(
+        Box(
             modifier = Modifier
                 .padding(top = Margin.Large.value)
                 .fillMaxWidth()
                 .height(150.dp)
-                .clip(shape = RoundedCornerShape(8.dp)),
+                .clip(shape = RoundedCornerShape(8.dp))
+                .background(backgroundColor),
         )
-        ShimmerBox(
+        Box(
             modifier = Modifier
                 .padding(
                     start = Margin.Small.value,
@@ -70,9 +78,10 @@ fun HorizontalPostListItemLoading() {
                 )
                 .width(170.dp)
                 .height(8.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
+                .clip(shape = RoundedCornerShape(16.dp))
+                .background(backgroundColor),
         )
-        ShimmerBox(
+        Box(
             modifier = Modifier
                 .padding(
                     start = Margin.Small.value,
@@ -80,7 +89,8 @@ fun HorizontalPostListItemLoading() {
                 )
                 .width(170.dp)
                 .height(8.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
+                .clip(shape = RoundedCornerShape(16.dp))
+                .background(backgroundColor),
         )
     }
 }
