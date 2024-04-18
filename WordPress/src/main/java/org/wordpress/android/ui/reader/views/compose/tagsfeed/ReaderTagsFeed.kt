@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.compose.components.shimmer.ShimmerBox
+import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
@@ -54,12 +55,13 @@ private fun LoadingTagsAndPosts() {
         repeat(numberOfLoadingRows) {
             item {
                 Spacer(modifier = Modifier.height(Margin.Large.value))
-                ShimmerBox(
+                Box(
                     modifier = Modifier
                         .padding(start = Margin.Large.value)
                         .width(75.dp)
                         .height(36.dp)
-                        .clip(shape = RoundedCornerShape(16.dp)),
+                        .clip(shape = RoundedCornerShape(16.dp))
+                        .background(AppColor.Black.copy(alpha = 0.08F)),
                 )
 
                 Spacer(modifier = Modifier.height(Margin.Large.value))
