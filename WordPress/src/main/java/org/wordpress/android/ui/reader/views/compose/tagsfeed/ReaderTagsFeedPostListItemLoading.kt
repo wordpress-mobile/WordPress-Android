@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +26,11 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderTagsFeedPostListItemLoading() {
-    val backgroundColor = AppColor.Black.copy(alpha = 0.08F)
+    val backgroundColor = if (isSystemInDarkTheme()) {
+        AppColor.White.copy(alpha = 0.12F)
+    } else {
+        AppColor.Black.copy(alpha = 0.08F)
+    }
     Column(
         modifier = Modifier
             .width(240.dp)

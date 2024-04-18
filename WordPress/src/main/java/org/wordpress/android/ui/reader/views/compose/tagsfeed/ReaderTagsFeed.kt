@@ -205,9 +205,9 @@ private fun Loading() {
     }
 }
 
-// TODO empty state (https://github.com/wordpress-mobile/WordPress-Android/issues/20584)
 @Composable
 private fun Empty() {
+// TODO empty state (https://github.com/wordpress-mobile/WordPress-Android/issues/20584)
 }
 
 
