@@ -18,12 +18,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -1094,6 +1096,8 @@ class PagesViewModel
 
     private fun updateConflictedPostWithLocalVersion(pageId: RemoteId) {
         performIfNetworkAvailable {
+            invalidateAllLists()
+
             val page = pageMap.getValue(pageId.value)
             val post = postStore.getPostByLocalPostId(page.pageId) ?: return@performIfNetworkAvailable
             post.error = null
@@ -1106,6 +1110,12 @@ class PagesViewModel
             )
         }
     }
+
+    private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
+    }
+
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
             _previewState.value != PostListRemotePreviewState.NONE
 
