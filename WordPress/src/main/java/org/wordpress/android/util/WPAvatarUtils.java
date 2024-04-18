@@ -47,7 +47,7 @@ public class WPAvatarUtils {
             try {
                 return new AvatarUrl(new URL(imageUrl),
                         new AvatarQueryOptions(avatarSz, defaultImage, null, null)).url().toString();
-            } catch (MalformedURLException e) {
+            } catch (MalformedURLException | IllegalArgumentException e) {
                 return "";
             }
         }

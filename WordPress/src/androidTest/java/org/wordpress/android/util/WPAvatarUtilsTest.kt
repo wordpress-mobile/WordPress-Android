@@ -40,4 +40,15 @@ class WPAvatarUtilsTest {
             )
         )
     }
+
+    @Test
+    fun rewriteAvatarUrlInvalidGravatarUrl() {
+        assertEquals(
+            "",
+            WPAvatarUtils.rewriteAvatarUrl(
+                "https://www.gravatar.com/avatar/?d=404&s=200",
+                200, DefaultAvatarOption.Status404
+            )
+        )
+    }
 }
