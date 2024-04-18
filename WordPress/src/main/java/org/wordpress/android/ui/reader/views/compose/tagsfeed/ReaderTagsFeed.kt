@@ -14,16 +14,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.compose.components.shimmer.ShimmerBox
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
-import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
 
 @Composable
@@ -34,15 +36,90 @@ fun ReaderTagsFeed(uiState: UiState) {
             .fillMaxHeight(),
     ) {
         when (uiState) {
-            is UiState.Loaded -> Loaded(uiState)
-            UiState.Loading -> Loading()
-            UiState.Empty -> Empty()
+            is UiState.LoadingTagsAndPosts -> LoadingTagsAndPosts()
+            is UiState.LoadedTagsLoadingPosts -> LoadedTagsLoadingPosts(uiState)
+            is UiState.LoadedTagsAndPosts -> LoadedTagsAndPosts(uiState)
+            is UiState.Empty -> Empty()
         }
     }
 }
 
 @Composable
-private fun Loaded(uiState: UiState.Loaded) {
+private fun LoadingTagsAndPosts() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        userScrollEnabled = false,
+    ) {
+        val numberOfLoadingRows = 3
+        repeat(numberOfLoadingRows) {
+            item {
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                ShimmerBox(
+                    modifier = Modifier
+                        .padding(start = Margin.Large.value)
+                        .width(75.dp)
+                        .height(36.dp)
+                        .clip(shape = RoundedCornerShape(16.dp)),
+                )
+
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                    userScrollEnabled = false,
+                ) {
+                    item {
+                        ReaderTagsFeedPostListItemLoading()
+                        Spacer(Modifier.width(12.dp))
+                        ReaderTagsFeedPostListItemLoading()
+                        Spacer(Modifier.width(12.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadedTagsLoadingPosts(uiState: UiState.LoadedTagsLoadingPosts) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = Margin.Large.value,
+                end = Margin.Large.value,
+            ),
+        userScrollEnabled = false,
+    ) {
+        uiState.items.forEach {
+            item {
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                ReaderFilterChip(
+                    text = UiString.UiStringText(it.tag.tagTitle),
+                    onClick = it.onTagClicked,
+                    height = 36.dp,
+                )
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    userScrollEnabled = false,
+                ) {
+                    item {
+                        ReaderTagsFeedPostListItemLoading()
+                        Spacer(Modifier.width(12.dp))
+                        ReaderTagsFeedPostListItemLoading()
+                        Spacer(Modifier.width(12.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoadedTagsAndPosts(uiState: UiState.LoadedTagsAndPosts) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -64,7 +141,7 @@ private fun Loaded(uiState: UiState.Loaded) {
             Spacer(modifier = Modifier.height(Margin.Large.value))
             when (tagsFeedItem) {
                 // If item is Success, show posts list
-                is TagsFeedItem.Success -> {
+                is TagsFeedItem.Loaded.Success -> {
                     LazyRow(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -92,7 +169,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                     }
                 }
                 // If item is Error, show error UI and retry button
-                is TagsFeedItem.Error -> {
+                is TagsFeedItem.Loaded.Error -> {
                 }
             }
         }
@@ -133,31 +210,44 @@ private fun Empty() {
 
 
 // TODO move to VM
-sealed class UiState {
-    // TODO review Loaded parameters
-    data class Loaded(
-        val items: List<TagsFeedItem>,
-    ) : UiState()
-
-    object Loading : UiState()
-
-    object Empty : UiState()
-}
-
 sealed class TagsFeedItem(
     open val tag: ReaderTag,
     open val onTagClicked: () -> Unit,
 ) {
-    data class Success(
+    sealed class Loaded(
         override val tag: ReaderTag,
         override val onTagClicked: () -> Unit,
-        val posts: List<TagsFeedPostItem>,
-    ) : TagsFeedItem(tag, onTagClicked)
+    ) : TagsFeedItem(tag, onTagClicked) {
+        data class Success(
+            override val tag: ReaderTag,
+            override val onTagClicked: () -> Unit,
+            val posts: List<TagsFeedPostItem>,
+        ) : Loaded(tag, onTagClicked)
 
-    data class Error(
+        data class Error(
+            override val tag: ReaderTag,
+            override val onTagClicked: () -> Unit,
+        ) : Loaded(tag, onTagClicked)
+    }
+
+    data class Loading(
         override val tag: ReaderTag,
         override val onTagClicked: () -> Unit,
     ) : TagsFeedItem(tag, onTagClicked)
+}
+
+sealed class UiState {
+    object LoadingTagsAndPosts : UiState()
+
+    data class LoadedTagsLoadingPosts(
+        val items: List<TagsFeedItem.Loading>,
+    ) : UiState()
+
+    data class LoadedTagsAndPosts(
+        val items: List<TagsFeedItem.Loaded>,
+    ) : UiState()
+
+    object Empty : UiState()
 }
 
 data class TagsFeedPostItem(
@@ -177,17 +267,17 @@ data class TagsFeedPostItem(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReaderTagsFeedLoaded() {
+fun ReaderTagsFeedLoadedTagsAndPosts() {
     AppTheme {
         ReaderTagsFeed(
-            uiState = UiState.Loaded(
+            uiState = UiState.LoadedTagsAndPosts(
                 items = listOf(
-                    TagsFeedItem.Success(
+                    TagsFeedItem.Loaded.Success(
                         tag = ReaderTag(
-                            "Tag 1",
-                            "Tag 1",
-                            "Tag 1",
-                            "Tag 1",
+                            "Tag Loaded Success",
+                            "Tag Loaded Success",
+                            "Tag Loaded Success",
+                            "Tag Loaded Success",
                             ReaderTagType.TAGS,
                         ),
                         posts = listOf(
@@ -259,12 +349,12 @@ fun ReaderTagsFeedLoaded() {
                         ),
                         onTagClicked = {},
                     ),
-                    TagsFeedItem.Error(
+                    TagsFeedItem.Loaded.Error(
                         tag = ReaderTag(
-                            "Tag 3",
-                            "Tag 3",
-                            "Tag 3",
-                            "Tag 3",
+                            "Tag Loaded Error",
+                            "Tag Loaded Error",
+                            "Tag Loaded Error",
+                            "Tag Loaded Error",
                             ReaderTagType.TAGS,
                         ),
                         onTagClicked = {},
@@ -278,10 +368,54 @@ fun ReaderTagsFeedLoaded() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReaderTagsFeedLoading() {
+fun ReaderTagsFeedLoadingTagsAndPosts() {
     AppTheme {
         ReaderTagsFeed(
-            uiState = UiState.Loading
+            uiState = UiState.LoadingTagsAndPosts
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ReaderTagsFeedLoadedTagsLoadingPosts() {
+    AppTheme {
+        ReaderTagsFeed(
+            uiState = UiState.LoadedTagsLoadingPosts(
+                items = listOf(
+                    TagsFeedItem.Loading(
+                        tag = ReaderTag(
+                            "Tag 1",
+                            "Tag 1",
+                            "Tag 1",
+                            "Tag 1",
+                            ReaderTagType.TAGS,
+                        ),
+                        onTagClicked = {},
+                    ),
+                    TagsFeedItem.Loading(
+                        tag = ReaderTag(
+                            "Tag 2",
+                            "Tag 2",
+                            "Tag 2",
+                            "Tag 2",
+                            ReaderTagType.TAGS,
+                        ),
+                        onTagClicked = {},
+                    ),
+                    TagsFeedItem.Loading(
+                        tag = ReaderTag(
+                            "Tag 3",
+                            "Tag 3",
+                            "Tag 3",
+                            "Tag 3",
+                            ReaderTagType.TAGS,
+                        ),
+                        onTagClicked = {},
+                    )
+                )
+            )
         )
     }
 }

@@ -97,9 +97,7 @@ fun ReaderTagsFeedPostListItemLoadingPreview() {
         ) {
             LazyRow(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp),
+                    .fillMaxWidth(),
             ) {
                 item {
                     ReaderTagsFeedPostListItemLoading()
