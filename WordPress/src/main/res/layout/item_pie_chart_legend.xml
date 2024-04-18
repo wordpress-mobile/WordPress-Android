@@ -14,8 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:drawablePadding="@dimen/margin_medium"
-        android:ellipsize="end"
-        android:maxLines="1"
         app:drawableStartCompat="@drawable/ic_dot_white_12dp"
         tools:text="@string/unknown" />
 </FrameLayout>
