@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,6 +55,11 @@ private fun LoadingTagsAndPosts() {
         val numberOfLoadingRows = 3
         repeat(numberOfLoadingRows) {
             item {
+                val backgroundColor = if (isSystemInDarkTheme()) {
+                    AppColor.White.copy(alpha = 0.12F)
+                } else {
+                    AppColor.Black.copy(alpha = 0.08F)
+                }
                 Spacer(modifier = Modifier.height(Margin.Large.value))
                 Box(
                     modifier = Modifier
@@ -61,7 +67,7 @@ private fun LoadingTagsAndPosts() {
                         .width(75.dp)
                         .height(36.dp)
                         .clip(shape = RoundedCornerShape(16.dp))
-                        .background(AppColor.Black.copy(alpha = 0.08F)),
+                        .background(backgroundColor),
                 )
 
                 Spacer(modifier = Modifier.height(Margin.Large.value))
