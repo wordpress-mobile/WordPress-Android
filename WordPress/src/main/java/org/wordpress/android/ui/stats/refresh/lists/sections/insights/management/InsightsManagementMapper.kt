@@ -32,7 +32,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.ADDED
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status.REMOVED
 import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -52,13 +52,13 @@ private val GENERAL_INSIGHTS = mutableListOf(
 
 class InsightsManagementMapper @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 ) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
         withContext(bgDispatcher) {
             val insightListItems = mutableListOf<InsightListItem>()
             insightListItems += Header(R.string.stats_insights_management_general)
-            if (!trafficTabFeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(TODAY_STATS)) {
+            if (!trafficSubscribersTabFeatureConfig.isEnabled() && !GENERAL_INSIGHTS.contains(TODAY_STATS)) {
                 GENERAL_INSIGHTS.add(TODAY_STATS)
             }
             if (!GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {

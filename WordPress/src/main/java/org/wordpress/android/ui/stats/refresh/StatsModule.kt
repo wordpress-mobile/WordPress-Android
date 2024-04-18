@@ -65,7 +65,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.V
 import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewUseCase.TrafficOverviewUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -129,7 +129,7 @@ class StatsModule {
         actionCardGrowUseCase: ActionCardGrowUseCase,
         actionCardReminderUseCase: ActionCardReminderUseCase,
         actionCardScheduleUseCase: ActionCardScheduleUseCase,
-        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (BuildConfig.IS_JETPACK_APP) {
@@ -144,7 +144,7 @@ class StatsModule {
             useCases.add(followerTotalsUseCase)
         }
 
-        if (!trafficTabFeatureConfig.isEnabled()) {
+        if (!trafficSubscribersTabFeatureConfig.isEnabled()) {
             useCases.add(todayStatsUseCase)
         }
 
@@ -452,9 +452,9 @@ class StatsModule {
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
         @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
-        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
-        return if (trafficTabFeatureConfig.isEnabled()) {
+        return if (trafficSubscribersTabFeatureConfig.isEnabled()) {
             mapOf(
                 StatsSection.TRAFFIC to trafficUseCase,
                 StatsSection.INSIGHTS to insightsUseCase

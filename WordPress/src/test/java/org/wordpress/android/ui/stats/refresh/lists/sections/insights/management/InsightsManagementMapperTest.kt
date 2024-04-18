@@ -25,12 +25,12 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 
 @ExperimentalCoroutinesApi
 class InsightsManagementMapperTest : BaseUnitTest() {
     @Mock
-    private lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     private lateinit var insightsManagementMapper: InsightsManagementMapper
     private var insightTypeCount = 13 // POSTS_AND_PAGES_INSIGHTS.size + ACTIVITY_INSIGHTS.size + GENERAL_INSIGHTS.size
@@ -40,7 +40,7 @@ class InsightsManagementMapperTest : BaseUnitTest() {
     fun setUp() {
         insightsManagementMapper = InsightsManagementMapper(
             testDispatcher(),
-            trafficTabFeatureConfig
+            trafficSubscribersTabFeatureConfig
         )
     }
 
