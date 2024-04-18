@@ -5,7 +5,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.argThat
 import org.mockito.kotlin.mock
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.mockito.kotlin.argumentCaptor
