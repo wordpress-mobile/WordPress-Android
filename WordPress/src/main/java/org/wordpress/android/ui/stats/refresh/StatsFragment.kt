@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.SUBSCRIBERS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
@@ -52,7 +53,7 @@ import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
-private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS)
+private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
 private var statsTrafficTabEnabled = false
 
 @AndroidEntryPoint
@@ -230,6 +231,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         val position = when (selectedSection) {
             TRAFFIC -> 0
             INSIGHTS -> 1
+            SUBSCRIBERS -> 2
             DETAIL,
             INSIGHT_DETAIL,
             TOTAL_LIKES_DETAIL,
