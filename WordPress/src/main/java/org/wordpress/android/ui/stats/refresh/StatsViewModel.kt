@@ -352,6 +352,11 @@ class StatsViewModel
                 StatsGranularity.DAYS
             )
 
+            StatsSection.SUBSCRIBERS -> analyticsTracker.trackWithGranularity(
+                STATS_PERIOD_ACCESSED,
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+
             StatsSection.WEEKS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_WEEKS_ACCESSED,
                 StatsGranularity.WEEKS
