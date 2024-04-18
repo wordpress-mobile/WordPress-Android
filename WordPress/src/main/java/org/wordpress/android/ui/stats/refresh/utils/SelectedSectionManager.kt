@@ -51,6 +51,7 @@ class SelectedSectionManager
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
         StatsSection.TRAFFIC,
+        StatsSection.SUBSCRIBERS,
         StatsSection.ANNUAL_STATS,
         StatsSection.DETAIL,
         StatsSection.TOTAL_LIKES_DETAIL,

@@ -62,6 +62,7 @@ abstract class StatsListViewModel(
     enum class StatsSection(@StringRes val titleRes: Int) {
         TRAFFIC(R.string.stats_traffic),
         INSIGHTS(R.string.stats_insights),
+        SUBSCRIBERS(R.string.stats_subscribers),
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
