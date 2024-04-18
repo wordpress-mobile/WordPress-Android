@@ -220,7 +220,12 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void sendToJSPostSaveEvent() {
-        mWPAndroidGlueCode.sendToJSPostSaveEvent();
+        // Check that the activity isn't null, there is a possibility it can cause the following crash
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/20665
+        final Activity activity = getActivity();
+        if (activity != null) {
+            mWPAndroidGlueCode.sendToJSPostSaveEvent();
+        }
     }
 
     /**
