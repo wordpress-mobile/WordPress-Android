@@ -903,8 +903,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     // SiteSettingsListener
-    override fun onSaveError(error: Exception) { /* No Op */ }
-    override fun onFetchError(error: Exception) { /* No Op */ }
+    override fun onSaveError(error: Exception?) { /* No Op */ }
+    override fun onFetchError(error: Exception?) { /* No Op */ }
     override fun onSettingsUpdated() {
         // Let's hold the value in local variable as listener is too noisy
         val isJetpackSsoEnabled = siteModel.isJetpackConnected && siteSettings?.isJetpackSsoEnabled == true
@@ -919,7 +919,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onSettingsSaved() { /* No Op */ }
-    override fun onCredentialsValidated(error: Exception) { /* No Op */ }
+    override fun onCredentialsValidated(error: Exception?) { /* No Op */ }
     private fun setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
