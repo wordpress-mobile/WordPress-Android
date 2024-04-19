@@ -3191,7 +3191,6 @@ Language: lv
     <string name="site_picker_cant_hide_current_site">\"%s\" netika paslēpts, jo tā ir pašreizējā vietne</string>
     <string name="site_picker_create_wpcom">Izveidojiet vietni WordPress.com</string>
     <string name="site_picker_add_self_hosted">Pievienojiet pašu mitinātu vietni</string>
-    <string name="site_picker_add_site">Pievienojiet jaunu vietni</string>
     <string name="site_picker_edit_visibility">Rādīt / slēpt vietnes</string>
     <string name="site_picker_title">Izvēlieties vietni</string>
     <string name="my_site_btn_view_site">Skatīt vietni</string>

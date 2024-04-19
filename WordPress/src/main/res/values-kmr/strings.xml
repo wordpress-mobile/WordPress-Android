@@ -1955,7 +1955,6 @@ Language: ku_TR
     <string name="account_settings">Sazkariyên Hesêb</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nehat veşartin ji ber ku ew malpera niha ye</string>
     <string name="site_picker_create_wpcom">Malpera WordPress.com\'ê biafirîne</string>
-    <string name="site_picker_add_site">Malpera nû tevlî bike</string>
     <string name="site_picker_edit_visibility">Maperan veşêre/nîşan bide</string>
     <string name="site_picker_add_self_hosted">Malpereke xwe-hewan tevlî bike</string>
     <string name="my_site_btn_switch_site">Malperê Biguherîne</string>
