@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -32,7 +31,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -79,26 +78,11 @@ private fun Loaded(uiState: UiState.Loaded) {
             }
             Spacer(modifier = Modifier.height(Margin.Large.value))
             // Tag chip UI
-            when (tagChip) {
-                is TagChip.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .padding(start = Margin.Large.value)
-                            .width(75.dp)
-                            .height(36.dp)
-                            .clip(shape = RoundedCornerShape(16.dp))
-                            .background(backgroundColor),
-                    )
-                }
-
-                is TagChip.Loaded -> {
-                    ReaderFilterChip(
-                        text = UiString.UiStringText(tagChip.tag.tagTitle),
-                        onClick = tagChip.onTagClicked,
-                        height = 36.dp,
-                    )
-                }
-            }
+            ReaderFilterChip(
+                text = UiString.UiStringText(tagChip.tag.tagTitle),
+                onClick = tagChip.onTagClicked,
+                height = 36.dp,
+            )
             Spacer(modifier = Modifier.height(Margin.Large.value))
             // Posts list UI
             when (postList) {
@@ -148,8 +132,9 @@ private fun Loaded(uiState: UiState.Loaded) {
                 is PostList.Error -> {
                     Column(
                         modifier = Modifier
-                            .height(280.dp)
-                            .fillMaxWidth(),
+                            .height(250.dp)
+                            .fillMaxWidth()
+                            .padding(start = 60.dp, end = 60.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
@@ -166,22 +151,30 @@ private fun Loaded(uiState: UiState.Loaded) {
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
-                        val tagName = if (tagChip is TagChip.Loaded) tagChip.tag.tagDisplayName else ""
+                        val tagName = tagChip.tag.tagDisplayName
                         Text(
                             text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
                             style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colors.onSurface,
+                            textAlign = TextAlign.Center,
                         )
                         Spacer(modifier = Modifier.height(Margin.Medium.value))
                         Text(
                             text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
                             style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                            color = AppColor.Black.copy(alpha = 0.4F),
+                            color = if (isSystemInDarkTheme()) {
+                                AppColor.White.copy(alpha = 0.4F)
+                            } else {
+                                AppColor.Black.copy(alpha = 0.4F)
+                            },
+                            textAlign = TextAlign.Center,
                         )
                         Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
                         Button(
                             onClick = { postList.onRetryClick() },
-                            modifier = Modifier.height(36.dp),
+                            modifier = Modifier
+                                .height(36.dp)
+                                .width(114.dp),
                             elevation = ButtonDefaults.elevation(
                                 defaultElevation = 0.dp,
                                 pressedElevation = 0.dp,
@@ -191,22 +184,14 @@ private fun Loaded(uiState: UiState.Loaded) {
                                 backgroundColor = MaterialTheme.colors.onSurface,
                             ),
                             shape = RoundedCornerShape(50),
-                            contentPadding = PaddingValues(
-                                start = Margin.MediumLarge.value,
-                                end = Margin.MediumLarge.value,
-                                top = 0.dp,
-                                bottom = 0.dp
-                            )
                         ) {
                             Text(
                                 modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .widthIn(max = 250.dp),
-                                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                                    .align(Alignment.CenterVertically),
+                                style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colors.surface,
                                 text = stringResource(R.string.reader_tags_feed_error_retry),
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1,
                             )
                         }
                     }
@@ -273,14 +258,10 @@ sealed class UiState {
     object Empty : UiState()
 }
 
-sealed class TagChip {
-    data class Loaded(
-        val tag: ReaderTag,
-        val onTagClicked: () -> Unit,
-    ) : TagChip()
-
-    object Loading : TagChip()
-}
+data class TagChip(
+    val tag: ReaderTag,
+    val onTagClicked: () -> Unit,
+)
 
 sealed class PostList {
     data class Loaded(val items: List<TagsFeedPostItem>) : PostList()
@@ -388,10 +369,9 @@ fun ReaderTagsFeedLoaded() {
         ReaderTagsFeed(
             uiState = UiState.Loaded(
                 data = listOf(
-                    (TagChip.Loaded(readerTag, {}) to postListLoaded),
-                    (TagChip.Loaded(readerTag, {}) to PostList.Loading),
-                    (TagChip.Loaded(readerTag, {}) to PostList.Error {}),
-                    (TagChip.Loading to PostList.Loading),
+                    (TagChip(readerTag, {}) to postListLoaded),
+                    (TagChip(readerTag, {}) to PostList.Loading),
+                    (TagChip(readerTag, {}) to PostList.Error {}),
                 )
             )
         )
