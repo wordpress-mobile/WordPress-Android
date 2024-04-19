@@ -91,7 +91,7 @@ class PostConflictResolverTest : BaseUnitTest() {
             UploadStore.UploadError(PostStore.PostError(PostStore.PostErrorType.OLD_REVISION))
         )
 
-        val result = postConflictResolver.doesPostHaveUnhandledConflict(post)
+        val result = postConflictResolver.hasUnhandledConflict(post)
 
         assertTrue(result)
     }
@@ -102,7 +102,7 @@ class PostConflictResolverTest : BaseUnitTest() {
         val post = PostModel()
         whenever(uploadStore.getUploadErrorForPost(post)).thenReturn(null)
 
-        val result = postConflictResolver.doesPostHaveUnhandledConflict(post)
+        val result = postConflictResolver.hasUnhandledConflict(post)
 
         assertFalse(result)
     }

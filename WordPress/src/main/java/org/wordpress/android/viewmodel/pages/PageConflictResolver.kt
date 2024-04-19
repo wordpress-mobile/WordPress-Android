@@ -1,17 +1,44 @@
 package org.wordpress.android.viewmodel.pages
 
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
-import org.wordpress.android.ui.posts.PostUtils
-import javax.inject.Inject
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.PostConflictResolver
 
-class PageConflictResolver @Inject constructor(
-    private val uploadStore: UploadStore
+@Suppress("LongParameterList")
+class PageConflictResolver(
+    private val dispatcher: Dispatcher,
+    private val site: SiteModel,
+    private val postStore: PostStore,
+    private val uploadStore: UploadStore,
+    private val invalidateList: () -> Unit,
+    private val checkNetworkConnection: () -> Boolean,
+    private val showSnackBar: (SnackbarMessageHolder) -> Unit
 ) {
-    fun hasUnhandledAutoSave(post: PostModel) = PostUtils.hasAutoSave(post)
+    private val postConflictResolver: PostConflictResolver by lazy {
+        PostConflictResolver(
+            dispatcher = dispatcher,
+            site = site,
+            getPostByLocalPostId = postStore::getPostByLocalPostId,
+            invalidateList = invalidateList,
+            checkNetworkConnection = checkNetworkConnection,
+            showSnackBar = showSnackBar,
+            uploadStore = uploadStore,
+            postStore = postStore
+        )
+    }
 
-    fun doesPageHaveUnhandledConflict(post: PostModel) =
-        uploadStore.getUploadErrorForPost(post)?.postError?.type == PostStore.PostErrorType.OLD_REVISION ||
-                PostUtils.isPostInConflictWithRemote(post)
+    fun updateConflictedPageWithRemoteVersion(pageId: Int){
+        postConflictResolver.updateConflictedPostWithRemoteVersion(pageId)
+    }
+
+    fun updateConflictedPageWithLocalVersion(pageId: Int){
+        postConflictResolver.updateConflictedPostWithLocalVersion(pageId)
+    }
+
+    fun onPageSuccessfullyUpdated() {
+        postConflictResolver.onPostSuccessfullyUpdated()
+    }
 }
