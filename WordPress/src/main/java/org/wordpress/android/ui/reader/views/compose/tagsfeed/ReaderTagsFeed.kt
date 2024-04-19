@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -13,15 +14,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
@@ -38,7 +52,7 @@ fun ReaderTagsFeed(uiState: UiState) {
             .fillMaxHeight(),
     ) {
         when (uiState) {
-            is UiState.Loading -> LoadingTagsAndPosts()
+            is UiState.Loading -> Loading()
             is UiState.Loaded -> Loaded(uiState)
             is UiState.Empty -> Empty()
         }
@@ -64,76 +78,136 @@ private fun Loaded(uiState: UiState.Loaded) {
                 AppColor.Black.copy(alpha = 0.08F)
             }
             Spacer(modifier = Modifier.height(Margin.Large.value))
-            with(uiState) {
-                // Tag chip UI
-                when (tagChip) {
-                    is TagChip.Loading -> {
-                        Box(
-                            modifier = Modifier
-                                .padding(start = Margin.Large.value)
-                                .width(75.dp)
-                                .height(36.dp)
-                                .clip(shape = RoundedCornerShape(16.dp))
-                                .background(backgroundColor),
-                        )
-                    }
+            // Tag chip UI
+            when (tagChip) {
+                is TagChip.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .padding(start = Margin.Large.value)
+                            .width(75.dp)
+                            .height(36.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .background(backgroundColor),
+                    )
+                }
 
-                    is TagChip.Loaded -> {
-                        ReaderFilterChip(
-                            text = UiString.UiStringText(tagChip.tag.tagTitle),
-                            onClick = tagChip.onTagClicked,
-                            height = 36.dp,
-                        )
+                is TagChip.Loaded -> {
+                    ReaderFilterChip(
+                        text = UiString.UiStringText(tagChip.tag.tagTitle),
+                        onClick = tagChip.onTagClicked,
+                        height = 36.dp,
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(Margin.Large.value))
+            // Posts list UI
+            when (postList) {
+                is PostList.Loading -> {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        userScrollEnabled = false,
+                    ) {
+                        item {
+                            ReaderTagsFeedPostListItemLoading()
+                            Spacer(Modifier.width(12.dp))
+                            ReaderTagsFeedPostListItemLoading()
+                            Spacer(Modifier.width(12.dp))
+                        }
                     }
                 }
-                Spacer(modifier = Modifier.height(Margin.Large.value))
-                // Posts list UI
-                when (postList) {
-                    is PostList.Loading -> {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            userScrollEnabled = false,
-                        ) {
-                            item {
-                                ReaderTagsFeedPostListItemLoading()
-                                Spacer(Modifier.width(12.dp))
-                                ReaderTagsFeedPostListItemLoading()
-                                Spacer(Modifier.width(12.dp))
+
+                is PostList.Loaded -> {
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+                    ) {
+                        items(
+                            items = postList.items,
+                        ) { postItem ->
+                            with(postItem) {
+                                ReaderTagsFeedPostListItem(
+                                    siteName = siteName,
+                                    postDateLine = postDateLine,
+                                    postTitle = postTitle,
+                                    postExcerpt = postExcerpt,
+                                    postImageUrl = postImageUrl,
+                                    postNumberOfLikesText = postNumberOfLikesText,
+                                    postNumberOfCommentsText = postNumberOfCommentsText,
+                                    isPostLiked = isPostLiked,
+                                    onPostImageClick = onPostImageClick,
+                                    onPostLikeClick = onPostLikeClick,
+                                    onPostMoreMenuClick = onPostMoreMenuClick,
+                                )
                             }
                         }
                     }
+                }
 
-                    is PostList.Loaded -> {
-                        LazyRow(
+                is PostList.Error -> {
+                    Column(
+                        modifier = Modifier
+                            .height(280.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
-                        ) {
-                            items(
-                                items = postList.items,
-                            ) { postItem ->
-                                with(postItem) {
-                                    ReaderTagsFeedPostListItem(
-                                        siteName = siteName,
-                                        postDateLine = postDateLine,
-                                        postTitle = postTitle,
-                                        postExcerpt = postExcerpt,
-                                        postImageUrl = postImageUrl,
-                                        postNumberOfLikesText = postNumberOfLikesText,
-                                        postNumberOfCommentsText = postNumberOfCommentsText,
-                                        isPostLiked = isPostLiked,
-                                        onPostImageClick = onPostImageClick,
-                                        onPostLikeClick = onPostLikeClick,
-                                        onPostMoreMenuClick = onPostMoreMenuClick,
+                                .drawBehind {
+                                    drawCircle(
+                                        color = backgroundColor,
+                                        radius = this.size.maxDimension
                                     )
-                                }
-                            }
+                                },
+                            painter = painterResource(R.drawable.ic_wifi_off_24px),
+                            tint = MaterialTheme.colors.onPrimary,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
+                        val tagName = if (tagChip is TagChip.Loaded) tagChip.tag.tagDisplayName else ""
+                        Text(
+                            text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
+                            style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colors.onSurface,
+                        )
+                        Spacer(modifier = Modifier.height(Margin.Medium.value))
+                        Text(
+                            text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
+                            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+                            color = AppColor.Black.copy(alpha = 0.4F),
+                        )
+                        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+                        Button(
+                            onClick = { postList.onRetryClick() },
+                            modifier = Modifier.height(36.dp),
+                            elevation = ButtonDefaults.elevation(
+                                defaultElevation = 0.dp,
+                                pressedElevation = 0.dp,
+                            ),
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = MaterialTheme.colors.onPrimary,
+                                backgroundColor = MaterialTheme.colors.onSurface,
+                            ),
+                            shape = RoundedCornerShape(50),
+                            contentPadding = PaddingValues(
+                                start = Margin.MediumLarge.value,
+                                end = Margin.MediumLarge.value,
+                                top = 0.dp,
+                                bottom = 0.dp
+                            )
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .widthIn(max = 280.dp),
+                                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium,
+                                text = stringResource(R.string.reader_tags_feed_error_retry),
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1,
+                            )
                         }
-                    }
-
-                    is PostList.Error -> {
-//                        TODO()
                     }
                 }
             }
@@ -142,7 +216,7 @@ private fun Loaded(uiState: UiState.Loaded) {
 }
 
 @Composable
-private fun LoadingTagsAndPosts() {
+private fun Loading() {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         userScrollEnabled = false,
@@ -212,7 +286,7 @@ sealed class PostList {
 
     object Loading : PostList()
 
-    object Error : PostList()
+    data class Error(val onRetryClick: () -> Unit) : PostList()
 }
 
 data class TagsFeedPostItem(
@@ -315,7 +389,7 @@ fun ReaderTagsFeedLoaded() {
                 data = listOf(
                     (TagChip.Loaded(readerTag, {}) to postListLoaded),
                     (TagChip.Loaded(readerTag, {}) to PostList.Loading),
-                    (TagChip.Loaded(readerTag, {}) to PostList.Error),
+                    (TagChip.Loaded(readerTag, {}) to PostList.Error {}),
                     (TagChip.Loading to PostList.Loading),
                 )
             )
