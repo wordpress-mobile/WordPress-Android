@@ -90,7 +90,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
         } else {
-            BarDataSet(emptyList(), "Empty")
+            buildEmptyDataSet(cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
@@ -206,6 +206,11 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             high2.dataIndex = index
             highlightValues(arrayOf(high2, high))
         }
+    }
+
+    private fun buildEmptyDataSet(count: Int): BarDataSet {
+        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 0f, "empty") }
+        return BarDataSet(emptyValues, "Empty").apply { setDrawValues(false) }
     }
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
