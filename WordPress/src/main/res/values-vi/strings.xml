@@ -2771,7 +2771,6 @@ Language: vi_VN
     <string name="site_picker_cant_hide_current_site">Không ẩn được \"%s\" vì đó là blog hiện tại</string>
     <string name="site_picker_create_wpcom">Tạo blog với WordPress.com</string>
     <string name="site_picker_add_self_hosted">Thêm trang self-host</string>
-    <string name="site_picker_add_site">Tạo blog mới</string>
     <string name="site_picker_edit_visibility">Hiện/Ẩn blog</string>
     <string name="site_picker_title">Chọn Blog</string>
     <string name="my_site_btn_view_site">Xem blog</string>

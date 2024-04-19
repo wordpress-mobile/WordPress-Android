@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-10 07:16:11+0000
+Translation-Revision-Date: 2024-04-18 10:25:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_like">A semana pasada tiveches %1$s visitas e 1 Gústame</string>
+    <string name="weekly_roundup_notification_text_views_and_comment">A semana pasada tiveches %1$s visitas e 1 comentario</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">A semana pasada tiveches %1$s visitas, 1 Gústame e 1 comentario.</string>
+    <string name="site_picker_all_sites">Todos os sitios</string>
+    <string name="site_picker_edit_pins">Editar pins</string>
+    <string name="site_picker_recent_sites">Sitios recentes</string>
+    <string name="site_picker_pinned_sites">Sitios fixos</string>
+    <string name="dialog_post_conflict_another_device">Outro dispositivo</string>
+    <string name="dialog_post_conflict_current_device">Dispositivo actual</string>
+    <string name="dialog_post_autosave_title">Autogardado dispoñible</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">A semana pasada tiveches %1$s visitas, %2$s Gústame e 1 comentario.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">A semana pasada tiveches %1$s visitas, 1 Gústame e %2$s comentarios.</string>
+    <string name="dialog_post_conflict_body_for_page">A páxina modificouse noutro dispositivo. Selecciona a versión da páxina que queres conservar.</string>
+    <string name="dialog_post_conflict_body">A entrada modificouse noutro dispositivo. Selecciona a versión da entrada que queres conservar.</string>
+    <string name="dialog_post_autosave_body_for_page">Fixeches cambios nesta páxina desde outro dispositivo e non os gardaches. Selecciona a versión da páxina que queres conservar.</string>
+    <string name="dialog_post_autosave_body">Fixeches cambios nesta entrada desde outro dispositivo e non os gardaches. Selecciona a versión da entrada que queres conservar.</string>
+    <string name="dialog_post_conflict_title">Resolver conflito</string>
+    <string name="reader_preferences_screen_font_family_label">Fonte</string>
+    <string name="reader_preferences_font_size_large">Grande</string>
+    <string name="reader_preferences_font_size_small">Pequena</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_screen_font_size_label">Tamaño de fonte</string>
+    <string name="reader_preferences_font_size_extra_large">Extra grande</string>
+    <string name="reader_preferences_font_size_extra_small">Extra pequena</string>
+    <string name="reader_preferences_screen_theme_label">Esquema de cor</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">envía os teus comentarios</string>
+    <string name="reader_no_followed_tags_text_title">Non segues etiquetas</string>
+    <string name="gutenberg_native_clear_selected_color">Baleirar a cor seleccionada</string>
+    <string name="reader_toast_err_tag_already_following">Xa estás seguindo esta etiqueta</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_soft">Suave</string>
+    <string name="reader_preferences_theme_candy">Caramelo</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_evening">Noite</string>
+    <string name="reader_preferences_theme_system">Por defecto</string>
+    <string name="reader_page_followed_tags_text_title">Etiquetas seguidas</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">envía os teus comentarios</string>
+    <string name="reader_menu_reading_preferences">Preferencias de lectura</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Esta é unha nova característica aínda en desenvolvemento. Para axudarnos a mellorala %s.</string>
+    <string name="reader_preferences_screen_preview_text">Elixe as túas cores, fontes e tamaños. Previsualiza aquí a túa selección e le entradas cos teus estilos cando remates.</string>
+    <string name="reader_preferences_screen_preview_title">Preferencias de lectura</string>
+    <string name="reader_filter_empty_tags_action_follow">Segue unha etiqueta</string>
+    <string name="button_read">Ler</string>
+    <string name="gutenberg_native_copy_post_text">Copiar texto da entrada</string>
+    <string name="gutenberg_native_copy_error_details">Copiar detalles do erro</string>
+    <string name="gutenberg_native_button_to_copy_post_text">Botón para copiar o texto da entrada</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text">Pulsa aquí para copiar o texto da entrada.</string>
+    <string name="gutenberg_native_button_to_copy_error_details">Botón para copiar os detalles do erro</string>
+    <string name="editor_updating_post_failed">Erro ao actualizar o contido da entrada</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details">Pulsa aquí para copiar os detalles do erro.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">O editor atopou un erro inesperado.</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Podes copiar o texto da túa entrada en caso de que o teu contido se vexa afectado. Copia os detalles do erro para depuralo e compartilo co servizo de asistencia.</string>
+    <string name="editor_updating_post">Actualizando contido da entrada</string>
+    <string name="notifications_unread_content_description">Non lido</string>
+    <string name="gutenberg_native_edit_video_024aee6d">Editar o vídeo</string>
+    <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20">Lenda do vídeo. %s</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49">Lenda do vídeo. Baleiro</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users">A reprodución automática pode provocar problemas de usabilidade a algúns usuarios.</string>
     <string name="gravatar_info_sync_done_button">Feito</string>
     <string name="gravatar_info_learn_more_link">Que é Gravatar?</string>
     <string name="gravatar_info_title">O teu perfil de WordPress.com funciona con Gravatar</string>
@@ -3433,9 +3494,9 @@ Language: gl_ES
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="site_picker_create_wpcom">Crear un sitio en WordPress.com</string>
-    <string name="site_picker_add_site">Engadir sitio</string>
     <string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
+    <string name="site_picker_add_a_site">Engadir un sitio</string>
     <string name="my_site_btn_view_site">Ver o sitio</string>
     <string name="site_picker_title">Escoller sitio</string>
     <string name="my_site_btn_switch_site">Cambiar de sitio</string>
