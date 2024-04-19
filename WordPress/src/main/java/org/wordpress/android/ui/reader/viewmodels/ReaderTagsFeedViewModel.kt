@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -22,8 +21,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _uiStateFlow = MutableStateFlow(UiState(emptyMap()))
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
-    fun fetchAll() {
-        FAKE_TAGS.forEach {
+    fun fetchAll(tags: List<ReaderTag>) {
+        tags.forEach {
             fetchTag(it)
         }
     }
@@ -55,13 +54,5 @@ class ReaderTagsFeedViewModel @Inject constructor(
         data object Loading : FetchState()
         data object Error : FetchState()
         data class Success(val posts: ReaderPostList) : FetchState()
-    }
-
-    companion object {
-        private val FAKE_TAGS = listOf(
-            ReaderTag("science", "Science", "Science", null, ReaderTagType.FOLLOWED),
-            ReaderTag("fiction", "Fiction", "Fiction", null, ReaderTagType.FOLLOWED),
-            ReaderTag("rpg", "RPG", "RPG", null, ReaderTagType.FOLLOWED),
-        )
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,13 +23,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.Companion.getViewModelKeyForTag
+import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.util.NetworkUtils
+import javax.inject.Inject
 
 /**
  * Initial implementation of ReaderTagFeedFragment with the idea of it containing both a ComposeView, which will host
@@ -41,7 +52,25 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
 @AndroidEntryPoint
 class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragment_layout),
     WPMainActivity.OnScrollToTopListener {
+    // TODO thomashortadev get this via Fragment arguments
+    private val tagsFeedTag by lazy {
+        ReaderTag(
+            "",
+            getString(R.string.reader_tags_display_name),
+            getString(R.string.reader_tags_display_name),
+            "",
+            ReaderTagType.TAGS
+        )
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var subFilterViewModel: SubFilterViewModel
+
     private val viewModel: ReaderTagsFeedViewModel by viewModels()
+    private val readerViewModel: ReaderViewModel by viewModels(
+        ownerProducer = { requireParentFragment() }
+    )
 
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
@@ -57,7 +86,34 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             }
         }
 
-        viewModel.fetchAll()
+        initViewModels(savedInstanceState)
+    }
+
+    private fun initViewModels(savedInstanceState: Bundle?) {
+        subFilterViewModel = ViewModelProvider(this, viewModelFactory).get<SubFilterViewModel>(
+            getViewModelKeyForTag(tagsFeedTag),
+            SubFilterViewModel::class.java
+        )
+        subFilterViewModel.start(tagsFeedTag, tagsFeedTag, savedInstanceState)
+
+        subFilterViewModel.updateTagsAndSites.observe(viewLifecycleOwner) { event ->
+            event.applyIfNotHandled {
+                if (NetworkUtils.isNetworkAvailable(activity)) {
+                    ReaderUpdateServiceStarter.startService(activity, this)
+                }
+            }
+        }
+
+        subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
+            readerViewModel.showTopBarFilterGroup(
+                tagsFeedTag,
+                subFilters
+            )
+
+            val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
+            viewModel.fetchAll(tags)
+        }
+        subFilterViewModel.updateTagsAndSites()
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
@@ -71,73 +127,73 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
 /**
  * Throwaway UI code just for testing the initial Tags Feed fetching code.
+ * TODO remove this and replace with the final Compose content.
  */
 @Composable
 private fun ReaderTagsFeedScreen(
     uiState: ReaderTagsFeedViewModel.UiState,
 ) {
-    AppThemeWithoutBackground {
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            uiState.tagStates.forEach { (tag, fetchState) ->
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Text(
-                        text = tag.tagTitle,
-                        style = MaterialTheme.typography.h4,
-                    )
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        uiState.tagStates.forEach { (tag, fetchState) ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Text(
+                    text = tag.tagTitle,
+                    style = MaterialTheme.typography.h4,
+                )
 
-                    when (fetchState) {
-                        is ReaderTagsFeedViewModel.FetchState.Loading -> {
-                            Text(
-                                text = "Loading...",
-                                style = MaterialTheme.typography.body1,
-                            )
-                        }
+                when (fetchState) {
+                    is ReaderTagsFeedViewModel.FetchState.Loading -> {
+                        Text(
+                            text = "Loading...",
+                            style = MaterialTheme.typography.body1,
+                        )
+                    }
 
-                        is ReaderTagsFeedViewModel.FetchState.Error -> {
-                            Text(
-                                text = "Error loading posts",
-                                style = MaterialTheme.typography.body1,
-                            )
-                        }
+                    is ReaderTagsFeedViewModel.FetchState.Error -> {
+                        Text(
+                            text = "Error loading posts",
+                            style = MaterialTheme.typography.body1,
+                        )
+                    }
 
-                        is ReaderTagsFeedViewModel.FetchState.Success -> {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .horizontalScroll(rememberScrollState()),
-                            ) {
-                                fetchState.posts.forEach { post ->
-                                    Column(
-                                        modifier = Modifier
-                                            .width(300.dp)
-                                            .background(
-                                                MaterialTheme.colors.surface,
-                                                RoundedCornerShape(4.dp)
-                                            )
-                                            .padding(4.dp),
-                                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                                    ) {
-                                        Text(
-                                            text = post.title,
-                                            style = MaterialTheme.typography.h5,
-                                            maxLines = 2,
-                                            overflow = TextOverflow.Ellipsis,
+                    is ReaderTagsFeedViewModel.FetchState.Success -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
+                        ) {
+                            fetchState.posts.forEach { post ->
+                                Column(
+                                    modifier = Modifier
+                                        .width(300.dp)
+                                        .background(
+                                            MaterialTheme.colors.surface,
+                                            RoundedCornerShape(4.dp)
                                         )
+                                        .padding(4.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                                ) {
+                                    Text(
+                                        text = post.title,
+                                        style = MaterialTheme.typography.h5,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
 
-                                        Text(
-                                            text = post.excerpt,
-                                            style = MaterialTheme.typography.body1,
-                                            maxLines = 4,
-                                            overflow = TextOverflow.Ellipsis,
-                                        )
-                                    }
+                                    Text(
+                                        text = post.excerpt,
+                                        style = MaterialTheme.typography.body1,
+                                        maxLines = 4,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
                                 }
                             }
                         }
