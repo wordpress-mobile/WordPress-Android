@@ -229,7 +229,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             val selectedTag = uiState.selectedReaderTag
             val fragment = when {
                 selectedTag.isDiscover -> ReaderDiscoverFragment()
-                selectedTag.isTags -> ReaderTagsFeedFragment()
+                selectedTag.isTags -> ReaderTagsFeedFragment.newInstance(selectedTag)
                 else -> ReaderPostListFragment.newInstanceForTag(
                     selectedTag,
                     ReaderTypes.ReaderPostListType.TAG_FOLLOWED,

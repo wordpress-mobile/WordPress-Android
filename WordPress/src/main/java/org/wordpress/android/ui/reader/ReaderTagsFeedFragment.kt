@@ -28,7 +28,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
@@ -39,6 +38,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 
 /**
@@ -52,15 +52,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragment_layout),
     WPMainActivity.OnScrollToTopListener {
-    // TODO thomashortadev get this via Fragment arguments
     private val tagsFeedTag by lazy {
-        ReaderTag(
-            "",
-            getString(R.string.reader_tags_display_name),
-            getString(R.string.reader_tags_display_name),
-            "",
-            ReaderTagType.TAGS
-        )
+        // TODO maybe we can just create a static function somewhere that returns the Tags Feed ReaderTag, since it's
+        //  used in multiple places, client-side only, and always the same.
+        requireArguments().getSerializableCompat<ReaderTag>(ARG_TAGS_FEED_TAG)!!
     }
 
     @Inject
@@ -90,7 +85,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
-        subFilterViewModel = ViewModelProvider(this, viewModelFactory).get<SubFilterViewModel>(
+        subFilterViewModel = ViewModelProvider(this, viewModelFactory).get(
             getViewModelKeyForTag(tagsFeedTag),
             SubFilterViewModel::class.java
         )
@@ -122,6 +117,18 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     override fun onScrollToTop() {
         // TODO scroll current content to top
+    }
+
+    companion object {
+        private const val ARG_TAGS_FEED_TAG = "tags_feed_tag"
+
+        fun newInstance(
+            feedTag: ReaderTag
+        ): ReaderTagsFeedFragment = ReaderTagsFeedFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(ARG_TAGS_FEED_TAG, feedTag)
+            }
+        }
     }
 }
 
