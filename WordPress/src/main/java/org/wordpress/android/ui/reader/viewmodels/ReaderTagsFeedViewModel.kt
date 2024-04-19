@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.reader.exception.ReaderPostFetchException
+import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject

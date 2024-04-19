@@ -2,21 +2,21 @@ package org.wordpress.android.ui.reader.repository
 
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
+import dagger.Reusable
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONObject
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.ReaderTagTable
-import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
-import org.wordpress.android.ui.reader.exception.ReaderPostFetchException
+import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
+import org.wordpress.android.ui.reader.sources.ReaderPostLocalSource
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -26,8 +26,10 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+@Reusable
 class ReaderPostRepository @Inject constructor(
-    private val localeManagerWrapper: LocaleManagerWrapper
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    private val localSource: ReaderPostLocalSource,
 ) {
     /**
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
@@ -177,77 +179,13 @@ class ReaderPostRepository @Inject constructor(
             resultListener.onUpdateResult(ReaderActions.UpdateResult.FAILED)
             return
         }
+
+        // this should ideally be done using coroutines, but this class is currently being used from Java, which makes
+        // it difficult to use coroutines. This should be refactored to use coroutines when possible.
         object : Thread() {
             override fun run() {
                 val serverPosts = ReaderPostList.fromJson(jsonObject)
-                val updateResult = ReaderPostTable.comparePosts(serverPosts)
-                if (updateResult.isNewOrChanged) {
-                    // gap detection - only applies to posts with a specific tag
-                    var postWithGap: ReaderPost? = null
-                    if (tag != null) {
-                        when (updateAction) {
-                            ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER -> {
-                                // if there's no overlap between server and local (ie: all server
-                                // posts are new), assume there's a gap between server and local
-                                // provided that local posts exist
-                                val numServerPosts = serverPosts.size
-                                if (numServerPosts >= 2 && ReaderPostTable.getNumPostsWithTag(tag) > 0 &&
-                                    !ReaderPostTable.hasOverlap(
-                                        serverPosts,
-                                        tag
-                                    )
-                                ) {
-                                    // treat the second to last server post as having a gap
-                                    postWithGap = serverPosts[numServerPosts - 2]
-                                    // remove the last server post to deal with the edge case of
-                                    // there actually not being a gap between local & server
-                                    serverPosts.removeAt(numServerPosts - 1)
-                                    val gapMarker = ReaderPostTable.getGapMarkerIdsForTag(tag)
-                                    if (gapMarker != null) {
-                                        // We mustn't have two gapMarkers at the same time. Therefor we need to
-                                        // delete all posts before the current gapMarker and clear the gapMarker flag.
-                                        ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag)
-                                        ReaderPostTable.removeGapMarkerForTag(tag)
-                                    }
-                                }
-                            }
-
-                            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP -> {
-                                // if service was started as a request to fill a gap, delete existing posts
-                                // before the one with the gap marker, then remove the existing gap marker
-                                ReaderPostTable.deletePostsBeforeGapMarkerForTag(tag)
-                                ReaderPostTable.removeGapMarkerForTag(tag)
-                            }
-
-                            ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> ReaderPostTable.deletePostsWithTag(
-                                tag
-                            )
-
-                            ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> {}
-                        }
-                    }
-                    ReaderPostTable.addOrUpdatePosts(tag, serverPosts)
-                    if (AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)) {
-                        ReaderPostTable.updateBookmarkedPostPseudoId(serverPosts)
-                        AppPrefs.setBookmarkPostsPseudoIdsUpdated()
-                    }
-
-                    // gap marker must be set after saving server posts
-                    if (postWithGap != null) {
-                        ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag)
-                        AppLog.d(AppLog.T.READER, "added gap marker to tag " + tag!!.tagNameForLog)
-                    }
-                } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
-                    && updateAction == ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER_THAN_GAP
-                ) {
-                    // edge case - request to fill gap returned nothing new, so remove the gap marker
-                    ReaderPostTable.removeGapMarkerForTag(tag)
-                    AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new")
-                }
-                AppLog.d(
-                    AppLog.T.READER,
-                    "requested posts response = $updateResult"
-                )
+                val updateResult = localSource.saveUpdatedPosts(serverPosts, updateAction, tag)
                 resultListener.onUpdateResult(updateResult)
             }
         }.start()
