@@ -21,12 +21,24 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _uiStateFlow = MutableStateFlow(UiState(emptyMap()))
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
+    /**
+     * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
+     * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
+     * [FetchState]s: [FetchState.Loading], [FetchState.Success], [FetchState.Error].
+     */
     fun fetchAll(tags: List<ReaderTag>) {
         tags.forEach {
             fetchTag(it)
         }
     }
 
+    /**
+     * Fetch posts for a single tag. This method will emit a new state to [uiStateFlow] for different [FetchState]s:
+     * [FetchState.Loading], [FetchState.Success], [FetchState.Error], but only for the tag being fetched.
+     *
+     * Can be used for retrying a failed fetch, for instance.
+     */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun fetchTag(tag: ReaderTag) {
         launch {
             _uiStateFlow.update {
