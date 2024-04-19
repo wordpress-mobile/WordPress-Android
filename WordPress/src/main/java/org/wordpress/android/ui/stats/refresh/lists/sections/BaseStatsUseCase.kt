@@ -91,12 +91,9 @@ abstract class BaseStatsUseCase<DOMAIN_MODEL, UI_STATE>(
         val useCaseState = when (state) {
             is Error -> ERROR
             is Data -> {
-                if (!state.cached) {
-                    val updatedCachedData = loadCachedData()
-                    if (domainModel != updatedCachedData) {
-                        domainModel = updatedCachedData
-                        updateState()
-                    }
+                if (!state.cached && domainModel != state.model) {
+                    domainModel = state.model
+                    updateState()
                 }
                 SUCCESS
             }

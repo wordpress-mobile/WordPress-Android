@@ -46,7 +46,8 @@ class PageListEventListener(
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
     private val handlePostUploadFinished: (RemoteId, PageUploadErrorWrapper, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit,
-    private val handleHomepageSettingsChange: (SiteModel) -> Unit
+    private val handleHomepageSettingsChange: (SiteModel) -> Unit,
+    private val handlePageUpdatedWithoutError: () -> Unit
 ) : CoroutineScope {
     init {
         dispatcher.register(this)
@@ -103,6 +104,8 @@ class PageListEventListener(
                             "Error updating the post with type: ${event.error.type} and" +
                                     " message: ${event.error.message}"
                         )
+                    } else {
+                        handlePageUpdatedWithoutError.invoke()
                     }
                     uploadStatusChanged(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
                 }
@@ -231,7 +234,8 @@ class PageListEventListener(
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
             handlePostUploadFinished: (RemoteId, PageUploadErrorWrapper, Boolean) -> Unit,
-            handleHomepageSettingsChange: (SiteModel) -> Unit
+            handleHomepageSettingsChange: (SiteModel) -> Unit,
+            handlePageUpdatedWithoutError: () -> Unit,
         ): PageListEventListener {
             return PageListEventListener(
                 dispatcher = dispatcher,
@@ -243,7 +247,8 @@ class PageListEventListener(
                 invalidateUploadStatus = invalidateUploadStatus,
                 handleRemoteAutoSave = handleRemoteAutoSave,
                 handlePostUploadFinished = handlePostUploadFinished,
-                handleHomepageSettingsChange = handleHomepageSettingsChange
+                handleHomepageSettingsChange = handleHomepageSettingsChange,
+                handlePageUpdatedWithoutError = handlePageUpdatedWithoutError
             )
         }
     }

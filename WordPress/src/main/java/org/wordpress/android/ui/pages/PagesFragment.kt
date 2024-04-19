@@ -473,17 +473,21 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
     }
 
+    @Suppress("LongMethod")
     private fun setupActions(activity: FragmentActivity) {
         viewModel.dialogAction.observe(viewLifecycleOwner) {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         }
 
         viewModel.conflictResolutionAction.observe(viewLifecycleOwner) {
-            val fragment = requireActivity().supportFragmentManager.findFragmentByTag(PostResolutionOverlayFragment.TAG)
-            if (fragment == null) {
-                PostResolutionOverlayFragment
-                    .newInstance(it.postModel, it.postResolutionType)
-                    .show(requireActivity().supportFragmentManager, PostResolutionOverlayFragment.TAG)
+            if (isAdded) {
+                val fragment = requireActivity().supportFragmentManager
+                    .findFragmentByTag(PostResolutionOverlayFragment.TAG)
+                if (fragment == null) {
+                    PostResolutionOverlayFragment
+                        .newInstance(it.postModel, it.postResolutionType)
+                        .show(requireActivity().supportFragmentManager, PostResolutionOverlayFragment.TAG)
+                }
             }
         }
 

@@ -145,7 +145,7 @@ class ViewsAndVisitorsUseCaseTest : BaseUnitTest() {
             Assertions.assertThat(this[3]).isEqualTo(lineChartItem)
             Assertions.assertThat(this[5]).isEqualTo(chips)
         }
-        verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateViewsWidget(siteId)
     }
 
     @Test

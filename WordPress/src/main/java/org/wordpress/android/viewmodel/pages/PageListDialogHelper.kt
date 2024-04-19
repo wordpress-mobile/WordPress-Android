@@ -27,8 +27,8 @@ class PageListDialogHelper(
     private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
     private val isPostConflictResolutionEnabled: Boolean
 ) {
+    private var pageIdForConflictResolutionDialog: Int? = null
     private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
-    private var pageIdForConflictResolutionDialog: RemoteId? = null
     private var pageIdForDeleteDialog: RemoteId? = null
     private var pageIdForCopyDialog: RemoteId? = null
 
@@ -51,6 +51,16 @@ class PageListDialogHelper(
             )
             showDialog.invoke(dialogHolder)
         }
+    }
+
+    fun showConflictedPostResolutionDialog(page: PostModel) {
+        pageIdForConflictResolutionDialog = page.id
+        showConflictResolutionOverlay?.invoke(
+            PostResolutionOverlayActionEvent.ShowDialogAction(
+                page,
+                PostResolutionType.SYNC_CONFLICT
+            )
+        )
     }
 
     fun showDeletePageConfirmationDialog(pageId: RemoteId, pageTitle: String) {
@@ -78,16 +88,6 @@ class PageListDialogHelper(
         )
         pageIdForCopyDialog = RemoteId(page.remotePostId)
         showDialog.invoke(dialogHolder)
-    }
-
-    fun showConflictedPostResolutionDialog(page: PostModel) {
-        pageIdForConflictResolutionDialog = RemoteId(page.remotePostId)
-        showConflictResolutionOverlay?.invoke(
-            PostResolutionOverlayActionEvent.ShowDialogAction(
-                page,
-                PostResolutionType.SYNC_CONFLICT
-            )
-        )
     }
 
     fun onPositiveClickedForBasicDialog(
@@ -146,8 +146,8 @@ class PageListDialogHelper(
     fun onPostResolutionConfirmed(
         event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
         editPage: (RemoteId, LoadAutoSaveRevision) -> Unit,
-        updateConflictedPostWithRemoteVersion: (RemoteId) -> Unit,
-        updateConflictedPostWithLocalVersion: (RemoteId) -> Unit
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
     ) {
         when (event.postResolutionType) {
             PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> {
@@ -188,8 +188,8 @@ class PageListDialogHelper(
 
     private fun handleSyncRevisionConflict(
         event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
-        updateConflictedPostWithLocalVersion: (RemoteId) -> Unit,
-        updateConflictedPostWithRemoteVersion: (RemoteId) -> Unit
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit
     ) {
         when (event.postResolutionConfirmationType) {
             PostResolutionConfirmationType.CONFIRM_LOCAL -> {

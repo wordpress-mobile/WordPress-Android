@@ -75,7 +75,7 @@ class PageListViewModel @Inject constructor(
     private val siteEditorMVPFeatureConfig: SiteEditorMVPFeatureConfig,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
-    private val pageConflictResolver: PageConflictResolver
+    private val pageConflictDetector: PageConflictDetector
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = _pages.map {
@@ -506,7 +506,7 @@ class PageListViewModel @Inject constructor(
             pagesViewModel.site,
             pageModel.remoteId,
             isPageBlazeEligible(pageModel),
-            pageConflictResolver.doesPageHaveUnhandledConflict(pageModel.post)
+            pageConflictDetector.hasUnhandledConflict(pageModel.post)
         )
         val subtitle = when {
             pageModel.isHomepage -> R.string.site_settings_homepage

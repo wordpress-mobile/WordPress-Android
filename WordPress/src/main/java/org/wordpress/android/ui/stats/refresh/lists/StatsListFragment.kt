@@ -34,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.toNameResource
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -58,7 +58,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     lateinit var navigator: StatsNavigator
 
     @Inject
-    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     @Inject
     lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
@@ -155,7 +155,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
-        if (statsTrafficTabFeatureConfig.isEnabled()) {
+        if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) {
             dateSelector.granularitySpinner.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.filter_spinner_item,
@@ -332,7 +332,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     private fun StatsListFragmentBinding.updateInsights(statsState: List<StatsBlock>) {
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
-            adapter = StatsBlockAdapter(imageManager, statsTrafficTabFeatureConfig.isEnabled())
+            adapter = StatsBlockAdapter(imageManager, statsTrafficSubscribersTabFeatureConfig.isEnabled())
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as StatsBlockAdapter

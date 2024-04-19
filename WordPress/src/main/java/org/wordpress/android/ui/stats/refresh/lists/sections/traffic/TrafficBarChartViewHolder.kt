@@ -80,7 +80,7 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = if (hasData(item.entries)) {
             buildDataSet(chart.context, mappedEntries)
         } else {
-            buildEmptyDataSet(chart.context, cutEntries.size)
+            BarDataSet(emptyList(), "Empty")
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
 
@@ -154,25 +154,6 @@ class TrafficBarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             valueFormatter = BarChartLabelFormatter(item.entries)
             textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
         }
-    }
-
-    private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
-        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
-        val dataSet = BarDataSet(emptyValues, "Empty")
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.primary_5
-            ), ContextCompat.getColor(
-                context,
-                android.R.color.transparent
-            )
-        )
-        dataSet.formLineWidth = 0f
-        dataSet.setDrawValues(false)
-        dataSet.isHighlightEnabled = false
-        dataSet.highLightAlpha = 255
-        return dataSet
     }
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {

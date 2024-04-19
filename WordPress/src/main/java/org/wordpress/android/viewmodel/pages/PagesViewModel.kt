@@ -18,12 +18,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -119,7 +120,6 @@ class PagesViewModel
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val pageConflictResolver: PageConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     private val siteOptionsStore: SiteOptionsStore,
@@ -130,7 +130,8 @@ class PagesViewModel
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
-    private val uploadStore: UploadStore
+    private val uploadStore: UploadStore,
+    private val pageConflictDetector: PageConflictDetector
 ) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -241,6 +242,18 @@ class PagesViewModel
         )
     }
 
+    private val pageConflictResolver: PageConflictResolver by lazy {
+        PageConflictResolver(
+            dispatcher = dispatcher,
+            site = site,
+            postStore = postStore,
+            uploadStore = uploadStore,
+            invalidateList = this::invalidateAllLists,
+            checkNetworkConnection = this::checkNetworkConnection,
+            showSnackBar = { _showSnackbarMessage.postValue(it) }
+        )
+    }
+
     private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
     val authorSelectionUpdated = _authorSelectionUpdated
 
@@ -276,7 +289,8 @@ class PagesViewModel
             invalidateUploadStatus = this::handleInvalidateUploadStatus,
             handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
             handlePostUploadFinished = this::postUploadedFinished,
-            handleHomepageSettingsChange = this::handleHomepageSettingsChange
+            handleHomepageSettingsChange = this::handleHomepageSettingsChange,
+            handlePageUpdatedWithoutError = pageConflictResolver::onPageSuccessfullyUpdated
         )
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
@@ -611,7 +625,7 @@ class PagesViewModel
 
     private fun copyPage(pageId: Long, performChecks: Boolean = false) {
         pageMap[pageId]?.let {
-            if (performChecks && pageConflictResolver.hasUnhandledAutoSave(it.post)) {
+            if (performChecks && pageConflictDetector.hasUnhandledAutoSave(it.post)) {
                 pageListDialogHelper.showCopyConflictDialog(it.post)
                 return
             }
@@ -648,6 +662,14 @@ class PagesViewModel
             false
         }
     }
+
+    private fun checkNetworkConnection(): Boolean =
+        if (networkUtils.isNetworkAvailable()) {
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+            false
+        }
 
     private suspend fun performIfNetworkAvailableAsync(performAction: suspend () -> Unit): Boolean {
         return if (networkUtils.isNetworkAvailable()) {
@@ -706,13 +728,13 @@ class PagesViewModel
     }
 
     private fun checkAndEdit(page: PageModel) {
-        if (pageConflictResolver.hasUnhandledAutoSave(page.post)) {
+        if (pageConflictDetector.hasUnhandledAutoSave(page.post)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page.post)
             return
         }
 
         if (postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled() &&
-            pageConflictResolver.doesPageHaveUnhandledConflict(page.post)) {
+            pageConflictDetector.hasUnhandledConflict(page.post)) {
             pageListDialogHelper.showConflictedPostResolutionDialog(page.post)
             return
         }
@@ -1060,8 +1082,8 @@ class PagesViewModel
         pageListDialogHelper.onPostResolutionConfirmed(
             event = event,
             editPage = this::editPage,
-            updateConflictedPostWithRemoteVersion = this::updateConflictedPostWithRemoteVersion,
-            updateConflictedPostWithLocalVersion = this::updateConflictedPostWithLocalVersion
+            updateConflictedPostWithRemoteVersion = pageConflictResolver::updateConflictedPageWithRemoteVersion,
+            updateConflictedPostWithLocalVersion = pageConflictResolver::updateConflictedPageWithLocalVersion
         )
     }
 
@@ -1074,38 +1096,12 @@ class PagesViewModel
         }
         _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
     }
-
-    private fun updateConflictedPostWithRemoteVersion(pageId: RemoteId) {
-        performIfNetworkAvailable {
-            val page = pageMap.getValue(pageId.value)
-            val post = postStore.getPostByLocalPostId(page.pageId)
-            if (post != null) {
-                post.error = null
-                post.setIsLocallyChanged(false)
-                post.setAutoSaveExcerpt(null)
-                post.setAutoSaveRevisionId(0)
-                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(PostStore.RemotePostPayload(post, site)))
-                _showSnackbarMessage.postValue(
-                    SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_local_version_discarded))
-                )
-            }
-        }
+    
+    private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
     }
 
-    private fun updateConflictedPostWithLocalVersion(pageId: RemoteId) {
-        performIfNetworkAvailable {
-            val page = pageMap.getValue(pageId.value)
-            val post = postStore.getPostByLocalPostId(page.pageId) ?: return@performIfNetworkAvailable
-            post.error = null
-            uploadStore.clearUploadErrorForPost(post)
-            val remotePostPayload = PostStore.RemotePostPayload(post, site)
-            remotePostPayload.shouldSkipConflictResolutionCheck = true
-            dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
-            _showSnackbarMessage.postValue(
-                SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_web_version_discarded))
-            )
-        }
-    }
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
             _previewState.value != PostListRemotePreviewState.NONE
 

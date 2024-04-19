@@ -229,7 +229,7 @@ class StatsUtils @Inject constructor(
                 0L -> percentFormatter.format(value = 100)
                 else -> {
                     val percentageValue = difference.toFloat() / previousValue
-                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
+                    percentFormatter.formatWithJavaLib(value = percentageValue, rounding = HALF_UP)
                 }
             }
             val formattedDifference = mapLongToString(difference, isFormattedNumber)
