@@ -16,7 +16,6 @@ import org.wordpress.android.ui.posts.PostConflictDetector
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
 class PageConflictDetectorTest : BaseUnitTest() {
-
     private val uploadStore: UploadStore = mock()
 
     // Class under test

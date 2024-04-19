@@ -15,7 +15,6 @@ import org.junit.Assert.assertFalse
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
 class PostConflictDetectorTest : BaseUnitTest() {
-
     private val uploadStore: UploadStore = mock()
 
     // Class under test
