@@ -142,15 +142,17 @@ fun ReaderTagsFeedPostListItem(
                 maxLines = 1,
             )
             Spacer(Modifier.height(Margin.Medium.value))
-            // "•" separator
-            Text(
-                modifier = Modifier.padding(
-                    horizontal = Margin.Small.value
-                ),
-                text = "•",
-                style = MaterialTheme.typography.bodyMedium,
-                color = secondaryElementColor,
-            )
+            // "•" separator. We should only show it if likes *and* comments text is not empty.
+            if (postNumberOfLikesText.isNotBlank() && postNumberOfCommentsText.isNotBlank()) {
+                Text(
+                    modifier = Modifier.padding(
+                        horizontal = Margin.Small.value
+                    ),
+                    text = "•",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = secondaryElementColor,
+                )
+            }
             // Number of comments
             Text(
                 text = postNumberOfCommentsText,

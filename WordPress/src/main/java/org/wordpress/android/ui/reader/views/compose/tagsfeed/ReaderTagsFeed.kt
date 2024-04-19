@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
@@ -62,11 +63,7 @@ fun ReaderTagsFeed(uiState: UiState) {
 private fun Loaded(uiState: UiState.Loaded) {
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = Margin.Large.value,
-                end = Margin.Large.value,
-            )
+            .fillMaxSize(),
     ) {
         items(
             items = uiState.data,
@@ -79,6 +76,9 @@ private fun Loaded(uiState: UiState.Loaded) {
             Spacer(modifier = Modifier.height(Margin.Large.value))
             // Tag chip UI
             ReaderFilterChip(
+                modifier = Modifier.padding(
+                    start = Margin.Large.value,
+                ),
                 text = UiString.UiStringText(tagChip.tag.tagTitle),
                 onClick = tagChip.onTagClicked,
                 height = 36.dp,
@@ -91,12 +91,16 @@ private fun Loaded(uiState: UiState.Loaded) {
                         modifier = Modifier
                             .fillMaxWidth(),
                         userScrollEnabled = false,
+                        contentPadding = PaddingValues(
+                            start = Margin.Large.value,
+                            end = Margin.Large.value
+                        ),
                     ) {
                         item {
                             ReaderTagsFeedPostListItemLoading()
-                            Spacer(Modifier.width(12.dp))
+                            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
                             ReaderTagsFeedPostListItemLoading()
-                            Spacer(Modifier.width(12.dp))
+                            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
                         }
                     }
                 }
@@ -106,6 +110,10 @@ private fun Loaded(uiState: UiState.Loaded) {
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+                        contentPadding = PaddingValues(
+                            start = Margin.Large.value,
+                            end = Margin.Large.value
+                        ),
                     ) {
                         items(
                             items = postList.items,
@@ -126,6 +134,45 @@ private fun Loaded(uiState: UiState.Loaded) {
                                 )
                             }
                         }
+                        item {
+                            val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+                            val primaryElementColor = baseColor.copy(
+                                alpha = 0.87F
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .height(340.dp)
+                                    .padding(
+                                        start = Margin.ExtraLarge.value,
+                                        end = Margin.ExtraLarge.value,
+                                    ),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Icon(
+                                    modifier = Modifier
+                                        .drawBehind {
+                                            drawCircle(
+                                                color = backgroundColor,
+                                                radius = this.size.maxDimension
+                                            )
+                                        },
+                                    painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
+                                    tint = MaterialTheme.colors.onSurface,
+                                    contentDescription = null,
+                                )
+                                Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    text = "More from Nature",
+                                    style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+                                    color = primaryElementColor,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -135,7 +182,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                             .height(250.dp)
                             .fillMaxWidth()
                             .padding(start = 60.dp, end = 60.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
                         Icon(
@@ -147,7 +194,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                                     )
                                 },
                             painter = painterResource(R.drawable.ic_wifi_off_24px),
-                            tint = MaterialTheme.colors.onPrimary,
+                            tint = MaterialTheme.colors.onSurface,
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
@@ -197,6 +244,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
         }
     }
 }
@@ -293,65 +341,65 @@ fun ReaderTagsFeedLoaded() {
         val postListLoaded = PostList.Loaded(
             listOf(
                 TagsFeedPostItem(
-                    siteName = "siteName1",
-                    postDateLine = "postDateLine1",
-                    postTitle = "postTitle1",
-                    postExcerpt = "postExcerpt1",
+                    siteName = "Site Name 1",
+                    postDateLine = "1h",
+                    postTitle = "Post Title 1",
+                    postExcerpt = "Post excerpt 1",
                     postImageUrl = "postImageUrl1",
-                    postNumberOfLikesText = "postNumberOfLikesText1",
-                    postNumberOfCommentsText = "postNumberOfCommentsText1",
+                    postNumberOfLikesText = "15 likes",
+                    postNumberOfCommentsText = "",
                     isPostLiked = true,
                     onPostImageClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
                 TagsFeedPostItem(
-                    siteName = "siteName2",
-                    postDateLine = "postDateLine2",
-                    postTitle = "postTitle2",
-                    postExcerpt = "postExcerpt2",
+                    siteName = "Site Name 2",
+                    postDateLine = "2h",
+                    postTitle = "Post Title 2",
+                    postExcerpt = "Post excerpt 2",
                     postImageUrl = "postImageUrl2",
-                    postNumberOfLikesText = "postNumberOfLikesText2",
-                    postNumberOfCommentsText = "postNumberOfCommentsText2",
+                    postNumberOfLikesText = "",
+                    postNumberOfCommentsText = "3 comments",
                     isPostLiked = true,
                     onPostImageClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
                 TagsFeedPostItem(
-                    siteName = "siteName2",
-                    postDateLine = "postDateLine2",
-                    postTitle = "postTitle2",
-                    postExcerpt = "postExcerpt2",
-                    postImageUrl = "postImageUrl2",
-                    postNumberOfLikesText = "postNumberOfLikesText2",
-                    postNumberOfCommentsText = "postNumberOfCommentsText2",
-                    isPostLiked = true,
-                    onPostImageClick = {},
-                    onPostLikeClick = {},
-                    onPostMoreMenuClick = {},
-                ),
-                TagsFeedPostItem(
-                    siteName = "siteName3",
-                    postDateLine = "postDateLine3",
-                    postTitle = "postTitle3",
-                    postExcerpt = "postExcerpt3",
+                    siteName = "Site Name 3",
+                    postDateLine = "3h",
+                    postTitle = "Post Title 3",
+                    postExcerpt = "Post excerpt 3",
                     postImageUrl = "postImageUrl3",
-                    postNumberOfLikesText = "postNumberOfLikesText3",
-                    postNumberOfCommentsText = "postNumberOfCommentsText3",
+                    postNumberOfLikesText = "123 likes",
+                    postNumberOfCommentsText = "9 comments",
                     isPostLiked = true,
                     onPostImageClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
                 TagsFeedPostItem(
-                    siteName = "siteName4",
-                    postDateLine = "postDateLine4",
-                    postTitle = "postTitle4",
-                    postExcerpt = "postExcerpt4",
+                    siteName = "Site Name 4",
+                    postDateLine = "4h",
+                    postTitle = "Post Title 4",
+                    postExcerpt = "Post excerpt 4",
                     postImageUrl = "postImageUrl4",
-                    postNumberOfLikesText = "postNumberOfLikesText4",
-                    postNumberOfCommentsText = "postNumberOfCommentsText4",
+                    postNumberOfLikesText = "1234 likes",
+                    postNumberOfCommentsText = "91 comments",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+                TagsFeedPostItem(
+                    siteName = "Site Name 5",
+                    postDateLine = "5h",
+                    postTitle = "Post Title 5",
+                    postExcerpt = "Post excerpt 5",
+                    postImageUrl = "postImageUrl5",
+                    postNumberOfLikesText = "12 likes",
+                    postNumberOfCommentsText = "34 comments",
                     isPostLiked = true,
                     onPostImageClick = {},
                     onPostLikeClick = {},
