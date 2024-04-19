@@ -165,7 +165,10 @@ private fun Loaded(uiState: UiState.Loaded) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
                                     textAlign = TextAlign.Center,
-                                    text = "More from Nature",
+                                    text = stringResource(
+                                        id = R.string.reader_tags_feed_see_more_from_tag,
+                                        tagChip.tag.tagDisplayName
+                                    ),
                                     style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                                     color = primaryElementColor,
                                     maxLines = 1,
