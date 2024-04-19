@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.pages
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -348,7 +347,6 @@ class PagesViewModel
 
     private suspend fun refreshPages() {
         pageMap = pageStore.getPagesFromDb(site).associateBy { it.remoteId }
-        Log.d("","")
     }
 
     fun onPageEditFinished(localPageId: Int, data: Intent) {
@@ -1098,40 +1096,7 @@ class PagesViewModel
         }
         _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
     }
-
-   /* private fun updateConflictedPostWithRemoteVersion(pageId: RemoteId) {
-        performIfNetworkAvailable {
-            val page = pageMap.getValue(pageId.value)
-            val post = postStore.getPostByLocalPostId(page.pageId)
-            if (post != null) {
-                post.error = null
-                post.setIsLocallyChanged(false)
-                post.setAutoSaveExcerpt(null)
-                post.setAutoSaveRevisionId(0)
-                dispatcher.dispatch(PostActionBuilder.newFetchPostAction(PostStore.RemotePostPayload(post, site)))
-                _showSnackbarMessage.postValue(
-                    SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_local_version_discarded))
-                )
-            }
-        }
-    }
-
-    private fun updateConflictedPostWithLocalVersion(pageId: RemoteId) {
-        performIfNetworkAvailable {
-            invalidateAllLists()
-            val page = pageMap.getValue(pageId.value)
-            val post = postStore.getPostByLocalPostId(page.pageId) ?: return@performIfNetworkAvailable
-            post.error = null
-            uploadStore.clearUploadErrorForPost(post)
-            val remotePostPayload = PostStore.RemotePostPayload(post, site)
-            remotePostPayload.shouldSkipConflictResolutionCheck = true
-            dispatcher.dispatch(PostActionBuilder.newPushPostAction(remotePostPayload))
-            _showSnackbarMessage.postValue(
-                SnackbarMessageHolder(UiStringRes(R.string.snackbar_conflict_web_version_discarded))
-            )
-        }
-    }*/
-
+    
     private fun invalidateAllLists() {
         val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
         dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
