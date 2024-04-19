@@ -48,6 +48,8 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LA
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
+import org.wordpress.android.ui.posts.PostResolutionOverlayFragment
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
@@ -471,9 +473,22 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
     }
 
+    @Suppress("LongMethod")
     private fun setupActions(activity: FragmentActivity) {
         viewModel.dialogAction.observe(viewLifecycleOwner) {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
+        }
+
+        viewModel.conflictResolutionAction.observe(viewLifecycleOwner) {
+            if (isAdded) {
+                val fragment = requireActivity().supportFragmentManager
+                    .findFragmentByTag(PostResolutionOverlayFragment.TAG)
+                if (fragment == null) {
+                    PostResolutionOverlayFragment
+                        .newInstance(it.postModel, it.postResolutionType)
+                        .show(requireActivity().supportFragmentManager, PostResolutionOverlayFragment.TAG)
+                }
+            }
         }
 
         viewModel.postUploadAction.observe(viewLifecycleOwner) {
@@ -509,15 +524,19 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
-            it?.let { (page, isError, isFirstTimePublish) ->
+            it?.let { (page, errorWrapper, isFirstTimePublish) ->
+                val errorMessage = errorWrapper.errorMessage?.let {
+                    uiHelpers.getTextOfUiString(activity, it).toString()
+                }
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     activity,
                     activity.findViewById(R.id.coordinator),
-                    isError,
+                    errorWrapper.isError,
                     isFirstTimePublish,
                     page.post,
-                    null,
-                    page.site
+                    errorMessage,
+                    page.site,
+                    showRetry = errorWrapper.retry
                 )
             }
         }
@@ -672,6 +691,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
             appbarMain.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
         }
+    }
+
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        viewModel.onPostResolutionConfirmed(event)
     }
 }
 

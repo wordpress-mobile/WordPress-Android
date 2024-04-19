@@ -31,8 +31,6 @@ Language: ru
     <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
     <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
     <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
-    <string name="editor_updating_post_failed">Не удалось обновить содержимое записи</string>
-    <string name="editor_updating_post">Обновление содержимого записи</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>

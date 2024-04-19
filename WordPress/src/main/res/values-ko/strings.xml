@@ -32,8 +32,6 @@ Language: ko_KR
     <string name="gutenberg_native_copy_error_details">오류 상세 정보 복사</string>
     <string name="gutenberg_native_button_to_copy_post_text">글 텍스트 복사 버튼</string>
     <string name="gutenberg_native_button_to_copy_error_details">오류 상세 정보 복사 버튼</string>
-    <string name="editor_updating_post_failed">글 콘텐츠 업데이트 실패</string>
-    <string name="editor_updating_post">글 콘텐츠 업데이트 중</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">비디오 캡션. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">비디오 캡션. 비우기</string>
     <string name="gutenberg_native_edit_video_024aee6d">비디오 편집</string>

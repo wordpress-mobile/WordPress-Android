@@ -41,8 +41,6 @@ Language: he_IL
     <string name="gutenberg_native_copy_error_details">הפרטים של שגיאת ההעתקה</string>
     <string name="gutenberg_native_button_to_copy_post_text">כפתור להעתקת הטקסט של הפוסט</string>
     <string name="gutenberg_native_button_to_copy_error_details">כפתור להעתקה של פרטי השגיאה</string>
-    <string name="editor_updating_post_failed">עדכון התוכן של הפוסט נכשל</string>
-    <string name="editor_updating_post">מעדכן את תוכן הפוסט</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
     <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>

@@ -1759,8 +1759,8 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
-    <string name="editor_updating_post">Updating post content</string>
-    <string name="editor_updating_post_failed">Failed to update post content</string>
+    <string name="editor_updating_content">Updating content</string>
+    <string name="editor_updating_content_failed">Failed to update content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1984,6 +1984,8 @@
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
     <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
+    <string name="page_upload_conflict_error">There is a revision of this page that is more recent</string>
+
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>

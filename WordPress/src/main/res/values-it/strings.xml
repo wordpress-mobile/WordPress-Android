@@ -32,8 +32,6 @@ Language: it
     <string name="gutenberg_native_copy_error_details">Copia i dettagli dell\'errore</string>
     <string name="gutenberg_native_button_to_copy_post_text">Pulsante per copiare il testo dell\'articolo</string>
     <string name="gutenberg_native_button_to_copy_error_details">Pulsante per copiare i dettagli dell\'errore</string>
-    <string name="editor_updating_post_failed">Impossibile aggiornare il contenuto dell\'articolo</string>
-    <string name="editor_updating_post">Aggiornamento del contenuto dell\'articolo</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Didascalia del video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Didascalia del video. Vuoto</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifica video</string>

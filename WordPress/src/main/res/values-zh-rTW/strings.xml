@@ -41,8 +41,6 @@ Language: zh_TW
     <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
     <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
     <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
-    <string name="editor_updating_post_failed">無法更新文章內容</string>
-    <string name="editor_updating_post">正在更新文章內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>

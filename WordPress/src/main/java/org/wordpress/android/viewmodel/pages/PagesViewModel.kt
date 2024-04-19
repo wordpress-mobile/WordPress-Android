@@ -18,11 +18,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -31,6 +33,7 @@ import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -56,9 +59,11 @@ import org.wordpress.android.ui.pages.PagesListAction.VIEW_PAGE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.PostConflictResolutionFeatureUtils
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.posts.getAuthorFilterItems
@@ -115,7 +120,6 @@ class PagesViewModel
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    private val autoSaveConflictResolver: AutoSaveConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
     private val siteOptionsStore: SiteOptionsStore,
@@ -124,7 +128,10 @@ class PagesViewModel
     private val prefs: AppPrefsWrapper,
     private val blazeFeatureUtils: BlazeFeatureUtils,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
+    private val uploadStore: UploadStore,
+    private val pageConflictDetector: PageConflictDetector
 ) : ScopedViewModel(uiDispatcher) {
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
@@ -168,8 +175,8 @@ class PagesViewModel
     private val _postUploadAction = SingleLiveEvent<Triple<PostModel, SiteModel, Intent>>()
     val postUploadAction: LiveData<Triple<PostModel, SiteModel, Intent>> = _postUploadAction
 
-    private val _uploadFinishedAction = SingleLiveEvent<Triple<PageModel, Boolean, Boolean>>()
-    val uploadFinishedAction: LiveData<Triple<PageModel, Boolean, Boolean>> = _uploadFinishedAction
+    private val _uploadFinishedAction = SingleLiveEvent<Triple<PageModel, PageUploadErrorWrapper, Boolean>>()
+    val uploadFinishedAction: LiveData<Triple<PageModel, PageUploadErrorWrapper, Boolean>> = _uploadFinishedAction
 
     private val _publishAction = SingleLiveEvent<PageModel>()
     val publishAction = _publishAction
@@ -205,6 +212,10 @@ class PagesViewModel
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
+    private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> =
+        _conflictResolutionAction
+
     private var _site: SiteModel? = null
     val site: SiteModel
         get() = checkNotNull(_site) { "Trying to access unitialized site" }
@@ -225,7 +236,21 @@ class PagesViewModel
     private val pageListDialogHelper: PageListDialogHelper by lazy {
         PageListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled(),
+            showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
+        )
+    }
+
+    private val pageConflictResolver: PageConflictResolver by lazy {
+        PageConflictResolver(
+            dispatcher = dispatcher,
+            site = site,
+            postStore = postStore,
+            uploadStore = uploadStore,
+            invalidateList = this::invalidateAllLists,
+            checkNetworkConnection = this::checkNetworkConnection,
+            showSnackBar = { _showSnackbarMessage.postValue(it) }
         )
     }
 
@@ -264,7 +289,8 @@ class PagesViewModel
             invalidateUploadStatus = this::handleInvalidateUploadStatus,
             handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
             handlePostUploadFinished = this::postUploadedFinished,
-            handleHomepageSettingsChange = this::handleHomepageSettingsChange
+            handleHomepageSettingsChange = this::handleHomepageSettingsChange,
+            handlePageUpdatedWithoutError = pageConflictResolver::onPageSuccessfullyUpdated
         )
 
         val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
@@ -599,7 +625,7 @@ class PagesViewModel
 
     private fun copyPage(pageId: Long, performChecks: Boolean = false) {
         pageMap[pageId]?.let {
-            if (performChecks && autoSaveConflictResolver.hasUnhandledAutoSave(it.post)) {
+            if (performChecks && pageConflictDetector.hasUnhandledAutoSave(it.post)) {
                 pageListDialogHelper.showCopyConflictDialog(it.post)
                 return
             }
@@ -636,6 +662,14 @@ class PagesViewModel
             false
         }
     }
+
+    private fun checkNetworkConnection(): Boolean =
+        if (networkUtils.isNetworkAvailable()) {
+            true
+        } else {
+            _showSnackbarMessage.postValue(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
+            false
+        }
 
     private suspend fun performIfNetworkAvailableAsync(performAction: suspend () -> Unit): Boolean {
         return if (networkUtils.isNetworkAvailable()) {
@@ -694,8 +728,14 @@ class PagesViewModel
     }
 
     private fun checkAndEdit(page: PageModel) {
-        if (autoSaveConflictResolver.hasUnhandledAutoSave(page.post)) {
+        if (pageConflictDetector.hasUnhandledAutoSave(page.post)) {
             pageListDialogHelper.showAutoSaveRevisionDialog(page.post)
+            return
+        }
+
+        if (postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled() &&
+            pageConflictDetector.hasUnhandledConflict(page.post)) {
+            pageListDialogHelper.showConflictedPostResolutionDialog(page.post)
             return
         }
 
@@ -1037,6 +1077,16 @@ class PagesViewModel
         }
     }
 
+    // Post Resolution Overlay Actions
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        pageListDialogHelper.onPostResolutionConfirmed(
+            event = event,
+            editPage = this::editPage,
+            updateConflictedPostWithRemoteVersion = pageConflictResolver::updateConflictedPageWithRemoteVersion,
+            updateConflictedPostWithLocalVersion = pageConflictResolver::updateConflictedPageWithLocalVersion
+        )
+    }
+
     private fun editPage(pageId: RemoteId, loadAutoSaveRevision: LoadAutoSaveRevision = false) {
         val page = pageMap.getValue(pageId.value)
         val result = if (page.post.isLocalDraft) {
@@ -1045,6 +1095,11 @@ class PagesViewModel
             postStore.getPostByRemotePostId(page.remoteId, site)
         }
         _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
+    }
+    
+    private fun invalidateAllLists() {
+        val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
+        dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
     }
 
     private fun isRemotePreviewingFromPostsList() = _previewState.value != null &&
@@ -1068,9 +1123,13 @@ class PagesViewModel
         }
     }
 
-    private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean, isFirstTimePublish: Boolean) {
+    private fun postUploadedFinished(
+        remoteId: RemoteId,
+        errorWrapper: PageUploadErrorWrapper,
+        isFirstTimePublish: Boolean
+    ) {
         pageMap[remoteId.value]?.let {
-            _uploadFinishedAction.postValue(Triple(it, isError, isFirstTimePublish))
+            _uploadFinishedAction.postValue(Triple(it, errorWrapper, isFirstTimePublish))
         }
     }
 
