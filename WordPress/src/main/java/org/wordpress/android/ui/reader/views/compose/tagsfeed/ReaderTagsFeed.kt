@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,9 +23,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +47,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
@@ -139,41 +144,54 @@ private fun Loaded(uiState: UiState.Loaded) {
                             val primaryElementColor = baseColor.copy(
                                 alpha = 0.87F
                             )
-                            Column(
+                            Box(
                                 modifier = Modifier
                                     .height(340.dp)
                                     .padding(
                                         start = Margin.ExtraLarge.value,
                                         end = Margin.ExtraLarge.value,
-                                    ),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally,
+                                    )
                             ) {
-                                Icon(
+                                Column(
                                     modifier = Modifier
-                                        .drawBehind {
-                                            drawCircle(
-                                                color = backgroundColor,
-                                                radius = this.size.maxDimension
-                                            )
-                                        },
-                                    painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
-                                    tint = MaterialTheme.colors.onSurface,
-                                    contentDescription = null,
-                                )
-                                Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    textAlign = TextAlign.Center,
-                                    text = stringResource(
-                                        id = R.string.reader_tags_feed_see_more_from_tag,
-                                        tagChip.tag.tagDisplayName
-                                    ),
-                                    style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
-                                    color = primaryElementColor,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
+                                        .align(Alignment.Center)
+                                        .clickable(
+                                            interactionSource = remember { MutableInteractionSource() },
+                                            indication = rememberRipple(bounded = false),
+                                            onClick = {
+                                                tagChip.onTagClicked()
+                                                AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
+                                            }
+                                        ),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Icon(
+                                        modifier = Modifier
+                                            .drawBehind {
+                                                drawCircle(
+                                                    color = backgroundColor,
+                                                    radius = this.size.maxDimension
+                                                )
+                                            },
+                                        painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
+                                        tint = MaterialTheme.colors.onSurface,
+                                        contentDescription = null,
+                                    )
+                                    Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = TextAlign.Center,
+                                        text = stringResource(
+                                            id = R.string.reader_tags_feed_see_more_from_tag,
+                                            tagChip.tag.tagDisplayName
+                                        ),
+                                        style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+                                        color = primaryElementColor,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
                             }
                         }
                     }
