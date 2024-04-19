@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.exception.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -50,9 +51,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 _uiStateFlow.update {
                     it.copy(tagStates = it.tagStates + (tag to FetchState.Success(posts)))
                 }
-            } catch (e: Exception) {
+            } catch (e: ReaderPostFetchException) {
                 _uiStateFlow.update {
-                    it.copy(tagStates = it.tagStates + (tag to FetchState.Error))
+                    it.copy(tagStates = it.tagStates + (tag to FetchState.Error(e)))
                 }
             }
         }
@@ -64,7 +65,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     sealed class FetchState {
         data object Loading : FetchState()
-        data object Error : FetchState()
         data class Success(val posts: ReaderPostList) : FetchState()
+        data class Error(val exception: Exception) : FetchState()
     }
 }

@@ -15,6 +15,7 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
+import org.wordpress.android.ui.reader.exception.ReaderPostFetchException
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
@@ -36,7 +37,9 @@ class ReaderPostRepository @Inject constructor(
         return suspendCancellableCoroutine { cont ->
             val resultListener = UpdateResultListener { result ->
                 if (result == ReaderActions.UpdateResult.FAILED) {
-                    cont.resumeWithException(Exception("Failed to fetch newer posts for tag"))
+                    cont.resumeWithException(
+                        ReaderPostFetchException("Failed to fetch newer posts for tag: ${tag.tagSlug}")
+                    )
                 } else {
                     val posts = ReaderPostTable.getPostsWithTag(tag, maxPosts, false)
                     cont.resume(posts)
