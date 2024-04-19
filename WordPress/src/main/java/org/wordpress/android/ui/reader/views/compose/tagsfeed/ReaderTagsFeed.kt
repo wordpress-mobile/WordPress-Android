@@ -38,10 +38,105 @@ fun ReaderTagsFeed(uiState: UiState) {
             .fillMaxHeight(),
     ) {
         when (uiState) {
-            is UiState.LoadingTagsAndPosts -> LoadingTagsAndPosts()
-            is UiState.LoadedTagsLoadingPosts -> LoadedTagsLoadingPosts(uiState)
-            is UiState.LoadedTagsAndPosts -> LoadedTagsAndPosts(uiState)
+            is UiState.Loading -> LoadingTagsAndPosts()
+            is UiState.Loaded -> Loaded(uiState)
             is UiState.Empty -> Empty()
+        }
+    }
+}
+
+@Composable
+private fun Loaded(uiState: UiState.Loaded) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = Margin.Large.value,
+                end = Margin.Large.value,
+            )
+    ) {
+        items(
+            items = uiState.data,
+        ) { (tagChip, postList) ->
+            val backgroundColor = if (isSystemInDarkTheme()) {
+                AppColor.White.copy(alpha = 0.12F)
+            } else {
+                AppColor.Black.copy(alpha = 0.08F)
+            }
+            Spacer(modifier = Modifier.height(Margin.Large.value))
+            with(uiState) {
+                // Tag chip UI
+                when (tagChip) {
+                    is TagChip.Loading -> {
+                        Box(
+                            modifier = Modifier
+                                .padding(start = Margin.Large.value)
+                                .width(75.dp)
+                                .height(36.dp)
+                                .clip(shape = RoundedCornerShape(16.dp))
+                                .background(backgroundColor),
+                        )
+                    }
+
+                    is TagChip.Loaded -> {
+                        ReaderFilterChip(
+                            text = UiString.UiStringText(tagChip.tag.tagTitle),
+                            onClick = tagChip.onTagClicked,
+                            height = 36.dp,
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                // Posts list UI
+                when (postList) {
+                    is PostList.Loading -> {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            userScrollEnabled = false,
+                        ) {
+                            item {
+                                ReaderTagsFeedPostListItemLoading()
+                                Spacer(Modifier.width(12.dp))
+                                ReaderTagsFeedPostListItemLoading()
+                                Spacer(Modifier.width(12.dp))
+                            }
+                        }
+                    }
+
+                    is PostList.Loaded -> {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+                        ) {
+                            items(
+                                items = postList.items,
+                            ) { postItem ->
+                                with(postItem) {
+                                    ReaderTagsFeedPostListItem(
+                                        siteName = siteName,
+                                        postDateLine = postDateLine,
+                                        postTitle = postTitle,
+                                        postExcerpt = postExcerpt,
+                                        postImageUrl = postImageUrl,
+                                        postNumberOfLikesText = postNumberOfLikesText,
+                                        postNumberOfCommentsText = postNumberOfCommentsText,
+                                        isPostLiked = isPostLiked,
+                                        onPostImageClick = onPostImageClick,
+                                        onPostLikeClick = onPostLikeClick,
+                                        onPostMoreMenuClick = onPostMoreMenuClick,
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    is PostList.Error -> {
+//                        TODO()
+                    }
+                }
+            }
         }
     }
 }
@@ -90,172 +185,34 @@ private fun LoadingTagsAndPosts() {
 }
 
 @Composable
-private fun LoadedTagsLoadingPosts(uiState: UiState.LoadedTagsLoadingPosts) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = Margin.Large.value,
-                end = Margin.Large.value,
-            ),
-        userScrollEnabled = false,
-    ) {
-        uiState.items.forEach {
-            item {
-                Spacer(modifier = Modifier.height(Margin.Large.value))
-                ReaderFilterChip(
-                    text = UiString.UiStringText(it.tag.tagTitle),
-                    onClick = it.onTagClicked,
-                    height = 36.dp,
-                )
-                Spacer(modifier = Modifier.height(Margin.Large.value))
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    userScrollEnabled = false,
-                ) {
-                    item {
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun LoadedTagsAndPosts(uiState: UiState.LoadedTagsAndPosts) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                start = Margin.Large.value,
-                end = Margin.Large.value,
-            )
-    ) {
-        items(
-            items = uiState.items,
-            key = { it.tag.tagDisplayName },
-        ) { tagsFeedItem ->
-            Spacer(modifier = Modifier.height(Margin.Large.value))
-            ReaderFilterChip(
-                text = UiString.UiStringText(tagsFeedItem.tag.tagTitle),
-                onClick = tagsFeedItem.onTagClicked,
-                height = 36.dp,
-            )
-            Spacer(modifier = Modifier.height(Margin.Large.value))
-            when (tagsFeedItem) {
-                // If item is Success, show posts list
-                is TagsFeedItem.Loaded.Success -> {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
-                    ) {
-                        items(
-                            items = tagsFeedItem.posts,
-                        ) { postItem ->
-                            with(postItem) {
-                                ReaderTagsFeedPostListItem(
-                                    siteName = siteName,
-                                    postDateLine = postDateLine,
-                                    postTitle = postTitle,
-                                    postExcerpt = postExcerpt,
-                                    postImageUrl = postImageUrl,
-                                    postNumberOfLikesText = postNumberOfLikesText,
-                                    postNumberOfCommentsText = postNumberOfCommentsText,
-                                    isPostLiked = isPostLiked,
-                                    onPostImageClick = onPostImageClick,
-                                    onPostLikeClick = onPostLikeClick,
-                                    onPostMoreMenuClick = onPostMoreMenuClick,
-                                )
-                            }
-                        }
-                    }
-                }
-                // If item is Error, show error UI and retry button
-                is TagsFeedItem.Loaded.Error -> {
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Loading() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        userScrollEnabled = false,
-    ) {
-        val numberOfLoadingRows = 3
-        repeat(numberOfLoadingRows) {
-            item {
-                LazyRow(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
-                    userScrollEnabled = false,
-                ) {
-                    item {
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun Empty() {
 // TODO empty state (https://github.com/wordpress-mobile/WordPress-Android/issues/20584)
 }
 
-
 // TODO move to VM
-sealed class TagsFeedItem(
-    open val tag: ReaderTag,
-    open val onTagClicked: () -> Unit,
-) {
-    sealed class Loaded(
-        override val tag: ReaderTag,
-        override val onTagClicked: () -> Unit,
-    ) : TagsFeedItem(tag, onTagClicked) {
-        data class Success(
-            override val tag: ReaderTag,
-            override val onTagClicked: () -> Unit,
-            val posts: List<TagsFeedPostItem>,
-        ) : Loaded(tag, onTagClicked)
-
-        data class Error(
-            override val tag: ReaderTag,
-            override val onTagClicked: () -> Unit,
-        ) : Loaded(tag, onTagClicked)
-    }
-
-    data class Loading(
-        override val tag: ReaderTag,
-        override val onTagClicked: () -> Unit,
-    ) : TagsFeedItem(tag, onTagClicked)
-}
-
 sealed class UiState {
-    object LoadingTagsAndPosts : UiState()
+    data class Loaded(val data: List<Pair<TagChip, PostList>>) : UiState()
 
-    data class LoadedTagsLoadingPosts(
-        val items: List<TagsFeedItem.Loading>,
-    ) : UiState()
-
-    data class LoadedTagsAndPosts(
-        val items: List<TagsFeedItem.Loaded>,
-    ) : UiState()
+    object Loading : UiState()
 
     object Empty : UiState()
+}
+
+sealed class TagChip {
+    data class Loaded(
+        val tag: ReaderTag,
+        val onTagClicked: () -> Unit,
+    ) : TagChip()
+
+    object Loading : TagChip()
+}
+
+sealed class PostList {
+    data class Loaded(val items: List<TagsFeedPostItem>) : PostList()
+
+    object Loading : PostList()
+
+    object Error : PostList()
 }
 
 data class TagsFeedPostItem(
@@ -275,98 +232,91 @@ data class TagsFeedPostItem(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReaderTagsFeedLoadedTagsAndPosts() {
+fun ReaderTagsFeedLoaded() {
     AppTheme {
+        val postListLoaded = PostList.Loaded(
+            listOf(
+                TagsFeedPostItem(
+                    siteName = "siteName1",
+                    postDateLine = "postDateLine1",
+                    postTitle = "postTitle1",
+                    postExcerpt = "postExcerpt1",
+                    postImageUrl = "postImageUrl1",
+                    postNumberOfLikesText = "postNumberOfLikesText1",
+                    postNumberOfCommentsText = "postNumberOfCommentsText1",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+                TagsFeedPostItem(
+                    siteName = "siteName2",
+                    postDateLine = "postDateLine2",
+                    postTitle = "postTitle2",
+                    postExcerpt = "postExcerpt2",
+                    postImageUrl = "postImageUrl2",
+                    postNumberOfLikesText = "postNumberOfLikesText2",
+                    postNumberOfCommentsText = "postNumberOfCommentsText2",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+                TagsFeedPostItem(
+                    siteName = "siteName2",
+                    postDateLine = "postDateLine2",
+                    postTitle = "postTitle2",
+                    postExcerpt = "postExcerpt2",
+                    postImageUrl = "postImageUrl2",
+                    postNumberOfLikesText = "postNumberOfLikesText2",
+                    postNumberOfCommentsText = "postNumberOfCommentsText2",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+                TagsFeedPostItem(
+                    siteName = "siteName3",
+                    postDateLine = "postDateLine3",
+                    postTitle = "postTitle3",
+                    postExcerpt = "postExcerpt3",
+                    postImageUrl = "postImageUrl3",
+                    postNumberOfLikesText = "postNumberOfLikesText3",
+                    postNumberOfCommentsText = "postNumberOfCommentsText3",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+                TagsFeedPostItem(
+                    siteName = "siteName4",
+                    postDateLine = "postDateLine4",
+                    postTitle = "postTitle4",
+                    postExcerpt = "postExcerpt4",
+                    postImageUrl = "postImageUrl4",
+                    postNumberOfLikesText = "postNumberOfLikesText4",
+                    postNumberOfCommentsText = "postNumberOfCommentsText4",
+                    isPostLiked = true,
+                    onPostImageClick = {},
+                    onPostLikeClick = {},
+                    onPostMoreMenuClick = {},
+                ),
+            )
+        )
+        val readerTag = ReaderTag(
+            "Tag 1",
+            "Tag 1",
+            "Tag 1",
+            "Tag 1",
+            ReaderTagType.TAGS,
+        )
         ReaderTagsFeed(
-            uiState = UiState.LoadedTagsAndPosts(
-                items = listOf(
-                    TagsFeedItem.Loaded.Success(
-                        tag = ReaderTag(
-                            "Tag Loaded Success",
-                            "Tag Loaded Success",
-                            "Tag Loaded Success",
-                            "Tag Loaded Success",
-                            ReaderTagType.TAGS,
-                        ),
-                        posts = listOf(
-                            TagsFeedPostItem(
-                                siteName = "siteName1",
-                                postDateLine = "postDateLine1",
-                                postTitle = "postTitle1",
-                                postExcerpt = "postExcerpt1",
-                                postImageUrl = "postImageUrl1",
-                                postNumberOfLikesText = "postNumberOfLikesText1",
-                                postNumberOfCommentsText = "postNumberOfCommentsText1",
-                                isPostLiked = true,
-                                onPostImageClick = {},
-                                onPostLikeClick = {},
-                                onPostMoreMenuClick = {},
-                            ),
-                            TagsFeedPostItem(
-                                siteName = "siteName2",
-                                postDateLine = "postDateLine2",
-                                postTitle = "postTitle2",
-                                postExcerpt = "postExcerpt2",
-                                postImageUrl = "postImageUrl2",
-                                postNumberOfLikesText = "postNumberOfLikesText2",
-                                postNumberOfCommentsText = "postNumberOfCommentsText2",
-                                isPostLiked = true,
-                                onPostImageClick = {},
-                                onPostLikeClick = {},
-                                onPostMoreMenuClick = {},
-                            ),
-                            TagsFeedPostItem(
-                                siteName = "siteName2",
-                                postDateLine = "postDateLine2",
-                                postTitle = "postTitle2",
-                                postExcerpt = "postExcerpt2",
-                                postImageUrl = "postImageUrl2",
-                                postNumberOfLikesText = "postNumberOfLikesText2",
-                                postNumberOfCommentsText = "postNumberOfCommentsText2",
-                                isPostLiked = true,
-                                onPostImageClick = {},
-                                onPostLikeClick = {},
-                                onPostMoreMenuClick = {},
-                            ),
-                            TagsFeedPostItem(
-                                siteName = "siteName3",
-                                postDateLine = "postDateLine3",
-                                postTitle = "postTitle3",
-                                postExcerpt = "postExcerpt3",
-                                postImageUrl = "postImageUrl3",
-                                postNumberOfLikesText = "postNumberOfLikesText3",
-                                postNumberOfCommentsText = "postNumberOfCommentsText3",
-                                isPostLiked = true,
-                                onPostImageClick = {},
-                                onPostLikeClick = {},
-                                onPostMoreMenuClick = {},
-                            ),
-                            TagsFeedPostItem(
-                                siteName = "siteName4",
-                                postDateLine = "postDateLine4",
-                                postTitle = "postTitle4",
-                                postExcerpt = "postExcerpt4",
-                                postImageUrl = "postImageUrl4",
-                                postNumberOfLikesText = "postNumberOfLikesText4",
-                                postNumberOfCommentsText = "postNumberOfCommentsText4",
-                                isPostLiked = true,
-                                onPostImageClick = {},
-                                onPostLikeClick = {},
-                                onPostMoreMenuClick = {},
-                            ),
-                        ),
-                        onTagClicked = {},
-                    ),
-                    TagsFeedItem.Loaded.Error(
-                        tag = ReaderTag(
-                            "Tag Loaded Error",
-                            "Tag Loaded Error",
-                            "Tag Loaded Error",
-                            "Tag Loaded Error",
-                            ReaderTagType.TAGS,
-                        ),
-                        onTagClicked = {},
-                    ),
+            uiState = UiState.Loaded(
+                data = listOf(
+                    (TagChip.Loaded(readerTag, {}) to postListLoaded),
+                    (TagChip.Loaded(readerTag, {}) to PostList.Loading),
+                    (TagChip.Loaded(readerTag, {}) to PostList.Error),
+                    (TagChip.Loading to PostList.Loading),
                 )
             )
         )
@@ -376,54 +326,10 @@ fun ReaderTagsFeedLoadedTagsAndPosts() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReaderTagsFeedLoadingTagsAndPosts() {
+fun ReaderTagsFeedLoading() {
     AppTheme {
         ReaderTagsFeed(
-            uiState = UiState.LoadingTagsAndPosts
-        )
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ReaderTagsFeedLoadedTagsLoadingPosts() {
-    AppTheme {
-        ReaderTagsFeed(
-            uiState = UiState.LoadedTagsLoadingPosts(
-                items = listOf(
-                    TagsFeedItem.Loading(
-                        tag = ReaderTag(
-                            "Tag 1",
-                            "Tag 1",
-                            "Tag 1",
-                            "Tag 1",
-                            ReaderTagType.TAGS,
-                        ),
-                        onTagClicked = {},
-                    ),
-                    TagsFeedItem.Loading(
-                        tag = ReaderTag(
-                            "Tag 2",
-                            "Tag 2",
-                            "Tag 2",
-                            "Tag 2",
-                            ReaderTagType.TAGS,
-                        ),
-                        onTagClicked = {},
-                    ),
-                    TagsFeedItem.Loading(
-                        tag = ReaderTag(
-                            "Tag 3",
-                            "Tag 3",
-                            "Tag 3",
-                            "Tag 3",
-                            ReaderTagType.TAGS,
-                        ),
-                        onTagClicked = {},
-                    )
-                )
-            )
+            uiState = UiState.Loading
         )
     }
 }
