@@ -10,4 +10,5 @@ enum class StatsTimeframe {
     MONTH,
     YEAR,
     TRAFFIC,
+    SUBSCRIBERS
 }
