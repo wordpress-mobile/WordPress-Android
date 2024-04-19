@@ -92,7 +92,7 @@ class PageListViewModelTest : BaseUnitTest() {
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
     @Mock
-    lateinit var pageConflictResolver: PageConflictResolver
+    lateinit var pageConflictDetector: PageConflictDetector
 
     private lateinit var viewModel: PageListViewModel
 
@@ -119,7 +119,7 @@ class PageListViewModelTest : BaseUnitTest() {
             siteEditorMVPFeatureConfig,
             blazeFeatureUtils,
             testDispatcher(),
-            pageConflictResolver
+            pageConflictDetector
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
