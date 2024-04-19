@@ -152,6 +152,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
                         Icon(
                             modifier = Modifier
                                 .drawBehind {
@@ -200,7 +201,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                             Text(
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
-                                    .widthIn(max = 280.dp),
+                                    .widthIn(max = 250.dp),
                                 style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Medium,
                                 text = stringResource(R.string.reader_tags_feed_error_retry),
