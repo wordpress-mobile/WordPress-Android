@@ -1239,7 +1239,6 @@ Language: es_CL
     <string name="site_picker_create_wpcom">Crear sitio WordPress.com</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
-    <string name="site_picker_add_site">Añadir nuevo sitio</string>
     <string name="my_site_btn_view_site">Ver sitio</string>
     <string name="site_picker_title">Elegir sitio</string>
     <string name="my_site_btn_switch_site">Cambiar sitio</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-18 07:57:05+0000
+Translation-Revision-Date: 2024-04-16 07:31:04+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: hr
@@ -419,7 +419,7 @@ Language: hr
     <string name="site_picker_create_wpcom">Kreiraj WordPress.com web-stranicu</string>
     <string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
     <string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
-    <string name="site_picker_add_site">Dodaj novu web-stranicu</string>
+    <string name="site_picker_add_a_site">Dodaj novu web-stranicu</string>
     <string name="my_site_btn_view_site">Pogledaj stranicu</string>
     <string name="site_picker_title">Odaberi stranicu</string>
     <string name="my_site_btn_view_admin">Prikaži Admin</string>
@@ -495,6 +495,7 @@ Language: hr
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
+    <string name="reader_hint_add_tag_or_url_follow">Unesite URL adresu ili oznaku za praćenje </string>
     <string name="help">Pomoć</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
     <string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web-stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>

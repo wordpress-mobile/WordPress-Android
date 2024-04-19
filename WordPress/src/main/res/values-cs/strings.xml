@@ -3070,7 +3070,6 @@ Language: cs_CZ
     <string name="site_picker_create_wpcom">Vytvořit web na WordPress.com</string>
     <string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>
     <string name="site_picker_edit_visibility">Zobrazitt/skrýt stránky</string>
-    <string name="site_picker_add_site">Přidat web</string>
     <string name="my_site_btn_view_admin">Zobrazit administraci</string>
     <string name="site_picker_title">Vybrat web</string>
     <string name="my_site_btn_switch_site">Přepnout web</string>
