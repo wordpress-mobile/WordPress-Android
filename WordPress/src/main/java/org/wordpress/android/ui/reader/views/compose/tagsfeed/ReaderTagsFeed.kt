@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -91,179 +92,9 @@ private fun Loaded(uiState: UiState.Loaded) {
             Spacer(modifier = Modifier.height(Margin.Large.value))
             // Posts list UI
             when (postList) {
-                is PostList.Loading -> {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        userScrollEnabled = false,
-                        contentPadding = PaddingValues(
-                            start = Margin.Large.value,
-                            end = Margin.Large.value
-                        ),
-                    ) {
-                        item {
-                            ReaderTagsFeedPostListItemLoading()
-                            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
-                            ReaderTagsFeedPostListItemLoading()
-                            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
-                        }
-                    }
-                }
-
-                is PostList.Loaded -> {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
-                        contentPadding = PaddingValues(
-                            start = Margin.Large.value,
-                            end = Margin.Large.value
-                        ),
-                    ) {
-                        items(
-                            items = postList.items,
-                        ) { postItem ->
-                            with(postItem) {
-                                ReaderTagsFeedPostListItem(
-                                    siteName = siteName,
-                                    postDateLine = postDateLine,
-                                    postTitle = postTitle,
-                                    postExcerpt = postExcerpt,
-                                    postImageUrl = postImageUrl,
-                                    postNumberOfLikesText = postNumberOfLikesText,
-                                    postNumberOfCommentsText = postNumberOfCommentsText,
-                                    isPostLiked = isPostLiked,
-                                    onPostImageClick = onPostImageClick,
-                                    onPostLikeClick = onPostLikeClick,
-                                    onPostMoreMenuClick = onPostMoreMenuClick,
-                                )
-                            }
-                        }
-                        item {
-                            val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
-                            val primaryElementColor = baseColor.copy(
-                                alpha = 0.87F
-                            )
-                            Box(
-                                modifier = Modifier
-                                    .height(340.dp)
-                                    .padding(
-                                        start = Margin.ExtraLarge.value,
-                                        end = Margin.ExtraLarge.value,
-                                    )
-                            ) {
-                                Column(
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .clickable(
-                                            interactionSource = remember { MutableInteractionSource() },
-                                            indication = rememberRipple(bounded = false),
-                                            onClick = {
-                                                tagChip.onTagClicked()
-                                                AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
-                                            }
-                                        ),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    Icon(
-                                        modifier = Modifier
-                                            .drawBehind {
-                                                drawCircle(
-                                                    color = backgroundColor,
-                                                    radius = this.size.maxDimension
-                                                )
-                                            },
-                                        painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
-                                        tint = MaterialTheme.colors.onSurface,
-                                        contentDescription = null,
-                                    )
-                                    Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textAlign = TextAlign.Center,
-                                        text = stringResource(
-                                            id = R.string.reader_tags_feed_see_more_from_tag,
-                                            tagChip.tag.tagDisplayName
-                                        ),
-                                        style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
-                                        color = primaryElementColor,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                is PostList.Error -> {
-                    Column(
-                        modifier = Modifier
-                            .height(250.dp)
-                            .fillMaxWidth()
-                            .padding(start = 60.dp, end = 60.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
-                        Icon(
-                            modifier = Modifier
-                                .drawBehind {
-                                    drawCircle(
-                                        color = backgroundColor,
-                                        radius = this.size.maxDimension
-                                    )
-                                },
-                            painter = painterResource(R.drawable.ic_wifi_off_24px),
-                            tint = MaterialTheme.colors.onSurface,
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
-                        val tagName = tagChip.tag.tagDisplayName
-                        Text(
-                            text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
-                            style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colors.onSurface,
-                            textAlign = TextAlign.Center,
-                        )
-                        Spacer(modifier = Modifier.height(Margin.Medium.value))
-                        Text(
-                            text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
-                            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
-                            color = if (isSystemInDarkTheme()) {
-                                AppColor.White.copy(alpha = 0.4F)
-                            } else {
-                                AppColor.Black.copy(alpha = 0.4F)
-                            },
-                            textAlign = TextAlign.Center,
-                        )
-                        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
-                        Button(
-                            onClick = { postList.onRetryClick() },
-                            modifier = Modifier
-                                .height(36.dp)
-                                .width(114.dp),
-                            elevation = ButtonDefaults.elevation(
-                                defaultElevation = 0.dp,
-                                pressedElevation = 0.dp,
-                            ),
-                            colors = ButtonDefaults.buttonColors(
-                                contentColor = MaterialTheme.colors.onPrimary,
-                                backgroundColor = MaterialTheme.colors.onSurface,
-                            ),
-                            shape = RoundedCornerShape(50),
-                        ) {
-                            Text(
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically),
-                                style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colors.surface,
-                                text = stringResource(R.string.reader_tags_feed_error_retry),
-                            )
-                        }
-                    }
-                }
+                is PostList.Loading -> PostListLoading()
+                is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
+                is PostList.Error -> PostListError(backgroundColor, tagChip, postList)
             }
             Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
         }
@@ -316,6 +147,191 @@ private fun Loading() {
 @Composable
 private fun Empty() {
 // TODO empty state (https://github.com/wordpress-mobile/WordPress-Android/issues/20584)
+}
+
+@Composable
+private fun PostListLoading() {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth(),
+        userScrollEnabled = false,
+        contentPadding = PaddingValues(
+            start = Margin.Large.value,
+            end = Margin.Large.value
+        ),
+    ) {
+        item {
+            ReaderTagsFeedPostListItemLoading()
+            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
+            ReaderTagsFeedPostListItemLoading()
+            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
+        }
+    }
+}
+
+@Composable
+private fun PostListLoaded(
+    postList: PostList.Loaded,
+    tagChip: TagChip,
+    backgroundColor: Color
+) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
+        contentPadding = PaddingValues(
+            start = Margin.Large.value,
+            end = Margin.Large.value
+        ),
+    ) {
+        items(
+            items = postList.items,
+        ) { postItem ->
+            with(postItem) {
+                ReaderTagsFeedPostListItem(
+                    siteName = siteName,
+                    postDateLine = postDateLine,
+                    postTitle = postTitle,
+                    postExcerpt = postExcerpt,
+                    postImageUrl = postImageUrl,
+                    postNumberOfLikesText = postNumberOfLikesText,
+                    postNumberOfCommentsText = postNumberOfCommentsText,
+                    isPostLiked = isPostLiked,
+                    onPostImageClick = onPostImageClick,
+                    onPostLikeClick = onPostLikeClick,
+                    onPostMoreMenuClick = onPostMoreMenuClick,
+                )
+            }
+        }
+        item {
+            val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+            val primaryElementColor = baseColor.copy(
+                alpha = 0.87F
+            )
+            Box(
+                modifier = Modifier
+                    .height(340.dp)
+                    .padding(
+                        start = Margin.ExtraLarge.value,
+                        end = Margin.ExtraLarge.value,
+                    )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple(bounded = false),
+                            onClick = {
+                                tagChip.onTagClicked()
+                                AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
+                            }
+                        ),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .drawBehind {
+                                drawCircle(
+                                    color = backgroundColor,
+                                    radius = this.size.maxDimension
+                                )
+                            },
+                        painter = painterResource(R.drawable.ic_arrow_right_white_24dp),
+                        tint = MaterialTheme.colors.onSurface,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = stringResource(
+                            id = R.string.reader_tags_feed_see_more_from_tag,
+                            tagChip.tag.tagDisplayName
+                        ),
+                        style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+                        color = primaryElementColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PostListError(
+    backgroundColor: Color,
+    tagChip: TagChip,
+    postList: PostList.Error,
+) {
+    Column(
+        modifier = Modifier
+            .height(250.dp)
+            .fillMaxWidth()
+            .padding(start = 60.dp, end = 60.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+        Icon(
+            modifier = Modifier
+                .drawBehind {
+                    drawCircle(
+                        color = backgroundColor,
+                        radius = this.size.maxDimension
+                    )
+                },
+            painter = painterResource(R.drawable.ic_wifi_off_24px),
+            tint = MaterialTheme.colors.onSurface,
+            contentDescription = null
+        )
+        Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
+        val tagName = tagChip.tag.tagDisplayName
+        Text(
+            text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
+            style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colors.onSurface,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(modifier = Modifier.height(Margin.Medium.value))
+        Text(
+            text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
+            style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
+            color = if (isSystemInDarkTheme()) {
+                AppColor.White.copy(alpha = 0.4F)
+            } else {
+                AppColor.Black.copy(alpha = 0.4F)
+            },
+            textAlign = TextAlign.Center,
+        )
+        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+        Button(
+            onClick = { postList.onRetryClick() },
+            modifier = Modifier
+                .height(36.dp)
+                .width(114.dp),
+            elevation = ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+            ),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = MaterialTheme.colors.onPrimary,
+                backgroundColor = MaterialTheme.colors.onSurface,
+            ),
+            shape = RoundedCornerShape(50),
+        ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colors.surface,
+                text = stringResource(R.string.reader_tags_feed_error_retry),
+            )
+        }
+    }
 }
 
 // TODO move to VM
