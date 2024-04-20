@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +54,8 @@ fun ReaderTagsFeedPostListItem(
     postNumberOfLikesText: String,
     postNumberOfCommentsText: String,
     isPostLiked: Boolean,
-    onPostImageClick: () -> Unit,
+    onSiteClick: () -> Unit,
+    onPostClick: () -> Unit,
     onPostLikeClick: () -> Unit,
     onPostMoreMenuClick: () -> Unit,
 ) {
@@ -63,16 +66,24 @@ fun ReaderTagsFeedPostListItem(
     val secondaryElementColor = baseColor.copy(
         alpha = 0.6F
     )
-    Column(modifier = Modifier
-        .width(240.dp)
-        .height(340.dp)) {
+    Column(
+        modifier = Modifier
+            .width(240.dp)
+            .height(340.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Site name
             Text(
-                modifier = Modifier.weight(1F),
+                modifier = Modifier
+                    .weight(1F)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = { onSiteClick() },
+                    ),
                 text = siteName,
                 style = MaterialTheme.typography.labelLarge,
                 color = primaryElementColor,
@@ -97,7 +108,13 @@ fun ReaderTagsFeedPostListItem(
         }
         // Post title
         Text(
-            modifier = Modifier.padding(top = Margin.Medium.value),
+            modifier = Modifier
+                .padding(top = Margin.Medium.value)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { onPostClick() },
+                ),
             text = postTitle,
             style = MaterialTheme.typography.titleMedium,
             color = baseColor,
@@ -114,6 +131,11 @@ fun ReaderTagsFeedPostListItem(
                 .conditionalThen(
                     predicate = postImageUrl == null,
                     other = Modifier.height(180.dp)
+                )
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { onPostClick() },
                 ),
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
@@ -125,7 +147,7 @@ fun ReaderTagsFeedPostListItem(
         if (!postImageUrl.isNullOrBlank()) {
             PostImage(
                 imageUrl = postImageUrl,
-                onClick = onPostImageClick,
+                onClick = onPostClick,
             )
         }
         Spacer(Modifier.weight(1f))
@@ -275,7 +297,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -304,7 +327,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -319,7 +343,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -334,7 +359,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -350,7 +376,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -366,7 +393,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -393,7 +421,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
@@ -419,7 +448,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         postNumberOfLikesText = "15 likes",
                         postNumberOfCommentsText = "4 comments",
                         isPostLiked = true,
-                        onPostImageClick = {},
+                        onSiteClick = {},
+                        onPostClick = {},
                         onPostLikeClick = {},
                         onPostMoreMenuClick = {},
                     )
