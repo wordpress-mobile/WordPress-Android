@@ -749,16 +749,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID)) {
-                Log.i(javaClass.simpleName, "***=> We have a remote id, go get it from state ")
-                editPostRepository.loadPostByRemotePostId(
-                    state.getLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID),
-                    siteModel
-                )
+                val possibleValueOfPostRemoteId = state.getLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID)
+                Log.i(javaClass.simpleName, "***=> We have a remote id, and the value is $possibleValueOfPostRemoteId")
+                editPostRepository.loadPostByRemotePostId(possibleValueOfPostRemoteId, siteModel)
                 initializePostObject()
             } else if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)) {
-                editPostRepository.loadPostByLocalPostId(
-                    state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)
-                )
+                val possibleValueOfPostLocalId = state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID)
+                Log.i(javaClass.simpleName, "***=> We have a local id, and the value is $possibleValueOfPostLocalId")
+                editPostRepository.loadPostByLocalPostId(possibleValueOfPostLocalId)
                 initializePostObject()
             }
 
@@ -766,6 +764,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 state,
                 EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
             ) as EditorFragmentAbstract?)?.let { frag ->
+                Log.i(javaClass.simpleName, "***=> We have a frag $frag")
                 editorFragment = frag
                 if (frag is EditorMediaUploadListener) {
                     editorMediaUploadListener = frag
