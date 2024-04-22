@@ -107,9 +107,7 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         }
     }
 
-    private fun isDirty(): Boolean {
-        return currentReadingPreferences.value != originalReadingPreferences
-    }
+    private fun isDirty(): Boolean = currentReadingPreferences.value != originalReadingPreferences
 
     sealed interface ActionEvent {
         data object Close : ActionEvent
