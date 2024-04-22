@@ -137,6 +137,7 @@
 /sites/$site/stats/post/$post_ID
 /sites/$site/stats/streak
 /sites/$site/stats/file-downloads
+/sites/$site/stats/subscribers
 
 /sites/$site/post/$post_ID/diffs
 /sites/$site/page/$post_ID/diffs
