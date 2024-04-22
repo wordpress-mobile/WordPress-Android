@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.stats.time
 import com.google.gson.Gson
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersModel
 import org.wordpress.android.fluxc.model.stats.time.AuthorsModel.Post
 import org.wordpress.android.fluxc.model.stats.time.ClicksModel.Click
 import org.wordpress.android.fluxc.model.stats.time.FileDownloadsModel.FileDownloads
@@ -10,6 +11,7 @@ import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsM
 import org.wordpress.android.fluxc.model.stats.time.PostAndPageViewsModel.ViewsType
 import org.wordpress.android.fluxc.model.stats.time.ReferrersModel.Referrer
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel.PeriodData
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.SubscribersRestClient.SubscribersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
@@ -155,6 +157,34 @@ class TimeStatsMapper @Inject constructor(val gson: Gson) {
             AppLog.e(STATS, "VisitsAndViewsResponse: data, date & dataPerPeriod fields should never be null")
         }
         return VisitsAndViewsModel(response.date ?: "", dataPerPeriod ?: listOf())
+    }
+
+    fun map(response: SubscribersResponse, cacheMode: LimitMode): SubscribersModel {
+        val periodIndex = response.fields?.indexOf("period")
+        val subscribersIndex = response.fields?.indexOf("subscribers")
+        val dataPerPeriod = response.data?.mapNotNull { periodData ->
+            periodData?.let {
+                val period = periodIndex?.let { periodData[it] }
+                if (!period.isNullOrBlank()) {
+                    SubscribersModel.PeriodData(period, periodData.getLongOrZero(subscribersIndex))
+                } else {
+                    null
+                }
+            }
+        }?.let {
+            if (cacheMode is LimitMode.Top) {
+                it.take(cacheMode.limit)
+            } else {
+                it
+            }
+        }
+        if (response.data == null || response.date == null || dataPerPeriod == null) {
+            AppLog.e(
+                STATS,
+                "SubscribersResponse: data, date & dataPerPeriod fields should never be null"
+            )
+        }
+        return SubscribersModel(response.date ?: "", dataPerPeriod ?: listOf())
     }
 
     private fun List<String?>.getLongOrZero(itemIndex: Int?): Long {
