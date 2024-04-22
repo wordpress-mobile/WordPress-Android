@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 15:54:08+0000
+Translation-Revision-Date: 2024-04-17 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 commento</string>
+    <string name="weekly_roundup_notification_text_views_and_like">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 Mi piace</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">L\'ultima settimana hai avuto %1$s visualizzazioni, 1 Mi piace e 1 commento.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">L\'ultima settimana hai avuto %1$s visualizzazioni, %2$s Mi piace e 1 commento.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">L\'ultima settimana hai avuto %1$s visualizzazioni, 1 Mi piace e %2$s commenti.</string>
+    <string name="site_picker_recent_sites">Siti recenti</string>
+    <string name="site_picker_all_sites">Tutti i siti</string>
+    <string name="site_picker_pinned_sites">Siti fissati</string>
+    <string name="site_picker_edit_pins">Modifica Pin</string>
+    <string name="dialog_post_autosave_body_for_page">Hai apportato modifiche non salvate a questa pagina da un dispositivo diverso. Seleziona la versione della pagina da mantenere.</string>
+    <string name="dialog_post_autosave_body">Hai apportato modifiche non salvate a questo articolo da un dispositivo diverso. Seleziona la versione dell\'articolo da mantenere.</string>
+    <string name="dialog_post_autosave_title">Salvataggio automatico disponibile</string>
+    <string name="dialog_post_conflict_another_device">Altro dispositivo</string>
+    <string name="dialog_post_conflict_current_device">Dispositivo corrente</string>
+    <string name="dialog_post_conflict_body_for_page">La pagina è stata modificata su un altro dispositivo. Seleziona la versione della pagina da mantenere.</string>
+    <string name="dialog_post_conflict_body">L\'articolo è stato modificato su un altro dispositivo. Seleziona la versione dell\'articolo da mantenere.</string>
+    <string name="dialog_post_conflict_title">Risolvi il conflitto</string>
+    <string name="reader_preferences_font_size_extra_large">Molto grande</string>
+    <string name="reader_preferences_font_size_large">Grande</string>
+    <string name="reader_preferences_font_size_normal">Normale</string>
+    <string name="reader_preferences_font_size_small">Piccolo</string>
+    <string name="reader_preferences_font_size_extra_small">Molto piccolo</string>
+    <string name="reader_preferences_screen_font_size_label">Dimensione carattere</string>
+    <string name="reader_preferences_screen_font_family_label">Carattere</string>
+    <string name="reader_preferences_screen_theme_label">Schema colori</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">invia il tuo feedback</string>
     <string name="gutenberg_native_clear_selected_color">Cancella il colore selezionato</string>
     <string name="reader_no_followed_tags_text_title">Nessun tag seguito</string>
     <string name="reader_toast_err_tag_already_following">Segui già questo tag</string>
@@ -32,8 +58,6 @@ Language: it
     <string name="gutenberg_native_copy_error_details">Copia i dettagli dell\'errore</string>
     <string name="gutenberg_native_button_to_copy_post_text">Pulsante per copiare il testo dell\'articolo</string>
     <string name="gutenberg_native_button_to_copy_error_details">Pulsante per copiare i dettagli dell\'errore</string>
-    <string name="editor_updating_post_failed">Impossibile aggiornare il contenuto dell\'articolo</string>
-    <string name="editor_updating_post">Aggiornamento del contenuto dell\'articolo</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Didascalia del video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Didascalia del video. Vuoto</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifica video</string>
@@ -3457,7 +3481,7 @@ Language: it
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>
     <string name="site_picker_add_self_hosted">Aggiungi un sito self-hosted</string>
-    <string name="site_picker_add_site">Aggiungi nuovo sito</string>
+    <string name="site_picker_add_a_site">Aggiungi un sito</string>
     <string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
     <string name="site_picker_title">Seleziona un sito</string>
     <string name="my_site_btn_view_site">Visualizza il sito</string>

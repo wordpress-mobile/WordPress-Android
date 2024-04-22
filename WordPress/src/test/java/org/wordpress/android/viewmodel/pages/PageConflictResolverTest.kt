@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts
+package org.wordpress.android.viewmodel.pages
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
@@ -22,10 +22,9 @@ import org.wordpress.android.R
 
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
-class PostConflictResolverTest : BaseUnitTest() {
+class PageConflictResolverTest : BaseUnitTest() {
     private val dispatcher: Dispatcher = mock()
     private val site: SiteModel = mock()
-
     private val getPostByLocalPostId = mock(Function1::class.java) as (Int) -> PostModel?
     private val invalidateList = mock(Function0::class.java) as () -> Unit
     private val checkNetworkConnection = mock(Function0::class.java) as () -> Boolean
@@ -34,16 +33,15 @@ class PostConflictResolverTest : BaseUnitTest() {
     private val postStore: PostStore = mock()
 
     // Class under test
-    private lateinit var postConflictResolver: PostConflictResolver
+    private lateinit var pageConflictResolver: PageConflictResolver
 
     @Before
     fun setUp() {
-        postConflictResolver = PostConflictResolver(
+        pageConflictResolver = PageConflictResolver(
             dispatcher,
             site,
             postStore,
             uploadStore,
-            getPostByLocalPostId,
             invalidateList,
             checkNetworkConnection,
             showSnackbar,
@@ -51,15 +49,15 @@ class PostConflictResolverTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given network connection, when update conflicted post with local version is invoked, then success`() {
+    fun `given network connection, when update conflicted page with local version is invoked, then success`() {
         whenever(checkNetworkConnection.invoke()).thenReturn(true)
         val post = PostModel()
-        whenever(getPostByLocalPostId.invoke(anyInt())).thenReturn(post)
+        whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(post)
         val expectedSnackbarMessage = SnackbarMessageHolder(
             UiString.UiStringRes(R.string.snackbar_conflict_web_version_discarded)
         )
 
-        postConflictResolver.updateConflictedPostWithLocalVersion(123)
+        pageConflictResolver.updateConflictedPageWithLocalVersion(123)
 
         verify(invalidateList).invoke()
         verify(uploadStore).clearUploadErrorForPost(post)
@@ -71,7 +69,7 @@ class PostConflictResolverTest : BaseUnitTest() {
     fun `given no network connection, when update conflicted post with local version is invoked, then no network`() {
         whenever(checkNetworkConnection.invoke()).thenReturn(false)
 
-        postConflictResolver.updateConflictedPostWithLocalVersion(123)
+        pageConflictResolver.updateConflictedPageWithLocalVersion(123)
 
         verifyNoInteractions(getPostByLocalPostId)
         verifyNoInteractions(postStore)
@@ -82,18 +80,17 @@ class PostConflictResolverTest : BaseUnitTest() {
     @Test
     fun `given post is in conflict with remote, when on post updated, then clear upload error for post`() {
         val updatedPost = PostModel()
-        whenever(getPostByLocalPostId.invoke(anyInt())).thenReturn(updatedPost)
+        whenever(postStore.getPostByLocalPostId(anyInt())).thenReturn(updatedPost)
         whenever(checkNetworkConnection.invoke()).thenReturn(true)
         val expectedSnackbarMessage = SnackbarMessageHolder(
             UiString.UiStringRes(R.string.snackbar_conflict_local_version_discarded)
         )
 
-        postConflictResolver.updateConflictedPostWithRemoteVersion(123)
-        postConflictResolver.onPostSuccessfullyUpdated()
+        pageConflictResolver.updateConflictedPageWithRemoteVersion(123)
+        pageConflictResolver.onPageSuccessfullyUpdated()
 
         verify(uploadStore).clearUploadErrorForPost(updatedPost)
         verify(showSnackbar).invoke(expectedSnackbarMessage)
         verify(postStore).removeLocalRevision(updatedPost)
     }
 }
-

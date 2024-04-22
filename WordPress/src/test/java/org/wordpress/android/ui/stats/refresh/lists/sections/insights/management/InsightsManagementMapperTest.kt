@@ -4,7 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
@@ -25,23 +24,16 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.Header
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementViewModel.InsightListItem.InsightModel.Status
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 
 @ExperimentalCoroutinesApi
 class InsightsManagementMapperTest : BaseUnitTest() {
-    @Mock
-    private lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
-
     private lateinit var insightsManagementMapper: InsightsManagementMapper
     private var insightTypeCount = 13 // POSTS_AND_PAGES_INSIGHTS.size + ACTIVITY_INSIGHTS.size + GENERAL_INSIGHTS.size
     private val sectionsCount = 3
 
     @Before
     fun setUp() {
-        insightsManagementMapper = InsightsManagementMapper(
-            testDispatcher(),
-            trafficSubscribersTabFeatureConfig
-        )
+        insightsManagementMapper = InsightsManagementMapper(testDispatcher())
     }
 
     @Test
@@ -58,8 +50,8 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[1], VIEWS_AND_VISITORS, true)
         assertInsight(result[2], ALL_TIME_STATS, true)
         assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, true)
-        assertInsight(result[4], ANNUAL_SITE_STATS, true)
-        assertInsight(result[5], TODAY_STATS, true)
+        assertInsight(result[4], TODAY_STATS, true)
+        assertInsight(result[5], ANNUAL_SITE_STATS, true)
         assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
         assertInsight(result[7], LATEST_POST_SUMMARY, true)
         assertInsight(result[8], POSTING_ACTIVITY, true)
@@ -86,8 +78,8 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[1], VIEWS_AND_VISITORS, false)
         assertInsight(result[2], ALL_TIME_STATS, true)
         assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, false)
-        assertInsight(result[4], ANNUAL_SITE_STATS, false)
-        assertInsight(result[5], TODAY_STATS, false)
+        assertInsight(result[4], TODAY_STATS, false)
+        assertInsight(result[5], ANNUAL_SITE_STATS, false)
         assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
         assertInsight(result[7], LATEST_POST_SUMMARY, false)
         assertInsight(result[8], POSTING_ACTIVITY, false)
@@ -111,8 +103,8 @@ class InsightsManagementMapperTest : BaseUnitTest() {
         assertInsight(result[1], VIEWS_AND_VISITORS, false)
         assertInsight(result[2], ALL_TIME_STATS, false)
         assertInsight(result[3], MOST_POPULAR_DAY_AND_HOUR, false)
-        assertInsight(result[4], ANNUAL_SITE_STATS, false)
-        assertInsight(result[5], TODAY_STATS, false)
+        assertInsight(result[4], TODAY_STATS, false)
+        assertInsight(result[5], ANNUAL_SITE_STATS, false)
         assertHeader(result[6], R.string.stats_insights_management_posts_and_pages)
         assertInsight(result[7], LATEST_POST_SUMMARY, false)
         assertInsight(result[8], POSTING_ACTIVITY, false)

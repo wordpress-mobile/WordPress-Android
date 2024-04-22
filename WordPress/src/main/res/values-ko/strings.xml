@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 10:54:08+0000
+Translation-Revision-Date: 2024-04-18 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">지난주에는 조회수 %1$s회, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_and_like">지난주에는 조회수 %1$s회, 좋아요 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">지난주에는 조회수 %1$s개회, 좋아요 %2$s개, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 %2$s개를 기록했습니다.</string>
+    <string name="site_picker_recent_sites">최근 사이트</string>
+    <string name="site_picker_all_sites">모든 사이트</string>
+    <string name="site_picker_pinned_sites">고정한 사이트</string>
+    <string name="site_picker_edit_pins">고정 편집</string>
+    <string name="dialog_post_autosave_body_for_page">이 페이지에 다른 기기에서 작성한 저장되지 않은 변경 사항이 있습니다. 저장할 버전의 페이지를 선택하세요.</string>
+    <string name="dialog_post_autosave_body">이 글에 다른 기기에서 작성한 저장되지 않은 변경 사항이 있습니다. 저장할 버전의 글을 선택하세요.</string>
+    <string name="dialog_post_autosave_title">자동 저장 가능</string>
+    <string name="dialog_post_conflict_another_device">다른 기기</string>
+    <string name="dialog_post_conflict_current_device">현재 기기</string>
+    <string name="dialog_post_conflict_body_for_page">이 페이지가 다른 기기에서 수정되었습니다. 저장할 버전의 페이지를 선택하세요.</string>
+    <string name="dialog_post_conflict_body">이 글이 다른 기기에서 수정되었습니다. 저장할 버전의 글을 선택하세요.</string>
+    <string name="dialog_post_conflict_title">충돌 해결</string>
+    <string name="reader_preferences_font_size_extra_large">더 크게</string>
+    <string name="reader_preferences_font_size_large">대</string>
+    <string name="reader_preferences_font_size_normal">일반</string>
+    <string name="reader_preferences_font_size_small">소</string>
+    <string name="reader_preferences_font_size_extra_small">더 작게</string>
+    <string name="reader_preferences_screen_font_size_label">글꼴 크기</string>
+    <string name="reader_preferences_screen_font_family_label">글꼴</string>
+    <string name="reader_preferences_screen_theme_label">색상표</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">피드백 보내기</string>
     <string name="gutenberg_native_clear_selected_color">선택한 색상 지우기</string>
     <string name="reader_no_followed_tags_text_title">팔로우한 태그 없음</string>
     <string name="reader_toast_err_tag_already_following">이미 이 태그 팔로우 중</string>
@@ -32,8 +58,6 @@ Language: ko_KR
     <string name="gutenberg_native_copy_error_details">오류 상세 정보 복사</string>
     <string name="gutenberg_native_button_to_copy_post_text">글 텍스트 복사 버튼</string>
     <string name="gutenberg_native_button_to_copy_error_details">오류 상세 정보 복사 버튼</string>
-    <string name="editor_updating_post_failed">글 콘텐츠 업데이트 실패</string>
-    <string name="editor_updating_post">글 콘텐츠 업데이트 중</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">비디오 캡션. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">비디오 캡션. 비우기</string>
     <string name="gutenberg_native_edit_video_024aee6d">비디오 편집</string>
@@ -3456,7 +3480,6 @@ Language: ko_KR
     <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>
     <string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
-    <string name="site_picker_add_site">사이트 추가</string>
     <string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
     <string name="site_picker_title">사이트 선택</string>
     <string name="my_site_btn_view_site">사이트 보기</string>

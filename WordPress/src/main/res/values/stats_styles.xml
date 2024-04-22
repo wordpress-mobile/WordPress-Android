@@ -76,10 +76,6 @@
         <item name="android:textColor">@color/stats_block_column</item>
     </style>
 
-    <style name="StatsBlockTrafficColumnSmallHeader" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:textColor">@color/stats_block_column</item>
-    </style>
-
     <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">@color/stats_block_column</item>
         <item name="android:textSize">@dimen/text_sz_larger</item>

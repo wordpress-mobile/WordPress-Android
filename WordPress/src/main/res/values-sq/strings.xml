@@ -31,8 +31,6 @@ Language: sq_AL
     <string name="gutenberg_native_copy_error_details">Kopjo hollësi gabimi</string>
     <string name="gutenberg_native_button_to_copy_post_text">Buton për “Kopjo tekst postimi”</string>
     <string name="gutenberg_native_button_to_copy_error_details">Buton për “Kopjo hollësi gabimi”</string>
-    <string name="editor_updating_post_failed">S’u arrit të përditësohet lëndë postimi</string>
-    <string name="editor_updating_post">Po përditësohet lëndë postimi</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Legjendë videoje. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Legjendë videoje. E zbrazët</string>
     <string name="gutenberg_native_edit_video_024aee6d">Përpunoni video</string>
@@ -3459,7 +3457,6 @@ Language: sq_AL
     <string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
     <string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>
     <string name="site_picker_add_self_hosted">Shto sajt të vetëstrehuar</string>
-    <string name="site_picker_add_site">Shtoni sajt të ri</string>
     <string name="site_picker_edit_visibility">Shfaq/fshih sajte</string>
     <string name="site_picker_title">Zgjidhni një sajt</string>
     <string name="my_site_btn_view_site">Shihni Sajtin</string>

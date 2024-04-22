@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-08 17:17:36+0000
+Translation-Revision-Date: 2024-04-15 19:10:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Last week you had %1$s views and 1 comment</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Last week you had %1$s views and 1 like</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Last week you had %1$s views, 1 like, and 1 comment.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Last week you had %1$s views, %2$s likes, and 1 comment.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Last week you had %1$s views, 1 like, and %2$s comments.</string>
+    <string name="site_picker_recent_sites">Recent sites</string>
+    <string name="site_picker_all_sites">All sites</string>
+    <string name="site_picker_pinned_sites">Pinned sites</string>
+    <string name="site_picker_edit_pins">Edit pins</string>
+    <string name="dialog_post_autosave_body_for_page">You\'ve made unsaved changes to this page from a different device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_autosave_body">You\'ve made unsaved changes to this post from a different device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_autosave_title">Autosave Available</string>
+    <string name="dialog_post_conflict_another_device">Another device</string>
+    <string name="dialog_post_conflict_current_device">Current device</string>
+    <string name="dialog_post_conflict_body_for_page">The page was modified on another device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_conflict_body">The post was modified on another device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_conflict_title">Resolve Conflict</string>
     <string name="reader_preferences_font_size_extra_large">Extra large</string>
     <string name="reader_preferences_font_size_large">Large</string>
     <string name="reader_preferences_font_size_normal">Normal</string>
@@ -42,8 +59,6 @@ Language: en_GB
     <string name="gutenberg_native_copy_error_details">Copy error details</string>
     <string name="gutenberg_native_button_to_copy_post_text">Button to copy post text</string>
     <string name="gutenberg_native_button_to_copy_error_details">Button to copy error details</string>
-    <string name="editor_updating_post_failed">Failed to update post content</string>
-    <string name="editor_updating_post">Updating post content</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video caption. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video caption. Empty</string>
     <string name="gutenberg_native_edit_video_024aee6d">Edit video</string>
@@ -3478,7 +3493,7 @@ Language: en_GB
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
-    <string name="site_picker_add_site">Add new site</string>
+    <string name="site_picker_add_a_site">Add a site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="site_picker_title">Choose site</string>
     <string name="my_site_btn_view_site">View Site</string>

@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 15:54:08+0000
+Translation-Revision-Date: 2024-04-17 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">La semaine dernière, vous avez eu %1$s vues et 1 commentaire</string>
+    <string name="weekly_roundup_notification_text_views_and_like">La semaine dernière, vous avez eu %1$s vues et 1 mention J’aime</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">La semaine dernière, vous avez eu %1$s vues, 1 mention J’aime et 1 commentaire.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">La semaine dernière, vous avez eu %1$s vues, %2$s mentions J’aime et 1 commentaire.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">La semaine dernière, vous avez eu %1$s vues, 1 mention J’aime et %2$s commentaires.</string>
+    <string name="site_picker_recent_sites">Sites récents</string>
+    <string name="site_picker_all_sites">Tous les sites</string>
+    <string name="site_picker_pinned_sites">Sites épinglés</string>
+    <string name="site_picker_edit_pins">Modifier les épingles</string>
+    <string name="dialog_post_autosave_body_for_page">Vous avez apporté des modifications non enregistrées à cette page depuis un autre appareil. Veuillez indiquer quelle version de la page conserver.</string>
+    <string name="dialog_post_autosave_body">Vous avez apporté des modifications non enregistrées à cet article depuis un autre appareil. Veuillez indiquer quelle version de l’article conserver.</string>
+    <string name="dialog_post_autosave_title">Enregistrement automatique disponible</string>
+    <string name="dialog_post_conflict_another_device">Autre appareil</string>
+    <string name="dialog_post_conflict_current_device">Appareil actuel</string>
+    <string name="dialog_post_conflict_body_for_page">Cette page a été modifiée sur un autre appareil. Veuillez indiquer quelle version de la page conserver.</string>
+    <string name="dialog_post_conflict_body">L’article a été modifié sur un autre appareil. Veuillez indiquer quelle version de l’article conserver.</string>
+    <string name="dialog_post_conflict_title">Résoudre le conflit</string>
+    <string name="reader_preferences_font_size_extra_large">Très grande</string>
+    <string name="reader_preferences_font_size_large">Grande</string>
+    <string name="reader_preferences_font_size_normal">Normale</string>
+    <string name="reader_preferences_font_size_small">Petite</string>
+    <string name="reader_preferences_font_size_extra_small">Très petite</string>
+    <string name="reader_preferences_screen_font_size_label">Taille de la police</string>
+    <string name="reader_preferences_screen_font_family_label">Police</string>
+    <string name="reader_preferences_screen_theme_label">Jeu de couleurs</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">envoyez vos commentaires</string>
     <string name="gutenberg_native_clear_selected_color">Effacer la couleur sélectionnée</string>
     <string name="reader_no_followed_tags_text_title">Aucune étiquette suivie</string>
     <string name="reader_toast_err_tag_already_following">Vous suivez déjà cette étiquette</string>
@@ -32,8 +58,6 @@ Language: fr
     <string name="gutenberg_native_copy_error_details">Copier les détails de l’erreur</string>
     <string name="gutenberg_native_button_to_copy_post_text">Bouton permettant de copier le texte de l’article</string>
     <string name="gutenberg_native_button_to_copy_error_details">Bouton permettant de copier les détails de l’erreur</string>
-    <string name="editor_updating_post_failed">Échec de la mise à jour du contenu de l\'article</string>
-    <string name="editor_updating_post">Mise à jour du contenu de l\'article</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>
@@ -160,6 +184,7 @@ Language: fr
     <string name="new_domain_search_screen_transfer_domain_description">Vous désirez transférer un domaine que vous possédez déjà ?</string>
     <string name="new_domain_search_screen_input_placeholder">Saisir du contenu pour obtenir d’autres suggestions</string>
     <string name="new_domain_search_screen_title">Rechercher un domaine</string>
+    <string name="purchase_domain_screen_error_button_title">OK</string>
     <string name="purchase_domain_screen_error_subtitle">Une erreur est survenue lors de l’ajout du domaine au panier. Vérifiez que vous êtes en ligne et réessayez.</string>
     <string name="purchase_domain_screen_error_title">Erreur</string>
     <string name="domain_management_site_domains_button">Tout</string>
@@ -222,6 +247,7 @@ Language: fr
     <string name="personalization_screen_draft_posts_card_description">Vos brouillons d’articles récents.</string>
     <string name="personalization_screen_draft_posts_card_title">Brouillons d’articles</string>
     <string name="personalization_screen_stats_card_description">Vues, visiteurs et mentions J’aime</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Le contenu des cartes peut varier en fonction de l’activité sur votre site</string>
     <string name="personalization_screen_title"> Personnaliser l’onglet Accueil</string>
     <string name="personalize_card_content_description">Appuyer pour personnaliser l’onglet Accueil</string>
     <string name="personalize_card_text">Personnaliser l’onglet Accueil</string>
@@ -1670,6 +1696,7 @@ Language: fr
     <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
     <string name="gutenberg_native_move_to_top">Déplacer tout en haut</string>
     <string name="gutenberg_native_insert_mention">Insérer une mention</string>
@@ -3457,7 +3484,7 @@ Language: fr
     <string name="site_picker_cant_hide_current_site">\"%s\" n\'a pas été caché, c\'est le site selectionné</string>
     <string name="site_picker_create_wpcom">Créer un site WordPress.com</string>
     <string name="site_picker_add_self_hosted">Ajouter un site auto-hébergé</string>
-    <string name="site_picker_add_site">Ajout de nouveau site</string>
+    <string name="site_picker_add_a_site">Ajouter un site</string>
     <string name="site_picker_edit_visibility">Montrer/cacher les sites</string>
     <string name="site_picker_title">Choisir un site</string>
     <string name="my_site_btn_view_site">Afficher le site</string>

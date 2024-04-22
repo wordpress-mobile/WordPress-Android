@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-08 16:54:10+0000
+Translation-Revision-Date: 2024-04-18 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Geçen hafta %1$s görüntüleme oldu ve 1 yorum aldınız</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Geçen hafta %1$s görüntüleme oldu ve 1 beğeni aldınız</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Geçen hafta %1$s görüntüleme oldu, 1 beğeni ve 1 yorum aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Geçen hafta %1$s görüntüleme oldu, %2$s beğeni ve 1 yorum aldınız.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Geçen hafta %1$s görüntüleme oldu, 1 beğeni ve %2$s yorum aldınız.</string>
+    <string name="site_picker_recent_sites">Son Siteler</string>
+    <string name="site_picker_all_sites">Tüm Siteler</string>
+    <string name="site_picker_pinned_sites">Sabitlenen Siteler</string>
+    <string name="site_picker_edit_pins">Sabitlemeleri Düzenle</string>
+    <string name="dialog_post_autosave_body_for_page">Farklı bir cihazdan bu sayfada kaydedilmeyen değişiklikler yaptınız. Lütfen sayfanın hangi versiyonunu korumak istediğinizi seçin.</string>
+    <string name="dialog_post_autosave_body">Farklı bir cihazdan bu gönderide kaydedilmeyen değişiklikler yaptınız. Lütfen gönderinin hangi versiyonunu korumak istediğinizi seçin.</string>
+    <string name="dialog_post_autosave_title">Otomatik Kaydetme Kullanılabilir</string>
+    <string name="dialog_post_conflict_another_device">Başka Cihaz</string>
+    <string name="dialog_post_conflict_current_device">Mevcut Cihaz</string>
+    <string name="dialog_post_conflict_body_for_page">Bu sayfa başka bir cihazda değiştirilmiş. Lütfen sayfanın hangi versiyonunu korumak istediğinizi seçin.</string>
+    <string name="dialog_post_conflict_body">Bu gönderi başka bir cihazda değiştirilmiş. Lütfen gönderinin hangi versiyonunu korumak istediğinizi seçin.</string>
+    <string name="dialog_post_conflict_title">Çakışmayı Çözün</string>
+    <string name="reader_preferences_font_size_extra_large">Çok büyük</string>
+    <string name="reader_preferences_font_size_large">Büyük</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_small">Küçük</string>
+    <string name="reader_preferences_font_size_extra_small">Çok küçük</string>
+    <string name="reader_preferences_screen_font_size_label">Yazı Tipi Boyutu</string>
+    <string name="reader_preferences_screen_font_family_label">Yazı tipi</string>
+    <string name="reader_preferences_screen_theme_label">Renk Düzeni</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">geri bildiriminizi gönderin</string>
     <string name="gutenberg_native_clear_selected_color">Seçilen rengi temizle</string>
     <string name="reader_no_followed_tags_text_title">Takip edilen etiket yok</string>
     <string name="reader_toast_err_tag_already_following">Bu etiketi zaten takip ediyorsunuz</string>
@@ -30,8 +56,6 @@ Language: tr
     <string name="gutenberg_native_copy_error_details">Hata ayrıntılarını kopyala</string>
     <string name="gutenberg_native_button_to_copy_post_text">Gönderi metnini kopyalama düğmesi</string>
     <string name="gutenberg_native_button_to_copy_error_details">Hata ayrıntılarını kopyalama düğmesi</string>
-    <string name="editor_updating_post_failed">Gönderi içeriği güncellenemedi</string>
-    <string name="editor_updating_post">Gönderi içeriği güncelleniyor</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video yazısı. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video yazısı. Boş</string>
     <string name="gutenberg_native_edit_video_024aee6d">Videoyu düzenle</string>
@@ -3466,7 +3490,7 @@ Language: tr
     <string name="site_picker_cant_hide_current_site">\"%s\" geçerli site olduğundan gizlenmedi</string>
     <string name="site_picker_create_wpcom">WordPress.com sitesi oluştur</string>
     <string name="site_picker_add_self_hosted">Kullanıcı tarafından barındırılan site ekle</string>
-    <string name="site_picker_add_site">Yeni site ekle</string>
+    <string name="site_picker_add_a_site">Site ekleyin</string>
     <string name="site_picker_edit_visibility">Siteleri görüntüle/gizle</string>
     <string name="site_picker_title">Site seç</string>
     <string name="my_site_btn_view_site">Siteyi görüntüle</string>

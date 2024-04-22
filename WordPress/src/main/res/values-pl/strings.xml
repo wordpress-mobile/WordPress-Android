@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-04 10:37:13+0000
+Translation-Revision-Date: 2024-04-17 06:26:46+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: pl
@@ -896,6 +896,7 @@ Language: pl
     <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Spróbuj zastosować więcej tagów, aby poszerzyć wyszukiwanie</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpowiedział na twój wpis</string>
     <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b&gt;50 polubień&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; polubił(a) twój wpis</string>
@@ -942,6 +943,7 @@ Language: pl
     <string name="reader_label_toolbar_back">Powrót</string>
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
+    <string name="reader_discover_empty_subtitle_follow">Obserwuj tagi aby odkryć nowe blogi</string>
     <string name="stats_referrer_popup_unmark_as_spam">Oznacz jako Nie Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Otwórz witrynę</string>
     <string name="media_uploading_gif_library_photo">Przesyłanie plików gif</string>
@@ -1077,6 +1079,7 @@ Language: pl
     <string name="ccpa_privacy_notice_read">Przeczytaj notkę o prywatności CCPA</string>
     <string name="ccpa_privacy_notice_caption">Akt CPA wymaga aby dostarczyć rezydentom Kaliforni dodakowej informacji o danych które pozyskujemy.</string>
     <string name="post_status_post_trashed">W koszu</string>
+    <string name="reader_choose_interests_tags_content_description">Wybierz tagi</string>
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
@@ -1132,6 +1135,9 @@ Language: pl
     <string name="copy_link_address">Skopiuj adres odnośnika</string>
     <string name="reader_reblog_error">Nie udało się reblogować</string>
     <string name="whats_new_in_version_title">Co nowego</string>
+    <string name="reader_no_blog_to_reblog_action">Zarządzanie blogami</string>
+    <string name="reader_no_blog_to_reblog_detail">Po utworzeniu bloga WordPress.com możesz ponownie publikować wybrane treści na własnej witrynie.</string>
+    <string name="reader_no_blog_to_reblog_title">Brak dostępnych blogów WordPress.com</string>
     <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
@@ -1224,6 +1230,8 @@ Language: pl
     <string name="reader_self_hosted_select_filter">Użyj przycisku filtra aby odnaleźć wpisy dotyczące określonych tematów</string>
     <string name="reader_btn_remove_filter_content_description">Usuń bieżący filtr</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>
+    <string name="reader_bottom_sheet_select_content_description">Wybierz tag lub blog, wyskakujące okno</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Zaloguj się do WordPress.com, aby zobaczyć najnowsze wpisy z subskrybowanych blogów</string>
     <string name="gutenberg_native_replace_current_block">Zamień aktualny blok</string>
     <string name="gutenberg_native_add_to_end">Dodaj zakończenie</string>
     <string name="gutenberg_native_add_to_beginning">Dodaj początek</string>
@@ -2847,7 +2855,6 @@ Language: pl
     <string name="site_picker_create_wpcom">Utwórz witrynę WordPress.com</string>
     <string name="site_picker_edit_visibility">Pokaż/ukryj witryny</string>
     <string name="site_picker_add_self_hosted">Dodaj witrynę z własnym hostingiem</string>
-    <string name="site_picker_add_site">Dodaj nową witrynę</string>
     <string name="site_picker_title">Wybierz witrynę</string>
     <string name="my_site_btn_view_site">Zobacz witrynę</string>
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>

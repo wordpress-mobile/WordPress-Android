@@ -1236,7 +1236,6 @@ Language: sk
     <string name="site_picker_create_wpcom">Vytvorte webovú stránku WordPress.com</string>
     <string name="site_picker_edit_visibility">Zobraziť/skryť webové stránky</string>
     <string name="site_picker_add_self_hosted">Pridať webovú stránku s vlastným hostingom</string>
-    <string name="site_picker_add_site">Pridať novú webovú stránku</string>
     <string name="my_site_btn_view_site">Zobraziť webovú stránku</string>
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>

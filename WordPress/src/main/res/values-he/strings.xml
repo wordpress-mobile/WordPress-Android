@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-12 07:32:32+0000
+Translation-Revision-Date: 2024-04-18 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ותגובה אחת</string>
+    <string name="weekly_roundup_notification_text_views_and_like">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ולייק אחד</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, לייק אחד ותגובה אחת.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, ⁦%2$s⁩ לייקים ותגובה אחת.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, לייק אחד ו-⁦%2$s⁩ תגובות.</string>
+    <string name="site_picker_recent_sites">אתרים מהתקופה האחרונה</string>
+    <string name="site_picker_all_sites">כל האתרים</string>
+    <string name="site_picker_pinned_sites">אתרים נעוצים</string>
+    <string name="site_picker_edit_pins">לערוך נעצים</string>
+    <string name="dialog_post_autosave_body_for_page">ביצעת שינויים שלא נשמרו בעמוד הזה ממכשיר שונה. יש לבחור את הגרסה של העמוד שברצונך לשמור.</string>
+    <string name="dialog_post_autosave_body">ביצעת שינויים שלא נשמרו בפוסט הזה ממכשיר שונה. יש לבחור את הגרסה של הפוסט שברצונך לשמור.</string>
+    <string name="dialog_post_autosave_title">שמירה אוטומטית זמינה</string>
+    <string name="dialog_post_conflict_another_device">מכשיר אחר</string>
+    <string name="dialog_post_conflict_current_device">מכשיר נוכחי</string>
+    <string name="dialog_post_conflict_body_for_page">בוצעו בעמוד שינויים ממכשיר אחר. יש לבחור את הגרסה של העמוד שברצונך לשמור.</string>
+    <string name="dialog_post_conflict_body">בוצעו בפוסט שינויים ממכשיר אחר. יש לבחור את הגרסה של הפוסט שברצונך לשמור.</string>
+    <string name="dialog_post_conflict_title">לפתור התנגשות</string>
     <string name="reader_preferences_font_size_extra_large">גדול מאוד</string>
     <string name="reader_preferences_font_size_large">גדול</string>
     <string name="reader_preferences_font_size_normal">רגיל</string>
@@ -41,8 +58,6 @@ Language: he_IL
     <string name="gutenberg_native_copy_error_details">הפרטים של שגיאת ההעתקה</string>
     <string name="gutenberg_native_button_to_copy_post_text">כפתור להעתקת הטקסט של הפוסט</string>
     <string name="gutenberg_native_button_to_copy_error_details">כפתור להעתקה של פרטי השגיאה</string>
-    <string name="editor_updating_post_failed">עדכון התוכן של הפוסט נכשל</string>
-    <string name="editor_updating_post">מעדכן את תוכן הפוסט</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
     <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>
@@ -3465,7 +3480,7 @@ Language: he_IL
     <string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
     <string name="site_picker_create_wpcom">יצירת אתר וורדפרס.קום</string>
     <string name="site_picker_add_self_hosted">הוספת אתר באחסון עצמי</string>
-    <string name="site_picker_add_site">הוספת אתר חדש</string>
+    <string name="site_picker_add_a_site">להוסיף אתר</string>
     <string name="site_picker_edit_visibility">הצגת/הסתרת אתרים</string>
     <string name="site_picker_title">בחירת אתר</string>
     <string name="my_site_btn_view_site">הצגת אתר</string>

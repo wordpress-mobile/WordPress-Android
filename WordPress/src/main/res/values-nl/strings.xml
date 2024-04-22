@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-08 17:20:36+0000
+Translation-Revision-Date: 2024-04-15 19:07:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Afgelopen week had je %1$s weergaven en 1 reactie</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Afgelopen week had je %1$s weergaven en 1 vind-ik-leuk</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Afgelopen week had je %1$s weergaven, 1 vind-ik-leuk en 1 reactie.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Afgelopen week had je %1$s weergaven, %2$s vind-ik-leuks en 1 reactie.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Vorige week had je %1$s weergaven, 1 vind-ik-leuk en %2$s reacties.</string>
+    <string name="site_picker_recent_sites">Recente sites</string>
+    <string name="site_picker_all_sites">Alle sites</string>
+    <string name="site_picker_pinned_sites">Vastgezette sites</string>
+    <string name="site_picker_edit_pins">Bewerk pins</string>
+    <string name="dialog_post_autosave_body_for_page">Je hebt niet-opgeslagen wijzigingen aangebracht in dit bericht vanaf een ander apparaat. Selecteer de versie van het bericht dat je wil behouden.</string>
+    <string name="dialog_post_autosave_body">Je hebt niet-opgeslagen wijzigingen aangebracht in dit bericht vanaf een ander apparaat. Selecteer de versie van het bericht die je wil behouden.</string>
+    <string name="dialog_post_autosave_title">Automatisch opslaan beschikbaar</string>
+    <string name="dialog_post_conflict_another_device">Een ander apparaat</string>
+    <string name="dialog_post_conflict_current_device">Huidig apparaat</string>
+    <string name="dialog_post_conflict_body_for_page">De pagina is aangepast op een ander apparaat. Selecteer de versie van de pagina die je wil behouden.</string>
+    <string name="dialog_post_conflict_body">Het bericht is aangepast op een ander apparaat. Selecteer de versie van het bericht dat je wil behouden.</string>
+    <string name="dialog_post_conflict_title">Conflict oplossen</string>
     <string name="reader_preferences_font_size_extra_large">Extra groot</string>
     <string name="reader_preferences_font_size_large">Groot</string>
     <string name="reader_preferences_font_size_normal">Normaal</string>
@@ -42,8 +59,6 @@ Language: nl
     <string name="gutenberg_native_copy_error_details">Foutdetails kopiëren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knop om berichttekst te kopiëren</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knop om foutdetails te kopiëren</string>
-    <string name="editor_updating_post_failed">Fout bij het bijwerken van berichtcontent.</string>
-    <string name="editor_updating_post">Berichtcontent updaten</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videobijschrift. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videobijschrift. Leeg</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bewerken</string>
@@ -3478,7 +3493,7 @@ Language: nl
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="site_picker_create_wpcom">WordPress.com site maken</string>
     <string name="site_picker_add_self_hosted">Een zelf-gehoste site toevoegen</string>
-    <string name="site_picker_add_site">Voeg nieuwe site toe</string>
+    <string name="site_picker_add_a_site">Voeg een site toe</string>
     <string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
     <string name="site_picker_title">Site kiezen</string>
     <string name="my_site_btn_view_site">Bekijk site</string>

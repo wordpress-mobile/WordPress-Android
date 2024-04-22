@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 18:54:08+0000
+Translation-Revision-Date: 2024-04-17 18:54:10+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">За последнюю неделю вы получили: просмотров — %1$s, комментариев — 1</string>
+    <string name="weekly_roundup_notification_text_views_and_like">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1, комментариев — 1.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — %2$s, комментариев — 1.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1, комментариев — %2$s.</string>
+    <string name="site_picker_recent_sites">Последние сайты</string>
+    <string name="site_picker_all_sites">Все сайты</string>
+    <string name="site_picker_pinned_sites">Закреплённые сайты</string>
+    <string name="site_picker_edit_pins">Изменить закрепление</string>
+    <string name="dialog_post_autosave_body_for_page">Вы внесли изменения на эту страницу с другого устройства, но не сохранили их. Выберите, какую версию страницы вы хотите сохранить.</string>
+    <string name="dialog_post_autosave_body">Вы внесли изменения в эту запись с другого устройства, но не сохранили их. Выберите, какую версию записи вы хотите сохранить.</string>
+    <string name="dialog_post_autosave_title">Доступно автоматическое сохранение</string>
+    <string name="dialog_post_conflict_another_device">Другое устройство</string>
+    <string name="dialog_post_conflict_current_device">Текущее устройство</string>
+    <string name="dialog_post_conflict_body_for_page">Страница была изменена на другом устройстве. Выберите, какую версию страницы вы хотите сохранить.</string>
+    <string name="dialog_post_conflict_body">Запись была изменена на другом устройстве. Выберите, какую версию записи вы хотите сохранить.</string>
+    <string name="dialog_post_conflict_title">Устранить конфликт</string>
+    <string name="reader_preferences_font_size_extra_large">Очень крупный</string>
+    <string name="reader_preferences_font_size_large">Крупный</string>
+    <string name="reader_preferences_font_size_normal">Обычный</string>
+    <string name="reader_preferences_font_size_small">Мелкий</string>
+    <string name="reader_preferences_font_size_extra_small">Очень мелкий</string>
+    <string name="reader_preferences_screen_font_size_label">Размер шрифта</string>
+    <string name="reader_preferences_screen_font_family_label">Шрифт</string>
+    <string name="reader_preferences_screen_theme_label">Цветовая схема</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">отправить отзыв</string>
     <string name="gutenberg_native_clear_selected_color">Очистить выбранный цвет</string>
     <string name="reader_no_followed_tags_text_title">Нет подписок на метки</string>
     <string name="reader_toast_err_tag_already_following">Вы уже подписаны на эту метку</string>
@@ -31,8 +57,6 @@ Language: ru
     <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
     <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
     <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
-    <string name="editor_updating_post_failed">Не удалось обновить содержимое записи</string>
-    <string name="editor_updating_post">Обновление содержимого записи</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>
@@ -3467,7 +3491,7 @@ Language: ru
     <string name="site_picker_cant_hide_current_site">\"%s\" не был скрыт, так как это текущий сайт.</string>
     <string name="site_picker_create_wpcom">Создать сайт на WordPress.com</string>
     <string name="site_picker_add_self_hosted">Добавить автономный веб-сайт</string>
-    <string name="site_picker_add_site">Добавить веб-сайт</string>
+    <string name="site_picker_add_a_site">Добавить сайт</string>
     <string name="site_picker_edit_visibility">Показать/скрыть веб-сайты</string>
     <string name="site_picker_title">Выбрать сайт</string>
     <string name="my_site_btn_view_site">Просмотреть веб-сайт</string>

@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-12 07:32:16+0000
+Translation-Revision-Date: 2024-04-18 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">上週你有 %1$s 個瀏覽次數和 1 則留言</string>
+    <string name="weekly_roundup_notification_text_views_and_like">上週你有 %1$s 個瀏覽次數和 1 個讚</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">上週你有 %1$s 個瀏覽次數、1 個讚和 1 則留言。</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">上週你有 %1$s 個瀏覽次數、%2$s 個讚和 1 則留言。</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">上週你有 %1$s 個瀏覽次數、1 個讚、%2$s 則留言。</string>
+    <string name="site_picker_recent_sites">近期網站</string>
+    <string name="site_picker_all_sites">所有網站</string>
+    <string name="site_picker_pinned_sites">已釘選的網站</string>
+    <string name="site_picker_edit_pins">編輯釘選</string>
+    <string name="dialog_post_autosave_body_for_page">這個頁面在不同裝置有未儲存的變更。 請選取要保存的頁面版本。</string>
+    <string name="dialog_post_autosave_body">這篇文章在不同裝置有未儲存的變更。 請選取要保存的文章版本。</string>
+    <string name="dialog_post_autosave_title">可使用自動儲存</string>
+    <string name="dialog_post_conflict_another_device">其他裝置</string>
+    <string name="dialog_post_conflict_current_device">目前裝置</string>
+    <string name="dialog_post_conflict_body_for_page">此頁面已在其他裝置修改。 請選取要保存的頁面版本。</string>
+    <string name="dialog_post_conflict_body">此文章已在其他裝置修改。 請選取要保存的文章版本。</string>
+    <string name="dialog_post_conflict_title">解決衝突</string>
     <string name="reader_preferences_font_size_extra_large">超大</string>
     <string name="reader_preferences_font_size_large">大</string>
     <string name="reader_preferences_font_size_normal">一般</string>
@@ -41,8 +58,6 @@ Language: zh_TW
     <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
     <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
     <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
-    <string name="editor_updating_post_failed">無法更新文章內容</string>
-    <string name="editor_updating_post">正在更新文章內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
@@ -3465,7 +3480,6 @@ Language: zh_TW
     <string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
     <string name="site_picker_create_wpcom">建立 WordPress.com 網站</string>
     <string name="site_picker_add_self_hosted">新增自助託管的網站</string>
-    <string name="site_picker_add_site">新增網站</string>
     <string name="site_picker_edit_visibility">顯示/隱藏網站</string>
     <string name="site_picker_title">選擇網站</string>
     <string name="my_site_btn_view_site">檢視網站</string>

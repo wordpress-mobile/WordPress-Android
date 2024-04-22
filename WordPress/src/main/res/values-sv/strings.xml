@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-10 09:33:40+0000
+Translation-Revision-Date: 2024-04-17 12:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Förra veckan hade du %1$s visningar och 1 kommentar</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Förra veckan hade du %1$s visningar och 1 gillamarkering</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Förra veckan hade du %1$s visningar, 1 gillamarkering och 1 kommentar.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Förra veckan hade du %1$s visningar, %2$s gillamarkeringar och 1 kommentar.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Förra veckan hade du %1$s visningar, 1 gillamarkering och %2$s kommentarer.</string>
+    <string name="site_picker_recent_sites">Senaste webbplatser</string>
+    <string name="site_picker_all_sites">Alla webbplatser</string>
+    <string name="site_picker_pinned_sites">Fastnålade webbplatser</string>
+    <string name="site_picker_edit_pins">Redigera fastnålade webbplatser</string>
+    <string name="dialog_post_autosave_body_for_page">Du har osparade ändringar på den här sidan som har gjorts med en annan enhet. Välj vilken version av sidan du vill behålla.</string>
+    <string name="dialog_post_autosave_body">Du har osparade ändringar i det här inlägget som har gjorts med en annan enhet. Välj vilken version av inlägget du vill behålla.</string>
+    <string name="dialog_post_autosave_title">Autosparning tillgänglig</string>
+    <string name="dialog_post_conflict_another_device">En annan enhet</string>
+    <string name="dialog_post_conflict_current_device">Nuvarande enhet</string>
+    <string name="dialog_post_conflict_body_for_page">Sidan har ändrats på en annan enhet. Välj vilken version av sidan du vill behålla.</string>
+    <string name="dialog_post_conflict_body">Inlägget har ändrats på en annan enhet. Välj vilken version av inlägget du vill behålla.</string>
+    <string name="dialog_post_conflict_title">Lös konflikt</string>
     <string name="reader_preferences_font_size_extra_large">Extra stor</string>
     <string name="reader_preferences_font_size_large">Stor</string>
     <string name="reader_preferences_font_size_normal">Normal</string>
@@ -42,8 +59,6 @@ Language: sv_SE
     <string name="gutenberg_native_copy_error_details">Kopiera felinformation</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knapp för att kopiera inläggstext</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knapp för att kopiera felinformation</string>
-    <string name="editor_updating_post_failed">Uppdatering av inläggsinnehållet misslyckades</string>
-    <string name="editor_updating_post">Inläggsinnehållet uppdateras</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
     <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>
@@ -3478,7 +3493,7 @@ Language: sv_SE
     <string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
     <string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>
     <string name="site_picker_add_self_hosted">Lägg till webbplats på egen server</string>
-    <string name="site_picker_add_site">Lägg till ny webbplats</string>
+    <string name="site_picker_add_a_site">Lägg till en webbplats</string>
     <string name="site_picker_edit_visibility">Visa/dölj webbplatser</string>
     <string name="site_picker_title">Välj webbplats</string>
     <string name="my_site_btn_view_site">Visa webbplats</string>

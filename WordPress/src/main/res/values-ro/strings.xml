@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-08 20:30:23+0000
+Translation-Revision-Date: 2024-04-16 10:08:02+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Săptămâna trecută ai avut %1$s vizualizări și 1 comentariu</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Săptămâna trecută ai avut %1$s vizualizări și o apreciere</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Săptămâna trecută ai avut %1$s vizualizări, o apreciere și 1 comentariu.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Săptămâna trecută ai avut %1$s vizualizări, %2$s aprecieri și 1 comentariu.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Săptămâna trecută ai avut %1$s vizualizări, o apreciere și %2$s comentarii.</string>
+    <string name="site_picker_recent_sites">Site-uri recente</string>
+    <string name="site_picker_all_sites">Toate site-urile</string>
+    <string name="site_picker_pinned_sites">Site-uri fixate</string>
+    <string name="site_picker_edit_pins">Editează fixările</string>
+    <string name="dialog_post_autosave_body_for_page">Ai făcut modificări la această pagină de pe un alt dispozitiv și nu le-ai salvat. Te rog să selectezi versiunea pe care vrei să o păstrezi pentru această pagină.</string>
+    <string name="dialog_post_autosave_body">Ai făcut modificări la acest articol de pe un alt dispozitiv și nu le-ai salvat. Te rog să selectezi versiunea pe care vrei să o păstrezi pentru acest articol.</string>
+    <string name="dialog_post_autosave_title">Salvarea automată este disponibilă</string>
+    <string name="dialog_post_conflict_another_device">Un alt dispozitiv</string>
+    <string name="dialog_post_conflict_current_device">Dispozitivul curent</string>
+    <string name="dialog_post_conflict_body_for_page">Pagina a fost modificată pe un alt dispozitiv. Te rog să selectezi versiunea pe care vrei să o păstrezi pentru această pagină.</string>
+    <string name="dialog_post_conflict_body">Articolul a fost modificat pe un alt dispozitiv. Te rog să selectezi versiunea pe care vrei să o păstrezi pentru acest articol.</string>
+    <string name="dialog_post_conflict_title">Rezolvă conflictul</string>
     <string name="reader_preferences_font_size_extra_large">Foarte mare</string>
     <string name="reader_preferences_font_size_large">Mare</string>
     <string name="reader_preferences_font_size_normal">Normal</string>
@@ -14,7 +31,7 @@ Language: ro
     <string name="reader_preferences_screen_font_size_label">Dimensiune font</string>
     <string name="reader_preferences_screen_font_family_label">Font</string>
     <string name="reader_preferences_screen_theme_label">Schemă de culori</string>
-    <string name="reader_preferences_screen_preview_text_feedback_label">trimite impresiile</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">trimite impresii</string>
     <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Șterge culoarea selectată</string>
     <string name="reader_no_followed_tags_text_title">Nicio etichetă urmărită</string>
@@ -28,7 +45,7 @@ Language: ro
     <string name="reader_preferences_theme_sepia">Sepia</string>
     <string name="reader_preferences_theme_soft">Delicat</string>
     <string name="reader_preferences_theme_system">Implicită</string>
-    <string name="reader_preferences_screen_preview_text_feedback_link">trimite impresiile</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">trimite impresii</string>
     <string name="reader_preferences_screen_preview_text_feedback">Aceasta este o funcționalitate nouă, încă în dezvoltare. Pentru a ne ajuta să o îmbunătățim %s.</string>
     <string name="reader_preferences_screen_preview_text">Alegi culorile, fonturile și dimensiunile. După ce ai terminat, previzualizezi aici ce ai selectat și citești articolele în stilul tău.</string>
     <string name="reader_preferences_screen_preview_title">Preferințe pentru citire</string>
@@ -42,8 +59,6 @@ Language: ro
     <string name="gutenberg_native_copy_error_details">Copiază detaliile despre erori</string>
     <string name="gutenberg_native_button_to_copy_post_text">Buton pentru a copia textul articolului</string>
     <string name="gutenberg_native_button_to_copy_error_details">Buton pentru a copia detaliile despre erori</string>
-    <string name="editor_updating_post_failed">Actualizarea conținutul articolului a eșuat</string>
-    <string name="editor_updating_post">Actualizez conținutul articolului</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Subtitrare video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editează videoul</string>
@@ -3373,8 +3388,8 @@ Language: ro
     <string name="site_settings_sort_by_title">Sortează după</string>
     <string name="site_settings_account_required_title">Utilizatorii trebuie să fie autentificați</string>
     <string name="site_settings_identity_required_title">Trebuie să includă nume și email</string>
-    <string name="site_settings_receive_pingbacks_title">Primește pingback-uri</string>
-    <string name="site_settings_send_pingbacks_title">Trimite pingback-uri</string>
+    <string name="site_settings_receive_pingbacks_title">Primești pingback-uri</string>
+    <string name="site_settings_send_pingbacks_title">Trimiți pingback-uri</string>
     <string name="site_settings_allow_comments_title">Permite comentarii</string>
     <string name="site_settings_default_format_title">Format implicit</string>
     <string name="site_settings_default_category_title">Categorie implicită</string>
@@ -3478,7 +3493,7 @@ Language: ro
     <string name="site_picker_cant_hide_current_site">„%s” n-a fost ascuns pentru că este site-ul curent</string>
     <string name="site_picker_create_wpcom">Creează un site WordPress.com</string>
     <string name="site_picker_add_self_hosted">Adaugă site auto-găzduit</string>
-    <string name="site_picker_add_site">Adaugă site nou</string>
+    <string name="site_picker_add_a_site">Adaugă un site</string>
     <string name="site_picker_edit_visibility">Arată/ascunde site-uri</string>
     <string name="site_picker_title">Alege site</string>
     <string name="my_site_btn_view_site">Vezi site-ul</string>

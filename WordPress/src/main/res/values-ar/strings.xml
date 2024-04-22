@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-12 07:31:58+0000
+Translation-Revision-Date: 2024-04-17 18:54:10+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وتعليق واحد</string>
+    <string name="weekly_roundup_notification_text_views_and_like">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد وتعليق واحد.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من الإعجابات وتعليق واحد.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد و⁦%2$s⁩ من التعليقات.</string>
+    <string name="site_picker_pinned_sites">المواقع المثبَّتة</string>
+    <string name="site_picker_edit_pins">تحرير الدبابيس</string>
+    <string name="dialog_post_autosave_body_for_page">لقد أجريت تغييرات غير محفوظة على هذه الصفحة من جهاز مختلف. يرجى تحديد إصدار الصفحة المطلوب الحفاظ عليه.</string>
+    <string name="dialog_post_autosave_body">لقد أجريت تغييرات غير محفوظة على هذه التدوينة من جهاز مختلف. يرجى تحديد إصدار التدوينة المطلوب الحفاظ عليه.</string>
+    <string name="dialog_post_conflict_another_device">جهاز آخر</string>
+    <string name="dialog_post_conflict_current_device">جهاز حالي</string>
+    <string name="dialog_post_conflict_body_for_page">تم تعديل الصفحة على جهاز آخر. يرجى تحديد إصدار الصفحة المطلوب الحفاظ عليه.</string>
+    <string name="dialog_post_conflict_body">تم تعديل التدوينة على جهاز آخر. يرجى تحديد إصدار التدوينة المطلوب الحفاظ عليه.</string>
+    <string name="dialog_post_conflict_title">حل التعارض</string>
     <string name="reader_preferences_font_size_extra_large">كبير جداً</string>
     <string name="reader_preferences_font_size_large">كبير</string>
     <string name="reader_preferences_font_size_normal">عادي</string>
@@ -39,8 +53,6 @@ Language: ar
     <string name="gutenberg_native_copy_error_details">نسخ تفاصيل الخطأ</string>
     <string name="gutenberg_native_button_to_copy_post_text">زر نسخ نص التدوينة</string>
     <string name="gutenberg_native_button_to_copy_error_details">زر نسخ تفاصيل الخطأ</string>
-    <string name="editor_updating_post_failed">فشل تحديث محتوى التدوينة</string>
-    <string name="editor_updating_post">تحديث محتوى التدوينة</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">تسمية الفيديو. فارغ</string>
     <string name="gutenberg_native_edit_video_024aee6d">تحرير الفيديو</string>
@@ -3463,7 +3475,7 @@ Language: ar
     <string name="site_picker_create_wpcom">إنشاء موقع WordPress.com</string>
     <string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>
     <string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
-    <string name="site_picker_add_site">إضافة موقع جديد</string>
+    <string name="site_picker_add_a_site">إضافة موقع</string>
     <string name="my_site_btn_view_admin">عرض المسؤول</string>
     <string name="site_picker_title">إختر الموقع</string>
     <string name="my_site_btn_switch_site">تبديل الموقع</string>

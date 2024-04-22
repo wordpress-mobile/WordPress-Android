@@ -411,6 +411,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Inject lateinit var editorJetpackSocialViewModel: EditorJetpackSocialViewModel
 
     private lateinit var siteModel: SiteModel
+
     private var siteSettings: SiteSettingsInterface? = null
     private var isJetpackSsoEnabled: Boolean = false
     private var networkErrorOnLastMediaFetchAttempt: Boolean = false
@@ -501,7 +502,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.new_edit_post_activity)
-
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 handleBackPressed()
@@ -512,8 +512,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
         createEditShareMessageActivityResultLauncher()
 
-        // Initialize siteModel based on intent or savedInstanceState
-        initializeSiteModelAndFinishIfNeeded(savedInstanceState)
+        if (!initializeSiteModel(savedInstanceState)) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
+            finish()
+            return
+        }
 
         isLandingEditor = intent.extras?.getBoolean(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR) ?: false
 
@@ -598,8 +601,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
-    private fun initializeSiteModelAndFinishIfNeeded(savedInstanceState: Bundle?) {
-        // Set siteModel only once
+    private fun initializeSiteModel(savedInstanceState: Bundle?): Boolean {
+        // Initialize siteModel based on intent or savedInstanceState and set it only once
         val tempSiteModel = if (savedInstanceState == null) {
             val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel?
             val siteFromQuickPressBlogId = getSiteModelForExtraQuickPressBlogIdIfRequested(intent.extras)
@@ -607,12 +610,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
-        tempSiteModel?.let { siteModel = tempSiteModel }?: run {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT)
-            finish()
-            return
-        }
+        tempSiteModel?.let { siteModel = it }?: return false
+
+        return true
     }
+
     private fun isActionSendOrNewMedia(action: String?): Boolean {
         return action == Intent.ACTION_SEND || action == Intent.ACTION_SEND_MULTIPLE || action == NEW_MEDIA_POST
     }
@@ -903,8 +905,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     // SiteSettingsListener
-    override fun onSaveError(error: Exception) { /* No Op */ }
-    override fun onFetchError(error: Exception) { /* No Op */ }
+    override fun onSaveError(error: Exception?) { /* No Op */ }
+    override fun onFetchError(error: Exception?) { /* No Op */ }
     override fun onSettingsUpdated() {
         // Let's hold the value in local variable as listener is too noisy
         val isJetpackSsoEnabled = siteModel.isJetpackConnected && siteSettings?.isJetpackSsoEnabled == true
@@ -919,7 +921,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onSettingsSaved() { /* No Op */ }
-    override fun onCredentialsValidated(error: Exception) { /* No Op */ }
+    override fun onCredentialsValidated(error: Exception?) { /* No Op */ }
     private fun setupViewPager() {
         // Set up the ViewPager with the sections adapter.
         viewPager = findViewById(R.id.pager)
@@ -1059,7 +1061,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             } else {
                 ToastUtils.showToast(
                     this@EditPostActivity,
-                    getString(R.string.editor_updating_post_failed),
+                    getString(R.string.editor_updating_content_failed),
                     ToastUtils.Duration.SHORT
                 )
             }

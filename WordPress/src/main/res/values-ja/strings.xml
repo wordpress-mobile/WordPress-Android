@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-12 07:32:25+0000
+Translation-Revision-Date: 2024-04-17 10:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">先週、%1$s件の表示と1件のコメントがありました</string>
+    <string name="weekly_roundup_notification_text_views_and_like">先週、%1$s件の表示と1件の「いいね」がありました</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">先週、%1$s件の表示、1件の「いいね」、1件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">先週、%1$s件の表示、%2$s件の「いいね」、1件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">先週、%1$s件の表示、1件の「いいね」、%2$s件のコメントがありました。</string>
+    <string name="site_picker_recent_sites">最近のサイト</string>
+    <string name="site_picker_all_sites">すべてのサイト</string>
+    <string name="site_picker_pinned_sites">固定済みサイト</string>
+    <string name="site_picker_edit_pins">固定を編集</string>
+    <string name="dialog_post_autosave_body_for_page">別のデバイスからこのページに加えられた未保存の変更があります。 保持するページのバージョンを選択してください。</string>
+    <string name="dialog_post_autosave_body">別のデバイスからこの投稿に加えられた未保存の変更があります。 保持する投稿のバージョンを選択してください。</string>
+    <string name="dialog_post_autosave_title">自動保存が利用可能</string>
+    <string name="dialog_post_conflict_another_device">別のデバイス</string>
+    <string name="dialog_post_conflict_current_device">現在のデバイス</string>
+    <string name="dialog_post_conflict_body_for_page">ページが別のデバイスで編集されました。 保持するページのバージョンを選択してください。</string>
+    <string name="dialog_post_conflict_body">投稿が別のデバイスで編集されました。 保持する投稿のバージョンを選択してください。</string>
+    <string name="dialog_post_conflict_title">競合を解決</string>
     <string name="reader_preferences_font_size_extra_large">特大</string>
     <string name="reader_preferences_font_size_large">大</string>
     <string name="reader_preferences_font_size_normal">通常</string>
@@ -37,8 +54,6 @@ Language: ja_JP
     <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
     <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
     <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
-    <string name="editor_updating_post_failed">投稿コンテンツの更新に失敗しました。</string>
-    <string name="editor_updating_post">投稿コンテンツを更新しています</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
@@ -3467,7 +3482,7 @@ Language: ja_JP
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="site_picker_create_wpcom">WordPress.com サイトを作成</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>
-    <string name="site_picker_add_site">新規サイトを追加</string>
+    <string name="site_picker_add_a_site">サイトを追加</string>
     <string name="site_picker_edit_visibility">サイトを表示/非表示</string>
     <string name="site_picker_title">サイトを選択</string>
     <string name="my_site_btn_view_site">サイトを表示</string>

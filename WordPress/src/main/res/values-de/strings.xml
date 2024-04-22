@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 17:33:40+0000
+Translation-Revision-Date: 2024-04-16 07:37:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Letzte Woche hattest du %1$s Aufrufe und 1 Kommentar</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Letzte Woche hattest du %1$s Aufrufe und 1 Like</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Letzte Woche hattest du %1$s Aufrufe, 1 Like und 1 Kommentar.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Letzte Woche hattest du %1$s Aufrufe, %2$s Likes und 1 Kommentar.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Letzte Woche hattest du %1$s Aufrufe, 1 Like und %2$s Kommentare.</string>
+    <string name="site_picker_recent_sites">Kürzlich aufgerufene Websites</string>
+    <string name="site_picker_all_sites">Alle Websites</string>
+    <string name="site_picker_pinned_sites">Angeheftete Websites</string>
+    <string name="site_picker_edit_pins">Pins bearbeiten</string>
+    <string name="dialog_post_autosave_body_for_page">Du hast von einem anderen Gerät aus ungespeicherte Änderungen an dieser Seite vorgenommen. Bitte wähle die Version der Seite aus, die du behalten möchtest.</string>
+    <string name="dialog_post_autosave_body">Du hast von einem anderen Gerät aus ungespeicherte Änderungen an diesem Beitrag vorgenommen. Bitte wähle die Version des Beitrags aus, die du behalten möchtest.</string>
+    <string name="dialog_post_autosave_title">Automatische Speicherung verfügbar</string>
+    <string name="dialog_post_conflict_another_device">Ein anderes Gerät</string>
+    <string name="dialog_post_conflict_current_device">Aktuelles Gerät</string>
+    <string name="dialog_post_conflict_body_for_page">Die Seite wurde auf einem anderen Gerät geändert. Bitte wähle die Version der Seite aus, die du behalten möchtest.</string>
+    <string name="dialog_post_conflict_body">Der Beitrag wurde auf einem anderen Gerät geändert. Bitte wähle die Version des Beitrags aus, die du behalten möchtest.</string>
+    <string name="dialog_post_conflict_title">Konflikt auflösen</string>
     <string name="reader_preferences_font_size_extra_large">Sehr groß</string>
     <string name="reader_preferences_font_size_large">Groß</string>
     <string name="reader_preferences_font_size_normal">Normal</string>
@@ -42,8 +59,6 @@ Language: de
     <string name="gutenberg_native_copy_error_details">Fehlerdetails kopieren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Button zum Kopieren des Beitragstexts</string>
     <string name="gutenberg_native_button_to_copy_error_details">Button zum Kopieren von Fehlerdetails</string>
-    <string name="editor_updating_post_failed">Das Aktualisieren des Beitragsinhalts ist fehlgeschlagen</string>
-    <string name="editor_updating_post">Beitragsinhalt aktualisieren</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videountertitel. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videountertitel. Leer</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bearbeiten</string>
@@ -3478,7 +3493,7 @@ Language: de
     <string name="site_picker_cant_hide_current_site">„%s“ wurde nicht ausgeblendet, denn es ist die aktuelle Website</string>
     <string name="site_picker_create_wpcom">WordPress.com-Website erstellen</string>
     <string name="site_picker_add_self_hosted">Selbst gehostete Website hinzufügen</string>
-    <string name="site_picker_add_site">Website hinzufügen</string>
+    <string name="site_picker_add_a_site">Eine Website hinzufügen</string>
     <string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
     <string name="site_picker_title">Website auswählen</string>
     <string name="my_site_btn_view_site">Website ansehen</string>

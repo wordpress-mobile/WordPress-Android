@@ -965,7 +965,6 @@ Language: el_GR
     <string name="account_settings">Ρυθμίσεις Λογαριασμού</string>
     <string name="site_picker_cant_hide_current_site">Το \"%s\" δεν κρύφτηκε επειδή είναι ο τρέχων ιστότοπος</string>
     <string name="site_picker_create_wpcom">Δημιουργία WordPress.com ιστότοπου</string>
-    <string name="site_picker_add_site">Προσθήκη ιστότοπου</string>
     <string name="site_picker_edit_visibility">Εμφάνιση/απόκρυψη ιστότοπων</string>
     <string name="site_picker_add_self_hosted">Προσθήκη αυτο-φιλοξενούμενου ιστότοπου</string>
     <string name="my_site_btn_view_site">Προβολή ιστότοπου</string>

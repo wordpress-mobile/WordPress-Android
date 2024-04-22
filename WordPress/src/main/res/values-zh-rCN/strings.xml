@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-09 11:54:08+0000
+Translation-Revision-Date: 2024-04-18 11:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">上周共计 %1$s 次查看和 1 条评论</string>
+    <string name="weekly_roundup_notification_text_views_and_like">上周共计 %1$s 次查看和 1 个赞</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">上周共计 %1$s 次查看、1 个赞和 1 条评论。</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">上周共计 %1$s 次查看、%2$s 个赞和 1 条评论。</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">上周共计 %1$s 次查看、1 个赞和 %2$s 条评论。</string>
+    <string name="site_picker_recent_sites">最近访问的站点</string>
+    <string name="site_picker_all_sites">所有站点</string>
+    <string name="site_picker_pinned_sites">固定站点</string>
+    <string name="site_picker_edit_pins">编辑固定项</string>
+    <string name="dialog_post_autosave_body_for_page">您在其他设备上对该页面进行的更改未保存。 请选择要保留的页面版本。</string>
+    <string name="dialog_post_autosave_body">您在其他设备上对该文章进行的更改未保存。 请选择要保留的文章版本。</string>
+    <string name="dialog_post_autosave_title">支持自动保存</string>
+    <string name="dialog_post_conflict_another_device">其他设备</string>
+    <string name="dialog_post_conflict_current_device">当前设备</string>
+    <string name="dialog_post_conflict_body_for_page">在其他设备上修改过该页面。 请选择要保留的页面版本。</string>
+    <string name="dialog_post_conflict_body">在其他设备上修改过此文章。 请选择要保留的文章版本。</string>
+    <string name="dialog_post_conflict_title">解决冲突</string>
+    <string name="reader_preferences_font_size_extra_large">超大</string>
+    <string name="reader_preferences_font_size_large">大</string>
+    <string name="reader_preferences_font_size_normal">常规</string>
+    <string name="reader_preferences_font_size_small">小</string>
+    <string name="reader_preferences_font_size_extra_small">极小</string>
+    <string name="reader_preferences_screen_font_size_label">字体大小</string>
+    <string name="reader_preferences_screen_font_family_label">字体</string>
+    <string name="reader_preferences_screen_theme_label">配色方案</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">发送您的反馈</string>
     <string name="gutenberg_native_clear_selected_color">清除选定的颜色</string>
     <string name="reader_no_followed_tags_text_title">无关注的标签</string>
     <string name="reader_toast_err_tag_already_following">您已关注此标签</string>
@@ -30,8 +56,6 @@ Language: zh_CN
     <string name="gutenberg_native_copy_error_details">复制错误详情</string>
     <string name="gutenberg_native_button_to_copy_post_text">点击此按钮即可复制文章文本</string>
     <string name="gutenberg_native_button_to_copy_error_details">点击此按钮即可复制错误详情</string>
-    <string name="editor_updating_post_failed">更新文章内容失败</string>
-    <string name="editor_updating_post">正在更新文章内容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">视频说明。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">视频说明。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">编辑视频</string>
@@ -3454,7 +3478,7 @@ Language: zh_CN
     <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
     <string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>
     <string name="site_picker_add_self_hosted">添加自托管站点</string>
-    <string name="site_picker_add_site">添加新站点</string>
+    <string name="site_picker_add_a_site">添加站点</string>
     <string name="site_picker_edit_visibility">显示/隐藏站点</string>
     <string name="site_picker_title">选择站点</string>
     <string name="my_site_btn_view_site">查看站点</string>
