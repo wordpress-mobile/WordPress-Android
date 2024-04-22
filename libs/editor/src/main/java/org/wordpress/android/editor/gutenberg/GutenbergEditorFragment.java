@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -200,6 +201,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @SuppressWarnings("unchecked")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.i("GutenbergEditorFragment", "***=> onCreate");
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
@@ -239,6 +241,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("GutenbergEditorFragment", "***=> onCreateView");
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         initializeSavingProgressDialog();
@@ -752,6 +755,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override public void onResume() {
+        Log.i("GutenbergEditorFragment", "***=> onResume");
         super.onResume();
 
         setEditorProgressBarVisibility(!mEditorDidMount);
@@ -968,6 +972,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onAttach(Activity activity) {
+        Log.i("GutenbergEditorFragment", "***=> onAttach");
         super.onAttach(activity);
 
         try {
@@ -991,6 +996,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        Log.i("GutenbergEditorFragment", "***=> onSaveInstanceState");
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
         outState.putString(ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH, mExternallyEditedBlockOriginalHash);
@@ -1147,7 +1153,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentNotAddedException {
+        Log.i("GutenbergEditorFragment", "***=> getTitleAndContent");
         if (!isAdded()) {
+            Log.i("GutenbergEditorFragment", "***=> getTitleAndContent THROW EXCEPTION");
             throw new EditorFragmentNotAddedException();
         }
         return getGutenbergContainerFragment().getTitleAndContent(originalContent, new OnGetContentInterrupted() {
@@ -1346,6 +1354,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onDestroy() {
+        Log.i("GutenbergEditorFragment", "***=> onDestroy");
         hideSavingProgressDialog();
         super.onDestroy();
     }

@@ -39,6 +39,7 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.LiveData
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.automattic.android.tracks.crashlogging.CrashLogging
@@ -770,16 +771,26 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 initializePostObject()
             }
 
-            (supportFragmentManager.getFragment(
-                state,
-                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
-            ) as EditorFragmentAbstract?)?.let { frag ->
-                Log.i(javaClass.simpleName, "***=> We have a frag $frag")
-                editorFragment = frag
-                if (frag is EditorMediaUploadListener) {
-                    editorMediaUploadListener = frag
+            val possibleFragment = supportFragmentManager.getFragment(state, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT)
+            if (possibleFragment != null) {
+                Log.i(javaClass.simpleName, "***=> Retrieved a fragment using STATE_KEY_EDITOR_FRAGMENT key")
+                editorFragment = possibleFragment as EditorFragmentAbstract
+                if (possibleFragment is EditorMediaUploadListener) {
+                    editorMediaUploadListener = possibleFragment
                 }
             }
+
+            //. todo: annmarie this was the original code
+//            (supportFragmentManager.getFragment(
+//                state,
+//                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
+//            ) as EditorFragmentAbstract?)?.let { frag ->
+//                Log.i(javaClass.simpleName, "***=> We have a frag $frag")
+//                editorFragment = frag
+//                if (frag is EditorMediaUploadListener) {
+//                    editorMediaUploadListener = frag
+//                }
+//            }
         }
     }
 
@@ -2399,8 +2410,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
+
+    //
     inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) :
-        FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        // FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
