@@ -66,8 +66,8 @@ fun StatsSection.toStatsGranularity(): StatsGranularity? {
 }
 
 fun StatsGranularity.toNameResource() = when {
-    this == DAYS -> R.string.stats_timeframe_by_day
-    this == WEEKS -> R.string.stats_timeframe_by_week
-    this == MONTHS -> R.string.stats_timeframe_by_month
-    else -> R.string.stats_timeframe_by_year
+    this == DAYS -> R.string.stats_timeframe_days
+    this == WEEKS -> R.string.stats_timeframe_weeks
+    this == MONTHS -> R.string.stats_timeframe_months
+    else -> R.string.stats_timeframe_years
 }

@@ -62,7 +62,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.traffic.TrafficOverviewUseCase.TrafficOverviewUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
@@ -85,7 +84,6 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
-const val TRAFFIC_USE_CASE_FACTORIES = "TrafficUseCaseFactories"
 
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
@@ -128,8 +126,7 @@ class StatsModule {
         managementNewsCardUseCase: ManagementNewsCardUseCase,
         actionCardGrowUseCase: ActionCardGrowUseCase,
         actionCardReminderUseCase: ActionCardReminderUseCase,
-        actionCardScheduleUseCase: ActionCardScheduleUseCase,
-        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+        actionCardScheduleUseCase: ActionCardScheduleUseCase
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         val useCases = mutableListOf<BaseStatsUseCase<*, *>>()
         if (BuildConfig.IS_JETPACK_APP) {
@@ -144,12 +141,9 @@ class StatsModule {
             useCases.add(followerTotalsUseCase)
         }
 
-        if (!trafficSubscribersTabFeatureConfig.isEnabled()) {
-            useCases.add(todayStatsUseCase)
-        }
-
         useCases.addAll(
             listOf(
+                todayStatsUseCase,
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
                 followersUseCaseFactory.build(BLOCK),
@@ -276,38 +270,6 @@ class StatsModule {
     }
 
     /**
-     * Provides a list of use case factories that build use cases for the Traffic stats screen based on the given
-     * granularity (Day, Week, Month, Year).
-     */
-    @Provides
-    @Singleton
-    @Named(TRAFFIC_USE_CASE_FACTORIES)
-    @Suppress("LongParameterList")
-    fun provideTrafficUseCaseFactories(
-        postsAndPagesUseCaseFactory: PostsAndPagesUseCaseFactory,
-        referrersUseCaseFactory: ReferrersUseCaseFactory,
-        clicksUseCaseFactory: ClicksUseCaseFactory,
-        countryViewsUseCaseFactory: CountryViewsUseCaseFactory,
-        videoPlaysUseCaseFactory: VideoPlaysUseCaseFactory,
-        searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
-        authorsUseCaseFactory: AuthorsUseCaseFactory,
-        trafficOverviewUseCaseFactory: TrafficOverviewUseCaseFactory,
-        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory
-    ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
-        return listOf(
-            postsAndPagesUseCaseFactory,
-            referrersUseCaseFactory,
-            clicksUseCaseFactory,
-            countryViewsUseCaseFactory,
-            videoPlaysUseCaseFactory,
-            searchTermsUseCaseFactory,
-            authorsUseCaseFactory,
-            trafficOverviewUseCaseFactory,
-            fileDownloadsUseCaseFactory
-        )
-    }
-
-    /**
      * Provides a singleton usecase that represents the TRAFFIC stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
@@ -319,7 +281,7 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(TRAFFIC_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
+        @Named(GRANULAR_USE_CASE_FACTORIES) useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
         selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {

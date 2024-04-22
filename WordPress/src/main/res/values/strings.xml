@@ -1299,10 +1299,6 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
-    <string name="stats_timeframe_by_day">By day</string>
-    <string name="stats_timeframe_by_week">By week</string>
-    <string name="stats_timeframe_by_month">By month</string>
-    <string name="stats_timeframe_by_year">By year</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>

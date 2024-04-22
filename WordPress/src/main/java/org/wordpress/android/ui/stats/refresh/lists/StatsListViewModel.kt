@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
+import org.wordpress.android.ui.stats.refresh.GRANULAR_USE_CASE_FACTORIES
 import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
@@ -22,7 +23,6 @@ import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_LIKES_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TRAFFIC_USE_CASE
-import org.wordpress.android.ui.stats.refresh.TRAFFIC_USE_CASE_FACTORIES
 import org.wordpress.android.ui.stats.refresh.VIEWS_AND_VISITORS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.WEEK_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.YEAR_STATS_USE_CASE
@@ -215,7 +215,7 @@ class TrafficListViewModel @Inject constructor(
     @Named(TRAFFIC_USE_CASE) private val trafficStatsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory,
-    @Named(TRAFFIC_USE_CASE_FACTORIES)
+    @Named(GRANULAR_USE_CASE_FACTORIES)
     private val useCasesFactories: List<@JvmSuppressWildcards GranularUseCaseFactory>,
     private val selectedTrafficGranularityManager: SelectedTrafficGranularityManager,
 ) : StatsListViewModel(
