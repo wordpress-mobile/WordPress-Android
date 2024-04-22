@@ -5,7 +5,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.util.AppLog
@@ -16,7 +16,8 @@ import javax.inject.Inject
  */
 @Reusable
 class ReaderPostLocalSource @Inject constructor(
-    private val readerPostTable: ReaderPostTableWrapper,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
 ) {
     /**
      * Save the list of posts to the local database, and handle any gaps between local and server posts.
@@ -29,7 +30,7 @@ class ReaderPostLocalSource @Inject constructor(
         updateAction: ReaderPostServiceStarter.UpdateAction,
         requestedTag: ReaderTag?,
     ): ReaderActions.UpdateResult {
-        val updateResult = readerPostTable.comparePosts(serverPosts)
+        val updateResult = readerPostTableWrapper.comparePosts(serverPosts)
         if (updateResult.isNewOrChanged) {
             // gap detection - only applies to posts with a specific tag
             var postWithGap: ReaderPost? = null
@@ -43,7 +44,7 @@ class ReaderPostLocalSource @Inject constructor(
                         handleRequestOlderThanGapResult(requestedTag)
                     }
 
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> readerPostTable.deletePostsWithTag(
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_REFRESH -> readerPostTableWrapper.deletePostsWithTag(
                         requestedTag
                     )
 
@@ -53,16 +54,16 @@ class ReaderPostLocalSource @Inject constructor(
             }
 
             // save posts to local db
-            readerPostTable.addOrUpdatePosts(requestedTag, serverPosts)
+            readerPostTableWrapper.addOrUpdatePosts(requestedTag, serverPosts)
 
-            if (AppPrefs.shouldUpdateBookmarkPostsPseudoIds(requestedTag)) {
-                readerPostTable.updateBookmarkedPostPseudoId(serverPosts)
-                AppPrefs.setBookmarkPostsPseudoIdsUpdated()
+            if (appPrefsWrapper.shouldUpdateBookmarkPostsPseudoIds(requestedTag)) {
+                readerPostTableWrapper.updateBookmarkedPostPseudoId(serverPosts)
+                appPrefsWrapper.setBookmarkPostsPseudoIdsUpdated()
             }
 
             // gap marker must be set after saving server posts
             if (postWithGap != null && requestedTag != null) {
-                readerPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, requestedTag)
+                readerPostTableWrapper.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, requestedTag)
                 AppLog.d(AppLog.T.READER, "added gap marker to tag " + requestedTag.tagNameForLog)
             }
         } else if (updateResult == ReaderActions.UpdateResult.UNCHANGED
@@ -70,7 +71,7 @@ class ReaderPostLocalSource @Inject constructor(
             && requestedTag != null
         ) {
             // edge case - request to fill gap returned nothing new, so remove the gap marker
-            readerPostTable.removeGapMarkerForTag(requestedTag)
+            readerPostTableWrapper.removeGapMarkerForTag(requestedTag)
             AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new")
         }
         AppLog.d(
@@ -83,8 +84,8 @@ class ReaderPostLocalSource @Inject constructor(
     private fun handleRequestOlderThanGapResult(requestedTag: ReaderTag) {
         // if service was started as a request to fill a gap, delete existing posts
         // before the one with the gap marker, then remove the existing gap marker
-        readerPostTable.deletePostsBeforeGapMarkerForTag(requestedTag)
-        readerPostTable.removeGapMarkerForTag(requestedTag)
+        readerPostTableWrapper.deletePostsBeforeGapMarkerForTag(requestedTag)
+        readerPostTableWrapper.removeGapMarkerForTag(requestedTag)
     }
 
     /**
@@ -101,8 +102,8 @@ class ReaderPostLocalSource @Inject constructor(
         // provided that local posts exist
         var postWithGap: ReaderPost? = null
         val numServerPosts = serverPosts.size
-        if (numServerPosts >= 2 && readerPostTable.getNumPostsWithTag(requestedTag) > 0 &&
-            !readerPostTable.hasOverlap(
+        if (numServerPosts >= 2 && readerPostTableWrapper.getNumPostsWithTag(requestedTag) > 0 &&
+            !readerPostTableWrapper.hasOverlap(
                 serverPosts,
                 requestedTag
             )
@@ -112,12 +113,12 @@ class ReaderPostLocalSource @Inject constructor(
             // remove the last server post to deal with the edge case of
             // there actually not being a gap between local & server
             serverPosts.removeAt(numServerPosts - 1)
-            val gapMarker = readerPostTable.getGapMarkerIdsForTag(requestedTag)
+            val gapMarker = readerPostTableWrapper.getGapMarkerIdsForTag(requestedTag)
             if (gapMarker != null) {
                 // We mustn't have two gapMarkers at the same time. Therefor we need to
                 // delete all posts before the current gapMarker and clear the gapMarker flag.
-                readerPostTable.deletePostsBeforeGapMarkerForTag(requestedTag)
-                readerPostTable.removeGapMarkerForTag(requestedTag)
+                readerPostTableWrapper.deletePostsBeforeGapMarkerForTag(requestedTag)
+                readerPostTableWrapper.removeGapMarkerForTag(requestedTag)
             }
         }
         return postWithGap
