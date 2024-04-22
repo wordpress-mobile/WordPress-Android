@@ -13,6 +13,7 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
+import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -499,6 +500,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.i(javaClass.simpleName, "***=> onCreate")
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.new_edit_post_activity)
@@ -530,8 +532,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val isRestarting = checkToRestart(intent)
 
         if (savedInstanceState == null) {
+            Log.i(javaClass.simpleName, "***=> savedInstanceState == null")
             handleIntentExtras(intent.extras, isRestarting)
         } else {
+            Log.i(javaClass.simpleName, "***=> savedInstanceState != null")
             retrieveSavedInstanceState(savedInstanceState)
         }
 
@@ -709,7 +713,18 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    private fun logInstanceState(bundle: Bundle?) {
+        bundle?.let {
+            Log.i(javaClass.simpleName, "***=> Printing Bundle Contents")
+            for (key in it.keySet()) {
+                val value = it.get(key)
+                Log.i(javaClass.simpleName, "$key: $value")
+            }
+        }
+    }
     private fun retrieveSavedInstanceState(savedInstanceState: Bundle?) {
+        Log.i(javaClass.simpleName, "***=> retrieveSavedInstanceState")
+        logInstanceState(savedInstanceState)
         savedInstanceState?.let { state ->
             state.getParcelableArrayList<Uri>(EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS)
                 ?.let { parcelableArrayList ->
@@ -734,6 +749,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
 
             // if we have a remote id saved, let's first try that, as the local Id might have changed after FETCH_POSTS
             if (state.containsKey(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID)) {
+                Log.i(javaClass.simpleName, "***=> We have a remote id, go get it from state ")
                 editPostRepository.loadPostByRemotePostId(
                     state.getLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID),
                     siteModel
@@ -746,14 +762,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 initializePostObject()
             }
 
-            (fragmentManager.getFragment(
-                    state,
-                    EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
-                ) as EditorFragmentAbstract?)?.let { frag ->
-                        editorFragment = frag
-                    if (frag is EditorMediaUploadListener) {
-                        editorMediaUploadListener = frag
-                    }
+            (supportFragmentManager.getFragment(
+                state,
+                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
+            ) as EditorFragmentAbstract?)?.let { frag ->
+                editorFragment = frag
+                if (frag is EditorMediaUploadListener) {
+                    editorMediaUploadListener = frag
+                }
             }
         }
     }
@@ -1111,6 +1127,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onResume() {
+        Log.i(javaClass.simpleName, "***=> onResume")
         super.onResume()
         EventBus.getDefault().register(this)
         reattachUploadingMediaForAztec()
@@ -1131,12 +1148,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onPause() {
+        Log.i(javaClass.simpleName, "***=> onPause")
         super.onPause()
         EventBus.getDefault().unregister(this)
         AnalyticsTracker.track(Stat.EDITOR_CLOSED)
     }
 
     override fun onStop() {
+        Log.i(javaClass.simpleName, "***=> onStop")
         super.onStop()
         if (aztecImageLoader != null && isFinishing) {
             aztecImageLoader?.clearTargets()
@@ -1152,6 +1171,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onDestroy() {
+        Log.i(javaClass.simpleName, "***=> onDestroy")
         if (!isConfigChange && (restartEditorOption == RestartEditorOptions.NO_RESTART)) {
             postEditorAnalyticsSession?.end()
         }
@@ -1176,11 +1196,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        Log.i(javaClass.simpleName, "***=> onSaveInstanceState")
         super.onSaveInstanceState(outState)
         // Saves both post objects so we can restore them in onCreate()
         updateAndSavePostAsync()
         outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
         if (!editPostRepository.isLocalDraft) {
+            Log.i(javaClass.simpleName, "***=> save post remote id ${editPostRepository.remotePostId}")
             outState.putLong(EditPostActivityConstants.STATE_KEY_POST_REMOTE_ID, editPostRepository.remotePostId)
         }
         outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
@@ -1200,15 +1222,19 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         outState.putParcelableArrayList(
             EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
         )
+
         editorFragment?.let {
             supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, it)
         }
         // We must save the media capture path when the activity is destroyed to handle orientation changes during
         // photo capture (see: https://github.com/wordpress-mobile/WordPress-Android/issues/11296)
         outState.putString(EditPostActivityConstants.STATE_KEY_MEDIA_CAPTURE_PATH, mediaCapturePath)
+        logInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        Log.i(javaClass.simpleName, "***=> onRestoreInstanceState")
+        logInstanceState(savedInstanceState)
         super.onRestoreInstanceState(savedInstanceState)
         htmlModeMenuStateOn = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_HTML_MODE_ON)
         menuHasUndo = savedInstanceState.getBoolean(EditPostActivityConstants.STATE_KEY_UNDO)
@@ -1222,6 +1248,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
+        Log.i(javaClass.simpleName, "***=> onConfigurationChanged")
         super.onConfigurationChanged(newConfig)
         editorPhotoPicker?.onOrientationChanged(newConfig.orientation)
     }
@@ -1926,6 +1953,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun updateFromEditor(oldContent: String): UpdateFromEditor {
+        Log.i(javaClass.simpleName, "***=> updateFromEditor")
         editorFragment?.let {
             return try {
                 // To reduce redundant bridge events emitted to the Gutenberg editor, we get title and content at once
@@ -3273,6 +3301,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onResult: Consumer<String>,
         onError: Consumer<Bundle>
     ) {
+       Log.i(javaClass.simpleName, "***=> onPerformFetch")
        reactNativeRequestHandler.performGetRequest(path, siteModel, enableCaching, onResult, onError)
     }
 
@@ -3282,6 +3311,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         onResult: Consumer<String>,
         onError: Consumer<Bundle>
     ) {
+       Log.i(javaClass.simpleName, "***=> onPerformPost")
        reactNativeRequestHandler.performPostRequest(path, body, siteModel, onResult, onError)
     }
 
@@ -3438,6 +3468,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     override fun onEditorFragmentInitialized() {
+        Log.i(javaClass.simpleName, "***=> onEditorFragmentInitialized")
         // now that we have the Post object initialized,
         // check whether we have media items to insert from the WRITE POST with media functionality
         if (intent.hasExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA)) {
@@ -3461,12 +3492,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun onEditorFinalTouchesBeforeShowing() {
+        Log.i(javaClass.simpleName, "***=> onEditorFinalTouchesBeforeShowing")
         refreshEditorContent()
 
         onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded()
         onEditorFinalTouchesBeforeShowingForAztecIfNeeded()
     }
     private fun onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded() {
+        Log.i(javaClass.simpleName, "***=> onEditorFinalTouchesBeforeShowingForGutenbergIfNeeded")
         // probably here is best for Gutenberg to start interacting with
         if (!(showGutenbergEditor && editorFragment is GutenbergEditorFragment))
             return
@@ -3487,6 +3520,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
     private fun onEditorFinalTouchesBeforeShowingForAztecIfNeeded() {
+        Log.i(javaClass.simpleName, "***=> onEditorFinalTouchesBeforeShowingForAztecIfNeeded")
         if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
                 intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
@@ -3498,6 +3532,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         unsupportedBlocksList: ArrayList<Any>,
         replaceBlockActionWaiting: Boolean
     ) {
+        Log.i(javaClass.simpleName, "***=> onEditorFragmentContentReady")
         val entryPoint: PostUtils.EntryPoint? =
             intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
 
