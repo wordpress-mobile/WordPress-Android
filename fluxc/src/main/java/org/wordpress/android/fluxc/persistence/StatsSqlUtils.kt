@@ -16,8 +16,7 @@ import javax.inject.Singleton
 const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ"
 
 @Singleton
-class StatsSqlUtils
-@Inject constructor() {
+class StatsSqlUtils @Inject constructor() {
     private val gson: Gson by lazy {
         val builder = GsonBuilder()
         builder.setDateFormat(DATE_FORMAT)
@@ -168,6 +167,7 @@ class StatsSqlUtils
         VIDEO_PLAYS,
         PUBLICIZE_INSIGHTS,
         POSTING_ACTIVITY,
-        FILE_DOWNLOADS
+        FILE_DOWNLOADS,
+        SUBSCRIBERS
     }
 }
