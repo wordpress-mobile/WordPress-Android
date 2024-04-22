@@ -498,6 +498,16 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        Log.i(javaClass.simpleName, "***=> onRestart")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.i(javaClass.simpleName, "***=> onStart")
+    }
+
     @Suppress("LongMethod")
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.i(javaClass.simpleName, "***=> onCreate")
@@ -718,7 +728,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             Log.i(javaClass.simpleName, "***=> Printing Bundle Contents")
             for (key in it.keySet()) {
                 val value = it.get(key)
-                Log.i(javaClass.simpleName, "$key: $value")
+                Log.i(javaClass.simpleName, "***=> $key: $value")
             }
         }
     }
