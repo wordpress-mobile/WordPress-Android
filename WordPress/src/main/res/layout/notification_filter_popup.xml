@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="?colorSurface"
+    app:cardCornerRadius="@dimen/notifications_popup_radius">
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_filter_all"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_tab_title_all"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginVertical="8dp"
+            android:background="@color/grey_300"
+            app:layout_constraintTop_toBottomOf="@+id/text_mark_all_as_read" />
+
+        <TextView
+            android:id="@+id/text_filter_unread"
+            android:layout_width="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_tab_title_unread_notifications"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large" />
+
+        <TextView
+            android:id="@+id/text_filter_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_tab_title_comments"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large" />
+
+        <TextView
+            android:id="@+id/text_filter_follows"
+            android:layout_width="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_tab_title_follows"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large" />
+
+        <TextView
+            android:id="@+id/text_filter_likes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/notifications_item_action_padding"
+            android:text="@string/notifications_tab_title_likes"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+

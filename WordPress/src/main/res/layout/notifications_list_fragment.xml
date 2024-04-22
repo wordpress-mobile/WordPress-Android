@@ -26,16 +26,19 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/WordPress.ActionBar" />
+            app:theme="@style/WordPress.ActionBar">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:visibility="visible"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            <TextView
+                android:id="@+id/toolbar_title"
+                style="@android:style/TextAppearance.Material.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/notifications_screen_title"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/chevron_right_small"
+                app:drawableTint="?attr/colorOnSurface" />
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
             android:id="@+id/notification_permission_warning"
