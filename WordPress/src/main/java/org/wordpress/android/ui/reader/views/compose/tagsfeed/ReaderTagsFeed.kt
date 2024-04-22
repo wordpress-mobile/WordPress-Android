@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
@@ -40,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
@@ -60,7 +63,7 @@ fun ReaderTagsFeed(uiState: UiState) {
         when (uiState) {
             is UiState.Loading -> Loading()
             is UiState.Loaded -> Loaded(uiState)
-            is UiState.Empty -> Empty()
+            is UiState.Empty -> Empty(uiState)
         }
     }
 }
@@ -145,8 +148,76 @@ private fun Loading() {
 }
 
 @Composable
-private fun Empty() {
-// TODO empty state (https://github.com/wordpress-mobile/WordPress-Android/issues/20584)
+private fun Empty(uiState: UiState.Empty) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // Title
+        Text(
+            modifier = Modifier
+                .padding(
+                    start = Margin.ExtraExtraMediumLarge.value,
+                    end = Margin.ExtraExtraMediumLarge.value,
+                    bottom = Margin.Medium.value,
+                ),
+            text = stringResource(id = R.string.reader_discover_empty_title),
+            textAlign = TextAlign.Center,
+            fontSize = 20.sp,
+            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colors.onSurface.copy(
+                alpha = ContentAlpha.medium,
+            ),
+        )
+        // Subtitle
+        Text(
+            modifier = Modifier
+                .padding(
+                    start = Margin.ExtraExtraMediumLarge.value,
+                    end = Margin.ExtraExtraMediumLarge.value,
+                    bottom = Margin.Large.value,
+                ),
+            text = stringResource(id = R.string.reader_discover_empty_subtitle_follow),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.subtitle1,
+            color = MaterialTheme.colors.onSurface.copy(
+                alpha = ContentAlpha.medium,
+            ),
+        )
+        // Button
+        Button(
+            onClick = uiState.onOpenTagsListClick,
+            modifier = Modifier.padding(
+                start = Margin.ExtraMediumLarge.value,
+                end = Margin.ExtraMediumLarge.value,
+                bottom = Margin.ExtraLarge.value,
+            ),
+            contentPadding = PaddingValues(
+                horizontal = 32.dp,
+                vertical = 8.dp,
+            ),
+            elevation = ButtonDefaults.elevation(
+                defaultElevation = 0.dp,
+                pressedElevation = 0.dp,
+            ),
+            colors = ButtonDefaults.buttonColors(
+                contentColor = MaterialTheme.colors.onPrimary,
+                backgroundColor = MaterialTheme.colors.onSurface,
+            ),
+        ) {
+            Row() {
+                androidx.compose.material.Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically),
+                    style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                    text = stringResource(id = R.string.reader_discover_empty_button_text),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -341,7 +412,7 @@ sealed class UiState {
 
     object Loading : UiState()
 
-    object Empty : UiState()
+    data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
 }
 
 data class TagChip(
@@ -487,7 +558,9 @@ fun ReaderTagsFeedLoading() {
 fun ReaderTagsFeedEmpty() {
     AppTheme {
         ReaderTagsFeed(
-            uiState = UiState.Empty
+            uiState = UiState.Empty(
+                onOpenTagsListClick = {},
+            )
         )
     }
 }
