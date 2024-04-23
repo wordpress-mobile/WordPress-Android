@@ -272,7 +272,7 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * Provides a singleton use case that represents the TRAFFIC stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
@@ -314,7 +314,7 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * Provides a singleton use case that represents the Subscribers Stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
