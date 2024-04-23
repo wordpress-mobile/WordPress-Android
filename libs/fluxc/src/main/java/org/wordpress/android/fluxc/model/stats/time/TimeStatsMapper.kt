@@ -164,9 +164,10 @@ class TimeStatsMapper @Inject constructor(val gson: Gson) {
         val subscribersIndex = response.fields?.indexOf("subscribers")
         val dataPerPeriod = response.data?.mapNotNull { periodData ->
             periodData?.let {
-                val period = periodIndex?.let { periodData[it] }
+                val period = periodIndex?.let { periodData[it] as String }
                 if (!period.isNullOrBlank()) {
-                    SubscribersModel.PeriodData(period, periodData.getLongOrZero(subscribersIndex))
+                    val subscribers = subscribersIndex?.let { periodData[it] as? Long } ?: 0
+                    SubscribersModel.PeriodData(period, subscribers)
                 } else {
                     null
                 }
@@ -179,10 +180,7 @@ class TimeStatsMapper @Inject constructor(val gson: Gson) {
             }
         }
         if (response.data == null || response.date == null || dataPerPeriod == null) {
-            AppLog.e(
-                STATS,
-                "SubscribersResponse: data, date & dataPerPeriod fields should never be null"
-            )
+            AppLog.e(STATS, "SubscribersResponse: data, date & dataPerPeriod fields should never be null")
         }
         return SubscribersModel(response.date ?: "", dataPerPeriod ?: listOf())
     }
