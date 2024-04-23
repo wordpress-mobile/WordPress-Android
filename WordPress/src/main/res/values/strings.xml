@@ -1354,6 +1354,7 @@
     <!-- Stats insights -->
     <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>
+    <string name="stats_subscribers">Subscribers</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>

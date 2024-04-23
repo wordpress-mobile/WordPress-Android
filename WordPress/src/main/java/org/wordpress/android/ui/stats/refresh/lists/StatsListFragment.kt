@@ -225,6 +225,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.TRAFFIC -> TrafficListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
+            StatsSection.SUBSCRIBERS -> SubscribersListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java
             StatsSection.MONTHS -> MonthsListViewModel::class.java

@@ -18,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
+import org.wordpress.android.ui.stats.refresh.SUBSCRIBERS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
@@ -62,6 +63,7 @@ abstract class StatsListViewModel(
     enum class StatsSection(@StringRes val titleRes: Int) {
         TRAFFIC(R.string.stats_traffic),
         INSIGHTS(R.string.stats_insights),
+        SUBSCRIBERS(R.string.stats_subscribers),
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
@@ -210,6 +212,24 @@ class InsightsListViewModel
     actionCardHandler
 )
 
+class SubscribersListViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(SUBSCRIBERS_USE_CASE) private val subscribersUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    popupMenuHandler: ItemPopupMenuHandler,
+    newsCardHandler: NewsCardHandler,
+    actionCardHandler: ActionCardHandler
+) : StatsListViewModel(
+    mainDispatcher,
+    subscribersUseCase,
+    analyticsTracker,
+    null,
+    popupMenuHandler,
+    newsCardHandler,
+    actionCardHandler
+)
+
 class TrafficListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TRAFFIC_USE_CASE) private val trafficStatsUseCase: BaseListUseCase,
@@ -307,6 +327,19 @@ class DaysListViewModel @Inject constructor(
 class InsightsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEWS_AND_VISITORS_USE_CASE) statsUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    dateSelectorFactory: StatsDateSelector.Factory
+) : StatsListViewModel(
+    mainDispatcher,
+    statsUseCase,
+    analyticsTracker,
+    dateSelectorFactory.build(StatsGranularity.WEEKS)
+)
+
+// Using Weeks granularity on Subscribers detail screens
+class SubscribersDetailListViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(SUBSCRIBERS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(
