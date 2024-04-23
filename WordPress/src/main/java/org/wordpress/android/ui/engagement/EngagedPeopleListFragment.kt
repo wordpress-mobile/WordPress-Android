@@ -73,6 +73,7 @@ class EngagedPeopleListFragment : Fragment() {
     private lateinit var loadingView: View
     private lateinit var rootView: View
     private lateinit var emptyView: ActionableEmptyView
+    private val listScenario by lazy { requireNotNull(arguments?.getParcelableCompat<ListScenario>(KEY_LIST_SCENARIO)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,8 +95,6 @@ class EngagedPeopleListFragment : Fragment() {
         loadingView = view.findViewById(R.id.loading_view)
         emptyView = view.findViewById(R.id.actionable_empty_view)
 
-        val listScenario = requireNotNull(arguments?.getParcelableCompat<ListScenario>(KEY_LIST_SCENARIO))
-
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelableCompat<Parcelable>(KEY_LIST_STATE)?.let {
@@ -115,6 +114,7 @@ class EngagedPeopleListFragment : Fragment() {
                         bottomSheet.show(childFragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
                     }
                 }
+
                 HideBottomSheet -> {
                     bottomSheet?.apply { this.dismiss() }
                 }
@@ -164,10 +164,12 @@ class EngagedPeopleListFragment : Fragment() {
                         readerTracker
                     )
                 }
+
                 is PreviewSiteByUrl -> {
                     val url = event.siteUrl
                     openUrl(this, url, event.source)
                 }
+
                 is PreviewCommentInReader -> {
                     ReaderActivityLauncher.showReaderComments(
                         this,
@@ -177,9 +179,11 @@ class EngagedPeopleListFragment : Fragment() {
                         event.source.sourceDescription
                     )
                 }
+
                 is PreviewPostInReader -> {
                     ReaderActivityLauncher.showReaderPostDetail(this, event.siteId, event.postId)
                 }
+
                 is OpenUserProfileBottomSheet -> {
                     userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick, event.source)
                 }
@@ -217,6 +221,7 @@ class EngagedPeopleListFragment : Fragment() {
                     serviceRequest.postId,
                     null
                 )
+
                 is RequestComment -> ReaderCommentService.startServiceForComment(
                     this,
                     serviceRequest.siteId,
@@ -239,7 +244,8 @@ class EngagedPeopleListFragment : Fragment() {
     private fun setupAdapter(items: List<EngageItem>) {
         val adapter = recycler.adapter as? EngagedPeopleAdapter ?: EngagedPeopleAdapter(
             imageManager,
-            resourceProvider
+            resourceProvider,
+            listScenario.type
         ).also {
             recycler.adapter = it
         }
