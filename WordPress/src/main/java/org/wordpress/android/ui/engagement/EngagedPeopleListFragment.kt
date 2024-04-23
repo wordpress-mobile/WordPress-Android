@@ -6,15 +6,18 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActionableEmptyView
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.engagement.BottomSheetAction.HideBottomSheet
 import org.wordpress.android.ui.engagement.BottomSheetAction.ShowBottomSheet
@@ -73,6 +76,8 @@ class EngagedPeopleListFragment : Fragment() {
     private lateinit var loadingView: View
     private lateinit var rootView: View
     private lateinit var emptyView: ActionableEmptyView
+    private lateinit var divider: View
+    private lateinit var shareButton: MaterialButton
     private val listScenario by lazy { requireNotNull(arguments?.getParcelableCompat<ListScenario>(KEY_LIST_SCENARIO)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +99,8 @@ class EngagedPeopleListFragment : Fragment() {
         recycler = view.findViewById(R.id.recycler)
         loadingView = view.findViewById(R.id.loading_view)
         emptyView = view.findViewById(R.id.actionable_empty_view)
+        divider = view.findViewById(R.id.divider)
+        shareButton = view.findViewById(R.id.button_share_post)
 
         val layoutManager = LinearLayoutManager(activity)
 
@@ -253,6 +260,18 @@ class EngagedPeopleListFragment : Fragment() {
         val recyclerViewState = recycler.layoutManager?.onSaveInstanceState()
         adapter.loadData(items)
         recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
+
+        val likeItem = items.first { it is EngageItem.LikedItem } as EngageItem.LikedItem
+        val visible = listScenario.type == ListScenarioType.LOAD_POST_LIKES
+        divider.isVisible = visible
+        shareButton.isVisible = visible
+        shareButton.setOnClickListener {
+            ActivityLauncher.openShareIntent(
+                it.context,
+                likeItem.likedItemSiteUrl,
+                likeItem.postOrCommentText.toString()
+            )
+        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

@@ -13,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintVertical_bias="0"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 
@@ -51,4 +53,26 @@
             android:textSize="@dimen/text_sz_double_extra_large" />
     </LinearLayout>
 
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:alpha="0.6"
+        android:background="#3C3C43"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/button_share_post"/>
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.ShareButton"
+        android:id="@+id/button_share_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/block_share"
+        app:iconGravity="textStart"
+        app:iconTint="?attr/colorSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:text="@string/stats_insights_share_post"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
