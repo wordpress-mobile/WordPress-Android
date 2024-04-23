@@ -104,6 +104,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
             viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
+            viewPager.isUserInputEnabled = false
             viewPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
             )
