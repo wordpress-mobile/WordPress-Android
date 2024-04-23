@@ -297,8 +297,12 @@ private fun PostListError(
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(Margin.Medium.value))
+        val errorMessageResId = when (postList.type) {
+            is ErrorType.Loading -> R.string.reader_tags_feed_loading_error_description
+            is ErrorType.NoContent -> R.string.reader_tags_feed_no_content_error_description
+        }
         Text(
-            text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
+            text = stringResource(errorMessageResId, tagName),
             style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
             color = if (isSystemInDarkTheme()) {
                 AppColor.White.copy(alpha = 0.4F)
