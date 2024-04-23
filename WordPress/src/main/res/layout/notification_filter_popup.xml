@@ -7,7 +7,7 @@
     app:cardCornerRadius="@dimen/notifications_popup_radius">
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="@dimen/notifications_filter_popup_width"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -25,7 +25,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:layout_marginVertical="8dp"
+            android:layout_marginVertical="@dimen/margin_medium"
             android:background="@color/grey_300"
             app:layout_constraintTop_toBottomOf="@+id/text_mark_all_as_read" />
 
