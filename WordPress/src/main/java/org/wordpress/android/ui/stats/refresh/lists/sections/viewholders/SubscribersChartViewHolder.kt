@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh.lists.sections.viewholders
 
-import android.graphics.DashPathEffect
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.SubscribersChartLabelFormatter
-import java.lang.Integer.max
 
 @Suppress("MagicNumber")
 class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
@@ -48,10 +46,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             if (hasData(item.entries)) {
                 chart.post {
                     val accessibilityEvent = object : LineChartAccessibilityEvent {
-                        override fun onHighlight(
-                            entry: Entry,
-                            index: Int
-                        ) {
+                        override fun onHighlight(entry: Entry, index: Int) {
                             drawChartMarker(Highlight(entry.x, entry.y, 0))
                             val value = entry.data as? String
                             value?.let {
@@ -137,7 +132,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun configureYAxis(item: SubscribersChartItem) {
         val minYValue = 6f
-        val maxYValue = item.entries.maxByOrNull { it.value }!!.value
+        val maxYValue = item.entries.maxByOrNull { it.value }?.value ?: 7
 
         chart.axisLeft.apply {
             valueFormatter = LargeValueFormatter()
@@ -169,15 +164,9 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             if (chart.contentRect.width() > 0) {
                 axisLineWidth = 4.0F
 
-                val count = max(item.entries.count(), 7)
                 val tickWidth = 4.0F
-                val contentWidthMinusTicks = chart.contentRect.width() - (tickWidth * count.toFloat())
-                setAxisLineDashedLine(
-                    DashPathEffect(
-                        floatArrayOf(tickWidth, (contentWidthMinusTicks / (count - 1).toFloat())),
-                        0f
-                    )
-                )
+                val contentWidthMinusTicks = chart.contentRect.width() - (tickWidth * 3f)
+                enableAxisLineDashedLine(tickWidth, contentWidthMinusTicks / 29f, 0f)
             }
 
             setDrawLabels(true)
@@ -201,8 +190,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun configureDataSets(dataSets: MutableList<ILineDataSet>) {
-        val thisWeekDataSet = dataSets.first() as? LineDataSet
-        thisWeekDataSet?.apply {
+        (dataSets.first() as? LineDataSet)?.apply {
             axisDependency = LEFT
 
             lineWidth = 2f
@@ -223,27 +211,10 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             color = ContextCompat.getColor(chart.context, R.color.blue_50)
 
             setDrawFilled(true)
-            fillDrawable =
-                ContextCompat.getDrawable(
-                    chart.context,
-                    R.drawable.bg_rectangle_stats_line_chart_blue_gradient
-                )?.apply { alpha = 26 }
-        }
-
-        val lastWeekDataSet = dataSets.last() as? LineDataSet
-        lastWeekDataSet?.apply {
-            axisDependency = LEFT
-
-            lineWidth = 2f
-
-            mode = CUBIC_BEZIER
-            cubicIntensity = 0.2f
-
-            color = ContextCompat.getColor(chart.context, R.color.gray_10)
-
-            setDrawValues(false)
-            setDrawCircles(false)
-            isHighlightEnabled = false
+            fillDrawable = ContextCompat.getDrawable(
+                chart.context,
+                R.drawable.bg_rectangle_stats_line_chart_blue_gradient
+            )?.apply { alpha = 26 }
         }
     }
 
@@ -260,12 +231,10 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return dataSet
     }
 
-    private fun <T> takeEntriesWithinGraphWidth(entries: List<T>): List<T> {
-        return if (8 < entries.size) {
-            entries.subList(entries.size - 8, entries.size)
-        } else {
-            entries
-        }
+    private fun <T> takeEntriesWithinGraphWidth(entries: List<T>) = if (8 < entries.size) {
+        entries.subList(entries.size - 8, entries.size)
+    } else {
+        entries
     }
 
     private fun LineChart.resetChart() {
@@ -277,13 +246,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         invalidate()
     }
 
-    private fun toLineEntry(line: Line, index: Int): Entry {
-        return Entry(
-            index.toFloat(),
-            line.value.toFloat(),
-            line.id
-        )
-    }
+    private fun toLineEntry(line: Line, index: Int) = Entry(index.toFloat(), line.value.toFloat(), line.id)
 
     private fun roundUp(input: Float): Float {
         return if (input > 100) {

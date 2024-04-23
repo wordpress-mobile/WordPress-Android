@@ -21,8 +21,8 @@ class SubscribersMapper @Inject constructor(
         onLineSelected: (String?) -> Unit,
         onLineChartDrawn: (visibleBarCount: Int) -> Unit,
         selectedItemPeriod: String
-    ): List<BlockListItem> {
-        val chartItems = dates.reversed().map {
+    ): BlockListItem {
+        val chartItems = dates.map {
             val date = statsDateFormatter.parseStatsDate(StatsGranularity.DAYS, it.period)
             Line(
                 statsDateFormatter.printDayWithoutYear(date).enforceWesternArabicNumerals() as String,
@@ -31,22 +31,17 @@ class SubscribersMapper @Inject constructor(
             )
         }
 
-        val result = mutableListOf<SubscribersChartItem>()
-
         val contentDescriptions = statsUtils.getSubscribersChartEntryContentDescriptions(
             R.string.stats_subscribers_subscribers,
             chartItems
         )
 
-        result.add(
-            SubscribersChartItem(
-                entries = chartItems,
-                selectedItemPeriod = selectedItemPeriod,
-                onLineSelected = onLineSelected,
-                onLineChartDrawn = onLineChartDrawn,
-                entryContentDescriptions = contentDescriptions
-            )
+        return SubscribersChartItem(
+            entries = chartItems,
+            selectedItemPeriod = selectedItemPeriod,
+            onLineSelected = onLineSelected,
+            onLineChartDrawn = onLineChartDrawn,
+            entryContentDescriptions = contentDescriptions
         )
-        return result
     }
 }

@@ -83,7 +83,7 @@ class SubscribersUseCase @Inject constructor(
 
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
-            items.addAll(
+            items.add(
                 subscribersMapper.buildChart(
                     domainModel.dates.reversed(),
                     this::onLineSelected,
