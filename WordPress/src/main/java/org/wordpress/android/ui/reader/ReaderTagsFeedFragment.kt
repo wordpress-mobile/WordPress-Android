@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.os.Bundle
 import android.view.View
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
@@ -77,7 +79,10 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         binding.composeView.setContent {
             AppThemeWithoutBackground {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                ReaderTagsFeedScreen(uiState)
+                ReaderTagsFeedScreen(
+                    uiState = uiState,
+                    onRetryClicked = viewModel::fetchTag,
+                )
             }
         }
 
@@ -139,6 +144,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 @Composable
 private fun ReaderTagsFeedScreen(
     uiState: ReaderTagsFeedViewModel.UiState,
+    onRetryClicked: (ReaderTag) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -165,10 +171,24 @@ private fun ReaderTagsFeedScreen(
                     }
 
                     is ReaderTagsFeedViewModel.FetchState.Error -> {
-                        Text(
-                            text = "Error loading posts",
-                            style = MaterialTheme.typography.body1,
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                        ) {
+                            Text(
+                                text = "Error loading posts.",
+                                style = MaterialTheme.typography.body1,
+                            )
+
+                            Text(
+                                text = "Retry",
+                                style = MaterialTheme.typography.body1,
+                                textDecoration = TextDecoration.Underline,
+                                color = MaterialTheme.colors.primary,
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .clickable { onRetryClicked(tag) },
+                            )
+                        }
                     }
 
                     is ReaderTagsFeedViewModel.FetchState.Success -> {

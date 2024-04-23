@@ -39,7 +39,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
      *
      * Can be used for retrying a failed fetch, for instance.
      */
-    @Suppress("MemberVisibilityCanBePrivate")
     fun fetchTag(tag: ReaderTag) {
         launch {
             _uiStateFlow.update {
