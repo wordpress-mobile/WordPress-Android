@@ -37,11 +37,7 @@ class SubscribersRestClient @Inject constructor(
     ): FetchStatsPayload<SubscribersResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.subscribers.urlV1_1
 
-        val params = mapOf(
-            "unit" to granularity.toString(),
-            "quantity" to quantity.toString(),
-            "date" to date
-        )
+        val params = mapOf("unit" to granularity.toString(), "quantity" to quantity.toString(), "date" to date)
 
         val response = wpComGsonRequestBuilder.syncGetRequest(
             this,
@@ -61,6 +57,6 @@ class SubscribersRestClient @Inject constructor(
         @SerializedName("date") val date: String?,
         @SerializedName("unit") val unit: String?,
         @SerializedName("fields") val fields: List<String>?,
-        @SerializedName("data") val data: List<List<String>?>?
+        @SerializedName("data") val data: List<List<*>?>?
     )
 }
