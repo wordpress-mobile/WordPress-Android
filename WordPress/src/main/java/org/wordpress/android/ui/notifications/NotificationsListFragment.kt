@@ -205,6 +205,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
         lastTabPosition = position
+        binding?.viewPager?.currentItem = position
     }
 
     private fun NotificationsListFragmentBinding.setNotificationPermissionWarning() {
