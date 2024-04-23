@@ -2306,7 +2306,8 @@
     <!-- Reader tags feed -->
     <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
     <string name="reader_tags_feed_error_title">No posts found for %s</string>
-    <string name="reader_tags_feed_error_description">This tag might not have any posts, or there was no internet connection.</string>
+    <string name="reader_tags_feed_loading_error_description">We couldn\'t load posts from this tag right now</string>
+    <string name="reader_tags_feed_no_content_error_description">We couldn\'t find any posts tagged %s right now</string>
     <string name="reader_tags_feed_error_retry">Retry</string>
 
     <!-- connection bar which appears on main activity when there's no connection -->

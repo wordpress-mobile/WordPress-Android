@@ -368,8 +368,12 @@ private fun PostListError(
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(Margin.Medium.value))
+        val errorMessage = when (postList.type) {
+            is ErrorType.Loading -> stringResource(R.string.reader_tags_feed_loading_error_description)
+            is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
+        }
         Text(
-            text = stringResource(id = R.string.reader_tags_feed_error_description, tagName),
+            text = errorMessage,
             style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
             color = if (isSystemInDarkTheme()) {
                 AppColor.White.copy(alpha = 0.4F)
@@ -408,12 +412,17 @@ private fun PostListError(
 
 // TODO move to VM
 sealed class UiState {
-    data class Loaded(val data: List<Pair<TagChip, PostList>>) : UiState()
+    data class Loaded(val data: List<TagFeedItem>) : UiState()
 
     object Loading : UiState()
 
     data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
 }
+
+data class TagFeedItem(
+    val tagChip: TagChip,
+    val postList: PostList,
+)
 
 data class TagChip(
     val tag: ReaderTag,
@@ -425,7 +434,16 @@ sealed class PostList {
 
     object Loading : PostList()
 
-    data class Error(val onRetryClick: () -> Unit) : PostList()
+    data class Error(
+        val type: ErrorType,
+        val onRetryClick: () -> Unit
+    ) : PostList()
+}
+
+sealed interface ErrorType {
+    data object Loading : ErrorType
+
+    data object NoContent : ErrorType
 }
 
 data class TagsFeedPostItem(
@@ -532,9 +550,22 @@ fun ReaderTagsFeedLoaded() {
         ReaderTagsFeed(
             uiState = UiState.Loaded(
                 data = listOf(
-                    (TagChip(readerTag, {}) to postListLoaded),
-                    (TagChip(readerTag, {}) to PostList.Loading),
-                    (TagChip(readerTag, {}) to PostList.Error {}),
+                    TagFeedItem(
+                        tagChip = TagChip(readerTag, {}),
+                        postList = postListLoaded
+                    ),
+                    TagFeedItem(
+                        tagChip = TagChip(readerTag, {}),
+                        postList = PostList.Loading,
+                    ),
+                    TagFeedItem(
+                        tagChip = TagChip(readerTag, {}),
+                        postList = PostList.Error(ErrorType.Loading, {}),
+                    ),
+                    TagFeedItem(
+                        tagChip = TagChip(readerTag, {}),
+                        postList = PostList.Error(ErrorType.NoContent, {}),
+                    ),
                 )
             )
         )
