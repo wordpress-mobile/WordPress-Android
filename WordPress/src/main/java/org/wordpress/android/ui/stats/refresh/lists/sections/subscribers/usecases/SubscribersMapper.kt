@@ -15,7 +15,6 @@ class SubscribersMapper @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val statsUtils: StatsUtils
 ) {
-
     fun buildChart(
         dates: List<PeriodData>,
         onLineSelected: (String?) -> Unit,

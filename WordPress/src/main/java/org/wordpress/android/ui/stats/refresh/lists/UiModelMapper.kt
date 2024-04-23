@@ -78,6 +78,7 @@ class UiModelMapper
         return mapStatsWithOverview(TimeStatsType.OVERVIEW, useCaseModels, showError)
     }
 
+    @Suppress("CyclomaticComplexMethod")
     fun mapSubscribers(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
         val allFailing = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
             acc && useCaseModel.state == ERROR
