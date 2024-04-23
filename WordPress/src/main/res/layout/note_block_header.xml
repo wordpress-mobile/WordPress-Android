@@ -9,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/header_root_view"
-        android:layout_marginHorizontal="16dp"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/black_translucent_10"
-        app:cardCornerRadius="18dp"
+        app:cardCornerRadius="@dimen/notifications_like_header_radius"
         app:cardElevation="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,10 +21,10 @@
 
             <ImageView
                 android:id="@+id/header_avatar"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginVertical="6dp"
+                android:layout_width="@dimen/avatar_sz_extra_small"
+                android:layout_height="@dimen/avatar_sz_extra_small"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginVertical="@dimen/margin_small_medium"
                 android:contentDescription="@string/reader_avatar_desc"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -32,9 +32,9 @@
 
             <ImageView
                 android:id="@+id/header_arrow"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/notifications_like_header_icon_size"
+                android:layout_height="@dimen/notifications_like_header_icon_size"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_arrow_right_white_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -46,17 +46,17 @@
                 android:id="@+id/header_snippet"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="@dimen/margin_extra_medium_large"
                 android:ellipsize="end"
                 android:lines="1"
-                android:paddingVertical="8dp"
+                android:paddingVertical="@dimen/page_list_row_vertical_padding"
                 android:textColor="?attr/colorOnSurface"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_sz_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/header_arrow"
                 app:layout_constraintStart_toEndOf="@+id/header_avatar"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_goneMarginStart="16dp"
+                app:layout_goneMarginStart="@dimen/margin_extra_large"
                 tools:text="Snippet" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
