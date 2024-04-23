@@ -300,7 +300,7 @@ class StatsModule {
     }
 
     /**
-     * Provides a list of use case factories that build use cases for the Traffic stats screen based on the given
+     * Provides a list of use case factories that build use cases for the Subscribers stats screen based on the given
      * granularity (Day, Week, Month, Year).
      */
     @Provides
