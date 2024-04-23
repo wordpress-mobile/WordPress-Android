@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -206,16 +205,14 @@ private fun Empty(uiState: UiState.Empty) {
                 backgroundColor = MaterialTheme.colors.onSurface,
             ),
         ) {
-            Row() {
-                androidx.compose.material.Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically),
-                    style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
-                    text = stringResource(id = R.string.reader_discover_empty_button_text),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                )
-            }
+            androidx.compose.material.Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+                text = stringResource(id = R.string.reader_discover_empty_button_text),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
         }
     }
 }
