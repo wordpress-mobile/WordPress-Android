@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLe
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.SubscribersChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.SUBSCRIBERS_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -107,6 +109,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapView
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.PieChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.QuickScanItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ReferredItemViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.SubscribersChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TabsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TagViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TextViewHolder
@@ -148,6 +151,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             BAR_CHART -> BarChartViewHolder(parent)
             PIE_CHART -> PieChartViewHolder(parent)
             LINE_CHART -> LineChartViewHolder(parent)
+            SUBSCRIBERS_CHART -> SubscribersChartViewHolder(parent)
             CHART_LEGEND -> ChartLegendViewHolder(parent)
             CHART_LEGENDS_BLUE -> ChartLegendsBlueViewHolder(parent)
             CHART_LEGENDS_PURPLE -> ChartLegendsPurpleViewHolder(parent)
@@ -198,6 +202,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
             is PieChartViewHolder -> holder.bind(item as PieChartItem)
             is LineChartViewHolder -> holder.bind(item as LineChartItem)
+            is SubscribersChartViewHolder -> holder.bind(item as SubscribersChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
             is ChartLegendsBlueViewHolder -> holder.bind(item as ChartLegendsBlue)
             is ChartLegendsPurpleViewHolder -> holder.bind(item as ChartLegendsPurple)
