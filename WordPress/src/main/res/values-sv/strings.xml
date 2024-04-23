@@ -59,8 +59,6 @@ Language: sv_SE
     <string name="gutenberg_native_copy_error_details">Kopiera felinformation</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knapp för att kopiera inläggstext</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knapp för att kopiera felinformation</string>
-    <string name="editor_updating_post_failed">Uppdatering av inläggsinnehållet misslyckades</string>
-    <string name="editor_updating_post">Inläggsinnehållet uppdateras</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
     <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>

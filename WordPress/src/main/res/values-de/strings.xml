@@ -59,8 +59,6 @@ Language: de
     <string name="gutenberg_native_copy_error_details">Fehlerdetails kopieren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Button zum Kopieren des Beitragstexts</string>
     <string name="gutenberg_native_button_to_copy_error_details">Button zum Kopieren von Fehlerdetails</string>
-    <string name="editor_updating_post_failed">Das Aktualisieren des Beitragsinhalts ist fehlgeschlagen</string>
-    <string name="editor_updating_post">Beitragsinhalt aktualisieren</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videountertitel. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videountertitel. Leer</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bearbeiten</string>

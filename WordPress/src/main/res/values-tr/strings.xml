@@ -56,8 +56,6 @@ Language: tr
     <string name="gutenberg_native_copy_error_details">Hata ayrıntılarını kopyala</string>
     <string name="gutenberg_native_button_to_copy_post_text">Gönderi metnini kopyalama düğmesi</string>
     <string name="gutenberg_native_button_to_copy_error_details">Hata ayrıntılarını kopyalama düğmesi</string>
-    <string name="editor_updating_post_failed">Gönderi içeriği güncellenemedi</string>
-    <string name="editor_updating_post">Gönderi içeriği güncelleniyor</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video yazısı. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video yazısı. Boş</string>
     <string name="gutenberg_native_edit_video_024aee6d">Videoyu düzenle</string>

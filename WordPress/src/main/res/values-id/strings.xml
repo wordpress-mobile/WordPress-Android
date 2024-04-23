@@ -58,8 +58,6 @@ Language: id
     <string name="gutenberg_native_copy_error_details">Salin detail error</string>
     <string name="gutenberg_native_button_to_copy_post_text">Tombol untuk menyalin teks pos</string>
     <string name="gutenberg_native_button_to_copy_error_details">Tombol untuk menyalin detail error</string>
-    <string name="editor_updating_post_failed">Gagal memperbarui konten pos</string>
-    <string name="editor_updating_post">Memperbarui konten pos</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Keterangan video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Keterangan video. Kosong</string>
     <string name="gutenberg_native_edit_video_024aee6d">Sunting video</string>
