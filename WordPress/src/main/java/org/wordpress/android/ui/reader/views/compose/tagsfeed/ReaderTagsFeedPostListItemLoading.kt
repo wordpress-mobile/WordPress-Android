@@ -1,10 +1,10 @@
-package org.wordpress.android.ui.reader.views.compose.horizontalpostlist
+package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -25,8 +25,12 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
-fun HorizontalPostListItemLoading() {
-    val backgroundColor = AppColor.Black.copy(alpha = 0.08F)
+fun ReaderTagsFeedPostListItemLoading() {
+    val backgroundColor = if (isSystemInDarkTheme()) {
+        AppColor.White.copy(alpha = 0.12F)
+    } else {
+        AppColor.Black.copy(alpha = 0.08F)
+    }
     Column(
         modifier = Modifier
             .width(240.dp)
@@ -96,7 +100,7 @@ fun HorizontalPostListItemLoading() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun HorizontalPostListItemLoadingPreview() {
+fun ReaderTagsFeedPostListItemLoadingPreview() {
     AppTheme {
         Box(
             modifier = Modifier
@@ -105,18 +109,16 @@ fun HorizontalPostListItemLoadingPreview() {
         ) {
             LazyRow(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 16.dp),
-                contentPadding = PaddingValues(horizontal = 12.dp),
+                    .fillMaxWidth(),
             ) {
                 item {
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                     Spacer(Modifier.width(12.dp))
-                    HorizontalPostListItemLoading()
+                    ReaderTagsFeedPostListItemLoading()
                 }
             }
         }
