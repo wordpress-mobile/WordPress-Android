@@ -2363,8 +2363,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-
-    //
     inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) :
         FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         @Suppress("ReturnCount")
