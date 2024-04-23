@@ -24,9 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
-import com.google.android.material.tabs.TabLayout.Tab
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
@@ -35,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
+import org.wordpress.android.databinding.NotificationFilterPopupBinding
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.JetpackPoweredScreen
@@ -102,27 +100,11 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding = NotificationsListFragmentBinding.bind(view).apply {
-            toolbarMain.setTitle(R.string.notifications_screen_title)
+            toolbarTitle.setOnClickListener { showFilterPopup(toolbarTitle) }
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbarMain)
 
-            tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-                override fun onTabSelected(tab: Tab) {
-                    val tabPosition = TabPosition.values().getOrNull(tab.position) ?: All
-                    AnalyticsTracker.track(
-                        NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
-                            NOTIFICATIONS_SELECTED_FILTER to tabPosition.filter.toString()
-                        )
-                    )
-                    lastTabPosition = tab.position
-                }
-
-                override fun onTabUnselected(tab: Tab) = Unit
-                override fun onTabReselected(tab: Tab) = Unit
-            })
             viewPager.adapter = NotificationsFragmentAdapter(this@NotificationsListFragment)
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = TabPosition.values().getOrNull(position)?.let { getString(it.titleRes) } ?: ""
-            }.attach()
+            viewPager.isUserInputEnabled = false
             viewPager.setPageTransformer(
                 MarginPageTransformer(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
             )
@@ -153,6 +135,37 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
+    private fun showFilterPopup(anchorView: View) {
+        val popupWindow = PopupWindow(requireContext(), null, R.style.WordPress)
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_over_toolbar_elevation)
+        popupWindow.contentView = NotificationFilterPopupBinding.inflate(LayoutInflater.from(requireContext()))
+            .apply {
+                textFilterAll.setOnClickListener(getFilterClickListener(TabPosition.All, popupWindow))
+                textFilterUnread.setOnClickListener(getFilterClickListener(TabPosition.Unread, popupWindow))
+                textFilterComments.setOnClickListener(getFilterClickListener(TabPosition.Comment, popupWindow))
+                textFilterFollows.setOnClickListener(getFilterClickListener(TabPosition.Follow, popupWindow))
+                textFilterLikes.setOnClickListener(getFilterClickListener(TabPosition.Like, popupWindow))
+            }.root
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+    private fun getFilterClickListener(filter: TabPosition, popupWindow: PopupWindow) = View.OnClickListener {
+        AnalyticsTracker.track(
+            NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
+                NOTIFICATIONS_SELECTED_FILTER to filter.toString()
+            )
+        )
+        lastTabPosition = filter.ordinal
+        binding?.viewPager?.currentItem = filter.ordinal
+        binding?.toolbarTitle?.text = if (filter == All) {
+            getString(R.string.notifications_screen_spinner_title)
+        } else {
+            getString(filter.titleRes)
+        }
+        popupWindow.dismiss()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -165,11 +178,9 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             if (!accountStore.hasAccessToken()) {
                 showConnectJetpackView()
                 connectJetpack.visibility = View.VISIBLE
-                tabLayout.visibility = View.GONE
                 viewPager.visibility = View.GONE
             } else {
                 connectJetpack.visibility = View.GONE
-                tabLayout.visibility = View.VISIBLE
                 viewPager.visibility = View.VISIBLE
                 fetchRemoteNotes()
             }
@@ -200,7 +211,14 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
         lastTabPosition = position
-        tabLayout.getTabAt(lastTabPosition)?.select()
+        binding?.viewPager?.currentItem = position
+        TabPosition.entries.getOrNull(position)?.let {
+            toolbarTitle.text = if (it == All) {
+                getString(R.string.notifications_screen_spinner_title)
+            } else {
+                getString(it.titleRes)
+            }
+        }
     }
 
     private fun NotificationsListFragmentBinding.setNotificationPermissionWarning() {
