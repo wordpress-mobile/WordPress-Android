@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.argThat
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
@@ -127,41 +128,87 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when saveReadingPreferencesAndClose is called then it emits Close action event`() = test {
+    fun `when onExitActionClick is called then it emits Close action event`() = test {
         // When
-        viewModel.saveReadingPreferencesAndClose()
+        viewModel.onExitActionClick()
 
         // Then
-        val closeEvent = collectedEvents.last() as ActionEvent.Close
-        assertThat(closeEvent.isDirty).isFalse()
+        val closeEvent = collectedEvents.last()
+        assertThat(closeEvent).isEqualTo(ActionEvent.Close)
     }
 
     @Test
-    fun `when saveReadingPreferencesAndClose is called with updated preferences then it emit Close action event`() =
+    fun `when onExitActionClick is called with original preferences then it doesn't save them`() =
         test {
-            // Given
-            val newTheme = ReaderReadingPreferences.Theme.SEPIA
-            viewModel.onThemeClick(newTheme)
-
             // When
-            viewModel.saveReadingPreferencesAndClose()
+            viewModel.onExitActionClick()
 
             // Then
-            val closeEvent = collectedEvents.last() as ActionEvent.Close
-            assertThat(closeEvent.isDirty).isTrue()
+            verifyNoInteractions(saveReadingPreferences)
         }
 
     @Test
-    fun `when saveReadingPreferencesAndClose is called with updated preferences then it saves them`() = test {
+    fun `when onExitActionClick is called with updated preferences then it saves them`() = test {
         // Given
         val newTheme = ReaderReadingPreferences.Theme.SOFT
         viewModel.onThemeClick(newTheme)
 
         // When
-        viewModel.saveReadingPreferencesAndClose()
+        viewModel.onExitActionClick()
 
         // Then
         verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
+    }
+
+    @Test
+    fun `when onBottomSheetHidden is called with original preferences then it doesn't save them`() =
+        test {
+            // When
+            viewModel.onBottomSheetHidden()
+
+            // Then
+            verifyNoInteractions(saveReadingPreferences)
+        }
+
+    @Test
+    fun `when onBottomSheetHidden is called with updated preferences then it saves them`() = test {
+        // Given
+        val newTheme = ReaderReadingPreferences.Theme.SOFT
+        viewModel.onThemeClick(newTheme)
+
+        // When
+        viewModel.onBottomSheetHidden()
+
+        // Then
+        verify(saveReadingPreferences).invoke(argThat { theme == newTheme })
+    }
+
+    @Test
+    fun `when onScreenClosed is called with original preferences then it doesn't emit UpdatePostDetail`() = test {
+        // Given
+        viewModel.onExitActionClick()
+
+        // When
+        viewModel.onScreenClosed()
+
+        // Then
+        val updateEvent = collectedEvents.last()
+        assertThat(updateEvent).isNotEqualTo(ActionEvent.UpdatePostDetails)
+    }
+
+    @Test
+    fun `when onScreenClosed is called with updated preferences then it emits UpdatePostDetail`() = test {
+        // Given
+        val newTheme = ReaderReadingPreferences.Theme.SOFT
+        viewModel.onThemeClick(newTheme)
+        viewModel.onExitActionClick()
+
+        // When
+        viewModel.onScreenClosed()
+
+        // Then
+        val updateEvent = collectedEvents.last()
+        assertThat(updateEvent).isEqualTo(ActionEvent.UpdatePostDetails)
     }
 
     @Test
@@ -270,7 +317,7 @@ class ReaderReadingPreferencesViewModelTest : BaseUnitTest() {
         viewModel.onThemeClick(newTheme)
 
         // When
-        viewModel.saveReadingPreferencesAndClose()
+        viewModel.onExitActionClick()
 
         // Then
         verify(readingPreferencesTracker).trackSaved(argThat { theme == newTheme })
