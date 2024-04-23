@@ -15,8 +15,8 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersMapper
 import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersModel
-import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.SubscribersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.SubscribersRestClient.SubscribersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
@@ -55,7 +55,7 @@ class SubscribersStoreTest {
     lateinit var currentTimeProvider: CurrentTimeProvider
 
     @Mock
-    lateinit var mapper: TimeStatsMapper
+    lateinit var mapper: SubscribersMapper
 
     @Mock
     lateinit var appLogWrapper: AppLogWrapper

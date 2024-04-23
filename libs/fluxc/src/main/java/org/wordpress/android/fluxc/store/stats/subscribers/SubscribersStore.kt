@@ -3,8 +3,8 @@ package org.wordpress.android.fluxc.store.stats.subscribers
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
+import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersMapper
 import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersModel
-import org.wordpress.android.fluxc.model.stats.time.TimeStatsMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.SubscribersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
@@ -25,7 +25,7 @@ import javax.inject.Singleton
 class SubscribersStore @Inject constructor(
     private val restClient: SubscribersRestClient,
     private val sqlUtils: SubscribersSqlUtils,
-    private val timeStatsMapper: TimeStatsMapper,
+    private val subscribersMapper: SubscribersMapper,
     private val statsUtils: StatsUtils,
     private val currentTimeProvider: CurrentTimeProvider,
     private val coroutineEngine: CoroutineEngine,
@@ -60,7 +60,7 @@ class SubscribersStore @Inject constructor(
             payload.response != null -> {
                 logProgress(granularity, "Data fetched correctly")
                 sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)
-                val subscribersResponse = timeStatsMapper.map(payload.response, limitMode)
+                val subscribersResponse = subscribersMapper.map(payload.response, limitMode)
                 if (subscribersResponse.period.isBlank() || subscribersResponse.dates.isEmpty()) {
                     logProgress(granularity, "Invalid response")
                     OnStatsFetched(
@@ -109,6 +109,6 @@ class SubscribersStore @Inject constructor(
         limitMode: LimitMode,
         dateWithTimeZone: String
     ) = coroutineEngine.run(STATS, this, "getSubscribers") {
-        sqlUtils.select(site, granularity, dateWithTimeZone)?.let { timeStatsMapper.map(it, limitMode) }
+        sqlUtils.select(site, granularity, dateWithTimeZone)?.let { subscribersMapper.map(it, limitMode) }
     }
 }
