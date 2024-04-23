@@ -157,6 +157,11 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         )
         lastTabPosition = filter.ordinal
         binding?.viewPager?.currentItem = filter.ordinal
+        binding?.toolbarTitle?.text = if (filter == All) {
+            getString(R.string.notifications_screen_spinner_title)
+        } else {
+            getString(filter.titleRes)
+        }
         popupWindow.dismiss()
     }
 
@@ -206,6 +211,13 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
         lastTabPosition = position
         binding?.viewPager?.currentItem = position
+        TabPosition.entries.getOrNull(position)?.let {
+            toolbarTitle.text = if (it == All) {
+                getString(R.string.notifications_screen_spinner_title)
+            } else {
+                getString(it.titleRes)
+            }
+        }
     }
 
     private fun NotificationsListFragmentBinding.setNotificationPermissionWarning() {

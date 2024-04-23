@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:text="@string/notifications_screen_title"
+                android:text="@string/notifications_screen_spinner_title"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/chevron_right_small"
                 app:drawableTint="?attr/colorOnSurface" />
