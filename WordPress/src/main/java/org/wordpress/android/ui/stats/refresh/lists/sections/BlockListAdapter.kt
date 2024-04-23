@@ -76,7 +76,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
@@ -134,7 +133,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): BlockListItemViewHolder {
-        return when (values()[itemType]) {
+        return when (BlockListItem.Type.entries[itemType]) {
             TITLE -> TitleViewHolder(parent)
             TITLE_WITH_MORE -> TitleWithMoreViewHolder(parent)
             BIG_TITLE -> BigTitleViewHolder(parent)
