@@ -22,7 +22,17 @@ class LikerViewHolder(
     private val likerAvatar = itemView.findViewById<ImageView>(R.id.user_avatar)
     private val likerRootView = itemView.findViewById<View>(R.id.liker_root_view)
 
-    fun bind(liker: Liker) {
+    fun bind(liker: Liker, position: Int) {
+        val isFirstLiker = position == 1
+        itemView.layoutParams = (itemView.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            topMargin = resourceProvider.getDimensionPixelSize(
+                if (isFirstLiker) {
+                    R.dimen.margin_small
+                } else {
+                    R.dimen.margin_none
+                }
+            )
+        }
         this.likerName.text = liker.name
         this.likerLogin.text = if (liker.login.isNotBlank()) {
             resourceProvider.getString(R.string.at_username, liker.login)

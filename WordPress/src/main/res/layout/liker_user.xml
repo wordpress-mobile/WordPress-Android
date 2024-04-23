@@ -6,21 +6,19 @@
     android:id="@+id/liker_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
     android:background="?android:selectableItemBackground"
     android:clickable="true"
-    android:contentDescription="@null"
-    android:focusable="true"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/user_avatar"
-        android:layout_width="@dimen/avatar_sz_extra_large"
-        android:layout_height="@dimen/avatar_sz_extra_large"
-        android:padding="@dimen/margin_extra_large"
+        android:layout_width="@dimen/avatar_sz_medium"
+        android:layout_height="@dimen/avatar_sz_medium"
         android:importantForAccessibility="no"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/margin_extra_large"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <LinearLayout
@@ -28,6 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginStart="@dimen/margin_extra_large"
         app:layout_constraintStart_toEndOf="@+id/user_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -39,9 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:includeFontPadding="true"
+            android:fontFamily="sans-serif-medium"
             android:singleLine="true"
-            android:textAppearance="?attr/textAppearanceBody1"
+            android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_high_type"
             tools:text="Bob Ross" />
 
@@ -50,21 +49,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:includeFontPadding="true"
-            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif-medium"
             android:singleLine="true"
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="@color/material_on_surface_emphasis_medium"
             tools:text="bobross" />
-
     </LinearLayout>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="@dimen/divider_size"
-        android:background="@drawable/notifications_list_divider_full_width"
-        app:layout_constraintStart_toStartOf="@+id/user_data"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
