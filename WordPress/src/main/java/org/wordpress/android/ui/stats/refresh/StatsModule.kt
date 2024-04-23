@@ -308,10 +308,8 @@ class StatsModule {
     @Named(SUBSCRIBER_USE_CASE_FACTORIES)
     @Suppress("LongParameterList")
     fun provideSubscriberUseCaseFactories(
-        followersUseCaseFactory: FollowersUseCaseFactory,
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-            followersUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -327,7 +325,7 @@ class StatsModule {
         @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
         @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
         statsSiteProvider: StatsSiteProvider,
-        @Named(SUBSCRIBER_USE_CASE_FACTORIES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>, //change here
+        @Named(SUBSCRIBER_USE_CASE_FACTORIES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
         uiModelMapper: UiModelMapper
     ): BaseListUseCase {
         return BaseListUseCase(

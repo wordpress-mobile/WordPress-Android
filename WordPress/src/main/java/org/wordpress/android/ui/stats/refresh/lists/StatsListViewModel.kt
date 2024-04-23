@@ -19,7 +19,6 @@ import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
 import org.wordpress.android.ui.stats.refresh.SUBSCRIBERS_USE_CASE
-import org.wordpress.android.ui.stats.refresh.SUBSCRIBER_USE_CASE_FACTORIES
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
