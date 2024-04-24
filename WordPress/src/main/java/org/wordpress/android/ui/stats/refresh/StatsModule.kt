@@ -70,6 +70,7 @@ import javax.inject.Singleton
 
 const val INSIGHTS_USE_CASE = "InsightsUseCase"
 const val TRAFFIC_USE_CASE = "TrafficStatsUseCase"
+const val SUBSCRIBERS_USE_CASE = "SubscribersStatsUseCase"
 const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
@@ -84,6 +85,7 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val SUBSCRIBER_USE_CASE_FACTORIES = "SubscriberUseCaseFactories"
 
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
@@ -270,7 +272,7 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * Provides a singleton use case that represents the TRAFFIC stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
@@ -294,6 +296,45 @@ class StatsModule {
             },
             { statsStore.getTimeStatsTypes(it) },
             uiModelMapper::mapTimeStats
+        )
+    }
+
+    /**
+     * Provides a list of use case factories that build use cases for the Subscribers stats screen based on the given
+     * granularity (Day, Week, Month, Year).
+     */
+    @Provides
+    @Singleton
+    @Named(SUBSCRIBER_USE_CASE_FACTORIES)
+    @Suppress("LongParameterList")
+    fun provideSubscriberUseCaseFactories(
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
+        return listOf(
+        )
+    }
+
+    /**
+     * Provides a singleton use case that represents the Subscribers Stats screen.
+     * @param useCasesFactories build the use cases for the DAYS granularity
+     */
+    @Provides
+    @Named(SUBSCRIBERS_USE_CASE)
+    @Suppress("LongParameterList")
+    fun provideSubscribersUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(SUBSCRIBER_USE_CASE_FACTORIES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { statsStore.getInsightTypes(it) },
+            uiModelMapper::mapInsights
         )
     }
 
@@ -410,6 +451,7 @@ class StatsModule {
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
         @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
+        @Named(SUBSCRIBERS_USE_CASE) subscribersUseCase: BaseListUseCase,
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
@@ -419,7 +461,8 @@ class StatsModule {
         return if (trafficSubscribersTabFeatureConfig.isEnabled()) {
             mapOf(
                 StatsSection.TRAFFIC to trafficUseCase,
-                StatsSection.INSIGHTS to insightsUseCase
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.SUBSCRIBERS to subscribersUseCase
             )
         } else {
             mapOf(

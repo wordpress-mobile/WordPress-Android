@@ -19,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_A
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_YEARS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_SUBSCRIBERS_ACCESSED
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.DEFAULT_INSIGHTS
 import org.wordpress.android.fluxc.store.JETPACK_DEFAULT_INSIGHTS
@@ -156,6 +157,7 @@ class StatsViewModel
         return when (timeframe) {
             StatsTimeframe.TRAFFIC -> StatsSection.TRAFFIC
             StatsTimeframe.INSIGHTS -> StatsSection.INSIGHTS
+            StatsTimeframe.SUBSCRIBERS -> StatsSection.SUBSCRIBERS
             DAY -> StatsSection.DAYS
             WEEK -> StatsSection.WEEKS
             MONTH -> StatsSection.MONTHS
@@ -347,6 +349,9 @@ class StatsViewModel
             )
 
             StatsSection.INSIGHTS -> analyticsTracker.track(STATS_INSIGHTS_ACCESSED)
+
+            StatsSection.SUBSCRIBERS -> analyticsTracker.track(STATS_SUBSCRIBERS_ACCESSED)
+
             StatsSection.DAYS -> analyticsTracker.trackWithGranularity(
                 STATS_PERIOD_DAYS_ACCESSED,
                 StatsGranularity.DAYS
