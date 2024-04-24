@@ -120,6 +120,8 @@
     <string name="me">Me</string>
     <string name="everyone">Everyone</string>
 
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
+
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
@@ -296,6 +298,7 @@
     <string name="button_publish">Publish</string>
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
+    <string name="button_read">Read</string>
     <string name="button_preview">Preview</string>
     <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
@@ -373,6 +376,18 @@
     <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
+
+    <!-- Post Resolution Overlay -->
+    <string name="dialog_post_conflict_title">Resolve Conflict</string>
+    <string name="dialog_post_conflict_body">The post was modified on another device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_conflict_body_for_page">The page was modified on another device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_conflict_current_device">Current Device</string>
+    <string name="dialog_post_conflict_another_device">Another Device</string>
+    <string name="dialog_post_autosave_title">Autosave Available</string>
+    <string name="dialog_post_autosave_body">You\'ve made unsaved changes to this post from a different device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_autosave_body_for_page">You\'ve made unsaved changes to this page from a different device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_autosave_current_device" translatable="false">@string/dialog_post_conflict_current_device</string>
+    <string name="dialog_post_autosave_another_device" translatable="false">@string/dialog_post_conflict_another_device</string>
 
     <!-- post autosave revision dialog -->
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
@@ -1643,8 +1658,10 @@
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Follow a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
+    <string name="reader_filter_empty_tags_action_follow">Follow a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
@@ -1657,8 +1674,11 @@
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
+    <string name="reader_discover_empty_subtitle_follow">Follow tags to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -1692,6 +1712,39 @@
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
 
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colors, fonts and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+
+    <!-- translators: %s is replaced with the string in reader_preferences_screen_preview_text_feedback_link, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
+    <!-- translators: this is the accessibility label for this action and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'send your feedback'." -->
+    <string name="reader_preferences_screen_preview_text_feedback_label">send your feedback</string>
+
+    <string name="reader_preferences_screen_theme_label">Color Scheme</string>
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+
+    <string name="reader_preferences_screen_font_family_label">Font</string>
+    <string name="reader_preferences_screen_font_family_preview" translatable="false">Aa</string>
+    <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
+    <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>
+    <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
+
+    <string name="reader_preferences_screen_font_size_label">Font Size</string>
+    <string name="reader_preferences_font_size_extra_small">Extra small</string>
+    <string name="reader_preferences_font_size_small">Small</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_large">Large</string>
+    <string name="reader_preferences_font_size_extra_large">Extra large</string>
+    <string name="reader_preferences_screen_font_size_preview" translatable="false">A</string>
+
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
     <string name="editor_page_saved_online">Page saved online</string>
@@ -1706,8 +1759,6 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
-    <string name="editor_updating_post">Updating post content</string>
-    <string name="editor_updating_post_failed">Failed to update post content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -2097,6 +2148,7 @@
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->
+    <string name="reader_page_followed_tags_text_title">Followed tags</string>
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
 
     <!-- menu text -->
@@ -2107,6 +2159,7 @@
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_block_user">Block user</string>
+    <string name="reader_menu_reading_preferences">Reading Preferences</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2139,6 +2192,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
+    <string name="reader_hint_add_tag_or_url_follow">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
 
@@ -2189,6 +2243,7 @@
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
+    <string name="reader_toast_err_tag_already_following">You\'re already following this tag</string>
     <string name="reader_toast_err_tag_not_valid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_adding_tag">Unable to add this tag</string>
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
@@ -2229,6 +2284,7 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
+    <string name="reader_no_followed_tags_text_title">No followed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
@@ -2439,7 +2495,7 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
-    <string name="site_picker_add_site">Add new site</string>
+    <string name="site_picker_add_a_site">Add a site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
@@ -2447,6 +2503,10 @@
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="site_picker_edit_pins">Edit Pins</string>
+    <string name="site_picker_pinned_sites">Pinned Sites</string>
+    <string name="site_picker_all_sites">All Sites</string>
+    <string name="site_picker_recent_sites">Recent Sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -4164,9 +4224,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Last week you had %1$s views, 1 like, and %2$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Last week you had %1$s views, %2$s likes, and 1 comment.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Last week you had %1$s views, 1 like, and 1 comment.</string>
     <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Last week you had %1$s views and 1 like</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_comment">Last week you had %1$s views and 1 comment</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>
@@ -4794,4 +4859,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
 </resources>

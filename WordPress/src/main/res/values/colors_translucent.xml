@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <color name="black_translucent_10">#1A000000</color>
     <color name="black_translucent_20">#33000000</color>
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
     <color name="black_translucent_60">#99000000</color>
 
+    <color name="white_translucent_10">#1Affffff</color>
     <color name="white_translucent_20">#33ffffff</color>
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_50">#80ffffff</color>

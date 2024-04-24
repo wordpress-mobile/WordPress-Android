@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-24 17:19:42+0000
+Translation-Revision-Date: 2024-04-15 19:07:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Afgelopen week had je %1$s weergaven en 1 reactie</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Afgelopen week had je %1$s weergaven en 1 vind-ik-leuk</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Afgelopen week had je %1$s weergaven, 1 vind-ik-leuk en 1 reactie.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Afgelopen week had je %1$s weergaven, %2$s vind-ik-leuks en 1 reactie.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Vorige week had je %1$s weergaven, 1 vind-ik-leuk en %2$s reacties.</string>
+    <string name="site_picker_recent_sites">Recente sites</string>
+    <string name="site_picker_all_sites">Alle sites</string>
+    <string name="site_picker_pinned_sites">Vastgezette sites</string>
+    <string name="site_picker_edit_pins">Bewerk pins</string>
+    <string name="dialog_post_autosave_body_for_page">Je hebt niet-opgeslagen wijzigingen aangebracht in dit bericht vanaf een ander apparaat. Selecteer de versie van het bericht dat je wil behouden.</string>
+    <string name="dialog_post_autosave_body">Je hebt niet-opgeslagen wijzigingen aangebracht in dit bericht vanaf een ander apparaat. Selecteer de versie van het bericht die je wil behouden.</string>
+    <string name="dialog_post_autosave_title">Automatisch opslaan beschikbaar</string>
+    <string name="dialog_post_conflict_another_device">Een ander apparaat</string>
+    <string name="dialog_post_conflict_current_device">Huidig apparaat</string>
+    <string name="dialog_post_conflict_body_for_page">De pagina is aangepast op een ander apparaat. Selecteer de versie van de pagina die je wil behouden.</string>
+    <string name="dialog_post_conflict_body">Het bericht is aangepast op een ander apparaat. Selecteer de versie van het bericht dat je wil behouden.</string>
+    <string name="dialog_post_conflict_title">Conflict oplossen</string>
+    <string name="reader_preferences_font_size_extra_large">Extra groot</string>
+    <string name="reader_preferences_font_size_large">Groot</string>
+    <string name="reader_preferences_font_size_normal">Normaal</string>
+    <string name="reader_preferences_font_size_small">Klein</string>
+    <string name="reader_preferences_font_size_extra_small">Extra klein</string>
+    <string name="reader_preferences_screen_font_size_label">Lettertype grootte</string>
+    <string name="reader_preferences_screen_font_family_label">Lettertype</string>
+    <string name="reader_preferences_screen_theme_label">Kleurenschema</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">verzend je feedback</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
+    <string name="gutenberg_native_clear_selected_color">Wis geselecteerde kleur</string>
+    <string name="reader_no_followed_tags_text_title">Geen gevolgde tags</string>
+    <string name="reader_toast_err_tag_already_following">Je volgt deze tag al</string>
+    <string name="reader_menu_reading_preferences">Leesvoorkeuren</string>
+    <string name="reader_page_followed_tags_text_title">Gevolgde tags</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Avond</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Zacht</string>
+    <string name="reader_preferences_theme_system">Standaard</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">verzend je feedback</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Dit is een nieuwe functie die nog in ontwikkeling is. Om ons te helpen het te verbeteren %s.</string>
+    <string name="reader_preferences_screen_preview_text">Kies je kleuren, lettertypen en groottes. Bekijk hier een voorbeeld van je selectie en lees berichten met je stijlen zodra je klaar bent.</string>
+    <string name="reader_preferences_screen_preview_title">Leesvoorkeuren</string>
+    <string name="reader_filter_empty_tags_action_follow">Volg een tag</string>
+    <string name="button_read">Lees</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Je kan je berichttekst kopiëren als de fout betrekking heeft op je content. Kopieer de foutdetails om te debuggen en te delen met de ondersteuning.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">De editor is op een onverwacht probleem gestuit</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Tik hier om de berichttekst te kopiëren</string>
@@ -14,8 +59,6 @@ Language: nl
     <string name="gutenberg_native_copy_error_details">Foutdetails kopiëren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knop om berichttekst te kopiëren</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knop om foutdetails te kopiëren</string>
-    <string name="editor_updating_post_failed">Fout bij het bijwerken van berichtcontent.</string>
-    <string name="editor_updating_post">Berichtcontent updaten</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videobijschrift. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videobijschrift. Leeg</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bewerken</string>
@@ -76,9 +119,11 @@ Language: nl
     <string name="reader_dropdown_menu_subscriptions">Abonnementen</string>
     <string name="reader_dropdown_menu_discover">Ontdek</string>
     <string name="reader_search_content_description">Zoeken</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Volg tags</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blogs om je op te abonneren</string>
     <string name="reader_filter_empty_tags_action_suggested">Voorgestelde tags</string>
     <string name="reader_filter_empty_blogs_action_search">Een blog zoeken</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Volg een tag en je zult de beste berichten ervan hier kunnen zien.</string>
     <string name="reader_filter_empty_tags_list_title">Geen tags</string>
     <string name="reader_filter_empty_blogs_list_text">Abonneer je op blogs in Ontdek en je ziet hun nieuwste berichten hier. Of zoek een blog die je al leuk vindt.</string>
     <string name="reader_filter_empty_blogs_list_title">Geen blog-abonnementen</string>
@@ -1467,6 +1512,7 @@ Language: nl
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
     <string name="continue_site_credentials">Ga verder met winkel-referenties</string>
     <string name="login_find_your_connected_email">Vind je verbonden e-mail</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Probeer meer tags te volgen om de zoekopdracht te verbreden</string>
     <string name="reader_discover_no_posts_title">Geen recente berichten</string>
     <string name="reader_discover_empty_title">Welkom!</string>
     <string name="scan">Scan</string>
@@ -1517,6 +1563,7 @@ Language: nl
     <string name="photo_picker_wordpress_media_library">Kies uit WordPress mediabibliotheek</string>
     <string name="reader_label_toolbar_back">Terug</string>
     <string name="reader_discover_empty_button_text">Aan de slag</string>
+    <string name="reader_discover_empty_subtitle_follow">Volg tags om nieuwe blogs te ontdekken</string>
     <string name="reader_post_details_header_by_author_name">Door</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Deze verwijzer kan niet gemarkeerd worden als spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Markering als spam ongedaan maken</string>
@@ -3446,7 +3493,7 @@ Language: nl
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="site_picker_create_wpcom">WordPress.com site maken</string>
     <string name="site_picker_add_self_hosted">Een zelf-gehoste site toevoegen</string>
-    <string name="site_picker_add_site">Voeg nieuwe site toe</string>
+    <string name="site_picker_add_a_site">Voeg een site toe</string>
     <string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
     <string name="site_picker_title">Site kiezen</string>
     <string name="my_site_btn_view_site">Bekijk site</string>
@@ -3524,6 +3571,7 @@ Language: nl
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="schedule_verb">Inplannen</string>
     <string name="update_verb">Update</string>
+    <string name="reader_hint_add_tag_or_url_follow">Voer een URL of tag in om te volgen</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>
     <string name="help">Help</string>

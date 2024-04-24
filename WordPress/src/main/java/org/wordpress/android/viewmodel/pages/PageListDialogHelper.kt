@@ -6,6 +6,9 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISIO
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNPUBLISHED_REVISION_DIALOG_SHOWN
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.ui.posts.PostResolutionConfirmationType
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
+import org.wordpress.android.ui.posts.PostResolutionType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -20,23 +23,44 @@ private const val POST_TYPE = "post_type"
 
 class PageListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
+    private val isPostConflictResolutionEnabled: Boolean
 ) {
+    private var pageIdForConflictResolutionDialog: Int? = null
     private var pageIdForAutosaveRevisionResolutionDialog: RemoteId? = null
     private var pageIdForDeleteDialog: RemoteId? = null
     private var pageIdForCopyDialog: RemoteId? = null
 
     fun showAutoSaveRevisionDialog(page: PostModel) {
-        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "page"))
-        val dialogHolder = DialogHolder(
-            tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
-            title = UiStringRes(R.string.dialog_confirm_autosave_title),
-            message = PostUtils.getCustomStringForAutosaveRevisionDialog(page),
-            positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
-            negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
-        )
         pageIdForAutosaveRevisionResolutionDialog = RemoteId(page.remotePostId)
-        showDialog.invoke(dialogHolder)
+        if (isPostConflictResolutionEnabled) {
+            showConflictResolutionOverlay?.invoke(
+                PostResolutionOverlayActionEvent.ShowDialogAction(
+                    page, PostResolutionType.AUTOSAVE_REVISION_CONFLICT
+                )
+            )
+        } else {
+            analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "page"))
+            val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_autosave_title),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(page),
+                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+            )
+            showDialog.invoke(dialogHolder)
+        }
+    }
+
+    fun showConflictedPostResolutionDialog(page: PostModel) {
+        pageIdForConflictResolutionDialog = page.id
+        showConflictResolutionOverlay?.invoke(
+            PostResolutionOverlayActionEvent.ShowDialogAction(
+                page,
+                PostResolutionType.SYNC_CONFLICT
+            )
+        )
     }
 
     fun showDeletePageConfirmationDialog(pageId: RemoteId, pageTitle: String) {
@@ -116,6 +140,72 @@ class PageListDialogHelper(
                 copyPage(it)
             } ?: throw NullPointerException("pageIdForCopyDialog shouldn't be null.")
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
+        }
+    }
+
+    fun onPostResolutionConfirmed(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionType) {
+            PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> {
+                handleAutosaveRevisionConflict(event, editPage)
+            }
+
+            PostResolutionType.SYNC_CONFLICT -> {
+                handleSyncRevisionConflict(
+                    event,
+                    updateConflictedPostWithLocalVersion,
+                    updateConflictedPostWithRemoteVersion
+                )
+            }
+        }
+    }
+
+    private fun handleAutosaveRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        editPage: (RemoteId, LoadAutoSaveRevision) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                pageIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the local page (don't use the auto save version)
+                    editPage(it, false)
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                pageIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the restored auto save
+                    pageIdForAutosaveRevisionResolutionDialog = null
+                    editPage(it, true)
+                }
+            }
+        }
+    }
+
+    private fun handleSyncRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                pageIdForConflictResolutionDialog?.let {
+                    // load version from local
+                    updateConflictedPostWithLocalVersion(it)
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                pageIdForConflictResolutionDialog?.let {
+                    pageIdForConflictResolutionDialog = null
+                    // load version from remote
+                    updateConflictedPostWithRemoteVersion(it)
+                }
+            }
         }
     }
 }

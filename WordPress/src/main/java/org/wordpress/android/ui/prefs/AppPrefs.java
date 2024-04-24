@@ -47,7 +47,7 @@ public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
 
     // store twice as many recent sites as we show
-    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
 
     private static final Gson GSON = new Gson();
@@ -202,6 +202,7 @@ public class AppPrefs {
         SHOULD_HIDE_BLOGANUARY_NUDGE_CARD,
         SHOULD_HIDE_SOTW2023_NUDGE_CARD,
         SHOULD_HIDE_DYNAMIC_CARD,
+        PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
     }
 
@@ -1769,6 +1770,14 @@ public class AppPrefs {
 
     public static boolean getShouldHideDynamicCard(@NonNull final String id) {
         return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_DYNAMIC_CARD.name() + id, false);
+    }
+
+    @NonNull public static String getPinnedSiteLocalIds() {
+        return getString(DeletablePrefKey.PINNED_SITE_IDS, "[]");
+    }
+
+    public static void setPinnedSiteLocalIds(@NonNull final String ids) {
+        setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
     }
 
     @Nullable

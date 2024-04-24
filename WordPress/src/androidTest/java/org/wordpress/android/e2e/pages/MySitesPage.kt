@@ -63,15 +63,7 @@ class MySitesPage {
 
     fun startNewSite() {
         switchSite()
-        // If the device has a narrower display, the menu_add is hidden in the overflow
-        if (WPSupportUtils.isElementDisplayed(R.id.menu_add)) {
-            WPSupportUtils.clickOn(R.id.menu_add)
-        } else {
-            // open the overflow and then click on the item with text
-            Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
-            Espresso.onView(ViewMatchers.withText(WPSupportUtils.getTranslatedString(R.string.site_picker_add_site)))
-                .perform(ViewActions.click())
-        }
+        WPSupportUtils.clickOn(R.id.button_add_site)
     }
 
     fun goToSettings() {

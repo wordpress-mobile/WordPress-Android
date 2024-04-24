@@ -54,7 +54,7 @@ class BarcodeScanningFragment : Fragment() {
                         },
                         onScannedResult = { codeScannerStatus ->
                             viewLifecycleOwner.lifecycleScope.launch {
-                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                                     codeScannerStatus.collect { status ->
                                         setResultAndPopStack(status)
                                     }
@@ -90,8 +90,10 @@ class BarcodeScanningFragment : Fragment() {
     }
 
     private fun setResultAndPopStack(status: CodeScannerStatus) {
-        setFragmentResult(KEY_BARCODE_SCANNING_REQUEST, bundleOf(KEY_BARCODE_SCANNING_SCAN_STATUS to status))
-        requireActivity().supportFragmentManager.popBackStackImmediate()
+        if (isAdded) {
+            setFragmentResult(KEY_BARCODE_SCANNING_REQUEST, bundleOf(KEY_BARCODE_SCANNING_SCAN_STATUS to status))
+            requireActivity().supportFragmentManager.popBackStackImmediate()
+        }
     }
 
     companion object {

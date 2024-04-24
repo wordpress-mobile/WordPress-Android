@@ -34,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -51,7 +51,7 @@ class MinifiedWidgetUpdater
     private val todayInsightsStore: TodayInsightsStore,
     private val widgetUtils: WidgetUtils,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 ) : WidgetUpdater {
     private val coroutineScope = CoroutineScope(defaultDispatcher)
     override fun updateAppWidget(
@@ -79,8 +79,8 @@ class MinifiedWidgetUpdater
             views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
             views.setViewVisibility(R.id.widget_retry_button, View.GONE)
 
-            val timeframe = if (statsTrafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
-            val granularity = if (statsTrafficTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
+            val timeframe = if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+            val granularity = if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
 
             views.setOnClickPendingIntent(
                 R.id.widget_container,

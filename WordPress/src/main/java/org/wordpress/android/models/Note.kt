@@ -224,9 +224,13 @@ class Note {
      * Setters
      */
 
-    fun setRead() {
+    fun setRead() = updateReadState(1)
+
+    fun setUnread() = updateReadState(0)
+
+    private fun updateReadState(read: Int) {
         try {
-            mNoteJSON?.putOpt("read", 1)
+            mNoteJSON?.putOpt("read", read)
         } catch (e: JSONException) {
             AppLog.e(AppLog.T.NOTIFS, "Failed to set 'read' property", e)
         }

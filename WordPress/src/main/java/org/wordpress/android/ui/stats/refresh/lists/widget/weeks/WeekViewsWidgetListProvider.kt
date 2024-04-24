@@ -15,7 +15,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import javax.inject.Inject
 
 class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
@@ -26,7 +26,7 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
     lateinit var widgetUpdater: WeekViewsWidgetUpdater
 
     @Inject
-    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
@@ -73,8 +73,8 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
         rv.setTextViewText(R.id.period, uiModel.key)
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
-        val timeframe = if (trafficTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
-        if (trafficTabFeatureConfig.isEnabled()) {
+        val timeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        if (trafficSubscribersTabFeatureConfig.isEnabled()) {
             intent.putExtra(StatsActivity.ARG_GRANULARITY, StatsGranularity.WEEKS)
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

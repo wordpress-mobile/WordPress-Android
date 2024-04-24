@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-21 09:54:09+0000
+Translation-Revision-Date: 2024-04-17 10:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">先週、%1$s件の表示と1件のコメントがありました</string>
+    <string name="weekly_roundup_notification_text_views_and_like">先週、%1$s件の表示と1件の「いいね」がありました</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">先週、%1$s件の表示、1件の「いいね」、1件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">先週、%1$s件の表示、%2$s件の「いいね」、1件のコメントがありました。</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">先週、%1$s件の表示、1件の「いいね」、%2$s件のコメントがありました。</string>
+    <string name="site_picker_recent_sites">最近のサイト</string>
+    <string name="site_picker_all_sites">すべてのサイト</string>
+    <string name="site_picker_pinned_sites">固定済みサイト</string>
+    <string name="site_picker_edit_pins">固定を編集</string>
+    <string name="dialog_post_autosave_body_for_page">別のデバイスからこのページに加えられた未保存の変更があります。 保持するページのバージョンを選択してください。</string>
+    <string name="dialog_post_autosave_body">別のデバイスからこの投稿に加えられた未保存の変更があります。 保持する投稿のバージョンを選択してください。</string>
+    <string name="dialog_post_autosave_title">自動保存が利用可能</string>
+    <string name="dialog_post_conflict_another_device">別のデバイス</string>
+    <string name="dialog_post_conflict_current_device">現在のデバイス</string>
+    <string name="dialog_post_conflict_body_for_page">ページが別のデバイスで編集されました。 保持するページのバージョンを選択してください。</string>
+    <string name="dialog_post_conflict_body">投稿が別のデバイスで編集されました。 保持する投稿のバージョンを選択してください。</string>
+    <string name="dialog_post_conflict_title">競合を解決</string>
+    <string name="reader_preferences_font_size_extra_large">特大</string>
+    <string name="reader_preferences_font_size_large">大</string>
+    <string name="reader_preferences_font_size_normal">通常</string>
+    <string name="reader_preferences_font_size_small">小</string>
+    <string name="reader_preferences_font_size_extra_small">極小</string>
+    <string name="reader_preferences_screen_font_size_label">フォントサイズ</string>
+    <string name="reader_preferences_screen_font_family_label">フォント</string>
+    <string name="reader_preferences_screen_theme_label">配色</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">フィードバックを送る</string>
+    <string name="reader_toast_err_tag_already_following">すでにこのタグをフォローしています</string>
+    <string name="reader_menu_reading_preferences">閲覧の設定</string>
+    <string name="reader_page_followed_tags_text_title">フォロー中のタグ</string>
+    <string name="reader_preferences_theme_candy">キャンディー</string>
+    <string name="reader_preferences_theme_evening">イヴニング</string>
+    <string name="reader_preferences_theme_sepia">セピア</string>
+    <string name="reader_preferences_theme_soft">ソフト</string>
+    <string name="reader_preferences_theme_system">デフォルト</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">フィードバックを送る</string>
+    <string name="reader_preferences_screen_preview_text_feedback">これはまだ開発中の新機能です。 改善にご協力ください%s。</string>
+    <string name="reader_preferences_screen_preview_text">カラー、フォント、サイズを選択します。 ここで選択内容をプレビューし、完成後にスタイルを適用して投稿を読むことができます。</string>
+    <string name="reader_preferences_screen_preview_title">閲覧の設定</string>
+    <string name="reader_filter_empty_tags_action_follow">タグをフォローする</string>
+    <string name="button_read">読む</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">コンテンツが影響を受けた場合に備えて投稿内容をコピーできます。 エラーの詳細をコピーしてデバッグし、サポートと共有してください。</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">エディターで予期しないエラーが発生しました。</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">投稿内容をコピーするには、ここをタップします</string>
@@ -14,8 +54,6 @@ Language: ja_JP
     <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
     <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
     <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
-    <string name="editor_updating_post_failed">投稿コンテンツの更新に失敗しました。</string>
-    <string name="editor_updating_post">投稿コンテンツを更新しています</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
@@ -76,9 +114,11 @@ Language: ja_JP
     <string name="reader_dropdown_menu_subscriptions">サブスクリプション</string>
     <string name="reader_dropdown_menu_discover">ディスカバー</string>
     <string name="reader_search_content_description">検索</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">タグをフォローする</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">購読するブログ</string>
     <string name="reader_filter_empty_tags_action_suggested">おすすめのタグ</string>
     <string name="reader_filter_empty_blogs_action_search">ブログを検索</string>
+    <string name="reader_filter_empty_tags_list_follow_text">タグをフォローすると、そのタグの最適の投稿がこちらに表示されます。</string>
     <string name="reader_filter_empty_tags_list_title">タグなし</string>
     <string name="reader_filter_empty_blogs_list_text">「ディスカバー」でブログを購読すると、最新の投稿がこちらに表示されます。 またはすでに気に入っているブログを検索します。</string>
     <string name="reader_filter_empty_blogs_list_title">ブログ購読はありません</string>
@@ -1243,6 +1283,7 @@ Language: ja_JP
     <string name="gutenberg_native_audio_file">音声ファイル</string>
     <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
+    <string name="gutenberg_native_add_audio">音声ファイルを追加</string>
     <string name="continue_with_wpcom">WordPress.com でログインまたは登録</string>
     <string name="photo_picker_use_audio">この音声を使用</string>
     <string name="photo_picker_choose_audio">端末から音声を選択</string>
@@ -1460,6 +1501,7 @@ Language: ja_JP
     <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
     <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
     <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
+    <string name="reader_discover_no_posts_follow_subtitle">もっと多くのタグをフォローして、検索範囲を広げてみてください</string>
     <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
     <string name="reader_discover_empty_title">ようこそ !</string>
     <string name="scan">スキャン</string>
@@ -1510,6 +1552,7 @@ Language: ja_JP
     <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
     <string name="reader_label_toolbar_back">戻る</string>
     <string name="reader_discover_empty_button_text">今すぐ始める</string>
+    <string name="reader_discover_empty_subtitle_follow">タグをフォローして新しいブログを見つける</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">このリファラーはスパムとしてマークできません</string>
     <string name="stats_referrer_popup_unmark_as_spam">スパムとしてのマークを解除</string>
@@ -3439,7 +3482,7 @@ Language: ja_JP
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="site_picker_create_wpcom">WordPress.com サイトを作成</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>
-    <string name="site_picker_add_site">新規サイトを追加</string>
+    <string name="site_picker_add_a_site">サイトを追加</string>
     <string name="site_picker_edit_visibility">サイトを表示/非表示</string>
     <string name="site_picker_title">サイトを選択</string>
     <string name="my_site_btn_view_site">サイトを表示</string>
@@ -3517,6 +3560,7 @@ Language: ja_JP
     <string name="reader_toast_err_generic">操作を実行できませんでした</string>
     <string name="schedule_verb">予約</string>
     <string name="update_verb">更新</string>
+    <string name="reader_hint_add_tag_or_url_follow">フォローする URL またはタグを入力</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>
     <string name="help">ヘルプ</string>

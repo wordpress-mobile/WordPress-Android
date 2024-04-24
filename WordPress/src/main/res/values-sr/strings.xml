@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: sr_RS
 -->
 <resources>
@@ -1733,7 +1733,6 @@ Language: sr_RS
     <string name="site_picker_create_wpcom">Направи WordPress.com сајт</string>
     <string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>
     <string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
-    <string name="site_picker_add_site">Додај нови сајт</string>
     <string name="my_site_btn_view_admin">Види управљање</string>
     <string name="my_site_btn_view_site">Види веб место</string>
     <string name="site_picker_title">Одабери веб место</string>

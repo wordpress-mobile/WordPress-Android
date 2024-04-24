@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvid
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class TodayWidgetBlockListViewModel
     private val todayWidgetUpdater: TodayWidgetUpdater,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val statsUtils: StatsUtils,
-    private val trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 ) : WidgetBlockListViewModel {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -83,7 +83,7 @@ class TodayWidgetBlockListViewModel
                 statsUtils.toFormattedString(domainModel.views, MILLION),
                 resourceProvider.getString(R.string.stats_visitors),
                 statsUtils.toFormattedString(domainModel.visitors, MILLION),
-                targetTimeframe = if (trafficTabFeatureConfig.isEnabled()) {
+                targetTimeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) {
                     StatsTimeframe.TRAFFIC
                 } else StatsTimeframe.INSIGHTS
             ),
@@ -94,9 +94,11 @@ class TodayWidgetBlockListViewModel
                 statsUtils.toFormattedString(domainModel.likes, MILLION),
                 resourceProvider.getString(R.string.stats_comments),
                 statsUtils.toFormattedString(domainModel.comments, MILLION),
-                targetTimeframe = if (trafficTabFeatureConfig.isEnabled()) {
+                targetTimeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) {
                     StatsTimeframe.TRAFFIC
-                } else StatsTimeframe.INSIGHTS
+                } else {
+                    StatsTimeframe.INSIGHTS
+                }
             )
         )
     }

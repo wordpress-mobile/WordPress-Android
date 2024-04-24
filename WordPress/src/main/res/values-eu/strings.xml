@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-07-23 20:48:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: eu_ES
 -->
 <resources>
@@ -406,7 +406,6 @@ Language: eu_ES
     <string name="site_picker_create_wpcom">Sortu WordPress.com gunea</string>
     <string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
     <string name="site_picker_edit_visibility">Erakutsi/ezkutatu guneak</string>
-    <string name="site_picker_add_site">Gehitu gune berria</string>
     <string name="my_site_btn_view_site">Ikusi gunea</string>
     <string name="site_picker_title">Aukeratu gunea</string>
     <string name="my_site_btn_switch_site">Aldatu gunez</string>

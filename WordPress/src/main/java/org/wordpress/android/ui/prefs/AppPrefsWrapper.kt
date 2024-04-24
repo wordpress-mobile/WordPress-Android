@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
@@ -473,6 +474,15 @@ class AppPrefsWrapper @Inject constructor() {
     var savedPrivacyBannerSettings: Boolean
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
         set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
+
+    var pinnedSiteLocalIds: MutableSet<Int>
+        get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
+        set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))
+
+    fun getRecentSiteLocalIds(): MutableSet<Int> = AppPrefs.getRecentlyPickedSiteIds().toMutableSet()
+    fun addRecentSiteLocalId(siteLocalId: Int) {
+        AppPrefs.addRecentlyPickedSiteId(siteLocalId)
+    }
 
     companion object {
         private const val LIGHT_MODE_ID = 0

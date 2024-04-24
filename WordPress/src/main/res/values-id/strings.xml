@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 10:54:08+0000
+Translation-Revision-Date: 2024-04-18 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 komentar</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 suka</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Minggu lalu Anda mendapatkan %1$s penayangan, 1 suka, dan 1 komentar.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Minggu lalu Anda mendapatkan %1$s penayangan, %2$s suka, dan 1 komentar.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Minggu lalu Anda mendapatkan %1$s penayangan, 1 suka, dan %2$s komentar.</string>
+    <string name="site_picker_recent_sites">Situs Terbaru</string>
+    <string name="site_picker_all_sites">Semua Situs</string>
+    <string name="site_picker_pinned_sites">Situs yang Disematkan</string>
+    <string name="site_picker_edit_pins">Edit Sematan</string>
+    <string name="dialog_post_autosave_body_for_page">Anda telah membuat perubahan yang tidak tersimpan pada halaman ini dari perangkat lain. Pilih versi halaman yang ingin disimpan.</string>
+    <string name="dialog_post_autosave_body">Anda telah membuat perubahan yang tidak tersimpan pada pos ini dari perangkat lain. Pilih versi pos yang ingin disimpan.</string>
+    <string name="dialog_post_autosave_title">Simpan Otomatis Tersedia</string>
+    <string name="dialog_post_conflict_another_device">Perangkat Lain</string>
+    <string name="dialog_post_conflict_current_device">Perangkat Saat Ini</string>
+    <string name="dialog_post_conflict_body_for_page">Halaman diubah di perangkat lain. Pilih versi halaman yang ingin disimpan.</string>
+    <string name="dialog_post_conflict_body">Pos diubah di perangkat lain. Pilih versi pos yang ingin disimpan.</string>
+    <string name="dialog_post_conflict_title">Selesaikan Konflik</string>
+    <string name="reader_preferences_font_size_extra_large">Ekstra besar</string>
+    <string name="reader_preferences_font_size_large">Besar</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_small">Kecil</string>
+    <string name="reader_preferences_font_size_extra_small">Ekstra kecil</string>
+    <string name="reader_preferences_screen_font_size_label">Ukuran Font</string>
+    <string name="reader_preferences_screen_font_family_label">Font</string>
+    <string name="reader_preferences_screen_theme_label">Skema Warna</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">kirim feedback Anda</string>
+    <string name="gutenberg_native_clear_selected_color">Batalkan warna yang dipilih</string>
+    <string name="reader_no_followed_tags_text_title">Tidak ada tag yang diikuti</string>
+    <string name="reader_toast_err_tag_already_following">Anda telah mengikuti tag ini</string>
+    <string name="reader_menu_reading_preferences">Preferensi Reader</string>
+    <string name="reader_page_followed_tags_text_title">Tag yang diikuti</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">Malam</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">kirim feedback Anda</string>
+    <string name="reader_preferences_screen_preview_text_feedback">Ini merupakan fitur baru yang masih dikembangkan. Untuk membantu kami meningkatkannya %s.</string>
+    <string name="reader_preferences_screen_preview_text">Pilih warna, font, dan ukuran Anda. Pratinjau pilihan di sini, dan baca pos sesuai gaya Anda setelah selesai.</string>
+    <string name="reader_preferences_screen_preview_title">Preferensi Reader</string>
+    <string name="reader_filter_empty_tags_action_follow">Ikuti sebuah tag</string>
+    <string name="button_read">Baca</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Anda dapat menyalin teks pos seandainya konten Anda terdampak. Salin detail error untuk di-debug dan dibagikan kepada dukungan.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Editor mengalami error tak terduga</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Ketuk di sini untuk menyalin teks pos</string>
@@ -14,8 +58,6 @@ Language: id
     <string name="gutenberg_native_copy_error_details">Salin detail error</string>
     <string name="gutenberg_native_button_to_copy_post_text">Tombol untuk menyalin teks pos</string>
     <string name="gutenberg_native_button_to_copy_error_details">Tombol untuk menyalin detail error</string>
-    <string name="editor_updating_post_failed">Gagal memperbarui konten pos</string>
-    <string name="editor_updating_post">Memperbarui konten pos</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Keterangan video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Keterangan video. Kosong</string>
     <string name="gutenberg_native_edit_video_024aee6d">Sunting video</string>
@@ -31,12 +73,15 @@ Language: id
     <string name="error_media_could_not_share_media_from_device">Tidak dapat memuat media untuk dibagikan. Harap periksa perizinan aplikasi\n        atau gunakan pustaka media aplikasi.</string>
     <string name="site_monitoring_cannot_be_started">Saat ini kami tidak dapat membuka pemantauan situs. Coba lagi nanti</string>
     <string name="site_monitoring_tab_title_web_server_logs">Log Server web</string>
+    <string name="site_monitoring_tab_title_php_logs">Log PHP</string>
+    <string name="site_monitoring_tab_title_metrics">Metrik</string>
     <string name="site_monitoring">Pemantauan Situs</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gunakan &lt;b&gt;Temukan&lt;/b&gt; untuk menemukan situs dan tag. Coba pilih &lt;b&gt;Langganan&lt;/b&gt; untuk melihat konten langganan dan mengelola langganan Anda.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Buka langganan</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">Blog langganan Anda belum mengeposkan apa pun akhir-akhir ini</string>
     <string name="reader_no_followed_blogs_description_subs">Langganan blog di Temukan atau cari blog yang sudah Anda sukai.</string>
     <string name="reader_no_recommended_blogs_title">Tidak ada blog rekomendasi</string>
+    <string name="reader_no_posts_with_this_tag">Belum ada pos dengan tag ini</string>
     <string name="reader_toast_err_unable_to_block_blog">Tidak dapat memblokir blog ini</string>
     <string name="reader_toast_posts_from_this_blog_blocked">Pos dari blog ini tidak akan ditampilkan lagi</string>
     <string name="reader_toast_err_unable_to_unfollow_blog">Tidak dapat berhenti berlangganan blog</string>
@@ -44,6 +89,7 @@ Language: id
     <string name="reader_toast_err_unable_to_follow_blog">Tidak dapat berlangganan blog ini</string>
     <string name="reader_toast_err_already_follow_this_blog">Anda sudah berlangganan blog ini</string>
     <string name="reader_toast_err_show_blog">Tidak dapat menampilkan blog ini</string>
+    <string name="reader_label_choose_interests">Pilih minat Anda</string>
     <string name="reader_label_subscribers_count_single">1 pelanggan</string>
     <string name="reader_label_subscribers_count">%s pelanggan</string>
     <string name="reader_label_subscribe_count">%,d Pelanggan</string>
@@ -51,10 +97,12 @@ Language: id
     <string name="reader_hint_search_subscribed_blogs">Cari blog langganan</string>
     <string name="reader_btn_subscribed">Telah berlangganan</string>
     <string name="reader_btn_subscribe">Berlangganan</string>
+    <string name="reader_menu_block_this_blog">Blokir blog ini</string>
     <string name="reader_menu_tags_and_blogs">Sunting tag dan blog</string>
     <string name="reader_page_followed_blogs_title">Telah berlangganan blog</string>
     <string name="reader_title_tags">Ikuti tag</string>
     <string name="reader_activity_title_manage_tags_blogs">Kelola Tag &amp; Blog</string>
+    <string name="reader_activity_title_tag_preview">Tag</string>
     <string name="reader_activity_title_blog_preview">Blog Pembaca</string>
     <string name="reader_subscribed_display_name">Telah berlangganan</string>
     <string name="reader_filter_chip_tag_other">%d Tag</string>
@@ -70,9 +118,11 @@ Language: id
     <string name="reader_dropdown_menu_subscriptions">Langganan</string>
     <string name="reader_dropdown_menu_discover">Temukan</string>
     <string name="reader_search_content_description">Pencarian</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Ikuti tag</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">Blog untuk dijadikan langganan</string>
     <string name="reader_filter_empty_tags_action_suggested">Tag yang diusulkan</string>
     <string name="reader_filter_empty_blogs_action_search">Cari blog</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Ikuti tag dan Anda akan dapat melihat pos dengan tag terbaik di sini.</string>
     <string name="reader_filter_empty_tags_list_title">Tidak ada tag</string>
     <string name="reader_filter_empty_blogs_list_text">Berlangganan blog di Temukan dan Anda akan melihat pos terbarunya di sini. Atau, cari blog yang sudah Anda sukai.</string>
     <string name="reader_filter_empty_blogs_list_title">Tidak ada langganan blog</string>
@@ -99,6 +149,7 @@ Language: id
     <string name="domains_free_domain">Domain WordPress.com gratis</string>
     <string name="domains_site_other_domains">Domain lain untuk %s</string>
     <string name="domains_primary_site_domain_chip">Domain utama</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary telah hadir!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Ayo mulai!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Nyalakan prompt blogging</string>
@@ -110,6 +161,7 @@ Language: id
     <string name="bloganuary_dashboard_nudge_overlay_title">Ikuti tantangan menulis sebulan penuh dari kami</string>
     <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">Selama bulan Januari, prompt blogging akan datang dari Bloganuary — tantangan kami untuk komunitas guna membentuk kebiasaan blogging di tahun yang baru.</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary segera hadir!</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">Karenanya, kami menyarankan Anda untuk mengedit blok melalui browser web.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">Karenanya, kami menyarankan Anda untuk mengedit blok melalui editor web.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">Atau, Anda dapat meratakan konten dengan membatalkan pengelompokan blok.</string>
@@ -199,6 +251,8 @@ Language: id
     <string name="personalization_screen_draft_posts_card_description">Konsep pos terbaru Anda.</string>
     <string name="personalization_screen_draft_posts_card_title">Buat konsep pos</string>
     <string name="personalization_screen_stats_card_description">Kunjungan, Pengunjung, dan suka</string>
+    <string name="personalization_screen_tab_cards_footer_cards">Kartu bisa saja menampilkan konten berbeda, tergantung pada apa yang terjadi di situs Anda</string>
+    <string name="personalization_screen_tab_cards_description">Tambahkan atau sembunyikan Kartu</string>
     <string name="personalization_screen_title"> Sesuaikan tab beranda</string>
     <string name="personalize_card_content_description">Ketuk untuk mempersonalisasikan tab beranda Anda</string>
     <string name="personalize_card_text">Personalisasikan tab beranda Anda</string>
@@ -1457,6 +1511,7 @@ Language: id
     <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
     <string name="continue_site_credentials">Lanjutkan dengan kredensial toko</string>
     <string name="login_find_your_connected_email">Temukan email Anda yang terhubung</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Coba ikuti lebih banyak tag untuk memperluas pencarian</string>
     <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
     <string name="reader_discover_empty_title">Selamat datang!</string>
     <string name="scan">Pindai</string>
@@ -1507,6 +1562,7 @@ Language: id
     <string name="photo_picker_wordpress_media_library">Pilih dari Pustaka Media WordPress</string>
     <string name="reader_label_toolbar_back">Kembali</string>
     <string name="reader_discover_empty_button_text">Memulai</string>
+    <string name="reader_discover_empty_subtitle_follow">Ikuti tag untuk menemukan blog baru</string>
     <string name="reader_post_details_header_by_author_name">Oleh</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Perujuk ini tidak dapat ditandai sebagai spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>
@@ -3013,6 +3069,10 @@ Language: id
     <string name="editor_post_saved_online">Pos disimpan secara online</string>
     <string name="site_settings_image_quality_hint">Kualitas gambar. Semakin tinggi nilainya, semakin bagus kualitas gambarnya.</string>
     <string name="site_settings_optimize_images_summary">Memungkinkan pengubahan ukuran dan kompresi gambar</string>
+    <string name="media_encoder_quality_maximum">Maksimum</string>
+    <string name="media_encoder_quality_high">Tinggi</string>
+    <string name="media_encoder_quality_medium">Sedang</string>
+    <string name="media_encoder_quality_low">Rendah</string>
     <string name="media_upload_state_uploaded">Diunggah</string>
     <string name="media_upload_state_failed">Unggahan Gagal</string>
     <string name="media_upload_state_deleted">Dihapus</string>
@@ -3432,7 +3492,7 @@ Language: id
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="site_picker_create_wpcom">Buat situs WordPress.com</string>
     <string name="site_picker_add_self_hosted">Tambahkan situs yang dikelola sendiri</string>
-    <string name="site_picker_add_site">Tambah situs baru</string>
+    <string name="site_picker_add_a_site">Tambahkan situs</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
     <string name="site_picker_title">Pilih situs</string>
     <string name="my_site_btn_view_site">Tampilkan Situs</string>
@@ -3510,6 +3570,7 @@ Language: id
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
     <string name="schedule_verb">Jadwalkan</string>
     <string name="update_verb">Mutakhirkan</string>
+    <string name="reader_hint_add_tag_or_url_follow">Masukkan sebuah URL atau tag untuk diikuti</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>
     <string name="help">Bantuan</string>

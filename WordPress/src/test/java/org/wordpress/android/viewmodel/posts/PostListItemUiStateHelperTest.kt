@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadFailed
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadQueued
@@ -66,6 +67,9 @@ class PostListItemUiStateHelperTest {
     @Mock
     private lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     private lateinit var helper: PostListItemUiStateHelper
 
     @Before
@@ -75,9 +79,11 @@ class PostListItemUiStateHelperTest {
             uploadUiStateUseCase,
             labelColorUseCase,
             jetpackFeatureRemovalPhaseHelper,
-            blazeFeatureUtils
+            blazeFeatureUtils,
+            buildConfigWrapper
         )
         whenever(appPrefsWrapper.isAztecEditorEnabled).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test
@@ -88,7 +94,8 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify draft actions`() {
+    fun `given wordpress app, verify draft actions`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_DRAFT)
         )
@@ -98,6 +105,21 @@ class PostListItemUiStateHelperTest {
         assertThat(state.moreActions.actions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
         assertThat(state.moreActions.actions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat(state.moreActions.actions).hasSize(5)
+    }
+
+    @Test
+    fun `given jetpack app, verify draft actions`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_DRAFT)
+        )
+        assertThat(state.moreActions.actions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(state.moreActions.actions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(state.moreActions.actions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_PUBLISH)
+        assertThat(state.moreActions.actions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(state.moreActions.actions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(state.moreActions.actions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(state.moreActions.actions).hasSize(6)
     }
 
     @Test
@@ -114,7 +136,8 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify draft actions without publishing rights`() {
+    fun `given wordpress app, verify draft actions without publishing rights`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_DRAFT),
             capabilitiesToPublish = false
@@ -127,6 +150,24 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
         assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat(moreActions).hasSize(5)
+    }
+
+    @Test
+    fun `given jetpack app, verify draft actions without publishing rights`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_DRAFT),
+            capabilitiesToPublish = false
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_SUBMIT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(6)
     }
 
     @Test
@@ -212,8 +253,9 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify published post actions`() {
+    fun `given wordpress app, verify published post actions`() {
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
@@ -230,10 +272,31 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify published post actions when stats are not supported`() {
+    fun `given jetpack app, verify published post actions`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_PUBLISH)
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[7].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(8)
+    }
+
+    @Test
+    fun `given wordpress app, verify published post actions when stats are not supported`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH),
-            statsSupported = false
+            statsSupported = false,
         )
 
         val moreActions = state.moreActions.actions
@@ -247,8 +310,28 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `given published post with stats access when jetpack removal phase then stats is in menu`() {
+    fun `given jetpack app, verify published post actions when stats are not supported`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_PUBLISH),
+            statsSupported = false,
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
+    }
+
+    @Test
+    fun `given wordpress app, published post with stats access when jetpack removal phase then stats is in menu`() {
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
@@ -265,8 +348,29 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `given published post with stats access when not jetpack removal phase then stats is not in menu`() {
+    fun `given jetpack app, published post with stats access when jetpack removal phase then stats is in menu`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(true)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_PUBLISH)
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_STATS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[7].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(8)
+    }
+
+    @Test
+    fun `given wordpress, published post with stats access when not jetpack removal phase then stats is not in menu`() {
         whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PUBLISH)
         )
@@ -281,6 +385,24 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions).hasSize(6)
     }
 
+    @Test
+    fun `given jetpack, published post with stats access when not jetpack removal phase then stats is not in menu`() {
+        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowPublishedPostStatsButton()).thenReturn(false)
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_PUBLISH)
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_MOVE_TO_DRAFT)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_COPY)
+        assertThat(moreActions[4].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[5].buttonType).isEqualTo(PostListButtonType.BUTTON_COMMENTS)
+        assertThat(moreActions[6].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(7)
+    }
     @Test
     fun `verify published post with changes actions`() {
         val state = createPostListItemUiState(
@@ -329,7 +451,8 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify scheduled post actions`() {
+    fun `given wordpress app, verify scheduled post actions`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_SCHEDULED)
         )
@@ -339,6 +462,21 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
         assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
         assertThat(moreActions).hasSize(3)
+    }
+
+    @Test
+    fun `given jetpack app, verify scheduled post actions`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_SCHEDULED)
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(4)
     }
 
     @Test
@@ -385,7 +523,8 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `verify post pending review without publishing rights`() {
+    fun `given wordpress app, verify post pending review without publishing rights`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
         val state = createPostListItemUiState(
             post = createPostModel(status = POST_STATE_PENDING),
             capabilitiesToPublish = false
@@ -398,6 +537,21 @@ class PostListItemUiStateHelperTest {
         assertThat(moreActions).hasSize(3)
     }
 
+    @Test
+    fun `given jetpack app, verify post pending review without publishing rights`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+        val state = createPostListItemUiState(
+            post = createPostModel(status = POST_STATE_PENDING),
+            capabilitiesToPublish = false
+        )
+
+        val moreActions = state.moreActions.actions
+        assertThat(moreActions[0].buttonType).isEqualTo(PostListButtonType.BUTTON_VIEW)
+        assertThat(moreActions[1].buttonType).isEqualTo(PostListButtonType.BUTTON_READ)
+        assertThat(moreActions[2].buttonType).isEqualTo(PostListButtonType.BUTTON_SHARE)
+        assertThat(moreActions[3].buttonType).isEqualTo(PostListButtonType.BUTTON_TRASH)
+        assertThat(moreActions).hasSize(4)
+    }
     @Test
     fun `verify published post with local changes eligible for auto upload`() {
         whenever(uploadUiStateUseCase.createUploadUiState(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(

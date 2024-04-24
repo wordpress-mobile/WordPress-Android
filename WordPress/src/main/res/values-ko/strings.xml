@@ -1,11 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-20 11:54:09+0000
+Translation-Revision-Date: 2024-04-18 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="weekly_roundup_notification_text_views_and_comment">지난주에는 조회수 %1$s회, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_and_like">지난주에는 조회수 %1$s회, 좋아요 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">지난주에는 조회수 %1$s개회, 좋아요 %2$s개, 댓글 1개를 기록했습니다.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 %2$s개를 기록했습니다.</string>
+    <string name="site_picker_recent_sites">최근 사이트</string>
+    <string name="site_picker_all_sites">모든 사이트</string>
+    <string name="site_picker_pinned_sites">고정한 사이트</string>
+    <string name="site_picker_edit_pins">고정 편집</string>
+    <string name="dialog_post_autosave_body_for_page">이 페이지에 다른 기기에서 작성한 저장되지 않은 변경 사항이 있습니다. 저장할 버전의 페이지를 선택하세요.</string>
+    <string name="dialog_post_autosave_body">이 글에 다른 기기에서 작성한 저장되지 않은 변경 사항이 있습니다. 저장할 버전의 글을 선택하세요.</string>
+    <string name="dialog_post_autosave_title">자동 저장 가능</string>
+    <string name="dialog_post_conflict_another_device">다른 기기</string>
+    <string name="dialog_post_conflict_current_device">현재 기기</string>
+    <string name="dialog_post_conflict_body_for_page">이 페이지가 다른 기기에서 수정되었습니다. 저장할 버전의 페이지를 선택하세요.</string>
+    <string name="dialog_post_conflict_body">이 글이 다른 기기에서 수정되었습니다. 저장할 버전의 글을 선택하세요.</string>
+    <string name="dialog_post_conflict_title">충돌 해결</string>
+    <string name="reader_preferences_font_size_extra_large">더 크게</string>
+    <string name="reader_preferences_font_size_large">대</string>
+    <string name="reader_preferences_font_size_normal">일반</string>
+    <string name="reader_preferences_font_size_small">소</string>
+    <string name="reader_preferences_font_size_extra_small">더 작게</string>
+    <string name="reader_preferences_screen_font_size_label">글꼴 크기</string>
+    <string name="reader_preferences_screen_font_family_label">글꼴</string>
+    <string name="reader_preferences_screen_theme_label">색상표</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">피드백 보내기</string>
+    <string name="gutenberg_native_clear_selected_color">선택한 색상 지우기</string>
+    <string name="reader_no_followed_tags_text_title">팔로우한 태그 없음</string>
+    <string name="reader_toast_err_tag_already_following">이미 이 태그 팔로우 중</string>
+    <string name="reader_menu_reading_preferences">읽기 기본 설정</string>
+    <string name="reader_page_followed_tags_text_title">팔로우한 태그</string>
+    <string name="reader_preferences_theme_candy">사탕</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_evening">저녁</string>
+    <string name="reader_preferences_theme_sepia">세피아</string>
+    <string name="reader_preferences_theme_soft">부드러운</string>
+    <string name="reader_preferences_theme_system">기본</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">피드백 보내기</string>
+    <string name="reader_preferences_screen_preview_text_feedback">아직 개발 중인 새 기능입니다. 개선에 동참해 주세요(%s).</string>
+    <string name="reader_preferences_screen_preview_text">색상, 글꼴과 크기를 선택하세요. 선택한 상태를 여기에서 미리 보며 완료한 후 스타일이 적용된 글을 읽어보세요.</string>
+    <string name="reader_preferences_screen_preview_title">읽기 기본 설정</string>
+    <string name="reader_filter_empty_tags_action_follow">태그 팔로우</string>
+    <string name="button_read">읽기</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">콘텐츠가 영향을 받는 때를 대비하여 글 텍스트를 복사할 수 있습니다. 디버깅할 오류 상세 정보를 복사하고 지원팀과 공유하세요.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">편집기에서 예기치 않은 오류가 발생했습니다.</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">여기를 눌러 글 텍스트 복사</string>
@@ -14,8 +58,6 @@ Language: ko_KR
     <string name="gutenberg_native_copy_error_details">오류 상세 정보 복사</string>
     <string name="gutenberg_native_button_to_copy_post_text">글 텍스트 복사 버튼</string>
     <string name="gutenberg_native_button_to_copy_error_details">오류 상세 정보 복사 버튼</string>
-    <string name="editor_updating_post_failed">글 콘텐츠 업데이트 실패</string>
-    <string name="editor_updating_post">글 콘텐츠 업데이트 중</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">비디오 캡션. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">비디오 캡션. 비우기</string>
     <string name="gutenberg_native_edit_video_024aee6d">비디오 편집</string>
@@ -75,9 +117,11 @@ Language: ko_KR
     <string name="reader_dropdown_menu_subscriptions">구독</string>
     <string name="reader_dropdown_menu_discover">발견</string>
     <string name="reader_search_content_description">검색</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">태그 팔로우</string>
     <string name="reader_discover_recommended_blogs_to_subscribe_header">구독할 블로그</string>
     <string name="reader_filter_empty_tags_action_suggested">제안된 태그</string>
     <string name="reader_filter_empty_blogs_action_search">블로그 검색</string>
+    <string name="reader_filter_empty_tags_list_follow_text">태그를 팔로우하면 여기에서 인기 글을 확인할 수 있습니다.</string>
     <string name="reader_filter_empty_tags_list_title">태그 없음</string>
     <string name="reader_filter_empty_blogs_list_text">발견에서 블로그를 구독하면 여기에 최신 글이 표시됩니다. 아니면 이미 좋아하는 블로그를 검색하세요.</string>
     <string name="reader_filter_empty_blogs_list_title">블로그 구독 없음</string>
@@ -1460,6 +1504,7 @@ Language: ko_KR
     <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
     <string name="continue_site_credentials">상점 자격증명으로 계속하기</string>
     <string name="login_find_your_connected_email">연결한 이메일 찾기</string>
+    <string name="reader_discover_no_posts_follow_subtitle">검색 범위가 넓어지도록 추가 태그를 팔로우해 보세요.</string>
     <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
     <string name="reader_discover_empty_title">환영합니다!</string>
     <string name="scan">검색하기</string>
@@ -1510,6 +1555,7 @@ Language: ko_KR
     <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
     <string name="reader_label_toolbar_back">돌아가기</string>
     <string name="reader_discover_empty_button_text">시작하기</string>
+    <string name="reader_discover_empty_subtitle_follow">태그를 팔로우하여 새 블로그 발견하기</string>
     <string name="reader_post_details_header_by_author_name">작성자</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
@@ -3434,7 +3480,6 @@ Language: ko_KR
     <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>
     <string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
-    <string name="site_picker_add_site">사이트 추가</string>
     <string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
     <string name="site_picker_title">사이트 선택</string>
     <string name="my_site_btn_view_site">사이트 보기</string>
@@ -3512,6 +3557,7 @@ Language: ko_KR
     <string name="reader_toast_err_generic">이 작업을 실행할 수 없습니다</string>
     <string name="schedule_verb">예약</string>
     <string name="update_verb">업데이트</string>
+    <string name="reader_hint_add_tag_or_url_follow">팔로우할 태그 또는 URL 입력</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
     <string name="help">도우미</string>

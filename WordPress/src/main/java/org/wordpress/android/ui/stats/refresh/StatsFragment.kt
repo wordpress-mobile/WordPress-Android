@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.SUBSCRIBERS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
@@ -45,14 +46,14 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
-private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS)
+private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
 private var statsTrafficTabEnabled = false
 
 @AndroidEntryPoint
@@ -64,7 +65,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
-    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var mStatsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -99,7 +100,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     private fun StatsFragmentBinding.initializeViews() {
-        statsTrafficTabEnabled = statsTrafficTabFeatureConfig.isEnabled()
+        statsTrafficTabEnabled = mStatsTrafficSubscribersTabFeatureConfig.isEnabled()
 
         val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
@@ -230,6 +231,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         val position = when (selectedSection) {
             TRAFFIC -> 0
             INSIGHTS -> 1
+            SUBSCRIBERS -> 2
             DETAIL,
             INSIGHT_DETAIL,
             TOTAL_LIKES_DETAIL,

@@ -1,0 +1,3 @@
+24.6:
+- Abbiamo risolto alcuni problemi con la formattazione del testo evidenziato. Questo è l'apice della nostra settimana.
+- L'app ora supporta i suggerimenti di testo che sono più lunghi dello spazio visibile nell'editor. Nessun crash: solo testo predittivo, a vista d'occhio.

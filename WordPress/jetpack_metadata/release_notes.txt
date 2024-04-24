@@ -1,1 +1,2 @@
-Good news, everyone: we fixed the broken links on your announcement badge screen. Insights into your biggest publishing accomplishments are just a tap away.
+We redesigned the site picker screen. You can now pin your favorite sites, see recently accessed sites, and more. We also removed the ability to show and hide sites.
+(Did we say the word “sites” enough? We think so.)

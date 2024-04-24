@@ -33,6 +33,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.EditorBloggingPromptsViewModel;
 import org.wordpress.android.ui.posts.EditorJetpackSocialViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
+import org.wordpress.android.ui.posts.PostResolutionOverlayViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.prepublishing.categories.PrepublishingCategoriesViewModel;
@@ -58,6 +59,8 @@ import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.MonthsListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.SubscribersDetailListViewModel;
+import org.wordpress.android.ui.stats.refresh.lists.SubscribersListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalCommentsDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalFollowersDetailListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.TotalLikesDetailListViewModel;
@@ -79,7 +82,6 @@ import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
-import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
@@ -159,6 +161,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(SubscribersListViewModel.class)
+    abstract ViewModel subscribersTabViewModel(SubscribersListViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(TrafficListViewModel.class)
     abstract ViewModel trafficTabViewModel(TrafficListViewModel viewModel);
 
@@ -191,6 +198,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(InsightsDetailListViewModel.class)
     abstract ViewModel insightsDetailListViewModel(InsightsDetailListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SubscribersDetailListViewModel.class)
+    abstract ViewModel subscribersDetailListViewModel(SubscribersDetailListViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -311,11 +323,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FeatureAnnouncementViewModel.class)
     abstract ViewModel featureAnnouncementViewModel(FeatureAnnouncementViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SitePickerViewModel.class)
-    abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -539,4 +546,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(EditorJetpackSocialViewModel.class)
     abstract ViewModel editorJetpackSocialViewModel(EditorJetpackSocialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostResolutionOverlayViewModel.class)
+    abstract ViewModel postResolutionOverlayViewModel(PostResolutionOverlayViewModel viewModel);
 }

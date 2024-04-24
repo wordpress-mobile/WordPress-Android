@@ -18,6 +18,7 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
@@ -77,6 +78,8 @@ public class ReaderWebView extends WPWebView {
     private static boolean mBlogSchemeIsHttps;
 
     private boolean mIsDestroyed;
+
+    @Inject UserAgent mUserAgent;
     @Inject AccountStore mAccountStore;
 
     public ReaderWebView(Context context) {
@@ -103,8 +106,8 @@ public class ReaderWebView extends WPWebView {
 
             mReaderChromeClient = new ReaderWebChromeClient(this);
             this.setWebChromeClient(mReaderChromeClient);
-            this.setWebViewClient(new ReaderWebViewClient(this));
-            this.getSettings().setUserAgentString(WordPress.getUserAgent());
+            this.setWebViewClient(new ReaderWebViewClient(this, mUserAgent));
+            this.getSettings().setUserAgentString(mUserAgent.toString());
 
             // Enable third-party cookies since they are disabled by default;
             // we need third-party cookies to support authenticated images
@@ -261,12 +264,14 @@ public class ReaderWebView extends WPWebView {
 
     private static class ReaderWebViewClient extends WebViewClient {
         private final ReaderWebView mReaderWebView;
+        private final UserAgent mUserAgent;
 
-        ReaderWebViewClient(ReaderWebView readerWebView) {
+        ReaderWebViewClient(ReaderWebView readerWebView, UserAgent userAgent) {
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebViewClient requires readerWebView");
             }
             mReaderWebView = readerWebView;
+            mUserAgent = userAgent;
         }
 
 
@@ -309,7 +314,7 @@ public class ReaderWebView extends WPWebView {
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
                     conn.setReadTimeout(TIMEOUT_MS);
                     conn.setConnectTimeout(TIMEOUT_MS);
-                    conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
+                    conn.setRequestProperty("User-Agent", mUserAgent.toString());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
                             conn.getContentEncoding(),

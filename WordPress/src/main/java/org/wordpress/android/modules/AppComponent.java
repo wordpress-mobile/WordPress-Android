@@ -41,6 +41,7 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment;
 import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
 import org.wordpress.android.ui.main.AddContentAdapter;
+import org.wordpress.android.ui.main.ChooseSiteViewHolder;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -92,6 +93,7 @@ import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
+import org.wordpress.android.ui.posts.PostResolutionOverlayFragment;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
@@ -220,6 +222,8 @@ public interface AppComponent {
     void inject(AccountSettingsFragment object);
 
     void inject(SitePickerAdapter object);
+
+    void inject(ChooseSiteViewHolder object);
 
     void inject(SiteSettingsFragment object);
 
@@ -555,4 +559,6 @@ public interface AppComponent {
     void inject(WeekWidgetBlockListProviderFactory object);
 
     void inject(WPMainNavigationView object);
+
+    void inject(PostResolutionOverlayFragment object);
 }

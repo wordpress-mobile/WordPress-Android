@@ -51,6 +51,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -97,6 +98,8 @@ public class UploadUtils {
             case UNAUTHORIZED:
                 return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
                         : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case OLD_REVISION:
+                return new UiStringRes(R.string.local_post_is_conflicted);
             case UNSUPPORTED_ACTION:
             case INVALID_RESPONSE:
             case GENERIC_ERROR:
@@ -468,19 +471,21 @@ public class UploadUtils {
         return !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
     }
 
-    public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+    public static void onPostUploadedSnackbarHandler(final Activity activity,
+                                                     View snackbarAttachView,
                                                      boolean isError,
                                                      boolean isFirstTimePublish,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
                                                      SnackbarSequencer sequencer,
-                                                     @Nullable OnPublishingCallback onPublishingCallback) {
+                                                     @Nullable OnPublishingCallback onPublishingCallback,
+                                                     final boolean showRetry) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
-                if (AppPrefs.isAztecEditorEnabled()) {
+                if (AppPrefs.isAztecEditorEnabled() && showRetry) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
                             new View.OnClickListener() {
                                 @Override
@@ -653,9 +658,22 @@ public class UploadUtils {
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostImmutableModel post) {
-        return !TextUtils.isEmpty(post.getAutoSaveModified())
-               && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
-                               .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
+        // Check if the autoSaveModified field is not empty.
+        boolean isAutoSaveModifiedNotEmpty = !TextUtils.isEmpty(post.getAutoSaveModified());
+
+        // If autoSaveModified is null, return false immediately.
+        if (!isAutoSaveModifiedNotEmpty) {
+            return false;
+        }
+
+        // Parse dates from ISO8601 format.
+        Date dateLocallyChanged = DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged());
+        Date autoSaveModified = DateTimeUtils.dateFromIso8601(post.getAutoSaveModified());
+
+        // Check if dateLocallyChanged is not after autoSaveModified (it is before or the same).
+        boolean isDateLocallyChangedNotAfter = !dateLocallyChanged.after(autoSaveModified);
+
+        return isAutoSaveModifiedNotEmpty && isDateLocallyChangedNotAfter;
     }
 
     public static int cancelPendingAutoUpload(PostModel post, Dispatcher dispatcher) {

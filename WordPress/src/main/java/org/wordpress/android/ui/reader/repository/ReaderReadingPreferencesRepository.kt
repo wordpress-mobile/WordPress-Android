@@ -10,7 +10,9 @@ import org.wordpress.android.util.EnumWithFallbackValueTypeAdapterFactory
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class ReaderReadingPreferencesRepository @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
@@ -20,23 +22,31 @@ class ReaderReadingPreferencesRepository @Inject constructor(
         .registerTypeAdapterFactory(EnumWithFallbackValueTypeAdapterFactory())
         .create()
 
+    // the preferences never change during the app lifecycle, so we can cache them safely for better performance
+    private var readingPreferences: ReaderReadingPreferences? = null
+
     suspend fun getReadingPreferences(): ReaderReadingPreferences = withContext(ioDispatcher) {
         getReadingPreferencesSync()
     }
 
     fun getReadingPreferencesSync(): ReaderReadingPreferences {
-        val savedPreferences = if (readingPreferencesFeatureConfig.isEnabled()) {
-            appPrefsWrapper.readerReadingPreferencesJson
-        } else {
-            null
+        if (!readingPreferencesFeatureConfig.isEnabled()) {
+            return ReaderReadingPreferences()
         }
 
-        return savedPreferences?.let {
-            gson.fromJson(it, ReaderReadingPreferences::class.java)
-        } ?: ReaderReadingPreferences()
+        return readingPreferences ?: loadReadingPreferences().also {
+            readingPreferences = it
+        }
     }
 
     suspend fun saveReadingPreferences(preferences: ReaderReadingPreferences): Unit = withContext(ioDispatcher) {
         appPrefsWrapper.readerReadingPreferencesJson = gson.toJson(preferences)
+        readingPreferences = preferences
+    }
+
+    private fun loadReadingPreferences(): ReaderReadingPreferences {
+        return appPrefsWrapper.readerReadingPreferencesJson?.let {
+            gson.fromJson(it, ReaderReadingPreferences::class.java)
+        } ?: ReaderReadingPreferences()
     }
 }

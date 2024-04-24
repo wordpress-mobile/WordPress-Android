@@ -302,7 +302,7 @@ class QuickStartRepository
 
     fun clearMenuStep() {
         if (_quickStartMenuStep.value != null) {
-            _quickStartMenuStep.value = null
+            _quickStartMenuStep.postValue(null)
         }
     }
 

@@ -8,6 +8,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
@@ -23,7 +24,8 @@ class ReaderTracker @Inject constructor(
     private val dateProvider: DateProvider,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val readingPreferencesTracker: ReaderReadingPreferencesTracker,
 ) {
     // TODO: evaluate to use something like Dispatchers.Main.Immediate in the fun(s)
     // to sync the access to trackers; so to remove the @MainThread and make the
@@ -298,6 +300,18 @@ class ReaderTracker @Inject constructor(
     fun trackPost(
         stat: AnalyticsTracker.Stat,
         post: ReaderPost?,
+        readingPreferences: ReaderReadingPreferences,
+    ) {
+        trackPost(
+            stat,
+            post,
+            readingPreferencesTracker.getPropertiesForPreferences(readingPreferences, READING_PREFERENCES_KEYS_PREFIX)
+        )
+    }
+
+    fun trackPost(
+        stat: AnalyticsTracker.Stat,
+        post: ReaderPost?,
         source: String
     ) {
         val properties = mutableMapOf<String, Any>(
@@ -439,6 +453,7 @@ class ReaderTracker @Inject constructor(
         private const val QUANTITY_KEY = "quantity"
         private const val INTERCEPTED_URI_KEY = "intercepted_uri"
         private const val QUERY_KEY = "query"
+        private const val READING_PREFERENCES_KEYS_PREFIX = "reading_preferences"
 
         private const val SOURCE_KEY = "source"
         const val SOURCE_FOLLOWING = "following"

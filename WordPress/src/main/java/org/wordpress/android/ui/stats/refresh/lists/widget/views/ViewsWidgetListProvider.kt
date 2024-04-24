@@ -16,7 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.IS_WIDE_VIEW_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import javax.inject.Inject
 
 class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
@@ -27,7 +27,7 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     lateinit var viewsWidgetUpdater: ViewsWidgetUpdater
 
     @Inject
-    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     private val isWideView: Boolean = intent.getBooleanExtra(IS_WIDE_VIEW_KEY, true)
     private val colorMode = intent.getColorMode()
@@ -91,7 +91,7 @@ class ViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteView
             rv.setViewVisibility(R.id.negative_change, View.GONE)
         }
         rv.setTextViewText(R.id.value, uiModel.value)
-        val granularity = if (trafficTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
+        val granularity = if (trafficSubscribersTabFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(INITIAL_SELECTED_PERIOD_KEY, uiModel.period)

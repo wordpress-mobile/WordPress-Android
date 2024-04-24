@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-11-10 08:08:29+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: lv
 -->
 <resources>
@@ -3191,7 +3191,6 @@ Language: lv
     <string name="site_picker_cant_hide_current_site">\"%s\" netika paslēpts, jo tā ir pašreizējā vietne</string>
     <string name="site_picker_create_wpcom">Izveidojiet vietni WordPress.com</string>
     <string name="site_picker_add_self_hosted">Pievienojiet pašu mitinātu vietni</string>
-    <string name="site_picker_add_site">Pievienojiet jaunu vietni</string>
     <string name="site_picker_edit_visibility">Rādīt / slēpt vietnes</string>
     <string name="site_picker_title">Izvēlieties vietni</string>
     <string name="my_site_btn_view_site">Skatīt vietni</string>

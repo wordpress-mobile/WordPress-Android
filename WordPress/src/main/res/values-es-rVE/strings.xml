@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0
+Generator: GlotPress/4.0.1
 Language: es_VE
 -->
 <resources>
@@ -2813,7 +2813,6 @@ Language: es_VE
     <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
-    <string name="site_picker_add_site">Añadir sitio nuevo</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
     <string name="site_picker_title">Elegir sitio</string>
     <string name="my_site_btn_view_site">Ver sitio</string>

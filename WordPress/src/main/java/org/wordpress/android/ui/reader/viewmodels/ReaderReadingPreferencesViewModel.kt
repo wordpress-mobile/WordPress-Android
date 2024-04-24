@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSaveReadingPreferencesUseCase
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeedbackFeatureConfig
@@ -20,7 +21,8 @@ import javax.inject.Named
 class ReaderReadingPreferencesViewModel @Inject constructor(
     getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase,
     private val saveReadingPreferences: ReaderSaveReadingPreferencesUseCase,
-    private val readerReadingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig,
+    private val readingPreferencesFeedbackFeatureConfig: ReaderReadingPreferencesFeedbackFeatureConfig,
+    private val readingPreferencesTracker: ReaderReadingPreferencesTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(bgDispatcher) {
     private val originalReadingPreferences = getReadingPreferences()
@@ -35,43 +37,81 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
 
     fun init() {
         launch {
-            _isFeedbackEnabled.emit(readerReadingPreferencesFeedbackFeatureConfig.isEnabled())
+            _isFeedbackEnabled.emit(readingPreferencesFeedbackFeatureConfig.isEnabled())
             _actionEvents.emit(ActionEvent.UpdateStatusBarColor(originalReadingPreferences.theme))
         }
     }
 
+    fun onScreenOpened(source: ReaderReadingPreferencesTracker.Source) {
+        readingPreferencesTracker.trackScreenOpened(source)
+    }
+
+    fun onScreenClosed() {
+        if (isDirty()) {
+            // here we assume the code for saving preferences has been called before reaching this point
+            launch {
+                _actionEvents.emit(ActionEvent.UpdatePostDetails)
+            }
+        }
+        readingPreferencesTracker.trackScreenClosed()
+    }
+
     fun onThemeClick(theme: ReaderReadingPreferences.Theme) {
         _currentReadingPreferences.update { it.copy(theme = theme) }
+        readingPreferencesTracker.trackItemTapped(theme)
     }
 
     fun onFontFamilyClick(fontFamily: ReaderReadingPreferences.FontFamily) {
         _currentReadingPreferences.update { it.copy(fontFamily = fontFamily) }
+        readingPreferencesTracker.trackItemTapped(fontFamily)
     }
 
     fun onFontSizeClick(fontSize: ReaderReadingPreferences.FontSize) {
         _currentReadingPreferences.update { it.copy(fontSize = fontSize) }
+        readingPreferencesTracker.trackItemTapped(fontSize)
     }
 
-    fun saveReadingPreferencesAndClose() {
+    /**
+     * An exit action has been triggered by the user. This means that we need to save the current preferences and emit
+     * the close event, so the dialog is dismissed.
+     */
+    fun onExitActionClick() {
         launch {
-            if (currentReadingPreferences.value != originalReadingPreferences) {
-                saveReadingPreferences(currentReadingPreferences.value)
-                val isDirty = currentReadingPreferences.value != originalReadingPreferences
-                _actionEvents.emit(ActionEvent.Close(isDirty = isDirty))
-            } else {
-                _actionEvents.emit(ActionEvent.Close(isDirty = false))
-            }
+            saveReadingPreferencesInternal()
+            _actionEvents.emit(ActionEvent.Close)
+        }
+    }
+
+    /**
+     * The bottom sheet has been hidden by the user, which means the dismiss process is already on its way. All we need
+     * to do is save the current preferences.
+     */
+    fun onBottomSheetHidden() {
+        launch {
+            saveReadingPreferencesInternal()
         }
     }
 
     fun onSendFeedbackClick() {
         launch {
+            readingPreferencesTracker.trackFeedbackTapped()
             _actionEvents.emit(ActionEvent.OpenWebView(FEEDBACK_URL))
         }
     }
 
+    private suspend fun saveReadingPreferencesInternal() {
+        val currentPreferences = currentReadingPreferences.value
+        if (isDirty()) {
+            saveReadingPreferences(currentPreferences)
+            readingPreferencesTracker.trackSaved(currentPreferences)
+        }
+    }
+
+    private fun isDirty(): Boolean = currentReadingPreferences.value != originalReadingPreferences
+
     sealed interface ActionEvent {
-        data class Close(val isDirty: Boolean) : ActionEvent
+        data object Close : ActionEvent
+        data object UpdatePostDetails : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
         data class OpenWebView(val url: String) : ActionEvent
     }
