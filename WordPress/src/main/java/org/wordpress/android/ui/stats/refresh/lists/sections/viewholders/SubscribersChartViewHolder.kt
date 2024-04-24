@@ -43,7 +43,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         coroutineScope.launch {
             delay(50)
             chart.draw(item)
-            if (hasData(item.entries)) {
+            if (item.entries.isNotEmpty()) {
                 chart.post {
                     val accessibilityEvent = object : LineChartAccessibilityEvent {
                         override fun onHighlight(entry: Entry, index: Int) {
@@ -82,18 +82,16 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun getData(item: SubscribersChartItem): List<ILineDataSet> {
-        val data = if (hasData(item.entries)) {
+        val data = if (item.entries.isEmpty()) {
+            buildEmptyDataSet(item.entries.size)
+        } else {
             val mappedEntries = item.entries.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, null)
-        } else {
-            buildEmptyDataSet(item.entries.size)
         }
         item.onLineChartDrawn?.invoke(data.entryCount)
 
         return listOf(data)
     }
-
-    private fun hasData(entries: List<Line>) = entries.isNotEmpty() && entries.any { it.value > 0 }
 
     private fun configureChartView(item: SubscribersChartItem) {
         chart.apply {
