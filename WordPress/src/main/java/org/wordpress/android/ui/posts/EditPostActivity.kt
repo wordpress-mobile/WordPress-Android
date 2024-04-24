@@ -1061,7 +1061,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             } else {
                 ToastUtils.showToast(
                     this@EditPostActivity,
-                    getString(R.string.editor_updating_post_failed),
+                    getString(R.string.editor_updating_content_failed),
                     ToastUtils.Duration.SHORT
                 )
             }

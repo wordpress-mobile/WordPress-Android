@@ -15,7 +15,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTION_CARD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.ACTIVITY_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BAR_CHART
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TRAFFIC_BAR_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.BIG_TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.CHART_LEGENDS_BLUE
@@ -70,7 +69,6 @@ class BlockDiffCallback(
                 COLUMNS,
                 CHIPS,
                 BAR_CHART,
-                TRAFFIC_BAR_CHART,
                 PIE_CHART,
                 LINE_CHART,
                 ACTIVITY_ITEM,

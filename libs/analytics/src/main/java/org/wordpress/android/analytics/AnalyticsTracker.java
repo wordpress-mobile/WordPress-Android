@@ -103,6 +103,7 @@ public final class AnalyticsTracker {
         STATS_INSIGHTS_MANAGEMENT_TYPE_ADDED,
         STATS_INSIGHTS_MANAGEMENT_TYPE_REMOVED,
         STATS_INSIGHTS_MANAGEMENT_TYPE_REORDERED,
+        STATS_SUBSCRIBERS_ACCESSED,
         STATS_PERIOD_DAYS_ACCESSED("stats_period_accessed"),
         STATS_PERIOD_WEEKS_ACCESSED("stats_period_accessed"),
         STATS_PERIOD_MONTHS_ACCESSED("stats_period_accessed"),

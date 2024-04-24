@@ -18,7 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBloc
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import javax.inject.Inject
 
 class WidgetBlockListProvider(
@@ -27,7 +27,7 @@ class WidgetBlockListProvider(
     intent: Intent
 ) : RemoteViewsFactory {
     @Inject
-    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
 
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)
@@ -69,12 +69,16 @@ class WidgetBlockListProvider(
         rv.setTextViewText(R.id.start_block_value, uiModel.startValue)
         rv.setTextViewText(R.id.end_block_title, uiModel.endKey)
         rv.setTextViewText(R.id.end_block_value, uiModel.endValue)
-        val timeframe = if (trafficTabFeatureConfig.isEnabled()) StatsTimeframe.TRAFFIC else uiModel.targetTimeframe
+        val timeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) {
+            StatsTimeframe.TRAFFIC
+        } else {
+            uiModel.targetTimeframe
+        }
         val intent = Intent()
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
         intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, timeframe)
-        if (trafficTabFeatureConfig.isEnabled()) {
+        if (trafficSubscribersTabFeatureConfig.isEnabled()) {
             intent.putExtra(StatsActivity.ARG_GRANULARITY, getGranularity())
         }
         intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)

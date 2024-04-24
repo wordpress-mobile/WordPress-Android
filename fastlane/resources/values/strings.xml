@@ -1759,8 +1759,6 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
-    <string name="editor_updating_post">Updating post content</string>
-    <string name="editor_updating_post_failed">Failed to update post content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>

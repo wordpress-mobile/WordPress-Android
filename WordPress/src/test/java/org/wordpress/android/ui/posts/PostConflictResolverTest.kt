@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
@@ -19,7 +17,6 @@ import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import kotlin.test.Test
 import org.wordpress.android.R
 
@@ -33,7 +30,6 @@ class PostConflictResolverTest : BaseUnitTest() {
     private val invalidateList = mock(Function0::class.java) as () -> Unit
     private val checkNetworkConnection = mock(Function0::class.java) as () -> Boolean
     private val showSnackbar = mock(Function1::class.java) as (SnackbarMessageHolder) -> Unit
-    private val showToast = mock(Function1::class.java) as (ToastMessageHolder) -> Unit
     private val uploadStore: UploadStore = mock()
     private val postStore: PostStore = mock()
 
@@ -45,13 +41,12 @@ class PostConflictResolverTest : BaseUnitTest() {
         postConflictResolver = PostConflictResolver(
             dispatcher,
             site,
+            postStore,
+            uploadStore,
             getPostByLocalPostId,
             invalidateList,
             checkNetworkConnection,
             showSnackbar,
-            showToast,
-            uploadStore,
-            postStore
         )
     }
 
@@ -82,53 +77,6 @@ class PostConflictResolverTest : BaseUnitTest() {
         verifyNoInteractions(postStore)
         verifyNoInteractions(showSnackbar)
         verifyNoInteractions(dispatcher)
-    }
-
-    @Test
-    fun `given upload store with unhandled conflict, when does post have unhandled conflict is invoked, then true`() {
-        val post = PostModel()
-        whenever(uploadStore.getUploadErrorForPost(post)).thenReturn(
-            UploadStore.UploadError(PostStore.PostError(PostStore.PostErrorType.OLD_REVISION))
-        )
-
-        val result = postConflictResolver.doesPostHaveUnhandledConflict(post)
-
-        assertTrue(result)
-    }
-
-    @Suppress("MaxLineLength")
-    @Test
-    fun `given upload store with no unhandled conflict, when post have unhandled conflict is invoked, then false`() {
-        val post = PostModel()
-        whenever(uploadStore.getUploadErrorForPost(post)).thenReturn(null)
-
-        val result = postConflictResolver.doesPostHaveUnhandledConflict(post)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `given post with unhandled auto save, when has unhandled auto save is invoked, then true`() {
-        val post = PostModel().apply {
-            setIsLocallyChanged(false)
-            setAutoSaveRevisionId(1)
-            setAutoSaveExcerpt("Some auto save excerpt")
-        }
-
-        val result = postConflictResolver.hasUnhandledAutoSave(post)
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `given post with no unhandled auto save, when has unhandled auto save is invoked, then false`() {
-        val post = PostModel().apply {
-            setIsLocallyChanged(true)
-        }
-
-        val result = postConflictResolver.hasUnhandledAutoSave(post)
-
-        assertFalse(result)
     }
 
     @Test

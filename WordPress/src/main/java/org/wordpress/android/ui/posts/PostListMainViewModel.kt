@@ -83,7 +83,8 @@ class PostListMainViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter,
-    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
+    private val postConflictDetector: PostConflictDetector
 ) : ViewModel(), CoroutineScope {
     private var isStarted = false
 
@@ -170,8 +171,7 @@ class PostListMainViewModel @Inject constructor(
             getPostByLocalPostId = postStore::getPostByLocalPostId,
             invalidateList = this::invalidateAllLists,
             checkNetworkConnection = this::checkNetworkConnection,
-            showSnackbar = { _snackBarMessage.postValue(it) },
-            showToast = { _toastMessage.postValue(it) },
+            showSnackBar = { _snackBarMessage.postValue(it) },
             uploadStore = uploadStore,
             postStore = postStore
         )
@@ -183,8 +183,8 @@ class PostListMainViewModel @Inject constructor(
             site = site,
             postStore = postStore,
             postListDialogHelper = postListDialogHelper,
-            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-            hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            doesPostHaveUnhandledConflict = postConflictDetector::hasUnhandledConflict,
+            hasUnhandledAutoSave = postConflictDetector::hasUnhandledAutoSave,
             triggerPostListAction = { _postListAction.postValue(it) },
             triggerPostUploadAction = { _postUploadAction.postValue(it) },
             triggerPublishAction = this::showPrepublishingBottomSheet,
@@ -199,8 +199,8 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun copyPost(site: SiteModel, postToCopy: PostModel, performChecks: Boolean = false) {
-        if (performChecks && (postConflictResolver.doesPostHaveUnhandledConflict(postToCopy) ||
-                    postConflictResolver.hasUnhandledAutoSave(postToCopy))
+        if (performChecks && (postConflictDetector.hasUnhandledConflict(postToCopy) ||
+                    postConflictDetector.hasUnhandledAutoSave(postToCopy))
         ) {
             postListDialogHelper.showCopyConflictDialog(postToCopy)
             return
@@ -325,8 +325,8 @@ class PostListMainViewModel @Inject constructor(
             postListType = postListType,
             postActionHandler = postActionHandler,
             uploadStatusTracker = uploadStatusTracker,
-            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-            hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            doesPostHaveUnhandledConflict = postConflictDetector::hasUnhandledConflict,
+            hasAutoSave = postConflictDetector::hasUnhandledAutoSave,
             postFetcher = postFetcher,
             getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )

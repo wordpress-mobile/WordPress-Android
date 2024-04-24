@@ -72,7 +72,7 @@ class CreatePageListItemActionsUseCaseTest {
     }
 
     @Test
-    fun `verify PUBLISHED actions`() {
+    fun `given no version conflicts, verify PUBLISHED actions`() {
         // Arrange
         val expectedActions = listOf(
             VIEW_PAGE,
@@ -84,7 +84,39 @@ class CreatePageListItemActionsUseCaseTest {
         )
 
         // Act
-        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
+        val publishedActions = useCase.setupPageActions(
+            listType = PUBLISHED,
+            uploadUiState = mock(),
+            siteModel = site,
+            remoteId = defaultRemoteId,
+            isPageEligibleForBlaze = false,
+            hasVersionConflict = false
+        )
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `give version conflict, verify PUBLISHED actions`() {
+        // Arrange
+        val expectedActions = listOf(
+            SET_PARENT,
+            MOVE_TO_DRAFT,
+            COPY,
+            SHARE,
+            MOVE_TO_TRASH,
+        )
+
+        // Act
+        val publishedActions = useCase.setupPageActions(
+            listType = PUBLISHED,
+            uploadUiState = mock(),
+            siteModel = site,
+            remoteId = defaultRemoteId,
+            isPageEligibleForBlaze = false,
+            hasVersionConflict = true
+        )
 
         // Assert
         assertThat(publishedActions).isEqualTo(expectedActions)

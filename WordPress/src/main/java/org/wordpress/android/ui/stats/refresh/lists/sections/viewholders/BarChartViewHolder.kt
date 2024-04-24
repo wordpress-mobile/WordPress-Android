@@ -90,7 +90,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
         } else {
-            buildEmptyDataSet(context, cutEntries.size)
+            buildEmptyDataSet(cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
@@ -208,23 +208,9 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
-        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
-        val dataSet = BarDataSet(emptyValues, "Empty")
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.primary_5
-            ), ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            )
-        )
-        dataSet.formLineWidth = 0f
-        dataSet.setDrawValues(false)
-        dataSet.isHighlightEnabled = false
-        dataSet.highLightAlpha = 255
-        return dataSet
+    private fun buildEmptyDataSet(count: Int): BarDataSet {
+        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 0f, "empty") }
+        return BarDataSet(emptyValues, "Empty").apply { setDrawValues(false) }
     }
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {

@@ -32,7 +32,7 @@ fun StatsListFragmentBinding.drawDateSelector(dateSelectorUiModel: DateSelectorU
         granularitySpinner.isVisible = dateSelectorUiModel?.isGranularitySpinnerVisible == true
 
         if (dateSelectorUiModel?.isGranularitySpinnerVisible != true) {
-            // StatsTrafficTabFeatureConfig is disabled.
+            // StatsTrafficSubscribersTabFeatureConfig is disabled.
             with(selectedDateTextView.layoutParams as ConstraintLayout.LayoutParams) {
                 horizontalBias = 0f
                 marginStart = selectedDateTextView.resources.getDimensionPixelSize(R.dimen.margin_small)

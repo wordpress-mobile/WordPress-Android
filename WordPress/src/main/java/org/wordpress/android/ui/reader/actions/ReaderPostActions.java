@@ -291,8 +291,10 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 ReaderPost post = ReaderPost.fromJson(jsonObject);
-                ReaderPostTable.addPost(post);
-                handlePostLikes(post, jsonObject);
+                new Thread(() -> {
+                    ReaderPostTable.addPost(post);
+                    handlePostLikes(post, jsonObject);
+                }).start();
                 if (requestListener != null) {
                     requestListener.onSuccess(post.getBlogUrl());
                 }

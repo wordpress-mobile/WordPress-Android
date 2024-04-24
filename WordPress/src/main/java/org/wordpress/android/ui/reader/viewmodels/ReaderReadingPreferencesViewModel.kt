@@ -47,6 +47,12 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
     }
 
     fun onScreenClosed() {
+        if (isDirty()) {
+            // here we assume the code for saving preferences has been called before reaching this point
+            launch {
+                _actionEvents.emit(ActionEvent.UpdatePostDetails)
+            }
+        }
         readingPreferencesTracker.trackScreenClosed()
     }
 
@@ -65,15 +71,24 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         readingPreferencesTracker.trackItemTapped(fontSize)
     }
 
-    fun saveReadingPreferencesAndClose() {
+    /**
+     * An exit action has been triggered by the user. This means that we need to save the current preferences and emit
+     * the close event, so the dialog is dismissed.
+     */
+    fun onExitActionClick() {
         launch {
-            val currentPreferences = currentReadingPreferences.value
-            val isDirty = currentPreferences != originalReadingPreferences
-            if (isDirty) {
-                saveReadingPreferences(currentPreferences)
-                readingPreferencesTracker.trackSaved(currentPreferences)
-            }
-            _actionEvents.emit(ActionEvent.Close(isDirty))
+            saveReadingPreferencesInternal()
+            _actionEvents.emit(ActionEvent.Close)
+        }
+    }
+
+    /**
+     * The bottom sheet has been hidden by the user, which means the dismiss process is already on its way. All we need
+     * to do is save the current preferences.
+     */
+    fun onBottomSheetHidden() {
+        launch {
+            saveReadingPreferencesInternal()
         }
     }
 
@@ -84,8 +99,19 @@ class ReaderReadingPreferencesViewModel @Inject constructor(
         }
     }
 
+    private suspend fun saveReadingPreferencesInternal() {
+        val currentPreferences = currentReadingPreferences.value
+        if (isDirty()) {
+            saveReadingPreferences(currentPreferences)
+            readingPreferencesTracker.trackSaved(currentPreferences)
+        }
+    }
+
+    private fun isDirty(): Boolean = currentReadingPreferences.value != originalReadingPreferences
+
     sealed interface ActionEvent {
-        data class Close(val isDirty: Boolean) : ActionEvent
+        data object Close : ActionEvent
+        data object UpdatePostDetails : ActionEvent
         data class UpdateStatusBarColor(val theme: ReaderReadingPreferences.Theme) : ActionEvent
         data class OpenWebView(val url: String) : ActionEvent
     }

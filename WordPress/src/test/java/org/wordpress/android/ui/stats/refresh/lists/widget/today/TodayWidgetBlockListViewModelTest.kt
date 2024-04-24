@@ -21,7 +21,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,7 +51,7 @@ class TodayWidgetBlockListViewModelTest {
     private lateinit var todayWidgetUpdater: TodayWidgetUpdater
 
     @Mock
-    private lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
     private lateinit var viewModel: TodayWidgetBlockListViewModel
     private val siteId: Int = 15
     private val appWidgetId: Int = 1
@@ -66,7 +66,7 @@ class TodayWidgetBlockListViewModelTest {
             todayWidgetUpdater,
             appPrefsWrapper,
             statsUtils,
-            trafficTabFeatureConfig
+            trafficSubscribersTabFeatureConfig
         )
         viewModel.start(siteId, color, appWidgetId)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }

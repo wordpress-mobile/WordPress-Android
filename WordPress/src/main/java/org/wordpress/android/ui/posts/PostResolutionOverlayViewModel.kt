@@ -138,7 +138,7 @@ class PostResolutionOverlayViewModel @Inject constructor(
     private fun onConfirmClick() {
         _uiState.value?.selectedContentItem?.let {
             val confirmationType = it.id.toPostResolutionConfirmationType()
-            tracker.trackConfirm(resolutionType, confirmationType)
+            tracker.trackConfirm(resolutionType, confirmationType, post.isPage)
             _triggerListeners.value = PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent(resolutionType,
                 confirmationType)
         }
@@ -146,21 +146,21 @@ class PostResolutionOverlayViewModel @Inject constructor(
     }
 
     private fun onCloseClick() {
-        tracker.trackClose(resolutionType)
+        tracker.trackClose(resolutionType, post.isPage)
         _dismissDialog.value = true
     }
 
     private fun onCancelClick() {
-        tracker.trackCancel(resolutionType)
+        tracker.trackCancel(resolutionType, post.isPage)
         _dismissDialog.value = true
     }
 
     fun onDialogDismissed() {
-        tracker.trackDismissed(resolutionType)
+        tracker.trackDismissed(resolutionType, post.isPage)
     }
 
     private fun onDialogShown() {
-        tracker.trackShown(resolutionType)
+        tracker.trackShown(resolutionType, post.isPage)
     }
 
     private fun onItemSelected(selectedItem: ContentItem) {

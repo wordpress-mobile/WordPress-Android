@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -169,36 +168,6 @@ class StatsUtils @Inject constructor(
         return contentDescriptions
     }
 
-    fun getTrafficBarChartEntryContentDescriptions(
-        @StringRes entryType: Int,
-        entries: List<BlockListItem.TrafficBarChartItem.Bar>,
-        @StringRes overlappingEntryType: Int? = null,
-        overlappingEntries: List<BlockListItem.TrafficBarChartItem.Bar>? = null
-    ): List<String> {
-        val contentDescriptions = mutableListOf<String>()
-        entries.forEachIndexed { index, bar ->
-            var contentDescription = resourceProvider.getString(
-                R.string.stats_bar_chart_accessibility_entry,
-                bar.label,
-                bar.value,
-                resourceProvider.getString(entryType)
-            )
-
-            overlappingEntries?.getOrNull(index)?.let { overlappingBar ->
-                overlappingEntryType?.let {
-                    contentDescription += resourceProvider.getString(
-                        R.string.stats_bar_chart_accessibility_overlapping_entry,
-                        overlappingBar.value,
-                        resourceProvider.getString(overlappingEntryType)
-                    )
-                }
-            }
-
-            contentDescriptions.add(contentDescription)
-        }
-        return contentDescriptions
-    }
-
     fun getLineChartEntryContentDescriptions(
         @StringRes entryType: Int,
         entries: List<Line>
@@ -229,7 +198,7 @@ class StatsUtils @Inject constructor(
                 0L -> percentFormatter.format(value = 100)
                 else -> {
                     val percentageValue = difference.toFloat() / previousValue
-                    percentFormatter.format(value = percentageValue, rounding = HALF_UP)
+                    percentFormatter.formatWithJavaLib(value = percentageValue, rounding = HALF_UP)
                 }
             }
             val formattedDifference = mapLongToString(difference, isFormattedNumber)
