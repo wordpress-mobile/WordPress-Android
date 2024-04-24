@@ -290,6 +290,7 @@
     <dimen name="notifications_image_size">180dp</dimen>
     <dimen name="notifications_like_header_radius">18dp</dimen>
     <dimen name="notifications_like_header_icon_size">20dp</dimen>
+    <dimen name="notifications_filter_popup_width">200dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>
