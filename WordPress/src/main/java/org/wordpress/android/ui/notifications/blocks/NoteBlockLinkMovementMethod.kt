@@ -28,7 +28,7 @@ class NoteBlockLinkMovementMethod : LinkMovementMethod() {
             MotionEvent.ACTION_MOVE -> {
                 val touchedSpan = getPressedSpan(textView, spannable, event)
                 if (mPressedSpan != null && touchedSpan !== mPressedSpan) {
-                    mPressedSpan!!.setPressed(false)
+                    mPressedSpan?.setPressed(false)
                     mPressedSpan = null
                     Selection.removeSelection(spannable)
                 }
@@ -36,7 +36,7 @@ class NoteBlockLinkMovementMethod : LinkMovementMethod() {
 
             else -> {
                 if (mPressedSpan != null) {
-                    mPressedSpan!!.setPressed(false)
+                    mPressedSpan?.setPressed(false)
                     super.onTouchEvent(textView, spannable, event)
                 }
                 mPressedSpan = null
