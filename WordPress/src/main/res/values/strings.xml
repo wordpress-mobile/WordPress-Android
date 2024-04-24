@@ -1598,6 +1598,7 @@
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
     <string name="likes_on_my_posts">Likes on my posts</string>
+    <string name="likes_share_post">Share your post</string>
     <string name="site_follows">Site follows</string>
     <string name="site_achievements">Site achievements</string>
     <string name="username_mentions">Username mentions</string>

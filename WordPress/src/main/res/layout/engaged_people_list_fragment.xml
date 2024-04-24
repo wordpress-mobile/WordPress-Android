@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:layout_marginVertical="@dimen/margin_medium"
-        android:text="@string/stats_insights_share_post"
+        android:text="@string/likes_share_post"
         android:visibility="gone"
         app:icon="@drawable/block_share"
         app:iconGravity="textStart"
