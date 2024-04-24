@@ -15,7 +15,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -72,7 +71,7 @@ class SubscribersUseCase @Inject constructor(
     private fun buildTitle() = Title(R.string.stats_subscribers_subscribers)
 
     private fun onLineSelected() {
-        analyticsTracker.trackGranular(AnalyticsTracker.Stat.STATS_VIEWS_AND_VISITORS_LINE_CHART_TAPPED, DAYS)
+        analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_CHART_TAPPED)
     }
 
     class SubscribersUseCaseFactory @Inject constructor(
