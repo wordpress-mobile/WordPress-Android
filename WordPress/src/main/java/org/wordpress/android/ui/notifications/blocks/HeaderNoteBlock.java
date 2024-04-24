@@ -63,7 +63,6 @@ public class HeaderNoteBlock extends NoteBlock {
         for (NoteBlockClickableSpan span : spans) {
             span.enableColors(view.getContext());
         }
-        noteBlockHolder.mNameTextView.setText(spannable);
         if (mImageType == ImageType.AVATAR_WITH_BACKGROUND) {
             mImageManager.loadIntoCircle(noteBlockHolder.mAvatarImageView, mImageType, getAvatarUrl());
         } else {
@@ -102,14 +101,7 @@ public class HeaderNoteBlock extends NoteBlock {
         }
 
         noteBlockHolder.mSnippetTextView.setText(getSnippet());
-
-        if (mIsComment) {
-            View footerView = view.findViewById(R.id.header_footer);
-            View footerCommentView = view.findViewById(R.id.header_footer_comment);
-            footerView.setVisibility(View.GONE);
-            footerCommentView.setVisibility(View.VISIBLE);
-        }
-
+        
         return view;
     }
 
@@ -145,14 +137,12 @@ public class HeaderNoteBlock extends NoteBlock {
     }
 
     private class NoteHeaderBlockHolder {
-        private final TextView mNameTextView;
         private final TextView mSnippetTextView;
         private final ImageView mAvatarImageView;
 
         NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
-            mNameTextView = view.findViewById(R.id.header_user);
             mSnippetTextView = view.findViewById(R.id.header_snippet);
             mAvatarImageView = view.findViewById(R.id.header_avatar);
         }

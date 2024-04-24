@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
@@ -19,25 +21,23 @@ class LikedItemViewHolder(
     parent: ViewGroup,
     private val imageManager: ImageManager
 ) : EngagedPeopleViewHolder(parent, R.layout.note_block_header) {
-    private val name = itemView.findViewById<TextView>(R.id.header_user)
     private val snippet = itemView.findViewById<TextView>(R.id.header_snippet)
     private val avatar = itemView.findViewById<ImageView>(R.id.header_avatar)
-    private val rootView = itemView.findViewById<View>(R.id.header_root_view)
+    private val rootView = itemView.findViewById<CardView>(R.id.header_root_view)
 
-    fun bind(likedItem: LikedItem) {
+    fun bind(likedItem: LikedItem, type: ListScenarioType) {
         val authorName = when (val author = likedItem.author) {
             is AuthorNameString -> author.nameString
             is AuthorNameCharSequence -> author.nameCharSequence
         }
 
-        this.name.text = authorName
         this.snippet.text = likedItem.postOrCommentText
 
         val avatarUrl = WPAvatarUtils.rewriteAvatarUrl(
             likedItem.authorAvatarUrl,
-            rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_small)
+            rootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_extra_small)
         )
-
+        avatar.isGone = type == ListScenarioType.LOAD_POST_LIKES
         imageManager.loadIntoCircle(this.avatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl)
 
         if (!TextUtils.isEmpty(likedItem.authorPreferredSiteUrl) || likedItem.authorPreferredSiteId > 0) {

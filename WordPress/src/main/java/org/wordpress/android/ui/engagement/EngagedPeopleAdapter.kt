@@ -12,7 +12,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 
 class EngagedPeopleAdapter constructor(
     private val imageManager: ImageManager,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val type: ListScenarioType
 ) : Adapter<EngagedPeopleViewHolder>() {
     private var itemsList = listOf<EngageItem>()
 
@@ -36,8 +37,8 @@ class EngagedPeopleAdapter constructor(
     override fun onBindViewHolder(holder: EngagedPeopleViewHolder, position: Int) {
         val item = itemsList[position]
         when (item) {
-            is LikedItem -> (holder as LikedItemViewHolder).bind(item)
-            is Liker -> (holder as LikerViewHolder).bind(item)
+            is LikedItem -> (holder as LikedItemViewHolder).bind(item, type)
+            is Liker -> (holder as LikerViewHolder).bind(item, position)
             is NextLikesPageLoader -> (holder as NextPageLoadViewHolder).bind(item)
         }
     }
