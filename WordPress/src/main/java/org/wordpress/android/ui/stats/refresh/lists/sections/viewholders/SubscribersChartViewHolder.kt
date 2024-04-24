@@ -49,16 +49,13 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                         override fun onHighlight(entry: Entry, index: Int) {
                             drawChartMarker(Highlight(entry.x, entry.y, 0))
                             val value = entry.data as? String
-                            value?.let {
-                                item.onLineSelected?.invoke(it)
-                            }
+                            value?.let { item.onLineSelected?.invoke() }
                         }
                     }
 
-                    val cutContentDescriptions = takeEntriesWithinGraphWidth(item.entryContentDescriptions)
                     accessibilityHelper = LineChartAccessibilityHelper(
                         chart,
-                        contentDescriptions = cutContentDescriptions,
+                        contentDescriptions = item.entryContentDescriptions,
                         accessibilityEvent = accessibilityEvent
                     )
 
@@ -88,7 +85,6 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val mappedEntries = item.entries.mapIndexed { index, pair -> toLineEntry(pair, index) }
             LineDataSet(mappedEntries, null)
         }
-        item.onLineChartDrawn?.invoke(data.entryCount)
 
         return listOf(data)
     }
@@ -112,13 +108,11 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             val isClickable = item.onLineSelected != null
             if (isClickable) {
                 setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
-                    override fun onNothingSelected() {
-                        item.onLineSelected?.invoke(item.selectedItemPeriod)
-                    }
+                    override fun onNothingSelected() = Unit
 
                     override fun onValueSelected(e: Entry, h: Highlight) {
                         drawChartMarker(h)
-                        item.onLineSelected?.invoke(e.data as? String)
+                        item.onLineSelected?.invoke()
                     }
                 })
             } else {
@@ -224,12 +218,6 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         return dataSet
     }
 
-    private fun <T> takeEntriesWithinGraphWidth(entries: List<T>) = if (8 < entries.size) {
-        entries.subList(entries.size - 8, entries.size)
-    } else {
-        entries
-    }
-
     private fun LineChart.resetChart() {
         fitScreen()
         data?.clearValues()
@@ -240,18 +228,4 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun toLineEntry(line: Line, index: Int) = Entry(index.toFloat(), line.value.toFloat(), line.id)
-
-    private fun roundUp(input: Float): Float {
-        return if (input > 100) {
-            roundUp(input / 10) * 10
-        } else {
-            for (i in 1..25) {
-                val limit = 4 * i
-                if (input < limit) {
-                    return limit.toFloat()
-                }
-            }
-            100F
-        }
-    }
 }

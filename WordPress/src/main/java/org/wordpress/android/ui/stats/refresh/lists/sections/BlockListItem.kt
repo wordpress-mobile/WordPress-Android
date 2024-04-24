@@ -305,8 +305,7 @@ sealed class BlockListItem(val type: Type) {
     data class SubscribersChartItem(
         val entries: List<Line>,
         val selectedItemPeriod: String? = null,
-        val onLineSelected: ((period: String?) -> Unit)? = null,
-        val onLineChartDrawn: ((visibleLineCount: Int) -> Unit)? = null,
+        val onLineSelected: (() -> Unit)? = null,
         val entryContentDescriptions: List<String>
     ) : BlockListItem(SUBSCRIBERS_CHART) {
         data class Line(val label: String, val id: String, val value: Int)

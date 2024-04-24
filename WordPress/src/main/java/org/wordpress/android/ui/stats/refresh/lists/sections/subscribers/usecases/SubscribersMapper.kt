@@ -13,13 +13,8 @@ class SubscribersMapper @Inject constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val statsUtils: StatsUtils
 ) {
-    fun buildChart(
-        dates: List<PeriodData>,
-        onLineSelected: (String?) -> Unit,
-        onLineChartDrawn: (visibleBarCount: Int) -> Unit,
-        selectedItemPeriod: String
-    ): BlockListItem {
-        val chartItems = dates.map {
+    fun buildChart(dates: List<PeriodData>, onLineSelected: () -> Unit): BlockListItem {
+        val chartItems = dates.reversed().map {
             Line(statsDateFormatter.getStatsDateFromPeriodDay(it.period), it.period, it.subscribers.toInt())
         }
 
@@ -30,9 +25,7 @@ class SubscribersMapper @Inject constructor(
 
         return SubscribersChartItem(
             entries = chartItems,
-            selectedItemPeriod = selectedItemPeriod,
             onLineSelected = onLineSelected,
-            onLineChartDrawn = onLineChartDrawn,
             entryContentDescriptions = contentDescriptions
         )
     }
