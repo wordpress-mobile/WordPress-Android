@@ -36,15 +36,23 @@ class PostConflictResolutionFeatureUtils @Inject constructor(
     private fun setLastModifiedForConflictResolution(payload: RemotePostPayload) {
         payload.post?.let { post ->
             payload.lastModifiedForConflictResolution = if (shouldUpdateLastModified(post)) {
-                dateTimeUtilsWrapper.currentTimeInIso8601()
-                //post.dateLocallyChanged
+                dateTimeUtilsWrapper.dateStringFromIso8601MinusMillis(
+                    payload.post.lastModified,
+                    MILLISECONDS_IN_A_MINUTE
+                )
             } else {
-                post.lastModified
+                null
             }
         }
     }
 
     private fun shouldUpdateLastModified(post: PostModel): Boolean {
-        return post.status == PostStatus.SCHEDULED.toString() && post.remotePostId > 0 && post.lastModified == post.dateCreated
+        return post.status == PostStatus.SCHEDULED.toString()
+                && post.remotePostId > 0
+                && post.lastModified == post.dateCreated
+    }
+
+    companion object {
+        const val MILLISECONDS_IN_A_MINUTE = 60L
     }
 }
