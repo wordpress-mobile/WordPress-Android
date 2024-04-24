@@ -44,6 +44,8 @@ class ListScenarioUtilsTest {
 
     private val siteId = 100L
     private val postId = 1000L
+    private val noteUrl = "http://example.com/note/1000"
+    private val noteTitle = "Note Title"
 
     @Before
     fun setup() {
@@ -52,6 +54,8 @@ class ListScenarioUtilsTest {
         whenever(note.siteId).thenReturn(siteId.toInt())
         whenever(note.postId).thenReturn(postId.toInt())
         whenever(note.siteId).thenReturn(siteId.toInt())
+        whenever(note.url).thenReturn(noteUrl)
+        whenever(note.title).thenReturn(noteTitle)
         whenever(
             spannableBuilder.getSpans(anyInt(), anyInt(), eq(NoteBlockClickableSpan::class.java))
         ).thenReturn(listOf<NoteBlockClickableSpan>().toTypedArray())
@@ -83,6 +87,8 @@ class ListScenarioUtilsTest {
             assertThat(postId).isEqualTo(this@ListScenarioUtilsTest.postId)
             assertThat(commentPostId).isEqualTo(0L)
             assertThat(commentSiteUrl).isEqualTo("")
+            assertThat(postUrl).isEqualTo(note.url)
+            assertThat(postTitle).isEqualTo(note.title)
         }
     }
 

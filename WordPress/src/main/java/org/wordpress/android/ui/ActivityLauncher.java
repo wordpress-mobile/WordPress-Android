@@ -1210,6 +1210,8 @@ public class ActivityLauncher {
             Activity activity,
             long siteId,
             long postId,
+            String postTitle,
+            String postUrl,
             HeaderData headerData,
             EngagementNavigationSource source
     ) {
@@ -1223,6 +1225,8 @@ public class ActivityLauncher {
                         postId,
                         0L,
                         "",
+                        postTitle,
+                        postUrl,
                         headerData
                 )
         );

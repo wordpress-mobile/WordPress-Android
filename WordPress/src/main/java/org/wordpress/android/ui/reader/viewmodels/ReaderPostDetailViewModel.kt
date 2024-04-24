@@ -838,6 +838,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 ShowEngagedPeopleList(
                     readerPost.blogId,
                     readerPost.postId,
+                    readerPost.title,
+                    readerPost.shortUrl,
                     HeaderData(
                         AuthorNameString(readerPost.authorName),
                         readerPost.title,

@@ -60,6 +60,8 @@ class ListScenarioUtils @Inject constructor(
             postOrCommentId = if (note.isPostLikeType) note.postId.toLong() else note.commentId,
             commentPostId = if (note.isCommentLikeType) note.postId.toLong() else 0L,
             commentSiteUrl = if (note.isCommentLikeType) note.url else "",
+            postUrl = note.url,
+            postTitle = note.title,
             headerData = HeaderData(
                 authorName = AuthorNameCharSequence(spannable),
                 snippetText = headerNoteBlock.getHeader(1).getTextOrEmpty(),
