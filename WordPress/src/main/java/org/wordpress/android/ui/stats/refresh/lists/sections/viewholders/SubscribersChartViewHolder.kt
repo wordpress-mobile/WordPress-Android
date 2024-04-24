@@ -153,8 +153,9 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
                 axisLineWidth = chart.resources.getDimensionPixelSize(R.dimen.stats_line_chart_tick_height) /
                     chart.resources.displayMetrics.density
                 val tickWidth = chart.resources.getDimension(R.dimen.stats_line_chart_tick_width)
-                val contentWidthMinusTicks = chart.contentRect.width() - tickWidth * 30
-                enableAxisLineDashedLine(tickWidth, contentWidthMinusTicks / 29, 0f)
+                val contentWidthMinusTicks = chart.contentRect.width() - tickWidth * 3
+                enableAxisLineDashedLine(tickWidth, contentWidthMinusTicks / 2, 0f)
+                axisLineColor = ContextCompat.getColor(chart.context, R.color.stats_bar_chart_gridline)
             }
 
             setDrawLabels(true)
