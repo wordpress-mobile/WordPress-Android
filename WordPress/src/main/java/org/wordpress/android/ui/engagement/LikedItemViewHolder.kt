@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.AuthorName.AuthorNameCharSequence
@@ -14,7 +13,6 @@ import org.wordpress.android.ui.engagement.AuthorName.AuthorNameString
 import org.wordpress.android.ui.engagement.EngageItem.LikedItem
 import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
-import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import com.google.android.material.R as MaterialR
@@ -74,12 +72,5 @@ class LikedItemViewHolder(
                 likedItem.likedItemPostId
             )
         }
-        val isDarkTheme = itemView.resources.configuration.isDarkTheme()
-        val color = ContextCompat.getColor(
-            itemView.context,
-            if (isDarkTheme) R.color.white_translucent_10
-            else R.color.black_translucent_10
-        )
-        rootView.setCardBackgroundColor(color)
     }
 }

@@ -6,12 +6,12 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/header_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/header_root_view"
         android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:foreground="?attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/black_translucent_10"
+        app:cardBackgroundColor="@color/background_like_header"
         app:cardCornerRadius="@dimen/notifications_like_header_radius"
         app:cardElevation="0dp">
 
@@ -26,9 +26,11 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginVertical="@dimen/margin_small_medium"
                 android:contentDescription="@string/reader_avatar_desc"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/header_arrow"
