@@ -13,8 +13,8 @@ class SubscribersMapper @Inject constructor() {
             periodData?.let {
                 val period = periodIndex?.let { periodData[it] as String }
                 if (!period.isNullOrBlank()) {
-                    val subscribers = subscribersIndex?.let { periodData[it] as? Long } ?: 0
-                    SubscribersModel.PeriodData(period, subscribers)
+                    val subscribers = subscribersIndex?.let { periodData[it] as? Double } ?: 0
+                    SubscribersModel.PeriodData(period, subscribers.toLong())
                 } else {
                     null
                 }
