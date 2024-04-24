@@ -162,11 +162,11 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
 
             if (chart.contentRect.width() > 0) {
-                axisLineWidth = 4.0F
-
-                val tickWidth = 4.0F
-                val contentWidthMinusTicks = chart.contentRect.width() - (tickWidth * 3f)
-                enableAxisLineDashedLine(tickWidth, contentWidthMinusTicks / 29f, 0f)
+                axisLineWidth = chart.resources.getDimensionPixelSize(R.dimen.stats_line_chart_tick_height) /
+                    chart.resources.displayMetrics.density
+                val tickWidth = chart.resources.getDimension(R.dimen.stats_line_chart_tick_width)
+                val contentWidthMinusTicks = chart.contentRect.width() - tickWidth * 30
+                enableAxisLineDashedLine(tickWidth, contentWidthMinusTicks / 29, 0f)
             }
 
             setDrawLabels(true)
