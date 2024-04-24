@@ -116,6 +116,7 @@
 
     <!-- Notifications -->
     <color name="inline_action_filled">@color/jetpack_green_30</color>
+    <color name="background_like_header">@color/white_translucent_10</color>
 
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#1C1C1E</color>
