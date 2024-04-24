@@ -131,7 +131,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun configureYAxis(item: SubscribersChartItem) {
-        val minYValue = 6f
+        val minYValue = item.entries.minByOrNull { it.value }?.value ?: 0
         val maxYValue = item.entries.maxByOrNull { it.value }?.value ?: 7
 
         chart.axisLeft.apply {
@@ -141,12 +141,8 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawZeroLine(true)
             setDrawAxisLine(false)
             granularity = 1F
-            axisMinimum = 0F
-            axisMaximum = if (maxYValue < minYValue) {
-                minYValue
-            } else {
-                roundUp(maxYValue.toFloat())
-            }
+            axisMinimum = minYValue.toFloat()
+            axisMaximum = maxYValue.toFloat()
             setLabelCount(5, true)
             textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
             gridColor = ContextCompat.getColor(chart.context, R.color.stats_bar_chart_gridline)
