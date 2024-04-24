@@ -65,6 +65,8 @@ sealed class ReaderNavigationEvents {
     data class ShowEngagedPeopleList(
         val siteId: Long,
         val postId: Long,
+        val postTitle: String,
+        val postUrl: String,
         val headerData: HeaderData
     ) : ReaderNavigationEvents()
 

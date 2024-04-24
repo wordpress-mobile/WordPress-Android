@@ -261,15 +261,14 @@ class EngagedPeopleListFragment : Fragment() {
         adapter.loadData(items)
         recycler.layoutManager?.onRestoreInstanceState(recyclerViewState)
 
-        val likeItem = items.first { it is EngageItem.LikedItem } as EngageItem.LikedItem
         val visible = listScenario.type == ListScenarioType.LOAD_POST_LIKES
         divider.isVisible = visible
         shareButton.isVisible = visible
         shareButton.setOnClickListener {
             ActivityLauncher.openShareIntent(
                 it.context,
-                likeItem.likedItemSiteUrl,
-                likeItem.postOrCommentText.toString()
+                listScenario.postUrl,
+                listScenario.postTitle
             )
         }
     }

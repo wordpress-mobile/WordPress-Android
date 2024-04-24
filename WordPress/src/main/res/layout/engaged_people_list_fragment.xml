@@ -1,33 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/root_layout"
-    android:background="?attr/colorSurface"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintVertical_bias="0"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical" />
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycler"
-        app:aevButton="@string/retry"
-        app:aevTitle="@string/media_empty_list"
-        tools:visibility="visible" />
+    android:background="?attr/colorSurface">
 
     <LinearLayout
         android:id="@+id/loading_view"
@@ -53,26 +31,51 @@
             android:textSize="@dimen/text_sz_double_extra_large" />
     </LinearLayout>
 
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:alpha="0.6"
         android:background="#3C3C43"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        app:layout_constraintBottom_toTopOf="@+id/button_share_post"/>
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/button_share_post"
+        tools:visibility="visible" />
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.ShareButton"
-        android:id="@+id/button_share_post"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_share_post"
+        style="@style/Widget.ShareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:text="@string/stats_insights_share_post"
+        android:visibility="gone"
         app:icon="@drawable/block_share"
         app:iconGravity="textStart"
         app:iconTint="?attr/colorSurface"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginHorizontal="@dimen/margin_extra_large"
-        android:layout_marginVertical="@dimen/margin_medium"
-        android:text="@string/stats_insights_share_post"/>
+        tools:visibility="visible" />
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:aevButton="@string/retry"
+        app:aevTitle="@string/media_empty_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recycler"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
