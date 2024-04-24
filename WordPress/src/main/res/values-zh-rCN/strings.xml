@@ -56,8 +56,6 @@ Language: zh_CN
     <string name="gutenberg_native_copy_error_details">复制错误详情</string>
     <string name="gutenberg_native_button_to_copy_post_text">点击此按钮即可复制文章文本</string>
     <string name="gutenberg_native_button_to_copy_error_details">点击此按钮即可复制错误详情</string>
-    <string name="editor_updating_post_failed">更新文章内容失败</string>
-    <string name="editor_updating_post">正在更新文章内容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">视频说明。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">视频说明。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">编辑视频</string>
