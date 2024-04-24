@@ -11,7 +11,7 @@ import com.github.mikephil.charting.components.YAxis.AxisDependency.LEFT
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.data.LineDataSet.Mode.CUBIC_BEZIER
+import com.github.mikephil.charting.data.LineDataSet.Mode.HORIZONTAL_BEZIER
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
@@ -206,8 +206,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             enableDashedHighlightLine(4.4F, 1F, 0F)
             isHighlightEnabled = true
 
-            mode = CUBIC_BEZIER
-            cubicIntensity = 0.2f
+            mode = HORIZONTAL_BEZIER
             color = ContextCompat.getColor(chart.context, R.color.blue_50)
 
             setDrawFilled(true)
