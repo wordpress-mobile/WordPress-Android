@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.ui.stats.refresh.LineChartMarkerView
+import org.wordpress.android.ui.stats.refresh.SubscribersChartMarkerView
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.SubscribersChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.SubscribersChartItem.Line
 import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
@@ -182,7 +182,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun drawChartMarker(h: Highlight) {
         if (chart.marker == null) {
-            val markerView = LineChartMarkerView(chart.context, 0)
+            val markerView = SubscribersChartMarkerView(chart.context)
             markerView.chartView = chart
             chart.marker = markerView
         }
