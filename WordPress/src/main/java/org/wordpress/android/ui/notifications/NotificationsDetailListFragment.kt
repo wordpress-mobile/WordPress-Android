@@ -217,11 +217,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     private val mOnNoteBlockTextClickListener: OnNoteBlockTextClickListener = object : OnNoteBlockTextClickListener {
-        override fun onNoteBlockTextClicked(clickedSpan: NoteBlockClickableSpan) {
+        override fun onNoteBlockTextClicked(clickedSpan: NoteBlockClickableSpan?) {
             if (!isAdded || activity !is NotificationsDetailActivity) {
                 return
             }
-            handleNoteBlockSpanClick(activity as NotificationsDetailActivity, clickedSpan)
+            clickedSpan?.let { handleNoteBlockSpanClick(activity as NotificationsDetailActivity, it) }
         }
 
         override fun showDetailForNoteIds() {
@@ -263,7 +263,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
 
-        override fun showSitePreview(siteId: Long, siteUrl: String) {
+        override fun showSitePreview(siteId: Long, siteUrl: String?) {
             if (!isAdded || notification == null || activity !is NotificationsDetailActivity) {
                 return
             }
