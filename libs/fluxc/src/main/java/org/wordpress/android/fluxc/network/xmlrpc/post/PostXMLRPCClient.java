@@ -230,13 +230,21 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final PostModel post,
             final SiteModel site,
             boolean isFirstTimePublish,
-            boolean shouldSkipConflictResolutionCheck
+            boolean shouldSkipConflictResolutionCheck,
+            @Nullable String lastModifiedForConflictResolution
     ) {
-        pushPostInternal(post, site, false, isFirstTimePublish, shouldSkipConflictResolutionCheck);
+        pushPostInternal(
+                post,
+                site,
+                false,
+                isFirstTimePublish,
+                shouldSkipConflictResolutionCheck,
+                lastModifiedForConflictResolution
+        );
     }
 
     public void restorePost(final PostModel post, final SiteModel site) {
-        pushPostInternal(post, site, true, false, true);
+        pushPostInternal(post, site, true, false, true, "");
     }
 
     private void pushPostInternal(
@@ -244,8 +252,13 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             final SiteModel site,
             final boolean isRestoringPost,
             final boolean isFirstTimePublish,
-            boolean shouldSkipConflictResolutionCheck) {
-        Map<String, Object> contentStruct = postModelToContentStruct(post, shouldSkipConflictResolutionCheck);
+            boolean shouldSkipConflictResolutionCheck,
+            String lastModifiedForConflictResolution) {
+        Map<String, Object> contentStruct = postModelToContentStruct(
+                post,
+                shouldSkipConflictResolutionCheck,
+                lastModifiedForConflictResolution
+        );
 
         if (post.isLocalDraft()) {
             // For first time publishing, set the comment status (open or closed) to the default value for the site
@@ -474,7 +487,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     private static Map<String, Object> postModelToContentStruct(
             PostModel post,
-            boolean shouldSkipConflictResolutionCheck
+            boolean shouldSkipConflictResolutionCheck,
+            @Nullable String lastModifiedForConflictResolution
     ) {
         Map<String, Object> contentStruct = new HashMap<>();
 
@@ -505,7 +519,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         // setting this field to true, would not add the modified date and won't trigger a check for latest version
         // on the remote host.
         if (!shouldSkipConflictResolutionCheck) {
-            String dateLastModifiedStr = post.getLastModified();
+            String dateLastModifiedStr = (lastModifiedForConflictResolution != null) ?
+                    lastModifiedForConflictResolution :
+                    post.getLastModified();
             Date dateLastModified = DateTimeUtils.dateUTCFromIso8601(dateLastModifiedStr);
             if (dateLastModified != null) {
                 contentStruct.put("if_not_modified_since", dateLastModified);
