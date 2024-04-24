@@ -37,7 +37,7 @@
         android:layout_height="1px"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:alpha="0.6"
-        android:background="#3C3C43"
+        android:background="@color/divider_likes"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/button_share_post"
         tools:visibility="visible" />
