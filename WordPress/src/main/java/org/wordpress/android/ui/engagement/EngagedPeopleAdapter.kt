@@ -38,7 +38,7 @@ class EngagedPeopleAdapter constructor(
         val item = itemsList[position]
         when (item) {
             is LikedItem -> (holder as LikedItemViewHolder).bind(item, type)
-            is Liker -> (holder as LikerViewHolder).bind(item)
+            is Liker -> (holder as LikerViewHolder).bind(item, position)
             is NextLikesPageLoader -> (holder as NextPageLoadViewHolder).bind(item)
         }
     }
