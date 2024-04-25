@@ -123,8 +123,13 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun configureYAxis(item: SubscribersChartItem) {
-        val minYValue = item.entries.minByOrNull { it.value }?.value ?: 0
-        val maxYValue = item.entries.maxByOrNull { it.value }?.value ?: 7
+        val hasChange = item.entries.map { it.value }.distinct().size > 1
+        val minYValue = if (hasChange) (item.entries.minByOrNull { it.value }?.value ?: 0) else 0
+        val maxYValue = if (hasChange) {
+            item.entries.maxByOrNull { it.value }?.value ?: 7
+        } else {
+            item.entries.last().value * 2
+        }
 
         chart.axisLeft.apply {
             valueFormatter = LargeValueFormatter()
