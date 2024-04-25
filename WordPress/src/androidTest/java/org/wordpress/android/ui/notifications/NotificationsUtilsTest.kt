@@ -51,7 +51,7 @@ class NotificationsUtilsTest {
         // Check if the link is correctly set
         val spans = result.getSpans(10, 14, ClickableSpan::class.java)
         assertTrue(spans.size == 1)
-        assertEquals("https://example.com", (spans[0] as NoteBlockClickableSpan).formattableRange.url)
+        assertEquals("https://example.com", (spans[0] as NoteBlockClickableSpan).formattableRange?.url)
     }
 
     @Test
