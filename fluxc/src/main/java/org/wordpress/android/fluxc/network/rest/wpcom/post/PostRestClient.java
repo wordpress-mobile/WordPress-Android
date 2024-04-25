@@ -310,7 +310,8 @@ public class PostRestClient extends BaseWPComRestClient {
             final PostModel post,
             final SiteModel site,
             final boolean isFirstTimePublish,
-            final boolean shouldSkipConflictResolutionCheck
+            final boolean shouldSkipConflictResolutionCheck,
+            final String lastModifiedForConflictResolution
     ) {
         String url;
 
@@ -320,7 +321,11 @@ public class PostRestClient extends BaseWPComRestClient {
             url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_2();
         }
 
-        Map<String, Object> body = postModelToParams(post, shouldSkipConflictResolutionCheck);
+        Map<String, Object> body = postModelToParams(
+                post,
+                shouldSkipConflictResolutionCheck,
+                lastModifiedForConflictResolution
+        );
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 PostWPComRestResponse.class,
@@ -613,7 +618,11 @@ public class PostRestClient extends BaseWPComRestClient {
         return post;
     }
 
-    private Map<String, Object> postModelToParams(PostModel post, boolean shouldSkipConflictResolutionCheck) {
+    private Map<String, Object> postModelToParams(
+            PostModel post,
+            boolean shouldSkipConflictResolutionCheck,
+            @Nullable String lastModifiedForConflictResolution
+    ) {
         Map<String, Object> params = new HashMap<>();
 
         params.put("status", StringUtils.notNullStr(post.getStatus()));
@@ -627,7 +636,10 @@ public class PostRestClient extends BaseWPComRestClient {
         // setting this field to true, would not add the modified date and won't trigger a check for latest version
         // on the remote host.
         if (!shouldSkipConflictResolutionCheck) {
-            params.put("if_not_modified_since", post.getLastModified());
+            String lastModified = (lastModifiedForConflictResolution != null)
+                    ? lastModifiedForConflictResolution
+                    : post.getLastModified();
+            params.put("if_not_modified_since", lastModified);
         }
 
         if (post.getAuthorId() > 0) {
