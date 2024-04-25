@@ -746,14 +746,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 initializePostObject()
             }
 
-            (fragmentManager.getFragment(
-                    state,
-                    EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
-                ) as EditorFragmentAbstract?)?.let { frag ->
-                        editorFragment = frag
-                    if (frag is EditorMediaUploadListener) {
-                        editorMediaUploadListener = frag
-                    }
+            (supportFragmentManager.getFragment(
+                state,
+                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
+            ) as EditorFragmentAbstract?)?.let { frag ->
+                editorFragment = frag
+                if (frag is EditorMediaUploadListener) {
+                    editorMediaUploadListener = frag
+                }
             }
         }
     }
@@ -1200,6 +1200,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         outState.putParcelableArrayList(
             EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
         )
+
         editorFragment?.let {
             supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, it)
         }
