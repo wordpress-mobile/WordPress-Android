@@ -366,6 +366,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 title = getString(R.string.reader_title_post_detail);
             }
 
+            if (note.isViewMilestoneType() || note.getHasBadge()) {
+                title = "";
+            }
+
             getSupportActionBar().setTitle(title);
             // important for accessibility - talkback
             setTitle(getString(R.string.notif_detail_screen_title, title));

@@ -76,6 +76,7 @@ class Note {
     val title: String by lazy { queryJSON("title", "") }
     val iconURL: String by lazy { queryJSON("icon", "") }
     val enabledCommentActions: EnumSet<EnabledActions> by lazy { getEnabledActions(commentActions) }
+    val hasBadge: Boolean by lazy { containsBadgeMediaType() }
     private val enabledPostActions: EnumSet<EnabledActions> by lazy { getEnabledActions(postActions) }
     private val timestampString: String by lazy { queryJSON("timestamp", "") }
     private val commentText: String by lazy { queryJSON("body[last].text", "") }
@@ -179,6 +180,19 @@ class Note {
             }
         }
         ""
+    }
+
+    private fun containsBadgeMediaType(): Boolean {
+        val bodyArray = mNoteJSON?.optJSONArray("body")
+        if (bodyArray != null && bodyArray.length() > 0) {
+            for (i in 0 until bodyArray.length()) {
+                val mediaType = JSONUtils.queryJSON(bodyArray, "body[$i].media[0].type", "")
+                if ("badge" == mediaType) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     /**
