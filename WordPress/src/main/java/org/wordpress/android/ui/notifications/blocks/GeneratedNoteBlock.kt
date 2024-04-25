@@ -20,7 +20,14 @@ class GeneratedNoteBlock(
     val clickListener: OnNoteBlockTextClickListener,
     private val pingbackUrl: String
 ) : NoteBlock(FormattableContent(), imageManager, notificationsUtilsWrapper, clickListener) {
-    override fun getNoteText(): Spannable {
+    override val metaSiteUrl: String
+        get() = pingbackUrl
+
+    override val blockType: BlockType
+        get() = BASIC
+
+    override val noteText: Spannable
+        get() {
         val spannableStringBuilder = SpannableStringBuilder(text)
 
         // Process Ranges to add links and text formatting
@@ -42,15 +49,7 @@ class GeneratedNoteBlock(
         return spannableStringBuilder
     }
 
-    override fun getMetaSiteUrl(): String {
-        return pingbackUrl
-    }
-
     override fun hasImageMediaItem(): Boolean {
         return false
-    }
-
-    override fun getBlockType(): BlockType {
-        return BASIC
     }
 }
