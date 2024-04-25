@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.blaze.blazepromote
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,10 @@ class BlazePromoteParentActivity : AppCompatActivity() {
                 }
                 else -> {}
             }
+        }
+
+        viewModel.onSelectedSiteMissing.observe(this) {
+            finish()
         }
     }
 
