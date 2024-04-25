@@ -10,6 +10,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,7 +20,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
 ) : ScopedViewModel(bgDispatcher) {
-    private val _uiStateFlow = MutableStateFlow(UiState(emptyMap()))
+    private val _uiStateFlow = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
     /**
@@ -41,30 +42,56 @@ class ReaderTagsFeedViewModel @Inject constructor(
      */
     fun fetchTag(tag: ReaderTag) {
         launch {
-            _uiStateFlow.update {
-                it.copy(tagStates = it.tagStates + (tag to FetchState.Loading))
-            }
-
-            try {
-                val posts = readerPostRepository.fetchNewerPostsForTag(tag)
-                _uiStateFlow.update {
-                    it.copy(tagStates = it.tagStates + (tag to FetchState.Success(posts)))
-                }
-            } catch (e: ReaderPostFetchException) {
-                _uiStateFlow.update {
-                    it.copy(tagStates = it.tagStates + (tag to FetchState.Error(e)))
-                }
-            }
+//            _uiStateFlow.update {
+//                it.copy(tagStates = it.tagStates + (tag to FetchState.Loading))
+//            }
+//
+//            try {
+//                val posts = readerPostRepository.fetchNewerPostsForTag(tag)
+//                _uiStateFlow.update {
+//                    it.copy(tagStates = it.tagStates + (tag to FetchState.Success(posts)))
+//                }
+//            } catch (e: ReaderPostFetchException) {
+//                _uiStateFlow.update {
+//                    it.copy(tagStates = it.tagStates + (tag to FetchState.Error(e)))
+//                }
+//            }
         }
     }
 
-    data class UiState(
-        val tagStates: Map<ReaderTag, FetchState>,
+    sealed class UiState {
+        object Initial : UiState()
+        data class Loaded(val data: List<TagFeedItem>) : UiState()
+
+        object Loading : UiState()
+
+        data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
+    }
+
+    data class TagFeedItem(
+        val tagChip: TagChip,
+        val postList: PostList,
     )
 
-    sealed class FetchState {
-        data object Loading : FetchState()
-        data class Success(val posts: ReaderPostList) : FetchState()
-        data class Error(val exception: Exception) : FetchState()
+    data class TagChip(
+        val tag: ReaderTag,
+        val onTagClicked: () -> Unit,
+    )
+
+    sealed class PostList {
+        data class Loaded(val items: List<TagsFeedPostItem>) : PostList()
+
+        object Loading : PostList()
+
+        data class Error(
+            val type: ErrorType,
+            val onRetryClick: () -> Unit
+        ) : PostList()
+    }
+
+    sealed interface ErrorType {
+        data object Loading : ErrorType
+
+        data object NoContent : ErrorType
     }
 }

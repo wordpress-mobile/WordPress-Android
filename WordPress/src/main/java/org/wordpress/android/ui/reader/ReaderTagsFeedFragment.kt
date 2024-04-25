@@ -2,28 +2,8 @@ package org.wordpress.android.ui.reader
 
 import android.os.Bundle
 import android.view.View
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +19,7 @@ import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.Companion.ge
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
@@ -79,10 +60,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         binding.composeView.setContent {
             AppThemeWithoutBackground {
                 val uiState by viewModel.uiStateFlow.collectAsState()
-                ReaderTagsFeedScreen(
-                    uiState = uiState,
-                    onRetryClicked = viewModel::fetchTag,
-                )
+                ReaderTagsFeed(uiState)
             }
         }
 
@@ -132,100 +110,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         ): ReaderTagsFeedFragment = ReaderTagsFeedFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(ARG_TAGS_FEED_TAG, feedTag)
-            }
-        }
-    }
-}
-
-/**
- * Throwaway UI code just for testing the initial Tags Feed fetching code.
- * TODO remove this and replace with the final Compose content.
- */
-@Composable
-private fun ReaderTagsFeedScreen(
-    uiState: ReaderTagsFeedViewModel.UiState,
-    onRetryClicked: (ReaderTag) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        uiState.tagStates.forEach { (tag, fetchState) ->
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Text(
-                    text = tag.tagTitle,
-                    style = MaterialTheme.typography.h4,
-                )
-
-                when (fetchState) {
-                    is ReaderTagsFeedViewModel.FetchState.Loading -> {
-                        Text(
-                            text = "Loading...",
-                            style = MaterialTheme.typography.body1,
-                        )
-                    }
-
-                    is ReaderTagsFeedViewModel.FetchState.Error -> {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(2.dp),
-                        ) {
-                            Text(
-                                text = "Error loading posts.",
-                                style = MaterialTheme.typography.body1,
-                            )
-
-                            Text(
-                                text = "Retry",
-                                style = MaterialTheme.typography.body1,
-                                textDecoration = TextDecoration.Underline,
-                                color = MaterialTheme.colors.primary,
-                                modifier = Modifier
-                                    .padding(start = 8.dp)
-                                    .clickable { onRetryClicked(tag) },
-                            )
-                        }
-                    }
-
-                    is ReaderTagsFeedViewModel.FetchState.Success -> {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                        ) {
-                            fetchState.posts.forEach { post ->
-                                Column(
-                                    modifier = Modifier
-                                        .width(300.dp)
-                                        .background(
-                                            MaterialTheme.colors.surface,
-                                            RoundedCornerShape(4.dp)
-                                        )
-                                        .padding(4.dp),
-                                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                                ) {
-                                    Text(
-                                        text = post.title,
-                                        style = MaterialTheme.typography.h5,
-                                        maxLines = 2,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-
-                                    Text(
-                                        text = post.excerpt,
-                                        style = MaterialTheme.typography.body1,
-                                        maxLines = 4,
-                                        overflow = TextOverflow.Ellipsis,
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
