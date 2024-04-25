@@ -519,9 +519,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         // setting this field to true, would not add the modified date and won't trigger a check for latest version
         // on the remote host.
         if (!shouldSkipConflictResolutionCheck) {
-            String dateLastModifiedStr = (lastModifiedForConflictResolution != null) ?
-                    lastModifiedForConflictResolution :
-                    post.getLastModified();
+            String dateLastModifiedStr = (lastModifiedForConflictResolution != null)
+                    ? lastModifiedForConflictResolution
+                    : post.getLastModified();
             Date dateLastModified = DateTimeUtils.dateUTCFromIso8601(dateLastModifiedStr);
             if (dateLastModified != null) {
                 contentStruct.put("if_not_modified_since", dateLastModified);
