@@ -44,7 +44,7 @@ import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 
 /**
- * Initial implementation of ReaderTagFeedFragment with the idea of it containing both a ComposeView, which will host
+ * Initial implementation of ReaderTagsFeedFragment with the idea of it containing both a ComposeView, which will host
  * all Compose content related to the new Tags Feed as well as an internal ReaderPostListFragment, which will be used
  * to display "filtered" content based on the currently selected tag on the top app bar filter.
  *
