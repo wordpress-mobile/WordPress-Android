@@ -48,7 +48,8 @@ class ReaderPostLocalSource @Inject constructor(
                         requestedTag
                     )
 
-                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> { /* noop */
+                    ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER -> {
+                        /* noop */
                     }
                 }
             }
