@@ -927,6 +927,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     activity,
                     this.siteId,
                     this.postId,
+                    this.postTitle,
+                    this.postUrl,
                     this.headerData,
                     EngagementNavigationSource.LIKE_READER_LIST
                 )

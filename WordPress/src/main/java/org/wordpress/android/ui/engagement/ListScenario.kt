@@ -13,6 +13,8 @@ data class ListScenario(
     val postOrCommentId: Long,
     val commentPostId: Long = 0,
     val commentSiteUrl: String,
+    val postTitle: String,
+    val postUrl: String,
     val headerData: HeaderData
 ) : Parcelable
 

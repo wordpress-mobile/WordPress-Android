@@ -1833,6 +1833,12 @@
         <item name="android:backgroundTint">?attr/colorOnBackground</item>
     </style>
 
+    <style name="Widget.ShareButton" parent="Widget.LoginFlow.Button.Primary">
+        <item name="android:textColor">?attr/colorSurface</item>
+        <item name="android:backgroundTint">?attr/colorOnBackground</item>
+        <item name="cornerRadius">20dp</item>
+    </style>
+
     <style name="AvatarShapeAppearanceOverlay">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/avatar_sz_medium_radius</item>
