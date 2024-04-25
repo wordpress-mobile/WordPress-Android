@@ -547,7 +547,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_SETTINGS_DETAILS_OPENED,
         NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_DISABLED,
         NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED,
-        NOTIFICATION_TAPPED_SEGMENTED_CONTROL,
+        NOTIFICATIONS_FILTER_SELECTED("notification_tapped_segmented_control"),
         THEMES_ACCESSED_THEMES_BROWSER("themes_theme_browser_accessed"),
         THEMES_ACCESSED_SEARCH("themes_search_accessed"),
         THEMES_CHANGED_THEME("themes_theme_changed"),

@@ -31,7 +31,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_FILTER_SELECTED
 import org.wordpress.android.databinding.NotificationFilterPopupBinding
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
@@ -152,7 +152,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     private fun getFilterClickListener(filter: TabPosition, popupWindow: PopupWindow) = View.OnClickListener {
         AnalyticsTracker.track(
-            NOTIFICATION_TAPPED_SEGMENTED_CONTROL, hashMapOf(
+            NOTIFICATIONS_FILTER_SELECTED, hashMapOf(
                 NOTIFICATIONS_SELECTED_FILTER to filter.toString()
             )
         )
