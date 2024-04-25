@@ -549,7 +549,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean = false,
-            replyText: String? = null,
             filter: Filter? = null,
             isTappedFromPushNotification: Boolean = false,
         ) {
@@ -558,9 +557,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             }
             val detailIntent = getOpenNoteIntent(activity, noteId)
             detailIntent.putExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard)
-            if (!TextUtils.isEmpty(replyText)) {
-                detailIntent.putExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA, replyText)
-            }
             detailIntent.putExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
             detailIntent.putExtra(
                 NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,

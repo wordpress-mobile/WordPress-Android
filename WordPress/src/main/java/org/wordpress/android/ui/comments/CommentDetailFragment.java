@@ -135,14 +135,12 @@ import kotlinx.coroutines.GlobalScope;
 @SuppressWarnings("DeprecatedIsStillUsed")
 public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
         OnCollapseListener {
-    private static final String KEY_MODE = "KEY_MODE";
-    private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
-    private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
-    private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
-    private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
-
-    private static final int INTENT_COMMENT_EDITOR = 1010;
-    private static final float NORMAL_OPACITY = 1f;
+    protected static final String KEY_MODE = "KEY_MODE";
+    protected static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
+    protected static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
+    protected static final String KEY_NOTE_ID = "KEY_NOTE_ID";
+    protected static final int INTENT_COMMENT_EDITOR = 1010;
+    protected static final float NORMAL_OPACITY = 1f;
 
     @Nullable private CommentModel mComment;
     @Nullable private SiteModel mSite;
@@ -151,11 +149,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
-    @Nullable private String mRestoredNoteId;
-    private boolean mIsUsersBlog = false;
-    private boolean mShouldFocusReplyField;
+    @Nullable protected String mRestoredNoteId;
+    protected boolean mIsUsersBlog = false;
+    protected boolean mShouldFocusReplyField;
     @Nullable private String mPreviousStatus;
-    private float mMediumOpacity;
+    protected float mMediumOpacity;
 
     @Inject AccountStore mAccountStore;
     @SuppressWarnings("deprecation")
@@ -185,37 +183,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private ReaderIncludeCommentBoxBinding mReplyBinding = null;
     @Nullable private CommentActionFooterBinding mActionBinding = null;
 
-    /*
-     * used when called from comment list
-     */
-    @SuppressWarnings("deprecation")
-    static CommentDetailFragment newInstance(
-            @NonNull SiteModel site,
-            CommentModel commentModel
-    ) {
-        CommentDetailFragment fragment = new CommentDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
-        args.putInt(KEY_SITE_LOCAL_ID, site.getId());
-        args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /*
-     * used when called from notification list for a comment notification
-     */
-    @SuppressWarnings("deprecation")
-    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
-        CommentDetailFragment fragment = new CommentDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_MODE, CommentSource.NOTIFICATION);
-        args.putString(KEY_NOTE_ID, noteId);
-        args.putString(KEY_REPLY_TEXT, replyText);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     @SuppressWarnings("deprecation")
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -223,29 +190,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         mCommentSource = (CommentSource) requireArguments().getSerializable(KEY_MODE);
-
-        switch (mCommentSource) {
-            case SITE_COMMENTS:
-                setComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID));
-                break;
-            case NOTIFICATION:
-                setNote(requireArguments().getString(KEY_NOTE_ID));
-                setReplyText(requireArguments().getString(KEY_REPLY_TEXT));
-                break;
-        }
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                // The note will be set in onResume()
-                // See WordPress.deferredInit()
-                mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
-            } else {
-                int siteId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
-                long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
-                setComment(commentId, siteId);
-            }
-        }
-
         setHasOptionsMenu(true);
     }
 
@@ -499,7 +443,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void setComment(final long commentRemoteId, final int siteLocalId) {
+    protected void setComment(final long commentRemoteId, final int siteLocalId) {
         final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
         if (site != null) {
             setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId));
@@ -572,13 +516,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         } else {
             setNote(note);
         }
-    }
-
-    private void setReplyText(String replyText) {
-        if (replyText == null) {
-            return;
-        }
-        mRestoredReplyText = replyText;
     }
 
     private void showErrorToastAndFinish() {

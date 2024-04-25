@@ -373,7 +373,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean,
-            replyText: String?,
             filter: Filter?,
             isTappedFromPushNotification: Boolean
         ) {
@@ -385,9 +384,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             }
             val detailIntent = getOpenNoteIntent(activity, noteId)
             detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard)
-            if (!TextUtils.isEmpty(replyText)) {
-                detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText)
-            }
             detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
             detailIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, isTappedFromPushNotification)
             openNoteForReplyWithParams(detailIntent, activity)
