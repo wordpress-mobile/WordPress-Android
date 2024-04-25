@@ -111,6 +111,8 @@ platform :android do
 
     trigger_beta_build(branch_to_build: "release/#{new_version}")
 
+    # Create an intermediate branch
+    Fastlane::Helper::GitHelper.create_branch("code_freeze/#{release_version}")
     create_release_management_pull_request('trunk', "Merge #{new_version} code freeze to trunk")
   end
 
@@ -319,6 +321,8 @@ platform :android do
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
+    # Create an intermediate branch
+    Fastlane::Helper::GitHelper.create_branch("finalize_release/#{release_version}")
     create_release_management_pull_request('trunk', "Merge #{version_name} final to trunk")
   end
 
