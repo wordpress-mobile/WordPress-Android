@@ -513,7 +513,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);

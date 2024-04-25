@@ -56,11 +56,9 @@ Language: gl_ES
     <string name="gutenberg_native_button_to_copy_post_text">Botón para copiar o texto da entrada</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Pulsa aquí para copiar o texto da entrada.</string>
     <string name="gutenberg_native_button_to_copy_error_details">Botón para copiar os detalles do erro</string>
-    <string name="editor_updating_post_failed">Erro ao actualizar o contido da entrada</string>
     <string name="gutenberg_native_tap_here_to_copy_error_details">Pulsa aquí para copiar os detalles do erro.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">O editor atopou un erro inesperado.</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Podes copiar o texto da túa entrada en caso de que o teu contido se vexa afectado. Copia os detalles do erro para depuralo e compartilo co servizo de asistencia.</string>
-    <string name="editor_updating_post">Actualizando contido da entrada</string>
     <string name="notifications_unread_content_description">Non lido</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editar o vídeo</string>
     <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>
