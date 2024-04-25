@@ -7,7 +7,7 @@ import javax.inject.Inject
 class ReaderPostLogicFactory @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
 ) {
-    fun create(listener: ServiceCompletionListener) = ReaderPostLogic(
+    fun create(listener: ServiceCompletionListener): ReaderPostLogic = ReaderPostLogic(
         listener,
         readerPostRepository,
     )
