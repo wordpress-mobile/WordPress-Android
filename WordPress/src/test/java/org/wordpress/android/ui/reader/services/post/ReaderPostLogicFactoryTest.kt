@@ -27,6 +27,6 @@ class ReaderPostLogicFactoryTest {
             // no-op
         }
         val logic = factory.create(listener)
-        assertThat(logic).isNotNull
+        assertThat(logic).isInstanceOf(ReaderPostLogic::class.java)
     }
 }
