@@ -636,9 +636,9 @@ public class PostRestClient extends BaseWPComRestClient {
         // setting this field to true, would not add the modified date and won't trigger a check for latest version
         // on the remote host.
         if (!shouldSkipConflictResolutionCheck) {
-            String lastModified = (lastModifiedForConflictResolution != null) ?
-                    lastModifiedForConflictResolution :
-                    post.getLastModified();
+            String lastModified = (lastModifiedForConflictResolution != null)
+                    ? lastModifiedForConflictResolution
+                    : post.getLastModified();
             params.put("if_not_modified_since", lastModified);
         }
 
