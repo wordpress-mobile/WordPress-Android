@@ -15,12 +15,17 @@ import org.wordpress.android.ui.comments.unified.CommentSource
 class SiteCommentDetailFragment : CommentDetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID))
-
         if (savedInstanceState != null) {
-            val siteId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID)
-            val commentId = savedInstanceState.getLong(KEY_COMMENT_ID)
-            setComment(commentId, siteId)
+            handleComment(savedInstanceState.getLong(KEY_COMMENT_ID), savedInstanceState.getInt(KEY_SITE_LOCAL_ID))
+        } else {
+            handleComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID))
+        }
+    }
+
+    private fun handleComment(commentRemoteId: Long, siteLocalId: Int) {
+        val site = mSiteStore.getSiteByLocalId(siteLocalId)
+        if (site != null) {
+            setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId))
         }
     }
 
@@ -29,14 +34,12 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
         fun newInstance(
             site: SiteModel,
             commentModel: CommentModel
-        ): SiteCommentDetailFragment {
-            val fragment = SiteCommentDetailFragment()
-            val args = Bundle()
-            args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS)
-            args.putInt(KEY_SITE_LOCAL_ID, site.id)
-            args.putLong(KEY_COMMENT_ID, commentModel.remoteCommentId)
-            fragment.arguments = args
-            return fragment
+        ): SiteCommentDetailFragment = SiteCommentDetailFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS)
+                putInt(KEY_SITE_LOCAL_ID, site.id)
+                putLong(KEY_COMMENT_ID, commentModel.remoteCommentId)
+            }
         }
     }
 }

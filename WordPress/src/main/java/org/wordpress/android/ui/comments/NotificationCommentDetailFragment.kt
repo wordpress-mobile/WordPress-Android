@@ -18,12 +18,10 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        requireArguments().getString(KEY_NOTE_ID)?.let { noteId ->
-            handleNote(noteId)
-        }
-
-        savedInstanceState?.getString(KEY_NOTE_ID)?.let { restoredNoteId ->
-            handleNote(restoredNoteId)
+        if (savedInstanceState?.getString(KEY_NOTE_ID) != null) {
+            handleNote(savedInstanceState.getString(KEY_NOTE_ID)!!)
+        } else {
+            handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
     }
 

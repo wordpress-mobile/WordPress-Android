@@ -46,7 +46,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.databinding.CommentActionFooterBinding;
 import org.wordpress.android.databinding.CommentDetailFragmentBinding;
 import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -439,14 +438,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    protected void setComment(final long commentRemoteId, final int siteLocalId) {
-        final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (site != null) {
-            setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId));
-        }
-    }
-
-    private void setComment(
+    protected void setComment(
             @NonNull final SiteModel site,
             @Nullable final CommentModel comment
     ) {
