@@ -1,3 +1,0 @@
-- We fixed a handful of issues with highlighted text formatting.
-- The app now supports text suggestions that are longer than the visible space in the editor.
-- We changed the infinity symbol to “100%” on the Stats screen. And in that moment, I swear we were 100%.
