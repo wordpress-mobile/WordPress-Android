@@ -1,0 +1,3 @@
+24.7:
+Wir haben den Bildschirm für die Website-Auswahl neu gestaltet. Du kannst jetzt deine Lieblings-Websites anheften, kürzlich aufgerufene Websites anzeigen und vieles mehr. Zudem haben wir die Möglichkeit zum Anzeigen und Ausblenden von Websites entfernt.
+(Haben wir den Begriff „Websites“ oft genug erwähnt? Wir würden sagen, ja.)

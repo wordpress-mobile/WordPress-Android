@@ -1,4 +1,0 @@
-24.6:
-- Vurgulu metin biçimlendirmesiyle ilgili birkaç sorunu düzelttik.
-- Uygulama artık düzenleyicideki görünür alandan daha uzun metin önerilerini destekliyor.
-- İstatistikler ekranındaki sonsuzluk simgesini "%100" olarak değiştirdik. Ve bunu yaparken kendimizi %100 buna adadık.

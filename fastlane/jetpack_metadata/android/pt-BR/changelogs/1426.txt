@@ -1,0 +1,3 @@
+24.7:
+A tela do seletor de sites está de cara nova. Agora você pode fixar seus sites favoritos, ver os recém-acessados e muito mais. Também removemos a capacidade de mostrar e ocultar sites.
+(Acho que já deu da palavra "sites", não é mesmo?)

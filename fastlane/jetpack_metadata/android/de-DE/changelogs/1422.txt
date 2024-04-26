@@ -1,4 +1,0 @@
-24.6:
-– Es wurden mehrere Probleme mit der Formatierung von markiertem Text behoben.
-– Die App unterstützt nun Textvorschläge, die länger als der sichtbare Bereich im Editor sind.
-– Das Unendlichkeitssymbol im Stats-Bildschirm wurde auf „100 %“ geändert. Und in dem Moment waren wir wirklich bei 100 %.

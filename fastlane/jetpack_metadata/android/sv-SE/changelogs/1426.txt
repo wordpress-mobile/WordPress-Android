@@ -1,0 +1,3 @@
+24.7:
+Vi har gjort om webbplatsväljarskärmen. Du kan nu nåla fast dina favoritwebbplatser, se nyligen besökta webbplatser och mycket mer. Vi har också tagit bort möjligheten att visa och dölja webbplatser.
+(Har vi sagt ordet "webbplatser" tillräckligt? Troligtvis.)

@@ -1,0 +1,3 @@
+24.7:
+Abbiamo rinnovato la schermata della scelta siti. Ora puoi fissare i tuoi siti preferiti, vedere i siti consultati di recente e altro ancora. Abbiamo anche rimosso la possibilità di mostrare e nascondere i siti.
+(Abbiamo usato abbastanza la parola "siti"? Pensiamo di sì.)
