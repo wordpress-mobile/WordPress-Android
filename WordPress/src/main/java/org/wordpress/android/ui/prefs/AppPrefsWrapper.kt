@@ -449,6 +449,10 @@ class AppPrefsWrapper @Inject constructor() {
     fun getShouldHideDynamicCard(id: String, ): Boolean =
         AppPrefs.getShouldHideDynamicCard(id)
 
+    fun shouldUpdateBookmarkPostsPseudoIds(tag: ReaderTag?): Boolean = AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)
+
+    fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
