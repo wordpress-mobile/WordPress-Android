@@ -96,7 +96,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                     start = Margin.Large.value,
                 ),
                 text = UiString.UiStringText(tagChip.tag.tagTitle),
-                onClick = tagChip.onTagClicked,
+                onClick = tagChip.onTagClick,
                 height = 36.dp,
             )
             Spacer(modifier = Modifier.height(Margin.Large.value))
@@ -300,7 +300,7 @@ private fun PostListLoaded(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple(bounded = false),
                             onClick = {
-                                tagChip.onTagClicked()
+                                tagChip.onTagClick()
                                 AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
                             }
                         ),
@@ -374,7 +374,7 @@ private fun PostListError(
         )
         Spacer(modifier = Modifier.height(Margin.Medium.value))
         val errorMessage = when (postList.type) {
-            is ErrorType.Loading -> stringResource(R.string.reader_tags_feed_loading_error_description)
+            is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
             is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
         }
         Text(
@@ -529,7 +529,7 @@ fun ReaderTagsFeedLoaded() {
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),
-                        postList = PostList.Error(ErrorType.Loading, {}),
+                        postList = PostList.Error(ErrorType.Default, {}),
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),

@@ -5,11 +5,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -19,8 +19,9 @@ import javax.inject.Named
 class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
-    private val _uiStateFlow = MutableStateFlow(UiState.Initial)
+    private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
     /**
@@ -29,6 +30,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [FetchState]s: [FetchState.Loading], [FetchState.Success], [FetchState.Error].
      */
     fun fetchAll(tags: List<ReaderTag>) {
+        if (tags.isEmpty()) {
+            _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
+            return
+        }
         tags.forEach {
             fetchTag(it)
         }
@@ -42,21 +47,107 @@ class ReaderTagsFeedViewModel @Inject constructor(
      */
     fun fetchTag(tag: ReaderTag) {
         launch {
-//            _uiStateFlow.update {
-//                it.copy(tagStates = it.tagStates + (tag to FetchState.Loading))
-//            }
-//
-//            try {
-//                val posts = readerPostRepository.fetchNewerPostsForTag(tag)
-//                _uiStateFlow.update {
-//                    it.copy(tagStates = it.tagStates + (tag to FetchState.Success(posts)))
-//                }
-//            } catch (e: ReaderPostFetchException) {
-//                _uiStateFlow.update {
-//                    it.copy(tagStates = it.tagStates + (tag to FetchState.Error(e)))
-//                }
-//            }
+            _uiStateFlow.update { UiState.Loading }
+
+            val loadedData = mutableListOf<TagFeedItem>()
+            val currentValue = _uiStateFlow.value
+            if (currentValue is UiState.Loaded) {
+                loadedData.addAll(currentValue.data)
+            }
+            try {
+                val posts = readerPostRepository.fetchNewerPostsForTag(tag)
+                if (posts.isNotEmpty()) {
+                    loadedData.add(
+                        TagFeedItem(
+                            tagChip = TagChip(
+                                tag = tag,
+                                onTagClick = ::onTagClick,
+                            ),
+                            postList = PostList.Loaded(
+                                posts.map {
+                                    TagsFeedPostItem(
+                                        siteName = it.blogName,
+                                        postDateLine = "1H",
+                                        postTitle = it.title,
+                                        postExcerpt = it.excerpt,
+                                        postImageUrl = it.blogImageUrl,
+                                        postNumberOfLikesText = readerUtilsWrapper.getShortLikeLabelText(
+                                            numLikes = it.numLikes
+                                        ),
+                                        postNumberOfCommentsText = readerUtilsWrapper.getShortCommentLabelText(
+                                            numComments = it.numReplies
+                                        ),
+                                        isPostLiked = it.isLikedByCurrentUser,
+                                        onSiteClick = ::onSiteClick,
+                                        onPostImageClick = ::onPostImageClick,
+                                        onPostLikeClick = ::onPostLikeClick,
+                                        onPostMoreMenuClick = ::onPostMoreMenuClick,
+                                    )
+                                }
+                            ),
+                        )
+                    )
+                } else {
+                    loadedData.add(
+                        errorTagFeedItem(
+                            tag = tag,
+                            errorType = ErrorType.NoContent,
+                        )
+                    )
+                }
+            } catch (e: ReaderPostFetchException) {
+                loadedData.add(
+                    errorTagFeedItem(
+                        tag = tag,
+                        errorType = ErrorType.Default,
+                    )
+                )
+            }
+            _uiStateFlow.update { UiState.Loaded(loadedData) }
         }
+    }
+
+    private fun errorTagFeedItem(
+        tag: ReaderTag,
+        errorType: ErrorType,
+    ): TagFeedItem =
+        TagFeedItem(
+            tagChip = TagChip(
+                tag = tag,
+                onTagClick = ::onTagClick
+            ),
+            postList = PostList.Error(
+                type = errorType,
+                onRetryClick = ::onRetryClick
+            ),
+        )
+
+    private fun onOpenTagsListClick() {
+        // TODO
+    }
+
+    private fun onTagClick() {
+        // TODO
+    }
+
+    private fun onRetryClick() {
+        // TODO
+    }
+
+    private fun onSiteClick() {
+        // TODO
+    }
+
+    private fun onPostImageClick() {
+        // TODO
+    }
+
+    private fun onPostLikeClick() {
+        // TODO
+    }
+
+    private fun onPostMoreMenuClick() {
+        // TODO
     }
 
     sealed class UiState {
@@ -75,7 +166,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     data class TagChip(
         val tag: ReaderTag,
-        val onTagClicked: () -> Unit,
+        val onTagClick: () -> Unit,
     )
 
     sealed class PostList {
@@ -90,7 +181,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     sealed interface ErrorType {
-        data object Loading : ErrorType
+        data object Default : ErrorType
 
         data object NoContent : ErrorType
     }
