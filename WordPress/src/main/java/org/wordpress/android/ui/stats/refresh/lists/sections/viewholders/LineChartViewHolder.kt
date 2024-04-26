@@ -183,16 +183,14 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             setDrawGridLines(false)
 
             if (chart.contentRect.width() > 0) {
-                axisLineWidth = 4.0F
+                axisLineWidth = chart.resources.getDimensionPixelSize(R.dimen.stats_line_chart_tick_height) /
+                    chart.resources.displayMetrics.density
 
                 val count = max(thisWeekData.count(), 7)
-                val tickWidth = 4.0F
+                val tickWidth = chart.resources.getDimension(R.dimen.stats_line_chart_tick_width)
                 val contentWidthMinusTicks = chart.contentRect.width() - (tickWidth * count.toFloat())
                 setAxisLineDashedLine(
-                    DashPathEffect(
-                        floatArrayOf(tickWidth, (contentWidthMinusTicks / (count - 1).toFloat())),
-                        0f
-                    )
+                    DashPathEffect(floatArrayOf(tickWidth, (contentWidthMinusTicks / (count - 1).toFloat())), 0f)
                 )
             }
 
@@ -289,10 +287,12 @@ class LineChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun <T> takeEntriesWithinGraphWidth(entries: List<T>): List<T> {
-        return if (8 < entries.size) entries.subList(
-            entries.size - 8,
-            entries.size
-        ) else {
+        return if (8 < entries.size) {
+            entries.subList(
+                entries.size - 8,
+                entries.size
+            )
+        } else {
             entries
         }
     }
