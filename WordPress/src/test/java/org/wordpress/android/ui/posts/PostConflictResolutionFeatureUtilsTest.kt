@@ -11,12 +11,16 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
 
 @ExperimentalCoroutinesApi
 class PostConflictResolutionFeatureUtilsTest : BaseUnitTest() {
     @Mock
     lateinit var mPostConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
+
+    @Mock
+    lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     private val site: SiteModel = mock()
     private val post: PostModel = mock()
@@ -25,7 +29,10 @@ class PostConflictResolutionFeatureUtilsTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        mPostConflictResolutionFeatureUtils = PostConflictResolutionFeatureUtils(mPostConflictResolutionFeatureConfig)
+        mPostConflictResolutionFeatureUtils = PostConflictResolutionFeatureUtils(
+            mPostConflictResolutionFeatureConfig,
+            dateTimeUtilsWrapper
+        )
     }
 
     @Test

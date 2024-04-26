@@ -321,15 +321,17 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
     }
-    private val mOnGravatarClickedListener = OnGravatarClickedListener { siteId, _, siteUrl ->
-        if (!isAdded || activity !is NotificationsDetailActivity) {
-            return@OnGravatarClickedListener
-        }
-        val detailActivity = activity as NotificationsDetailActivity
-        if (siteId == 0L && !TextUtils.isEmpty(siteUrl)) {
-            detailActivity.showWebViewActivityForUrl(siteUrl)
-        } else if (siteId != 0L) {
-            detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
+    private val mOnGravatarClickedListener = object : OnGravatarClickedListener {
+        override fun onGravatarClicked(siteId: Long, userId: Long, siteUrl: String?) {
+            if (!isAdded || activity !is NotificationsDetailActivity) {
+                return
+            }
+            val detailActivity = activity as NotificationsDetailActivity
+            if (siteId == 0L && !TextUtils.isEmpty(siteUrl)) {
+                detailActivity.showWebViewActivityForUrl(siteUrl)
+            } else if (siteId != 0L) {
+                detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
+            }
         }
     }
 
