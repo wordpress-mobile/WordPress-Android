@@ -150,7 +150,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
-    @Nullable protected String mRestoredNoteId;
     protected boolean mIsUsersBlog = false;
     protected boolean mShouldFocusReplyField;
     @Nullable private String mPreviousStatus;
@@ -466,8 +465,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @Nullable
-    @Override
-    public Note getNote() {
+    private Note getNote() {
         return mNote;
     }
 
@@ -477,11 +475,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         site.setSiteId(siteId);
         return site;
-    }
-
-    @Override
-    public void setNote(String noteId) {
-        // do nothing
     }
 
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
