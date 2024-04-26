@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.SubscribersRestClient.SubscribersResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.AuthorsRestClient.AuthorsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.ClicksRestClient.ClicksResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.CountryViewsRestClient.CountryViewsResponse
@@ -24,6 +25,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.FILE_DOWN
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTS_AND_PAGES_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.REFERRERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SEARCH_TERMS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.SUBSCRIBERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VIDEO_PLAYS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.VISITS_AND_VIEWS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.StatsType
@@ -156,6 +158,18 @@ open class TimeStatsSqlUtils<RESPONSE_TYPE>(
             statsRequestSqlUtils,
             VISITS_AND_VIEWS,
             VisitsAndViewsResponse::class.java
+    )
+
+    class SubscribersSqlUtils @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsUtils: StatsUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : TimeStatsSqlUtils<SubscribersResponse>(
+        statsSqlUtils,
+        statsUtils,
+        statsRequestSqlUtils,
+        SUBSCRIBERS,
+        SubscribersResponse::class.java
     )
 
     class CountryViewsSqlUtils
