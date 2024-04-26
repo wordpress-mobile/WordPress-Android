@@ -33,7 +33,7 @@ open class UserNoteBlock(
     notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) : NoteBlock(noteObject, imageManager, notificationsUtilsWrapper, onNoteBlockTextClickListener) {
     private val mGravatarClickedListener: OnGravatarClickedListener?
-    protected val avatarSize: Int
+    var avatarSize: Int
 
     override val blockType: BlockType
         get() = BlockType.USER
