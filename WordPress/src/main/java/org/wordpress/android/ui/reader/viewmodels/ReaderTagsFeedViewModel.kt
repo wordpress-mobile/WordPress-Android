@@ -11,6 +11,7 @@ import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,6 +21,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -67,7 +69,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
                                 posts.map {
                                     TagsFeedPostItem(
                                         siteName = it.blogName,
-                                        postDateLine = "1H",
+                                        postDateLine = dateTimeUtilsWrapper.javaDateToTimeSpan(
+                                            it.getDisplayDate(dateTimeUtilsWrapper)
+                                        ),
                                         postTitle = it.title,
                                         postExcerpt = it.excerpt,
                                         postImageUrl = it.blogImageUrl,

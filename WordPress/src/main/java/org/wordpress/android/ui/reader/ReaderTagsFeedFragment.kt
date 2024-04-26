@@ -82,6 +82,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             }
         }
 
+        // TODO not triggered when there's no internet, so the error/no connection UI is not shown.
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
             readerViewModel.showTopBarFilterGroup(
                 tagsFeedTag,
