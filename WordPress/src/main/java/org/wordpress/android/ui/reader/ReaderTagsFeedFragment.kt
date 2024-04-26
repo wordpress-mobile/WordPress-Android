@@ -34,7 +34,7 @@ import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelOwner
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -88,7 +88,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
-        subFilterViewModel = SubFilterViewModelOwner.getSubFilterViewModelForTag(this, tagsFeedTag, savedInstanceState)
+        subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForTag(this, tagsFeedTag, savedInstanceState)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }

@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -47,7 +48,7 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSuggestedTagsPag
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState
 import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelOwner
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -71,7 +72,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableViewInitializedListener,
-    OnScrollToTopListener, SubFilterViewModelOwner {
+    OnScrollToTopListener, SubFilterViewModelProvider {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -415,6 +416,20 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         }
     }
 
+    /**
+     * The owner of the SubFilterViewModel should be the current feed Fragment, so it can be properly cleared when the
+     * feed is changed, since it will be properly tied to the expected feed Fragment lifecycle instead of the
+     * [ReaderFragment] lifecycle.
+     *
+     * This method exists mainly for readability purposes and to avoid passing the Fragment as a parameter.
+     *
+     * Note: it can cause a crash if the current feed Fragment is not available for any reason, which should never
+     * happen since the calling methods are always called by the feed Fragment or their children.
+     */
+    private fun getSubFilterViewModelOwner(): ViewModelStoreOwner {
+        return getCurrentFeedFragment() as ViewModelStoreOwner
+    }
+
     private fun getSubFilterViewModel(): SubFilterViewModel? {
         val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag ?: return null
         return getSubFilterViewModelForTag(selectedTag)
@@ -425,38 +440,20 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
      * should only be used for getting a ViewModel that's already been started.
      */
     override fun getSubFilterViewModelForKey(key: String): SubFilterViewModel {
-        return ViewModelProvider(this, viewModelFactory)[key, SubFilterViewModel::class.java]
+        return ViewModelProvider(getSubFilterViewModelOwner(), viewModelFactory)[key, SubFilterViewModel::class.java]
     }
 
     override fun getSubFilterViewModelForTag(tag: ReaderTag, savedInstanceState: Bundle?): SubFilterViewModel {
-        // TODO thomashortadev now that this Fragment owns the SubFilterViewModel, it lives longer than the context
-        //  that uses it (selected feed), so we need to make sure it's properly cleared when the feed is changed.
-        //  OR maybe we can set the owner to be the current feed Fragment but have this ReaderFragment manage the
-        //  retrieval and initialization of the SubFilterViewModel. 🤔
-
-        return ViewModelProvider(this, viewModelFactory)[
+        return ViewModelProvider(getSubFilterViewModelOwner(), viewModelFactory)[
             SubFilterViewModel.getViewModelKeyForTag(tag),
             SubFilterViewModel::class.java
         ].also {
             it.initSubFilterViewModel(tag, savedInstanceState)
-
-            if (tag.isFilterable) {
-                it.updateTagsAndSites()
-            } else {
-                viewModel.hideTopBarFilterGroup(tag)
-            }
         }
     }
 
     private fun SubFilterViewModel.initSubFilterViewModel(startedTag: ReaderTag, savedInstanceState: Bundle?) {
-        if (isStarted) return
-
-        val wpMainActivityViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[WPMainActivityViewModel::class.java]
-
-        val viewModelKey = SubFilterViewModel.getViewModelKeyForTag(startedTag)
+        setupSubFilterBottomSheetObservers(startedTag)
 
         currentSubFilter.observe(
             viewLifecycleOwner
@@ -464,6 +461,44 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             onSubfilterSelected(subfilterListItem)
             viewModel.onSubFilterItemSelected(subfilterListItem)
         }
+
+
+        updateTagsAndSites.observe(
+            viewLifecycleOwner
+        ) { event: Event<EnumSet<UpdateTask>> ->
+            event.applyIfNotHandled {
+                if (NetworkUtils.isNetworkAvailable(activity)) {
+                    ReaderUpdateServiceStarter.startService(activity, this)
+                }
+            }
+        }
+
+        if (startedTag.isFilterable) {
+            subFilters.observe(
+                viewLifecycleOwner
+            ) { subFilters: List<SubfilterListItem> ->
+                viewModel.showTopBarFilterGroup(
+                    startedTag,
+                    subFilters
+                )
+            }
+
+            updateTagsAndSites()
+        } else {
+            viewModel.hideTopBarFilterGroup(startedTag)
+        }
+
+        // thomashortadev: not sure if always passing the same tags can cause problems
+        start(startedTag, startedTag, savedInstanceState)
+    }
+
+    private fun SubFilterViewModel.setupSubFilterBottomSheetObservers(startedTag: ReaderTag) {
+        val wpMainActivityViewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[WPMainActivityViewModel::class.java]
+
+        val viewModelKey = SubFilterViewModel.getViewModelKeyForTag(startedTag)
 
         bottomSheetUiState.observe(
             viewLifecycleOwner
@@ -514,30 +549,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 }
             }
         }
-
-        updateTagsAndSites.observe(
-            viewLifecycleOwner
-        ) { event: Event<EnumSet<UpdateTask>> ->
-            event.applyIfNotHandled {
-                if (NetworkUtils.isNetworkAvailable(activity)) {
-                    ReaderUpdateServiceStarter.startService(activity, this)
-                }
-            }
-        }
-
-        if (startedTag.isFilterable) {
-            subFilters.observe(
-                viewLifecycleOwner
-            ) { subFilters: List<SubfilterListItem> ->
-                viewModel.showTopBarFilterGroup(
-                    startedTag,
-                    subFilters
-                )
-            }
-        }
-
-        // TODO thomashortadev not sure if always passing the same tags can cause problems
-        start(startedTag, startedTag, savedInstanceState)
     }
 
     companion object {

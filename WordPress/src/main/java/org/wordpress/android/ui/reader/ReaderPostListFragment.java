@@ -110,7 +110,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelOwner;
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -601,7 +601,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
-        mSubFilterViewModel = SubFilterViewModelOwner.
+        mSubFilterViewModel = SubFilterViewModelProvider.
                 getSubFilterViewModelForTag(this, mTagFragmentStartedWith, savedInstanceState);
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {

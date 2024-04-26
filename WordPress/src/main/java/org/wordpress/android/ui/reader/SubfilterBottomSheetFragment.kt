@@ -18,7 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelOwner
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
@@ -75,7 +75,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             return
         }
 
-        viewModel = SubFilterViewModelOwner.getSubFilterViewModelForKey(this, subfilterVmKey)
+        viewModel = SubFilterViewModelProvider.getSubFilterViewModelForKey(this, subfilterVmKey)
 
         // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
