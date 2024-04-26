@@ -24,6 +24,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 
 // Note header, displayed at top of detail view
+@Suppress("LongParameterList")
 class HeaderNoteBlock(
     context: Context?,
     private val mHeadersList: List<FormattableContent>?,
@@ -114,6 +115,7 @@ class HeaderNoteBlock(
         }
     }
 
+    @Suppress("MagicNumber")
     private val mOnGravatarTouchListener = OnTouchListener { v, event ->
         val animationDuration = 150
         when (event.action) {
