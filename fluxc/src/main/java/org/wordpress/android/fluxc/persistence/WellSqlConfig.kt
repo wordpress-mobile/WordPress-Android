@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 200
+        return 201
     }
 
     override fun getDbName(): String {
@@ -2003,6 +2003,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 199 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD DB_TIMESTAMP INTEGER")
+                }
+                200 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD IS_SAMPLE_PRODUCT BOOLEAN")
                 }
             }
         }
