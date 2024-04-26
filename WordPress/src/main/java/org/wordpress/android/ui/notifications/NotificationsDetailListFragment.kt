@@ -539,7 +539,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 rootLayout!!.gravity = Gravity.CENTER_VERTICAL
             }
             if (noteBlockAdapter == null) {
-                noteBlockAdapter = NoteBlockAdapter(activity, noteList)
+                noteBlockAdapter = NoteBlockAdapter(requireContext(), noteList)
                 listAdapter = noteBlockAdapter
             } else {
                 noteBlockAdapter!!.setNoteList(noteList)
