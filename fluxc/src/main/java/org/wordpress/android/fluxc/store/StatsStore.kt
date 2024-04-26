@@ -219,6 +219,10 @@ class StatsStore
                 }
             }
 
+    suspend fun getSubscriberTypes() = coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getSubscriberTypes") {
+        return@withDefaultContext SubscriberType.values().toList()
+    }
+
     suspend fun getPostDetailTypes(): List<PostDetailType> =
             coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getPostDetailTypes") {
                 return@withDefaultContext PostDetailType.values().toList()
@@ -267,6 +271,8 @@ class StatsStore
         VIDEOS,
         FILE_DOWNLOADS
     }
+
+    enum class SubscriberType : StatsType { SUBSCRIBERS }
 
     enum class PostDetailType : StatsType {
         POST_HEADER,
