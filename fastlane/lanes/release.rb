@@ -112,9 +112,9 @@ platform :android do
     trigger_beta_build(branch_to_build: "release/#{new_version}")
 
     # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("code_freeze/#{new_version}")
+    Fastlane::Helper::GitHelper.create_branch("merge/#{new_version}-code-freeze-into-trunk")
     push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze to trunk")
+    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze into trunk")
   end
 
   #####################################################################################
@@ -323,9 +323,9 @@ platform :android do
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
     # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("finalize_release/#{version_name}")
+    Fastlane::Helper::GitHelper.create_branch("merge/#{version_name}-final-into-trunk")
     push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{version_name} final to trunk")
+    create_release_management_pull_request('trunk', "Merge #{version_name} final into trunk")
   end
 
   lane :check_translations_coverage do |options|
