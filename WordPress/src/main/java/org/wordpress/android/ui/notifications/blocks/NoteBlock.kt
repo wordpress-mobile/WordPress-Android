@@ -110,7 +110,7 @@ open class NoteBlock(
         return false
     }
 
-    open fun configureView(view: View): View? {
+    open fun configureView(view: View): View {
         val noteBlockHolder = view.tag as BasicNoteBlockHolder
 
         // Note image
@@ -224,7 +224,7 @@ open class NoteBlock(
         return textViewVisibility1
     }
 
-    open fun getViewHolder(view: View): Any? = BasicNoteBlockHolder(view)
+    open fun getViewHolder(view: View): Any = BasicNoteBlockHolder(view)
 
     internal class BasicNoteBlockHolder(view: View) {
         private val mRootLayout: LinearLayout = view as LinearLayout
