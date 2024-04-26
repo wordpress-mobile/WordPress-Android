@@ -113,6 +113,7 @@ platform :android do
 
     # Create an intermediate branch
     Fastlane::Helper::GitHelper.create_branch("code_freeze/#{new_version}")
+    push_to_git_remote(tags: false)
     create_release_management_pull_request('trunk', "Merge #{new_version} code freeze to trunk")
   end
 
@@ -323,6 +324,7 @@ platform :android do
 
     # Create an intermediate branch
     Fastlane::Helper::GitHelper.create_branch("finalize_release/#{version_name}")
+    push_to_git_remote(tags: false)
     create_release_management_pull_request('trunk', "Merge #{version_name} final to trunk")
   end
 
