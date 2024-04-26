@@ -33,13 +33,11 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.Companion.getViewModelKeyForTag
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelOwner
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import javax.inject.Inject
 
@@ -90,30 +88,12 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
-        subFilterViewModel = ViewModelProvider(this, viewModelFactory).get(
-            getViewModelKeyForTag(tagsFeedTag),
-            SubFilterViewModel::class.java
-        )
-        subFilterViewModel.start(tagsFeedTag, tagsFeedTag, savedInstanceState)
-
-        subFilterViewModel.updateTagsAndSites.observe(viewLifecycleOwner) { event ->
-            event.applyIfNotHandled {
-                if (NetworkUtils.isNetworkAvailable(activity)) {
-                    ReaderUpdateServiceStarter.startService(activity, this)
-                }
-            }
-        }
+        subFilterViewModel = SubFilterViewModelOwner.getSubFilterViewModelForTag(this, tagsFeedTag, savedInstanceState)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
-            readerViewModel.showTopBarFilterGroup(
-                tagsFeedTag,
-                subFilters
-            )
-
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
             viewModel.fetchAll(tags)
         }
-        subFilterViewModel.updateTagsAndSites()
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {

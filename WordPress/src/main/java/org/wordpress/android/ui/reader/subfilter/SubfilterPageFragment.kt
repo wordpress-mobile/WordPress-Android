@@ -101,10 +101,7 @@ class SubfilterPageFragment : Fragment() {
         primaryButton = emptyStateContainer.findViewById(R.id.action_button_primary)
         secondaryButton = emptyStateContainer.findViewById(R.id.action_button_secondary)
 
-        subFilterViewModel = ViewModelProvider(
-            requireParentFragment().parentFragment as ViewModelStoreOwner,
-            viewModelFactory
-        )[subfilterVmKey, SubFilterViewModel::class.java]
+        subFilterViewModel = SubFilterViewModelOwner.getSubFilterViewModelForKey(this, subfilterVmKey)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->

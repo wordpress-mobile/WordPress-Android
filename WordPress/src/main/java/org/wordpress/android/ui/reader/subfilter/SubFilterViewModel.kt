@@ -76,9 +76,10 @@ class SubFilterViewModel @Inject constructor(
     private var lastKnownUserId: Long? = null
     private var lastTokenAvailableStatus: Boolean? = null
 
-    private var isStarted = false
     private var isFirstLoad = true
     private var mTagFragmentStartedWith: ReaderTag? = null
+    var isStarted = false
+        private set
 
     /**
      * Tag may be null for Blog previews for instance.
