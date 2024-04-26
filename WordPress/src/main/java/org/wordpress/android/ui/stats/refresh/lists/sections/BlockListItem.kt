@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.SUBSCRIBERS_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -73,6 +74,7 @@ sealed class BlockListItem(val type: Type) {
         BAR_CHART,
         PIE_CHART,
         LINE_CHART,
+        SUBSCRIBERS_CHART,
         CHART_LEGEND,
         CHART_LEGENDS_BLUE,
         CHART_LEGENDS_PURPLE,
@@ -294,6 +296,18 @@ sealed class BlockListItem(val type: Type) {
         val onLineChartDrawn: ((visibleLineCount: Int) -> Unit)? = null,
         val entryContentDescriptions: List<String>
     ) : BlockListItem(LINE_CHART) {
+        data class Line(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
+    data class SubscribersChartItem(
+        val entries: List<Line>,
+        val selectedItemPeriod: String? = null,
+        val onLineSelected: (() -> Unit)? = null,
+        val entryContentDescriptions: List<String>
+    ) : BlockListItem(SUBSCRIBERS_CHART) {
         data class Line(val label: String, val id: String, val value: Int)
 
         override val itemId: Int

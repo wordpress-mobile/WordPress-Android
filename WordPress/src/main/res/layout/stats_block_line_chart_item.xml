@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_marginHorizontal="@dimen/margin_medium"
     android:importantForAccessibility="no">
 
     <com.github.mikephil.charting.charts.LineChart
