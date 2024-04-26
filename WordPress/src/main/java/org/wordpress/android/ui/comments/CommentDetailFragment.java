@@ -130,6 +130,8 @@ import kotlinx.coroutines.GlobalScope;
  *
  * @deprecated Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
+ *
+ * Use [SiteCommentDetailFragment] or [NotificationCommentDetailFragment] instead before removing this class
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
@@ -142,10 +144,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     protected static final int INTENT_COMMENT_EDITOR = 1010;
     protected static final float NORMAL_OPACITY = 1f;
 
-    @Nullable private CommentModel mComment;
-    @Nullable private SiteModel mSite;
+    @Nullable protected CommentModel mComment;
+    @Nullable protected SiteModel mSite;
 
-    @Nullable private Note mNote;
+    @Nullable protected Note mNote;
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
@@ -170,7 +172,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private OnCommentActionListener mOnCommentActionListener;
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
 
-    @Nullable private CommentSource mCommentSource;
+    private CommentSource mCommentSource;
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -179,9 +181,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      */
     @NonNull private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
 
-    @Nullable private CommentDetailFragmentBinding mBinding = null;
-    @Nullable private ReaderIncludeCommentBoxBinding mReplyBinding = null;
-    @Nullable private CommentActionFooterBinding mActionBinding = null;
+    @Nullable protected CommentDetailFragmentBinding mBinding = null;
+    @Nullable protected ReaderIncludeCommentBoxBinding mReplyBinding = null;
+    @Nullable protected CommentActionFooterBinding mActionBinding = null;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -387,12 +389,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
 
-        // Set the note if we retrieved the noteId from savedInstanceState
-        if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNote(mRestoredNoteId);
-            mRestoredNoteId = null;
-        }
-
         CollapseFullScreenDialogFragment fragment = null;
         if (mComment != null) {
             // reattach listeners to collapsible reply dialog
@@ -483,7 +479,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         return mNote;
     }
 
-    private SiteModel createDummyWordPressComSite(long siteId) {
+    protected SiteModel createDummyWordPressComSite(long siteId) {
         SiteModel site = new SiteModel();
         site.setIsWPCom(true);
         site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
@@ -491,39 +487,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         return site;
     }
 
-    public void setNote(@NonNull Note note) {
-        mNote = note;
-        mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
-        if (mSite == null) {
-            // This should not exist, we should clean that screen so a note without a site/comment can be displayed
-            mSite = createDummyWordPressComSite(mNote.getSiteId());
-        }
-        if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote);
-        }
-    }
-
     @Override
     public void setNote(String noteId) {
-        if (noteId == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        Note note = NotificationsTable.getNoteById(noteId);
-        if (note == null) {
-            showErrorToastAndFinish();
-        } else {
-            setNote(note);
-        }
-    }
-
-    private void showErrorToastAndFinish() {
-        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
-        if (getActivity() != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
-            getActivity().finish();
-        }
+        // do nothing
     }
 
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
@@ -660,7 +626,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * display the current comment
      */
-    private void showComment(
+    protected void showComment(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
