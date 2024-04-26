@@ -331,5 +331,6 @@ class AnalyticsTrackerNosaraTest {
         Stat.DASHBOARD_CARD_PLANS_TAPPED to "free_to_paid_plan_dashboard_card_tapped",
         Stat.DASHBOARD_CARD_PLANS_MORE_MENU_TAPPED to "free_to_paid_plan_dashboard_card_menu_tapped",
         Stat.DASHBOARD_CARD_PLANS_HIDDEN to "free_to_paid_plan_dashboard_card_hidden",
+        Stat.NOTIFICATIONS_FILTER_SELECTED  to "notification_tapped_segmented_control",
     )
 }
