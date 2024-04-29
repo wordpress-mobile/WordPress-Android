@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
@@ -35,7 +34,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
             return
         }
         // Initially add all tags to the list with the posts loading UI
-        loadingTagsUiState(tags)
+        _uiStateFlow.update {
+            readerTagsFeedUiStateMapper.mapLoadingTagsUiState(tags, ::onTagClick)
+        }
         // Fetch all posts and update the posts loading UI to either loaded or error when the request finishes
         launch {
             tags.forEach {
@@ -77,18 +78,22 @@ class ReaderTagsFeedViewModel @Inject constructor(
             } else {
                 updatedLoadedData.add(
                     existingIndex,
-                    errorTagFeedItem(
+                    readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                         tag = tag,
                         errorType = ErrorType.NoContent,
+                        onTagClick = ::onTagClick,
+                        onRetryClick = ::onRetryClick,
                     )
                 )
             }
         } catch (e: ReaderPostFetchException) {
             updatedLoadedData.add(
                 existingIndex,
-                errorTagFeedItem(
+                readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                     tag = tag,
                     errorType = ErrorType.Default,
+                    onTagClick = ::onTagClick,
+                    onRetryClick = ::onRetryClick,
                 )
             )
         }
@@ -104,37 +109,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
         return updatedLoadedData
     }
-
-    private fun loadingTagsUiState(tags: List<ReaderTag>) {
-        _uiStateFlow.update {
-            UiState.Loaded(
-                tags.map { tag ->
-                    TagFeedItem(
-                        tagChip = TagChip(
-                            tag = tag,
-                            onTagClick = ::onTagClick,
-                        ),
-                        postList = PostList.Loading,
-                    )
-                }
-            )
-        }
-    }
-
-    private fun errorTagFeedItem(
-        tag: ReaderTag,
-        errorType: ErrorType,
-    ): TagFeedItem =
-        TagFeedItem(
-            tagChip = TagChip(
-                tag = tag,
-                onTagClick = ::onTagClick
-            ),
-            postList = PostList.Error(
-                type = errorType,
-                onRetryClick = ::onRetryClick
-            ),
-        )
 
     private fun onOpenTagsListClick() {
         // TODO

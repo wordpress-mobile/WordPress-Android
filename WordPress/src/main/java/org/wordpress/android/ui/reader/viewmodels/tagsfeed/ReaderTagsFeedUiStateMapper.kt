@@ -49,4 +49,37 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             }
         ),
     )
+
+    fun mapErrorTagFeedItem(
+        tag: ReaderTag,
+        errorType: ReaderTagsFeedViewModel.ErrorType,
+        onTagClick: () -> Unit,
+        onRetryClick: () -> Unit,
+    ): ReaderTagsFeedViewModel.TagFeedItem =
+        ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = tag,
+                onTagClick = onTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Error(
+                type = errorType,
+                onRetryClick = onRetryClick,
+            ),
+        )
+
+    fun mapLoadingTagsUiState(
+        tags: List<ReaderTag>,
+        onTagClick: () -> Unit,
+    ): ReaderTagsFeedViewModel.UiState.Loaded =
+        ReaderTagsFeedViewModel.UiState.Loaded(
+            tags.map { tag ->
+                ReaderTagsFeedViewModel.TagFeedItem(
+                    tagChip = ReaderTagsFeedViewModel.TagChip(
+                        tag = tag,
+                        onTagClick = onTagClick,
+                    ),
+                    postList = ReaderTagsFeedViewModel.PostList.Loading,
+                )
+            }
+        )
 }
