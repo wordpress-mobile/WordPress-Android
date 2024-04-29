@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.extensions.enforceWesternArabicNumerals
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 import java.text.ParseException
@@ -314,6 +315,13 @@ class StatsDateFormatter
                 timeZoneResource,
                 utcTime
             )
-        } else null
+        } else {
+            null
+        }
+    }
+
+    fun getStatsDateFromPeriodDay(period: String): String {
+        val date = parseStatsDate(DAYS, period)
+        return printDayWithoutYear(date).enforceWesternArabicNumerals() as String
     }
 }

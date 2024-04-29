@@ -47,6 +47,10 @@ class BlazePromoteParentActivity : AppCompatActivity() {
                 else -> {}
             }
         }
+
+        viewModel.onSelectedSiteMissing.observe(this) {
+            finish()
+        }
     }
 
     private fun getSource(): BlazeFlowSource {

@@ -40,6 +40,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.SUBSCRIBERS_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -71,6 +72,7 @@ class BlockDiffCallback(
                 BAR_CHART,
                 PIE_CHART,
                 LINE_CHART,
+                SUBSCRIBERS_CHART,
                 ACTIVITY_ITEM,
                 LIST_ITEM -> oldItem.itemId == newItem.itemId
                 LINK,

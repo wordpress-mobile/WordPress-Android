@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem.Line
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -171,6 +172,23 @@ class StatsUtils @Inject constructor(
     fun getLineChartEntryContentDescriptions(
         @StringRes entryType: Int,
         entries: List<Line>
+    ): List<String> {
+        val contentDescriptions = mutableListOf<String>()
+        entries.forEach { bar ->
+            val contentDescription = resourceProvider.getString(
+                R.string.stats_bar_chart_accessibility_entry,
+                bar.label,
+                bar.value,
+                resourceProvider.getString(entryType)
+            )
+            contentDescriptions.add(contentDescription)
+        }
+        return contentDescriptions
+    }
+
+    fun getSubscribersChartEntryContentDescriptions(
+        @StringRes entryType: Int,
+        entries: List<BlockListItem.SubscribersChartItem.Line>
     ): List<String> {
         val contentDescriptions = mutableListOf<String>()
         entries.forEach { bar ->
