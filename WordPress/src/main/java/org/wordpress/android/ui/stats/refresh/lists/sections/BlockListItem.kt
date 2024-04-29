@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
@@ -62,6 +63,7 @@ sealed class BlockListItem(val type: Type) {
         VALUE_ITEM,
         VALUE_WITH_CHART_ITEM,
         VALUES_ITEM,
+        LIST_HEADER,
         LIST_ITEM,
         LIST_ITEM_WITH_ICON,
         LIST_ITEM_WITH_IMAGE,
@@ -144,6 +146,12 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val unit2: Int,
         val contentDescription2: String? = null
     ) : BlockListItem(VALUES_ITEM)
+
+    data class ListHeader(
+        @StringRes val label: Int,
+        @StringRes val valueLabel1: Int,
+        @StringRes val valueLabel2: Int
+    ) : BlockListItem(LIST_HEADER)
 
     data class ListItem(
         val text: String,

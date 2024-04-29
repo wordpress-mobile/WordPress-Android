@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Image
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListHeader
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
@@ -58,6 +59,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
@@ -99,6 +101,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ImageIt
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.InformationViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LineChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListHeaderViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithIconViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithImageViewHolder
@@ -142,6 +145,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             LIST_ITEM_WITH_IMAGE -> ListItemWithImageViewHolder(parent, imageManager = imageManager)
             LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
             LIST_ITEM -> ListItemViewHolder(parent)
+            LIST_HEADER -> ListHeaderViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> FourColumnsViewHolder(parent)
@@ -194,6 +198,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ListItemWithImageViewHolder -> holder.bind(item as ListItemWithImage)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
             is ListItemViewHolder -> holder.bind(item as ListItem)
+            is ListHeaderViewHolder -> holder.bind(item as ListHeader)
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is ChipsViewHolder -> holder.bind(item as Chips)
