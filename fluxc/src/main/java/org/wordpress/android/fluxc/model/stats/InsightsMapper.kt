@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Day
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.Month
 import org.wordpress.android.fluxc.model.stats.insights.PostingActivityModel.StreakModel
+import org.wordpress.android.fluxc.model.stats.subscribers.PostsModel
+import org.wordpress.android.fluxc.model.stats.subscribers.PostsModel.PostModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
@@ -24,6 +26,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.SummaryRest
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse.TagsGroup.TagResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.EmailsRestClient.EmailsSummaryResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.EmailsRestClient.SortField
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.STATS
@@ -338,6 +342,22 @@ class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
         result.add(Month(currentYear, currentMonth, currentMonthDays))
         return PostingActivityModel(streak, result, max, count < nonNullData.count())
     }
+
+    fun map(response: EmailsSummaryResponse, cacheMode: LimitMode, sortField: SortField) = PostsModel(
+        response.posts.let {
+            if (cacheMode is Top) {
+                return@let it.take(cacheMode.limit)
+            } else {
+                return@let it
+            }
+        }.map { post -> PostModel(post.id ?: 0, post.href ?: "", post.title ?: "", post.opens ?: 0, post.clicks ?: 0) }
+            .sortedByDescending {
+                when (sortField) {
+                    SortField.POST_ID -> it.id
+                    SortField.OPENS -> it.opens.toLong()
+                }
+            }
+    )
 
     private fun toDay(timeStamp: Long): Day {
         val calendar = Calendar.getInstance()
