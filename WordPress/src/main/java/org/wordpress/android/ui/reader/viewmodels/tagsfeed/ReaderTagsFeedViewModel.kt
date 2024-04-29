@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.viewmodels
+package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,9 +10,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
-import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
-import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -21,8 +19,7 @@ import javax.inject.Named
 class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
-    private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -65,7 +62,18 @@ class ReaderTagsFeedViewModel @Inject constructor(
             // Fetch posts for tag
             val posts = readerPostRepository.fetchNewerPostsForTag(tag)
             if (posts.isNotEmpty()) {
-                updatedLoadedData.add(existingIndex, loadedTagFeedItem(tag, posts))
+                updatedLoadedData.add(
+                    existingIndex,
+                    readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
+                        tag = tag,
+                        posts = posts,
+                        onTagClick = ::onTagClick,
+                        onSiteClick = ::onSiteClick,
+                        onPostImageClick = ::onPostImageClick,
+                        onPostLikeClick = ::onPostLikeClick,
+                        onPostMoreMenuClick = ::onPostMoreMenuClick,
+                    )
+                )
             } else {
                 updatedLoadedData.add(
                     existingIndex,
@@ -112,40 +120,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
             )
         }
     }
-
-    private fun loadedTagFeedItem(
-        tag: ReaderTag,
-        posts: ReaderPostList
-    ) = TagFeedItem(
-        tagChip = TagChip(
-            tag = tag,
-            onTagClick = ::onTagClick,
-        ),
-        postList = PostList.Loaded(
-            posts.map {
-                TagsFeedPostItem(
-                    siteName = it.blogName,
-                    postDateLine = dateTimeUtilsWrapper.javaDateToTimeSpan(
-                        it.getDisplayDate(dateTimeUtilsWrapper)
-                    ),
-                    postTitle = it.title,
-                    postExcerpt = it.excerpt,
-                    postImageUrl = it.blogImageUrl,
-                    postNumberOfLikesText = readerUtilsWrapper.getShortLikeLabelText(
-                        numLikes = it.numLikes
-                    ),
-                    postNumberOfCommentsText = readerUtilsWrapper.getShortCommentLabelText(
-                        numComments = it.numReplies
-                    ),
-                    isPostLiked = it.isLikedByCurrentUser,
-                    onSiteClick = ::onSiteClick,
-                    onPostImageClick = ::onPostImageClick,
-                    onPostLikeClick = ::onPostLikeClick,
-                    onPostMoreMenuClick = ::onPostMoreMenuClick,
-                )
-            }
-        ),
-    )
 
     private fun errorTagFeedItem(
         tag: ReaderTag,

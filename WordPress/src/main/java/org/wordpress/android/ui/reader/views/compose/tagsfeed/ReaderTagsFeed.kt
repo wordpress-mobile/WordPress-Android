@@ -48,11 +48,11 @@ import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.ErrorType
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.PostList
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.TagChip
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.TagFeedItem
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.UiState
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ErrorType
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.PostList
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagChip
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagFeedItem
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
