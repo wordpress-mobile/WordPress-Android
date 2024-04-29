@@ -4862,4 +4862,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
 </resources>

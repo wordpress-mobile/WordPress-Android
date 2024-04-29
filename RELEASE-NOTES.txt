@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+24.9
+-----
+
+
 24.8
 -----
 * [*] [Jetpack-only] Fixed percentage numbers direction on Stats for RTL languages [https://github.com/wordpress-mobile/WordPress-Android/pull/20656]
