@@ -168,6 +168,7 @@ class StatsSqlUtils @Inject constructor() {
         PUBLICIZE_INSIGHTS,
         POSTING_ACTIVITY,
         FILE_DOWNLOADS,
-        SUBSCRIBERS
+        SUBSCRIBERS,
+        EMAILS_SUBSCRIBERS
     }
 }
