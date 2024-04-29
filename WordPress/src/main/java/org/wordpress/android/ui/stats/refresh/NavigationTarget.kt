@@ -51,6 +51,8 @@ sealed class NavigationTarget {
         val selectedDate: Date?
     ) : NavigationTarget()
 
+    data object EmailsStats : NavigationTarget()
+
     object SetBloggingReminders : NavigationTarget()
     object CheckCourse : NavigationTarget()
     object SchedulePost : NavigationTarget()
