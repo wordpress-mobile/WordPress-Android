@@ -1299,10 +1299,6 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
-    <string name="stats_timeframe_by_day">By day</string>
-    <string name="stats_timeframe_by_week">By week</string>
-    <string name="stats_timeframe_by_month">By month</string>
-    <string name="stats_timeframe_by_year">By year</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
@@ -1328,6 +1324,7 @@
     <string name="stats_view_total_followers">Total Followers</string>
 
     <!-- stats: followers -->
+    <string name="stats_subscribers_subscribers">Subscribers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -1358,6 +1355,7 @@
     <!-- Stats insights -->
     <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>
+    <string name="stats_subscribers">Subscribers</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
@@ -1759,6 +1757,8 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_updating_content">Updating content</string>
+    <string name="editor_updating_content_failed">Failed to update content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1982,6 +1982,8 @@
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
     <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
+    <string name="page_upload_conflict_error">There is a revision of this page that is more recent</string>
+
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>
@@ -4860,4 +4862,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
 </resources>
