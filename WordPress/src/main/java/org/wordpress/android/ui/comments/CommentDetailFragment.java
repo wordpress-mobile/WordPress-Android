@@ -130,7 +130,8 @@ import kotlinx.coroutines.GlobalScope;
  * @deprecated Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
  *
- * Use [SiteCommentDetailFragment] or [NotificationCommentDetailFragment] instead before removing this class
+ * @see SiteCommentDetailFragment if you're called from comment list
+ * @see NotificationCommentDetailFragment if you're called from notification list
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
@@ -150,7 +151,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
-    protected boolean mIsUsersBlog = false;
+    protected boolean mIsUsersBlog = true;
     protected boolean mShouldFocusReplyField;
     @Nullable private String mPreviousStatus;
     protected float mMediumOpacity;
@@ -417,7 +418,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         replyBinding.editComment.setAdapter(mSuggestionAdapter);
     }
 
-    private void setReplyUniqueId(
+    protected void setReplyUniqueId(
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @Nullable SiteModel site,
             @Nullable CommentModel comment,
@@ -439,14 +440,14 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
 
     protected void setComment(
             @NonNull final SiteModel site,
-            @Nullable final CommentModel comment
+            @NonNull final CommentModel comment
     ) {
         mSite = site;
         mComment = comment;
 
         // is this comment on one of the user's blogs? it won't be if this was displayed from a
         // notification about a reply to a comment this user posted on someone else's blog
-        mIsUsersBlog = (comment != null);
+        mIsUsersBlog = true;
 
         if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
             showComment(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote);
@@ -496,9 +497,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onStart();
         EventBus.getDefault().register(this);
         mCommentsStoreAdapter.register(this);
-        if (mBinding != null && mReplyBinding != null && mActionBinding != null && mSite != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote);
-        }
     }
 
     @Override
@@ -548,7 +546,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     ) {
         CommentModel updatedComment = mCommentsStoreAdapter.getCommentByLocalId(comment.getId());
         if (updatedComment != null) {
-            setComment(site, updatedComment);
+            setComment(site, updatedComment); // non-null comment
         }
         if (mNotificationsDetailListFragment != null && note != null) {
             mNotificationsDetailListFragment.refreshBlocksForEditedComment(note.getId());
@@ -667,7 +665,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void showCommentWhenNonNull(
+    protected void showCommentWhenNonNull(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,
@@ -1292,9 +1290,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
 
         if (comment != null) {
-            setComment(site, comment);
+            // comment is already in our store, it's a notification about a comment we've already fetched
+            setComment(site, comment); // non-null comment
         } else if (note != null) {
-            setComment(site, note.buildComment());
+            // for some reason we don't have the comment in our store, but we have a note
+            setComment(site, note.buildComment()); // null comment, but we have a note to build one
         }
 
         if (note != null) {

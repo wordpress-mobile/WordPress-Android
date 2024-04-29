@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.unified.CommentSource
 
 /**
- * Used when called from comment list
+ * Used when called from My Site -> comment list -> comment
  * [CommentDetailFragment] is too big to be reused
  * It'd be better to have multiple fragments for different sources for different purposes
  */
@@ -23,10 +23,21 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
     }
 
     private fun handleComment(commentRemoteId: Long, siteLocalId: Int) {
-        val site = mSiteStore.getSiteByLocalId(siteLocalId)
-        if (site != null) {
-            setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId))
+        mSiteStore.getSiteByLocalId(siteLocalId)?.let { site ->
+            mSite = site
+            val comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId)
+            mComment = comment
+            mIsUsersBlog = comment != null
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+
+        // Reset the reply unique id since mComment just changed.
+        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding!!, mSite, mComment, mNote)
+        showCommentWhenNonNull(mBinding!!, mReplyBinding!!, mActionBinding!!, mSite!!, mComment!!, mNote)
     }
 
     companion object {
