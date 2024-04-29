@@ -179,7 +179,8 @@ class StatsModule {
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
-        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
+        emailsUseCaseFactory: EmailsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
             followersUseCaseFactory.build(VIEW_ALL),
@@ -188,7 +189,8 @@ class StatsModule {
             postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
             postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
             postRecentWeeksUseCaseFactory.build(VIEW_ALL),
-            annualSiteStatsUseCaseFactory.build(VIEW_ALL)
+            annualSiteStatsUseCaseFactory.build(VIEW_ALL),
+            emailsUseCaseFactory.build(VIEW_ALL)
         )
     }
 
