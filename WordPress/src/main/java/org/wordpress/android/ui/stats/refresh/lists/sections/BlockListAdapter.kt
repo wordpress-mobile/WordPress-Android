@@ -28,6 +28,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListI
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithImage
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithTwoValues
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
@@ -63,6 +64,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_TWO_VALUES
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
@@ -105,6 +107,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListHea
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithIconViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithImageViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithTwoValuesViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LoadingItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapLegendViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapViewHolder
@@ -144,6 +147,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             IMAGE_ITEM -> ImageItemViewHolder(parent, imageManager)
             LIST_ITEM_WITH_IMAGE -> ListItemWithImageViewHolder(parent, imageManager = imageManager)
             LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
+            LIST_ITEM_WITH_TWO_VALUES -> ListItemWithTwoValuesViewHolder(parent)
             LIST_ITEM -> ListItemViewHolder(parent)
             LIST_HEADER -> ListHeaderViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
@@ -195,6 +199,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ValueViewHolder -> holder.bind(item as ValueItem)
             is ValueWithChartViewHolder -> holder.bind(item as ValueWithChartItem)
             is ValuesViewHolder -> holder.bind(item as ValuesItem)
+            is ListItemWithTwoValuesViewHolder -> holder.bind(item as ListItemWithTwoValues)
             is ListItemWithImageViewHolder -> holder.bind(item as ListItemWithImage)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
             is ListItemViewHolder -> holder.bind(item as ListItem)

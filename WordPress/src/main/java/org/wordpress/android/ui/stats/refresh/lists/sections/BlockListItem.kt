@@ -29,6 +29,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_TWO_VALUES
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
@@ -65,6 +66,7 @@ sealed class BlockListItem(val type: Type) {
         VALUES_ITEM,
         LIST_HEADER,
         LIST_ITEM,
+        LIST_ITEM_WITH_TWO_VALUES,
         LIST_ITEM_WITH_ICON,
         LIST_ITEM_WITH_IMAGE,
         INFO,
@@ -159,6 +161,15 @@ sealed class BlockListItem(val type: Type) {
         val showDivider: Boolean = true,
         val contentDescription: String
     ) : BlockListItem(LIST_ITEM) {
+        override val itemId: Int
+            get() = text.hashCode()
+    }
+
+    data class ListItemWithTwoValues(
+        val text: String,
+        val value1: String,
+        val value2: String
+    ) : BlockListItem(LIST_ITEM_WITH_TWO_VALUES) {
         override val itemId: Int
             get() = text.hashCode()
     }
