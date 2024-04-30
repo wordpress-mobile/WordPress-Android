@@ -67,7 +67,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             ),
         )
 
-    fun mapLoadingTagsUiState(
+    fun mapLoadingPostsUiState(
         tags: List<ReaderTag>,
         onTagClick: () -> Unit,
     ): ReaderTagsFeedViewModel.UiState.Loaded =

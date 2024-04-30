@@ -9,97 +9,120 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
-import org.wordpress.android.ui.reader.viewmodels.ReaderTagsFeedViewModel.FetchState
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var readerPostRepository: ReaderPostRepository
 
+    @Mock
+    lateinit var readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper
+
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
     private val collectedUiStates: MutableList<ReaderTagsFeedViewModel.UiState> = mutableListOf()
 
+    val tag = ReaderTag(
+        "tag",
+        "tag",
+        "tag",
+        "endpoint",
+        ReaderTagType.FOLLOWED,
+    )
+
+    private val postListLoadingItem = ReaderTagsFeedViewModel.TagFeedItem(
+        tagChip = ReaderTagsFeedViewModel.TagChip(
+            tag = tag,
+            onTagClick = {},
+        ),
+        postList = ReaderTagsFeedViewModel.PostList.Loading,
+    )
+
     @Before
     fun setUp() {
-        viewModel = ReaderTagsFeedViewModel(testDispatcher(), readerPostRepository)
+        viewModel = ReaderTagsFeedViewModel(testDispatcher(), readerPostRepository, readerTagsFeedUiStateMapper)
     }
 
     @Test
     fun `given valid tag, when fetchTag, then UI state should update properly`() = testCollectingUiStates {
         // Given
-        val tag = ReaderTag(
-            "tag",
-            "tag",
-            "tag",
-            "endpoint",
-            ReaderTagType.FOLLOWED,
+        val tagFeedItem = ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag, {}),
+            ReaderTagsFeedViewModel.PostList.Loaded(listOf())
         )
-        val posts = ReaderPostList()
+        val posts = ReaderPostList().apply {
+            add(ReaderPost())
+        }
         whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
             delay(100)
             posts
         }
+        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+            .thenReturn(
+                ReaderTagsFeedViewModel.UiState.Loaded(
+                    listOf(postListLoadingItem, postListLoadingItem)
+                )
+            )
+        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(tagFeedItem)
 
         // When
-        viewModel.fetchTag(tag)
+        viewModel.start(listOf(tag))
         advanceUntilIdle()
 
         // Then
         assertThat(collectedUiStates).contains(
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag to FetchState.Loading,
-                )
-            ),
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag to FetchState.Success(posts),
-                )
-            ),
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(tagFeedItem)
+            )
         )
     }
 
     @Test
     fun `given invalid tag, when fetchTag, then UI state should update properly`() = testCollectingUiStates {
         // Given
-        val tag = ReaderTag(
-            "tag",
-            "tag",
-            "tag",
-            "endpoint",
-            ReaderTagType.FOLLOWED,
-        )
         val error = ReaderPostFetchException("error")
+        val tagFeedItem = ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag, {}),
+            ReaderTagsFeedViewModel.PostList.Error(
+                ReaderTagsFeedViewModel.ErrorType.Default, {}
+            ),
+        )
         whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
             delay(100)
             throw error
         }
+        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+            .thenReturn(
+                ReaderTagsFeedViewModel.UiState.Loaded(
+                    listOf(postListLoadingItem, postListLoadingItem)
+                )
+            )
+        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any()))
+            .thenReturn(tagFeedItem)
 
         // When
-        viewModel.fetchTag(tag)
+        viewModel.start(listOf(tag))
+//        viewModel.fetchTag(tag)
         advanceUntilIdle()
 
         // Then
         assertThat(collectedUiStates).contains(
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag to FetchState.Loading,
-                )
-            ),
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag to FetchState.Error(error),
-                )
-            ),
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(tagFeedItem)
+            )
         )
     }
 
@@ -120,8 +143,12 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             "endpoint2",
             ReaderTagType.FOLLOWED,
         )
-        val posts1 = ReaderPostList()
-        val posts2 = ReaderPostList()
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val posts2 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
         whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
             delay(100)
             posts1
@@ -130,34 +157,44 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(200)
             posts2
         }
+        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+            .thenReturn(
+                ReaderTagsFeedViewModel.UiState.Loaded(
+                    listOf(
+                        ReaderTagsFeedViewModel.TagFeedItem(
+                            tagChip = ReaderTagsFeedViewModel.TagChip(
+                                tag = tag1,
+                                onTagClick = {},
+                            ),
+                            postList = ReaderTagsFeedViewModel.PostList.Loading,
+                        ),
+                        ReaderTagsFeedViewModel.TagFeedItem(
+                            tagChip = ReaderTagsFeedViewModel.TagChip(
+                                tag = tag2,
+                                onTagClick = {},
+                            ),
+                            postList = ReaderTagsFeedViewModel.PostList.Loading,
+                        ),
+                    )
+                )
+            )
+        val tagFeedItem = ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag1, {}),
+            ReaderTagsFeedViewModel.PostList.Loaded(listOf()),
+        )
+        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(tagFeedItem)
 
         // When
-        viewModel.fetchAll(listOf(tag1, tag2))
+        viewModel.start(listOf(tag1, tag2))
         advanceUntilIdle()
 
         // Then
-
-        // tag 1
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag1] == FetchState.Loading
-        }
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag1] == FetchState.Success(posts1)
-        }
-
-        // tag 2
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag2] == FetchState.Loading
-        }
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag2] == FetchState.Success(posts1)
-        }
-
-        assertThat(collectedUiStates.last()).isEqualTo(
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag1 to FetchState.Success(posts1),
-                    tag2 to FetchState.Success(posts2),
+        assertThat(collectedUiStates).contains(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(
+                    tagFeedItem,
+                    tagFeedItem,
                 )
             )
         )
@@ -180,7 +217,9 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             "endpoint2",
             ReaderTagType.FOLLOWED,
         )
-        val posts1 = ReaderPostList()
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
         val error2 = ReaderPostFetchException("error")
         whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
             delay(100)
@@ -190,34 +229,52 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(200)
             throw error2
         }
+        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+            .thenReturn(
+                ReaderTagsFeedViewModel.UiState.Loaded(
+                    listOf(
+                        ReaderTagsFeedViewModel.TagFeedItem(
+                            tagChip = ReaderTagsFeedViewModel.TagChip(
+                                tag = tag1,
+                                onTagClick = {},
+                            ),
+                            postList = ReaderTagsFeedViewModel.PostList.Loading,
+                        ),
+                        ReaderTagsFeedViewModel.TagFeedItem(
+                            tagChip = ReaderTagsFeedViewModel.TagChip(
+                                tag = tag2,
+                                onTagClick = {},
+                            ),
+                            postList = ReaderTagsFeedViewModel.PostList.Loading,
+                        )
+                    )
+                )
+            )
+        val tagFeedItemLoaded = ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag1, {}),
+            ReaderTagsFeedViewModel.PostList.Loaded(listOf())
+        )
+        val tagFeedItemError = ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag2, {}),
+            ReaderTagsFeedViewModel.PostList.Error(
+                ReaderTagsFeedViewModel.ErrorType.Default, {}
+            )
+        )
+        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
+            .thenReturn(tagFeedItemLoaded)
+        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any()))
+            .thenReturn(tagFeedItemError)
 
         // When
-        viewModel.fetchAll(listOf(tag1, tag2))
+        viewModel.start(listOf(tag1, tag2))
         advanceUntilIdle()
 
         // Then
-
-        // tag 1
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag1] == FetchState.Loading
-        }
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag1] == FetchState.Success(posts1)
-        }
-
-        // tag 2
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag2] == FetchState.Loading
-        }
-        assertThat(collectedUiStates).anyMatch {
-            it.tagStates[tag2] == FetchState.Error(error2)
-        }
-
-        assertThat(collectedUiStates.last()).isEqualTo(
-            ReaderTagsFeedViewModel.UiState(
-                mapOf(
-                    tag1 to FetchState.Success(posts1),
-                    tag2 to FetchState.Error(error2),
+        assertThat(collectedUiStates).contains(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(
+                    tagFeedItemLoaded,
+                    tagFeedItemError,
                 )
             )
         )

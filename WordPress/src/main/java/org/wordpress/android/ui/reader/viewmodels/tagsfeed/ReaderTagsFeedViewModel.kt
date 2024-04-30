@@ -28,14 +28,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
-    fun fetchAll(tags: List<ReaderTag>) {
+    fun start(tags: List<ReaderTag>) {
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
         }
         // Initially add all tags to the list with the posts loading UI
         _uiStateFlow.update {
-            readerTagsFeedUiStateMapper.mapLoadingTagsUiState(tags, ::onTagClick)
+            readerTagsFeedUiStateMapper.mapLoadingPostsUiState(tags, ::onTagClick)
         }
         // Fetch all posts and update the posts loading UI to either loaded or error when the request finishes
         launch {

@@ -90,7 +90,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             )
 
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
-            viewModel.fetchAll(tags)
+            viewModel.start(tags)
         }
         subFilterViewModel.updateTagsAndSites()
     }
