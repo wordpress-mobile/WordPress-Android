@@ -129,10 +129,6 @@ Language: ru
     <string name="reader_filter_empty_blogs_list">Просмотреть последние записи из блогов, на которые вы подписаны</string>
     <string name="reader_filter_by_tag_title">Фильтр по метке</string>
     <string name="reader_filter_by_blog_title">Фильтровать по блогу</string>
-    <string name="stats_timeframe_by_year">По году</string>
-    <string name="stats_timeframe_by_month">По месяцу</string>
-    <string name="stats_timeframe_by_week">По неделе</string>
-    <string name="stats_timeframe_by_day">По дню</string>
     <string name="gutenberg_native_waiting_for_connection">Ожидание подключения</string>
     <string name="stats_traffic">Посещаемость</string>
     <string name="gutenberg_native_working_offline">Автономная работа</string>
@@ -1165,6 +1161,7 @@ Language: ru
     <string name="gutenberg_native_add_title">Добавить заголовок</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_loading">Загрузка</string>
+    <string name="gutenberg_native_link_label">Ярлык ссылки</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
