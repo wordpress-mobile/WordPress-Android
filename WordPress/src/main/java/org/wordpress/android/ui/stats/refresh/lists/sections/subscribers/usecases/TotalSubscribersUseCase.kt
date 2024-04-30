@@ -3,13 +3,11 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecas
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore
-import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
@@ -27,9 +25,6 @@ class TotalSubscribersUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val summaryStore: SummaryStore,
     private val statsSiteProvider: StatsSiteProvider,
-    private val resourceProvider: ResourceProvider,
-    private val totalStatsMapper: TotalStatsMapper,
-    private val actionCardHandler: ActionCardHandler,
     private val statsUtils: StatsUtils
 ) : StatelessUseCase<Int>(StatsStore.SubscriberType.TOTAL_SUBSCRIBERS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_subscribers))
@@ -67,9 +62,6 @@ class TotalSubscribersUseCase @Inject constructor(
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
         private val summaryStore: SummaryStore,
         private val statsSiteProvider: StatsSiteProvider,
-        private val resourceProvider: ResourceProvider,
-        private val totalStatsMapper: TotalStatsMapper,
-        private val actionCardHandler: ActionCardHandler,
         private val statsUtils: StatsUtils
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) = TotalSubscribersUseCase(
@@ -77,9 +69,6 @@ class TotalSubscribersUseCase @Inject constructor(
             backgroundDispatcher,
             summaryStore,
             statsSiteProvider,
-            resourceProvider,
-            totalStatsMapper,
-            actionCardHandler,
             statsUtils
         )
     }

@@ -23,11 +23,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase
-import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
 class TotalSubscribersUseCaseTest : BaseUnitTest() {
@@ -38,22 +35,11 @@ class TotalSubscribersUseCaseTest : BaseUnitTest() {
     lateinit var statsSiteProvider: StatsSiteProvider
 
     @Mock
-    lateinit var totalStatsMapper: TotalStatsMapper
-
-    @Mock
-    lateinit var resourceProvider: ResourceProvider
-
-    @Mock
     lateinit var site: SiteModel
-
-    @Mock
-    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     @Mock
     lateinit var statsUtils: StatsUtils
 
-    @Mock
-    lateinit var actionCardHandler: ActionCardHandler
     private lateinit var useCase: TotalSubscribersUseCase
     private val followers = 100
 
@@ -64,9 +50,6 @@ class TotalSubscribersUseCaseTest : BaseUnitTest() {
             testDispatcher(),
             insightsStore,
             statsSiteProvider,
-            resourceProvider,
-            totalStatsMapper,
-            actionCardHandler,
             statsUtils
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
