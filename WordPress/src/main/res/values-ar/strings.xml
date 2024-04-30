@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 18:54:10+0000
+Translation-Revision-Date: 2024-04-24 12:12:40+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
@@ -9,6 +9,8 @@ Language: ar
     <string name="weekly_roundup_notification_text_views_and_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وتعليق واحد</string>
     <string name="weekly_roundup_notification_text_views_and_like">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد</string>
     <string name="weekly_roundup_notification_text_views_like_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد وتعليق واحد.</string>
+    <string name="site_picker_all_sites">جميع المواقع</string>
+    <string name="dialog_post_autosave_title">الحفظ التلقائي متاح</string>
     <string name="weekly_roundup_notification_text_views_likes_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات و⁦%2$s⁩ من الإعجابات وتعليق واحد.</string>
     <string name="weekly_roundup_notification_text_views_like_comments">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد و⁦%2$s⁩ من التعليقات.</string>
     <string name="site_picker_pinned_sites">المواقع المثبَّتة</string>
@@ -19,6 +21,7 @@ Language: ar
     <string name="dialog_post_conflict_current_device">جهاز حالي</string>
     <string name="dialog_post_conflict_body_for_page">تم تعديل الصفحة على جهاز آخر. يرجى تحديد إصدار الصفحة المطلوب الحفاظ عليه.</string>
     <string name="dialog_post_conflict_body">تم تعديل التدوينة على جهاز آخر. يرجى تحديد إصدار التدوينة المطلوب الحفاظ عليه.</string>
+    <string name="site_picker_recent_sites">المواقع الأحدث</string>
     <string name="dialog_post_conflict_title">حل التعارض</string>
     <string name="reader_preferences_font_size_extra_large">كبير جداً</string>
     <string name="reader_preferences_font_size_large">كبير</string>
@@ -29,6 +32,7 @@ Language: ar
     <string name="reader_preferences_screen_font_family_label">الخط</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">أرسل ملاحظاتك</string>
     <string name="reader_preferences_screen_theme_label">نظام الألوان</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">مسح لون محدد</string>
     <string name="reader_no_followed_tags_text_title">لا توجد وسوم تمت متابعتها</string>
     <string name="reader_toast_err_tag_already_following">أنت تتابع هذا الوسم بالفعل</string>
@@ -42,6 +46,8 @@ Language: ar
     <string name="reader_preferences_screen_preview_text_feedback_link">إرسال الملاحظات</string>
     <string name="reader_preferences_screen_preview_text_feedback">هذه ميزة جديدة لا تزال قيد التطوير. لمساعدتنا على تسحينها %s.</string>
     <string name="reader_preferences_screen_preview_text">اختر ألوانك وخطوطك وأحجامك. قم بمعاينة التحديد الخاص بك هنا، واقرأ التدوينات باستخدام أنماطك بمجرد الانتهاء منها.</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
     <string name="reader_preferences_screen_preview_title">تفضيلات القراءة</string>
     <string name="reader_filter_empty_tags_action_follow">متابعة وسم</string>
     <string name="button_read">قراءة</string>
@@ -124,6 +130,7 @@ Language: ar
     <string name="reader_filter_empty_blogs_action">الاشتراك في المدونة</string>
     <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
     <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
+    <string name="reader_filter_empty_blogs_list">الإطلاع على أجدد المقالات من المدونات التي اشتركت فيها</string>
     <string name="stats_timeframe_by_year">حسب العام</string>
     <string name="stats_timeframe_by_month">حسب الشهر</string>
     <string name="stats_timeframe_by_week">حسب الأسبوع</string>
@@ -148,11 +155,14 @@ Language: ar
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">هيا بنا!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">تشغيل موجّهات التدوين</string>
     <string name="bloganuary_dashboard_nudge_overlay_note_prompts_enabled">ستستخدم Bloganuary موجّهات التدوين اليومية لإرسال الموضوعات الخاصة بشهر يناير إليك.</string>
+    <string name="bloganuary_dashboard_nudge_overlay_note_prompts_disabled">سوف يستخدم Bloganuary مطالبات التدوين اليومية لإرسال موضوعات إليك لشهر يناير. لقد تم تعطيل مطالبات التدوين حاليًا.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_three">اقرأ ردود المدونين الأخرى للحصول على الإلهام وإقامة اتصالات جديدة.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_two">انشر ردك.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">استقبل موجّهًا جديدًا لإلهامك في كل يوم.</string>
     <string name="bloganuary_dashboard_nudge_text">في شهر يناير، ستأتي موجّهات التدوين من Bloganuary - تحدٍّ مجتمعي لدينا لإنشاء عادة التدوين الخاصة بالعام الجديد.</string>
     <string name="bloganuary_dashboard_nudge_title_december">Bloganuary مقبلة!</string>
+    <string name="bloganuary_dashboard_nudge_overlay_title">الانضمام إلى تحدي الكتابة الذي يستمر لمدة شهر</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">لهذا السبب، نوصي بتحرير المكوّن باستخدام متصفح الويب لديك.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">لهذا السبب، نوصي بتحرير المكوّن باستخدام محرر الويب.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">بدلاً من ذلك، يمكنك تمهيد المحتوى عن طريق فك تجميع المكوّن.</string>
@@ -242,12 +252,14 @@ Language: ar
     <string name="personalization_screen_stats_card_description">المشاهدات والزائرون والإعجابات</string>
     <string name="personalization_screen_scheduled_posts_card_title">تدوينات مجدولة</string>
     <string name="personalization_screen_draft_posts_card_title">إعداد مسودة للتدوينات</string>
+    <string name="personalization_screen_tab_cards_footer_cards">قد تعرض البطاقات محتوى مختلفًا استنادًا إلى ما يحدث من خلال موقعك</string>
     <string name="personalize_card_content_description">النقر على علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="personalize_card_text">علامة تبويب تخصيص صفحتك الرئيسية</string>
     <string name="partial_media_access_prompt_change_settings">تغيير الإعدادات</string>
     <string name="partial_media_access_prompt_select_more">تحديد مزيد</string>
     <string name="partial_media_access_prompt_text">لا تتوافر سوى الصور والفيديوهات المُحدَّدة التي منحت حق الوصول إليها.</string>
     <string name="personalization_screen_title"> علامة تبويب تخصيص الصفحة الرئيسية</string>
+    <string name="personalization_screen_tab_cards_description">إضافة أو إخفاء البطاقات</string>
     <string name="blaze_campaigns_card_more_menu_view_all_campaigns">عرض كل الحملات</string>
     <string name="dashboard_activity_card_menu_all_activity">كل النشاط</string>
     <string name="dashboard_pages_card_more_menu_all_pages">كل الصفحات</string>
@@ -277,6 +289,7 @@ Language: ar
     <string name="contact_support_input_placeholder">إرسال رسالة…</string>
     <string name="contact_support_first_message">ما الذي يمكنني مساعدتك على القيام به؟</string>
     <string name="post_settings_jetpack_social_share_message_clear">واضح</string>
+    <string name="jetpack_social_social_shares_remaining">متبقي %1$d من المشاركات الاجتماعية</string>
     <string name="missing_splits_dialog_button">إغلاق</string>
     <string name="missing_splits_dialog_title">فشل التثبيت</string>
     <string name="campaign_detail_error_title">حدث خطأ</string>
@@ -321,6 +334,7 @@ Language: ar
     <string name="menu_redo_context">إعادة آخر تغيير</string>
     <string name="post_settings_jetpack_social_subscribe_share_more">الاشتراك لمشاركة المزيد</string>
     <string name="menu_undo_context">التراجع عن آخر تغيير</string>
+    <string name="jetpack_social_social_shares_remaining_one">هناك مشاركة واحدة من المشاركات على شبكات التواصل الاجتماعي</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">قم بزيادة حركة المرور لديك من حلال مشاركة تدويناتك تلقائيًا مع أصدقائك على شبكات التواصل الاجتماعي.</string>
     <string name="post_settings_jetpack_social_header">المشاركة عبر شبكات التواصل الاجتماعي</string>
     <string name="gutenberg_native_s_detached">تم فصل %s</string>
@@ -1946,6 +1960,7 @@ Language: ar
     <string name="gutenberg_native_choose_from_device">الاختيار من الجهاز</string>
     <string name="gutenberg_native_current_value_is_s">القيمة الحالية هي %s</string>
     <string name="gutenberg_native_add_url">إضافة رابط</string>
+    <string name="gutenberg_native_add_video">إضافة فيديو</string>
     <string name="gutenberg_native_alt_text">النص البديل</string>
     <string name="gutenberg_native_add_block_here">إضافة مكوّن هنا</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">حدث خطأ غير معروف. يُرجى المحاولة مرة أخرى.</string>
@@ -3055,7 +3070,11 @@ Language: ar
     <string name="editor_post_saved_online">تم حفظ المقالة على الإنترنت</string>
     <string name="site_settings_image_quality_hint">جودة الصور. تُشير القيم الأعلى إلى الصور ذات الجودة الأفضل.</string>
     <string name="site_settings_optimize_images_summary">تمكين تغيير حجم الصور وضغطها</string>
+    <string name="media_encoder_quality_maximum">الحد الأقصى</string>
+    <string name="media_encoder_quality_medium">متوسط</string>
     <string name="media_upload_state_uploaded">تم الرفع</string>
+    <string name="media_encoder_quality_high">عالي</string>
+    <string name="media_encoder_quality_low">منخفض</string>
     <string name="media_upload_state_deleted">محذوف</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>
     <string name="media_upload_state_failed">فشل الرفع</string>

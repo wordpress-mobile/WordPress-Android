@@ -1,2 +1,1 @@
-We redesigned the site picker screen. You can now pin your favorite sites, see recently accessed sites, and more. We also removed the ability to show and hide sites.
-(Did we say the word “sites” enough? We think so.)
+

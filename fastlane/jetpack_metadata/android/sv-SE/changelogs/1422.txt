@@ -1,4 +1,0 @@
-24.6:
-- Vi har åtgärdat en handfull problem rörande formatering av markerad text.
-- Appen stöder nu textförslag som är längre än det synliga utrymmet i redigeraren.
-- Vi har ändrat oändlighetssymbolen till "100 %" på skärmen Statistik. Och när vi gjorde det kändes det verkligen 100 %.

@@ -16,19 +16,11 @@ import javax.inject.Inject
 
 class UiModelMapper
 @Inject constructor(private val networkUtilsWrapper: NetworkUtilsWrapper) {
-    @Suppress("CyclomaticComplexMethod")
-    fun mapInsights(
-        useCaseModels: List<UseCaseModel>,
-        showError: (Int) -> Unit
-    ): UiModel {
+    fun mapInsights(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
         val insightUseCaseModels = useCaseModels.filter { it.type is InsightType }
         if (insightUseCaseModels.isNotEmpty()) {
-            val allFailing = insightUseCaseModels.fold(true) { acc, useCaseModel ->
-                acc && useCaseModel.state == ERROR
-            }
-            val allFailingWithoutData = insightUseCaseModels.fold(true) { acc, useCaseModel ->
-                acc && useCaseModel.state == ERROR && useCaseModel.data == null
-            }
+            val allFailing = allFailing(insightUseCaseModels)
+            val allFailingWithoutData = allFailingWithoutData(insightUseCaseModels)
             return if (!allFailing && !allFailingWithoutData) {
                 val data = useCaseModels.map { useCaseModel ->
                     when (useCaseModel.state) {
@@ -50,14 +42,7 @@ class UiModelMapper
                 UiModel.Success(data)
             } else if (!allFailingWithoutData) {
                 showError(getErrorMessage())
-                UiModel.Success(
-                    useCaseModels.map { useCaseModel ->
-                        StatsBlock.Error(
-                            useCaseModel.type,
-                            useCaseModel.data ?: useCaseModel.stateData ?: listOf()
-                        )
-                    }
-                )
+                getUiModelForAllFailingWithoutData(useCaseModels)
             } else {
                 UiModel.Error(getErrorMessage())
             }
@@ -78,14 +63,9 @@ class UiModelMapper
         return mapStatsWithOverview(TimeStatsType.OVERVIEW, useCaseModels, showError)
     }
 
-    @Suppress("CyclomaticComplexMethod")
     fun mapSubscribers(useCaseModels: List<UseCaseModel>, showError: (Int) -> Unit): UiModel {
-        val allFailing = useCaseModels.isNotEmpty() && useCaseModels.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR
-        }
-        val allFailingWithoutData = useCaseModels.fold(true) { acc, useCaseModel ->
-            acc && useCaseModel.state == ERROR && useCaseModel.data == null
-        }
+        val allFailing = useCaseModels.isNotEmpty() && allFailing(useCaseModels)
+        val allFailingWithoutData = allFailingWithoutData(useCaseModels)
         return if (useCaseModels.isEmpty()) {
             UiModel.Empty(R.string.loading)
         } else if (!allFailing && !allFailingWithoutData) {
@@ -108,13 +88,7 @@ class UiModelMapper
             UiModel.Success(data)
         } else if (!allFailingWithoutData) {
             showError(getErrorMessage())
-            val data = useCaseModels.map { useCaseModel ->
-                StatsBlock.Error(
-                    useCaseModel.type,
-                    useCaseModel.data ?: useCaseModel.stateData ?: listOf()
-                )
-            }
-            UiModel.Success(data)
+            getUiModelForAllFailingWithoutData(useCaseModels)
         } else {
             UiModel.Error(getErrorMessage())
         }
@@ -133,10 +107,7 @@ class UiModelMapper
         useCaseModels: List<UseCaseModel>,
         showError: (Int) -> Unit
     ): UiModel {
-        val allFailing = useCaseModels.isNotEmpty() && useCaseModels
-            .fold(true) { acc, useCaseModel ->
-                acc && useCaseModel.state == ERROR
-            }
+        val allFailing = useCaseModels.isNotEmpty() && allFailing(useCaseModels)
         val overviewIsFailing = useCaseModels.any { it.type == overViewType && it.state == ERROR }
         val overviewHasData = useCaseModels.any { it.type == overViewType && it.data != null }
         return if (!allFailing && (overviewHasData || !overviewIsFailing)) {
@@ -193,6 +164,24 @@ class UiModelMapper
             UiModel.Error(getErrorMessage())
         }
     }
+
+    private fun allFailing(useCaseModels: List<UseCaseModel>) = useCaseModels.fold(true) { acc, useCaseModel ->
+        acc && useCaseModel.state == ERROR
+    }
+
+    private fun allFailingWithoutData(useCaseModels: List<UseCaseModel>) =
+        useCaseModels.fold(true) { acc, useCaseModel ->
+            acc && useCaseModel.state == ERROR && useCaseModel.data == null
+        }
+
+    private fun getUiModelForAllFailingWithoutData(useCaseModels: List<UseCaseModel>) = UiModel.Success(
+        useCaseModels.map { useCaseModel ->
+            StatsBlock.Error(
+                useCaseModel.type,
+                useCaseModel.data ?: useCaseModel.stateData ?: listOf()
+            )
+        }
+    )
 
     private fun getErrorMessage(): Int {
         return if (networkUtilsWrapper.isNetworkAvailable()) {
