@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
