@@ -64,6 +64,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase.EmailsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersChartUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase.SubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
@@ -259,9 +260,13 @@ class StatsModule {
     @Suppress("LongParameterList")
     fun provideBlockSubscribersUseCases(
         subscribersChartUseCase: SubscribersChartUseCase,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
         emailsUseCaseFactory: EmailsUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> =
-        listOf(subscribersChartUseCase, emailsUseCaseFactory.build(BLOCK))
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
+        subscribersChartUseCase,
+        subscribersUseCaseFactory.build(BLOCK),
+        emailsUseCaseFactory.build(BLOCK)
+    )
 
     /**
      * Provides a singleton usecase that represents the Insights screen. It consists of list of use cases that build

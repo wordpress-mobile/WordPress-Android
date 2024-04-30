@@ -1025,6 +1025,8 @@
     <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
+    <string name="stats_name_label">Name</string>
+    <string name="stats_subscriber_since_label">Subscriber since</string>
     <string name="stats_emails_latest_emails_label">Latest emails</string>
     <string name="stats_emails_opens_label">Opens</string>
     <string name="stats_emails_clicks_label">Clicks</string>
