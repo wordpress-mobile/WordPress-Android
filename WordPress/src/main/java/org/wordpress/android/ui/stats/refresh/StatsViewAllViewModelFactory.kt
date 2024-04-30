@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_VIEWS_AND_VISITORS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
+import org.wordpress.android.ui.stats.StatsViewType.SUBSCRIBERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
@@ -54,6 +55,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.security.InvalidParameterException
@@ -208,6 +210,10 @@ class StatsViewAllViewModelFactory(
                         it is PostRecentWeeksUseCase
                     } to R.string.stats_detail_recent_weeks
 
+                SUBSCRIBERS -> Pair(
+                    insightsUseCases.first { it is SubscribersUseCase },
+                    R.string.stats_view_subscribers
+                )
                 EMAILS -> Pair(
                     insightsUseCases.first { it is EmailsUseCase },
                     R.string.stats_view_emails

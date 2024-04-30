@@ -30,5 +30,6 @@ enum class StatsViewType {
     TOTAL_LIKES,
     TOTAL_COMMENTS,
     TOTAL_FOLLOWERS,
-    EMAILS,
+    SUBSCRIBERS,
+    EMAILS
 }

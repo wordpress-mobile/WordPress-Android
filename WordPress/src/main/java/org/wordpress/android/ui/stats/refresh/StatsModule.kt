@@ -181,6 +181,7 @@ class StatsModule {
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
         emailsUseCaseFactory: EmailsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
@@ -191,6 +192,7 @@ class StatsModule {
             postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
             postRecentWeeksUseCaseFactory.build(VIEW_ALL),
             annualSiteStatsUseCaseFactory.build(VIEW_ALL),
+            subscribersUseCaseFactory.build(VIEW_ALL),
             emailsUseCaseFactory.build(VIEW_ALL)
         )
     }
