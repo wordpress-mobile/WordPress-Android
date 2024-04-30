@@ -2004,7 +2004,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 199 -> migrate(version) {
                     db.execSQL("ALTER TABLE PostModel ADD DB_TIMESTAMP INTEGER")
                 }
-                200 -> migrate(version) {
+                200 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD IS_SAMPLE_PRODUCT BOOLEAN")
                 }
             }
