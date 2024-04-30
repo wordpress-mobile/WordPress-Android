@@ -117,7 +117,7 @@ class EmailsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_subscribers_emails)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_emails)
     }
 
     private fun assertListHeader(item: BlockListItem) {
