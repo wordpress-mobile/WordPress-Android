@@ -1464,6 +1464,7 @@
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_follower_types_pie_chart_total_label">Totals</string>
+    <string name="stats_subscribers_subscribers_chart">Subscribers</string>
     <string name="stats_subscribers_subscribers">Subscribers</string>
     <string name="stats_subscribers_emails">Emails</string>
 

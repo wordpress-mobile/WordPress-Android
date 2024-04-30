@@ -22,7 +22,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.Us
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.SubscribersChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersMapper
-import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersChartUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -51,7 +51,7 @@ class SubscribersChartUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var localeManagerWrapper: LocaleManagerWrapper
 
-    private lateinit var useCase: SubscribersUseCase
+    private lateinit var useCase: SubscribersChartUseCase
     private val site = SiteModel()
     private val siteId = 1L
     private val periodData = PeriodData("2024-04-24", 10)
@@ -62,7 +62,7 @@ class SubscribersChartUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        useCase = SubscribersUseCase(
+        useCase = SubscribersChartUseCase(
             store,
             statsSiteProvider,
             subscribersMapper,
