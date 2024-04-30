@@ -121,7 +121,9 @@ import javax.inject.Inject
  *
  * Use [SiteCommentDetailFragment] or [NotificationCommentDetailFragment] instead before removing this class
  */
-@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any\n" + "  features or modifying this class, please ping develric or klymyam")
+@Deprecated("Comments are being refactored as part of Comments Unification project. If you are adding any" +
+        " features or modifying this class, please ping develric or klymyam")
+@Suppress("LargeClass")
 open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     CollapseFullScreenDialogFragment.OnConfirmListener, OnCollapseListener {
     protected var mComment: CommentModel? = null
@@ -195,6 +197,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     }
 
     // touching the file resulted in the MethodLength, it's suppressed until we get time to refactor this method
+    @Suppress("EmptyFunctionBlock","ComplexCondition","CyclomaticComplexMethod","LongMethod")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -275,7 +278,8 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         mBinding!!.textContent.movementMethod = WPLinkMovementMethod.getInstance()
         mReplyBinding!!.editComment.setHint(R.string.reader_hint_comment_on_comment)
         mReplyBinding!!.editComment.setOnEditorActionListener { _: TextView?, actionId: Int, _: KeyEvent? ->
-            if (site != null && mComment != null && (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)) {
+            if (site != null && mComment != null &&
+                (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)) {
                 submitReply(mReplyBinding!!, site!!, mComment!!)
             }
             false
@@ -338,6 +342,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
                 + comment.remoteCommentId)
     }
 
+    @Suppress("ComplexCondition")
     override fun onConfirm(result: Bundle?) {
         if (mReplyBinding != null && result != null && site != null && mComment != null) {
             mReplyBinding!!.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY))
@@ -449,7 +454,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         return site
     }
 
-    @Suppress("deprecation") // TODO: Remove when minSdkVersion >= 23
+    @Suppress("ForbiddenComment") // TODO: Remove when minSdkVersion >= 23
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         if (activity is OnPostClickListener) {
@@ -463,6 +468,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
+    @Suppress("ComplexCondition")
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
@@ -478,11 +484,12 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         super.onStop()
     }
 
-    @Suppress("unused")
+    @Suppress("unused","ComplexCondition")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: SuggestionNameListUpdated) {
         // check if the updated suggestions are for the current blog and update the suggestions
-        if (event.mRemoteBlogId != 0L && site != null && event.mRemoteBlogId == site!!.siteId && mSuggestionAdapter != null) {
+        if (event.mRemoteBlogId != 0L && site != null
+            && event.mRemoteBlogId == site!!.siteId && mSuggestionAdapter != null) {
             val userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
             val suggestions = fromUserSuggestions(userSuggestions)
             mSuggestionAdapter!!.suggestionList = suggestions
@@ -493,10 +500,11 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         super.onPause()
     }
 
-    @Suppress("deprecation")
+    @Suppress("deprecation","ComplexCondition")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (site != null && mComment != null && requestCode == INTENT_COMMENT_EDITOR && resultCode == Activity.RESULT_OK) {
+        if (site != null && mComment != null && requestCode == INTENT_COMMENT_EDITOR
+            && resultCode == Activity.RESULT_OK) {
             reloadComment(site!!, mComment!!, note)
         }
     }
@@ -536,16 +544,13 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45
         val commentIdentifier = mapCommentIdentifier()
-        if (commentIdentifier != null) {
-            val intent = createIntent(
-                requireActivity(),
-                commentIdentifier,
-                site
-            )
-            startActivityForResult(intent, INTENT_COMMENT_EDITOR)
-        } else {
-            throw IllegalArgumentException("CommentIdentifier cannot be null")
-        }
+        requireNotNull(commentIdentifier)
+        val intent = createIntent(
+            requireActivity(),
+            commentIdentifier,
+            site
+        )
+        startActivityForResult(intent, INTENT_COMMENT_EDITOR)
     }
 
     private fun mapCommentIdentifier(): CommentIdentifier? {
@@ -569,6 +574,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     /*
      * display the current comment
      */
+    @Suppress("LongParameterList")
     protected fun showComment(
         binding: CommentDetailFragmentBinding,
         replyBinding: ReaderIncludeCommentBoxBinding,
@@ -623,6 +629,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
+    @Suppress("LongParameterList","LongMethod")
     private fun showCommentWhenNonNull(
         binding: CommentDetailFragmentBinding,
         replyBinding: ReaderIncludeCommentBoxBinding,
@@ -748,6 +755,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
      * ensure the post associated with this comment is available to the reader and show its
      * title above the comment
      */
+    @Suppress("EmptyFunctionBlock")
     private fun showPostTitle(
         binding: CommentDetailFragmentBinding,
         comment: CommentModel,
@@ -901,6 +909,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     /*
      * approve, disapprove, spam, or trash the current comment
      */
+    @Suppress("LongParameterList")
     private fun moderateComment(
         binding: CommentDetailFragmentBinding,
         actionBinding: CommentActionFooterBinding,
@@ -921,7 +930,8 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         // instead of generic Approve action
         val statusToTrack: CommentStatus
         statusToTrack =
-            if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM && newStatus == CommentStatus.APPROVED) {
+            if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.SPAM
+                && newStatus == CommentStatus.APPROVED) {
                 CommentStatus.UNSPAM
             } else if (CommentStatus.fromString(mPreviousStatus) == CommentStatus.TRASH
                 && newStatus == CommentStatus.APPROVED
@@ -966,7 +976,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     /*
      * post comment box text as a reply to the current comment
      */
-    @Suppress("deprecation")
+    @Suppress("deprecation", "ReturnCount")
     private fun submitReply(
         replyBinding: ReaderIncludeCommentBoxBinding,
         site: SiteModel,
@@ -1017,6 +1027,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
      * the current status of the comment, show mBtnSpam if the comment isn't
      * already marked as spam, and show the current status of the comment
      */
+    @Suppress("CyclomaticComplexMethod","LongMethod")
     private fun updateStatusViews(
         binding: CommentDetailFragmentBinding,
         actionBinding: CommentActionFooterBinding,
@@ -1047,7 +1058,8 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
                     requireActivity().getColorFromAttribute(com.google.android.material.R.attr.colorError)
             }
 
-            CommentStatus.DELETED, CommentStatus.ALL, CommentStatus.UNREPLIED, CommentStatus.UNSPAM, CommentStatus.UNTRASH, CommentStatus.TRASH -> {
+            CommentStatus.DELETED, CommentStatus.ALL, CommentStatus.UNREPLIED,
+            CommentStatus.UNSPAM, CommentStatus.UNTRASH, CommentStatus.TRASH -> {
                 statusTextResId = R.string.comment_status_trash
                 statusColor =
                     requireActivity().getColorFromAttribute(com.google.android.material.R.attr.colorError)
@@ -1106,7 +1118,8 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
                 setImageResourceWithTint(
                     actionBinding.btnModerateIcon,
                     R.drawable.ic_undo_white_24dp,
-                    actionBinding.btnModerateText.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
+                    actionBinding.btnModerateText.context
+                        .getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
                 )
                 actionBinding.btnModerateText.setText(R.string.mnu_comment_untrash)
             }
@@ -1149,13 +1162,15 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         val color: Int
         if (status == CommentStatus.APPROVED) {
             color =
-                actionBinding.btnModerateText.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorSecondary)
+                actionBinding.btnModerateText.context
+                    .getColorResIdFromAttribute(com.google.android.material.R.attr.colorSecondary)
             actionBinding.btnModerateText.setText(R.string.comment_status_approved)
             actionBinding.btnModerateText.alpha = NORMAL_OPACITY
             actionBinding.btnModerateIcon.alpha = NORMAL_OPACITY
         } else {
             color =
-                actionBinding.btnModerateText.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
+                actionBinding.btnModerateText.context
+                    .getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
             actionBinding.btnModerateText.setText(R.string.mnu_comment_approve)
             actionBinding.btnModerateText.alpha = mMediumOpacity
             actionBinding.btnModerateIcon.alpha = mMediumOpacity
@@ -1206,6 +1221,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     /*
      * display the comment associated with the passed notification
      */
+    @Suppress("LongParameterList")
     private fun showCommentAsNotification(
         binding: CommentDetailFragmentBinding,
         replyBinding: ReaderIncludeCommentBoxBinding,
@@ -1227,7 +1243,8 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
-        if (note != null && !TextUtils.isEmpty(note.commentAuthorName) && note.commentAuthorName.length < 28) {
+        if (note != null && !TextUtils.isEmpty(note.commentAuthorName)
+            && note.commentAuthorName.length < AUTHOR_NAME_LENGTH) {
             replyBinding.editComment.hint =
                 String.format(getString(R.string.comment_reply_to_user), note.commentAuthorName)
         }
@@ -1309,7 +1326,10 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
                 .postSticky(OnNoteCommentLikeChanged(note!!, actionBinding.btnLike.isActivated))
         }
         actionBinding.btnLike.announceForAccessibility(
-            getText(if (actionBinding.btnLike.isActivated) R.string.comment_liked_talkback else R.string.comment_unliked_talkback)
+            getText(
+                if (actionBinding.btnLike.isActivated) R.string.comment_liked_talkback
+                else R.string.comment_unliked_talkback
+            )
         )
     }
 
@@ -1320,16 +1340,16 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         val color: Int
         val drawable: Int
         if (isLiked) {
-            color =
-                actionBinding.btnLikeIcon.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorSecondary)
+            color = actionBinding.btnLikeIcon.context
+                .getColorResIdFromAttribute(com.google.android.material.R.attr.colorSecondary)
             drawable = R.drawable.ic_star_white_24dp
             actionBinding.btnLikeText.text = resources.getString(R.string.mnu_comment_liked)
             actionBinding.btnLike.isActivated = true
             actionBinding.btnLikeText.alpha = NORMAL_OPACITY
             actionBinding.btnLikeIcon.alpha = NORMAL_OPACITY
         } else {
-            color =
-                actionBinding.btnLikeIcon.context.getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
+            color = actionBinding.btnLikeIcon.context
+                    .getColorResIdFromAttribute(com.google.android.material.R.attr.colorOnSurface)
             drawable = R.drawable.ic_star_outline_white_24dp
             actionBinding.btnLikeText.text = resources.getString(R.string.reader_label_like)
             actionBinding.btnLike.isActivated = false
@@ -1350,6 +1370,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
+    @Suppress("LongParameterList")
     private fun onCommentModerated(
         binding: CommentDetailFragmentBinding,
         actionBinding: CommentActionFooterBinding,
@@ -1374,7 +1395,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
-    @Suppress("deprecation")
+    @Suppress("deprecation","LongParameterList")
     private fun onCommentCreated(
         binding: CommentDetailFragmentBinding,
         replyBinding: ReaderIncludeCommentBoxBinding,
@@ -1440,7 +1461,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
     }
 
     // OnChanged events
-    @Suppress("unused")
+    @Suppress("unused", "ReturnCount")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onCommentChanged(event: OnCommentChanged) {
         // requesting local comment cache refresh
@@ -1514,11 +1535,12 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
             )
         }
         if (resId != -1 && view != null) {
-            view!!.announceForAccessibility(getText(resId))
+            requireView().announceForAccessibility(getText(resId))
         }
     }
 
     // Handle More Menu
+    @Suppress("LongParameterList")
     private fun showMoreMenu(
         binding: CommentDetailFragmentBinding,
         actionBinding: CommentActionFooterBinding,
@@ -1601,6 +1623,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun copyCommentLinkAddress(
         binding: CommentDetailFragmentBinding,
         comment: CommentModel
@@ -1616,6 +1639,7 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         }
     }
 
+    @Suppress("SwallowedException")
     private fun showSnackBar(
         binding: CommentDetailFragmentBinding,
         comment: CommentModel,
@@ -1675,5 +1699,6 @@ open class CommentDetailFragment : ViewPagerFragment(), NotificationFragment,
         const val KEY_NOTE_ID = "KEY_NOTE_ID"
         const val INTENT_COMMENT_EDITOR = 1010
         const val NORMAL_OPACITY = 1f
+        const val AUTHOR_NAME_LENGTH = 28
     }
 }
