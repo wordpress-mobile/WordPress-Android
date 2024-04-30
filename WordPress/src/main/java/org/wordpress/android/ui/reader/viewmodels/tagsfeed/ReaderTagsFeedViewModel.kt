@@ -51,6 +51,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
      *
      * Can be used for retrying a failed fetch, for instance.
      */
+    @Suppress("SwallowedException")
     private suspend fun fetchTag(tag: ReaderTag) {
         val updatedLoadedData = getUpdatedLoadedData()
         // At this point, all tag feed items already exist in the UI with the loading status.

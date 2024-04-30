@@ -27,6 +27,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         readerUtilsWrapper = readerUtilsWrapper,
     )
 
+    @Suppress("LongMethod")
     @Test
     fun `Should map loaded TagFeedItem correctly`() {
         // Given

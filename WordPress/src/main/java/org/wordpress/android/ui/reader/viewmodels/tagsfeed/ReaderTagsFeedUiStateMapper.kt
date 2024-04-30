@@ -11,6 +11,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
 ) {
+    @Suppress("LongParameterList")
     fun mapLoadedTagFeedItem(
         tag: ReaderTag,
         posts: ReaderPostList,

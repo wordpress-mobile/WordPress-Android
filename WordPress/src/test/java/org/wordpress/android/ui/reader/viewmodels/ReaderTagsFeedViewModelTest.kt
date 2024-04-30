@@ -126,6 +126,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Suppress("LongMethod")
     @Test
     fun `given valid tags, when fetchAll, then UI state should update properly`() = testCollectingUiStates {
         // Given
@@ -200,6 +201,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Suppress("LongMethod")
     @Test
     fun `given valid and invalid tags, when fetchAll, then UI state should update properly`() = testCollectingUiStates {
         // Given
