@@ -256,12 +256,12 @@ class StatsModule {
     @Named(BLOCK_SUBSCRIBERS_USE_CASES)
     @Suppress("LongParameterList")
     fun provideBlockSubscribersUseCases(
-        subscribersUseCase: SubscribersUseCase,
         followersUseCaseFactory: TotalSubscribersUseCaseFactory,
+        subscribersUseCase: SubscribersUseCase,
         ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
-            subscribersUseCase,
             followersUseCaseFactory.build(VIEW_ALL),
+            subscribersUseCase,
         )
     }
 
