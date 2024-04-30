@@ -12,10 +12,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.PublicizeRe
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.SummaryRestClient.SummaryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient.TagsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TodayInsightsRestClient.VisitResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.subscribers.EmailsRestClient.EmailsSummaryResponse
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.ALL_TIME_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.DETAILED_POST_STATS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAILS_SUBSCRIBERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
@@ -196,5 +198,15 @@ constructor(
             statsRequestSqlUtils,
             POSTING_ACTIVITY,
             PostingActivityResponse::class.java
+    )
+
+    class EmailsSqlUtils @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : InsightsSqlUtils<EmailsSummaryResponse>(
+        statsSqlUtils,
+        statsRequestSqlUtils,
+        EMAILS_SUBSCRIBERS,
+        EmailsSummaryResponse::class.java
     )
 }
