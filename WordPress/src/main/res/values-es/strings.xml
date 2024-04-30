@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 18:54:10+0000
+Translation-Revision-Date: 2024-04-30 07:01:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources>
+    <string name="page_upload_conflict_error">Hay una revisión más reciente de esta página</string>
+    <string name="editor_updating_content">Actualizando el contenido</string>
+    <string name="stats_subscribers">Suscriptores</string>
+    <string name="stats_subscribers_subscribers">Suscriptores</string>
     <string name="weekly_roundup_notification_text_views_and_comment">La semana pasada tuviste %1$s visitas y 1 comentario</string>
     <string name="weekly_roundup_notification_text_views_and_like">La semana pasada tuviste %1$s visitas y 1 Me gusta</string>
     <string name="weekly_roundup_notification_text_views_like_comment">La semana pasada tuviste %1$s visitas, 1 Me gusta y 1 comentario.</string>
@@ -59,6 +63,7 @@ Language: es
     <string name="gutenberg_native_copy_error_details">Copiar detalles del error</string>
     <string name="gutenberg_native_button_to_copy_post_text">Botón para copiar el texto de la entrada</string>
     <string name="gutenberg_native_button_to_copy_error_details">Botón para copiar los detalles del error</string>
+    <string name="editor_updating_content_failed">Error al actualizar el contenido</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Leyenda del vídeo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Leyenda del vídeo. Vacío</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editar el vídeo</string>
@@ -131,10 +136,6 @@ Language: es
     <string name="reader_filter_empty_blogs_list">Ver las últimas entradas de los blogs a los que estás suscrito</string>
     <string name="reader_filter_by_tag_title">Filtrar por etiqueta</string>
     <string name="reader_filter_by_blog_title">Filtrar por blog</string>
-    <string name="stats_timeframe_by_year">Por año</string>
-    <string name="stats_timeframe_by_month">Por mes</string>
-    <string name="stats_timeframe_by_week">Por semana</string>
-    <string name="stats_timeframe_by_day">Por día</string>
     <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
     <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_working_offline">Trabajo sin conexión</string>
@@ -661,7 +662,7 @@ Language: es
     <string name="qrcode_auth_flow_dismiss_dialog_message">¿Seguro que quieres continuar?</string>
     <string name="qrcode_auth_flow_dismiss_dialog_title">Salir del flujo de escaneo de código de acceso</string>
     <string name="qrcode_auth_flow_error_auth_failed_subtitle">No se ha podido acceder con este código de acceso. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
-    <string name="qrcode_auth_flow_error_auth_failed_title">Ha fallado la autentificación</string>
+    <string name="qrcode_auth_flow_error_auth_failed_title">Identificación fallida</string>
     <string name="qrcode_auth_flow_error_expired_subtitle">Este código de acceso ha caducado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
     <string name="qrcode_auth_flow_error_expired_title">El código de acceso ha caducado</string>
     <string name="qrcode_auth_flow_error_invalid_data_subtitle">No se ha podido validar el código de acceso escaneado. Toca el botón Analizar de nuevo para volver a escanear el código.</string>
@@ -1167,6 +1168,7 @@ Language: es
     <string name="gutenberg_native_add_title">Añadir título</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
     <string name="gutenberg_native_loading">Cargando</string>
+    <string name="gutenberg_native_link_label">Etiqueta del enlace</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>

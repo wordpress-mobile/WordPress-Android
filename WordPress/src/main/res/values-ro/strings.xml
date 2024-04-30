@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-16 10:08:02+0000
+Translation-Revision-Date: 2024-04-30 06:03:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="page_upload_conflict_error">Există o revizie mai recentă pentru această pagină</string>
+    <string name="editor_updating_content">Actualizez conținutul</string>
+    <string name="stats_subscribers">Abonați</string>
+    <string name="stats_subscribers_subscribers">Abonați</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Săptămâna trecută ai avut %1$s vizualizări și 1 comentariu</string>
     <string name="weekly_roundup_notification_text_views_and_like">Săptămâna trecută ai avut %1$s vizualizări și o apreciere</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Săptămâna trecută ai avut %1$s vizualizări, o apreciere și 1 comentariu.</string>
@@ -59,6 +63,7 @@ Language: ro
     <string name="gutenberg_native_copy_error_details">Copiază detaliile despre erori</string>
     <string name="gutenberg_native_button_to_copy_post_text">Buton pentru a copia textul articolului</string>
     <string name="gutenberg_native_button_to_copy_error_details">Buton pentru a copia detaliile despre erori</string>
+    <string name="editor_updating_content_failed">Actualizarea conținutului a eșuat</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Subtitrare video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editează videoul</string>
@@ -131,10 +136,6 @@ Language: ro
     <string name="reader_filter_empty_blogs_list">Vezi cele mai noi articole pe blogurile la care te-ai abonat</string>
     <string name="reader_filter_by_tag_title">Filtrează după etichetă</string>
     <string name="reader_filter_by_blog_title">Filtrează după blog</string>
-    <string name="stats_timeframe_by_year">După an</string>
-    <string name="stats_timeframe_by_month">După lună</string>
-    <string name="stats_timeframe_by_week">După săptămână</string>
-    <string name="stats_timeframe_by_day">După zi</string>
     <string name="gutenberg_native_waiting_for_connection">Aștept conexiunea</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Lucrează offline</string>
@@ -1167,6 +1168,7 @@ Language: ro
     <string name="gutenberg_native_add_title">Adaugă titlu</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
     <string name="gutenberg_native_loading">Încarc</string>
+    <string name="gutenberg_native_link_label">Etichetă legătură</string>
     <string name="gutenberg_native_text_color">Culoare text</string>
     <string name="gutenberg_native_s_link">Legătură la %s</string>
     <string name="gutenberg_native_padding">Distanțare</string>
@@ -3501,7 +3503,7 @@ Language: ro
     <string name="my_site_btn_switch_site">Comută site</string>
     <string name="my_site_btn_site_settings">Setări site</string>
     <string name="my_site_btn_blog_posts">Articole</string>
-    <string name="my_site_header_publish">Publicare</string>
+    <string name="my_site_header_publish">Publică</string>
     <string name="my_site_header_look_and_feel">Aspect și afect</string>
     <string name="my_site_header_configuration">Configurare</string>
     <string name="reader_label_new_posts_subtitle">Atinge pentru a le arăta</string>

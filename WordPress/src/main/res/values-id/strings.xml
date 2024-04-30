@@ -130,10 +130,6 @@ Language: id
     <string name="reader_filter_empty_blogs_list">Lihat pos terbaru dari blog langganan Anda</string>
     <string name="reader_filter_by_tag_title">Saring berdasarkan tag</string>
     <string name="reader_filter_by_blog_title">Saring berdasarkan blog</string>
-    <string name="stats_timeframe_by_year">Menurut tahun</string>
-    <string name="stats_timeframe_by_month">Menurut bulan</string>
-    <string name="stats_timeframe_by_week">Menurut minggu</string>
-    <string name="stats_timeframe_by_day">Menurut hari</string>
     <string name="gutenberg_native_waiting_for_connection">Menunggu koneksi</string>
     <string name="stats_traffic">Lalu lintas</string>
     <string name="gutenberg_native_working_offline">Bekerja secara Offline</string>
@@ -1166,6 +1162,7 @@ Language: id
     <string name="gutenberg_native_add_title">Tambahkan judul</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_loading">Memuat</string>
+    <string name="gutenberg_native_link_label">Label tautan</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_padding">Padding</string>
