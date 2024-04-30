@@ -40,9 +40,7 @@ class TotalSubscribersUseCase @Inject constructor(
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
     private val totalStatsMapper: TotalStatsMapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper,
     private val actionCardHandler: ActionCardHandler,
-    private val useCaseMode: UseCaseMode,
     private val statsUtils: StatsUtils
 ) : StatelessUseCase<Int>(StatsStore.SubscriberType.TOTAL_SUBSCRIBERS, mainDispatcher, bgDispatcher) {
     override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_subscribers))
@@ -82,7 +80,7 @@ class TotalSubscribersUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        R.string.stats_view_total_subscribers,
+        R.string.stats_view_total_subscribers
     )
 
 
@@ -93,7 +91,6 @@ class TotalSubscribersUseCase @Inject constructor(
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
         private val totalStatsMapper: TotalStatsMapper,
-        private val analyticsTracker: AnalyticsTrackerWrapper,
         private val actionCardHandler: ActionCardHandler,
         private val statsUtils: StatsUtils
     ) : InsightUseCaseFactory {
@@ -104,9 +101,7 @@ class TotalSubscribersUseCase @Inject constructor(
             statsSiteProvider,
             resourceProvider,
             totalStatsMapper,
-            analyticsTracker,
             actionCardHandler,
-            useCaseMode,
             statsUtils
         )
     }
