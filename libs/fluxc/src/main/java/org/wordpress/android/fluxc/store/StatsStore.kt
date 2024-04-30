@@ -272,7 +272,7 @@ class StatsStore
         FILE_DOWNLOADS
     }
 
-    enum class SubscriberType : StatsType { SUBSCRIBERS, TOTAL_SUBSCRIBERS }
+    enum class SubscriberType : StatsType { TOTAL_SUBSCRIBERS, SUBSCRIBERS }
 
     enum class PostDetailType : StatsType {
         POST_HEADER,
