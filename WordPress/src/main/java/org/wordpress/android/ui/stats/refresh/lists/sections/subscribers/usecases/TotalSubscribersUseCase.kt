@@ -51,21 +51,13 @@ class TotalSubscribersUseCase @Inject constructor(
     }
 
     override fun buildUiModel(domainModel: Int): List<BlockListItem> {
-        addActionCard(domainModel)
         val items = mutableListOf<BlockListItem>()
         items.add(buildTitle())
         items.add(ValueWithChartItem(
             value = statsUtils.toFormattedString(domainModel, MILLION),
             extraBottomMargin = true
         ))
-        if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
-            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_followers_guide_card)))
-        }
         return items
-    }
-
-    private fun addActionCard(domainModel: Int) {
-        if (domainModel <= 1) actionCardHandler.display(InsightType.ACTION_GROW)
     }
 
     private fun buildTitle() = TitleWithMore(R.string.stats_view_total_subscribers)
