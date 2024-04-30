@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,7 @@ import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -28,6 +30,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
+
+    private val _actionEvents = SingleLiveEvent<ActionEvent>()
+    val actionEvents: LiveData<ActionEvent> = _actionEvents
 
     /**
      * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
@@ -121,8 +126,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onTagClick() {
-        // TODO
+    private fun onTagClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
 
     private fun onRetryClick() {
@@ -160,6 +165,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
         )
     }
 
+    sealed class ActionEvent {
+        data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+    }
+
     sealed class UiState {
         object Initial : UiState()
         data class Loaded(val data: List<TagFeedItem>) : UiState()
@@ -176,7 +185,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     data class TagChip(
         val tag: ReaderTag,
-        val onTagClick: () -> Unit,
+        val onTagClick: (ReaderTag) -> Unit,
     )
 
     sealed class PostList {

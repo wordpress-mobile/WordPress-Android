@@ -17,11 +17,13 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.Companion.getViewModelKeyForTag
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
-import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
 /**
@@ -65,6 +67,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
 
         initViewModels(savedInstanceState)
+        observeActionEvents()
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
@@ -93,6 +96,24 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             viewModel.start(tags)
         }
         subFilterViewModel.updateTagsAndSites()
+    }
+
+    private fun observeActionEvents() {
+        viewModel.actionEvents.observe(viewLifecycleOwner) {
+            when (it) {
+                is ActionEvent.OpenTagPostsFeed -> {
+                    binding.composeView.setVisible(false)
+                    binding.postListContainer.setVisible(true)
+                    val tagPostsFeedFragment = ReaderPostListFragment.newInstanceForTag(
+                        // TODO double-check TAG_FOLLOWED type
+                        it.readerTag, ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+                    )
+                    childFragmentManager.beginTransaction()
+                        .replace(R.id.post_list_container, tagPostsFeedFragment)
+                        .commitNow()
+                }
+            }
+        }
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {

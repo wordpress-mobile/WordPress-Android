@@ -97,7 +97,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                     start = Margin.Large.value,
                 ),
                 text = UiString.UiStringText(tagChip.tag.tagTitle),
-                onClick = tagChip.onTagClick,
+                onClick = { tagChip.onTagClick(tagChip.tag) },
                 height = 36.dp,
             )
             Spacer(modifier = Modifier.height(Margin.Large.value))
@@ -288,7 +288,7 @@ private fun PostListLoaded(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple(bounded = false),
                             onClick = {
-                                tagChip.onTagClick()
+                                tagChip.onTagClick(tagChip.tag)
                                 AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
                             }
                         ),

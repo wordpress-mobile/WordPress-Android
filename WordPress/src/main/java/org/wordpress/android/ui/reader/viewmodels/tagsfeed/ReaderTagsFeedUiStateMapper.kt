@@ -15,7 +15,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     fun mapLoadedTagFeedItem(
         tag: ReaderTag,
         posts: ReaderPostList,
-        onTagClick: () -> Unit,
+        onTagClick: (ReaderTag) -> Unit,
         onSiteClick: () -> Unit,
         onPostCardClick: (TagsFeedPostItem) -> Unit,
         onPostLikeClick: () -> Unit,
@@ -56,7 +56,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     fun mapErrorTagFeedItem(
         tag: ReaderTag,
         errorType: ReaderTagsFeedViewModel.ErrorType,
-        onTagClick: () -> Unit,
+        onTagClick: (ReaderTag) -> Unit,
         onRetryClick: () -> Unit,
     ): ReaderTagsFeedViewModel.TagFeedItem =
         ReaderTagsFeedViewModel.TagFeedItem(
@@ -72,7 +72,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
 
     fun mapLoadingPostsUiState(
         tags: List<ReaderTag>,
-        onTagClick: () -> Unit,
+        onTagClick: (ReaderTag) -> Unit,
     ): ReaderTagsFeedViewModel.UiState.Loaded =
         ReaderTagsFeedViewModel.UiState.Loaded(
             tags.map { tag ->
