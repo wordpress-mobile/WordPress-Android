@@ -126,10 +126,6 @@ Language: ja_JP
     <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
     <string name="reader_filter_by_tag_title">タグで絞り込む</string>
     <string name="reader_filter_by_blog_title">ブログで絞り込む</string>
-    <string name="stats_timeframe_by_year">年別</string>
-    <string name="stats_timeframe_by_month">月別</string>
-    <string name="stats_timeframe_by_week">週別</string>
-    <string name="stats_timeframe_by_day">日別</string>
     <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
     <string name="stats_traffic">トラフィック</string>
     <string name="gutenberg_native_working_offline">オフラインで作業</string>
@@ -1156,6 +1152,7 @@ Language: ja_JP
     <string name="gutenberg_native_add_title">タイトルを追加</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_loading">読み込み中</string>
+    <string name="gutenberg_native_link_label">リンクラベル</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_padding">パディング</string>

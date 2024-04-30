@@ -131,10 +131,6 @@ Language: gl_ES
     <string name="reader_filter_empty_blogs_action">Subscríbete a un blog</string>
     <string name="reader_filter_empty_blogs_list_title">Non hai subscricións ao blog</string>
     <string name="reader_filter_empty_blogs_list">Ver as últimas entradas dos blogs aos que estás subscrito</string>
-    <string name="stats_timeframe_by_day">Por día</string>
-    <string name="stats_timeframe_by_year">Por ano</string>
-    <string name="stats_timeframe_by_week">Por semana</string>
-    <string name="stats_timeframe_by_month">Por mes</string>
     <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
     <string name="gutenberg_native_working_offline">Traballo sen conexión</string>
@@ -1167,6 +1163,7 @@ Language: gl_ES
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_add_title">Engade o título</string>
     <string name="gutenberg_native_loading">Cargando</string>
+    <string name="gutenberg_native_link_label">Etiqueta do enlace</string>
     <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recheo</string>

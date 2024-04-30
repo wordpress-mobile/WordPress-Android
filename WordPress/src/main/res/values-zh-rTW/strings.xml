@@ -130,10 +130,6 @@ Language: zh_TW
     <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
     <string name="reader_filter_by_tag_title">依標籤篩選</string>
     <string name="reader_filter_by_blog_title">依網誌篩選</string>
-    <string name="stats_timeframe_by_year">依年份</string>
-    <string name="stats_timeframe_by_month">依月</string>
-    <string name="stats_timeframe_by_week">依週</string>
-    <string name="stats_timeframe_by_day">依天</string>
     <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
     <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">離線作業</string>
@@ -1159,6 +1155,7 @@ Language: zh_TW
     <string name="gutenberg_native_add_title">新增標題</string>
     <string name="gutenberg_native_no_preview_available">未提供預覽</string>
     <string name="gutenberg_native_loading">載入中</string>
+    <string name="gutenberg_native_link_label">連結標籤</string>
     <string name="gutenberg_native_text_color">文字顏色</string>
     <string name="gutenberg_native_s_link">%s 連結</string>
     <string name="gutenberg_native_padding">邊框間距</string>

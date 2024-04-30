@@ -131,10 +131,6 @@ Language: sv_SE
     <string name="reader_filter_empty_blogs_list">Se de nyaste inläggen från bloggar du prenumererar på</string>
     <string name="reader_filter_by_tag_title">Filtrera efter etikett</string>
     <string name="reader_filter_by_blog_title">Filtrera efter blogg</string>
-    <string name="stats_timeframe_by_year">Efter år</string>
-    <string name="stats_timeframe_by_month">Efter månad</string>
-    <string name="stats_timeframe_by_week">Efter vecka</string>
-    <string name="stats_timeframe_by_day">Efter dag</string>
     <string name="gutenberg_native_waiting_for_connection">Väntar på anslutning</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Arbetar offline</string>
@@ -1167,6 +1163,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_title">Lägg till rubrik</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_loading">Laddar in …</string>
+    <string name="gutenberg_native_link_label">Länketikett</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
     <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_padding">Padding</string>
