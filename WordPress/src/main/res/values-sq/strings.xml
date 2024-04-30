@@ -103,10 +103,6 @@ Language: sq_AL
     <string name="reader_filter_empty_blogs_list">Shihni postimet më të reja prej blogjesh ku jeni pajtuar</string>
     <string name="reader_filter_by_tag_title">Filtroji sipas etiketash</string>
     <string name="reader_filter_by_blog_title">Filtroji sipas blogjesh</string>
-    <string name="stats_timeframe_by_year">Sipas vitesh</string>
-    <string name="stats_timeframe_by_month">Sipas muajsh</string>
-    <string name="stats_timeframe_by_week">Sipas javësh</string>
-    <string name="stats_timeframe_by_day">Sipas ditësh</string>
     <string name="gutenberg_native_waiting_for_connection">Po pritet për lidhje</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Punim i Palidhur</string>
@@ -1132,6 +1128,7 @@ Language: sq_AL
     <string name="gutenberg_native_add_title">Shtoni titull</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_loading">Po ngarkohet</string>
+    <string name="gutenberg_native_link_label">Etiketë lidhjeje</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
     <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_padding">Mbushje</string>

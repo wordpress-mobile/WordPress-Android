@@ -128,10 +128,6 @@ Language: tr
     <string name="reader_filter_empty_blogs_list">Abone olduğunuz bloglardaki en iyi yazıları görün</string>
     <string name="reader_filter_by_tag_title">Etikete göre süz</string>
     <string name="reader_filter_by_blog_title">Bloğa göre süz</string>
-    <string name="stats_timeframe_by_year">Yıla göre</string>
-    <string name="stats_timeframe_by_month">Aya göre</string>
-    <string name="stats_timeframe_by_week">Haftaya göre</string>
-    <string name="stats_timeframe_by_day">Güne göre</string>
     <string name="gutenberg_native_waiting_for_connection">Bağlantı bekleniyor</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Çevrim dışı çalışıyor</string>
@@ -1164,6 +1160,7 @@ Language: tr
     <string name="gutenberg_native_add_title">Başlık ekle</string>
     <string name="gutenberg_native_no_preview_available">Ön izleme yok</string>
     <string name="gutenberg_native_loading">Yükleniyor</string>
+    <string name="gutenberg_native_link_label">Bağlantı etiketi</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>

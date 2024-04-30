@@ -762,6 +762,7 @@ Language: cs_CZ
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_link_label">Popisek odkazu</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
