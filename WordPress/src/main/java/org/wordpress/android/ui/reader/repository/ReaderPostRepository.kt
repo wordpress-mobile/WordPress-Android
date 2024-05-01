@@ -35,7 +35,7 @@ class ReaderPostRepository @Inject constructor(
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
      * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
      */
-    suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 7): ReaderPostList {
+    suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList {
         return suspendCancellableCoroutine { cont ->
             val resultListener = UpdateResultListener { result ->
                 if (result == ReaderActions.UpdateResult.FAILED) {

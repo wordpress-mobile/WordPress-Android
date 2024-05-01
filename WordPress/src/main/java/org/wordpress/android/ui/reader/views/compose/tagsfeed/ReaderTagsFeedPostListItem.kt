@@ -140,7 +140,7 @@ fun ReaderTagsFeedPostListItem(
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
-            maxLines = if (!postImageUrl.isNullOrBlank()) 2 else Int.MAX_VALUE,
+            maxLines = if (!postImageUrl.isNullOrBlank()) 2 else 10,
             overflow = TextOverflow.Ellipsis,
         )
         // Post image
