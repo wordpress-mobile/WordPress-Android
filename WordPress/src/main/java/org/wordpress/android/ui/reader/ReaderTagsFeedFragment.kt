@@ -88,7 +88,11 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
-        subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForTag(this, tagsFeedTag, savedInstanceState)
+        subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForTag(
+            this,
+            tagsFeedTag,
+            savedInstanceState
+        )
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
