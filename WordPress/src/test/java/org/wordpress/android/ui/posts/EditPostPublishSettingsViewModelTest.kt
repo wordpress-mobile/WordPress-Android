@@ -450,4 +450,25 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(schedulingReminderPeriod).isEqualTo(ONE_HOUR)
     }
+
+    @Test
+    fun `on start sets current date when post not present in the repository`() {
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
+        }
+
+        whenever(editPostRepository.hasPost()).thenReturn(false)
+        whenever(editPostRepository.getPost()).thenReturn(null)
+
+        viewModel.start(editPostRepository)
+
+        assertThat(viewModel.year).isEqualTo(2019)
+        assertThat(viewModel.month).isEqualTo(6)
+        assertThat(viewModel.day).isEqualTo(6)
+        assertThat(viewModel.hour).isEqualTo(10)
+        assertThat(viewModel.minute).isEqualTo(20)
+
+        assertThat(uiModel!!.publishDateLabel).isEqualTo("Immediately")
+    }
 }
