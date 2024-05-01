@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 10:54:07+0000
+Translation-Revision-Date: 2024-04-30 01:37:13+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="page_upload_conflict_error">이 페이지의 최신 개정판은 다음과 같습니다.</string>
+    <string name="editor_updating_content">콘텐츠 업데이트</string>
+    <string name="stats_subscribers">구독자</string>
+    <string name="stats_subscribers_subscribers">구독자</string>
     <string name="weekly_roundup_notification_text_views_and_comment">지난주에는 조회수 %1$s회, 댓글 1개를 기록했습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_like">지난주에는 조회수 %1$s회, 좋아요 1개를 기록했습니다.</string>
     <string name="weekly_roundup_notification_text_views_like_comment">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 1개를 기록했습니다.</string>
@@ -32,6 +36,7 @@ Language: ko_KR
     <string name="reader_preferences_screen_font_family_label">글꼴</string>
     <string name="reader_preferences_screen_theme_label">색상표</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">피드백 보내기</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">선택한 색상 지우기</string>
     <string name="reader_no_followed_tags_text_title">팔로우한 태그 없음</string>
     <string name="reader_toast_err_tag_already_following">이미 이 태그 팔로우 중</string>
@@ -58,6 +63,7 @@ Language: ko_KR
     <string name="gutenberg_native_copy_error_details">오류 상세 정보 복사</string>
     <string name="gutenberg_native_button_to_copy_post_text">글 텍스트 복사 버튼</string>
     <string name="gutenberg_native_button_to_copy_error_details">오류 상세 정보 복사 버튼</string>
+    <string name="editor_updating_content_failed">콘텐츠를 업데이트하지 못했습니다.</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">비디오 캡션. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">비디오 캡션. 비우기</string>
     <string name="gutenberg_native_edit_video_024aee6d">비디오 편집</string>
@@ -112,6 +118,7 @@ Language: ko_KR
     <string name="reader_filter_chip_blog_one">블로그 1개</string>
     <string name="reader_filter_chip_blog_zero">블로그 0개</string>
     <string name="reader_dropdown_menu_lists">목록</string>
+    <string name="reader_dropdown_menu_automattic">자동</string>
     <string name="reader_dropdown_menu_liked">좋아함</string>
     <string name="reader_dropdown_menu_saved">저장됨</string>
     <string name="reader_dropdown_menu_subscriptions">구독</string>
@@ -129,10 +136,6 @@ Language: ko_KR
     <string name="reader_filter_empty_blogs_list">구독하는 블로그의 최신 글 확인</string>
     <string name="reader_filter_by_tag_title">태그로 필터링</string>
     <string name="reader_filter_by_blog_title">블로그로 필터링</string>
-    <string name="stats_timeframe_by_year">연도 기준</string>
-    <string name="stats_timeframe_by_month">월 기준</string>
-    <string name="stats_timeframe_by_week">주 기준</string>
-    <string name="stats_timeframe_by_day">일 기준</string>
     <string name="gutenberg_native_waiting_for_connection">연결 대기 중</string>
     <string name="stats_traffic">트래픽</string>
     <string name="gutenberg_native_working_offline">오프라인 작업 중</string>
@@ -148,6 +151,7 @@ Language: ko_KR
     <string name="domains_free_domain">무료 워드프레스닷컴 도메인</string>
     <string name="domains_site_other_domains">%s의 기타 도메인</string>
     <string name="domains_primary_site_domain_chip">기본 도메인</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary가 여기에 있습니다!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">지금 시작하세요!</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">블로깅 프롬프트 켜기</string>
@@ -157,7 +161,9 @@ Language: ko_KR
     <string name="bloganuary_dashboard_nudge_overlay_text_two">응답을 공개하세요.</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">영감을 주는 새로운 프롬프트를 매일 받아보세요.</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">한 달 동안 진행되는 글쓰기 챌린지 참여</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
     <string name="bloganuary_dashboard_nudge_text">새해에 블로깅 습관을 들이는 커뮤니티 챌린지인 Bloganuary에서 1월 한 달 동안 블로깅 프롬프트가 제공됩니다.</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary가 다가오고 있습니다!</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">따라서 웹 브라우저를 사용하여 블록을 편집하는 것이 좋습니다.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">따라서 웹 편집기를 사용하여 블록을 편집하는 것이 좋습니다.</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">그 대신에 블록 그룹 해제를 통해 콘텐츠를 평평하게 하실 수 있습니다.</string>
@@ -247,6 +253,8 @@ Language: ko_KR
     <string name="personalization_screen_draft_posts_card_description">최근 임시글입니다.</string>
     <string name="personalization_screen_draft_posts_card_title">임시글</string>
     <string name="personalization_screen_stats_card_description">조회수, 방문자 수 및 좋아요 개수</string>
+    <string name="personalization_screen_tab_cards_footer_cards">사이트에서 발생하는 상황에 따라 다른 콘텐츠가 카드에 표시될 수 있습니다.</string>
+    <string name="personalization_screen_tab_cards_description">카드 추가 또는 숨기기</string>
     <string name="personalization_screen_title"> 홈 탭 개인 설정</string>
     <string name="personalize_card_content_description">눌러서 홈 탭 개인 설정</string>
     <string name="personalize_card_text">홈 탭 개인 설정</string>
@@ -1160,6 +1168,7 @@ Language: ko_KR
     <string name="gutenberg_native_add_title">제목 추가</string>
     <string name="gutenberg_native_no_preview_available">사용 가능한 미리보기 없음</string>
     <string name="gutenberg_native_loading">로드하는 중</string>
+    <string name="gutenberg_native_link_label">링크 래이블</string>
     <string name="gutenberg_native_text_color">텍스트 색상</string>
     <string name="gutenberg_native_s_link">%s 링크</string>
     <string name="gutenberg_native_padding">안쪽 여백</string>
@@ -1287,6 +1296,7 @@ Language: ko_KR
     <string name="gutenberg_native_audio_file">오디오 파일</string>
     <string name="gutenberg_native_audio_caption_s">오디오 캡션. %s</string>
     <string name="gutenberg_native_audio_caption_empty">오디오 캡션. 비었음</string>
+    <string name="gutenberg_native_add_audio">오디오 추가</string>
     <string name="continue_with_wpcom">워드프레스닷컴을 통해 로그인하거나 가입</string>
     <string name="photo_picker_use_audio">이 오디오 사용</string>
     <string name="photo_picker_choose_audio">기기에서 오디오 선택</string>
@@ -1813,6 +1823,7 @@ Language: ko_KR
     <string name="app_theme_light">밝음</string>
     <string name="app_theme">외관</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">최근 이 페이지를 변경했지만 저장하지 않았습니다. 불러올 버전을 선택하세요:\n</string>
+    <string name="gutenberg_native_warning_message">경고 메시지</string>
     <string name="gutenberg_native_show_post_content">글 콘텐츠 보기</string>
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
     <string name="gutenberg_native_link_to">링크</string>
@@ -1952,6 +1963,7 @@ Language: ko_KR
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
     <string name="gutenberg_native_alt_text">대체 텍스트</string>
+    <string name="gutenberg_native_add_video">비디오 추가</string>
     <string name="gutenberg_native_add_url">URL 추가</string>
     <string name="gutenberg_native_add_alt_text">대체 텍스트 추가</string>
     <string name="gutenberg_native_add_block_here">블록을 여기에 추가</string>
@@ -3060,7 +3072,10 @@ Language: ko_KR
     <string name="editor_post_saved_online">글이 온라인으로 저장되었습니다.</string>
     <string name="site_settings_image_quality_hint">사진 품질. 값이 클수록 고품질의 사진을 의미합니다.</string>
     <string name="site_settings_optimize_images_summary">사진 크기를 조정하고 압축할 수 있습니다.</string>
+    <string name="media_encoder_quality_maximum">최대</string>
+    <string name="media_encoder_quality_high">높음</string>
     <string name="media_encoder_quality_medium">중간</string>
+    <string name="media_encoder_quality_low">낮음</string>
     <string name="media_upload_state_uploaded">업로드됨</string>
     <string name="media_upload_state_failed">실패</string>
     <string name="media_upload_state_deleted">삭제됨</string>
@@ -3480,6 +3495,7 @@ Language: ko_KR
     <string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
     <string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>
     <string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
+    <string name="site_picker_add_a_site">사이트 추가</string>
     <string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
     <string name="site_picker_title">사이트 선택</string>
     <string name="my_site_btn_view_site">사이트 보기</string>

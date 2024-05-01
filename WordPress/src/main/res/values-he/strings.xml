@@ -129,10 +129,6 @@ Language: he_IL
     <string name="reader_filter_empty_blogs_list">ניתן לראות את הפוסטים החדשים ביותר מבלוגים שנרשמת לעדכונים מהם</string>
     <string name="reader_filter_by_tag_title">לסנן לפי תגית</string>
     <string name="reader_filter_by_blog_title">לסנן לפי בלוג</string>
-    <string name="stats_timeframe_by_year">לפי שנה</string>
-    <string name="stats_timeframe_by_month">לפי חודש</string>
-    <string name="stats_timeframe_by_week">לפי שבוע</string>
-    <string name="stats_timeframe_by_day">לפי יום</string>
     <string name="gutenberg_native_waiting_for_connection">ממתין לחיבור</string>
     <string name="stats_traffic">תעבורה</string>
     <string name="gutenberg_native_working_offline">עבודה במצב לא מקוון</string>
@@ -1158,6 +1154,7 @@ Language: he_IL
     <string name="gutenberg_native_add_title">להוסיף כותרת</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_loading">טוען</string>
+    <string name="gutenberg_native_link_label">קישור תווית</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_padding">מרווחים</string>
