@@ -2648,9 +2648,23 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun launchCamera() {
-        WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath ->
-            this.mediaCapturePath = mediaCapturePath
-        }
+        WPMediaUtils.launchCamera(
+            this,
+            BuildConfig.APPLICATION_ID,
+            object : WPMediaUtils.LaunchCameraCallback {
+                override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+                  this@EditPostActivity.mediaCapturePath = mediaCapturePath
+                }
+
+                override fun onCameraError(errorMessage: String?) {
+                    ToastUtils.showToast(
+                        this@EditPostActivity,
+                        errorMessage,
+                        ToastUtils.Duration.SHORT
+                    )
+                }
+            }
+        )
     }
 
     private fun setPostContentFromShareAction() {

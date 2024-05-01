@@ -48,6 +48,8 @@ import java.util.List;
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
+
+        void onCameraError(String errorMessage);
     }
 
     // 3000px is the utmost max resolution you can set in the picker but 2000px is the default max for optimized images.
@@ -300,7 +302,13 @@ public class WPMediaUtils {
     public static void launchCamera(Activity activity, String applicationId, LaunchCameraCallback callback) {
         Intent intent = prepareLaunchCamera(activity, applicationId, callback);
         if (intent != null) {
-            activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
+            // Check if there is an app that can handle the camera intent
+            if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
+            } else {
+                // Handle the case where no camera app is available
+                callback.onCameraError(activity.getString(R.string.error_no_camera_available));
+            }
         }
     }
 
