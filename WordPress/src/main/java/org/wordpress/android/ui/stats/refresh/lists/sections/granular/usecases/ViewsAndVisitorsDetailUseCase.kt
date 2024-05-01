@@ -77,7 +77,8 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 statsSiteProvider.siteModel,
                 DAYS,
                 LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
-                it
+                it,
+                false
             )
         }
         return if (weeksCachedData != null && daysCachedData != null) {
@@ -110,7 +111,8 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 DAYS,
                 LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
                 it,
-                forced
+                forced,
+                false
             )
         }
         val daysModel = daysResponse?.model
@@ -124,9 +126,9 @@ class ViewsAndVisitorsDetailUseCase constructor(
             }
 
             weeksModel != null &&
-                    weeksModel.dates.isNotEmpty() &&
-                    daysModel != null &&
-                    daysModel.dates.isNotEmpty() -> {
+                weeksModel.dates.isNotEmpty() &&
+                daysModel != null &&
+                daysModel.dates.isNotEmpty() -> {
                 selectedDateProvider.onDateLoadingSucceeded(WEEKS)
                 State.Data(ViewsAndVisitorsDetailUiModel(weeksModel, daysModel))
             }
