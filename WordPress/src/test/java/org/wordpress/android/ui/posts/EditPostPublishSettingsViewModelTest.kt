@@ -95,6 +95,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             null
         }
         whenever(editPostRepository.getPost()).thenReturn(post)
+        whenever(editPostRepository.hasPost()).thenReturn(true)
     }
 
     @Test
