@@ -27,6 +27,8 @@ import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.SubscribersChartLabelFormatter
+import kotlin.math.max
+import kotlin.math.min
 
 @Suppress("MagicNumber")
 class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
@@ -79,7 +81,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun getData(item: SubscribersChartItem): List<ILineDataSet> {
-        val data = if (item.entries.isEmpty()) {
+        val data = if (item.entries.isEmpty() || item.entries.all { it.value == 0 }) {
             buildEmptyDataSet(item.entries.size)
         } else {
             val mappedEntries = item.entries.mapIndexed { index, pair -> toLineEntry(pair, index) }
@@ -123,12 +125,21 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun configureYAxis(item: SubscribersChartItem) {
-        val hasChange = item.entries.map { it.value }.distinct().size > 1
+        val differentValueCount = item.entries.map { it.value }.distinct().size
+        val hasChange = differentValueCount > 1
+        val onlyZero = item.entries.all { it.value == 0 }
         val minYValue = if (hasChange) (item.entries.minByOrNull { it.value }?.value ?: 0) else 0
         val maxYValue = if (hasChange) {
             item.entries.maxByOrNull { it.value }?.value ?: 7
         } else {
-            item.entries.last().value * 2
+            max(item.entries.last().value * 2, 1)
+        }
+        val labelCount = if (onlyZero) {
+            2
+        } else if (!hasChange) {
+            3
+        } else {
+            min(5, differentValueCount)
         }
 
         chart.axisLeft.apply {
@@ -140,7 +151,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             granularity = 1F
             axisMinimum = minYValue.toFloat()
             axisMaximum = maxYValue.toFloat()
-            setLabelCount(5, true)
+            setLabelCount(labelCount, true)
             textColor = ContextCompat.getColor(chart.context, R.color.neutral_30)
             gridColor = ContextCompat.getColor(chart.context, R.color.stats_bar_chart_gridline)
             textSize = 10f
