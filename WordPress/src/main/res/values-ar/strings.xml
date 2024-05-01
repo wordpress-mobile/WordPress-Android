@@ -131,10 +131,6 @@ Language: ar
     <string name="reader_filter_by_tag_title">التصفية حسب الوسم</string>
     <string name="reader_filter_by_blog_title">التصفية حسب المدونة</string>
     <string name="reader_filter_empty_blogs_list">الإطلاع على أجدد المقالات من المدونات التي اشتركت فيها</string>
-    <string name="stats_timeframe_by_year">حسب العام</string>
-    <string name="stats_timeframe_by_month">حسب الشهر</string>
-    <string name="stats_timeframe_by_week">حسب الأسبوع</string>
-    <string name="stats_timeframe_by_day">حسب اليوم</string>
     <string name="gutenberg_native_waiting_for_connection">انتظار الاتصال</string>
     <string name="stats_traffic">حركة المرور</string>
     <string name="gutenberg_native_working_offline">العمل من دون اتصال بالإنترنت</string>
@@ -1167,6 +1163,7 @@ Language: ar
     <string name="gutenberg_native_no_preview_available">لا توجد معاينة متاحة</string>
     <string name="gutenberg_native_add_title">أضف عنواناً</string>
     <string name="gutenberg_native_loading">تحميل</string>
+    <string name="gutenberg_native_link_label">تسمية الرابط</string>
     <string name="gutenberg_native_s_link">%s رابط</string>
     <string name="gutenberg_native_text_color">لون النص</string>
     <string name="gutenberg_native_padding">الهوامش الداخلية</string>

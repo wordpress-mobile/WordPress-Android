@@ -129,10 +129,6 @@ Language: fr
     <string name="reader_filter_empty_blogs_list">Voir les articles les plus récents des blogs auxquels vous êtes abonné(e)</string>
     <string name="reader_filter_by_tag_title">Filtrer par étiquette</string>
     <string name="reader_filter_by_blog_title">Filtrer par blog</string>
-    <string name="stats_timeframe_by_year">Par an</string>
-    <string name="stats_timeframe_by_month">Par mois</string>
-    <string name="stats_timeframe_by_week">Par semaine</string>
-    <string name="stats_timeframe_by_day">Par jour</string>
     <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Travail hors ligne</string>
@@ -1159,6 +1155,7 @@ Language: fr
     <string name="gutenberg_native_add_title">Ajouter un titre</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_loading">En cours de chargement…</string>
+    <string name="gutenberg_native_link_label">Libellé du lien</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_padding">Padding</string>
