@@ -114,6 +114,9 @@ class ViewsAndVisitorsDetailUseCase constructor(
         }
     }
 
+    private fun getErrorMessage(response: StatsStore.OnStatsFetched<VisitsAndViewsModel>?) =
+        response?.error?.message ?: response?.error?.type?.name
+
     @Suppress("LongMethod")
     override fun buildUiModel(
         domainModel: VisitsAndViewsModel,
