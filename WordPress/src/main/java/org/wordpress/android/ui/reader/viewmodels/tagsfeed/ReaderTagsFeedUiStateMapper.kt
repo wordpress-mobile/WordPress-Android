@@ -35,12 +35,12 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     postTitle = it.title,
                     postExcerpt = it.excerpt,
                     postImageUrl = it.blogImageUrl,
-                    postNumberOfLikesText = readerUtilsWrapper.getShortLikeLabelText(
+                    postNumberOfLikesText = if (it.numLikes > 0) readerUtilsWrapper.getShortLikeLabelText(
                         numLikes = it.numLikes
-                    ),
-                    postNumberOfCommentsText = readerUtilsWrapper.getShortCommentLabelText(
+                    ) else "",
+                    postNumberOfCommentsText = if (it.numReplies > 0) readerUtilsWrapper.getShortCommentLabelText(
                         numComments = it.numReplies
-                    ),
+                    ) else "",
                     isPostLiked = it.isLikedByCurrentUser,
                     onSiteClick = onSiteClick,
                     onPostImageClick = onPostImageClick,
