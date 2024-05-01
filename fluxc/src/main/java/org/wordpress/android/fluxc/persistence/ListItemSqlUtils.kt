@@ -6,6 +6,8 @@ import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.list.ListItemModel
 import org.wordpress.android.fluxc.persistence.WellSqlConfig.Companion.SQLITE_MAX_VARIABLE_NUMBER
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,8 +26,19 @@ class ListItemSqlUtils @Inject constructor() {
 
     /**
      * This function returns a list of [ListItemModel] records for the given [listId].
+     * It catches exceptions that occur during the database query and handles them.
      */
-    fun getListItems(listId: Int): List<ListItemModel> = getListItemsQuery(listId).asModel
+    @Suppress("TooGenericExceptionCaught")
+    fun getListItems(listId: Int): List<ListItemModel> {
+        return try {
+            // Attempt to execute the query and map the result to models
+            getListItemsQuery(listId).asModel
+        } catch (e: Exception) {
+            // Handle exceptions that might occur
+            AppLog.e(T.DB, "Error fetching items for listId: $listId", e)
+            emptyList()
+        }
+    }
 
     /**
      * This function returns the number of records a list has for the given [listId].
