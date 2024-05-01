@@ -143,11 +143,6 @@ class ViewsAndVisitorsDetailUseCase constructor(
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-            selectedDateProvider.selectDate(
-                selectedDate,
-                availableDates.takeLast(visibleLineCount),
-                DAYS
-            )
             val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
 
             items.add(
@@ -163,7 +158,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
                     domainModel.dates,
                     DAYS,
                     this::onLineSelected,
-                    this::onLineChartDrawn,
+                    {},
                     uiState.selectedPosition,
                     selectedItem.period
                 )
@@ -206,10 +201,6 @@ class ViewsAndVisitorsDetailUseCase constructor(
         }
     }
 
-    private fun onLineChartDrawn(visibleLineCount: Int) {
-        updateUiState { it.copy(visibleLineCount = visibleLineCount) }
-    }
-
     private fun onTopTipsLinkClick() {
         navigateTo(ViewUrl(TOP_TIPS_URL))
     }
@@ -219,7 +210,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
         updateUiState { it.copy(selectedPosition = position) }
     }
 
-    data class UiState(val selectedPosition: Int = 0, val visibleLineCount: Int? = null)
+    data class UiState(val selectedPosition: Int = 0)
 
     data class ViewsAndVisitorsDetailUiModel(
         val period: String,
