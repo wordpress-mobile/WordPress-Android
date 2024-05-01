@@ -29,6 +29,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
+        // don't start again if the tags match
+        if (_uiStateFlow.value is UiState.Loaded &&
+            tags == (_uiStateFlow.value as UiState.Loaded).data.map { it.tagChip.tag }
+        ) {
+            return
+        }
+
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
