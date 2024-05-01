@@ -180,7 +180,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
             )
         } else {
             selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+            AppLog.e(T.STATS, "There is no data to be shown in the views & visitors block")
         }
         return items
     }
