@@ -62,7 +62,8 @@ fun ReaderTagsFeed(uiState: UiState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .padding(bottom = 48.dp),
     ) {
         when (uiState) {
             is UiState.Loading -> Loading()
