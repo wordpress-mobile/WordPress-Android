@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
@@ -38,7 +39,6 @@ import javax.inject.Named
 
 @Suppress("LongParameterList")
 class ViewsAndVisitorsDetailUseCase constructor(
-    statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
     selectedDateProvider: SelectedDateProvider,
     statsSiteProvider: StatsSiteProvider,
@@ -179,7 +179,7 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 )
             )
         } else {
-            selectedDateProvider.onDateLoadingFailed(statsGranularity)
+            selectedDateProvider.onDateLoadingFailed(WEEKS)
             AppLog.e(T.STATS, "There is no data to be shown in the views & visitors block")
         }
         return items
@@ -242,19 +242,17 @@ class ViewsAndVisitorsDetailUseCase constructor(
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
         private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-            ViewsAndVisitorsDetailUseCase(
-                granularity,
-                visitsAndViewsStore,
-                selectedDateProvider,
-                statsSiteProvider,
-                statsDateFormatter,
-                viewsAndVisitorsMapper,
-                mainDispatcher,
-                backgroundDispatcher,
-                analyticsTracker,
-                statsWidgetUpdaters,
-                resourceProvider
-            )
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) = ViewsAndVisitorsDetailUseCase(
+            visitsAndViewsStore,
+            selectedDateProvider,
+            statsSiteProvider,
+            statsDateFormatter,
+            viewsAndVisitorsMapper,
+            mainDispatcher,
+            backgroundDispatcher,
+            analyticsTracker,
+            statsWidgetUpdaters,
+            resourceProvider
+        )
     }
 }
