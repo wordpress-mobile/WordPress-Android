@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.COMMENTS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
+import org.wordpress.android.ui.stats.StatsViewType.EMAILS
 import org.wordpress.android.ui.stats.StatsViewType.FILE_DOWNLOADS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
@@ -215,6 +216,11 @@ class StatsNavigator @Inject constructor(
                 )
             }
 
+            is NavigationTarget.EmailsStats -> ActivityLauncher.viewAllInsightsStats(
+                activity,
+                EMAILS,
+                siteProvider.siteModel.id
+            )
             is NavigationTarget.SetBloggingReminders -> {
                 ActivityLauncher.showSetBloggingReminders(activity, siteProvider.siteModel)
             }

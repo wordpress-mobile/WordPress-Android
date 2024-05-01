@@ -1025,6 +1025,9 @@
     <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
+    <string name="stats_emails_latest_emails_label">Latest emails</string>
+    <string name="stats_emails_opens_label">Opens</string>
+    <string name="stats_emails_clicks_label">Clicks</string>
 
     <!-- Number suffixes -->
     <string name="negative_prefix">-%s</string>
@@ -1322,9 +1325,9 @@
     <string name="stats_view_total_likes">Total Likes</string>
     <string name="stats_view_total_comments">Total Comments</string>
     <string name="stats_view_total_followers">Total Followers</string>
+    <string name="stats_view_emails">Emails</string>
 
     <!-- stats: followers -->
-    <string name="stats_subscribers_subscribers">Subscribers</string>
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_followers_a_minute_ago">a minute ago</string>
     <string name="stats_followers_minutes">%1$d minutes</string>
@@ -1461,6 +1464,8 @@
     <string name="stats_file_downloads_title_label">File</string>
     <string name="stats_file_downloads_value_label">Downloads</string>
     <string name="stats_follower_types_pie_chart_total_label">Totals</string>
+    <string name="stats_subscribers_subscribers">Subscribers</string>
+    <string name="stats_subscribers_emails">Emails</string>
 
     <string name="stats_select_previous_period_description">Select previous period</string>
     <string name="stats_select_next_period_description">Select next period</string>
