@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
+import org.wordpress.android.ui.stats.StatsViewType.EMAILS
 import org.wordpress.android.ui.stats.StatsViewType.FILE_DOWNLOADS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
@@ -52,6 +53,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.security.InvalidParameterException
@@ -205,6 +207,11 @@ class StatsViewAllViewModelFactory(
                     insightsUseCases.first {
                         it is PostRecentWeeksUseCase
                     } to R.string.stats_detail_recent_weeks
+
+                EMAILS -> Pair(
+                    insightsUseCases.first { it is EmailsUseCase },
+                    R.string.stats_view_emails
+                )
                 else -> throw InvalidParameterException("Invalid insights stats type: ${type.name}")
             }
         }
