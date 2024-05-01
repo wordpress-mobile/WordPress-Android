@@ -218,6 +218,17 @@ class ViewsAndVisitorsDetailUseCase constructor(
 
     data class UiState(val selectedPosition: Int = 0, val visibleLineCount: Int? = null)
 
+    data class ViewsAndVisitorsDetailUiModel(
+        val period: String,
+        val dates: List<VisitsAndViewsModel.PeriodData>,
+        val daysDates: List<VisitsAndViewsModel.PeriodData>
+    ) {
+        constructor(
+            weeksModel: VisitsAndViewsModel,
+            daysModel: VisitsAndViewsModel
+        ) : this(weeksModel.period, weeksModel.dates, daysModel.dates)
+    }
+
     class ViewsAndVisitorsGranularUseCaseFactory
     @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
