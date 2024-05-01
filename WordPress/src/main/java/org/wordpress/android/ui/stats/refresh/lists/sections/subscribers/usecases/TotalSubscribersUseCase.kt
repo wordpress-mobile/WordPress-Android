@@ -8,7 +8,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
@@ -24,7 +24,7 @@ class TotalSubscribersUseCase @Inject constructor(
     private val statsSiteProvider: StatsSiteProvider,
     private val statsUtils: StatsUtils
 ) : StatelessUseCase<Int>(StatsStore.SubscriberType.TOTAL_SUBSCRIBERS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_subscribers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_total_subscribers))
 
     override fun buildEmptyItem() = buildUiModel(0)
 
@@ -52,7 +52,7 @@ class TotalSubscribersUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = TitleWithMore(R.string.stats_view_total_subscribers)
+    private fun buildTitle() = Title(R.string.stats_view_total_subscribers)
 
     class TotalSubscribersUseCaseFactory @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
