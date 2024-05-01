@@ -48,6 +48,11 @@ import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ErrorType
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.PostList
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagChip
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagFeedItem
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
@@ -63,6 +68,9 @@ fun ReaderTagsFeed(uiState: UiState) {
             is UiState.Loading -> Loading()
             is UiState.Loaded -> Loaded(uiState)
             is UiState.Empty -> Empty(uiState)
+            is UiState.Initial -> {
+                // no-op
+            }
         }
     }
 }
@@ -88,7 +96,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                     start = Margin.Large.value,
                 ),
                 text = UiString.UiStringText(tagChip.tag.tagTitle),
-                onClick = tagChip.onTagClicked,
+                onClick = tagChip.onTagClick,
                 height = 36.dp,
             )
             Spacer(modifier = Modifier.height(Margin.Large.value))
@@ -292,7 +300,7 @@ private fun PostListLoaded(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple(bounded = false),
                             onClick = {
-                                tagChip.onTagClicked()
+                                tagChip.onTagClick()
                                 AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
                             }
                         ),
@@ -366,7 +374,7 @@ private fun PostListError(
         )
         Spacer(modifier = Modifier.height(Margin.Medium.value))
         val errorMessage = when (postList.type) {
-            is ErrorType.Loading -> stringResource(R.string.reader_tags_feed_loading_error_description)
+            is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
             is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
         }
         Text(
@@ -405,42 +413,6 @@ private fun PostListError(
             )
         }
     }
-}
-
-// TODO move to VM
-sealed class UiState {
-    data class Loaded(val data: List<TagFeedItem>) : UiState()
-
-    object Loading : UiState()
-
-    data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
-}
-
-data class TagFeedItem(
-    val tagChip: TagChip,
-    val postList: PostList,
-)
-
-data class TagChip(
-    val tag: ReaderTag,
-    val onTagClicked: () -> Unit,
-)
-
-sealed class PostList {
-    data class Loaded(val items: List<TagsFeedPostItem>) : PostList()
-
-    object Loading : PostList()
-
-    data class Error(
-        val type: ErrorType,
-        val onRetryClick: () -> Unit
-    ) : PostList()
-}
-
-sealed interface ErrorType {
-    data object Loading : ErrorType
-
-    data object NoContent : ErrorType
 }
 
 data class TagsFeedPostItem(
@@ -557,7 +529,7 @@ fun ReaderTagsFeedLoaded() {
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),
-                        postList = PostList.Error(ErrorType.Loading, {}),
+                        postList = PostList.Error(ErrorType.Default, {}),
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),
