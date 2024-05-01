@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.view.ViewCompat.animate
+import androidx.core.view.isVisible
+import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,12 +19,10 @@ import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.setVisible
 import javax.inject.Inject
 
 /**
@@ -46,9 +47,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     private lateinit var subFilterViewModel: SubFilterViewModel
 
     private val viewModel: ReaderTagsFeedViewModel by viewModels()
-    private val readerViewModel: ReaderViewModel by viewModels(
-        ownerProducer = { requireParentFragment() }
-    )
 
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
@@ -64,11 +62,11 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             }
         }
 
-        initViewModels(savedInstanceState)
+        observeSubFilterViewModel(savedInstanceState)
         observeActionEvents()
     }
 
-    private fun initViewModels(savedInstanceState: Bundle?) {
+    private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
         subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForTag(
             this,
             tagsFeedTag,
@@ -80,24 +78,86 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
             viewModel.start(tags)
         }
+
+        subFilterViewModel.currentSubFilter.observe(viewLifecycleOwner) { subFilter ->
+            if (subFilter is SubfilterListItem.Tag) {
+                showTagPostList(subFilter.tag)
+            } else {
+                hideTagPostList()
+            }
+        }
     }
 
     private fun observeActionEvents() {
         viewModel.actionEvents.observe(viewLifecycleOwner) {
             when (it) {
                 is ActionEvent.OpenTagPostsFeed -> {
-                    binding.composeView.setVisible(false)
-                    binding.postListContainer.setVisible(true)
-                    val tagPostsFeedFragment = ReaderPostListFragment.newInstanceForTag(
-                        // TODO double-check TAG_FOLLOWED type
-                        it.readerTag, ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-                    )
-                    childFragmentManager.beginTransaction()
-                        .replace(R.id.post_list_container, tagPostsFeedFragment)
-                        .commitNow()
+                    subFilterViewModel.setSubfilterFromTag(it.readerTag)
                 }
             }
         }
+    }
+
+    private fun showTagPostList(tag: ReaderTag) {
+        startPostListFragment(tag)
+        binding.postListContainer.fadeIn(
+            withEndAction = { binding.composeView.isVisible = false },
+        )
+    }
+
+    private fun hideTagPostList() {
+        binding.composeView.isVisible = true
+        binding.postListContainer.fadeOut(
+            withEndAction = { removeCurrentPostListFragment() },
+        )
+    }
+
+    private fun startPostListFragment(tag: ReaderTag) {
+        val tagPostListFragment = ReaderPostListFragment.newInstanceForTag(
+            tag,
+            ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+        )
+
+        childFragmentManager.commitNow {
+            replace(R.id.post_list_container, tagPostListFragment)
+        }
+    }
+
+    private fun removeCurrentPostListFragment() {
+        childFragmentManager.run {
+            findFragmentById(R.id.post_list_container)?.let {
+                commitNow {
+                    remove(it)
+                }
+            }
+        }
+    }
+
+    private fun View.fadeIn(
+        withEndAction: (() -> Unit)? = null
+    ) {
+        alpha = 0f
+        isVisible = true
+
+        animate(this)
+            // add quick delay to give time for the fragment to be added and load some content
+            .setStartDelay(POST_LIST_FADE_IN_DELAY)
+            .setDuration(POST_LIST_FADE_DURATION)
+            .withEndAction { withEndAction?.invoke() }
+            .alpha(1f)
+    }
+
+    private fun View.fadeOut(
+        withEndAction: (() -> Unit)? = null,
+    ) {
+        animate(this)
+            .withEndAction {
+                isVisible = false
+                alpha = 1f
+                withEndAction?.invoke()
+            }
+            .setDuration(POST_LIST_FADE_DURATION)
+            .alpha(0f)
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
@@ -110,6 +170,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     companion object {
         private const val ARG_TAGS_FEED_TAG = "tags_feed_tag"
+        private const val POST_LIST_FADE_DURATION = 250L
+        private const val POST_LIST_FADE_IN_DELAY = 300L
 
         fun newInstance(
             feedTag: ReaderTag
