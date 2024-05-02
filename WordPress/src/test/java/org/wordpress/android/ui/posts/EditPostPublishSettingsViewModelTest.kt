@@ -472,4 +472,22 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
 
         assertThat(uiModel!!.publishDateLabel).isEqualTo("Immediately")
     }
+
+    @Test
+    fun `given dateCreated is empty, when onAddToCalendar, then a toast is shown`() {
+        whenever(editPostRepository.dateCreated).thenReturn("")
+        val expectedToastMessage = ""
+        whenever(resourceProvider.getString(R.string.post_settings_add_to_calendar_error)).thenReturn(
+            expectedToastMessage
+        )
+
+        var toastMessage: String? = null
+        viewModel.onToast.observeForever {
+            toastMessage = it?.getContentIfNotHandled()
+        }
+
+        viewModel.onAddToCalendar(editPostRepository)
+
+        assertThat(toastMessage).isEqualTo(expectedToastMessage)
+    }
 }
