@@ -1795,6 +1795,7 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_no_calendar_app_exists">No app found to handle the request to add to calendar</string>
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
