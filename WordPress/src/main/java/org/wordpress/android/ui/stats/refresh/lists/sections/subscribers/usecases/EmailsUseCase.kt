@@ -55,7 +55,7 @@ class EmailsUseCase @Inject constructor(
     override suspend fun loadCachedData() =
         emailsStore.getEmails(statsSiteProvider.siteModel, LimitMode.Top(VIEW_ALL_ITEM_SIZE), sortField)
 
-    override fun buildLoadingItem() = listOf(BlockListItem.Title(R.string.stats_subscribers_emails))
+    override fun buildLoadingItem() = listOf(BlockListItem.Title(R.string.stats_view_emails))
 
     override fun buildEmptyItem() = listOf(buildTitle(), BlockListItem.Empty())
 
@@ -91,7 +91,7 @@ class EmailsUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = BlockListItem.Title(R.string.stats_subscribers_emails)
+    private fun buildTitle() = BlockListItem.Title(R.string.stats_view_emails)
 
     private fun mapPost(post: PostsModel.PostModel) = BlockListItem.ListItemWithTwoValues(
         text = post.title,

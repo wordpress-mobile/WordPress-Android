@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
+package org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
-import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -117,7 +116,7 @@ class EmailsUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_subscribers_emails)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_emails)
     }
 
     private fun assertListHeader(item: BlockListItem) {
