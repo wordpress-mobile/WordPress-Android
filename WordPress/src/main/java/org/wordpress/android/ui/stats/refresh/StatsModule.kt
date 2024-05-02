@@ -63,6 +63,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase.EmailsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase.TotalSubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersChartUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase.SubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
@@ -261,11 +262,13 @@ class StatsModule {
     @Named(BLOCK_SUBSCRIBERS_USE_CASES)
     @Suppress("LongParameterList")
     fun provideBlockSubscribersUseCases(
+        totalSubscribersUseCaseFactory: TotalSubscribersUseCaseFactory,
         subscribersChartUseCase: SubscribersChartUseCase,
         subscribersUseCaseFactory: SubscribersUseCaseFactory,
         emailsUseCaseFactory: EmailsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
-        subscribersChartUseCase,
+    totalSubscribersUseCaseFactory.build(VIEW_ALL),
+    subscribersChartUseCase,
         subscribersUseCaseFactory.build(BLOCK),
         emailsUseCaseFactory.build(BLOCK)
     )
