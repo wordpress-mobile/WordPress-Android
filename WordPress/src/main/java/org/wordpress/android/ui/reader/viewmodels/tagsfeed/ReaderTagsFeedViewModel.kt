@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,11 +11,13 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -34,12 +37,25 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _actionEvents = SingleLiveEvent<ActionEvent>()
     val actionEvents: LiveData<ActionEvent> = _actionEvents
 
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private var hasInitialized = false
+
     /**
      * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
+        startUiState(tags)
+        if (!hasInitialized) {
+            hasInitialized = true
+            initNavigationEvents()
+        }
+    }
+
+    private fun startUiState(tags: List<ReaderTag>) {
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
@@ -53,6 +69,17 @@ class ReaderTagsFeedViewModel @Inject constructor(
             tags.forEach {
                 fetchTag(it)
             }
+        }
+    }
+
+    private fun initNavigationEvents() {
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            // TODO reblog supported in this screen? See ReaderPostDetailViewModel and ReaderDiscoverViewModel
+//            val target = event.peekContent()
+//            if (target is ReaderNavigationEvents.ShowSitePickerForResult) {
+//                pendingReblogPost = target.post
+//            }
+            _navigationEvents.value = event
         }
     }
 
