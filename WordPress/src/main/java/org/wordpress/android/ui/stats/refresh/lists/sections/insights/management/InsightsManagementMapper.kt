@@ -112,7 +112,7 @@ class InsightsManagementMapper @Inject constructor(@Named(BG_THREAD) private val
         TOTAL_FOLLOWERS -> R.string.stats_view_total_subscribers
         AUTHORS_COMMENTS -> R.string.stats_comments_authors
         POSTS_COMMENTS -> R.string.stats_comments_posts_and_pages
-        FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
+        FOLLOWER_TOTALS -> R.string.stats_view_subscriber_totals
         FOLLOWER_TYPES -> null
         ACTION_REMINDER, ACTION_SCHEDULE, ACTION_GROW -> null
     }

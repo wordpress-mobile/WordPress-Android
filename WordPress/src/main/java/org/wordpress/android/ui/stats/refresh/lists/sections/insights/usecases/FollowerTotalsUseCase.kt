@@ -38,7 +38,7 @@ class FollowerTotalsUseCase
     private val statsUtils: StatsUtils,
     private val popupMenuHandler: ItemPopupMenuHandler
 ) : StatelessUseCase<Map<FollowerType, Int>>(FOLLOWER_TOTALS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_follower_totals))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_subscriber_totals))
 
     override fun buildEmptyItem(): List<BlockListItem> {
         return listOf(buildTitle(), Empty())
@@ -166,7 +166,7 @@ class FollowerTotalsUseCase
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_view_follower_totals, menuAction = this::onMenuClick)
+    private fun buildTitle() = Title(R.string.stats_view_subscriber_totals, menuAction = this::onMenuClick)
 
     private fun onMenuClick(view: View) {
         popupMenuHandler.onMenuClick(view, type)
