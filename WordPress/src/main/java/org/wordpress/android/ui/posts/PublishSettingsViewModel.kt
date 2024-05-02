@@ -71,8 +71,9 @@ constructor(
 
     open fun start(postRepository: EditPostRepository?) {
         editPostRepository = postRepository
-        val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
-            ?: localeManagerWrapper.getCurrentCalendar()
+        val startCalendar = postRepository?.takeIf { it.hasPost() }?.let {
+            getCurrentPublishDateAsCalendar(it)
+        } ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postRepository?.getPost())
     }
