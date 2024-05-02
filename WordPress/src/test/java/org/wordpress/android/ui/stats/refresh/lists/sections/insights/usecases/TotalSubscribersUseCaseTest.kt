@@ -18,8 +18,8 @@ import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase
@@ -89,8 +89,8 @@ class TotalSubscribersUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertTitle(item: BlockListItem) {
-        assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
-        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_subscribers)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_total_subscribers)
     }
 
     private fun assertValue(blockListItem: BlockListItem) {
