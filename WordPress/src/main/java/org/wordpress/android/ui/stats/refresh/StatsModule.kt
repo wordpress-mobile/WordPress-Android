@@ -63,8 +63,9 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase.EmailsUseCaseFactory
-import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase.TotalSubscribersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersChartUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase.SubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
@@ -181,6 +182,7 @@ class StatsModule {
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
         annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
         emailsUseCaseFactory: EmailsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
@@ -191,6 +193,7 @@ class StatsModule {
             postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
             postRecentWeeksUseCaseFactory.build(VIEW_ALL),
             annualSiteStatsUseCaseFactory.build(VIEW_ALL),
+            subscribersUseCaseFactory.build(VIEW_ALL),
             emailsUseCaseFactory.build(VIEW_ALL)
         )
     }
@@ -260,15 +263,15 @@ class StatsModule {
     @Suppress("LongParameterList")
     fun provideBlockSubscribersUseCases(
         totalSubscribersUseCaseFactory: TotalSubscribersUseCaseFactory,
-        subscribersUseCase: SubscribersUseCase,
+        subscribersChartUseCase: SubscribersChartUseCase,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
         emailsUseCaseFactory: EmailsUseCaseFactory
-    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
-        return listOf(
-            totalSubscribersUseCaseFactory.build(VIEW_ALL),
-            subscribersUseCase,
-            emailsUseCaseFactory.build(BLOCK)
-        )
-    }
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
+    totalSubscribersUseCaseFactory.build(VIEW_ALL),
+    subscribersChartUseCase,
+        subscribersUseCaseFactory.build(BLOCK),
+        emailsUseCaseFactory.build(BLOCK)
+    )
 
     /**
      * Provides a singleton usecase that represents the Insights screen. It consists of list of use cases that build

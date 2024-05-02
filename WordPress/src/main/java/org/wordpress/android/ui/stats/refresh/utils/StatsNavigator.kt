@@ -22,6 +22,7 @@ import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
+import org.wordpress.android.ui.stats.StatsViewType.SUBSCRIBERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
@@ -215,6 +216,12 @@ class StatsNavigator @Inject constructor(
                     siteProvider.siteModel.id
                 )
             }
+
+            is NavigationTarget.SubscribersStats -> ActivityLauncher.viewAllInsightsStats(
+                activity,
+                SUBSCRIBERS,
+                siteProvider.siteModel.id
+            )
 
             is NavigationTarget.EmailsStats -> ActivityLauncher.viewAllInsightsStats(
                 activity,

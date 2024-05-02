@@ -336,19 +336,6 @@ class InsightsDetailListViewModel @Inject constructor(
     dateSelectorFactory.build(StatsGranularity.WEEKS)
 )
 
-// Using Weeks granularity on Subscribers detail screens
-class SubscribersDetailListViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(SUBSCRIBERS_USE_CASE) statsUseCase: BaseListUseCase,
-    analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(
-    mainDispatcher,
-    statsUseCase,
-    analyticsTracker,
-    dateSelectorFactory.build(StatsGranularity.WEEKS)
-)
-
 class TotalLikesDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(TOTAL_LIKES_DETAIL_USE_CASE) statsUseCase: BaseListUseCase,

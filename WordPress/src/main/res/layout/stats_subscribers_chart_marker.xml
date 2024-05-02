@@ -22,7 +22,7 @@
         style="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stats_subscribers_subscribers"
+        android:text="@string/stats_view_subscribers_chart"
         android:textColor="@color/stats_tool_tip_body" />
 
     <TextView
