@@ -414,7 +414,7 @@ data class TagsFeedPostItem(
     val isPostLiked: Boolean,
     val postId: Long,
     val blogId: Long,
-    val onSiteClick: () -> Unit,
+    val onSiteClick: (TagsFeedPostItem) -> Unit,
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: () -> Unit,
     val onPostMoreMenuClick: () -> Unit,

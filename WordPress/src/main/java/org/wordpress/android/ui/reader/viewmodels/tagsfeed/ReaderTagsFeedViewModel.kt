@@ -161,8 +161,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onSiteClick() {
-        // TODO
+    private fun onSiteClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                _navigationEvents.postValue(
+                    Event(ReaderNavigationEvents.ShowBlogPreview(it.blogId, it.feedId, it.isFollowedByCurrentUser))
+                )
+            }
+        }
     }
 
     private fun onPostCardClick(postItem: TagsFeedPostItem) {

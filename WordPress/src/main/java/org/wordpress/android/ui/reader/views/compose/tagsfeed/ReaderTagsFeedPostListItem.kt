@@ -71,7 +71,7 @@ fun ReaderTagsFeedPostListItem(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = { onSiteClick() },
+                        onClick = { onSiteClick(item) },
                     ),
                 text = siteName,
                 style = MaterialTheme.typography.labelLarge,

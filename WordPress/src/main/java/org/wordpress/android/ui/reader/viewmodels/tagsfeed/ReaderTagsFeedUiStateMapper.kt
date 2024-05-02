@@ -16,7 +16,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         tag: ReaderTag,
         posts: ReaderPostList,
         onTagClick: (ReaderTag) -> Unit,
-        onSiteClick: () -> Unit,
+        onSiteClick: (TagsFeedPostItem) -> Unit,
         onPostCardClick: (TagsFeedPostItem) -> Unit,
         onPostLikeClick: () -> Unit,
         onPostMoreMenuClick: () -> Unit,
