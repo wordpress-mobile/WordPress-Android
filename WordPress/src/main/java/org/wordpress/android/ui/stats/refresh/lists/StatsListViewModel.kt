@@ -72,7 +72,7 @@ abstract class StatsListViewModel(
         INSIGHT_DETAIL(R.string.stats_insights_views_and_visitors),
         TOTAL_LIKES_DETAIL(R.string.stats_view_total_likes),
         TOTAL_COMMENTS_DETAIL(R.string.stats_view_total_comments),
-        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_followers),
+        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_subscribers),
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
