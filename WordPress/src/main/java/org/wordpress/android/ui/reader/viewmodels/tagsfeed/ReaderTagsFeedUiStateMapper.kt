@@ -17,7 +17,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         posts: ReaderPostList,
         onTagClick: () -> Unit,
         onSiteClick: () -> Unit,
-        onPostImageClick: () -> Unit,
+        onPostCardClick: (TagsFeedPostItem) -> Unit,
         onPostLikeClick: () -> Unit,
         onPostMoreMenuClick: () -> Unit,
     ) = ReaderTagsFeedViewModel.TagFeedItem(
@@ -42,8 +42,10 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                         numComments = it.numReplies
                     ) else "",
                     isPostLiked = it.isLikedByCurrentUser,
+                    postId = it.postId,
+                    blogId = it.blogId,
                     onSiteClick = onSiteClick,
-                    onPostImageClick = onPostImageClick,
+                    onPostCardClick = onPostCardClick,
                     onPostLikeClick = onPostLikeClick,
                     onPostMoreMenuClick = onPostMoreMenuClick,
                 )

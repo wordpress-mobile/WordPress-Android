@@ -53,7 +53,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         )
         val onTagClick = {}
         val onSiteClick = {}
-        val onPostImageClick = {}
+        val onPostCardClick = {}
         val onPostLikeClick = {}
         val onPostMoreMenuClick = {}
 
@@ -76,7 +76,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             posts = postList,
             onTagClick = onTagClick,
             onSiteClick = onSiteClick,
-            onPostImageClick = onPostImageClick,
+            onPostCardClick = onPostCardClick,
             onPostLikeClick = onPostLikeClick,
             onPostMoreMenuClick = onPostMoreMenuClick,
         )
@@ -99,7 +99,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         isPostLiked = readerPost.isLikedByCurrentUser,
                         onSiteClick = onSiteClick,
                         onPostLikeClick = onPostLikeClick,
-                        onPostImageClick = onPostImageClick,
+                        onPostCardClick = onPostCardClick,
                         onPostMoreMenuClick = onPostMoreMenuClick,
                     )
                 )

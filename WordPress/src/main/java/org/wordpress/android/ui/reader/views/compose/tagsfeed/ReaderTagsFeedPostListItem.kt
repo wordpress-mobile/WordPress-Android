@@ -46,19 +46,8 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderTagsFeedPostListItem(
-    siteName: String,
-    postDateLine: String,
-    postTitle: String,
-    postExcerpt: String,
-    postImageUrl: String?,
-    postNumberOfLikesText: String,
-    postNumberOfCommentsText: String,
-    isPostLiked: Boolean,
-    onSiteClick: () -> Unit,
-    onPostClick: () -> Unit,
-    onPostLikeClick: () -> Unit,
-    onPostMoreMenuClick: () -> Unit,
-) {
+    item: TagsFeedPostItem,
+) = with(item) {
     val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
     val primaryElementColor = baseColor.copy(
         alpha = 0.87F
@@ -113,7 +102,7 @@ fun ReaderTagsFeedPostListItem(
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
-                    onClick = { onPostClick() },
+                    onClick = { onPostCardClick(item) },
                 ),
             text = postTitle,
             style = MaterialTheme.typography.titleMedium,
@@ -129,25 +118,25 @@ fun ReaderTagsFeedPostListItem(
                     bottom = Margin.Medium.value,
                 )
                 .conditionalThen(
-                    predicate = postImageUrl == null,
+                    predicate = postImageUrl.isBlank(),
                     other = Modifier.height(180.dp)
                 )
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
-                    onClick = { onPostClick() },
+                    onClick = { onPostCardClick(item) },
                 ),
             text = postExcerpt,
             style = MaterialTheme.typography.bodySmall,
             color = primaryElementColor,
-            maxLines = if (!postImageUrl.isNullOrBlank()) 2 else 10,
+            maxLines = if (!postImageUrl.isBlank()) 2 else 10,
             overflow = TextOverflow.Ellipsis,
         )
         // Post image
-        if (!postImageUrl.isNullOrBlank()) {
+        if (!postImageUrl.isBlank()) {
             PostImage(
                 imageUrl = postImageUrl,
-                onClick = onPostClick,
+                onClick = { onPostCardClick(item) },
             )
         }
         Spacer(Modifier.weight(1f))
@@ -275,183 +264,215 @@ fun ReaderTagsFeedPostListItemPreview() {
             ) {
                 item {
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                "Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer pellentesque sapien " +
-                                "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
-                                " Vivamus in pretium nisl. Lorem ipsum dolor " +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                " adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
-                                "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                "urna fermentum posuere. Vivamus in pretium nisl.",
-                        postImageUrl = "https://picsum.photos/200/300",
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                    " pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
+                                    "Lorem ipsum dolor sit amet consectetur adipiscing elit. Integer pellentesque sapien " +
+                                    "sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
+                                    " Vivamus in pretium nisl. Lorem ipsum dolor " +
+                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                    " adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in" +
+                                    "pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer " +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
+                                    "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                    "urna fermentum posuere. Vivamus in pretium nisl.",
+                            postImageUrl = "https://picsum.photos/200/300",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
-                                "ipsum dolor sit amet, " +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
-                                "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
-                                "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
-                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                " consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
-                                "pretium nisl.",
-                        postImageUrl = null,
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem" +
+                                    "ipsum dolor sit amet, " +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere." +
+                                    "Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
+                                    "Integer pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl." +
+                                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                    "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                    "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
+                                    " consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum " +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur " +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus in " +
+                                    "pretium nisl.",
+                            postImageUrl = "",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet.",
-                        postImageUrl = "https://picsum.photos/200/300",
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet.",
+                            postExcerpt = "Lorem ipsum dolor sit amet.",
+                            postImageUrl = "https://picsum.photos/200/300",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet.",
-                        postImageUrl = null,
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet.",
+                            postExcerpt = "Lorem ipsum dolor sit amet.",
+                            postImageUrl = "",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet.",
-                        postImageUrl = "https://picsum.photos/200/300",
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postExcerpt = "Lorem ipsum dolor sit amet.",
+                            postImageUrl = "https://picsum.photos/200/300",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postExcerpt = "Lorem ipsum dolor sit amet.",
-                        postImageUrl = null,
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postExcerpt = "Lorem ipsum dolor sit amet.",
+                            postImageUrl = "",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit" +
-                                "amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
-                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
-                                "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
-                                "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
-                                "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
-                                "posuere. Vivamus in pretium nisl.",
-                        postImageUrl = "https://picsum.photos/200/300",
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet.",
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit" +
+                                    "amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
+                                    "posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                    "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                    "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                    "urna fermentum posuere. Vivamus in pretium nisl. Lorem " +
+                                    "ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed" +
+                                    "urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet," +
+                                    "consectetur adipiscing elit. Integer pellentesque sapien sed urna fermentum" +
+                                    "posuere. Vivamus in pretium nisl.",
+                            postImageUrl = "https://picsum.photos/200/300",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                     Spacer(Modifier.width(24.dp))
                     ReaderTagsFeedPostListItem(
-                        siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postDateLine = "1h",
-                        postTitle = "Lorem ipsum dolor sit amet.",
-                        postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
-                                "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor" +
-                                "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
-                                "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
-                                "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
-                                "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
-                                "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
-                                "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
-                        postImageUrl = null,
-                        postNumberOfLikesText = "15 likes",
-                        postNumberOfCommentsText = "4 comments",
-                        isPostLiked = true,
-                        onSiteClick = {},
-                        onPostClick = {},
-                        onPostLikeClick = {},
-                        onPostMoreMenuClick = {},
+                        item = TagsFeedPostItem(
+                            siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postDateLine = "1h",
+                            postTitle = "Lorem ipsum dolor sit amet.",
+                            postExcerpt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
+                                    "sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor" +
+                                    "sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                    "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl. Lorem ipsum" +
+                                    "dolor sit amet, consectetur adipiscing elit. Integer pellentesque sapien sed urna" +
+                                    "fermentum posuere. Vivamus in pretium nisl. Lorem ipsum dolor sit amet, consectetur" +
+                                    "adipiscing elit. Integer pellentesque sapien sed urna fermentum posuere. Vivamus" +
+                                    "in pretium nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
+                                    "pellentesque sapien sed urna fermentum posuere. Vivamus in pretium nisl.",
+                            postImageUrl = "",
+                            postNumberOfLikesText = "15 likes",
+                            postNumberOfCommentsText = "4 comments",
+                            isPostLiked = true,
+                            blogId = 123L,
+                            postId = 123L,
+                            onSiteClick = {},
+                            onPostCardClick = {},
+                            onPostLikeClick = {},
+                            onPostMoreMenuClick = {},
+                        )
                     )
                 }
             }

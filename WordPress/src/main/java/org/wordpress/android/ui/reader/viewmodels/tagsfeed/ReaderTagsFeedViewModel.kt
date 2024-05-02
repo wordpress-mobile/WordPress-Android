@@ -5,10 +5,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -19,6 +23,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
     private val readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -71,7 +77,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                         posts = posts,
                         onTagClick = ::onTagClick,
                         onSiteClick = ::onSiteClick,
-                        onPostImageClick = ::onPostImageClick,
+                        onPostCardClick = ::onPostCardClick,
                         onPostLikeClick = ::onPostLikeClick,
                         onPostMoreMenuClick = ::onPostMoreMenuClick,
                     )
@@ -127,8 +133,15 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onPostImageClick() {
-        // TODO
+    private fun onPostCardClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                readerPostCardActionsHandler.handleOnItemClicked(
+                    it,
+                    ReaderTracker.SOURCE_TAGS_FEED
+                )
+            }
+        }
     }
 
     private fun onPostLikeClick() {
@@ -137,6 +150,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun onPostMoreMenuClick() {
         // TODO
+    }
+
+    private fun findPost(postId: Long, blogId: Long): ReaderPost? {
+        return readerPostTableWrapper.getBlogPost(
+            blogId = blogId,
+            postId = postId,
+            excludeTextColumn = true,
+        )
     }
 
     sealed class UiState {
