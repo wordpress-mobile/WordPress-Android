@@ -99,6 +99,7 @@ class StatsLinkHandler
             "month" -> StatsTimeframe.MONTH
             "year" -> StatsTimeframe.YEAR
             "insights" -> StatsTimeframe.INSIGHTS
+            "subscribers" -> StatsTimeframe.SUBSCRIBERS
             else -> null
         }
     }
