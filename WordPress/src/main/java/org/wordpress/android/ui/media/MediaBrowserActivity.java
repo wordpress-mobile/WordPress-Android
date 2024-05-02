@@ -795,6 +795,10 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mMediaCapturePath = mediaCapturePath;
     }
 
+    @Override public void onCameraError(String errorMessage) {
+        ToastUtils.showToast(this, errorMessage, LONG);
+    }
+
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
         if (isFinishing()) {
             return;
