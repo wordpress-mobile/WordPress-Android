@@ -102,7 +102,7 @@ class InsightsManagementMapper @Inject constructor(@Named(BG_THREAD) private val
         ALL_TIME_STATS -> R.string.stats_insights_all_time_stats
         TAGS_AND_CATEGORIES -> R.string.stats_insights_tags_and_categories
         COMMENTS -> R.string.stats_comments
-        FOLLOWERS -> R.string.stats_view_followers
+        FOLLOWERS -> R.string.stats_view_subscribers
         TODAY_STATS -> R.string.stats_insights_today
         POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
         PUBLICIZE -> R.string.stats_view_publicize

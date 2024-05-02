@@ -122,7 +122,7 @@ class FollowersUseCase(
         }
     }
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_subscribers))
 
     override fun buildEmptyItem(): List<BlockListItem> {
         return listOf(buildTitle(), Empty())
@@ -180,9 +180,9 @@ class FollowersUseCase(
     }
 
     private fun buildTitle() = if (BuildConfig.IS_JETPACK_APP) {
-        Title(R.string.stats_view_followers)
+        Title(R.string.stats_view_subscribers)
     } else {
-        Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
+        Title(R.string.stats_view_subscribers, menuAction = this::onMenuClick)
     }
 
     private fun loadMore() {

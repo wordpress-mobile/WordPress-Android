@@ -333,7 +333,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_followers)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_subscribers)
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): LoadingItem {
