@@ -6,7 +6,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
@@ -130,6 +129,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    @Suppress("LongMethod")
     private fun observeNavigationEvents() {
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { event ->
             when (event) {
