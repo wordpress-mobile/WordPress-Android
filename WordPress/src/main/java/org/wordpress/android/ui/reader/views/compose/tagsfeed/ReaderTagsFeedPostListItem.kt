@@ -78,7 +78,7 @@ fun ReaderTagsFeedPostListItem(
             // Site name
             Text(
                 modifier = Modifier
-                    .weight(1F)
+                    .weight(1f, fill = false)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
