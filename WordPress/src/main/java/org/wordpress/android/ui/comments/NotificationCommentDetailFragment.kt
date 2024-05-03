@@ -26,20 +26,21 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
     }
 
     private fun handleNote(noteId: String) {
-        note = NotificationsTable.getNoteById(noteId)
+        val note = NotificationsTable.getNoteById(noteId)
         if (note == null) {
             // this should not happen
             AppLog.e(AppLog.T.NOTIFS, "Note could not be found.")
             ToastUtils.showToast(activity, R.string.error_notification_open)
             requireActivity().finish()
         } else {
-            site = mSiteStore.getSiteBySiteId(note!!.siteId.toLong())
-            if (site == null) {
+            mNote = note
+            mSite = mSiteStore.getSiteBySiteId(note.siteId.toLong())
+            if (mSite == null) {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
-                site = createDummyWordPressComSite(note!!.siteId.toLong())
+                mSite = createDummyWordPressComSite(mNote!!.siteId.toLong())
             }
             if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mActionBinding!!, site!!, mComment, note)
+                showComment(mBinding!!, mReplyBinding!!, mActionBinding!!, mSite!!, mComment, mNote)
             }
         }
     }
