@@ -68,7 +68,7 @@ class TotalFollowersUseCase @Inject constructor(
             extraBottomMargin = true
         ))
         if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
-            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_followers_guide_card)))
+            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_subscribers_guide_card)))
         }
         return items
     }

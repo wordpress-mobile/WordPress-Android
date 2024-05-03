@@ -1423,7 +1423,7 @@
     <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
-    <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Commenting on other blogs is a great way to build attention and subscribers for your new site.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
