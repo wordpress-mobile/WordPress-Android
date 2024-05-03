@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 12:54:08+0000
+Translation-Revision-Date: 2024-05-01 12:21:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="page_upload_conflict_error">Det finns en version av denna sida som är nyare</string>
+    <string name="editor_updating_content">Uppdaterar innehåll</string>
+    <string name="stats_subscribers">Prenumeranter</string>
+    <string name="stats_subscribers_subscribers">Prenumeranter</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Förra veckan hade du %1$s visningar och 1 kommentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Förra veckan hade du %1$s visningar och 1 gillamarkering</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Förra veckan hade du %1$s visningar, 1 gillamarkering och 1 kommentar.</string>
@@ -59,6 +63,7 @@ Language: sv_SE
     <string name="gutenberg_native_copy_error_details">Kopiera felinformation</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knapp för att kopiera inläggstext</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knapp för att kopiera felinformation</string>
+    <string name="editor_updating_content_failed">Misslyckades att uppdatera innehåll</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
     <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-05-02 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
+    <string name="page_upload_conflict_error">此页面有更新的修订版本</string>
+    <string name="editor_updating_content">正在更新内容</string>
+    <string name="stats_subscribers">订阅者</string>
+    <string name="stats_subscribers_subscribers">订阅者</string>
     <string name="weekly_roundup_notification_text_views_and_comment">上周共计 %1$s 次查看和 1 条评论</string>
     <string name="weekly_roundup_notification_text_views_and_like">上周共计 %1$s 次查看和 1 个赞</string>
     <string name="weekly_roundup_notification_text_views_like_comment">上周共计 %1$s 次查看、1 个赞和 1 条评论。</string>
@@ -56,6 +60,7 @@ Language: zh_CN
     <string name="gutenberg_native_copy_error_details">复制错误详情</string>
     <string name="gutenberg_native_button_to_copy_post_text">点击此按钮即可复制文章文本</string>
     <string name="gutenberg_native_button_to_copy_error_details">点击此按钮即可复制错误详情</string>
+    <string name="editor_updating_content_failed">更新内容失败</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">视频说明。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">视频说明。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">编辑视频</string>
