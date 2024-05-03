@@ -8,7 +8,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -29,9 +28,9 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_FILTER_SELECTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_FILTER_SELECTED
 import org.wordpress.android.databinding.NotificationFilterPopupBinding
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
