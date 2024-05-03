@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -153,7 +154,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onTagClick(readerTag: ReaderTag) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onTagClick(readerTag: ReaderTag) {
         _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
 
@@ -161,7 +163,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onSiteClick(postItem: TagsFeedPostItem) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onSiteClick(postItem: TagsFeedPostItem) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
                 _navigationEvents.postValue(

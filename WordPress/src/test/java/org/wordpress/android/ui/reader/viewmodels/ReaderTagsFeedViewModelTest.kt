@@ -25,7 +25,10 @@ import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.Event
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
@@ -47,6 +50,9 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
     private val collectedUiStates: MutableList<ReaderTagsFeedViewModel.UiState> = mutableListOf()
+
+    private val actionEvents = mutableListOf<ActionEvent>()
+    private val readerNavigationEvents = mutableListOf<Event<ReaderNavigationEvents>>()
 
     val tag = ReaderTag(
         "tag",
@@ -73,9 +79,10 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostCardActionsHandler = readerPostCardActionsHandler,
             readerPostTableWrapper = readerPostTableWrapper,
         )
-
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
+        observeActionEvents()
+        observeNavigationEvents()
     }
 
     @Test
@@ -305,6 +312,30 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `Should emit OpenTagPostsFeed when onTagClick is called`() {
+        // When
+        viewModel.onTagClick(tag)
+
+        // Then
+        assertIs<ActionEvent.OpenTagPostsFeed>(actionEvents.first())
+    }
+
+    @Test
+    fun `Should emit ShowBlogPreview when onSiteClick is called`() = test {
+        // Given
+        whenever(readerPostTableWrapper.getBlogPost(any(), any(), any()))
+            .thenReturn(ReaderPost())
+
+        // When
+        viewModel.onSiteClick(TagsFeedPostItem(
+            "", "", "", "", "", "", "", true, 123L, 123L, {}, {}, {}, {}
+        ))
+
+        // Then
+        assertIs<Event<ReaderNavigationEvents.ShowBlogPreview>>(readerNavigationEvents.first())
+    }
+
     private fun testCollectingUiStates(block: suspend TestScope.() -> Unit) = test {
         val collectedUiStatesJob = launch {
             collectedUiStates.clear()
@@ -312,5 +343,17 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         }
         this.block()
         collectedUiStatesJob.cancel()
+    }
+
+    private fun observeActionEvents() {
+        viewModel.actionEvents.observeForever {
+            it?.let { actionEvents.add(it) }
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        viewModel.navigationEvents.observeForever {
+            it?.let { readerNavigationEvents.add(it) }
+        }
     }
 }
