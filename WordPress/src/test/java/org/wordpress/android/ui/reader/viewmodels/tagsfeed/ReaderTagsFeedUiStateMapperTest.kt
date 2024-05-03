@@ -51,9 +51,9 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             "endpoint",
             ReaderTagType.FOLLOWED,
         )
-        val onTagClick = {}
-        val onSiteClick = {}
-        val onPostCardClick = {}
+        val onTagClick: (ReaderTag) -> Unit = {}
+        val onSiteClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick = {}
         val onPostMoreMenuClick = {}
 
@@ -97,6 +97,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
+                        postId = 123L,
+                        blogId = 123L,
                         onSiteClick = onSiteClick,
                         onPostLikeClick = onPostLikeClick,
                         onPostCardClick = onPostCardClick,
@@ -119,7 +121,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             ReaderTagType.FOLLOWED,
         )
         val errorType = ReaderTagsFeedViewModel.ErrorType.Default
-        val onTagClick = {}
+        val onTagClick: (ReaderTag) -> Unit = {}
         val onRetryClick = {}
         // When
         val actual = classToTest.mapErrorTagFeedItem(
@@ -146,7 +148,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
     @Test
     fun `Should map loading posts UI state correctly`() {
         // Given
-        val onTagClick = {}
+        val onTagClick: (ReaderTag) -> Unit = {}
         val tag1 = ReaderTag(
             "tag",
             "tag",

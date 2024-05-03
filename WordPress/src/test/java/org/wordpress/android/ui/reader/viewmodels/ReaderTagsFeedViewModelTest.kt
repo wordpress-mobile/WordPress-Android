@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
@@ -13,14 +14,18 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
+import org.wordpress.android.viewmodel.Event
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
@@ -29,6 +34,15 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper
+
+    @Mock
+    lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+
+    @Mock
+    lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
+    @Mock
+    lateinit var navigationEvents: MediatorLiveData<Event<ReaderNavigationEvents>>
 
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
@@ -52,7 +66,16 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = ReaderTagsFeedViewModel(testDispatcher(), readerPostRepository, readerTagsFeedUiStateMapper)
+        viewModel = ReaderTagsFeedViewModel(
+            bgDispatcher = testDispatcher(),
+            readerPostRepository = readerPostRepository,
+            readerTagsFeedUiStateMapper = readerTagsFeedUiStateMapper,
+            readerPostCardActionsHandler = readerPostCardActionsHandler,
+            readerPostTableWrapper = readerPostTableWrapper,
+        )
+
+        whenever(readerPostCardActionsHandler.navigationEvents)
+            .thenReturn(navigationEvents)
     }
 
     @Test
