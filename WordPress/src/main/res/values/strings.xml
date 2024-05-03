@@ -2078,7 +2078,7 @@
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
-    <string name="error_remove_follower">Couldn\'t remove follower</string>
+    <string name="error_remove_subscriber">Couldn\'t remove subscriber</string>
     <string name="error_remove_viewer">Couldn\'t remove viewer</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>

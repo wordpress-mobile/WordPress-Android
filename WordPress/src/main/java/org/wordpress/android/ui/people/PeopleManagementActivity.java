@@ -564,7 +564,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
                         errorMessageRes = R.string.error_remove_viewer;
                         break;
                     default:
-                        errorMessageRes = R.string.error_remove_follower;
+                        errorMessageRes = R.string.error_remove_subscriber;
                         break;
                 }
                 ToastUtils.showToast(PeopleManagementActivity.this,
