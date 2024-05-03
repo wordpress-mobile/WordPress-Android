@@ -1510,7 +1510,7 @@
     <string name="notifications_empty_all">No notifications…yet.</string>
     <string name="notifications_empty_unread">You\'re all up to date!</string>
     <string name="notifications_empty_comments">No comments yet</string>
-    <string name="notifications_empty_followers">No followers yet</string>
+    <string name="notifications_empty_subscribers">No subscribers yet</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>

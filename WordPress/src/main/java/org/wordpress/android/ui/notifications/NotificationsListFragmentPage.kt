@@ -365,7 +365,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 buttonResId = R.string.notifications_empty_view_reader
             }
             Follow.ordinal -> {
-                titleResId = R.string.notifications_empty_followers
+                titleResId = R.string.notifications_empty_subscribers
                 descriptionResId = R.string.notifications_empty_action_followers_likes
                 buttonResId = R.string.notifications_empty_view_reader
             }
