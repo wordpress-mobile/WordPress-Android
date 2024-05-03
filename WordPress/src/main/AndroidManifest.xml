@@ -232,7 +232,7 @@
             android:name=".ui.comments.CommentsDetailActivity"
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize"
-            android:label="@string/comments"/>
+            android:label=""/>
         <activity
             android:name=".ui.comments.unified.UnifiedCommentsDetailsActivity"
             android:theme="@style/WordPress.NoActionBar"
