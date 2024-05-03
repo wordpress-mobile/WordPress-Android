@@ -511,7 +511,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
         } else if (person.getPersonType() == Person.PersonType.VIEWER) {
             builder.setMessage(R.string.viewer_remove_confirmation_message);
         } else {
-            builder.setMessage(R.string.follower_remove_confirmation_message);
+            builder.setMessage(R.string.subscriber_remove_confirmation_message);
         }
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
