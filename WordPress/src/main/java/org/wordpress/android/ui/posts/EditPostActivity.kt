@@ -448,7 +448,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         } else {
             val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
             val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text))
+            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text?:""))
             newPostSetup(title, content)
         }
     }
