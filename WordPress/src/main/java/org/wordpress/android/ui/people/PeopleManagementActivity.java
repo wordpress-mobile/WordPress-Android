@@ -337,7 +337,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
                 }
                 mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
-                        R.string.error_fetch_followers_list,
+                        R.string.error_fetch_subscribers_list,
                         ToastUtils.Duration.SHORT);
             }
         });

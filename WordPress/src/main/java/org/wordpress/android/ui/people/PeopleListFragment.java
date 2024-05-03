@@ -214,7 +214,7 @@ public class PeopleListFragment extends Fragment {
                             case TEAM:
                                 return getString(R.string.error_fetch_users_list);
                             case FOLLOWERS:
-                                return getString(R.string.error_fetch_followers_list);
+                                return getString(R.string.error_fetch_subscribers_list);
                             case EMAIL_FOLLOWERS:
                                 return getString(R.string.error_fetch_email_followers_list);
                             case VIEWERS:
