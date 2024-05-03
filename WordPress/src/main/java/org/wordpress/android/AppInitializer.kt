@@ -283,6 +283,7 @@ class AppInitializer @Inject constructor(
     }
 
     fun init() {
+        crashLogging.initialize()
         dispatcher.register(this)
         appConfig.init(appScope)
 
