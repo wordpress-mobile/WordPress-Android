@@ -432,17 +432,6 @@ class AppInitializer @Inject constructor(
             AppLog.enableRecording(false)
             AppLog.e(T.UTILS, "Error enabling log file persistence", e)
         }
-        AppLog.addListener { tag, logLevel, message ->
-            val sb = StringBuffer()
-            sb.append(logLevel.toString())
-                .append("/")
-                .append(AppLog.TAG)
-                .append("-")
-                .append(tag.toString())
-                .append(": ")
-                .append(message)
-            crashLogging.recordEvent(sb.toString(), null)
-        }
     }
 
     private fun sanitizeMediaUploadStateForSite() {
