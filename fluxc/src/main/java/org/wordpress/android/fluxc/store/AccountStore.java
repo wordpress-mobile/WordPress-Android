@@ -1325,6 +1325,11 @@ public class AccountStore extends Store {
         return mAccessToken.get();
     }
 
+    private void updateToken(String token) {
+        mAccessToken.set(token);
+        emitChange(new OnAuthenticationChanged());
+    }
+
     private void updateToken(UpdateTokenPayload updateTokenPayload) {
         mAccessToken.set(updateTokenPayload.token);
         emitChange(new OnAuthenticationChanged());
