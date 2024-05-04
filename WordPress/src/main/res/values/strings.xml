@@ -2673,7 +2673,7 @@
     <string name="people_optional_custom_message_helper_text">Optional: enter a custom message to be sent with your invitation.</string>
 
     <string name="people_dropdown_item_team">Team</string>
-    <string name="people_dropdown_item_followers">Followers</string>
+    <string name="people_dropdown_item_subscribers">Subscribers</string>
     <string name="people_dropdown_item_email_followers">Email Followers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
