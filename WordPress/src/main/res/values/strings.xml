@@ -2684,7 +2684,7 @@
     <string name="title_subscriber">Subscriber</string>
     <string name="title_email_subscriber">Email Subscriber</string>
 
-    <string name="role_follower">Follower</string>
+    <string name="role_subscriber">Subscriber</string>
     <string name="role_viewer">Viewer</string>
 
     <string name="invite_links_section_title">Invite Link</string>
