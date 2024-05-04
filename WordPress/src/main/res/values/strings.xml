@@ -2681,7 +2681,7 @@
     <string name="people_empty_list_filtered_email_subscribers">No email subscribers yet</string>
     <string name="people_empty_list_filtered_viewers">No viewers yet</string>
     <string name="people_fetching">Fetching users…</string>
-    <string name="title_follower">Follower</string>
+    <string name="title_subscriber">Subscriber</string>
     <string name="title_email_follower">Email Follower</string>
 
     <string name="role_follower">Follower</string>
