@@ -101,7 +101,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
-        whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
+        whenever(resourceProvider.getString(eq(R.string.stats_subscribers_count_message), any(), any())).thenReturn(
             message
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)

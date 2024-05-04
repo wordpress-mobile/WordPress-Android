@@ -198,7 +198,7 @@ class FollowersUseCase(
             mutableItems.add(
                 Information(
                     resourceProvider.getString(
-                        R.string.stats_followers_count_message,
+                        R.string.stats_subscribers_count_message,
                         resourceProvider.getString(label),
                         model.totalCount
                     )
