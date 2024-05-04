@@ -2674,7 +2674,7 @@
 
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_subscribers">Subscribers</string>
-    <string name="people_dropdown_item_email_followers">Email Followers</string>
+    <string name="people_dropdown_item_email_subscribers">Email Subscribers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
     <string name="people_empty_list_filtered_followers">No followers yet</string>
