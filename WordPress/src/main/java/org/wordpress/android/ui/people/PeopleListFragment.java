@@ -198,7 +198,7 @@ public class PeopleListFragment extends Fragment {
                                 title = getString(R.string.people_empty_list_filtered_subscribers);
                                 break;
                             case EMAIL_FOLLOWERS:
-                                title = getString(R.string.people_empty_list_filtered_email_followers);
+                                title = getString(R.string.people_empty_list_filtered_email_subscribers);
                                 break;
                             case VIEWERS:
                                 title = getString(R.string.people_empty_list_filtered_viewers);
