@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecase
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Date
 
@@ -44,6 +45,9 @@ class SubscribersUseCaseTest : BaseUnitTest() {
 
     @Mock
     lateinit var statsSinceLabelFormatter: StatsSinceLabelFormatter
+
+    @Mock
+    lateinit var statsUtils: StatsUtils
 
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
@@ -79,11 +83,13 @@ class SubscribersUseCaseTest : BaseUnitTest() {
             store,
             statsSiteProvider,
             statsSinceLabelFormatter,
+            statsUtils,
             tracker,
             contentDescriptionHelper
         )
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
+        whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(contentDescriptionHelper.buildContentDescription(any(), any<String>(), any()))
             .thenReturn(contentDescription)
@@ -159,7 +165,7 @@ class SubscribersUseCaseTest : BaseUnitTest() {
         useCase.liveData.observeForever { if (it != null) updatedResult = it }
 
         button.loadMore()
-        assertThat(updatedResult.data).hasSize(12)
+        assertThat(updatedResult.data).hasSize(14)
     }
 
     private suspend fun loadFollowers(refresh: Boolean, forced: Boolean = false): UseCaseModel {
@@ -176,19 +182,19 @@ class SubscribersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(): LoadingItem {
-        assertThat(this).hasSize(12)
-        assertThat(this[0]).isEqualTo(Header(R.string.stats_name_label, R.string.stats_subscriber_since_label))
-        val follower = this[1] as ListItemWithIcon
+        assertThat(this).hasSize(14)
+        assertThat(this[2]).isEqualTo(Header(R.string.stats_name_label, R.string.stats_subscriber_since_label))
+        val follower = this[3] as ListItemWithIcon
         assertThat(follower.iconUrl).isEqualTo(avatar)
         assertThat(follower.iconStyle).isEqualTo(AVATAR)
         assertThat(follower.text).isEqualTo(user)
         assertThat(follower.value).isEqualTo(sinceLabel)
         assertThat(follower.contentDescription).isEqualTo(contentDescription)
 
-        assertThat(this[10] is ListItemWithIcon).isTrue()
+        assertThat(this[12] is ListItemWithIcon).isTrue()
 
-        assertThat(this[11] is LoadingItem).isTrue()
-        return this[11] as LoadingItem
+        assertThat(this[13] is LoadingItem).isTrue()
+        return this[13] as LoadingItem
     }
 
     private fun List<BlockListItem>.assertFollowers() {

@@ -1794,6 +1794,8 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_no_calendar_app_exists">No app found to handle the request to add to calendar</string>
+    <string name="post_settings_add_to_calendar_error">Unable to add to calendar</string>
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
@@ -2085,6 +2087,7 @@
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
     <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
+    <string name="error_no_camera_available">No camera app available.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>

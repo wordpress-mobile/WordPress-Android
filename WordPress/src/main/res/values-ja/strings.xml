@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 10:54:10+0000
+Translation-Revision-Date: 2024-05-02 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="page_upload_conflict_error">このページにはより最近のリビジョンがあります</string>
+    <string name="editor_updating_content">コンテンツを更新しています</string>
+    <string name="stats_subscribers">購読者</string>
+    <string name="stats_subscribers_subscribers">購読者</string>
     <string name="weekly_roundup_notification_text_views_and_comment">先週、%1$s件の表示と1件のコメントがありました</string>
     <string name="weekly_roundup_notification_text_views_and_like">先週、%1$s件の表示と1件の「いいね」がありました</string>
     <string name="weekly_roundup_notification_text_views_like_comment">先週、%1$s件の表示、1件の「いいね」、1件のコメントがありました。</string>
@@ -54,6 +58,7 @@ Language: ja_JP
     <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
     <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
     <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
+    <string name="editor_updating_content_failed">コンテンツの更新に失敗しました</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>

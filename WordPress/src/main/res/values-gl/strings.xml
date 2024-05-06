@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 10:25:32+0000
+Translation-Revision-Date: 2024-05-03 08:02:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
 -->
 <resources>
+    <string name="page_upload_conflict_error">Hai unha revisión máis recente desta páxina</string>
+    <string name="editor_updating_content">Actualizando o contido</string>
+    <string name="stats_subscribers">Subscritores</string>
+    <string name="stats_subscribers_subscribers">Subscritores</string>
     <string name="weekly_roundup_notification_text_views_and_like">A semana pasada tiveches %1$s visitas e 1 Gústame</string>
     <string name="weekly_roundup_notification_text_views_and_comment">A semana pasada tiveches %1$s visitas e 1 comentario</string>
     <string name="weekly_roundup_notification_text_views_like_comment">A semana pasada tiveches %1$s visitas, 1 Gústame e 1 comentario.</string>
@@ -59,6 +63,7 @@ Language: gl_ES
     <string name="gutenberg_native_tap_here_to_copy_error_details">Pulsa aquí para copiar os detalles do erro.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">O editor atopou un erro inesperado.</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Podes copiar o texto da túa entrada en caso de que o teu contido se vexa afectado. Copia os detalles do erro para depuralo e compartilo co servizo de asistencia.</string>
+    <string name="editor_updating_content_failed">Erro ao actualizar o contido</string>
     <string name="notifications_unread_content_description">Non lido</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editar o vídeo</string>
     <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>

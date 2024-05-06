@@ -24,8 +24,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase.SubscribersUiState
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
+import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSinceLabelFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -37,6 +39,7 @@ class SubscribersUseCase @Inject constructor(
     private val followersStore: FollowersStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsSinceLabelFormatter: StatsSinceLabelFormatter,
+    private val statsUtils: StatsUtils,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode,
     private val contentDescriptionHelper: ContentDescriptionHelper
@@ -75,6 +78,16 @@ class SubscribersUseCase @Inject constructor(
 
     override fun buildUiModel(domainModel: FollowersModel, uiState: SubscribersUiState): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
+
+        if (useCaseMode == VIEW_ALL) {
+            items.add(Title(R.string.stats_view_total_subscribers))
+            items.add(
+                BlockListItem.ValueWithChartItem(
+                    value = statsUtils.toFormattedString(domainModel.totalCount, MILLION),
+                    extraBottomMargin = true
+                )
+            )
+        }
 
         if (useCaseMode == UseCaseMode.BLOCK) {
             items.add(buildTitle())
@@ -138,6 +151,7 @@ class SubscribersUseCase @Inject constructor(
         private val followersStore: FollowersStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsSinceLabelFormatter: StatsSinceLabelFormatter,
+        private val statsUtils: StatsUtils,
         private val analyticsTracker: AnalyticsTrackerWrapper,
         private val contentDescriptionHelper: ContentDescriptionHelper
     ) : InsightUseCaseFactory {
@@ -147,6 +161,7 @@ class SubscribersUseCase @Inject constructor(
             followersStore,
             statsSiteProvider,
             statsSinceLabelFormatter,
+            statsUtils,
             analyticsTracker,
             useCaseMode,
             contentDescriptionHelper
