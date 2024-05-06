@@ -994,7 +994,7 @@
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_subscribers_count_message">Total %1$s Subscribers: %2$s</string>
-    <string name="stats_follower_label">Follower</string>
+    <string name="stats_subscriber_label">Subscriber</string>
     <string name="stats_follower_since_label">Since</string>
     <string name="stats_comments_authors">Authors</string>
     <string name="stats_comments_posts_and_pages">Posts and pages</string>

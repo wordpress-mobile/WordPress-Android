@@ -204,7 +204,7 @@ class FollowersUseCase(
                     )
                 )
             )
-            val header = Header(R.string.stats_follower_label, R.string.stats_follower_since_label)
+            val header = Header(R.string.stats_subscriber_label, R.string.stats_follower_since_label)
             mutableItems.add(header)
             model.followers.toUserItems(header)
                 .let { mutableItems.addAll(it) }

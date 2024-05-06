@@ -345,7 +345,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(this[1]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[2]).isEqualTo(
             Header(
-                R.string.stats_follower_label,
+                R.string.stats_subscriber_label,
                 R.string.stats_follower_since_label
             )
         )
@@ -380,7 +380,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[3]).isEqualTo(
             Header(
-                R.string.stats_follower_label,
+                R.string.stats_subscriber_label,
                 R.string.stats_follower_since_label
             )
         )
