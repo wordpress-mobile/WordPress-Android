@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.ReaderTestUtils
 
 // fragment implementing SubFilterViewModelProvider for testing purposes only
 @Suppress("MemberVisibilityCanBePrivate")
@@ -23,18 +24,14 @@ private open class SubFilterViewModelProviderFakeFragment(
     }
 }
 
-private fun createTag(tagName: String): ReaderTag {
-    return ReaderTag(tagName, tagName, tagName, "endpoint", ReaderTagType.FOLLOWED)
-}
-
 class SubFilterViewModelProviderTest {
     @Test
     fun `getSubFilterViewModelForTag should use given tag for retrieving the appropriate ViewModel`() {
         // Given
-        val tag1 = createTag("tag1")
+        val tag1 = ReaderTestUtils.createTag("tag1")
         val viewModel1: SubFilterViewModel = mock()
 
-        val tag2 = createTag("tag2")
+        val tag2 = ReaderTestUtils.createTag("tag2")
         val viewModel2: SubFilterViewModel = mock()
 
         val fragment = SubFilterViewModelProviderFakeFragment(
