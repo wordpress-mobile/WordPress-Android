@@ -14,11 +14,8 @@ import javax.inject.Singleton
 
 private const val MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES: Int = 60
 
-private const val MIN_DURATION_TO_WAIT_FOR_UPDATE_PROMPT: Int = 7
-
 @Singleton
 class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateManager) {
-
     fun registerUpdateListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.registerListener(installStateUpdatedListener)
     }
@@ -138,11 +135,11 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     }
 
     private fun setLastUpdateRequestedTime() {
-        //todo: add logic to save the time when the update request was made
+        // todo: add logic to save the time when the update request was made
     }
 
     private fun shouldRequestUpdate(): Boolean {
-        //todo: add logic to check the time since last update request
+        // todo: add logic to check the time since last update request
         return true
     }
 
