@@ -46,7 +46,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -69,7 +69,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -92,7 +92,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -115,7 +115,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -138,7 +138,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -161,7 +161,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -185,7 +185,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(1)
@@ -209,7 +209,7 @@ class ServiceMapperTest : BaseUnitTest() {
 
         val result = serviceMapper.map(
             listOf(service1, service2, service3),
-            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
         )
 
         assertThat(result).hasSize(3)
