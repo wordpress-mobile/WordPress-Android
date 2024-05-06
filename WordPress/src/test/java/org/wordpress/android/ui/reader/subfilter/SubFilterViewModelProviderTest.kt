@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.ReaderTestUtils
 
 // fragment implementing SubFilterViewModelProvider for testing purposes only
