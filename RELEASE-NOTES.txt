@@ -2,7 +2,7 @@
 
 24.9
 -----
-
+* [***] [Jetpack-only] Added Traffic and Subscribers tabs to the Stats screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20756]
 
 24.8
 -----
