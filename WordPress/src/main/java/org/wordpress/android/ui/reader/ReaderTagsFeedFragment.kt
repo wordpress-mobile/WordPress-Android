@@ -77,11 +77,9 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 ReaderTagsFeed(uiState)
             }
         }
-
         initViewModels(savedInstanceState)
         observeActionEvents()
         observeNavigationEvents()
-        observeRefreshPosts()
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
@@ -203,12 +201,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 is ReaderNavigationEvents.ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
                 else -> Unit // Do Nothing
             }
-        }
-    }
-
-    private fun observeRefreshPosts() {
-        viewModel.refreshPosts.observe(viewLifecycleOwner) {
-            viewModel.onRefreshPosts()
         }
     }
 

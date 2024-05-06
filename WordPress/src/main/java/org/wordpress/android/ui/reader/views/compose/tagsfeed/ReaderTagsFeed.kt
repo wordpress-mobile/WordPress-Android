@@ -411,7 +411,7 @@ data class TagsFeedPostItem(
     val postImageUrl: String,
     val postNumberOfLikesText: String,
     val postNumberOfCommentsText: String,
-    var isPostLiked: Boolean,
+    val isPostLiked: Boolean,
     val postId: Long,
     val blogId: Long,
     val onSiteClick: (TagsFeedPostItem) -> Unit,
