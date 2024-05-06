@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-05-02 13:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="page_upload_conflict_error">這個是頁面的最新修訂版本</string>
+    <string name="editor_updating_content">正在更新內容</string>
+    <string name="stats_subscribers">訂閱者</string>
+    <string name="stats_subscribers_subscribers">訂閱者</string>
     <string name="weekly_roundup_notification_text_views_and_comment">上週你有 %1$s 個瀏覽次數和 1 則留言</string>
     <string name="weekly_roundup_notification_text_views_and_like">上週你有 %1$s 個瀏覽次數和 1 個讚</string>
     <string name="weekly_roundup_notification_text_views_like_comment">上週你有 %1$s 個瀏覽次數、1 個讚和 1 則留言。</string>
@@ -58,6 +62,7 @@ Language: zh_TW
     <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
     <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
     <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
+    <string name="editor_updating_content_failed">無法更新內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>

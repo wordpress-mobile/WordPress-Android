@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-24 12:12:40+0000
+Translation-Revision-Date: 2024-05-01 22:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources>
+    <string name="page_upload_conflict_error">هناك نسخة مراجعة أحدث لهذه الصفحة</string>
+    <string name="stats_subscribers_subscribers">المشتركون</string>
+    <string name="stats_subscribers">المشتركون</string>
+    <string name="editor_updating_content">تحديث المحتوى</string>
     <string name="weekly_roundup_notification_text_views_and_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وتعليق واحد</string>
     <string name="weekly_roundup_notification_text_views_and_like">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد</string>
     <string name="weekly_roundup_notification_text_views_like_comment">كانت لديك الأسبوع الماضي ⁦%1$s⁩ من المشاهدات وإعجاب واحد وتعليق واحد.</string>
@@ -59,6 +63,7 @@ Language: ar
     <string name="gutenberg_native_copy_error_details">نسخ تفاصيل الخطأ</string>
     <string name="gutenberg_native_button_to_copy_post_text">زر نسخ نص التدوينة</string>
     <string name="gutenberg_native_button_to_copy_error_details">زر نسخ تفاصيل الخطأ</string>
+    <string name="editor_updating_content_failed">فشل تحديث المحتوى</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">تسمية الفيديو. فارغ</string>
     <string name="gutenberg_native_edit_video_024aee6d">تحرير الفيديو</string>
