@@ -411,12 +411,12 @@ data class TagsFeedPostItem(
     val postImageUrl: String,
     val postNumberOfLikesText: String,
     val postNumberOfCommentsText: String,
-    val isPostLiked: Boolean,
+    var isPostLiked: Boolean,
     val postId: Long,
     val blogId: Long,
     val onSiteClick: (TagsFeedPostItem) -> Unit,
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
-    val onPostLikeClick: () -> Unit,
+    val onPostLikeClick: (TagsFeedPostItem) -> Unit,
     val onPostMoreMenuClick: () -> Unit,
 )
 

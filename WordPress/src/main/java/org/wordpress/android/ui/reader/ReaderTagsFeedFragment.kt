@@ -81,6 +81,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         initViewModels(savedInstanceState)
         observeActionEvents()
         observeNavigationEvents()
+        observeRefreshPosts()
     }
 
     private fun initViewModels(savedInstanceState: Bundle?) {
@@ -205,9 +206,16 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    private fun observeRefreshPosts() {
+        viewModel.refreshPosts.observe(viewLifecycleOwner) {
+            viewModel.onRefreshPosts()
+        }
+    }
+
     private fun showBookmarkSavedLocallyDialog(
         bookmarkDialog: ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
     ) {
+        // TODO show bookmark saved dialog?
         bookmarkDialog.buttonLabel
 //        if (bookmarksSavedLocallyDialog == null) {
 //            MaterialAlertDialogBuilder(requireActivity())

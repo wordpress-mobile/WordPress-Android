@@ -8,16 +8,22 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -30,6 +36,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val likeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
@@ -40,6 +47,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _refreshPosts = MediatorLiveData<Event<Unit>>()
+    val refreshPosts: LiveData<Event<Unit>> = _refreshPosts
+
+    private var itemToBeRefreshed: TagsFeedPostItem? = null
 
     private var hasInitialized = false
 
@@ -53,6 +65,34 @@ class ReaderTagsFeedViewModel @Inject constructor(
         if (!hasInitialized) {
             hasInitialized = true
             initNavigationEvents()
+            initFollowStatusUpdatedEvents()
+        }
+    }
+
+    fun onRefreshPosts() {
+        // Like, bookmark or block action status changed.
+        (_uiStateFlow.value as? UiState.Loaded?)?.let { uiState ->
+            itemToBeRefreshed?.let { item ->
+                launch {
+                    findPost(item.postId, item.blogId)?.let { updatedPost ->
+                        val hasPostChanged = item.isPostLiked != updatedPost.isLikedByCurrentUser
+                        if (!hasPostChanged) {
+                            return@launch
+                        }
+                        itemToBeRefreshed = null
+                        uiState.data.filter { it.postList is PostList.Loaded }
+                            .flatMap { (it.postList as PostList.Loaded).items }
+                            .map {
+                                if (it.postId == item.postId) {
+                                    it.isPostLiked = updatedPost.isLikedByCurrentUser
+                                } else {
+                                    it
+                                }
+                            }
+                        _uiStateFlow.update { uiState }
+                    }
+                }
+            }
         }
     }
 
@@ -81,6 +121,12 @@ class ReaderTagsFeedViewModel @Inject constructor(
 //                pendingReblogPost = target.post
 //            }
             _navigationEvents.value = event
+        }
+    }
+
+    private fun initFollowStatusUpdatedEvents() {
+        _refreshPosts.addSource(readerPostCardActionsHandler.refreshPosts) { event ->
+            _refreshPosts.value = event
         }
     }
 
@@ -185,8 +231,45 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostLikeClick() {
-        // TODO
+    private fun onPostLikeClick(postItem: TagsFeedPostItem) {
+        // We can't immediately update the UI because ReaderPostCardActionsHandler doesn't return an error.
+        // If there's an error, this class directly shows a Snackbar with the error message.
+        itemToBeRefreshed = postItem
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+//                readerPostCardActionsHandler.onAction(
+//                    post = it,
+//                    type = ReaderPostCardActionType.LIKE,
+//                    isBookmarkList = false,
+//                    source = ReaderTracker.SOURCE_TAGS_FEED,
+//                )
+                likeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+                    when (it) {
+                        is PostLikeUseCase.PostLikeState.Success -> {
+                            // TODO
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked success")
+                        }
+                        is PostLikeUseCase.PostLikeState.Failed.NoNetwork -> {
+                            // TODO
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed no network")
+//                            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.no_network_message))))
+                        }
+                        is PostLikeUseCase.PostLikeState.Failed.RequestFailed -> {
+                            // TODO
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed request failed")
+//                            _refreshPosts.postValue(Event(Unit))
+//                            _snackbarEvents.postValue(
+//                                Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.reader_error_request_failed_title)))
+//                            )
+                        }
+                        else -> {
+                            // no-op
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked else: $it")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun onPostMoreMenuClick() {

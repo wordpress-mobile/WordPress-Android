@@ -18,7 +18,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         onTagClick: (ReaderTag) -> Unit,
         onSiteClick: (TagsFeedPostItem) -> Unit,
         onPostCardClick: (TagsFeedPostItem) -> Unit,
-        onPostLikeClick: () -> Unit,
+        onPostLikeClick: (TagsFeedPostItem) -> Unit,
         onPostMoreMenuClick: () -> Unit,
     ) = ReaderTagsFeedViewModel.TagFeedItem(
         tagChip = ReaderTagsFeedViewModel.TagChip(
