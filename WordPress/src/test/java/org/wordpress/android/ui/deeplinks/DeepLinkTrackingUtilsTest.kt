@@ -106,7 +106,7 @@ class DeepLinkTrackingUtilsTest {
 
         deepLinkTrackingUtils.track(action, OpenMediaPickerForSite(mock()), mediaUri)
 
-        assertTrackingData("apps.wordpress.com", DeepLinkSource.QRCODE_MEDIA, expectedUrl)
+        assertTrackingData("apps.wordpress.com", DeepLinkSource.BANNER, expectedUrl, "qr-code-media")
     }
 
     @Test
@@ -124,7 +124,7 @@ class DeepLinkTrackingUtilsTest {
             authUri
         )
 
-        assertTrackingData("apps.wordpress.com", DeepLinkSource.QRCODE_AUTH, expectedUrl)
+        assertTrackingData("apps.wordpress.com", DeepLinkSource.BANNER, expectedUrl, "login-qr-code")
     }
 
     private fun assertTrackingData(

@@ -9,12 +9,9 @@ import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -26,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
 import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.util.image.GlidePopTransitionOptions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
@@ -48,7 +46,6 @@ public class NoteBlock {
     protected final NotificationsUtilsWrapper mNotificationsUtilsWrapper;
     private boolean mIsBadge;
     private boolean mIsPingback;
-    private boolean mHasAnimatedBadge;
     private boolean mIsViewMilestone;
 
     public interface OnNoteBlockTextClickListener {
@@ -107,7 +104,7 @@ public class NoteBlock {
         mIsPingback = true;
     }
 
-    FormattableMedia getNoteMediaItem() {
+    @Nullable public FormattableMedia getNoteMediaItem() {
         return FormattableContentUtilsKt.getMediaOrNull(mNoteData, 0);
     }
 
@@ -127,7 +124,7 @@ public class NoteBlock {
         return mNoteData.getMedia() != null && !mNoteData.getMedia().isEmpty();
     }
 
-    boolean hasImageMediaItem() {
+    public boolean hasImageMediaItem() {
         return hasMediaArray()
                && getNoteMediaItem() != null
                && !TextUtils.isEmpty(getNoteMediaItem().getType())
@@ -161,27 +158,22 @@ public class NoteBlock {
         if (hasImageMediaItem()) {
             noteBlockHolder.getImageView().setVisibility(View.VISIBLE);
             // Request image, and animate it when loaded
-            mImageManager
-                    .loadWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
-                            StringUtils.notNullStr(getNoteMediaItem().getUrl()), ScaleType.CENTER, null,
-                            new ImageManager.RequestListener<Drawable>() {
-                                @Override
-                                public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
-                                    if (e != null) {
-                                        AppLog.e(T.NOTIFS, e);
-                                    }
-                                    noteBlockHolder.hideImageView();
-                                }
+            mImageManager.animateWithResultListener(noteBlockHolder.getImageView(), ImageType.IMAGE,
+                    StringUtils.notNullStr(getNoteMediaItem().getUrl()),
+                    GlidePopTransitionOptions.INSTANCE.pop(),
+                    new ImageManager.RequestListener<Drawable>() {
+                        @Override
+                        public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                            if (e != null) {
+                                AppLog.e(T.NOTIFS, e);
+                            }
+                            noteBlockHolder.hideImageView();
+                        }
 
-                                @Override
-                                public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
-                                    if (!mHasAnimatedBadge && view.getContext() != null) {
-                                        mHasAnimatedBadge = true;
-                                        Animation pop = AnimationUtils.loadAnimation(view.getContext(), R.anim.pop);
-                                        noteBlockHolder.getImageView().startAnimation(pop);
-                                    }
-                                }
-                            });
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        }
+                    });
 
             if (mIsBadge) {
                 noteBlockHolder.getImageView().setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
@@ -251,7 +243,7 @@ public class NoteBlock {
                             });
                         } else {
                             noteBlockHolder.getTextView().setTextSize(28);
-                            TypefaceSpan typefaceSpan = new TypefaceSpan("serif");
+                            TypefaceSpan typefaceSpan = new TypefaceSpan("sans-serif");
                             noteText.setSpan(typefaceSpan, 0, noteText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                         }
                     }
@@ -318,14 +310,7 @@ public class NoteBlock {
 
         public ImageView getImageView() {
             if (mImageView == null) {
-                mImageView = new ImageView(mRootLayout.getContext());
-                int imageSize = DisplayUtils.dpToPx(mRootLayout.getContext(), 180);
-                int imagePadding = mRootLayout.getContext().getResources().getDimensionPixelSize(R.dimen.margin_large);
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(imageSize, imageSize);
-                layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                mImageView.setLayoutParams(layoutParams);
-                mImageView.setPadding(0, imagePadding, 0, 0);
-                mRootLayout.addView(mImageView, 0);
+                mImageView = mRootLayout.findViewById(R.id.image);
             }
 
             return mImageView;

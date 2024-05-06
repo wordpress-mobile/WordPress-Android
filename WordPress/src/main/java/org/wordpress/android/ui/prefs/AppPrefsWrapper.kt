@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import com.google.gson.Gson
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.models.ReaderTag
@@ -63,6 +64,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
+    var readerAnalyticsCountTagsTimestamp: Long
+        get() = AppPrefs.getReaderAnalyticsCountTagsTimestamp()
+        set(timestamp) = AppPrefs.setReaderAnalyticsCountTagsTimestamp(timestamp)
+
     var readerCssUpdatedTimestamp: Long
         get() = AppPrefs.getReaderCssUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
@@ -71,9 +76,9 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderCardsPageHandle()
         set(pageHandle) = AppPrefs.setReaderCardsPageHandle(pageHandle)
 
-    var shouldShowStoriesIntro: Boolean
-        get() = AppPrefs.shouldShowStoriesIntro()
-        set(shouldShow) = AppPrefs.setShouldShowStoriesIntro(shouldShow)
+    var readerTopBarSelectedFeedItemId: String?
+        get() = AppPrefs.getReaderTopBarSelectedFeedItemId()
+        set(selectedFeedItemId) = AppPrefs.setReaderTopBarSelectedFeedItemId(selectedFeedItemId)
 
     var shouldScheduleCreateSiteNotification: Boolean
         get() = AppPrefs.shouldScheduleCreateSiteNotification()
@@ -89,6 +94,10 @@ class AppPrefsWrapper @Inject constructor() {
     var notificationPermissionsWarningDismissed: Boolean
         get() = AppPrefs.getNotificationsPermissionsWarningDismissed()
         set(dismissed) = AppPrefs.setNotificationsPermissionWarningDismissed(dismissed)
+
+    var readerReadingPreferencesJson: String?
+        get() = AppPrefs.getReaderReadingPreferencesJson()
+        set(json) = AppPrefs.setReaderReadingPreferencesJson(json)
 
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
@@ -465,6 +474,15 @@ class AppPrefsWrapper @Inject constructor() {
     var savedPrivacyBannerSettings: Boolean
         get() = getBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, false)
         set(value) = AppPrefs.setBoolean(AppPrefs.DeletablePrefKey.HAS_SAVED_PRIVACY_SETTINGS, value)
+
+    var pinnedSiteLocalIds: MutableSet<Int>
+        get() = Gson().fromJson(AppPrefs.getPinnedSiteLocalIds(), Array<Int>::class.java).toMutableSet()
+        set(value) = AppPrefs.setPinnedSiteLocalIds(Gson().toJson(value))
+
+    fun getRecentSiteLocalIds(): MutableSet<Int> = AppPrefs.getRecentlyPickedSiteIds().toMutableSet()
+    fun addRecentSiteLocalId(siteLocalId: Int) {
+        AppPrefs.addRecentlyPickedSiteId(siteLocalId)
+    }
 
     companion object {
         private const val LIGHT_MODE_ID = 0

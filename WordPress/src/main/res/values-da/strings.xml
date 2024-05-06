@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.1
 Language: da_DK
 -->
 <resources>
@@ -70,9 +70,7 @@ Language: da_DK
     <string name="reader_discover_attribution_author_and_blog">Oprindeligt udgivet af %1$s den %2$s</string>
     <string name="reader_short_like_count_multi">%s Likes</string>
     <string name="reader_short_like_count_one">1 Like</string>
-    <string name="reader_label_follow_count">%,d følgere</string>
     <string name="reader_short_like_count_none">Like</string>
-    <string name="reader_menu_tags">Rediger emner og websteder</string>
     <string name="button_publish">Udgiv</string>
     <string name="button_edit">Rediger</string>
     <string name="push_auth_expired">Forespørgslen er udløbet. Log ind på WordPress.com og prøv igen.</string>
@@ -89,7 +87,6 @@ Language: da_DK
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
-    <string name="site_picker_add_site">Tilføj nyt websted</string>
     <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
@@ -117,7 +114,6 @@ Language: da_DK
     <string name="reader_label_new_posts">Nye indlæg</string>
     <string name="logs_copied_to_clipboard">Log-filerne er kopieret til udklipsholderen</string>
     <string name="error_copy_to_clipboard">Der skete en fejl under kopieringen af teksten til udklipsholderen</string>
-    <string name="reader_empty_posts_in_blog">Dette websted er tomt</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
     <string name="stats_followers_a_minute_ago">et minut siden</string>
     <string name="stats_followers_a_day">En dag</string>
@@ -159,21 +155,9 @@ Language: da_DK
     <string name="comment_reply_to_user">Besvar %s</string>
     <string name="posts_empty_list">Ingen indlæg endnu! Hvorfor ikke skabe et?</string>
     <string name="mnu_comment_liked">Synes godt om</string>
-    <string name="reader_empty_posts_in_tag">Ingen indlæg med dette emne</string>
     <string name="reader_toast_err_generic">Denne handling kan ikke udføres</string>
-    <string name="reader_toast_blog_blocked">Indlæg fra dette websted, vil ikke længere blive vist</string>
-    <string name="reader_menu_block_blog">Blokere dette websted</string>
-    <string name="reader_toast_err_block_blog">Det er ikke muligt at blokere dette websted</string>
     <string name="update_verb">Opdater</string>
     <string name="schedule_verb">Planlæg</string>
-    <string name="reader_page_followed_blogs">Fulgte websteder</string>
-    <string name="reader_empty_recommended_blogs">Ingen anbefalede websteder</string>
-    <string name="reader_hint_add_tag_or_url">Indtast en URL eller emne for at følge</string>
-    <string name="reader_page_followed_tags">Fulgte emner</string>
-    <string name="reader_toast_err_already_follow_blog">Du følger allerede dette websted</string>
-    <string name="reader_toast_err_get_blog_info">Det er ikke muligt at vise dette websted</string>
-    <string name="reader_toast_err_follow_blog">Det er ikke muligt at følge dette websted</string>
-    <string name="reader_label_followed_blog">Webstedet følges</string>
     <string name="help">Hjælp</string>
     <string name="ssl_certificate_error">Dette er ikke et gyldigt SLL certifikat</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>
@@ -233,8 +217,6 @@ Language: da_DK
     <string name="cannot_delete_multi_media_items">Nogle medier kan ikke slettes på nuværende tidspunkt. Prøv igen senere.</string>
     <string name="delete_page">Slet side?</string>
     <string name="delete_post">Slet indlæg?</string>
-    <string name="reader_toast_err_add_tag">Kunne ikke tilføje dette emne</string>
-    <string name="reader_toast_err_remove_tag">Kunne ikke fjerne dette emne</string>
     <string name="share_link">Del link</string>
     <string name="reader_empty_posts_in_tag_updating">Henter indlæg…</string>
     <string name="reader_likes_you_and_multi">Du og %,d andre personer synes godt om dette</string>
@@ -248,7 +230,6 @@ Language: da_DK
     <string name="reader_likes_one">En person synes godt om dette</string>
     <string name="reader_btn_share">Del</string>
     <string name="reader_btn_follow">Følg</string>
-    <string name="reader_btn_unfollow">Følger</string>
     <string name="reader_label_added_tag">Tilføjede %s</string>
     <string name="reader_label_removed_tag">Fjernede %s</string>
     <string name="reader_likes_only_you">Du synes godt om dette</string>
@@ -259,8 +240,6 @@ Language: da_DK
     <string name="reader_toast_err_share_intent">Kunne ikke dele</string>
     <string name="reader_toast_err_comment_failed">Kunne ikke sende din kommentar</string>
     <string name="reader_hint_comment_on_comment">Besvar kommentar…</string>
-    <string name="reader_toast_err_tag_exists">Du følger allerede dette emne</string>
-    <string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt emne</string>
     <string name="media_edit_failure">Opdatering mislykkedes</string>
     <string name="theme_activate_button">Aktiver</string>
     <string name="share_action">Del</string>

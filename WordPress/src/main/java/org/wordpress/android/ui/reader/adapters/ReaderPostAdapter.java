@@ -59,8 +59,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
@@ -82,6 +83,7 @@ import kotlin.jvm.functions.Function3;
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
+    private final NetworkUtilsWrapper mNetworkUtilsWrapper;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -258,7 +260,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new ReaderRemovedPostViewHolder(postView);
             default:
                 return mReaderImprovementsFeatureConfig.isEnabled()
-                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent)
+                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper,
+                        parent)
                         : new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
         }
     }
@@ -338,8 +341,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         ReaderActions.ActionListener listener = succeeded -> {
             if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
-                        : R.string.reader_toast_err_remove_tag;
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
+                        : R.string.reader_toast_err_removing_tag;
                 ToastUtils.showToast(context, errResId);
             } else {
                 if (isAskingToFollow) {
@@ -380,11 +383,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mImageManager
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
-                        GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
+                        WPAvatarUtils.rewriteAvatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
         mImageManager.loadIntoCircle(holder.mImgBlavatar,
                 SiteUtils.getSiteImageType(post.isP2orA8C(), BlavatarShape.CIRCULAR),
-                GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
+                WPAvatarUtils.rewriteAvatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
         holder.mTxtSubtitle.setText(ReaderXPostUtils.getXPostSubtitleHtml(post));
@@ -519,7 +522,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, false, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, false, false, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -621,7 +624,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onVideoOverlayClicked,
                         onPostHeaderClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, true, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, true, false, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }
@@ -644,6 +647,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ReaderPostListType postListType,
             ImageManager imageManager,
             UiHelpers uiHelpers,
+            @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
             boolean isMainReader
     ) {
         super();
@@ -652,6 +656,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mSource = mReaderTracker.getSource(mPostListType);
         mUiHelpers = uiHelpers;
+        mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
 

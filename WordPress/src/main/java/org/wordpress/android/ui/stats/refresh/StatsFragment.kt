@@ -34,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHT_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.SUBSCRIBERS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
@@ -43,13 +44,17 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.models.JetpackPoweredScreen
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
+private val statsSectionsWithTrafficTab = listOf(TRAFFIC, INSIGHTS, SUBSCRIBERS)
+private var statsTrafficTabEnabled = false
 
 @AndroidEntryPoint
 class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
@@ -58,6 +63,10 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
+
+    @Inject
+    lateinit var mStatsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private lateinit var selectedTabListener: SelectedTabListener
@@ -91,6 +100,8 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     private fun StatsFragmentBinding.initializeViews() {
+        statsTrafficTabEnabled = mStatsTrafficSubscribersTabFeatureConfig.isEnabled()
+
         val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
         statsPager.setPageTransformer(
@@ -180,7 +191,11 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 
         viewModel.selectedSection.observe(viewLifecycleOwner) { selectedSection ->
             selectedSection?.let {
-                handleSelectedSection(selectedSection)
+                if (statsTrafficTabEnabled) {
+                    handleSelectedSectionWithTrafficTab(selectedSection)
+                } else {
+                    handleSelectedSection(selectedSection)
+                }
             }
         }
 
@@ -210,6 +225,31 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     @Suppress("MagicNumber")
+    private fun StatsFragmentBinding.handleSelectedSectionWithTrafficTab(
+        selectedSection: StatsSection
+    ) {
+        val position = when (selectedSection) {
+            TRAFFIC -> 0
+            INSIGHTS -> 1
+            SUBSCRIBERS -> 2
+            DETAIL,
+            INSIGHT_DETAIL,
+            TOTAL_LIKES_DETAIL,
+            TOTAL_COMMENTS_DETAIL,
+            TOTAL_FOLLOWERS_DETAIL,
+            ANNUAL_STATS -> null
+            else -> null
+        }
+        position?.let {
+            if (statsPager.currentItem != position) {
+                tabLayout.removeOnTabSelectedListener(selectedTabListener)
+                statsPager.setCurrentItem(position, false)
+                tabLayout.addOnTabSelectedListener(selectedTabListener)
+            }
+        }
+    }
+
+    @Suppress("MagicNumber")
     private fun StatsFragmentBinding.handleSelectedSection(
         selectedSection: StatsSection
     ) {
@@ -225,6 +265,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
             TOTAL_COMMENTS_DETAIL,
             TOTAL_FOLLOWERS_DETAIL,
             ANNUAL_STATS -> null
+            else -> null
         }
         position?.let {
             if (statsPager.currentItem != position) {
@@ -295,18 +336,20 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
 }
 
 class StatsPagerAdapter(private val parent: Fragment) : FragmentStateAdapter(parent) {
-    override fun getItemCount(): Int = statsSections.size
+    private val statsTabs = if (statsTrafficTabEnabled) statsSectionsWithTrafficTab else statsSections
+    override fun getItemCount(): Int = statsTabs.size
 
     override fun createFragment(position: Int): Fragment {
-        return StatsListFragment.newInstance(statsSections[position])
+        return StatsListFragment.newInstance(statsTabs[position])
     }
 
     fun getTabTitle(position: Int): CharSequence {
-        return parent.context?.getString(statsSections[position].titleRes).orEmpty()
+        return parent.context?.getString(statsTabs[position].titleRes).orEmpty()
     }
 }
 
 private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelectedListener {
+    private val statsTabs = if (statsTrafficTabEnabled) statsSectionsWithTrafficTab else statsSections
     override fun onTabReselected(tab: Tab?) {
         // Do nothing
     }
@@ -316,6 +359,6 @@ private class SelectedTabListener(val viewModel: StatsViewModel) : OnTabSelected
     }
 
     override fun onTabSelected(tab: Tab) {
-        viewModel.onSectionSelected(statsSections[tab.position])
+        viewModel.onSectionSelected(statsTabs[tab.position])
     }
 }

@@ -2,6 +2,7 @@ plugins {
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.plugin.parcelize"
+    id "org.jetbrains.kotlinx.kover"
 }
 
 repositories {
@@ -10,9 +11,10 @@ repositories {
         content {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
-            includeGroup "org.wordpress-mobile"
-            includeGroup "org.wordpress-mobile.gutenberg-mobile"
-            includeGroupByRegex "org.wordpress-mobile.react-native-libraries.*"
+            includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroupByRegex "org.wordpress.react-native-libraries.*"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.tracks"
         }
     }
     maven {
@@ -104,6 +106,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

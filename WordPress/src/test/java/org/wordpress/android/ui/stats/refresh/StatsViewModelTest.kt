@@ -10,12 +10,12 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_INSIGHTS_ACCESSED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_DAYS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_MONTHS_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_PERIOD_WEEKS_ACCESSED
@@ -33,17 +33,21 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.utils.NewsCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.SelectedSectionManager
+import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.ui.stats.refresh.utils.trackGranular
+import org.wordpress.android.ui.stats.refresh.utils.trackWithGranularity
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -57,6 +61,9 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var statsSectionManager: SelectedSectionManager
+
+    @Mock
+    lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
 
     @Mock
     lateinit var analyticsTracker: AnalyticsTrackerWrapper
@@ -90,6 +97,9 @@ class StatsViewModelTest : BaseUnitTest() {
 
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
+
+    @Mock
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -97,6 +107,8 @@ class StatsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         whenever(baseListUseCase.snackbarMessage).thenReturn(MutableLiveData())
+        whenever(statsSectionManager.getSelectedSection()).thenReturn(TRAFFIC)
+        whenever(selectedTrafficGranularityManager.getSelectedTrafficGranularity()).thenReturn(StatsGranularity.DAYS)
         whenever(statsSectionManager.liveSelectedSection).thenReturn(liveSelectedSection)
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         viewModel = StatsViewModel(
@@ -105,6 +117,7 @@ class StatsViewModelTest : BaseUnitTest() {
             testDispatcher(),
             selectedDateProvider,
             statsSectionManager,
+            selectedTrafficGranularityManager,
             analyticsTracker,
             networkUtilsWrapper,
             statsSiteProvider,
@@ -113,10 +126,20 @@ class StatsViewModelTest : BaseUnitTest() {
             statsModuleActivateUseCase,
             notificationsTracker,
             jetpackBrandingUtils,
-            jetpackFeatureRemovalOverlayUtil
+            jetpackFeatureRemovalOverlayUtil,
+            trafficSubscribersTabFeatureConfig
         )
 
-        viewModel.start(1, false, null, null, false, null)
+        viewModel.start(1, StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)
+    }
+
+    @Test
+    fun `tracks tab traffic selection`() {
+        startViewModel()
+
+        // The TRAFFIC tab is already the initial tab.
+
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
@@ -126,9 +149,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(INSIGHTS)
 
         verify(statsSectionManager).setSelectedSection(INSIGHTS)
-        /* First one is default insights section selection which is set when no value is passed to vm for
-           initial section */
-        verify(analyticsTracker, times(2)).track(STATS_INSIGHTS_ACCESSED)
+        verify(analyticsTracker).track(STATS_INSIGHTS_ACCESSED)
     }
 
     @Test
@@ -138,7 +159,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(DAYS)
 
         verify(statsSectionManager).setSelectedSection(DAYS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_DAYS_ACCESSED, StatsGranularity.DAYS)
     }
 
     @Test
@@ -148,7 +169,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(WEEKS)
 
         verify(statsSectionManager).setSelectedSection(WEEKS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_WEEKS_ACCESSED, StatsGranularity.WEEKS)
     }
 
     @Test
@@ -158,7 +179,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(MONTHS)
 
         verify(statsSectionManager).setSelectedSection(MONTHS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_MONTHS_ACCESSED, StatsGranularity.MONTHS)
     }
 
     @Test
@@ -168,7 +189,7 @@ class StatsViewModelTest : BaseUnitTest() {
         viewModel.onSectionSelected(YEARS)
 
         verify(statsSectionManager).setSelectedSection(YEARS)
-        verify(analyticsTracker).trackGranular(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
+        verify(analyticsTracker).trackWithGranularity(STATS_PERIOD_YEARS_ACCESSED, StatsGranularity.YEARS)
     }
 
     @Test
@@ -332,7 +353,7 @@ class StatsViewModelTest : BaseUnitTest() {
 
     private fun startViewModel(statsModuleEnabled: Boolean = true) {
         whenever(site.isActiveModuleEnabled(any())).thenReturn(statsModuleEnabled)
-        viewModel.start(1, false, null, null, false, null)
+        viewModel.start(1, StatsLaunchedFrom.QUICK_ACTIONS, null, null, false, null)
     }
 
     private val networkUnavailableError = StatsModuleActivateRequestState.Failure.NetworkUnavailable

@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
+import org.wordpress.android.R
 import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 
@@ -25,6 +28,19 @@ fun StatsListFragmentBinding.drawDateSelector(dateSelectorUiModel: DateSelectorU
         val enableNextButton = dateSelectorUiModel?.enableSelectNext == true
         if (nextDateButton.isEnabled != enableNextButton) {
             nextDateButton.isEnabled = enableNextButton
+        }
+        granularitySpinner.isVisible = dateSelectorUiModel?.isGranularitySpinnerVisible == true
+
+        if (dateSelectorUiModel?.isGranularitySpinnerVisible != true) {
+            // StatsTrafficSubscribersTabFeatureConfig is disabled.
+            with(selectedDateTextView.layoutParams as ConstraintLayout.LayoutParams) {
+                horizontalBias = 0f
+                marginStart = selectedDateTextView.resources.getDimensionPixelSize(R.dimen.margin_small)
+            }
+            with(currentSiteTimeZone.layoutParams as ConstraintLayout.LayoutParams) {
+                horizontalBias = 0f
+                marginStart = selectedDateTextView.resources.getDimensionPixelSize(R.dimen.margin_small)
+            }
         }
     }
 }

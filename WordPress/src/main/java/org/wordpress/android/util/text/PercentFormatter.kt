@@ -34,6 +34,25 @@ class PercentFormatter @Inject constructor(
     }
 
     /**
+     * This is similar to format(), except this utilizes java.text.NumberFormat. When the default locale is a RTL
+     * language (e.g., "ar_EG"), the output should be "-83%" but android.icu.text.NumberFormat returns "%83-".
+     * java.text.NumberFormat returns the expected result of "-83%".
+     * @param value the value to be returned formatted
+     * @return the formatted string
+     */
+    fun formatWithJavaLib(
+        value: Float,
+        maxFractionDigits: Int = MAXIMUM_FRACTION_DIGITS,
+        rounding: RoundingMode = RoundingMode.DOWN
+    ): String {
+        val percentFormatter = java.text.NumberFormat.getPercentInstance(localeManagerWrapper.getLocale()).apply {
+            maximumFractionDigits = maxFractionDigits
+            roundingMode = rounding
+        }
+        return percentFormatter.format(value)
+    }
+
+    /**
      * Returns a String with a percent sign (%) using the given Int parameter. The Int value will be returned as the
      * percentage (e.g. if the Int value is 10, the returned String for Locale.US will be "10%"). The returned String
      * uses the default Locale.

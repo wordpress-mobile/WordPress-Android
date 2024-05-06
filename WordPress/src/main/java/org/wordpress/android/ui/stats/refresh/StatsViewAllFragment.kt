@@ -61,6 +61,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private var binding: StatsViewAllFragmentBinding? = null
@@ -191,17 +192,17 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
     }
 
     private fun StatsViewAllFragmentBinding.setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, {
+        viewModel.isRefreshing.observe(viewLifecycleOwner) {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
-        })
+        }
 
-        viewModel.showSnackbarMessage.observeEvent(viewLifecycleOwner, { holder ->
+        viewModel.showSnackbarMessage.observeEvent(viewLifecycleOwner) { holder ->
             showSnackbar(activity, holder)
-        })
+        }
 
-        viewModel.data.observe(viewLifecycleOwner, {
+        viewModel.data.observe(viewLifecycleOwner) {
             if (it != null) {
                 with(statsListFragment) {
                     recyclerView.visibility = if (it is Success) View.VISIBLE else View.GONE
@@ -214,41 +215,44 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
                         is Success -> {
                             loadData(recyclerView, prepareLayout(it.data, it.type))
                         }
+
                         is Loading -> {
                             loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
                         }
+
                         is Error -> {
                             errorView.statsErrorView.button.setOnClickListener {
                                 viewModel.onRetryClick()
                             }
                         }
+
                         is EmptyBlock -> {
                         }
                     }
                 }
             }
-        })
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+        }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
             navigator.navigate(activity, target)
-        })
+        }
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner) { dateSelectorUiModel ->
             statsListFragment.drawDateSelector(dateSelectorUiModel)
-        })
+        }
 
-        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target ->
             navigator.navigate(activity, target)
-        })
+        }
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
+        viewModel.selectedDate?.observe(viewLifecycleOwner) { event ->
             if (event != null) {
                 viewModel.onDateChanged()
             }
-        })
+        }
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner) { hasShadow ->
             appBarLayout.showShadow(hasShadow == true)
-        })
+        }
     }
 
     private fun showSnackbar(

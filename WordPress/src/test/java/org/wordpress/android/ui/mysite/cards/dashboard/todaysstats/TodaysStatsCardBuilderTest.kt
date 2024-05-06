@@ -31,6 +31,7 @@ private const val TODAYS_STATS_COMMENTS = 1000
 private const val TODAYS_STATS_VIEWS_FORMATTED_STRING = "10,000"
 private const val TODAYS_STATS_VISITORS_FORMATTED_STRING = "1,000"
 private const val TODAYS_STATS_LIKES_FORMATTED_STRING = "100"
+private const val TODAYS_STATS_COMMENTS_FORMATTED_STRING = "1,000"
 
 private const val GET_MORE_VIEWS_MSG_WITH_CLICKABLE_LINK =
     "If you want to try get more views and traffic check out our " +
@@ -194,6 +195,7 @@ class TodaysStatsCardBuilderTest : BaseUnitTest() {
         views = UiStringText(TODAYS_STATS_VIEWS_FORMATTED_STRING),
         visitors = UiStringText(TODAYS_STATS_VISITORS_FORMATTED_STRING),
         likes = UiStringText(TODAYS_STATS_LIKES_FORMATTED_STRING),
+        comments = UiStringText(TODAYS_STATS_COMMENTS_FORMATTED_STRING),
         onCardClick = onTodaysStatsCardClick,
         moreMenuOptions = TodaysStatsCard.MoreMenuOptions(
             onMoreMenuClick = onMoreMenuClick,

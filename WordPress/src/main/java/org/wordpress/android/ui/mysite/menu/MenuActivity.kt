@@ -64,6 +64,7 @@ import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.SiteSettingsFragment
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.LocaleManager
@@ -143,7 +144,12 @@ class MenuActivity : AppCompatActivity() {
             is SiteNavigationAction.OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(this, action.site)
             is SiteNavigationAction.OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(this)
             is SiteNavigationAction.OpenUnifiedComments -> ActivityLauncher.viewUnifiedComments(this, action.site)
-            is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(this, action.site)
+            is SiteNavigationAction.OpenStats -> ActivityLauncher.viewBlogStats(
+                this,
+                action.site,
+                StatsLaunchedFrom.ROW
+            )
+
             is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
                 this,
                 action.site
@@ -152,6 +158,7 @@ class MenuActivity : AppCompatActivity() {
                 this,
                 action.campaignListingPageSource
             )
+            is SiteNavigationAction.OpenSiteMonitoring -> activityNavigator.navigateToSiteMonitoring(this, action.site)
             else -> {}
         }
     }
@@ -418,7 +425,7 @@ fun MySiteListItemPreviewWithSecondaryImage() {
         MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Plans"),
-            secondaryIcon = R.drawable.ic_story_icon_24dp,
+            secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
             showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },

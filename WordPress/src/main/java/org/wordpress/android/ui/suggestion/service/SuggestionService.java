@@ -91,7 +91,7 @@ public class SuggestionService extends Service {
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating suggestions for siteId: " + siteId);
         String path = "/users/suggest" + "?site_id=" + siteId;
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        WordPress.getRestClientUtils().getWithLocale(path, listener, errorListener);
     }
 
     private void handleSuggestionsUpdatedResponse(final long siteId, final JSONObject jsonObject) {
@@ -136,7 +136,7 @@ public class SuggestionService extends Service {
 
         AppLog.d(AppLog.T.SUGGESTION, "suggestion service > updating tags for siteId: " + siteId);
         String path = "/sites/" + siteId + "/tags";
-        WordPress.getRestClientUtils().get(path, listener, errorListener);
+        WordPress.getRestClientUtils().getWithLocale(path, listener, errorListener);
     }
 
     private void handleTagsUpdatedResponse(final long siteId, final JSONObject jsonObject) {

@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLoggingKey;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
@@ -25,6 +27,7 @@ public class AppConfigModule {
         return new AppSecrets(BuildConfig.OAUTH_APP_ID, BuildConfig.OAUTH_APP_SECRET);
     }
 
+    @Singleton
     @Provides
     public UserAgent provideUserAgent(@ApplicationContext Context appContext) {
         return new UserAgent(appContext, WordPress.USER_AGENT_APPNAME);

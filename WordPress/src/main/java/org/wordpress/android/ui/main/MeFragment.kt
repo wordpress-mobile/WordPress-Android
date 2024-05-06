@@ -20,6 +20,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.gravatar.services.AvatarService
+import com.gravatar.services.ErrorType
+import com.gravatar.services.GravatarListener
+import com.gravatar.types.Email
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -36,15 +40,15 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_GALLERY
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOADED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION
 import org.wordpress.android.databinding.MeFragmentBinding
+import org.wordpress.android.designsystem.DesignSystemActivity
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.networking.GravatarApi
-import org.wordpress.android.networking.GravatarApi.GravatarUploadListener
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.about.UnifiedAboutActivity
@@ -144,6 +148,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     @Inject
     lateinit var domainManagementFeatureConfig: DomainManagementFeatureConfig
 
+    @Inject
+    lateinit var avatarService: AvatarService
+
     private val viewModel: MeViewModel by viewModels()
 
     private val shouldShowDomainButton
@@ -199,6 +206,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
+        learnMoreAtGravatar.setOnClickListener {
+            ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
+        }
+        gravatarSyncView.gravatarSyncButton.setOnClickListener {
+            gravatarSyncView.gravatarSyncContainer.visibility = View.GONE
+        }
 
         if (BuildConfig.IS_JETPACK_APP) meAboutIcon.setImageResource(R.drawable.ic_jetpack_logo_white_24dp)
 
@@ -207,6 +220,11 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             debugSettingsDivider.isVisible = true
             rowDebugSettings.setOnClickListener {
                 requireContext().startActivity(Intent(requireContext(), DebugSettingsActivity::class.java))
+            }
+            rowDesignSystem.isVisible = true
+            designSystemDivider.isVisible = true
+            rowDesignSystem.setOnClickListener {
+                requireContext().startActivity(Intent(requireContext(), DesignSystemActivity::class.java))
             }
         }
 
@@ -657,21 +675,19 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
         val file = File(filePath)
         if (!file.exists()) {
-            ToastUtils.showToast(
-                activity,
-                R.string.error_locating_image,
-                SHORT
-            )
+            ToastUtils.showToast(activity, R.string.error_locating_image, SHORT)
             return
         }
         binding?.showGravatarProgressBar(true)
-        GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
-            object : GravatarUploadListener {
-                override fun onSuccess() {
+        avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken.orEmpty(),
+            object : GravatarListener<Unit> {
+                override fun onSuccess(response: Unit) {
+                    AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
 
-                override fun onError() {
+                override fun onError(errorType: ErrorType) {
+                    AnalyticsTracker.track(ME_GRAVATAR_UPLOAD_EXCEPTION, mapOf("error_type" to errorType.name))
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
                 }
             })
@@ -683,8 +699,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     fun onEventMainThread(event: GravatarUploadFinished) {
         binding?.showGravatarProgressBar(false)
         if (event.success) {
-            AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
             binding?.loadAvatar(event.filePath)
+            binding?.gravatarSyncView?.gravatarSyncContainer?.visibility = View.VISIBLE
         } else {
             ToastUtils.showToast(
                 activity,
@@ -703,6 +719,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
+        private const val GRAVATAR_URL = "https://www.gravatar.com";
         fun newInstance(): MeFragment {
             return MeFragment()
         }

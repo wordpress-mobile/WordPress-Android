@@ -22,9 +22,7 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.TextUtils
-import android.util.AndroidRuntimeException
 import android.util.Log
-import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
@@ -39,12 +37,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.firebase.iid.FirebaseInstanceId
 import com.wordpress.rest.RestClient
-import com.wordpress.stories.compose.NotificationTrackerProvider
-import com.wordpress.stories.compose.frame.StoryNotificationType
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_FRAME_SAVE_SUCCESS
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_ERROR
-import com.wordpress.stories.compose.frame.StoryNotificationType.STORY_SAVE_SUCCESS
 import kotlinx.coroutines.CoroutineScope
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -61,6 +53,7 @@ import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged
@@ -76,7 +69,6 @@ import org.wordpress.android.networking.ConnectionChangeReceiver
 import org.wordpress.android.networking.OAuthAuthenticator
 import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.push.GCMRegistrationScheduler
-import org.wordpress.android.push.NotificationType
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.debug.cookies.DebugCookieManager
@@ -93,7 +85,6 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters
-import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
@@ -101,6 +92,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppThemeUtils
 import org.wordpress.android.util.BitmapLruCache
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.EncryptedLogging
 import org.wordpress.android.util.FluxCUtils
@@ -122,6 +114,8 @@ import org.wordpress.android.widgets.AppRatingDialog
 import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
+import java.net.CookieManager
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -132,6 +126,9 @@ class AppInitializer @Inject constructor(
     wellSqlInitializer: WellSqlInitializer,
     private val application: Application
 ) : DefaultLifecycleObserver {
+    @Inject
+    lateinit var userAgent: UserAgent
+
     @Inject
     lateinit var dispatcher: Dispatcher
 
@@ -172,9 +169,6 @@ class AppInitializer @Inject constructor(
     lateinit var imageEditorTracker: ImageEditorTracker
 
     @Inject
-    lateinit var storyMediaSaveUploadBridge: StoryMediaSaveUploadBridge
-
-    @Inject
     lateinit var crashLogging: CrashLogging
 
     @Inject
@@ -196,7 +190,12 @@ class AppInitializer @Inject constructor(
     lateinit var gcmRegistrationScheduler: GCMRegistrationScheduler
 
     @Inject
-    lateinit var debugCookieManager: DebugCookieManager
+    lateinit var cookieManager: CookieManager
+
+    @Inject
+    lateinit var buildConfig: BuildConfigWrapper
+
+    private lateinit var debugCookieManager: DebugCookieManager
 
     @Inject
     @Named(APPLICATION_SCOPE)
@@ -233,8 +232,6 @@ class AppInitializer @Inject constructor(
     lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     private lateinit var applicationLifecycleMonitor: ApplicationLifecycleMonitor
-    lateinit var storyNotificationTrackerProvider: StoryNotificationTrackerProvider
-        private set
 
     @Suppress("DEPRECATION")
     private lateinit var credentialsClient: GoogleApiClient
@@ -286,6 +283,7 @@ class AppInitializer @Inject constructor(
     }
 
     fun init() {
+        crashLogging.initialize()
         dispatcher.register(this)
         appConfig.init(appScope)
         // Upload any encrypted logs that were queued but not yet uploaded
@@ -317,7 +315,7 @@ class AppInitializer @Inject constructor(
                 .installDefaultEventBus()
         }
 
-        RestClientUtils.setUserAgent(userAgent)
+        RestClientUtils.setUserAgent(userAgent.toString())
 
         if (!initialized) {
             zendeskHelper.setupZendesk(
@@ -367,19 +365,24 @@ class AppInitializer @Inject constructor(
         systemNotificationsTracker.checkSystemNotificationsState()
         ImageEditorInitializer.init(imageManager, imageEditorTracker, imageEditorFileUtils, appScope)
 
-        storyNotificationTrackerProvider = StoryNotificationTrackerProvider()
-        storyMediaSaveUploadBridge.init(application)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(storyMediaSaveUploadBridge)
-
         exPlat.forceRefresh()
 
-        debugCookieManager.sync()
+        initDebugCookieManager()
 
         if (!initialized && BuildConfig.DEBUG && Build.VERSION.SDK_INT >= VERSION_CODES.R) {
             initAppOpsManager()
         }
 
+        AppLog.i(T.UTILS, "AppInitializer.userAgentString: $userAgent")
+
         initialized = true
+    }
+
+    private fun initDebugCookieManager() {
+        if (buildConfig.isDebugSettingsEnabled()) {
+            debugCookieManager = DebugCookieManager(application, cookieManager, buildConfig)
+            debugCookieManager.sync()
+        }
     }
 
     /**
@@ -420,19 +423,14 @@ class AppInitializer @Inject constructor(
         WorkManager.initialize(application, configBuilder.build())
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun enableLogRecording() {
         AppLog.enableRecording(true)
-        AppLog.enableLogFilePersistence(application.baseContext, MAX_LOG_COUNT)
-        AppLog.addListener { tag, logLevel, message ->
-            val sb = StringBuffer()
-            sb.append(logLevel.toString())
-                .append("/")
-                .append(AppLog.TAG)
-                .append("-")
-                .append(tag.toString())
-                .append(": ")
-                .append(message)
-            crashLogging.recordEvent(sb.toString(), null)
+        try {
+            AppLog.enableLogFilePersistence(application.baseContext, MAX_LOG_COUNT)
+        } catch (e: Exception) {
+            AppLog.enableRecording(false)
+            AppLog.e(T.UTILS, "Error enabling log file persistence", e)
         }
     }
 
@@ -463,65 +461,78 @@ class AppInitializer @Inject constructor(
         credentialsClient.connect()
     }
 
-    private fun createNotificationChannelsOnSdk26() {
+    private fun createNotificationChannelsOnSdk26(
+        normal: Boolean = true,
+        important: Boolean = true,
+        reminder: Boolean = true,
+        transient: Boolean = true,
+        weeklyRoundup: Boolean = true
+    ) {
         // create Notification channels introduced in Android Oreo
         if (Build.VERSION.SDK_INT >= VERSION_CODES.O) {
-            // Create the NORMAL channel (used for likes, comments, replies, etc.)
-            val normalChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_normal_id),
-                application.getString(R.string.notification_channel_general_title),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             val notificationManager = application.getSystemService(
                 Context.NOTIFICATION_SERVICE
             ) as NotificationManager
-            notificationManager.createNotificationChannel(normalChannel)
+            if (normal) {
+                // Create the NORMAL channel (used for likes, comments, replies, etc.)
+                val normalChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_normal_id),
+                    application.getString(R.string.notification_channel_general_title),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
 
-            // Create the IMPORTANT channel (used for 2fa auth, for example)
-            val importantChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_important_id),
-                application.getString(R.string.notification_channel_important_title),
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(importantChannel)
-
-            // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
-            val reminderChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_reminder_id),
-                application.getString(R.string.notification_channel_reminder_title),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(reminderChannel)
-
-            // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
-            // or media upload)
-            val transientChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_transient_id),
-                application.getString(R.string.notification_channel_transient_title),
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            transientChannel.setSound(null, null)
-            transientChannel.enableVibration(false)
-            transientChannel.enableLights(false)
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            notificationManager.createNotificationChannel(transientChannel)
-
-            // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
-            val weeklyRoundupChannel = NotificationChannel(
-                application.getString(R.string.notification_channel_weekly_roundup_id),
-                application.getString(R.string.notification_channel_weekly_roundup_title),
-                NotificationManager.IMPORTANCE_LOW
-            )
-            // Register the channel with the system; you can't change the importance or other notification behaviors
-            // after this
-            notificationManager.createNotificationChannel(weeklyRoundupChannel)
+                notificationManager.createNotificationChannel(normalChannel)
+            }
+            if (important) {
+                // Create the IMPORTANT channel (used for 2fa auth, for example)
+                val importantChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_important_id),
+                    application.getString(R.string.notification_channel_important_title),
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(importantChannel)
+            }
+            if (reminder) {
+                // Create the REMINDER channel (used for various reminders, like Quick Start, etc.)
+                val reminderChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_reminder_id),
+                    application.getString(R.string.notification_channel_reminder_title),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(reminderChannel)
+            }
+            if (transient) {
+                // Create the TRANSIENT channel (used for short-lived notifications such as processing a Like/Approve,
+                // or media upload)
+                val transientChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_transient_id),
+                    application.getString(R.string.notification_channel_transient_title),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                transientChannel.setSound(null, null)
+                transientChannel.enableVibration(false)
+                transientChannel.enableLights(false)
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(transientChannel)
+            }
+            if (weeklyRoundup) {
+                // Create the WEEKLY ROUNDUP channel (used for weekly roundup notification containing weekly stats)
+                val weeklyRoundupChannel = NotificationChannel(
+                    application.getString(R.string.notification_channel_weekly_roundup_id),
+                    application.getString(R.string.notification_channel_weekly_roundup_title),
+                    NotificationManager.IMPORTANCE_LOW
+                )
+                // Register the channel with the system; you can't change the importance or other notification behaviors
+                // after this
+                notificationManager.createNotificationChannel(weeklyRoundupChannel)
+            }
         }
     }
 
@@ -955,34 +966,20 @@ class AppInitializer @Inject constructor(
         }
     }
 
-    inner class StoryNotificationTrackerProvider : NotificationTrackerProvider {
-        private fun translateNotificationTypes(storyNotificationType: StoryNotificationType): NotificationType {
-            return when (storyNotificationType) {
-                STORY_SAVE_SUCCESS -> NotificationType.STORY_SAVE_SUCCESS
-                STORY_SAVE_ERROR -> NotificationType.STORY_SAVE_ERROR
-                STORY_FRAME_SAVE_SUCCESS -> NotificationType.STORY_FRAME_SAVE_SUCCESS
-                STORY_FRAME_SAVE_ERROR -> NotificationType.STORY_FRAME_SAVE_ERROR
-            }
-        }
-
-        override fun trackShownNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackTappedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType))
-        }
-
-        override fun trackDismissedNotification(storyNotificationType: StoryNotificationType) {
-            systemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType))
-        }
-    }
-
     private fun updateNotificationSettings() {
-        if(!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications())
+        if (!jetpackFeatureRemovalPhaseHelper.shouldShowNotifications()) {
             NotificationsUtils.cancelAllNotifications(application)
-        else
+            // Only create the transient notification channel to handle upload notifications
+            createNotificationChannelsOnSdk26(
+                normal = false,
+                important = false,
+                reminder = false,
+                transient = true,
+                weeklyRoundup = false,
+            )
+        } else {
             createNotificationChannelsOnSdk26()
+        }
     }
 
     companion object {
@@ -1067,55 +1064,6 @@ class AppInitializer @Inject constructor(
                 null,
                 RestClient.REST_CLIENT_VERSIONS.V0
             )
-        }
-
-        /**
-         * Device's default User-Agent string.
-         * E.g.:
-         * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-         * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-         * Safari/537.36"
-         */
-        @Suppress("SwallowedException")
-        val defaultUserAgent: String by lazy {
-            try {
-                WebSettings.getDefaultUserAgent(context)
-            } catch (e: AndroidRuntimeException) {
-                // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            } catch (expected: NullPointerException) {
-                // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/3838
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            } catch (e: IllegalArgumentException) {
-                // Catch IllegalArgumentException that could be raised by WebSettings.getDefaultUserAgent()
-                // See https://github.com/wordpress-mobile/WordPress-Android/issues/9015
-
-                // initialize with the empty string, it's a rare issue
-                ""
-            }
-        }
-
-        /**
-         * User-Agent string when making HTTP connections, for both API traffic and WebViews. Appends
-         * "wp-android/version" to WebView's default User-Agent string for the webservers to get the full feature list
-         * of the browser and serve content accordingly, e.g.:
-         * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-         * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-         * Safari/537.36 wp-android/4.7"
-         * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
-         **/
-        val userAgent: String by lazy {
-            if (TextUtils.isEmpty(defaultUserAgent)) {
-                WordPress.USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context)
-            } else {
-                (defaultUserAgent + " " + WordPress.USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(context))
-            }
         }
 
         fun getBitmapCache(): BitmapLruCache {

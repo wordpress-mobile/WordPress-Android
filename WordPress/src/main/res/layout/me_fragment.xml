@@ -223,6 +223,31 @@
                 tools:visibility="visible"/>
 
             <LinearLayout
+                android:id="@+id/row_design_system"
+                android:visibility="gone"
+                style="@style/MeListRowLayout"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/me_design_system_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_customize_white_24dp" />
+
+                <org.wordpress.android.util.widgets.AutoResizeTextView
+                    android:id="@+id/me_design_system_settings"
+                    style="@style/MeListRowTextView"
+                    android:text="@string/preference_design_system" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/design_system_divider"
+                android:visibility="gone"
+                style="@style/MeListSectionDividerView"
+                tools:visibility="visible"/>
+
+            <LinearLayout
                 android:id="@+id/row_support"
                 style="@style/MeListRowLayout">
 
@@ -371,6 +396,76 @@
                 app:iconTint="@null"
                 tools:ignore="TextContrastCheck"
                 tools:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/gravatar_info_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/margin_extra_small_large"
+                android:paddingTop="@dimen/margin_extra_small_large"
+                android:paddingBottom="@dimen/margin_extra_large"
+                android:layout_margin="@dimen/margin_extra_large"
+                android:background="@drawable/bg_wordpress_gravatar_info"
+                app:layout_constraintBottom_toTopOf="@+id/gravatar_sync_container"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_logo_plus_gravatar" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/gravatar_title"
+                    style="@style/MyProfileLabel"
+                    app:fixWidowWords="true"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:text="@string/gravatar_info_title"
+                    android:textStyle="bold"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/gravatar_description"
+                    style="@style/MyProfileLabel"
+                    app:fixWidowWords="true"
+                    android:layout_marginTop="@dimen/margin_medium"
+                    android:text="@string/gravatar_info_description" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:background="?android:attr/listDivider"
+                    android:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/learn_more_at_gravatar"
+                    style="@style/OverlayMigrationHelperText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gravatar_info_learn_more_link"
+                    android:textColor="@color/jetpack_green_50"
+                    app:drawableEndCompat="@drawable/ic_external_white_24dp"
+                    app:icon="@drawable/ic_external_white_24dp" />
+
+            </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <include
+        android:id="@+id/gravatar_sync_view"
+        layout="@layout/gravatar_sync_info_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:visibility="gone"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="gone" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

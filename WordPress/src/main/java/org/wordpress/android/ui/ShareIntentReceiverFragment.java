@@ -19,11 +19,13 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
+import org.wordpress.android.ui.main.SiteRecord;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageManager;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -44,7 +46,6 @@ public class ShareIntentReceiverFragment extends Fragment {
     private boolean mSharingMediaFile;
     private int mLastUsedBlogLocalId;
     private RecyclerView mRecyclerView;
-    private View mBottomButtonsContainer;
     private View mBottomButtonsShadow;
 
     public static ShareIntentReceiverFragment newInstance(boolean sharingMediaFile, int lastUsedBlogLocalId) {
@@ -111,7 +112,6 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private void initButtonsContainer(ViewGroup layout) {
-        mBottomButtonsContainer = layout.findViewById(R.id.bottom_buttons);
         mBottomButtonsShadow = layout.findViewById(R.id.bottom_shadow);
     }
 
@@ -187,7 +187,7 @@ public class ShareIntentReceiverFragment extends Fragment {
             }
 
             @Override
-            public void onBindViewHolder(HeaderViewHolder holder, SiteList sites) {
+            public void onBindViewHolder(HeaderViewHolder holder, List<SiteRecord> sites) {
                 if (!isAdded()) {
                     return;
                 }

@@ -10,17 +10,18 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.Domain
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchedDomainsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.ui.domains.DomainsDashboardItem.AddDomain
-import org.wordpress.android.ui.domains.DomainsDashboardItem.DomainBlurb
-import org.wordpress.android.ui.domains.DomainsDashboardItem.FreeDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchaseDomain
 import org.wordpress.android.ui.domains.DomainsDashboardItem.PurchasePlan
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomains
 import org.wordpress.android.ui.domains.DomainsDashboardItem.SiteDomainsHeader
+import org.wordpress.android.ui.domains.usecases.AllDomains
+import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
 import org.wordpress.android.ui.domains.usecases.FetchPlansUseCase
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
@@ -34,6 +35,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val htmlMessageUtils: HtmlMessageUtils = mock()
     private val fetchPlansUseCase: FetchPlansUseCase = mock()
+    private val fetchAllDomainsUseCase: FetchAllDomainsUseCase = mock()
 
     private lateinit var viewModel: DomainsDashboardViewModel
 
@@ -46,6 +48,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             analyticsTracker,
             htmlMessageUtils,
             fetchPlansUseCase,
+            fetchAllDomainsUseCase,
             testDispatcher()
         )
 
@@ -64,11 +67,11 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         assertThat(dashboardItems).hasSize(5)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(AddDomain::class.java)
-        assertThat(dashboardItems[4]).isInstanceOf(DomainBlurb::class.java)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[3]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[4]).isInstanceOf(AddDomain::class.java)
     }
 
     @Test
@@ -81,11 +84,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(2)
+        assertThat(dashboardItems).hasSize(3)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(PurchasePlan::class.java)
-        assertThat((dashboardItems[1] as PurchasePlan).title)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchasePlan::class.java)
+        assertThat((dashboardItems[2] as PurchasePlan).title)
             .isEqualTo(UiStringRes(R.string.domains_free_plan_get_your_domain_title))
     }
 
@@ -99,13 +103,14 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(4)
+        assertThat(dashboardItems).hasSize(5)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(PurchaseDomain::class.java)
-        assertThat((dashboardItems[3] as PurchaseDomain).title)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[3]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[4]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat((dashboardItems[4] as PurchaseDomain).title)
             .isEqualTo(UiStringRes(R.string.domains_paid_plan_claim_your_domain_title))
     }
 
@@ -119,12 +124,13 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(4)
+        assertThat(dashboardItems).hasSize(5)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(SiteDomainsHeader::class.java)
-        assertThat(dashboardItems[2]).isInstanceOf(SiteDomains::class.java)
-        assertThat(dashboardItems[3]).isInstanceOf(AddDomain::class.java)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[3]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[4]).isInstanceOf(AddDomain::class.java)
     }
 
     @Test
@@ -137,10 +143,11 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(2)
+        assertThat(dashboardItems).hasSize(3)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchaseDomain::class.java)
     }
 
     @Test
@@ -153,11 +160,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val dashboardItems = uiModel
 
-        assertThat(dashboardItems).hasSize(2)
+        assertThat(dashboardItems).hasSize(3)
 
-        assertThat(dashboardItems[0]).isInstanceOf(FreeDomain::class.java)
-        assertThat(dashboardItems[1]).isInstanceOf(PurchaseDomain::class.java)
-        assertThat((dashboardItems[1] as PurchaseDomain).title)
+        assertThat(dashboardItems[0]).isInstanceOf(SiteDomainsHeader::class.java)
+        assertThat(dashboardItems[1]).isInstanceOf(SiteDomains::class.java)
+        assertThat(dashboardItems[2]).isInstanceOf(PurchaseDomain::class.java)
+        assertThat((dashboardItems[2] as PurchaseDomain).title)
             .isEqualTo(UiStringRes(R.string.domains_paid_plan_add_your_domain_title))
     }
 
@@ -168,6 +176,8 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
 
         val plan = if (hasDomainCredits) planWithCredits else planWithNoCredits
         whenever(fetchPlansUseCase.execute(site)).thenReturn(OnPlansFetched(site, listOf(plan)))
+        val allDomains = if (hasCustomDomains) listOf(allDomainsDomain) else emptyList()
+        whenever(fetchAllDomainsUseCase.execute()).thenReturn(AllDomains.Success(allDomains))
 
         viewModel.start(site)
     }
@@ -175,6 +185,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
     companion object {
         private const val TEST_SITE_ID = 1234L
         private const val TEST_DOMAIN_NAME = "testdomain.blog"
+        private const val TEST_SITE_NAME = "Test Site"
 
         private val customDomain = Domain(
             domain = "henna.tattoo",
@@ -185,9 +196,12 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
             wpcomDomain = false
         )
 
+        private val allDomainsDomain = AllDomainsDomain(domain = "henna.tattoo")
+
         private val siteWithFreePlan = SiteModel().apply {
             siteId = TEST_SITE_ID
             url = TEST_DOMAIN_NAME
+            name = TEST_SITE_NAME
             unmappedUrl = TEST_DOMAIN_NAME
             planId = FREE_PLAN_ID
         }
@@ -195,6 +209,7 @@ class DomainsDashboardViewModelTest : BaseUnitTest() {
         private val siteWithPaidPlan = SiteModel().apply {
             siteId = TEST_SITE_ID
             url = TEST_DOMAIN_NAME
+            name = TEST_SITE_NAME
             unmappedUrl = TEST_DOMAIN_NAME
             planId = PREMIUM_PLAN_ID
         }

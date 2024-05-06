@@ -73,27 +73,22 @@ public class ReaderLikeTable {
         }
     }
 
-    public static int getNumLikesForPost(ReaderPost post) {
-        if (post == null) {
-            return 0;
-        }
-        String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT count(*) FROM tbl_post_likes WHERE blog_id=? AND post_id=?", args);
-    }
-
     public static void setCurrentUserLikesPost(ReaderPost post, boolean isLiked, long wpComUserId) {
         if (post == null) {
             return;
         }
+        setCurrentUserLikesPost(post.postId, post.blogId, isLiked, wpComUserId);
+    }
+
+    public static void setCurrentUserLikesPost(long postId, long blogId, boolean isLiked, long wpComUserId) {
         if (isLiked) {
             ContentValues values = new ContentValues();
-            values.put("blog_id", post.blogId);
-            values.put("post_id", post.postId);
+            values.put("blog_id", blogId);
+            values.put("post_id", postId);
             values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_post_likes", null, values);
         } else {
-            String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(wpComUserId)};
+            String[] args = {Long.toString(blogId), Long.toString(postId), Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_post_likes", "blog_id=? AND post_id=? AND user_id=?", args);
         }
     }
@@ -127,44 +122,6 @@ public class ReaderLikeTable {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);
         }
-    }
-
-
-    /****
-     * comment likes
-     */
-
-    public static ReaderUserIdList getLikesForComment(ReaderComment comment) {
-        ReaderUserIdList userIds = new ReaderUserIdList();
-        if (comment == null) {
-            return userIds;
-        }
-
-        String[] args = {Long.toString(comment.blogId),
-                Long.toString(comment.commentId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
-                "SELECT user_id FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
-        try {
-            if (c.moveToFirst()) {
-                do {
-                    userIds.add(c.getLong(0));
-                } while (c.moveToNext());
-            }
-
-            return userIds;
-        } finally {
-            SqlUtils.closeCursor(c);
-        }
-    }
-
-    public static int getNumLikesForComment(ReaderComment comment) {
-        if (comment == null) {
-            return 0;
-        }
-        String[] args = {Long.toString(comment.blogId),
-                Long.toString(comment.commentId)};
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT count(*) FROM tbl_comment_likes WHERE blog_id=? AND comment_id=?", args);
     }
 
     public static void setCurrentUserLikesComment(ReaderComment comment, boolean isLiked, long wpComUserId) {

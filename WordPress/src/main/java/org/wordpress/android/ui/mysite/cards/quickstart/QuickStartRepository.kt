@@ -99,7 +99,7 @@ class QuickStartRepository
     }
 
     fun clearActiveTask() {
-        _activeTask.value = null
+        _activeTask.postValue(null)
     }
 
     fun clearPendingTask() {
@@ -302,7 +302,7 @@ class QuickStartRepository
 
     fun clearMenuStep() {
         if (_quickStartMenuStep.value != null) {
-            _quickStartMenuStep.value = null
+            _quickStartMenuStep.postValue(null)
         }
     }
 

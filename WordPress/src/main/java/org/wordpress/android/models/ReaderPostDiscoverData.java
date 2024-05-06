@@ -28,7 +28,6 @@ public class ReaderPostDiscoverData {
     }
 
     private String mAuthorName;
-    private String mAuthorUrl;
     private String mBlogName;
     private String mBlogUrl;
     private String mAvatarUrl;
@@ -36,9 +35,6 @@ public class ReaderPostDiscoverData {
 
     private long mBlogId;
     private long mPostId;
-
-    private int mNumLikes;
-    private int mNumComments;
 
     private DiscoverType mDiscoverType = DiscoverType.OTHER;
 
@@ -51,7 +47,6 @@ public class ReaderPostDiscoverData {
         JSONObject jsonAttribution = json.optJSONObject("attribution");
         if (jsonAttribution != null) {
             mAuthorName = jsonAttribution.optString("author_name");
-            mAuthorUrl = jsonAttribution.optString("author_url");
             mBlogName = jsonAttribution.optString("blog_name");
             mBlogUrl = jsonAttribution.optString("blog_url");
             mAvatarUrl = jsonAttribution.optString("avatar_url");
@@ -61,8 +56,6 @@ public class ReaderPostDiscoverData {
         if (jsonWpcomData != null) {
             mBlogId = jsonWpcomData.optLong("blog_id");
             mPostId = jsonWpcomData.optLong("post_id");
-            mNumLikes = jsonWpcomData.optInt("like_count");
-            mNumComments = jsonWpcomData.optInt("comment_count");
         }
 
         // walk the post formats array until we find one we know we should handle differently
@@ -96,10 +89,6 @@ public class ReaderPostDiscoverData {
         return StringUtils.notNullStr(mAuthorName);
     }
 
-    private String getAuthorUrl() {
-        return StringUtils.notNullStr(mAuthorUrl);
-    }
-
     public String getBlogName() {
         return StringUtils.notNullStr(mBlogName);
     }
@@ -130,10 +119,6 @@ public class ReaderPostDiscoverData {
 
     public boolean hasPermalink() {
         return !TextUtils.isEmpty(mPermaLink);
-    }
-
-    public boolean hasAvatarUrl() {
-        return !TextUtils.isEmpty(mAvatarUrl);
     }
 
     public DiscoverType getDiscoverType() {

@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -140,7 +141,7 @@ public class JetpackConnectionResultActivity extends LocaleAwareActivity {
         if (mSource == JetpackConnectionSource.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction(SiteUtils.getFetchSitesPayload()));
-            ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);
+            ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site, StatsLaunchedFrom.QUICK_ACTIONS);
         }
         finish();
     }

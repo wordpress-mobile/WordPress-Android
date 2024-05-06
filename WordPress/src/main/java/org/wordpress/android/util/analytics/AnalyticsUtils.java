@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsMetadata;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
@@ -32,6 +31,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
@@ -48,7 +48,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_IS_QUICKPRESS;
 
 public class AnalyticsUtils {
     private static final String BLOG_ID_KEY = "blog_id";
@@ -65,8 +64,6 @@ public class AnalyticsUtils {
     private static final String INTENT_HOST = "intent_host";
     private static final String INTENT_DATA = "intent_data";
     private static final String INTERCEPTOR_CLASSNAME = "interceptor_classname";
-    private static final String NEWS_CARD_ORIGIN = "origin";
-    private static final String NEWS_CARD_VERSION = "version";
     private static final String SITE_TYPE_KEY = "site_type";
     private static final String COMMENT_ACTION_SOURCE = "source";
     private static final String SOURCE_KEY = "source";
@@ -79,7 +76,6 @@ public class AnalyticsUtils {
     private static final String CAUSE_OF_ISSUE_KEY = "cause_of_issue";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
-    public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     public static final String PROMPT_ID = "prompt_id";
@@ -112,7 +108,7 @@ public class AnalyticsUtils {
             // Post created from the media library
             normalizedSourceName = "media-library";
         }
-        if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
+        if (intent != null && intent.hasExtra(EditPostActivityConstants.EXTRA_IS_QUICKPRESS)) {
             // Quick press
             normalizedSourceName = "quick-press";
         }
@@ -521,7 +517,7 @@ public class AnalyticsUtils {
         }
 
         Map<String, Object> properties = railcarJsonToProperties(railcarJson);
-        properties.put("action", AnalyticsTrackerNosara.getEventNameForStat(stat));
+        properties.put("action", stat.getEventName());
         AnalyticsTracker.track(AnalyticsTracker.Stat.TRAIN_TRACKS_INTERACT, properties);
     }
 
@@ -639,13 +635,6 @@ public class AnalyticsUtils {
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT, properties);
-    }
-
-    private static Map<String, String> createNewsCardProperties(String origin, int version) {
-        Map<String, String> properties = new HashMap<>();
-        properties.put(NEWS_CARD_ORIGIN, origin);
-        properties.put(NEWS_CARD_VERSION, String.valueOf(version));
-        return properties;
     }
 
     public static void trackLoginProloguePages(int page) {

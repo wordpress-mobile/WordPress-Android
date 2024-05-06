@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.READING_PREFERENCES
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
@@ -195,6 +197,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REPORT_POST -> handleReportPostClicked(post)
             REPORT_USER -> handleReportUserClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
+            READING_PREFERENCES -> handleReadingPreferencesClicked()
             SPACER_NO_ACTION -> Unit // Do nothing
         }
     }
@@ -393,6 +396,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
         _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
+    private fun handleReadingPreferencesClicked() {
+        _navigationEvents.postValue(Event(ShowReadingPreferences))
+    }
+
     private suspend fun handleBlockSiteClicked(
         blogId: Long,
         feedId: Long,
@@ -405,7 +412,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                     _snackbarEvents.postValue(
                         Event(
                             SnackbarMessageHolder(
-                                UiStringRes(R.string.reader_toast_blog_blocked),
+                                UiStringRes(R.string.reader_toast_posts_from_this_blog_blocked),
                                 UiStringRes(R.string.undo),
                                 {
                                     coroutineScope.launch {
@@ -419,13 +426,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 BlockSiteState.Success, BlockSiteState.Failed.AlreadyRunning -> Unit // do nothing
                 BlockSiteState.Failed.NoNetwork -> {
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_unable_to_block_blog)))
                     )
                 }
                 BlockSiteState.Failed.RequestFailed -> {
                     _refreshPosts.postValue(Event(Unit))
                     _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_block_blog)))
+                        Event(SnackbarMessageHolder(UiStringRes(R.string.reader_toast_err_unable_to_block_blog)))
                     )
                 }
             }

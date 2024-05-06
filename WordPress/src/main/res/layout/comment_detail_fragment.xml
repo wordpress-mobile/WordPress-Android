@@ -109,7 +109,7 @@
                 android:id="@+id/text_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
+                android:fontFamily="sans-serif"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_large"
                 android:paddingEnd="@dimen/margin_extra_large"

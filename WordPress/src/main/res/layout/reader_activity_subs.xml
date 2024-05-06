@@ -20,7 +20,7 @@
                 style="@style/TextAppearance.App.Toolbar.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/reader_title_subs"
+                android:text="@string/reader_activity_title_manage_tags_blogs"
                 android:textColor="?attr/colorOnSurface" />
         </com.google.android.material.appbar.MaterialToolbar>
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/btn_add"
-            android:hint="@string/reader_hint_add_tag_or_url"
+            android:hint="@string/reader_hint_add_tag_or_url_follow"
             android:minHeight="@dimen/min_touch_target_sz"
             android:paddingStart="@dimen/margin_large"
             android:paddingEnd="@dimen/margin_medium"

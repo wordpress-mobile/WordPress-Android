@@ -16,7 +16,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
@@ -46,10 +45,9 @@ public class AppPrefs {
     public static final int SELECTED_SITE_UNAVAILABLE = -1;
 
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
-    private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
 
     // store twice as many recent sites as we show
-    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 8;
     private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
 
     private static final Gson GSON = new Gson();
@@ -73,6 +71,10 @@ public class AppPrefs {
         READER_TAG_TYPE,
         READER_TAG_WAS_FOLLOWING,
 
+        READER_ANALYTICS_COUNT_TAGS_TIMESTAMP,
+
+        READER_ANALYTICS_COUNT_SITES_TIMESTAMP,
+
         // currently active tab on the main Reader screen when the user is in Reader
         READER_ACTIVE_TAB,
 
@@ -88,15 +90,6 @@ public class AppPrefs {
         // index of the last active item in Stats activity
         STATS_ITEM_INDEX,
 
-        // Keep the associations between each widget_id/blog_id added to the app
-        STATS_WIDGET_KEYS_BLOGS,
-
-        // last data stored for the Stats Widgets
-        STATS_WIDGET_DATA,
-
-        // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
-        STATS_WIDGET_PROMO_ANALYTICS,
-
         // index of the last active people list filter in People Management activity
         PEOPLE_LIST_FILTER_INDEX,
 
@@ -111,9 +104,6 @@ public class AppPrefs {
 
         // local IDs of sites recently chosen in the site picker
         RECENTLY_PICKED_SITE_IDS,
-
-        // list of last time a notification has been created for a draft
-        PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES,
 
         // Optimize Image and Video settings
         IMAGE_OPTIMIZE_ENABLED,
@@ -163,10 +153,11 @@ public class AppPrefs {
         READER_CARDS_ENDPOINT_PAGE_HANDLE,
         // used to tell the server to return a different set of data so the content on discover tab doesn't look static
         READER_CARDS_ENDPOINT_REFRESH_COUNTER,
-
         // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
+        // Selected Reader feed ID for persisting user preferred feed
+        READER_TOP_BAR_SELECTED_FEED_ITEM_ID,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
@@ -211,6 +202,8 @@ public class AppPrefs {
         SHOULD_HIDE_BLOGANUARY_NUDGE_CARD,
         SHOULD_HIDE_SOTW2023_NUDGE_CARD,
         SHOULD_HIDE_DYNAMIC_CARD,
+        PINNED_SITE_IDS,
+        READER_READING_PREFERENCES_JSON,
     }
 
     /**
@@ -231,15 +224,6 @@ public class AppPrefs {
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
         BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN,
-
-        // When we need to show the new image optimize promo dialog
-        IMAGE_OPTIMIZE_PROMO_REQUIRED,
-
-        // Global plans features
-        GLOBAL_PLANS_PLANS_FEATURES,
-
-        // When we need to sync IAP data with the wpcom backend
-        IAP_SYNC_REQUIRED,
 
         // When we need to show the snackbar indicating how notifications can be navigated through
         SWIPE_TO_NAVIGATE_NOTIFICATIONS,
@@ -274,12 +258,6 @@ public class AppPrefs {
         // used to indicate that we already obtained and tracked the installation referrer
         IS_INSTALLATION_REFERRER_OBTAINED,
 
-        // used to indicate that user dont want to see the Gutenberg warning dialog anymore
-        IS_GUTENBERG_WARNING_DIALOG_DISABLED,
-
-        // used to indicate that user dont want to see the Gutenberg informative dialog anymore
-        IS_GUTENBERG_INFORMATIVE_DIALOG_DISABLED,
-
         // indicates whether the system notifications are enabled for the app
         SYSTEM_NOTIFICATIONS_ENABLED,
 
@@ -294,12 +272,6 @@ public class AppPrefs {
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
-
-        // used to indicate that we do not need to show the Post List FAB tooltip
-        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
-
-        // Used to indicate whether or not the stories intro screen must be shown
-        SHOULD_SHOW_STORIES_INTRO,
 
         // Used to indicate whether or not the device running out of storage warning should be shown
         SHOULD_SHOW_STORAGE_WARNING,
@@ -582,10 +554,6 @@ public class AppPrefs {
         setString(DeletablePrefKey.LAST_ACTIVITY_STR, value);
     }
 
-    public static void resetLastActivityStr() {
-        remove(DeletablePrefKey.LAST_ACTIVITY_STR);
-    }
-
     public static int getMainPageIndex(int maxIndexValue) {
         int value = getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
         return value > maxIndexValue ? 0 : value;
@@ -593,31 +561,6 @@ public class AppPrefs {
 
     public static void setMainPageIndex(int index) {
         setInt(DeletablePrefKey.MAIN_PAGE_INDEX, index);
-    }
-
-    // Stats Widgets
-    public static void resetStatsWidgetsKeys() {
-        remove(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
-    }
-
-    public static String getStatsWidgetsKeys() {
-        return getString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS);
-    }
-
-    public static void setStatsWidgetsKeys(String widgetData) {
-        setString(DeletablePrefKey.STATS_WIDGET_KEYS_BLOGS, widgetData);
-    }
-
-    public static String getStatsWidgetsData() {
-        return getString(DeletablePrefKey.STATS_WIDGET_DATA);
-    }
-
-    public static void setStatsWidgetsData(String widgetData) {
-        setString(DeletablePrefKey.STATS_WIDGET_DATA, widgetData);
-    }
-
-    public static void resetStatsWidgetsData() {
-        remove(DeletablePrefKey.STATS_WIDGET_DATA);
     }
 
     // Themes
@@ -659,32 +602,6 @@ public class AppPrefs {
 
     public static void setBookmarksSavedLocallyDialogShown() {
         setBoolean(UndeletablePrefKey.BOOKMARKS_SAVED_LOCALLY_DIALOG_SHOWN, false);
-    }
-
-    public static boolean isImageOptimizePromoRequired() {
-        return getBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, true);
-    }
-
-    public static void setImageOptimizePromoRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.IMAGE_OPTIMIZE_PROMO_REQUIRED, required);
-    }
-
-    // Store the number of times Stats are loaded successfully before showing the Promo Dialog
-    public static void bumpAnalyticsForStatsWidgetPromo() {
-        int current = getAnalyticsForStatsWidgetPromo();
-        setInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS, current + 1);
-    }
-
-    public static int getAnalyticsForStatsWidgetPromo() {
-        return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static boolean isInAppPurchaseRefreshRequired() {
-        return getBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, false);
-    }
-
-    public static void setInAppPurchaseRefreshRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.IAP_SYNC_REQUIRED, required);
     }
 
     /**
@@ -739,18 +656,6 @@ public class AppPrefs {
 
     public static void setReaderSwipeToNavigateShown(boolean alreadyShown) {
         setBoolean(UndeletablePrefKey.SWIPE_TO_NAVIGATE_READER, alreadyShown);
-    }
-
-    public static long getPendingDraftsLastNotificationDate(PostModel post) {
-        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
-        return prefs().getLong(key, 0);
-    }
-
-    public static void setPendingDraftsLastNotificationDate(PostModel post, long timestamp) {
-        String key = DeletablePrefKey.PENDING_DRAFTS_NOTIFICATION_LAST_NOTIFICATION_DATES.name() + "-" + post.getId();
-        SharedPreferences.Editor editor = prefs().edit();
-        editor.putLong(key, timestamp);
-        editor.apply();
     }
 
     public static boolean isImageOptimize() {
@@ -1260,6 +1165,22 @@ public class AppPrefs {
         setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
     }
 
+    public static long getReaderAnalyticsCountTagsTimestamp() {
+        return getLong(DeletablePrefKey.READER_ANALYTICS_COUNT_TAGS_TIMESTAMP, -1);
+    }
+
+    public static void setReaderAnalyticsCountTagsTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_TAGS_TIMESTAMP, timestamp);
+    }
+
+    public static long getReaderAnalyticsCountSitesTimestamp() {
+        return getLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, -1);
+    }
+
+    public static void setReaderAnalyticsCountSitesTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_ANALYTICS_COUNT_SITES_TIMESTAMP, timestamp);
+    }
+
     public static long getReaderCssUpdatedTimestamp() {
         return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
     }
@@ -1292,12 +1213,17 @@ public class AppPrefs {
         setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
     }
 
-    public static void setShouldShowStoriesIntro(boolean shouldShow) {
-        setBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, shouldShow);
+    @Nullable
+    public static String getReaderTopBarSelectedFeedItemId() {
+        return getString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, null);
     }
 
-    public static boolean shouldShowStoriesIntro() {
-        return getBoolean(UndeletablePrefKey.SHOULD_SHOW_STORIES_INTRO, true);
+    public static void setReaderTopBarSelectedFeedItemId(@Nullable String selectedFeedItemId) {
+        if (selectedFeedItemId == null) {
+            remove(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID);
+        } else {
+            setString(DeletablePrefKey.READER_TOP_BAR_SELECTED_FEED_ITEM_ID, selectedFeedItemId);
+        }
     }
 
     public static void setShouldShowStorageWarning(boolean shouldShow) {
@@ -1844,5 +1770,26 @@ public class AppPrefs {
 
     public static boolean getShouldHideDynamicCard(@NonNull final String id) {
         return prefs().getBoolean(DeletablePrefKey.SHOULD_HIDE_DYNAMIC_CARD.name() + id, false);
+    }
+
+    @NonNull public static String getPinnedSiteLocalIds() {
+        return getString(DeletablePrefKey.PINNED_SITE_IDS, "[]");
+    }
+
+    public static void setPinnedSiteLocalIds(@NonNull final String ids) {
+        setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
+    }
+
+    @Nullable
+    public static String getReaderReadingPreferencesJson() {
+        return getString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, null);
+    }
+
+    public static void setReaderReadingPreferencesJson(@Nullable String json) {
+        if (json == null) {
+            remove(DeletablePrefKey.READER_READING_PREFERENCES_JSON);
+        } else {
+            setString(DeletablePrefKey.READER_READING_PREFERENCES_JSON, json);
+        }
     }
 }

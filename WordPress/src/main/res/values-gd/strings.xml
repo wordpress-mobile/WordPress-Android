@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.1
 Language: gd_GB
 -->
 <resources>
@@ -121,7 +121,6 @@ Language: gd_GB
     <string name="reader_toast_err_generic">Cha ghabh seo a dhèanamh</string>
     <string name="update_verb">Ùraich</string>
     <string name="schedule_verb">Cuir air an sgeideal</string>
-    <string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
     <string name="help">Cobhair</string>
     <string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
     <string name="ssl_certificate_ask_trust">Ma gheibh thu cothrom air an làrach seo gun duilgheadas sam bith a ghnàth, dh’fhaoidte gu bheil a’ mhearachd seo a’ ciallachadh gu bheil cuideigin a’ leigeil orra gur iad-san an làrach cheart is cha bu chòir dhut leantainn air adhart. A bheil thu airson gabhail ris an teisteanas co-dhiù?</string>
@@ -201,7 +200,6 @@ Language: gd_GB
     <string name="reader_untitled_post">(Gun tiotal)</string>
     <string name="reader_btn_share">Co-roinn</string>
     <string name="reader_btn_follow">Lean</string>
-    <string name="reader_btn_unfollow">A\' leanntainn</string>
     <string name="reader_label_added_tag">Chaidh %s a chur ris</string>
     <string name="reader_label_removed_tag">Chaidh %s a thoirt air falbh</string>
     <string name="reader_likes_one">Tha aon duine ag ràdh gur toigh leotha seo</string>

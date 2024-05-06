@@ -29,19 +29,6 @@ steps:
   #################
   - group: "🕵️‍♂️ Linters"
     steps:
-      - label: "☢️ Danger - PR Check"
-        command: .buildkite/commands/danger-pr-check.sh
-        plugins:
-          - docker#v5.8.0:
-              image: "public.ecr.aws/docker/library/ruby:3.2.2"
-              propagate-environment: true
-              environment:
-                - "DANGER_GITHUB_API_TOKEN"
-        if: "build.pull_request.id != null"
-        retry:
-          manual:
-            permit_on_passed: true
-
       - label: "🕵️ checkstyle"
         command: |
           cp gradle.properties-example gradle.properties

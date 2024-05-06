@@ -26,15 +26,32 @@ public class ReaderEvents {
         throw new AssertionError();
     }
 
-    public static class FollowedTagsChanged {
+    public static class FollowedTagsFetched {
         private final boolean mDidSucceed;
+        private final boolean mDidChange;
+        private final int mTotalTags;
 
-        public FollowedTagsChanged(boolean didSucceed) {
+        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed) {
             mDidSucceed = didSucceed;
+            mDidChange = true;
+            mTotalTags = tagsFollowed;
+        }
+
+        public FollowedTagsFetched(boolean didSucceed, int tagsFollowed, boolean didChange) {
+            mDidSucceed = didSucceed;
+            mDidChange = didChange;
+            mTotalTags = tagsFollowed;
         }
 
         public boolean didSucceed() {
             return mDidSucceed;
+        }
+
+        public boolean didChange() {
+            return mDidChange;
+        }
+        public int getTotalTags() {
+            return mTotalTags;
         }
     }
 
@@ -50,10 +67,20 @@ public class ReaderEvents {
         }
     }
 
-    public static class FollowedBlogsChanged {
-    }
+    public static class FollowedBlogsFetched {
+        private final int mTotalSubscriptions;
+        private final boolean mDidChange;
 
-    public static class RecommendedBlogsChanged {
+        public boolean didChange() {
+            return mDidChange;
+        }
+        public int getTotalSubscriptions() {
+            return mTotalSubscriptions;
+        }
+        public FollowedBlogsFetched(int totalSubscriptions, boolean didChange) {
+            mTotalSubscriptions = totalSubscriptions;
+            mDidChange = didChange;
+        }
     }
 
     public static class InterestTagsFetchEnded {
@@ -90,9 +117,6 @@ public class ReaderEvents {
         public DiscoverTasks getTask() {
             return mTask;
         }
-    }
-
-    public static class SinglePostDownloaded {
     }
 
     public static class UpdatePostsStarted {
@@ -286,14 +310,6 @@ public class ReaderEvents {
 
         public ReaderSimplePostList getGlobalRelatedPosts() {
             return mGlobalRelatedPosts;
-        }
-
-        public boolean hasLocalRelatedPosts() {
-            return mLocalRelatedPosts.size() > 0;
-        }
-
-        public boolean hasGlobalRelatedPosts() {
-            return mGlobalRelatedPosts.size() > 0;
         }
 
         public boolean didSucceed() {

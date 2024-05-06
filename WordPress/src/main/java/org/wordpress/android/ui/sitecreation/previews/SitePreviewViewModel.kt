@@ -23,6 +23,8 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewLoadingShimmerState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotFoundInDbUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.UrlData
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
@@ -81,7 +83,10 @@ class SitePreviewViewModel @Inject constructor(
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return else isStarted = true
-        require(siteCreationState.result is Created)
+        if (siteCreationState.result !is Created) {
+            updateUiState(SiteNotCreatedErrorUiState)
+            return
+        }
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         isFree = requireNotNull(siteCreationState.domain).isFree
@@ -132,9 +137,13 @@ class SitePreviewViewModel @Inject constructor(
     private suspend fun fetchNewlyCreatedSiteModel(remoteSiteId: Long): SiteModel? {
         val onSiteFetched = fetchWpComSiteUseCase.fetchSiteWithRetry(remoteSiteId)
         return if (!onSiteFetched.isError) {
-            return requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
-                "Site successfully fetched but has not been found in the local db."
+            val site = siteStore.getSiteBySiteId(remoteSiteId)
+            if (site == null) {
+                withContext(mainDispatcher) {
+                    updateUiState(SiteNotFoundInDbUiState)
+                }
             }
+            site
         } else {
             null
         }
@@ -187,6 +196,7 @@ class SitePreviewViewModel @Inject constructor(
         val shimmerVisibility: Boolean = false,
         val subtitle: UiString,
         val caption: UiString?,
+        val errorTitle: UiString? = null,
     ) {
         data class SitePreviewContentUiState(
             val isFree: Boolean,
@@ -208,6 +218,23 @@ class SitePreviewViewModel @Inject constructor(
             webViewErrorVisibility = true,
             subtitle = getSubtitle(isFree),
             caption = getCaption(isFree),
+        )
+
+        data object SiteNotCreatedErrorUiState : SitePreviewUiState(
+            urlData = UrlData("", "", 0 to 0, 0 to 0),
+            webViewVisibility = false,
+            webViewErrorVisibility = true,
+            subtitle = UiStringRes(R.string.site_creation_error_generic_title),
+            caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
+            errorTitle = UiStringRes(R.string.error),
+        )
+
+        data object SiteNotFoundInDbUiState : SitePreviewUiState(
+            urlData = UrlData("", "", 0 to 0, 0 to 0),
+            webViewVisibility = false,
+            webViewErrorVisibility = true,
+            subtitle = UiStringRes(R.string.site_creation_error_generic_title),
+            caption = UiStringRes(R.string.site_creation_error_generic_subtitle),
         )
 
         data class SitePreviewLoadingShimmerState(

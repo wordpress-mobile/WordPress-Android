@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.1
 Language: az
 -->
 <resources>
@@ -105,7 +105,6 @@ Language: az
     <string name="reader_toast_err_generic">Bu hərəkət həyata keçirilə bilmir</string>
     <string name="update_verb">Yenilə</string>
     <string name="schedule_verb">Planla</string>
-    <string name="reader_page_followed_blogs">İzlənilən saytlar</string>
     <string name="ssl_certificate_error">Yanlış SSL sertifikatı</string>
     <string name="help">Yardım</string>
     <string name="ssl_certificate_ask_trust">Əgər bu sayta əsasən problemsiz şəkildə qoşula bilirsinizsə, bu xəta başqalarının saytı təqlid etdiyi mənasına gəlir. yenə də sertifikata etibar etmək istəyirsinizmi?</string>
@@ -186,7 +185,6 @@ Language: az
     <string name="reader_label_added_tag"> %s əlavə edildi</string>
     <string name="reader_label_removed_tag">%s silindi</string>
     <string name="reader_btn_follow">İzlə</string>
-    <string name="reader_btn_unfollow">İzlənən</string>
     <string name="reader_likes_one">Bir nəfər bunu bəyənir</string>
     <string name="reader_likes_only_you">Bunu bəyənirsiniz</string>
     <string name="reader_toast_err_comment_failed">Şərhi dərc etmək baş tutmadı</string>

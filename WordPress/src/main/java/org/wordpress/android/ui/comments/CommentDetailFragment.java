@@ -31,6 +31,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
+import com.gravatar.AvatarQueryOptions;
+import com.gravatar.AvatarUrl;
+import com.gravatar.types.Email;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
@@ -96,11 +99,11 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
@@ -814,9 +817,10 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
         String avatarUrl = "";
         if (comment.getAuthorProfileImageUrl() != null) {
-            avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
+            avatarUrl = WPAvatarUtils.rewriteAvatarUrl(comment.getAuthorProfileImageUrl(), avatarSz);
         } else if (comment.getAuthorEmail() != null) {
-            avatarUrl = GravatarUtils.gravatarFromEmail(comment.getAuthorEmail(), avatarSz);
+            avatarUrl = new AvatarUrl(new Email(comment.getAuthorEmail()),
+                    new AvatarQueryOptions(avatarSz, null, null, null)).url().toString();
         }
         mImageManager.loadIntoCircle(binding.imageAvatar, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
 
@@ -1354,7 +1358,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private boolean canLike(@NonNull SiteModel site) {
-        return mEnabledActions.contains(EnabledActions.ACTION_LIKE)
+        return mEnabledActions.contains(EnabledActions.ACTION_LIKE_COMMENT)
                && SiteUtils.isAccessedViaWPComRest(site);
     }
 
@@ -1387,7 +1391,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
          * this user made on someone else's blog
          */
         if (note != null) {
-            mEnabledActions = note.getEnabledActions();
+            mEnabledActions = note.getEnabledCommentActions();
         }
 
         // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
@@ -1471,6 +1475,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         mCommentsStoreAdapter.dispatch(CommentActionBuilder.newLikeCommentAction(
                 new RemoteLikeCommentPayload(site, comment, actionBinding.btnLike.isActivated()))
         );
+        if (mNote != null) {
+            EventBus.getDefault().postSticky(new NotificationEvents
+                    .OnNoteCommentLikeChanged(mNote, actionBinding.btnLike.isActivated()));
+        }
+
         actionBinding.btnLike.announceForAccessibility(
                 getText(actionBinding.btnLike.isActivated() ? R.string.comment_liked_talkback
                         : R.string.comment_unliked_talkback)

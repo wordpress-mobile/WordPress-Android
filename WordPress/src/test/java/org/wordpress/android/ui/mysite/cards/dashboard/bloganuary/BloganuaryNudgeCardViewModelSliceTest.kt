@@ -12,13 +12,16 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.config.BloganuaryNudgeFeatureConfig
 
@@ -42,7 +45,12 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
+    @Mock
+    lateinit var bloganuaryNudgeCardBuilder: BloganuaryNudgeCardBuilder
+
     lateinit var viewModel: BloganuaryNudgeCardViewModelSlice
+
+    private var uiModels = mutableListOf<MySiteCardAndItem.Card.BloganuaryNudgeCardModel?>()
 
     @Before
     fun setUp() {
@@ -53,12 +61,18 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
             appPrefsWrapper,
             tracker,
             dateTimeUtilsWrapper,
+            bloganuaryNudgeCardBuilder
         )
         viewModel.initialize(testScope())
+
+        viewModel.uiModel.observeForever { uiModel ->
+            uiModels.add(uiModel)
+        }
     }
 
     @Test
     fun `GIVEN FF disabled, WHEN getting builder params, THEN not eligible`() {
+        mockCalendarMonth(Calendar.DECEMBER)
         whenever(bloganuaryNudgeFeatureConfig.isEnabled()).thenReturn(false)
 
         val params = viewModel.getBuilderParams()
@@ -76,8 +90,8 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
         lenient.`when`(selectedSiteRepository.getSelectedSite()).thenReturn(mockSiteModel)
         lenient.`when`(appPrefsWrapper.getShouldHideBloganuaryNudgeCard(SITE_ID)).thenReturn(false)
 
-        // Test all months except December
-        (Calendar.JANUARY..Calendar.NOVEMBER).forEach { month ->
+        // Test all months except eligible months
+        (Calendar.FEBRUARY..Calendar.NOVEMBER).forEach { month ->
             mockCalendarMonth(month)
 
             val params = viewModel.getBuilderParams()
@@ -133,6 +147,33 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `GIVEN requirements met AND month is DECEMBER, WHEN getting builder params, THEN return correct title`() {
+        mockEligibleRequirements(Calendar.DECEMBER)
+
+        val params = viewModel.getBuilderParams()
+
+        assertThat(params.title).isEqualTo(UiStringRes(R.string.bloganuary_dashboard_nudge_title_december))
+    }
+
+    @Test
+    fun `GIVEN requirements met AND month is JANUARY, WHEN getting builder params, THEN return correct title`() {
+        mockEligibleRequirements(Calendar.JANUARY)
+
+        val params = viewModel.getBuilderParams()
+
+        assertThat(params.title).isEqualTo(UiStringRes(R.string.bloganuary_dashboard_nudge_title_january))
+    }
+
+    @Test
+    fun `GIVEN requirements met, WHEN getting builder params, THEN return correct text`() {
+        mockEligibleRequirements()
+
+        val params = viewModel.getBuilderParams()
+
+        assertThat(params.text).isEqualTo(UiStringRes(R.string.bloganuary_dashboard_nudge_text))
+    }
+
+    @Test
     fun `GIVEN builder params, WHEN calling onLearnMoreClick, THEN navigate to overlay`() = test {
         val isPromptsEnabled = true
         whenever(bloggingPromptsSettingsHelper.isPromptsSettingEnabled()).thenReturn(isPromptsEnabled)
@@ -157,7 +198,7 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
 
         advanceUntilIdle()
         verify(appPrefsWrapper).setShouldHideBloganuaryNudgeCard(SITE_ID, true)
-        assertThat(viewModel.refresh.value?.peekContent()).isTrue
+        assertThat(uiModels.last()).isNull()
     }
 
     // region Analytics
@@ -205,9 +246,9 @@ class BloganuaryNudgeCardViewModelSliceTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.getCalendarInstance()).thenReturn(mockCalendar)
     }
 
-    private fun mockEligibleRequirements() {
+    private fun mockEligibleRequirements(month: Int = Calendar.DECEMBER) {
         whenever(bloganuaryNudgeFeatureConfig.isEnabled()).thenReturn(true)
-        mockCalendarMonth(Calendar.DECEMBER)
+        mockCalendarMonth(month)
         whenever(bloggingPromptsSettingsHelper.isPromptsFeatureAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(mockSiteModel)
         whenever(appPrefsWrapper.getShouldHideBloganuaryNudgeCard(SITE_ID)).thenReturn(false)

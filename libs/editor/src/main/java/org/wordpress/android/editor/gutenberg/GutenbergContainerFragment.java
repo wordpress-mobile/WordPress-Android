@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -23,6 +24,7 @@ import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBlockTypeImpressionsEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnBackHandlerEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnConnectionStatusEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnCustomerSupportOptionsListener;
@@ -33,12 +35,11 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidReques
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendButtonPressedActionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogExceptionListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSendEventToHostListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleUndoButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnToggleRedoButtonListener;
@@ -71,7 +72,6 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachMediaUploadQueryListener onReattachQueryListener,
-                                  OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
                                   OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
@@ -86,8 +86,6 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
                                   ShowSuggestionsUtil showSuggestionsUtil,
-                                  OnMediaFilesCollectionBasedBlockEditorListener
-                                          onMediaFilesCollectionBasedBlockEditorListener,
                                   OnFocalPointPickerTooltipShownEventListener onFPPTooltipShownEventListener,
                                   OnGutenbergDidRequestPreviewListener
                                           onGutenbergDidRequestPreviewListener,
@@ -97,12 +95,13 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnToggleUndoButtonListener onToggleUndoButtonListener,
                                   OnToggleRedoButtonListener onToggleRedoButtonListener,
                                   OnConnectionStatusEventListener onConnectionStatusEventListener,
+                                  OnBackHandlerEventListener onBackHandlerEventListener,
+                                  OnLogExceptionListener onLogExceptionListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
-                    onStorySavingReattachQueryListener,
                     onSetFeaturedImageListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
@@ -114,7 +113,6 @@ public class GutenbergContainerFragment extends Fragment {
                     onGutenbergDidRequestEmbedFullscreenPreviewListener,
                     onGutenbergDidSendButtonPressedActionListener,
                     showSuggestionsUtil,
-                    onMediaFilesCollectionBasedBlockEditorListener,
                     onFPPTooltipShownEventListener,
                     onGutenbergDidRequestPreviewListener,
                     onBlockTypeImpressionsListener,
@@ -123,6 +121,8 @@ public class GutenbergContainerFragment extends Fragment {
                     onToggleUndoButtonListener,
                     onToggleRedoButtonListener,
                     onConnectionStatusEventListener,
+                    onBackHandlerEventListener,
+                    onLogExceptionListener,
                     isDarkMode);
     }
 
@@ -170,6 +170,22 @@ public class GutenbergContainerFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (mWPAndroidGlueCode.shouldHandleBackPress()) {
+                    mWPAndroidGlueCode.onBackPressed();
+                } else {
+                    if (isEnabled()) {
+                        setEnabled(false); // Disable this callback
+                        requireActivity().onBackPressed(); // Bubble up the onBackPressed event
+                        setEnabled(true); // Re-enable this callback
+                    }
+                }
+            }
+        };
+
+        getActivity().getOnBackPressedDispatcher().addCallback(this, callback);
         mWPAndroidGlueCode.onResume(this, getActivity());
     }
 
@@ -204,7 +220,12 @@ public class GutenbergContainerFragment extends Fragment {
     }
 
     public void sendToJSPostSaveEvent() {
-        mWPAndroidGlueCode.sendToJSPostSaveEvent();
+        // Check that the activity isn't null, there is a possibility it can cause the following crash
+        // https://github.com/wordpress-mobile/WordPress-Android/issues/20665
+        final Activity activity = getActivity();
+        if (activity != null) {
+            mWPAndroidGlueCode.sendToJSPostSaveEvent();
+        }
     }
 
     /**
@@ -239,6 +260,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void mediaFileUploadFailed(final int mediaId) {
         mWPAndroidGlueCode.mediaFileUploadFailed(mediaId);
+    }
+
+    public void mediaFileUploadPaused(final int mediaId) {
+        mWPAndroidGlueCode.mediaFileUploadPaused(mediaId);
     }
 
     public void mediaFileUploadSucceeded(final int mediaId, final String mediaUrl, final int serverMediaId) {

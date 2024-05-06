@@ -24,7 +24,7 @@ data class MediaPickerSetup(
     }
 
     enum class CameraSetup {
-        STORIES, ENABLED, HIDDEN
+        ENABLED, HIDDEN
     }
 
     fun toBundle(bundle: Bundle) {

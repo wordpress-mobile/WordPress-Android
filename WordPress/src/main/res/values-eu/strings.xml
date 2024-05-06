@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-07-23 20:48:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.1
 Language: eu_ES
 -->
 <resources>
@@ -40,13 +40,11 @@ Language: eu_ES
     <string name="post_status_sticky">Itsaskorra</string>
     <string name="domains_search_for_a_domain_button">Bilatu domeinu bat</string>
     <string name="domains_add_a_domain">Gehitu domeinu bat</string>
-    <string name="domains_site_domains">Zure gunearen domeinuak</string>
     <string name="comment_edit_user_name">Izena</string>
     <string name="comment_edit_comment">Iruzkina</string>
     <string name="comment_edit_web_address">Web helbidea</string>
     <string name="comment_edit_email_address">E-posta helbidea</string>
     <string name="comment_edit_menu_done">Eginda</string>
-    <string name="domains_primary_site_address">%s</string>
     <string name="my_site_btn_domains">Domeinuak</string>
     <string name="my_site_quick_actions_title">Esteka azkarrak</string>
     <string name="gutenberg_native_selected_s">Hautatuta: %s</string>
@@ -84,13 +82,11 @@ Language: eu_ES
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_sites_title">Guneak</string>
     <string name="reader_save_for_later_display_name">Gordeta</string>
     <string name="reader_discover_display_name">Aurkitu</string>
     <string name="reader_my_likes_display_name">Atsegiteak</string>
     <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
     <string name="suffix_1_000">%sK</string>
-    <string name="reader_filter_tags_title">Gaiak</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
     <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
     <string name="gutenberg_native_ungroup">Taldea desegin</string>
@@ -383,7 +379,6 @@ Language: eu_ES
     <string name="reader_short_like_count_multi">%s atsegite</string>
     <string name="reader_short_like_count_one">Atsegite 1</string>
     <string name="reader_short_like_count_none">Atsegin dut</string>
-    <string name="reader_label_follow_count">%,d jarraitzaile</string>
     <string name="reader_title_post_detail">Irakurlearen postontzia</string>
     <string name="notification_types">Jakinarazpen motak</string>
     <string name="app_notifications">App-aren jakinarazpenak</string>
@@ -398,7 +393,6 @@ Language: eu_ES
     <string name="button_view">Ikusi</string>
     <string name="button_edit">Editatu</string>
     <string name="button_publish">Argitaratu</string>
-    <string name="reader_toast_err_follow_blog_not_found">Ezin izan da gune hori aurkitu</string>
     <string name="undo">Desegin</string>
     <string name="push_auth_expired">Eskaria iraungi da. Hasi saioa WordPress.com-en berriro saiatzeko.</string>
     <string name="ignore">Ezikusi</string>
@@ -412,7 +406,6 @@ Language: eu_ES
     <string name="site_picker_create_wpcom">Sortu WordPress.com gunea</string>
     <string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
     <string name="site_picker_edit_visibility">Erakutsi/ezkutatu guneak</string>
-    <string name="site_picker_add_site">Gehitu gune berria</string>
     <string name="my_site_btn_view_site">Ikusi gunea</string>
     <string name="site_picker_title">Aukeratu gunea</string>
     <string name="my_site_btn_switch_site">Aldatu gunez</string>
@@ -439,7 +432,6 @@ Language: eu_ES
     <string name="reader_label_new_posts">Bidalketa berriak</string>
     <string name="error_copy_to_clipboard">Errore bat gertatu da testua arbelera kopiatzean</string>
     <string name="post_uploading">Bidalketa igotzen</string>
-    <string name="reader_empty_posts_in_blog">Gune hau hutsik dago</string>
     <string name="stats_view_top_posts_and_pages">Bidalketak eta orrialdeak</string>
     <string name="stats_view_videos">Bideoak</string>
     <string name="stats_view_followers">Jarraitzaileak</string>
@@ -473,15 +465,10 @@ Language: eu_ES
     <string name="error_publish_empty_post">Ezin da bidalketa huts bat argitaratu</string>
     <string name="older_two_days">2 egun baino zaharragoa</string>
     <string name="older_last_week">Aste bat baino zaharragoa</string>
-    <string name="reader_empty_posts_in_tag">Ez dago bidalketarik gai honekin</string>
     <string name="comment">Iruzkindu</string>
     <string name="mnu_comment_liked">Atseginda</string>
     <string name="update_verb">Eguneratu</string>
     <string name="schedule_verb">Programatu</string>
-    <string name="reader_page_followed_blogs">Jarraitutako guneak</string>
-    <string name="reader_empty_recommended_blogs">Ez dago gomendatutako gunerik</string>
-    <string name="reader_label_followed_blog">Gunea jarraituta</string>
-    <string name="reader_title_blog_preview">Irakurle gunea</string>
     <string name="help">Laguntza</string>
     <string name="ssl_certificate_error">SSL ziurtagiri okerra</string>
     <string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
@@ -551,8 +538,6 @@ Language: eu_ES
     <string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
     <string name="delete_page">Orrialdea ezabatu?</string>
     <string name="delete_post">Bidalketa ezabatu?</string>
-    <string name="reader_toast_err_remove_tag">Ezin izan da etiketa hau kendu</string>
-    <string name="reader_toast_err_add_tag">Ezin izan da gai hau gehitu</string>
     <string name="share_link">Partekatu esteka</string>
     <string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen…</string>
     <string name="cant_share_no_visible_blog">Ezin da WordPress-en partekatu blog ikusgai bat ez baduzu</string>
@@ -573,14 +558,11 @@ Language: eu_ES
     <string name="reader_btn_share">Partekatu</string>
     <string name="reader_btn_follow">Jarraitu</string>
     <string name="reader_untitled_post">(Izenbururik gabe)</string>
-    <string name="reader_btn_unfollow">Jarraitzen</string>
     <string name="reader_label_removed_tag">%s ezabatua</string>
     <string name="reader_likes_one">Pertsona batek hau gustuko du</string>
     <string name="reader_likes_only_you">Hau gustuko duzu</string>
     <string name="reader_hint_comment_on_comment">Erantzun iruzkinari…</string>
-    <string name="reader_toast_err_tag_invalid">Hori ez da etiketa zuzen bat</string>
     <string name="reader_view_reblog">Birblogeatu </string>
-    <string name="reader_toast_err_tag_exists">Dagoeneko gai hau jarraitzen duzu</string>
     <string name="comments_empty_list">Oraindik iruzkin gabe</string>
     <string name="sign_up_label">Izena eman</string>
     <string name="media_gallery_type_squares">Karratuak</string>

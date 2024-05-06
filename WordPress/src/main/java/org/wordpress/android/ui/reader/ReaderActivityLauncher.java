@@ -13,7 +13,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
-import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -184,8 +183,11 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderSearch(Context context) {
-        Intent intent = new Intent(context, ReaderSearchActivity.class);
-        context.startActivity(intent);
+        context.startActivity(createReaderSearchIntent(context));
+    }
+
+    public static Intent createReaderSearchIntent(@NonNull final Context context) {
+        return new Intent(context, ReaderSearchActivity.class);
     }
 
     /*
@@ -312,9 +314,13 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderSubs(Context context, int selectPosition) {
-        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(createIntentShowReaderSubs(context, selectPosition));
+    }
+
+    public static Intent createIntentShowReaderSubs(@NonNull final Context context, final int selectPosition) {
+        final Intent intent = new Intent(context, ReaderSubsActivity.class);
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
-        context.startActivity(intent);
+        return intent;
     }
 
     public static void showReaderInterests(Activity activity) {
@@ -377,12 +383,6 @@ public class ReaderActivityLauncher {
         }
     }
 
-    public static void showReaderPhotoViewer(Context context,
-                                             String imageUrl,
-                                             EnumSet<PhotoViewerOption> imageOptions) {
-        showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
-    }
-
     public enum OpenUrlType {
         INTERNAL, EXTERNAL
     }
@@ -402,13 +402,7 @@ public class ReaderActivityLauncher {
 
     public static void sharePost(Context context, ReaderPost post) throws ActivityNotFoundException {
         String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
-
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, url);
-        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
-
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+        ActivityLauncher.openShareIntent(context, url, post.getTitle());
     }
 
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-alpha.11
+Generator: GlotPress/4.0.1
 Language: uz
 -->
 <resources>
@@ -19,7 +19,6 @@ Language: uz
     <string name="empty_list_default">Ushbu ro‘yxat bo‘sh</string>
     <string name="reader_btn_share">Bo‘lish</string>
     <string name="reader_btn_follow">Kuzatish</string>
-    <string name="reader_btn_unfollow">Kuzatmoqda</string>
     <string name="reader_toast_err_comment_failed">Mulohazangiz kiritilmadi</string>
     <string name="reader_toast_err_share_intent">Bo‘lishib bo‘lmadi</string>
     <string name="reader_toast_err_view_image">Rasm ko‘rinmayapti</string>

@@ -259,20 +259,6 @@ public class ReaderUtils {
     }
 
     /*
-     * returns the passed string prefixed with a "#" if it's non-empty and isn't already
-     * prefixed with a "#"
-     */
-    public static String makeHashTag(String tagName) {
-        if (TextUtils.isEmpty(tagName)) {
-            return "";
-        } else if (tagName.startsWith("#")) {
-            return tagName;
-        } else {
-            return "#" + tagName;
-        }
-    }
-
-    /*
      * set the background of the passed view to the round ripple drawable - only works on
      * Lollipop or later, does nothing on earlier Android versions
      */
@@ -346,8 +332,8 @@ public class ReaderUtils {
         if (tag.isDefaultInMemoryTag()) {
             // if the tag was created in memory from createTagFromTagName
             // we need to set some fields as below before to use it
-            tag.setTagTitle(context.getString(R.string.reader_following_display_name));
-            tag.setTagDisplayName(context.getString(R.string.reader_following_display_name));
+            tag.setTagTitle(context.getString(R.string.reader_subscribed_display_name));
+            tag.setTagDisplayName(context.getString(R.string.reader_subscribed_display_name));
 
             String baseUrl = clientUtilsProvider.getTagUpdateEndpointURL();
 

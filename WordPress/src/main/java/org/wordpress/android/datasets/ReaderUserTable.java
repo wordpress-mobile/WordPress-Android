@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
@@ -29,16 +29,6 @@ public class ReaderUserTable {
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_users");
-    }
-
-    public static void addOrUpdateUser(ReaderUser user) {
-        if (user == null) {
-            return;
-        }
-
-        ReaderUserList users = new ReaderUserList();
-        users.add(user);
-        addOrUpdateUsers(users);
     }
 
     private static final String COLUMN_NAMES =
@@ -118,7 +108,7 @@ public class ReaderUserTable {
             if (c.moveToFirst()) {
                 do {
                     long userId = c.getLong(0);
-                    String url = GravatarUtils.fixGravatarUrl(c.getString(1), avatarSz);
+                    String url = WPAvatarUtils.rewriteAvatarUrl(c.getString(1), avatarSz);
                     // add current user to the top
                     if (userId == wpComUserId) {
                         avatars.add(0, url);
@@ -148,13 +138,6 @@ public class ReaderUserTable {
         } finally {
             SqlUtils.closeCursor(c);
         }
-    }
-
-    private static String getAvatarForUser(long userId) {
-        String[] args = {Long.toString(userId)};
-        return SqlUtils
-                .stringForQuery(ReaderDatabase.getReadableDb(), "SELECT avatar_url FROM tbl_users WHERE user_id=?",
-                                args);
     }
 
     public static ReaderUserList getUsersWhoLikePost(long blogId, long postId, int max) {

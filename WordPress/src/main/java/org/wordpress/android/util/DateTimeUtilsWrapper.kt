@@ -61,4 +61,11 @@ class DateTimeUtilsWrapper @Inject constructor(
     }
 
     fun getInstantNow(): Instant = Instant.now()
+
+    fun timestampFromIso8601Millis(date: String) = DateTimeUtils.timestampFromIso8601Millis(date)
+
+    fun dateStringFromIso8601MinusMillis(date: String, millisecondsToSubtract: Long) =
+        runCatching {
+            DateTimeUtils.iso8601FromTimestamp((dateFromIso8601(date).time - millisecondsToSubtract) / 1000)
+        }.getOrNull()
 }

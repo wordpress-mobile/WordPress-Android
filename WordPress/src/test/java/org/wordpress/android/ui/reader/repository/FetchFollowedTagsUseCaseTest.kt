@@ -9,7 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsFetched
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
@@ -61,12 +61,12 @@ class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Success returned when FollowedTagsChanged event is posted with true`() = test {
+    fun `Success returned when FollowedTagsFetched event is posted with success`() = test {
         // Given
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        val event = FollowedTagsChanged(true)
+        val event = FollowedTagsFetched(true, 10)
         whenever(readerUpdateServiceStarterWrapper.startService(contextProvider.getContext(), EnumSet.of(TAGS)))
-            .then { useCase.onFollowedTagsChanged(event) }
+            .then { useCase.onFollowedTagsFetched(event) }
 
         // When
         val result = useCase.fetch()
@@ -76,12 +76,12 @@ class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `RemoteRequestFailure returned when FollowedTagsChanged event is posted with false`() = test {
+    fun `RemoteRequestFailure returned when FollowedTagsFetched event is posted with failure`() = test {
         // Given
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        val event = FollowedTagsChanged(false)
+        val event = FollowedTagsFetched(false, 10)
         whenever(readerUpdateServiceStarterWrapper.startService(contextProvider.getContext(), EnumSet.of(TAGS)))
-            .then { useCase.onFollowedTagsChanged(event) }
+            .then { useCase.onFollowedTagsFetched(event) }
 
         // When
         val result = useCase.fetch()

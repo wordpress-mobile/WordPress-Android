@@ -21,13 +21,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewException
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.model.ReviewErrorCode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
-import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,7 +34,6 @@ import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATIO
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
@@ -57,7 +53,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.review.ReviewViewModel
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -66,6 +61,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
+import org.wordpress.android.util.extensions.logException
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
@@ -82,7 +78,8 @@ class PostsListActivity : LocaleAwareActivity(),
     BasicDialogPositiveClickInterface,
     BasicDialogNegativeClickInterface,
     BasicDialogOnDismissByOutsideTouchInterface,
-    ScrollableViewInitializedListener {
+    ScrollableViewInitializedListener,
+    PostResolutionOverlayListener {
     @Inject
     internal lateinit var siteStore: SiteStore
 
@@ -121,9 +118,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var mediaPickerLauncher: MediaPickerLauncher
-
-    @Inject
-    internal lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
@@ -282,7 +276,6 @@ class PostsListActivity : LocaleAwareActivity(),
                     action,
                     remotePreviewLogicHelper,
                     previewStateHelper,
-                    mediaPickerLauncher,
                     blazeFeatureUtils
                 )
             }
@@ -317,8 +310,7 @@ class PostsListActivity : LocaleAwareActivity(),
             if (fragment == null) {
                 val prepublishingFragment = newInstance(
                     site = site,
-                    isPage = editPostRepository.isPage,
-                    isStoryPost = false
+                    isPage = editPostRepository.isPage
                 )
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
@@ -360,19 +352,22 @@ class PostsListActivity : LocaleAwareActivity(),
                     AppLog.e(AppLog.T.POSTS, "Error launching google review API flow.", e)
                 }
             } else {
-                @ReviewErrorCode val reviewErrorCode = (task.exception as ReviewException).errorCode
-                AppLog.e(
-                    AppLog.T.POSTS,
-                    "Error fetching ReviewInfo object from Review API to start in-app review process",
-                    reviewErrorCode
-                )
+                task.logException()
             }
         }
     }
 
-    private fun setupActions() {
+    private fun PostListActivityBinding.setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
+        }
+        viewModel.conflictResolutionAction.observe(this@PostsListActivity) {
+            val fragment = supportFragmentManager.findFragmentByTag(PostResolutionOverlayFragment.TAG)
+            if (fragment == null) {
+                PostResolutionOverlayFragment
+                    .newInstance(it.postModel, it.postResolutionType)
+                    .show(supportFragmentManager, PostResolutionOverlayFragment.TAG)
+            }
         }
         viewModel.postUploadAction.observe(this@PostsListActivity) {
             it?.let { uploadAction ->
@@ -383,11 +378,16 @@ class PostsListActivity : LocaleAwareActivity(),
                     uploadActionUseCase,
                     uploadUtilsWrapper
                 ) { isFirstTimePublishing ->
+                    changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                     reviewViewModel.onPublishingPost(isFirstTimePublishing)
                 }
             }
         }
+    }
+
+    private fun PostListActivityBinding.changeTabsOnPostUpload() {
+        tabLayout.getTabAt(PostListType.PUBLISHED.ordinal)?.select()
     }
 
     private fun PostListActivityBinding.loadViewState(state: PostListMainViewState) {
@@ -448,11 +448,10 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    public override fun onResume() {
+    override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
     }
-
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -462,9 +461,8 @@ class PostsListActivity : LocaleAwareActivity(),
                 if (data != null && EditPostActivity.checkToRestart(data)) {
                     ActivityLauncher.editPostOrPageForResult(
                         data, this, site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0)
+                        data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0)
                     )
-
                     // a restart will happen so, no need to continue here
                     return
                 }
@@ -474,26 +472,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
             requestCode == RequestCodes.REMOTE_PREVIEW_POST -> {
                 viewModel.handleRemotePreviewClosing()
-            }
-
-            requestCode == RequestCodes.PHOTO_PICKER &&
-                    resultCode == Activity.RESULT_OK &&
-                    data != null -> {
-                storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                    data,
-                    this,
-                    site,
-                    STORY_FROM_POSTS_LIST
-                )
-            }
-
-            requestCode == RequestCodes.CREATE_STORY -> {
-                val isNewStory = data?.getStringExtra(GutenbergEditorFragment.ARG_STORY_BLOCK_ID) == null
-                bloggingRemindersViewModel.onPublishingPost(
-                    site.id,
-                    isNewStory
-                )
-                reviewViewModel.onPublishingPost(isNewStory)
             }
         }
     }
@@ -655,6 +633,11 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onScrollableViewInitialized(containerId: Int) {
         binding.appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         binding.appbarMain.setTag(R.id.posts_non_search_recycler_view_id_tag_key, containerId)
+    }
+
+    // PostResolutionOverlayListener Callbacks
+    override fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        viewModel.onPostResolutionConfirmed(event)
     }
 
     companion object {

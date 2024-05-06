@@ -55,7 +55,7 @@ class EditorBloggingPromptsViewModel
 
     private fun createPromptTags(prompt: BloggingPromptModel): List<String> = mutableListOf<String>().apply {
         add(BloggingPromptsPostTagProvider.BLOGGING_PROMPT_TAG)
-        add(bloggingPromptsPostTagProvider.promptIdTag(prompt.answeredLink))
+        add(bloggingPromptsPostTagProvider.promptIdTag(prompt.id))
         prompt.bloganuaryId?.let { bloganuaryIdTag ->
             add(BloggingPromptsPostTagProvider.BLOGANUARY_TAG)
             add(bloganuaryIdTag)

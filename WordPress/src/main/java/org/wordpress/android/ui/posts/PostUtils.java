@@ -54,11 +54,6 @@ public class PostUtils {
     private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
     private static final String GUTENBERG_BLOCK_START = "<!-- wp:";
-    private static final int SRC_ATTRIBUTE_LENGTH_PLUS_ONE = 5;
-    private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s";
-    private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
-    private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
-    public static final String WP_STORIES_GUTENBERG_BLOCK_START = "<!-- wp:jetpack/story";
 
     public static Map<String, Object> addPostTypeAndPostFormatToAnalyticsProperties(PostImmutableModel post,
                                                                                     Map<String, Object> properties) {
@@ -168,11 +163,9 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
-                    properties.put("editor_source",
-                            contentContainsWPStoryGutenbergBlocks(post.getContent())
-                                    ? SiteUtils.WP_STORIES_CREATOR_NAME
-                                    : (shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
-                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
+                    properties.put("editor_source", (shouldShowGutenbergEditor(
+                            post.isLocalDraft(), post.getContent(), site) ? SiteUtils.GB_EDITOR_NAME
+                            : SiteUtils.AZTEC_EDITOR_NAME));
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
@@ -208,10 +201,6 @@ public class PostUtils {
         return post != null && !(post.getContent().trim().isEmpty()
                                  && post.getExcerpt().trim().isEmpty()
                                  && post.getTitle().trim().isEmpty());
-    }
-
-    public static boolean hasEmptyContentFields(PostImmutableModel post) {
-        return TextUtils.isEmpty(post.getTitle()) && TextUtils.isEmpty(post.getContent());
     }
 
     /**
@@ -313,10 +302,10 @@ public class PostUtils {
     }
 
     /**
-     * Removes the VideoPress block tag from the given string.
+     * Removes VideoPress references that occur in the VideoPress or video block from the given string.
      */
     public static String removeWPVideoPress(String str) {
-        return str.replaceAll("(?s)\\n?<!--\\swp:videopress/video?(.*?)wp:videopress/video\\s-->", "");
+        return str.replaceAll("(?s)\\n?<!--\\swp:video.*?(.*?)wp:video.*?\\s-->", "");
     }
 
     public static String getFormattedDate(PostModel post) {
@@ -368,11 +357,6 @@ public class PostUtils {
         cal.add(Calendar.MINUTE, -30);
         Date halfHourBack = cal.getTime();
         return pubDate != null && pubDate.before(halfHourBack);
-    }
-
-    // Only drafts should have the option to publish immediately to avoid user confusion
-    static boolean shouldPublishImmediatelyOptionBeAvailable(PostModel postModel) {
-        return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
     static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
@@ -596,10 +580,6 @@ public class PostUtils {
         return flag != null && post != null
                && post.getLocalSiteId() == flag.localSiteId
                && post.getId() == flag.postId;
-    }
-
-    public static boolean contentContainsWPStoryGutenbergBlocks(String postContent) {
-        return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
     }
 
     public enum EntryPoint {

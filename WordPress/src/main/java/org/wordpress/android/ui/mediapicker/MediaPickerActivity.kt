@@ -27,7 +27,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerActivity.MediaPickerMedia
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.Companion.newInstance
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForPhotos
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenCameraForWPStories
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.OpenSystemPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerAction.SwitchMediaPicker
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerListener
@@ -37,7 +36,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.GIF_LIBR
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
-import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_ID
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_QUEUED_URIS
 import org.wordpress.android.ui.photopicker.MediaPickerConstants.EXTRA_MEDIA_SOURCE
@@ -49,6 +47,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -251,13 +250,6 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
         WPMediaUtils.launchChooserWithContext(this, openSystemPicker, uiHelpers, MEDIA_LIBRARY)
     }
 
-    private fun launchWPStoriesCamera() {
-        val intent = Intent()
-            .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-    }
-
     private fun Intent.putUris(
         mediaUris: List<Uri>
     ) {
@@ -321,12 +313,27 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
             is OpenSystemPicker -> {
                 launchChooserWithContext(action, uiHelpers)
             }
-            is OpenCameraForWPStories -> launchWPStoriesCamera()
             is SwitchMediaPicker -> {
                 startActivityForResult(buildIntent(this, action.mediaPickerSetup, site, localPostId), PHOTO_PICKER)
             }
             OpenCameraForPhotos -> {
-                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath = it }
+                WPMediaUtils.launchCamera(
+                    this,
+                    BuildConfig.APPLICATION_ID,
+                    object : WPMediaUtils.LaunchCameraCallback {
+                        override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+                            this@MediaPickerActivity.mediaCapturePath = mediaCapturePath
+                        }
+
+                        override fun onCameraError(errorMessage: String?) {
+                            ToastUtils.showToast(
+                                this@MediaPickerActivity,
+                                errorMessage,
+                                ToastUtils.Duration.SHORT
+                            )
+                        }
+                    }
+                )
             }
         }
     }

@@ -1,17 +1,16 @@
 gradle.ext.fluxCBinaryPath = "org.wordpress:fluxc"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
-gradle.ext.gutenbergMobileBinaryPath = "org.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.gutenbergMobileBinaryPath = "org.wordpress.gutenberg-mobile:react-native-gutenberg-bridge"
 gradle.ext.includedBuildGutenbergMobilePath = null
 gradle.ext.loginFlowBinaryPath = "org.wordpress:login"
-gradle.ext.storiesAndroidPath = "com.automattic:stories"
-gradle.ext.storiesAndroidMp4ComposePath = "com.automattic.stories:mp4compose"
-gradle.ext.storiesAndroidPhotoEditorPath = "com.automattic.stories:photoeditor"
 gradle.ext.aztecAndroidAztecPath = "org.wordpress:aztec"
 gradle.ext.aztecAndroidWordPressShortcodesPath = "org.wordpress.aztec:wordpress-shortcodes"
 gradle.ext.aztecAndroidWordPressCommentsPath = "org.wordpress.aztec:wordpress-comments"
 gradle.ext.aztecAndroidGlideLoaderPath = "org.wordpress.aztec:glide-loader"
 gradle.ext.aztecAndroidPicassoLoaderPath = "org.wordpress.aztec:picasso-loader"
 gradle.ext.aboutAutomatticBinaryPath = "com.automattic:about"
+gradle.ext.tracksBinaryPath = "com.automattic:Automattic-Tracks-Android"
+gradle.ext.gravatarBinaryPath = "com.gravatar:gravatar"
 
 def localBuilds = new File("${rootDir}/local-builds.gradle")
 if (localBuilds.exists()) {
@@ -94,6 +93,24 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting about-automattic with the local build"
                 substitute module("$gradle.ext.aboutAutomatticBinaryPath") using project(':library')
+            }
+        }
+    }
+
+    if (ext.has("localTracksPath")) {
+        includeBuild(ext.localTracksPath) {
+            dependencySubstitution {
+                println "Substituting tracks with the local build"
+                substitute module("$gradle.ext.tracksBinaryPath") using project(':AutomatticTracks')
+            }
+        }
+    }
+
+    if (ext.has("localGravatarAndroidPath")) {
+        includeBuild(ext.localGravatarAndroidPath) {
+            dependencySubstitution {
+                println "Substituting Gravatar-Android with the local build"
+                substitute module("$gradle.ext.gravatarBinaryPath") using project(':gravatar')
             }
         }
     }

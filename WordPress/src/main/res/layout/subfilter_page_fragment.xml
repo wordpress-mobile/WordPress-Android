@@ -21,32 +21,52 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:importantForAccessibility="yes">
+        android:importantForAccessibility="yes"
+        android:padding="@dimen/margin_extra_large"
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/title"
+            style="@style/SubfilterEmptyStateTitle"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:fixWidowWords="true"
-            android:layout_marginTop="50dp"
-            style="@style/ActionableEmptyStateTitle"
-            android:text="@string/reader_filter_empty_sites_list"/>
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:text="@string/reader_filter_empty_tags_list_title"
+            app:fixWidowWords="true" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/action_button"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text"
+            style="@style/SubfilterEmptyStateText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+            android:text="@string/reader_filter_empty_tags_list_follow_text"
+            app:fixWidowWords="true" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_button_primary"
+            style="@style/Reader.Button.Primary"
             android:ellipsize="end"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:visibility="visible"
+            android:text="@string/reader_filter_empty_tags_action_suggested" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_button_secondary"
+            style="@style/Reader.Button.Secondary"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
             android:minHeight="@dimen/default_dialog_button_height"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:textAllCaps="true"
-            android:textColor="@color/primary"
             android:visibility="visible"
-            android:text="@string/reader_filter_empty_sites_action"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:text="@string/reader_filter_empty_tags_action_follow" />
 
     </LinearLayout>
 </RelativeLayout>

@@ -17,7 +17,8 @@ import org.wordpress.android.databinding.ReaderDiscoverFragmentLayoutBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
-import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.ChooseSiteActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.addItemDivider
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageManager
@@ -54,7 +56,7 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout) {
+class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragment_layout), OnScrollToTopListener {
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
     @Inject
@@ -72,6 +74,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     @Inject
     lateinit var readerTracker: ReaderTracker
+
+    @Inject
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     private lateinit var parentViewModel: ReaderViewModel
 
     @Inject
@@ -90,7 +96,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             recyclerView.adapter =
                 ReaderDiscoverAdapter(
-                    uiHelpers, imageManager, readerTracker, readerImprovementsFeatureConfig.isEnabled()
+                    uiHelpers,
+                    imageManager,
+                    readerTracker,
+                    networkUtilsWrapper,
+                    readerImprovementsFeatureConfig.isEnabled()
                 )
 
             // set the background color as we have different colors for the new and legacy designs that are not easy to
@@ -131,9 +141,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             when (it) {
                 is DiscoverUiState.ContentUiState -> {
                     (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
-                    if (it.scrollToTop) {
-                        recyclerView.scrollToPosition(0)
-                    }
                 }
                 is DiscoverUiState.EmptyUiState -> {
                     uiHelpers.setTextOrHide(actionableEmptyView.title, it.titleResId)
@@ -153,9 +160,10 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             ptrLayout.isEnabled = it.swipeToRefreshEnabled
             ptrLayout.isRefreshing = it.reloadProgressVisibility
         }
+        viewModel.scrollToTopEvent.observeEvent(viewLifecycleOwner) { recyclerView.scrollToPosition(0) }
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { handleNavigation(it) }
-        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, { it.showSnackbar() })
-        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner, { it.addWebViewCachingFragment() })
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { it.showSnackbar() }
+        viewModel.preloadPostEvents.observeEvent(viewLifecycleOwner) { it.addWebViewCachingFragment() }
         viewModel.start(parentViewModel)
     }
 
@@ -269,10 +277,14 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK && data != null) {
             val siteLocalId = data.getIntExtra(
-                SitePickerActivity.KEY_SITE_LOCAL_ID,
+                ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                 SelectedSiteRepository.UNAVAILABLE
             )
             viewModel.onReblogSiteSelected(siteLocalId)
         }
+    }
+
+    override fun onScrollToTop() {
+        binding?.recyclerView?.smoothScrollToPosition(0)
     }
 }

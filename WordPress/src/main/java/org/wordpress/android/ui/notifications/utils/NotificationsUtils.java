@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,10 +14,11 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.AlignmentSpan;
 import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
@@ -27,7 +27,6 @@ import com.android.volley.VolleyError;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.wordpress.rest.RestRequest;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
@@ -39,6 +38,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.fluxc.tools.FormattableMedia;
 import org.wordpress.android.fluxc.tools.FormattableRange;
+import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.ui.notifications.blocks.NoteBlock;
@@ -71,9 +71,6 @@ public class NotificationsUtils {
     public static final String WPCOM_PUSH_DEVICE_SERVER_ID = "wp_pref_notifications_server_id";
     public static final String PUSH_AUTH_ENDPOINT = "me/two-step/push-authentication";
 
-    private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
-    private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
-
     private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
 
     public interface TwoFactorAuthCallback {
@@ -90,7 +87,7 @@ public class NotificationsUtils {
         if (!TextUtils.isEmpty(deviceID)) {
             settingsEndpoint += "?device_id=" + deviceID;
         }
-        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
@@ -220,16 +217,17 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                  TextView textView,
-                                                  final Function1<FormattableRange, Unit> clickHandler,
-                                                  boolean isFooter) {
+    @NonNull
+    static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            @Nullable final Function1<FormattableRange, Unit> clickHandler,
+            boolean isFooter
+    ) {
         Function1<NoteBlockClickableSpan, Unit> clickListener =
-                clickHandler != null ? new Function1<NoteBlockClickableSpan, Unit>() {
-                    @Override public Unit invoke(NoteBlockClickableSpan noteBlockClickableSpan) {
-                        clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
-                        return null;
-                    }
+                clickHandler != null ? noteBlockClickableSpan -> {
+                    clickHandler.invoke(noteBlockClickableSpan.getFormattableRange());
+                    return null;
                 } : null;
         return getSpannableContentForRanges(formattableContent,
                 textView,
@@ -246,11 +244,14 @@ public class NotificationsUtils {
      * @param isFooter - Set if spannable should apply special formatting
      * @return Spannable string with formatted content
      */
-    private static SpannableStringBuilder getSpannableContentForRanges(FormattableContent formattableContent,
-                                                          TextView textView,
-                                                          boolean isFooter,
-                                                          final Function1<NoteBlockClickableSpan, Unit>
-                                                                  onNoteBlockTextClickListener) {
+    @NonNull
+    public static SpannableStringBuilder getSpannableContentForRanges(
+            @Nullable FormattableContent formattableContent,
+            @Nullable TextView textView,
+            boolean isFooter,
+            @Nullable final Function1<NoteBlockClickableSpan, Unit>
+                    onNoteBlockTextClickListener
+    ) {
         if (formattableContent == null) {
             return new SpannableStringBuilder();
         }
@@ -267,6 +268,9 @@ public class NotificationsUtils {
         List<FormattableRange> rangesArray = formattableContent.getRanges();
         if (rangesArray != null) {
             for (FormattableRange range : rangesArray) {
+                // Skip ranges with UNKNOWN type and no URL since they are not actionable
+                if (range.rangeType() == FormattableRangeType.UNKNOWN && TextUtils.isEmpty(range.getUrl())) continue;
+
                 NoteBlockClickableSpan clickableSpan =
                         new NoteBlockClickableSpan(range, shouldLink, isFooter) {
                     @Override
@@ -283,13 +287,6 @@ public class NotificationsUtils {
                     spannableStringBuilder
                             .setSpan(clickableSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
-                    // Add additional styling if the range wants it
-                    if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
-                        StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
-                        spannableStringBuilder
-                                .setSpan(styleSpan, indices.get(0), indices.get(1), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                    }
-
                     if (onNoteBlockTextClickListener != null && textView != null) {
                         textView.setLinksClickable(true);
                         textView.setMovementMethod(new NoteBlockLinkMovementMethod());
@@ -299,21 +296,6 @@ public class NotificationsUtils {
         }
 
         return spannableStringBuilder;
-    }
-
-    public static int[] getIndicesForRange(JSONObject rangeObject) {
-        int[] indices = new int[]{0, 0};
-        if (rangeObject == null) {
-            return indices;
-        }
-
-        JSONArray indicesArray = rangeObject.optJSONArray("indices");
-        if (indicesArray != null && indicesArray.length() >= 2) {
-            indices[0] = indicesArray.optInt(0);
-            indices[1] = indicesArray.optInt(1);
-        }
-
-        return indices;
     }
 
     /**
@@ -495,6 +477,11 @@ public class NotificationsUtils {
         }
 
         return false;
+    }
+
+    @Nullable
+    public static Note getNoteById(@Nullable String noteID) {
+        return NotificationsTable.getNoteById(noteID);
     }
 
     public static Note buildNoteObjectFromBundle(Bundle data) {

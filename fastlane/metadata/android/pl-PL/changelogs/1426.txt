@@ -1,0 +1,3 @@
+24.7:
+Przeprojektowaliśmy ekran wyboru witryn. Możesz teraz przypinać ulubione witryny, wyświetlać ostatnio odwiedzane witryny i nie tylko. Usunęliśmy również możliwość pokazywania i ukrywania witryn.
+(Czy wystarczająco dużo razy użyliśmy słowa "witryny"? Wydaje nam się, że tak).

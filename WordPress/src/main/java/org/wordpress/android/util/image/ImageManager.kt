@@ -23,6 +23,9 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.TransitionOptions
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -38,8 +41,6 @@ import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.WordPress
-import org.wordpress.android.modules.GlideApp
-import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
@@ -107,7 +108,7 @@ class ImageManager @Inject constructor(
     fun load(imageView: ImageView, imageType: ImageType, imgUrl: String = "", scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imgUrl)
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -137,7 +138,7 @@ class ImageManager @Inject constructor(
             videoUrl,
             loadAction = {
                 if (!context.isAvailable()) return@runIfMediaNotTooBig
-                GlideApp.with(context)
+                Glide.with(context)
                     .load(videoUrl)
                     .addFallback(imageType)
                     .addPlaceholder(imageType)
@@ -152,7 +153,7 @@ class ImageManager @Inject constructor(
                 val fallbackDrawable = placeholderManager.getErrorResource(imageType)?.let {
                     ColorDrawable(ContextCompat.getColor(context, it))
                 }
-                GlideApp.with(context)
+                Glide.with(context)
                     .load(fallbackDrawable)
                     .addPlaceholder(imageType)
                     .addFallback(imageType)
@@ -178,7 +179,7 @@ class ImageManager @Inject constructor(
         height: Int? = null
     ) {
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .asBitmap()
             .load(imgUrl)
             .addFallback(imageType)
@@ -202,7 +203,7 @@ class ImageManager @Inject constructor(
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imgUrl)
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -236,7 +237,7 @@ class ImageManager @Inject constructor(
             return
         }
 
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imageData)
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -262,7 +263,7 @@ class ImageManager @Inject constructor(
         val context = imageView.context
         if (!context.isAvailable()) return
 
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imgUrl)
             .transform(CenterCrop(), RoundedCorners(cornerRadius))
             .addFallback(imageType)
@@ -290,7 +291,7 @@ class ImageManager @Inject constructor(
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(Uri.parse(imgUrl))
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -302,6 +303,47 @@ class ImageManager @Inject constructor(
     }
 
     /**
+     * Loads an image from the "imgUrl" into the ImageView animating it with the provided Glide animation.
+     * Adds a placeholder and an error placeholder depending on the ImageType and attaches a ResultListener.
+     */
+    fun animateWithResultListener(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        transitionOptions: TransitionOptions<*, in Drawable>,
+        requestListener: RequestListener<Drawable>
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        Glide.with(context)
+            .load(Uri.parse(imgUrl))
+            .addFallback(imageType)
+            .addPlaceholder(imageType)
+            .applyScaleType(CENTER)
+            .attachRequestListener(requestListener)
+            .transition(transitionOptions)
+            .into(imageView)
+            .clearOnDetach()
+    }
+
+    /**
+     * Preloads an image from the provided `imgUrl`.
+     */
+    fun preload(context: Context, imgUrl: String) {
+        if (!context.isAvailable()) return
+        try {
+            Glide.with(context)
+                .downloadOnly()
+                .load(Uri.parse(imgUrl))
+                .submit()
+                .get() // This makes each call blocking, so subsequent calls can be cancelled if needed.
+        } catch (e: ExecutionException) {
+            // This is a best effort preload, so we don't want to crash the app if an `ExecutionException` is thrown.
+            AppLog.e(AppLog.T.UTILS, "Error preloading image $imgUrl: $e")
+        }
+    }
+
+    /**
      * Preloads an [MShot].
      *
      * This is needed because the mshot service redirects to a loading gif image when the thumbnail is not ready.
@@ -310,7 +352,7 @@ class ImageManager @Inject constructor(
     fun preload(context: Context, design: MShot) {
         if (!context.isAvailable()) return
         try {
-            GlideApp.with(context)
+            Glide.with(context)
                 .downloadOnly()
                 .load(design)
                 .submit()
@@ -330,7 +372,7 @@ class ImageManager @Inject constructor(
     fun loadWithResultListener(view: ImageView, design: MShot, requestListener: RequestListener<Drawable>) {
         val context = view.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(design)
             .addFallback(ImageType.THEME)
             .addPlaceholder(ImageType.THEME)
@@ -360,7 +402,7 @@ class ImageManager @Inject constructor(
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imgUri)
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -384,7 +426,7 @@ class ImageManager @Inject constructor(
     ) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .asFile()
             .load(imgUri)
             .attachRequestListener(requestListener)
@@ -404,7 +446,7 @@ class ImageManager @Inject constructor(
     fun load(imageView: ImageView, bitmap: Bitmap, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(bitmap)
             .applyScaleType(scaleType)
             .into(imageView)
@@ -418,7 +460,7 @@ class ImageManager @Inject constructor(
     fun load(imageView: ImageView, drawable: Drawable, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(drawable)
             .applyScaleType(scaleType)
             .into(imageView)
@@ -432,7 +474,7 @@ class ImageManager @Inject constructor(
     fun load(imageView: ImageView, @DrawableRes resourceId: Int, scaleType: ScaleType = CENTER) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(ContextCompat.getDrawable(context, resourceId))
             .applyScaleType(scaleType)
             .into(imageView)
@@ -450,7 +492,7 @@ class ImageManager @Inject constructor(
     fun loadIntoCustomTarget(viewTarget: ViewTarget<TextView, Drawable>, imageType: ImageType, imgUrl: String) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .load(imgUrl)
             .addFallback(imageType)
             .addPlaceholder(imageType)
@@ -472,7 +514,7 @@ class ImageManager @Inject constructor(
         scaleType: ScaleType = CENTER
     ) {
         if (!context.isAvailable()) return
-        GlideApp.with(context)
+        Glide.with(context)
             .asBitmap()
             .load(imgUrl)
             .applyScaleType(scaleType)
@@ -488,7 +530,7 @@ class ImageManager @Inject constructor(
         if (context is Activity && (context.isFinishing || context.isDestroyed)) {
             return
         }
-        GlideApp.with(imageView.context).clear(imageView)
+        Glide.with(imageView.context).clear(imageView)
     }
 
     /**
@@ -497,12 +539,12 @@ class ImageManager @Inject constructor(
      */
     @Suppress("DEPRECATION")
     fun <T : Any> cancelRequest(context: Context, target: BaseTarget<T>?) {
-        GlideApp.with(context).clear(target)
+        Glide.with(context).clear(target)
     }
 
-    private fun <T : Any> GlideRequest<T>.applyScaleType(
+    private fun <T : Any> RequestBuilder<T>.applyScaleType(
         scaleType: ScaleType
-    ): GlideRequest<T> {
+    ): RequestBuilder<T> {
         return when (scaleType) {
             ScaleType.CENTER_CROP -> this.centerCrop()
             ScaleType.CENTER_INSIDE -> this.centerInside()
@@ -521,7 +563,7 @@ class ImageManager @Inject constructor(
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.applySize(width: Int?, height: Int?): GlideRequest<T> {
+    private fun <T : Any> RequestBuilder<T>.applySize(width: Int?, height: Int?): RequestBuilder<T> {
         return if (width != null && height != null) {
             this.override(width, height)
         } else {
@@ -529,7 +571,7 @@ class ImageManager @Inject constructor(
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addPlaceholder(imageType: ImageType): GlideRequest<T> {
+    private fun <T : Any> RequestBuilder<T>.addPlaceholder(imageType: ImageType): RequestBuilder<T> {
         val placeholderImageRes = placeholderManager.getPlaceholderResource(imageType)
         return if (placeholderImageRes == null) {
             this
@@ -538,7 +580,7 @@ class ImageManager @Inject constructor(
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.addFallback(imageType: ImageType): GlideRequest<T> {
+    private fun <T : Any> RequestBuilder<T>.addFallback(imageType: ImageType): RequestBuilder<T> {
         val errorImageRes = placeholderManager.getErrorResource(imageType)
         return if (errorImageRes == null) {
             this
@@ -550,7 +592,7 @@ class ImageManager @Inject constructor(
     /**
      * Changing the signature invalidates cache.
      */
-    private fun <T : Any> GlideRequest<T>.addSignature(signature: Int?): GlideRequest<T> {
+    private fun <T : Any> RequestBuilder<T>.addSignature(signature: Int?): RequestBuilder<T> {
         return if (signature == null) {
             this
         } else {
@@ -558,15 +600,15 @@ class ImageManager @Inject constructor(
         }
     }
 
-    private fun GlideRequest<Drawable>.addThumbnail(
+    private fun RequestBuilder<Drawable>.addThumbnail(
         context: Context,
         thumbnailUrl: String?,
         listener: RequestListener<Drawable>
-    ): GlideRequest<Drawable> {
+    ): RequestBuilder<Drawable> {
         return if (TextUtils.isEmpty(thumbnailUrl)) {
             this
         } else {
-            val thumbnailRequest = GlideApp
+            val thumbnailRequest = Glide
                 .with(context)
                 .load(thumbnailUrl)
                 .downsample(DownsampleStrategy.AT_MOST)
@@ -575,9 +617,9 @@ class ImageManager @Inject constructor(
         }
     }
 
-    private fun <T : Any> GlideRequest<T>.attachRequestListener(
+    private fun <T : Any> RequestBuilder<T>.attachRequestListener(
         requestListener: RequestListener<T>?
-    ): GlideRequest<T> {
+    ): RequestBuilder<T> {
         return if (requestListener == null) {
             this
         } else {
@@ -585,7 +627,7 @@ class ImageManager @Inject constructor(
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
-                    target: Target<T>?,
+                    target: Target<T>,
                     isFirstResource: Boolean
                 ): Boolean {
                     requestListener.onLoadFailed(e, model)
@@ -593,22 +635,16 @@ class ImageManager @Inject constructor(
                 }
 
                 override fun onResourceReady(
-                    resource: T?,
-                    model: Any?,
+                    resource: T,
+                    model: Any,
                     target: Target<T>?,
-                    dataSource: DataSource?,
+                    dataSource: DataSource,
                     isFirstResource: Boolean
                 ): Boolean {
-                    if (resource != null) {
-                        requestListener.onResourceReady(resource, model)
-                    } else {
-                        // according to the Glide's JavaDoc, this shouldn't happen
-                        AppLog.e(AppLog.T.UTILS, "Resource in ImageManager.onResourceReady is null.")
-                        requestListener.onLoadFailed(null, model)
-                    }
+                    requestListener.onResourceReady(resource, model)
                     return false
                 }
-            })
+           })
         }
     }
 

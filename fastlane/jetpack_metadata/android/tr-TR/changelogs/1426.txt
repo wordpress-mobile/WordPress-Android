@@ -1,0 +1,3 @@
+24.7:
+Site seçici ekranını yeniden tasarladık. Artık favori sitelerinizi sabitleyebilir, yakın zamanda eriştiğiniz siteleri görebilir ve daha fazlasını yapabilirsiniz. Ayrıca siteleri gösterebilme ve gizleyebilme olanağını kaldırdık.
+("Siteler" kelimesinden yeterince bahsettik mi? Bizce bahsettik).

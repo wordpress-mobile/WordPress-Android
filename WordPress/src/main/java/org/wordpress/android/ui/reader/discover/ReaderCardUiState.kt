@@ -169,8 +169,8 @@ sealed class ReaderCardUiState {
         ) {
             val followContentDescription: UiStringRes by lazy {
                 when (isFollowed) {
-                    true -> R.string.reader_btn_unfollow
-                    false -> R.string.reader_btn_follow
+                    true -> R.string.reader_btn_subscribed
+                    false -> R.string.reader_btn_subscribe
                 }.let(::UiStringRes)
             }
         }
@@ -229,5 +229,6 @@ enum class ReaderPostCardActionType {
     REPORT_POST,
     REPORT_USER,
     TOGGLE_SEEN_STATUS,
-    SPACER_NO_ACTION
+    SPACER_NO_ACTION,
+    READING_PREFERENCES,
 }

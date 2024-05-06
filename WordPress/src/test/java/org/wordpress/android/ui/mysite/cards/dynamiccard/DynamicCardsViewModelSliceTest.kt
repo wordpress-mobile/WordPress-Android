@@ -21,7 +21,6 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 private const val DYNAMIC_CARD_ID_FIRST = "year_in_review_2023"
 private const val DYNAMIC_CARD_ID_SECOND = "domain_management"
 private const val DYNAMIC_CARD_TITLE = "News"
-private const val DYNAMIC_CARD_REMOTE_FEATURE_FLAG = "dynamic_dashboard_cards"
 private const val DYNAMIC_CARD_FEATURED_IMAGE = "https://path/to/image"
 private const val DYNAMIC_CARD_URL = "https://wordpress.com"
 private const val SOME_DEEP_LINK = "some_deep_link"
@@ -40,7 +39,6 @@ private val dynamicCardRowModel = DynamicCardRowModel(
 private val firstDynamicCardModel = DynamicCardModel(
     id = DYNAMIC_CARD_ID_FIRST,
     title = DYNAMIC_CARD_TITLE,
-    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
     featuredImage = DYNAMIC_CARD_FEATURED_IMAGE,
     url = DYNAMIC_CARD_URL,
     action = DYNAMIC_CARD_ACTION,
@@ -51,7 +49,6 @@ private val firstDynamicCardModel = DynamicCardModel(
 private val secondDynamicCardModel = DynamicCardModel(
     id = DYNAMIC_CARD_ID_SECOND,
     title = null,
-    remoteFeatureFlag = DYNAMIC_CARD_REMOTE_FEATURE_FLAG,
     featuredImage = null,
     url = null,
     action = null,
@@ -78,12 +75,15 @@ class DynamicCardsViewModelSliceTest : BaseUnitTest() {
     @Mock
     private lateinit var tracker: DynamicCardsAnalyticsTracker
 
+    @Mock
+    private lateinit var dynamicCardsBuilder: DynamicCardsBuilder
+
     private lateinit var viewModelSlice: DynamicCardsViewModelSlice
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers, tracker)
+        viewModelSlice = DynamicCardsViewModelSlice(appPrefsWrapper, deepLinkHandlers, tracker, dynamicCardsBuilder)
     }
 
     @Test

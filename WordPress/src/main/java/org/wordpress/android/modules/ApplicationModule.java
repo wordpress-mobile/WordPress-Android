@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
@@ -90,5 +91,10 @@ public abstract class ApplicationModule {
     @Provides
     public static ActivityNavigator provideActivityNavigator(@ApplicationContext Context context) {
         return new ActivityNavigator();
+    }
+
+    @Provides
+    public static SensorManager provideSensorManager(@ApplicationContext Context context) {
+        return (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
 }

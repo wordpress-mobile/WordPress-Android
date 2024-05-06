@@ -10,6 +10,8 @@
     <attr name="wpColorAppBar" format="reference|color" />
     <attr name="wpColorOnSurfaceMedium" format="reference|color" />
     <attr name="wpColorOnSurfaceHigh" format="reference|color" />
+    <attr name="wpColorTextPrimary" format="reference|color" />
+    <attr name="wpColorTextSecondary" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
     <attr name="wpColorWarningLight" format="reference|color" />
@@ -22,11 +24,26 @@
     <attr name="colorGutenbergDivider" format="reference|color" />
     <attr name="colorGutenbergBackground" format="reference|color" />
 
+    <!-- Gravatar colors -->
+    <attr name="grColorInfoBanner" format="reference|color" />
+    <attr name="grColorSyncBanner" format="reference|color" />
+
     <!-- Modal layout picker colors-->
     <attr name="layoutPickerBackground" format="reference|color" />
     <attr name="categoriesButtonBackground" format="reference|color" />
     <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
     <attr name="mlpDividerColor" format="reference|color" />
+
+    <!-- Reader attributes -->
+    <attr name="readerFollowButtonBackground" format="reference|color" />
+    <attr name="readerFollowButtonForeground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedBackground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedForeground" format="reference|color" />
+    <attr name="readerFollowButtonSelectedTextAlpha" format="float" />
+    <attr name="readerFollowButtonSelectedStrokeAlpha" format="reference|float" />
+
+    <!-- Snackbar colors -->
+    <attr name="snackbarActionColor" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
@@ -197,6 +214,11 @@
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->
         <attr name="aevTitle" format="string"/>
+        <!-- Optional: style to set the button UI attributes -->
+        <attr name="aevButtonStyle" format="enum">
+            <enum name="primary" value="0"/>
+            <enum name="reader" value="1"/>
+        </attr>
     </declare-styleable>
 
     <!--
