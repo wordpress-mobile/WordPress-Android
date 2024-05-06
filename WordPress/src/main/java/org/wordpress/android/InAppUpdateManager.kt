@@ -14,7 +14,10 @@ import javax.inject.Singleton
 
 private const val MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES: Int = 60
 
+private const val UPDATE_PRIORITY_DEFAULT: Int = 4
+
 @Singleton
+@Suppress("TooManyFunctions")
 class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateManager) {
     fun registerUpdateListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.registerListener(installStateUpdatedListener)
@@ -82,7 +85,7 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
     }
 
     private fun isUpdatePriorityHigh(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updatePriority > 4
+        return appUpdateInfo.updatePriority > UPDATE_PRIORITY_DEFAULT
     }
 
     private fun isClientVersionOlderThanThreshold(appUpdateInfo: AppUpdateInfo): Boolean {
@@ -90,6 +93,7 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
             ?: -1) >= MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES
     }
 
+    @Suppress("TooGenericExceptionCaught")
     fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
         Log.e("AppUpdateChecker", "requestImmediateUpdate called")
         try {
@@ -105,7 +109,8 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         }
     }
 
-    fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
+    @Suppress("TooGenericExceptionCaught")
+    private fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
         Log.e("AppUpdateChecker", "requestFlexibleUpdate called")
         try {
             appUpdateManager.startUpdateFlowForResult(
@@ -134,10 +139,12 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
                 && !isUpdatePriorityHigh(appUpdateInfo)
     }
 
+    @Suppress("unused")
     private fun setLastUpdateRequestedTime() {
         // todo: add logic to save the time when the update request was made
     }
 
+    @Suppress("unused","FunctionOnlyReturningConstant")
     private fun shouldRequestUpdate(): Boolean {
         // todo: add logic to check the time since last update request
         return true
