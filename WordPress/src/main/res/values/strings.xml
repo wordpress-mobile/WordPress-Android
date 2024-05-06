@@ -1605,14 +1605,14 @@
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
     <string name="likes_on_my_posts">Likes on my posts</string>
-    <string name="site_follows">Site follows</string>
+    <string name="site_subscribers">Site subscribers</string>
     <string name="site_achievements">Site achievements</string>
     <string name="username_mentions">Username mentions</string>
     <string-array name="notifications_blog_settings" translatable="false">
         <item>@string/comments_on_my_site</item>
         <item>@string/likes_on_my_comments</item>
         <item>@string/likes_on_my_posts</item>
-        <item>@string/site_follows</item>
+        <item>@string/site_subscribers</item>
         <item>@string/site_achievements</item>
         <item>@string/username_mentions</item>
     </string-array>
