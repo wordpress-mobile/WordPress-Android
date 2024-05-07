@@ -9,21 +9,20 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.ktx.updatePriority
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.RemoteConfigWrapper
 import javax.inject.Inject
-
 import javax.inject.Singleton
 
-private const val MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES: Int = 60
 
-private const val UPDATE_PRIORITY_DEFAULT: Int = 4
+private const val MAXIMUM_THRESHOLD_FOR_FLEXIBLE_UPDATES: Int = 60
 
 @Singleton
 @Suppress("TooManyFunctions")
 class InAppUpdateManager @Inject constructor(
     private val appUpdateManager: AppUpdateManager,
-    private val remoteConfigWrapper: RemoteConfigWrapper
+    private val remoteConfigWrapper: RemoteConfigWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     fun registerUpdateListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.registerListener(installStateUpdatedListener)
@@ -47,7 +46,7 @@ class InAppUpdateManager @Inject constructor(
                 Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, no update available")
             } else if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
                 Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update available")
-                if (isImmediateUpdateNecessary(appUpdateInfo)) {
+                if (isImmediateUpdateNecessary()) {
                     Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, immediate update")
                     requestImmediateUpdate(appUpdateInfo, activity)
                 } else {
@@ -81,17 +80,6 @@ class InAppUpdateManager @Inject constructor(
             Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, failure")
             Log.e("AppUpdateChecker", exception.message.toString())
         }
-    }
-
-    private fun isImmediateUpdateNecessary(appUpdateInfo: AppUpdateInfo): Boolean {
-        return (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-                && isUpdatePriorityHigh(appUpdateInfo)) || isClientVersionOlderThanThreshold(
-            appUpdateInfo
-        )
-    }
-
-    private fun isUpdatePriorityHigh(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updatePriority > UPDATE_PRIORITY_DEFAULT
     }
 
     private fun isClientVersionOlderThanThreshold(appUpdateInfo: AppUpdateInfo): Boolean {
@@ -135,14 +123,14 @@ class InAppUpdateManager @Inject constructor(
         return (appUpdateInfo.updateAvailability()
                 == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
-                && isUpdatePriorityHigh(appUpdateInfo)
+                && isImmediateUpdateNecessary()
     }
 
     fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
         return (appUpdateInfo.updateAvailability()
                 == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-                && !isUpdatePriorityHigh(appUpdateInfo)
+                && !isImmediateUpdateNecessary()
     }
 
     @Suppress("unused")
@@ -163,6 +151,44 @@ class InAppUpdateManager @Inject constructor(
     fun unregisterListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.unregisterListener(installStateUpdatedListener)
     }
+
+    /**
+     * Retrieves the current version code of the application.
+     *
+     * This version code is obtained from the application's build configuration.
+     *
+     * @return The current application version code.
+     */
+    private fun getCurrentAppVersion() = buildConfigWrapper.getAppVersionCode()
+
+    /**
+     * Retrieves the version code of the last known update that requires blocking.
+     *
+     * This value is sourced from a remote configuration that specifies the
+     * version of the application that requires immediate blocking updates.
+     *
+     * @return The version code of the last blocking app update.
+     */
+    private fun getLastBlockingAppVersion(): Int = remoteConfigWrapper.getInAppUpdateBlockingVersion()
+
+    /**
+     * Extracts the available version code for the app update from the given update information.
+     *
+     * The available version code indicates the most recent update version that's available
+     * and ready to be installed on the user's device.
+     *
+     * @param appUpdateInfo The update information object that contains version details.
+     * @return The available version code for the app update.
+     */
+    private fun getAvailableUpdateAppVersion(appUpdateInfo: AppUpdateInfo) = appUpdateInfo.availableVersionCode()
+
+    /**
+     * Checks if an immediate app update is required based on the current app version
+     * and the last known blocking version.
+     *
+     * @return `true` if the current app version is lower than the last blocking app version, otherwise `false`.
+     */
+    private fun isImmediateUpdateNecessary() = getCurrentAppVersion() < getLastBlockingAppVersion()
 
     companion object {
         const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
