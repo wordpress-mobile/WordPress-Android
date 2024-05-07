@@ -51,10 +51,10 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             "endpoint",
             ReaderTagType.FOLLOWED,
         )
-        val onTagClick: (ReaderTag) -> Unit = {}
+        val onTagClick = { _: ReaderTag -> }
         val onSiteClick: (TagsFeedPostItem) -> Unit = {}
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
-        val onPostLikeClick = {}
+        val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
         val onPostMoreMenuClick = {}
 
         val dateLine = "dateLine"
@@ -97,6 +97,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
+                        isLikeButtonEnabled = true,
                         postId = 0L,
                         blogId = 0L,
                         onSiteClick = onSiteClick,
