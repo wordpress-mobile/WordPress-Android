@@ -42,6 +42,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                         numComments = it.numReplies
                     ) else "",
                     isPostLiked = it.isLikedByCurrentUser,
+                    isLikeButtonEnabled = true,
                     postId = it.postId,
                     blogId = it.blogId,
                     onSiteClick = onSiteClick,

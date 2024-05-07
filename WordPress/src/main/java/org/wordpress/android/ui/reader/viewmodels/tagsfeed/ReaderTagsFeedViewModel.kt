@@ -190,8 +190,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun onPostLikeClick(postItem: TagsFeedPostItem) {
         AppLog.e(AppLog.T.READER, "RL-> onPostLikeClick - postItem isLiked = ${postItem.isPostLiked}")
-        // Immediately update the UI. If the request fails, show error and revert UI state.
-        updatePostItemUI(postItem, !postItem.isPostLiked)
+        // Immediately update the UI and disable the like button. If the request fails, show error and revert UI state.
+        // If the request fails or succeeds, the like button is enabled again.
+        updatePostItemUI(
+            postItemToUpdate = postItem,
+            isPostLikedUpdated = !postItem.isPostLiked,
+            isLikeButtonEnabled = false
+        )
 
 //
 //        // Like, bookmark or block action status changed.
@@ -261,7 +266,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun updatePostItemUI(
         postItemToUpdate: TagsFeedPostItem,
-        isPostLikedUpdated: Boolean
+        isPostLikedUpdated: Boolean,
+        isLikeButtonEnabled: Boolean,
     ) {
         val uiState = _uiStateFlow.value
         if (uiState !is UiState.Loaded) {
@@ -286,6 +292,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                         add(
                             postItemToUpdateIndex, postItemToUpdate.copy(
                                 isPostLiked = isPostLikedUpdated,
+                                isLikeButtonEnabled = isLikeButtonEnabled,
                             )
                         )
                     }
