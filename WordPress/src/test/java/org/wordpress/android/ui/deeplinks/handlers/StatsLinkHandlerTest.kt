@@ -15,6 +15,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.stats.StatsTimeframe.DAY
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.StatsTimeframe.MONTH
+import org.wordpress.android.ui.stats.StatsTimeframe.SUBSCRIBERS
 import org.wordpress.android.ui.stats.StatsTimeframe.WEEK
 import org.wordpress.android.ui.stats.StatsTimeframe.YEAR
 
@@ -108,7 +109,8 @@ class StatsLinkHandlerTest {
             "week" to WEEK,
             "month" to MONTH,
             "year" to YEAR,
-            "insights" to INSIGHTS
+            "insights" to INSIGHTS,
+            "subscribers" to SUBSCRIBERS
         )
         timeframes.forEach { (key, timeframe) ->
             val uri = buildUri(host = null, "stats", key, siteUrl)
@@ -122,6 +124,25 @@ class StatsLinkHandlerTest {
                     timeframe
                 )
             )
+        }
+    }
+
+    @Test
+    fun `opens stats screen for a stats timeframe and no site present in URL`() {
+        val timeframes = mapOf(
+            "day" to DAY,
+            "week" to WEEK,
+            "month" to MONTH,
+            "year" to YEAR,
+            "insights" to INSIGHTS,
+            "subscribers" to SUBSCRIBERS
+        )
+        timeframes.forEach { (key, timeframe) ->
+            val uri = buildUri(host = null, "stats", key)
+
+            val buildNavigateAction = statsLinkHandler.buildNavigateAction(uri)
+
+            assertThat(buildNavigateAction).isEqualTo(NavigateAction.OpenStatsForTimeframe(timeframe))
         }
     }
 
