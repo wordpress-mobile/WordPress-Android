@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
+import androidx.lifecycle.LiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,6 +12,7 @@ import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,12 +25,22 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
+    private val _actionEvents = SingleLiveEvent<ActionEvent>()
+    val actionEvents: LiveData<ActionEvent> = _actionEvents
+
     /**
      * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
+        // don't start again if the tags match
+        if (_uiStateFlow.value is UiState.Loaded &&
+            tags == (_uiStateFlow.value as UiState.Loaded).data.map { it.tagChip.tag }
+        ) {
+            return
+        }
+
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
@@ -115,8 +127,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onTagClick() {
-        // TODO
+    private fun onTagClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
 
     private fun onRetryClick() {
@@ -139,6 +151,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
+    sealed class ActionEvent {
+        data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+    }
+
     sealed class UiState {
         object Initial : UiState()
         data class Loaded(val data: List<TagFeedItem>) : UiState()
@@ -155,7 +171,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     data class TagChip(
         val tag: ReaderTag,
-        val onTagClick: () -> Unit,
+        val onTagClick: (ReaderTag) -> Unit,
     )
 
     sealed class PostList {
