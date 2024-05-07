@@ -168,7 +168,8 @@ sealed class BlockListItem(val type: Type) {
     data class ListItemWithTwoValues(
         val text: String,
         val value1: String,
-        val value2: String
+        val value2: String,
+        val contentDescription: String
     ) : BlockListItem(LIST_ITEM_WITH_TWO_VALUES) {
         override val itemId: Int
             get() = text.hashCode()
