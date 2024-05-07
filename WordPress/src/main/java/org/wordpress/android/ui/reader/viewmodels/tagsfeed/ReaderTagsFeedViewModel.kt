@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -43,6 +44,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _errorMessageEvents = MediatorLiveData<Event<Int>>()
+    val errorMessageEvents: LiveData<Event<Int>> = _errorMessageEvents
 
     private var hasInitialized = false
 
@@ -275,10 +279,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                                 isPostLikedUpdated = !isPostLikedUpdated,
                                 isLikeButtonEnabled = true,
                             )
-
-                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed no network")
-                            // TODO show snackbar?
-//  _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.no_network_message))))
+                            _errorMessageEvents.postValue(Event(R.string.no_network_message))
                         }
 
                         is PostLikeUseCase.PostLikeState.Failed.RequestFailed -> {
@@ -288,17 +289,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
                                 isPostLikedUpdated = !isPostLikedUpdated,
                                 isLikeButtonEnabled = true,
                             )
-                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed request failed")
-                            // TODO show snackbar?
-//                            _refreshPosts.postValue(Event(Unit))
-//                            _snackbarEvents.postValue(
-//  Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.reader_error_request_failed_title)))
-//                            )
+                            _errorMessageEvents.postValue(Event(R.string.reader_error_request_failed_title))
                         }
 
                         else -> {
                             // no-op
-                            AppLog.e(AppLog.T.READER, "RL-> Post liked else: $it")
                         }
                     }
                 }
