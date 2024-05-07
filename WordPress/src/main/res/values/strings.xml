@@ -1323,7 +1323,6 @@
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Jetpack Social Connections</string>
     <string name="stats_view_followers">Followers</string>
-    <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
     <string name="stats_view_total_comments">Total Comments</string>
     <string name="stats_view_total_followers">Total Followers</string>
@@ -1408,7 +1407,6 @@
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_google_plus">Google+</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$s of views</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
