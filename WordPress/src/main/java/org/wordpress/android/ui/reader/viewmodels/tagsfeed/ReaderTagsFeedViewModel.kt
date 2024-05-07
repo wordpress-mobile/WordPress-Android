@@ -49,18 +49,23 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
-        startUiState(tags)
-        if (!hasInitialized) {
-            hasInitialized = true
-            initNavigationEvents()
+        // don't start again if the tags match
+        if (_uiStateFlow.value is UiState.Loaded &&
+            tags == (_uiStateFlow.value as UiState.Loaded).data.map { it.tagChip.tag }
+        ) {
+            return
         }
-    }
 
-    private fun startUiState(tags: List<ReaderTag>) {
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
         }
+
+        if (!hasInitialized) {
+            hasInitialized = true
+            initNavigationEvents()
+        }
+
         // Initially add all tags to the list with the posts loading UI
         _uiStateFlow.update {
             readerTagsFeedUiStateMapper.mapLoadingPostsUiState(tags, ::onTagClick)

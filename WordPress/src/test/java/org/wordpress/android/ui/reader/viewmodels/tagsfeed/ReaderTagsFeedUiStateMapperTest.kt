@@ -51,7 +51,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             "endpoint",
             ReaderTagType.FOLLOWED,
         )
-        val onTagClick: (ReaderTag) -> Unit = {}
+        val onTagClick = { _: ReaderTag -> }
         val onSiteClick: (TagsFeedPostItem) -> Unit = {}
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick = {}
