@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-05-02 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="page_upload_conflict_error">Bu sayfanın daha yeni olan bir revizyonu var</string>
+    <string name="editor_updating_content">İçerik güncelleniyor</string>
+    <string name="stats_subscribers">Aboneler</string>
+    <string name="stats_subscribers_subscribers">Aboneler</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Geçen hafta %1$s görüntüleme oldu ve 1 yorum aldınız</string>
     <string name="weekly_roundup_notification_text_views_and_like">Geçen hafta %1$s görüntüleme oldu ve 1 beğeni aldınız</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Geçen hafta %1$s görüntüleme oldu, 1 beğeni ve 1 yorum aldınız.</string>
@@ -56,6 +60,7 @@ Language: tr
     <string name="gutenberg_native_copy_error_details">Hata ayrıntılarını kopyala</string>
     <string name="gutenberg_native_button_to_copy_post_text">Gönderi metnini kopyalama düğmesi</string>
     <string name="gutenberg_native_button_to_copy_error_details">Hata ayrıntılarını kopyalama düğmesi</string>
+    <string name="editor_updating_content_failed">İçerik güncellenemedi</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video yazısı. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video yazısı. Boş</string>
     <string name="gutenberg_native_edit_video_024aee6d">Videoyu düzenle</string>

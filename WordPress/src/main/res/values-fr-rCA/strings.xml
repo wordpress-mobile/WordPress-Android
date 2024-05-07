@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 12:54:08+0000
+Translation-Revision-Date: 2024-05-01 23:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="page_upload_conflict_error">Il existe une version plus récente de cette page</string>
+    <string name="editor_updating_content">Mise à jour du contenu</string>
+    <string name="stats_subscribers">Abonnés</string>
+    <string name="stats_subscribers_subscribers">Abonnés</string>
     <string name="weekly_roundup_notification_text_views_and_comment">La semaine dernière, vous avez eu %1$s vues et 1 commentaire</string>
     <string name="weekly_roundup_notification_text_views_and_like">La semaine dernière, vous avez eu %1$s vues et 1 mention J’aime</string>
     <string name="weekly_roundup_notification_text_views_like_comment">La semaine dernière, vous avez eu %1$s vues, 1 mention J’aime et 1 commentaire.</string>
@@ -58,6 +62,7 @@ Language: fr
     <string name="gutenberg_native_copy_error_details">Copier les détails de l’erreur</string>
     <string name="gutenberg_native_button_to_copy_post_text">Bouton permettant de copier le texte de l’article</string>
     <string name="gutenberg_native_button_to_copy_error_details">Bouton permettant de copier les détails de l’erreur</string>
+    <string name="editor_updating_content_failed">Échec de la mise à jour du contenu</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>

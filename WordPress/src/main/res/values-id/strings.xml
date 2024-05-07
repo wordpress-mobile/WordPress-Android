@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 09:54:07+0000
+Translation-Revision-Date: 2024-05-02 09:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources>
+    <string name="page_upload_conflict_error">Ada revisi yang lebih baru untuk halaman ini</string>
+    <string name="editor_updating_content">Memperbarui konten</string>
+    <string name="stats_subscribers">Pengikut</string>
+    <string name="stats_subscribers_subscribers">Pengikut</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 komentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 suka</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Minggu lalu Anda mendapatkan %1$s penayangan, 1 suka, dan 1 komentar.</string>
@@ -32,6 +36,7 @@ Language: id
     <string name="reader_preferences_screen_font_family_label">Font</string>
     <string name="reader_preferences_screen_theme_label">Skema Warna</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">kirim feedback Anda</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Batalkan warna yang dipilih</string>
     <string name="reader_no_followed_tags_text_title">Tidak ada tag yang diikuti</string>
     <string name="reader_toast_err_tag_already_following">Anda telah mengikuti tag ini</string>
@@ -58,6 +63,7 @@ Language: id
     <string name="gutenberg_native_copy_error_details">Salin detail error</string>
     <string name="gutenberg_native_button_to_copy_post_text">Tombol untuk menyalin teks pos</string>
     <string name="gutenberg_native_button_to_copy_error_details">Tombol untuk menyalin detail error</string>
+    <string name="editor_updating_content_failed">Gagal memperbarui konten</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Keterangan video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Keterangan video. Kosong</string>
     <string name="gutenberg_native_edit_video_024aee6d">Sunting video</string>

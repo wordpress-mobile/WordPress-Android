@@ -1,2 +1,2 @@
-* [*] [Jetpack-only] Fixed percentage numbers direction on Stats for RTL languages [https://github.com/wordpress-mobile/WordPress-Android/pull/20656]
+On the Stats screen, percentages now appear in their correct position for right-to-left language users. Right on.
 

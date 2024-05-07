@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 18:54:10+0000
+Translation-Revision-Date: 2024-05-01 16:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="page_upload_conflict_error">Найдена более свежая редакция страницы.</string>
+    <string name="editor_updating_content">Обновление контента</string>
+    <string name="stats_subscribers">Подписчики</string>
+    <string name="stats_subscribers_subscribers">Подписчики</string>
     <string name="weekly_roundup_notification_text_views_and_comment">За последнюю неделю вы получили: просмотров — %1$s, комментариев — 1</string>
     <string name="weekly_roundup_notification_text_views_and_like">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1</string>
     <string name="weekly_roundup_notification_text_views_like_comment">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1, комментариев — 1.</string>
@@ -57,6 +61,7 @@ Language: ru
     <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
     <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
     <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
+    <string name="editor_updating_content_failed">Не удалось обновить контент</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>

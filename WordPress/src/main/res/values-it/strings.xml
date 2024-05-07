@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 14:54:09+0000
+Translation-Revision-Date: 2024-05-03 12:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources>
+    <string name="page_upload_conflict_error">C\'è una revisione di questa pagina che è più recente</string>
+    <string name="editor_updating_content">Aggiornamento del contenuto</string>
     <string name="weekly_roundup_notification_text_views_and_comment">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 commento</string>
     <string name="weekly_roundup_notification_text_views_and_like">L\'ultima settimana hai avuto %1$s visualizzazioni e 1 Mi piace</string>
     <string name="weekly_roundup_notification_text_views_like_comment">L\'ultima settimana hai avuto %1$s visualizzazioni, 1 Mi piace e 1 commento.</string>
@@ -32,6 +34,7 @@ Language: it
     <string name="reader_preferences_screen_font_family_label">Carattere</string>
     <string name="reader_preferences_screen_theme_label">Schema colori</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">invia il tuo feedback</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Cancella il colore selezionato</string>
     <string name="reader_no_followed_tags_text_title">Nessun tag seguito</string>
     <string name="reader_toast_err_tag_already_following">Segui già questo tag</string>
@@ -58,6 +61,7 @@ Language: it
     <string name="gutenberg_native_copy_error_details">Copia i dettagli dell\'errore</string>
     <string name="gutenberg_native_button_to_copy_post_text">Pulsante per copiare il testo dell\'articolo</string>
     <string name="gutenberg_native_button_to_copy_error_details">Pulsante per copiare i dettagli dell\'errore</string>
+    <string name="editor_updating_content_failed">Impossibile aggiornare il contenuto</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Didascalia del video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Didascalia del video. Vuoto</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifica video</string>
