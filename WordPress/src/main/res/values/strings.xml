@@ -2656,7 +2656,7 @@
     <string name="button_invite" translatable="false">@string/invite</string>
     <string name="invite_username_not_found">%s: User not found</string>
     <string name="invite_already_a_member">%s: Already a member</string>
-    <string name="invite_already_following">%s: Already following</string>
+    <string name="invite_already_subscribed">%s: Already subscribed</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_message_title">Custom message</string>
