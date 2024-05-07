@@ -1,0 +1,3 @@
+24.7:
+Hemos rediseñado la pantalla del selector de sitios. Ahora puedes fijar tus sitios favoritos, ver los últimos sitios a los que has accedido y muchas más funciones. También hemos eliminado la funcionalidad para mostrar y ocultar sitios.
+(¿Hemos mencionado bastante la palabra "sitios"? Diría que sí).

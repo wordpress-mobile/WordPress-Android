@@ -3,9 +3,12 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.stats.LimitMode
+import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TOTAL_FOLLOWERS
-import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
+import org.wordpress.android.fluxc.store.stats.subscribers.SubscribersStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.StatsViewType
@@ -32,7 +35,7 @@ import javax.inject.Named
 class TotalFollowersUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val summaryStore: SummaryStore,
+    private val subscribersStore: SubscribersStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val resourceProvider: ResourceProvider,
     private val totalStatsMapper: TotalStatsMapper,
@@ -45,18 +48,35 @@ class TotalFollowersUseCase @Inject constructor(
 
     override fun buildEmptyItem() = buildUiModel(0)
 
-    override suspend fun loadCachedData() = summaryStore.getSummary(statsSiteProvider.siteModel)?.followers
+    override suspend fun loadCachedData(): Int {
+        val model = subscribersStore.getSubscribers(
+            statsSiteProvider.siteModel,
+            StatsGranularity.DAYS,
+            LimitMode.Top(1)
+        )
+        return getTotalSubscribersFromModel(model)
+    }
 
     override suspend fun fetchRemoteData(forced: Boolean): State<Int> {
-        val response = summaryStore.fetchSummary(statsSiteProvider.siteModel, forced)
-        val model = response.model?.followers
+        val response = subscribersStore.fetchSubscribers(
+            statsSiteProvider.siteModel,
+            StatsGranularity.DAYS,
+            LimitMode.Top(1),
+            forced
+        )
+        val model = response.model
         val error = response.error
 
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
-            model != null -> State.Data(model)
+            model != null && model.dates.isNotEmpty() -> State.Data(getTotalSubscribersFromModel(model))
             else -> State.Empty()
         }
+    }
+
+    private fun getTotalSubscribersFromModel(model: SubscribersModel?): Int {
+        val dates = model?.dates
+        return if (dates.isNullOrEmpty()) 0 else dates.first().subscribers.toInt()
     }
 
     override fun buildUiModel(domainModel: Int): List<BlockListItem> {
@@ -97,7 +117,7 @@ class TotalFollowersUseCase @Inject constructor(
     class TotalFollowersUseCaseFactory @Inject constructor(
         @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
         @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
-        private val summaryStore: SummaryStore,
+        private val subscribersStore: SubscribersStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val resourceProvider: ResourceProvider,
         private val totalStatsMapper: TotalStatsMapper,
@@ -108,7 +128,7 @@ class TotalFollowersUseCase @Inject constructor(
         override fun build(useCaseMode: UseCaseMode) = TotalFollowersUseCase(
             mainDispatcher,
             backgroundDispatcher,
-            summaryStore,
+            subscribersStore,
             statsSiteProvider,
             resourceProvider,
             totalStatsMapper,

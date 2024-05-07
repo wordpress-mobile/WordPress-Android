@@ -2,11 +2,11 @@ package org.wordpress.android.ui.deeplinks.handlers
 
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction
+import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackStaticPosterView
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStats
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSite
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForSiteAndTimeframe
 import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenStatsForTimeframe
-import org.wordpress.android.ui.deeplinks.DeepLinkNavigator.NavigateAction.OpenJetpackStaticPosterView
 import org.wordpress.android.ui.deeplinks.DeepLinkUriUtils
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.APPLINK_SCHEME
 import org.wordpress.android.ui.deeplinks.DeepLinkingIntentReceiverViewModel.Companion.HOST_WORDPRESS_COM
@@ -32,7 +32,8 @@ class StatsLinkHandler
         val pathSegments = uri.pathSegments
         val length = pathSegments.size
         val site = pathSegments.getOrNull(length - 1)?.toSite()
-        val statsTimeframe = pathSegments.getOrNull(length - 2)?.toStatsTimeframe()
+        val timeframeIndex = if (site == null) (length - 1) else (length - 2)
+        val statsTimeframe = pathSegments.getOrNull(timeframeIndex)?.toStatsTimeframe()
         return when {
             jetpackFeatureRemovalPhaseHelper.shouldShowStaticPage() -> OpenJetpackStaticPosterView
             site != null && statsTimeframe != null -> {
@@ -98,6 +99,7 @@ class StatsLinkHandler
             "month" -> StatsTimeframe.MONTH
             "year" -> StatsTimeframe.YEAR
             "insights" -> StatsTimeframe.INSIGHTS
+            "subscribers" -> StatsTimeframe.SUBSCRIBERS
             else -> null
         }
     }

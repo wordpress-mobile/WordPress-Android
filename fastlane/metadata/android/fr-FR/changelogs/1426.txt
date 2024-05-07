@@ -1,0 +1,3 @@
+24.7 :
+Nous avons repensé l’écran de sélection de site. Vous pouvez désormais épingler vos sites favoris, voir les sites récemment consultés et plus encore. Nous avons également supprimé la possibilité d’afficher et de masquer des sites.
+(Si jamais vous ne l’aviez pas remarqué, il est question de sites.)

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-15 19:07:50+0000
+Translation-Revision-Date: 2024-04-29 20:04:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="page_upload_conflict_error">Er is een recentere revisie van deze pagina</string>
+    <string name="editor_updating_content">Inhoud aan het updaten</string>
+    <string name="stats_subscribers">Abonnees</string>
+    <string name="stats_subscribers_subscribers">Abonnees</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Afgelopen week had je %1$s weergaven en 1 reactie</string>
     <string name="weekly_roundup_notification_text_views_and_like">Afgelopen week had je %1$s weergaven en 1 vind-ik-leuk</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Afgelopen week had je %1$s weergaven, 1 vind-ik-leuk en 1 reactie.</string>
@@ -59,6 +63,7 @@ Language: nl
     <string name="gutenberg_native_copy_error_details">Foutdetails kopiëren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knop om berichttekst te kopiëren</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knop om foutdetails te kopiëren</string>
+    <string name="editor_updating_content_failed">Mislukt om inhoud te updaten</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videobijschrift. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videobijschrift. Leeg</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bewerken</string>
@@ -131,10 +136,6 @@ Language: nl
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_by_tag_title">Filteren op tag</string>
     <string name="reader_filter_by_blog_title">Filteren op blog</string>
-    <string name="stats_timeframe_by_year">Per jaar</string>
-    <string name="stats_timeframe_by_month">Per maand</string>
-    <string name="stats_timeframe_by_week">Per week</string>
-    <string name="stats_timeframe_by_day">Per dag</string>
     <string name="gutenberg_native_waiting_for_connection">Wachten op verbinding</string>
     <string name="stats_traffic">Bezoekersaantallen</string>
     <string name="gutenberg_native_working_offline">Werk offline</string>
@@ -1167,6 +1168,7 @@ Language: nl
     <string name="gutenberg_native_add_title">Titel toevoegen</string>
     <string name="gutenberg_native_no_preview_available">Geen voorbeeld beschikbaar</string>
     <string name="gutenberg_native_loading">Bezig met laden</string>
+    <string name="gutenberg_native_link_label">Link label</string>
     <string name="gutenberg_native_text_color">Tekstkleur</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
