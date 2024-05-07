@@ -5,10 +5,13 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.updatePriority
+import org.wordpress.android.util.config.RemoteConfigWrapper
+import javax.inject.Inject
 
 import javax.inject.Singleton
 
@@ -18,7 +21,10 @@ private const val UPDATE_PRIORITY_DEFAULT: Int = 4
 
 @Singleton
 @Suppress("TooManyFunctions")
-class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateManager) {
+class InAppUpdateManager @Inject constructor(
+    private val appUpdateManager: AppUpdateManager,
+    private val remoteConfigWrapper: RemoteConfigWrapper
+) {
     fun registerUpdateListener(installStateUpdatedListener: InstallStateUpdatedListener) {
         appUpdateManager.registerListener(installStateUpdatedListener)
     }
@@ -99,8 +105,8 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         try {
             appUpdateManager.startUpdateFlowForResult(
                 appUpdateInfo,
-                AppUpdateType.IMMEDIATE,
                 activity,
+                AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build(),
                 APP_UPDATE_IMMEDIATE_REQUEST_CODE
             )
         } catch (e: Exception) {
@@ -115,9 +121,9 @@ class InAppUpdateManager constructor(private val appUpdateManager: AppUpdateMana
         try {
             appUpdateManager.startUpdateFlowForResult(
                 appUpdateInfo,
-                AppUpdateType.FLEXIBLE,
                 activity,
-                APP_UPDATE_FLEXIBLE_REQUEST_CODE
+                AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE).build(),
+                APP_UPDATE_IMMEDIATE_REQUEST_CODE
             )
         } catch (e: Exception) {
             Log.e("AppUpdateChecker", "requestFlexibleUpdate called, exception")

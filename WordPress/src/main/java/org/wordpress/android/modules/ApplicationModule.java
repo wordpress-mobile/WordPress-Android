@@ -78,12 +78,7 @@ public abstract class ApplicationModule {
             RestoreStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
-
-    @Provides
-    public static InAppUpdateManager provideInAppUpdateManager(AppUpdateManager appUpdateManager) {
-        return new InAppUpdateManager(appUpdateManager);
-    }
-
+    
     @Provides
     public static AppUpdateManager provideAppUpdateManager(@ApplicationContext Context context) {
         return AppUpdateManagerFactory.create(context);
