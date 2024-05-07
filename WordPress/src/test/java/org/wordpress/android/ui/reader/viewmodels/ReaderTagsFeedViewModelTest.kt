@@ -282,7 +282,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     private fun mockMapLoadingTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any()))
             .thenAnswer {
                 val tags = it.getArgument<List<ReaderTag>>(0)
                 ReaderTagsFeedViewModel.UiState.Loaded(
@@ -292,7 +292,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
                                 tag = tag,
                                 onTagClick = {},
                             ),
-                            postList = ReaderTagsFeedViewModel.PostList.Loading,
+                            postList = ReaderTagsFeedViewModel.PostList.Initial,
                         )
                     }
                 )
@@ -300,14 +300,14 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     private fun mockMapLoadedTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any(),))
             .thenAnswer {
                 getLoadedTagFeedItem(it.getArgument(0))
             }
     }
 
     private fun mockMapErrorTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any(),))
             .thenAnswer {
                 getErrorTagFeedItem(it.getArgument(0))
             }

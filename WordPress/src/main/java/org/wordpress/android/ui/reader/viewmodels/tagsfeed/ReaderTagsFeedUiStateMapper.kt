@@ -20,6 +20,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         onPostCardClick: (TagsFeedPostItem) -> Unit,
         onPostLikeClick: () -> Unit,
         onPostMoreMenuClick: () -> Unit,
+        onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ) = ReaderTagsFeedViewModel.TagFeedItem(
         tagChip = ReaderTagsFeedViewModel.TagChip(
             tag = tag,
@@ -51,6 +52,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                 )
             }
         ),
+        onItemEnteredView = onItemEnteredView,
     )
 
     fun mapErrorTagFeedItem(
@@ -58,6 +60,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         errorType: ReaderTagsFeedViewModel.ErrorType,
         onTagClick: (ReaderTag) -> Unit,
         onRetryClick: () -> Unit,
+        onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ): ReaderTagsFeedViewModel.TagFeedItem =
         ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
@@ -68,11 +71,13 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                 type = errorType,
                 onRetryClick = onRetryClick,
             ),
+            onItemEnteredView = onItemEnteredView,
         )
 
-    fun mapLoadingPostsUiState(
+    fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
         onTagClick: (ReaderTag) -> Unit,
+        onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ): ReaderTagsFeedViewModel.UiState.Loaded =
         ReaderTagsFeedViewModel.UiState.Loaded(
             tags.map { tag ->
@@ -81,8 +86,23 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                         tag = tag,
                         onTagClick = onTagClick,
                     ),
-                    postList = ReaderTagsFeedViewModel.PostList.Loading,
+                    postList = ReaderTagsFeedViewModel.PostList.Initial,
+                    onItemEnteredView = onItemEnteredView,
                 )
             }
+        )
+
+    fun mapLoadingTagFeedItem(
+        tag: ReaderTag,
+        onTagClick: (ReaderTag) -> Unit,
+        onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
+    ): ReaderTagsFeedViewModel.TagFeedItem =
+        ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = tag,
+                onTagClick = onTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Loading,
+            onItemEnteredView = onItemEnteredView,
         )
 }

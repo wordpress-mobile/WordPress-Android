@@ -28,6 +28,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,7 +85,14 @@ private fun Loaded(uiState: UiState.Loaded) {
     ) {
         items(
             items = uiState.data,
-        ) { (tagChip, postList) ->
+        ) { item ->
+            val tagChip = item.tagChip
+            val postList = item.postList
+
+            LaunchedEffect(Unit) {
+                item.onEnteredView()
+            }
+
             val backgroundColor = if (isSystemInDarkTheme()) {
                 AppColor.White.copy(alpha = 0.12F)
             } else {
@@ -103,7 +111,7 @@ private fun Loaded(uiState: UiState.Loaded) {
             Spacer(modifier = Modifier.height(Margin.Large.value))
             // Posts list UI
             when (postList) {
-                is PostList.Loading -> PostListLoading()
+                is PostList.Initial, is PostList.Loading -> PostListLoading()
                 is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
                 is PostList.Error -> PostListError(backgroundColor, tagChip, postList)
             }
@@ -525,7 +533,7 @@ fun ReaderTagsFeedLoaded() {
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),
-                        postList = PostList.Loading,
+                        postList = PostList.Initial,
                     ),
                     TagFeedItem(
                         tagChip = TagChip(readerTag, {}),
