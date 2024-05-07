@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-05-02 15:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="page_upload_conflict_error">קיימת גרסה עדכנית יותר של העמוד</string>
+    <string name="editor_updating_content">מעדכן תוכן</string>
+    <string name="stats_subscribers">מנויים</string>
+    <string name="stats_subscribers_subscribers">מנויים</string>
     <string name="weekly_roundup_notification_text_views_and_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ותגובה אחת</string>
     <string name="weekly_roundup_notification_text_views_and_like">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ולייק אחד</string>
     <string name="weekly_roundup_notification_text_views_like_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, לייק אחד ותגובה אחת.</string>
@@ -58,6 +62,7 @@ Language: he_IL
     <string name="gutenberg_native_copy_error_details">הפרטים של שגיאת ההעתקה</string>
     <string name="gutenberg_native_button_to_copy_post_text">כפתור להעתקת הטקסט של הפוסט</string>
     <string name="gutenberg_native_button_to_copy_error_details">כפתור להעתקה של פרטי השגיאה</string>
+    <string name="editor_updating_content_failed">העדכון של התוכן נכשל</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
     <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>
@@ -129,10 +134,6 @@ Language: he_IL
     <string name="reader_filter_empty_blogs_list">ניתן לראות את הפוסטים החדשים ביותר מבלוגים שנרשמת לעדכונים מהם</string>
     <string name="reader_filter_by_tag_title">לסנן לפי תגית</string>
     <string name="reader_filter_by_blog_title">לסנן לפי בלוג</string>
-    <string name="stats_timeframe_by_year">לפי שנה</string>
-    <string name="stats_timeframe_by_month">לפי חודש</string>
-    <string name="stats_timeframe_by_week">לפי שבוע</string>
-    <string name="stats_timeframe_by_day">לפי יום</string>
     <string name="gutenberg_native_waiting_for_connection">ממתין לחיבור</string>
     <string name="stats_traffic">תעבורה</string>
     <string name="gutenberg_native_working_offline">עבודה במצב לא מקוון</string>
@@ -1158,6 +1159,7 @@ Language: he_IL
     <string name="gutenberg_native_add_title">להוסיף כותרת</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_loading">טוען</string>
+    <string name="gutenberg_native_link_label">קישור תווית</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_padding">מרווחים</string>

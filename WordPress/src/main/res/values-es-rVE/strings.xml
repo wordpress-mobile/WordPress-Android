@@ -530,6 +530,7 @@ Language: es_VE
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
+    <string name="gutenberg_native_link_label">Etiqueta del enlace</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>

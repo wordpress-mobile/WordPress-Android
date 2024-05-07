@@ -1,0 +1,31 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/rest/v1.1/sites/.*/stats/emails/summary/.*"
+  },
+  "response": {
+    "status": 200,
+    "jsonBody": {
+      "posts": [
+        {
+          "id": 1,
+          "href": "http://url1",
+          "date": "2024-04-29 12:00:00",
+          "title": "title1",
+          "type": "post",
+          "opens": 10,
+          "clicks": 20
+        },
+        {
+          "id": 2,
+          "href": "http://url2",
+          "date": "2024-04-28 12:00:00",
+          "title": "title2",
+          "type": "post",
+          "opens": 30,
+          "clicks": 40
+        }
+      ]
+    }
+  }
+}

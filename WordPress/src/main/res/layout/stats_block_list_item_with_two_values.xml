@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_large"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/one_line_list_item_height"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/margin_extra_large"
+    android:paddingVertical="5dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/text"
+        style="@style/StatsBlockItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/text_sz_large" />
+
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+        android:id="@+id/value1"
+        style="@style/StatsBlockValue"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:gravity="end"
+        android:importantForAccessibility="no" />
+
+    <org.wordpress.android.widgets.MaterialTextViewWithNumerals
+        android:id="@+id/value2"
+        style="@style/StatsBlockValue"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:importantForAccessibility="no" />
+</LinearLayout>

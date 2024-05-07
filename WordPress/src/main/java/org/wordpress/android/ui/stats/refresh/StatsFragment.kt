@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
+import org.wordpress.android.models.JetpackPoweredScreen
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
@@ -38,13 +39,12 @@ import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSect
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_COMMENTS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_FOLLOWERS_DETAIL
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TOTAL_LIKES_DETAIL
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.WEEKS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.YEARS
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdateResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.models.JetpackPoweredScreen
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.TRAFFIC
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -224,10 +224,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         }
     }
 
-    @Suppress("MagicNumber")
-    private fun StatsFragmentBinding.handleSelectedSectionWithTrafficTab(
-        selectedSection: StatsSection
-    ) {
+    private fun StatsFragmentBinding.handleSelectedSectionWithTrafficTab(selectedSection: StatsSection) {
         val position = when (selectedSection) {
             TRAFFIC -> 0
             INSIGHTS -> 1
@@ -243,16 +240,14 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         position?.let {
             if (statsPager.currentItem != position) {
                 tabLayout.removeOnTabSelectedListener(selectedTabListener)
-                statsPager.setCurrentItem(position, false)
+                statsPager.currentItem = position
                 tabLayout.addOnTabSelectedListener(selectedTabListener)
             }
         }
     }
 
     @Suppress("MagicNumber")
-    private fun StatsFragmentBinding.handleSelectedSection(
-        selectedSection: StatsSection
-    ) {
+    private fun StatsFragmentBinding.handleSelectedSection(selectedSection: StatsSection) {
         val position = when (selectedSection) {
             INSIGHTS -> 0
             DAYS -> 1
@@ -270,7 +265,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
         position?.let {
             if (statsPager.currentItem != position) {
                 tabLayout.removeOnTabSelectedListener(selectedTabListener)
-                statsPager.setCurrentItem(position, false)
+                statsPager.currentItem = position
                 tabLayout.addOnTabSelectedListener(selectedTabListener)
             }
         }
