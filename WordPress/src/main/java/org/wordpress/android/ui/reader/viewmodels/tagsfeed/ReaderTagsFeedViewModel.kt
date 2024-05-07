@@ -1,16 +1,24 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -21,12 +29,19 @@ class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val readerPostRepository: ReaderPostRepository,
     private val readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
 
     private val _actionEvents = SingleLiveEvent<ActionEvent>()
     val actionEvents: LiveData<ActionEvent> = _actionEvents
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private var hasInitialized = false
 
     /**
      * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
@@ -45,6 +60,12 @@ class ReaderTagsFeedViewModel @Inject constructor(
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
         }
+
+        if (!hasInitialized) {
+            hasInitialized = true
+            initNavigationEvents()
+        }
+
         // Initially add all tags to the list with the posts loading UI
         _uiStateFlow.update {
             readerTagsFeedUiStateMapper.mapLoadingPostsUiState(tags, ::onTagClick)
@@ -54,6 +75,17 @@ class ReaderTagsFeedViewModel @Inject constructor(
             tags.forEach {
                 fetchTag(it)
             }
+        }
+    }
+
+    private fun initNavigationEvents() {
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            // TODO reblog supported in this screen? See ReaderPostDetailViewModel and ReaderDiscoverViewModel
+//            val target = event.peekContent()
+//            if (target is ReaderNavigationEvents.ShowSitePickerForResult) {
+//                pendingReblogPost = target.post
+//            }
+            _navigationEvents.value = event
         }
     }
 
@@ -83,7 +115,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                         posts = posts,
                         onTagClick = ::onTagClick,
                         onSiteClick = ::onSiteClick,
-                        onPostImageClick = ::onPostImageClick,
+                        onPostCardClick = ::onPostCardClick,
                         onPostLikeClick = ::onPostLikeClick,
                         onPostMoreMenuClick = ::onPostMoreMenuClick,
                     )
@@ -127,7 +159,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onTagClick(readerTag: ReaderTag) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onTagClick(readerTag: ReaderTag) {
         _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
 
@@ -135,12 +168,26 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    private fun onSiteClick() {
-        // TODO
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onSiteClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                _navigationEvents.postValue(
+                    Event(ReaderNavigationEvents.ShowBlogPreview(it.blogId, it.feedId, it.isFollowedByCurrentUser))
+                )
+            }
+        }
     }
 
-    private fun onPostImageClick() {
-        // TODO
+    private fun onPostCardClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                readerPostCardActionsHandler.handleOnItemClicked(
+                    it,
+                    ReaderTracker.SOURCE_TAGS_FEED
+                )
+            }
+        }
     }
 
     private fun onPostLikeClick() {
@@ -149,6 +196,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun onPostMoreMenuClick() {
         // TODO
+    }
+
+    private fun findPost(postId: Long, blogId: Long): ReaderPost? {
+        return readerPostTableWrapper.getBlogPost(
+            blogId = blogId,
+            postId = postId,
+            excludeTextColumn = true,
+        )
     }
 
     sealed class ActionEvent {

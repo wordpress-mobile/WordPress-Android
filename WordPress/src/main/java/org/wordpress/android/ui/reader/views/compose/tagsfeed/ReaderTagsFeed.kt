@@ -62,7 +62,8 @@ fun ReaderTagsFeed(uiState: UiState) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .padding(bottom = 48.dp),
     ) {
         when (uiState) {
             is UiState.Loading -> Loading()
@@ -263,22 +264,9 @@ private fun PostListLoaded(
         items(
             items = postList.items,
         ) { postItem ->
-            with(postItem) {
                 ReaderTagsFeedPostListItem(
-                    siteName = siteName,
-                    postDateLine = postDateLine,
-                    postTitle = postTitle,
-                    postExcerpt = postExcerpt,
-                    postImageUrl = postImageUrl,
-                    postNumberOfLikesText = postNumberOfLikesText,
-                    postNumberOfCommentsText = postNumberOfCommentsText,
-                    isPostLiked = isPostLiked,
-                    onSiteClick = onSiteClick,
-                    onPostClick = onPostImageClick,
-                    onPostLikeClick = onPostLikeClick,
-                    onPostMoreMenuClick = onPostMoreMenuClick,
+                    item = postItem
                 )
-            }
         }
         item {
             val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
@@ -424,8 +412,10 @@ data class TagsFeedPostItem(
     val postNumberOfLikesText: String,
     val postNumberOfCommentsText: String,
     val isPostLiked: Boolean,
-    val onSiteClick: () -> Unit,
-    val onPostImageClick: () -> Unit,
+    val postId: Long,
+    val blogId: Long,
+    val onSiteClick: (TagsFeedPostItem) -> Unit,
+    val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: () -> Unit,
     val onPostMoreMenuClick: () -> Unit,
 )
@@ -446,8 +436,10 @@ fun ReaderTagsFeedLoaded() {
                     postNumberOfLikesText = "15 likes",
                     postNumberOfCommentsText = "",
                     isPostLiked = true,
+                    postId = 123L,
+                    blogId = 123L,
                     onSiteClick = {},
-                    onPostImageClick = {},
+                    onPostCardClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
@@ -460,8 +452,10 @@ fun ReaderTagsFeedLoaded() {
                     postNumberOfLikesText = "",
                     postNumberOfCommentsText = "3 comments",
                     isPostLiked = true,
+                    postId = 456L,
+                    blogId = 456L,
                     onSiteClick = {},
-                    onPostImageClick = {},
+                    onPostCardClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
@@ -474,8 +468,10 @@ fun ReaderTagsFeedLoaded() {
                     postNumberOfLikesText = "123 likes",
                     postNumberOfCommentsText = "9 comments",
                     isPostLiked = true,
+                    postId = 789L,
+                    blogId = 789L,
                     onSiteClick = {},
-                    onPostImageClick = {},
+                    onPostCardClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
@@ -488,8 +484,10 @@ fun ReaderTagsFeedLoaded() {
                     postNumberOfLikesText = "1234 likes",
                     postNumberOfCommentsText = "91 comments",
                     isPostLiked = true,
+                    postId = 1234L,
+                    blogId = 1234L,
                     onSiteClick = {},
-                    onPostImageClick = {},
+                    onPostCardClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),
@@ -502,8 +500,10 @@ fun ReaderTagsFeedLoaded() {
                     postNumberOfLikesText = "12 likes",
                     postNumberOfCommentsText = "34 comments",
                     isPostLiked = true,
+                    postId = 5678L,
+                    blogId = 5678L,
                     onSiteClick = {},
-                    onPostImageClick = {},
+                    onPostCardClick = {},
                     onPostLikeClick = {},
                     onPostMoreMenuClick = {},
                 ),

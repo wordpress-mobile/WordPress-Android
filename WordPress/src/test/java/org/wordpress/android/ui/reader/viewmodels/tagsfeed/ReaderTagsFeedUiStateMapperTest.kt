@@ -52,8 +52,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             ReaderTagType.FOLLOWED,
         )
         val onTagClick = { _: ReaderTag -> }
-        val onSiteClick = {}
-        val onPostImageClick = {}
+        val onSiteClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick = {}
         val onPostMoreMenuClick = {}
 
@@ -76,7 +76,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             posts = postList,
             onTagClick = onTagClick,
             onSiteClick = onSiteClick,
-            onPostImageClick = onPostImageClick,
+            onPostCardClick = onPostCardClick,
             onPostLikeClick = onPostLikeClick,
             onPostMoreMenuClick = onPostMoreMenuClick,
         )
@@ -97,9 +97,11 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
+                        postId = 0L,
+                        blogId = 0L,
                         onSiteClick = onSiteClick,
                         onPostLikeClick = onPostLikeClick,
-                        onPostImageClick = onPostImageClick,
+                        onPostCardClick = onPostCardClick,
                         onPostMoreMenuClick = onPostMoreMenuClick,
                     )
                 )
@@ -119,7 +121,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             ReaderTagType.FOLLOWED,
         )
         val errorType = ReaderTagsFeedViewModel.ErrorType.Default
-        val onTagClick = { _: ReaderTag -> }
+        val onTagClick: (ReaderTag) -> Unit = {}
         val onRetryClick = {}
         // When
         val actual = classToTest.mapErrorTagFeedItem(
@@ -146,7 +148,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
     @Test
     fun `Should map loading posts UI state correctly`() {
         // Given
-        val onTagClick = { _: ReaderTag -> }
+        val onTagClick: (ReaderTag) -> Unit = {}
         val tag1 = ReaderTag(
             "tag",
             "tag",

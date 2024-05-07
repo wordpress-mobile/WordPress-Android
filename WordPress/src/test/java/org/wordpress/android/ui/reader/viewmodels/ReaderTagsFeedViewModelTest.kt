@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.toList
@@ -16,14 +17,22 @@ import org.mockito.kotlin.doSuspendableAnswer
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.ReaderTestUtils
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
+import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
+import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.viewmodel.Event
+import kotlin.test.assertIs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
@@ -33,13 +42,43 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper
 
+    @Mock
+    lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+
+    @Mock
+    lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+
+    @Mock
+    lateinit var navigationEvents: MediatorLiveData<Event<ReaderNavigationEvents>>
+
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
     private val collectedUiStates: MutableList<ReaderTagsFeedViewModel.UiState> = mutableListOf()
 
+    private val actionEvents = mutableListOf<ActionEvent>()
+    private val readerNavigationEvents = mutableListOf<Event<ReaderNavigationEvents>>()
+
+    val tag = ReaderTag(
+        "tag",
+        "tag",
+        "tag",
+        "endpoint",
+        ReaderTagType.FOLLOWED,
+    )
+
     @Before
     fun setUp() {
-        viewModel = ReaderTagsFeedViewModel(testDispatcher(), readerPostRepository, readerTagsFeedUiStateMapper)
+        viewModel = ReaderTagsFeedViewModel(
+            bgDispatcher = testDispatcher(),
+            readerPostRepository = readerPostRepository,
+            readerTagsFeedUiStateMapper = readerTagsFeedUiStateMapper,
+            readerPostCardActionsHandler = readerPostCardActionsHandler,
+            readerPostTableWrapper = readerPostTableWrapper,
+        )
+        whenever(readerPostCardActionsHandler.navigationEvents)
+            .thenReturn(navigationEvents)
+        observeActionEvents()
+        observeNavigationEvents()
     }
 
     @Test
@@ -167,6 +206,30 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `Should emit OpenTagPostsFeed when onTagClick is called`() {
+        // When
+        viewModel.onTagClick(tag)
+
+        // Then
+        assertIs<ActionEvent.OpenTagPostsFeed>(actionEvents.first())
+    }
+
+    @Test
+    fun `Should emit ShowBlogPreview when onSiteClick is called`() = test {
+        // Given
+        whenever(readerPostTableWrapper.getBlogPost(any(), any(), any()))
+            .thenReturn(ReaderPost())
+
+        // When
+        viewModel.onSiteClick(TagsFeedPostItem(
+            "", "", "", "", "", "", "", true, 123L, 123L, {}, {}, {}, {}
+        ))
+
+        // Then
+        assertIs<Event<ReaderNavigationEvents.ShowBlogPreview>>(readerNavigationEvents.first())
+    }
+
     @Suppress("LongMethod")
     @Test
     fun `given tags fetched, when start again, then nothing happens`() = testCollectingUiStates {
@@ -269,5 +332,17 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         }
         this.block()
         collectedUiStatesJob.cancel()
+    }
+
+    private fun observeActionEvents() {
+        viewModel.actionEvents.observeForever {
+            it?.let { actionEvents.add(it) }
+        }
+    }
+
+    private fun observeNavigationEvents() {
+        viewModel.navigationEvents.observeForever {
+            it?.let { readerNavigationEvents.add(it) }
+        }
     }
 }

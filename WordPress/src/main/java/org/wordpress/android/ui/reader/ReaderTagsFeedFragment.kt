@@ -13,16 +13,22 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -48,6 +54,12 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     private val viewModel: ReaderTagsFeedViewModel by viewModels()
 
+    @Inject
+    lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
 
@@ -61,9 +73,9 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 ReaderTagsFeed(uiState)
             }
         }
-
         observeSubFilterViewModel(savedInstanceState)
         observeActionEvents()
+        observeNavigationEvents()
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -158,6 +170,105 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             }
             .setDuration(POST_LIST_FADE_DURATION)
             .alpha(0f)
+    }
+
+    @Suppress("LongMethod")
+    private fun observeNavigationEvents() {
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner) { event ->
+            when (event) {
+                is ReaderNavigationEvents.ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(
+                    context,
+                    event.post.blogId,
+                    event.post.postId
+                )
+
+                is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
+                is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
+                is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
+                    context,
+                    event.blogId,
+                    event.postId,
+                    ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
+                )
+
+                is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+                is ReaderNavigationEvents.ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
+                    this@ReaderTagsFeedFragment,
+                    event.preselectedSite,
+                    event.mode
+                )
+
+                is ReaderNavigationEvents.OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(
+                    activity,
+                    event.site,
+                    event.post,
+                    event.source
+                )
+
+                is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+                is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> {
+                    showBookmarkSavedLocallyDialog(event)
+                }
+                is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
+                    context,
+                    event.tag,
+                    ReaderTracker.SOURCE_DISCOVER,
+                    readerTracker
+                )
+
+                is ReaderNavigationEvents.ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(
+                    context,
+                    event.videoUrl
+                )
+
+                is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    context,
+                    event.siteId,
+                    event.feedId,
+                    event.isFollowed,
+                    ReaderTracker.SOURCE_DISCOVER,
+                    readerTracker
+                )
+
+                is ReaderNavigationEvents.ShowReportPost -> ReaderActivityLauncher.openUrl(
+                    context,
+                    readerUtilsWrapper.getReportPostUrl(event.url),
+                    ReaderActivityLauncher.OpenUrlType.INTERNAL
+                )
+
+                is ReaderNavigationEvents.ShowReportUser -> ReaderActivityLauncher.openUrl(
+                    context,
+                    readerUtilsWrapper.getReportUserUrl(event.url, event.authorId),
+                    ReaderActivityLauncher.OpenUrlType.INTERNAL
+                )
+
+                is ReaderNavigationEvents.ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
+                else -> Unit // Do Nothing
+            }
+        }
+    }
+
+    private fun showBookmarkSavedLocallyDialog(
+        bookmarkDialog: ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+    ) {
+        bookmarkDialog.buttonLabel
+//        if (bookmarksSavedLocallyDialog == null) {
+//            MaterialAlertDialogBuilder(requireActivity())
+//                .setTitle(getString(bookmarkDialog.title))
+//                .setMessage(getString(bookmarkDialog.message))
+//                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+//                    bookmarkDialog.okButtonAction.invoke()
+//                }
+//                .setOnDismissListener {
+//                    bookmarksSavedLocallyDialog = null
+//                }
+//                .setCancelable(false)
+//                .create()
+//                .let {
+//                    bookmarksSavedLocallyDialog = it
+//                    it.show()
+//                }
+//        }
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
