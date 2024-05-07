@@ -192,80 +192,64 @@ class ReaderTagsFeedViewModel @Inject constructor(
         AppLog.e(AppLog.T.READER, "RL-> onPostLikeClick - postItem isLiked = ${postItem.isPostLiked}")
         // Immediately update the UI and disable the like button. If the request fails, show error and revert UI state.
         // If the request fails or succeeds, the like button is enabled again.
+        val isPostLikedUpdated = !postItem.isPostLiked
         updatePostItemUI(
             postItemToUpdate = postItem,
-            isPostLikedUpdated = !postItem.isPostLiked,
-            isLikeButtonEnabled = false
+            isPostLikedUpdated = isPostLikedUpdated,
+            isLikeButtonEnabled = false,
         )
 
         // After updating the like button UI to the intended state and disabling the like button, send a request to the
         // like endpoint by using the PostLikeUseCase
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                likeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+                    when (it) {
+                        is PostLikeUseCase.PostLikeState.Success -> {
+                            // Re-enable like button without changing the current post item UI.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
+                        }
 
+                        is PostLikeUseCase.PostLikeState.Failed.NoNetwork -> {
+                            // Revert post item like button UI to the previous state and re-enable like button.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = !isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
 
-//
-//        // Like, bookmark or block action status changed.
-//
-//
-//        (_uiStateFlow.value as? UiState.Loaded?)?.let { uiState ->
-//            launch {
-//                findPost(item.postId, item.blogId)?.let { updatedPost ->
-//                    val hasPostChanged = item.isPostLiked != updatedPost.isLikedByCurrentUser
-//                    if (!hasPostChanged) {
-//                        return@launch
-//                    }
-//                    uiState.data.filter { it.postList is PostList.Loaded }
-//                        .flatMap { (it.postList as PostList.Loaded).items }
-//                        .map {
-//                            if (it.postId == item.postId) {
-//                                it.isPostLiked = updatedPost.isLikedByCurrentUser
-//                            } else {
-//                                it
-//                            }
-//                        }
-//                    _uiStateFlow.update { uiState }
-//                }
-//            }
-//        }
-//
-//
-//        launch {
-//            findPost(postItem.postId, postItem.blogId)?.let {
-////                readerPostCardActionsHandler.onAction(
-////                    post = it,
-////                    type = ReaderPostCardActionType.LIKE,
-////                    isBookmarkList = false,
-////                    source = ReaderTracker.SOURCE_TAGS_FEED,
-////                )
-//                likeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
-//                    when (it) {
-//                        is PostLikeUseCase.PostLikeState.Success -> {
-//                            // TODO
-//                            AppLog.e(AppLog.T.READER, "RL-> Post liked success")
-//                        }
-//
-//                        is PostLikeUseCase.PostLikeState.Failed.NoNetwork -> {
-//                            // TODO
-//                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed no network")
-////                            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.no_network_message))))
-//                        }
-//
-//                        is PostLikeUseCase.PostLikeState.Failed.RequestFailed -> {
-//                            // TODO
-//                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed request failed")
-////                            _refreshPosts.postValue(Event(Unit))
-////                            _snackbarEvents.postValue(
-////                                Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.reader_error_request_failed_title)))
-////                            )
-//                        }
-//
-//                        else -> {
-//                            // no-op
-//                            AppLog.e(AppLog.T.READER, "RL-> Post liked else: $it")
-//                        }
-//                    }
-//                }
-//            }
-//        }
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed no network")
+                            // TODO show snackbar?
+//                            _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.no_network_message))))
+                        }
+
+                        is PostLikeUseCase.PostLikeState.Failed.RequestFailed -> {
+                            // Revert post item like button UI to the previous state and re-enable like button.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = !isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked failed request failed")
+                            // TODO show snackbar?
+//                            _refreshPosts.postValue(Event(Unit))
+//                            _snackbarEvents.postValue(
+//                                Event(SnackbarMessageHolder(UiString.UiStringRes(R.string.reader_error_request_failed_title)))
+//                            )
+                        }
+
+                        else -> {
+                            // no-op
+                            AppLog.e(AppLog.T.READER, "RL-> Post liked else: $it")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun updatePostItemUI(
@@ -275,8 +259,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
     ) {
         val uiState = _uiStateFlow.value as? UiState.Loaded ?: return
         // Finds the TagFeedItem associated with the post that should be updated
-        val tagFeedItemToUpdate: TagFeedItem = uiState.data.firstOrNull {
-            it.postList is PostList.Loaded && it.postList.items.contains(postItemToUpdate)
+        val tagFeedItemToUpdate: TagFeedItem = uiState.data.firstOrNull { tagFeedItem ->
+            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
+                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+            } != null
         } ?: return
         uiState.data.indexOf(tagFeedItemToUpdate).let { tagFeedItemToUpdateIndex ->
             if (tagFeedItemToUpdateIndex == -1) {
