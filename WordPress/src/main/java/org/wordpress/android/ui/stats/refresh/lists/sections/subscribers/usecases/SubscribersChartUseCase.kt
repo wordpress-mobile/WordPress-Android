@@ -31,7 +31,7 @@ class SubscribersChartUseCase @Inject constructor(
     @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher,
     private val analyticsTracker: AnalyticsTrackerWrapper
 ) : StatelessUseCase<SubscribersModel>(SUBSCRIBERS_CHART, mainDispatcher, backgroundDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf()
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_subscribers))
 
     override suspend fun loadCachedData() = subscribersStore.getSubscribers(
         statsSiteProvider.siteModel,
