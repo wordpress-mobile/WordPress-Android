@@ -347,7 +347,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 // set a default title if title is not set within the note
                 switch (note.getRawType()) {
                     case NOTE_FOLLOW_TYPE:
-                        title = getString(R.string.follows);
+                        title = getString(R.string.subscribers);
                         break;
                     case NOTE_COMMENT_LIKE_TYPE:
                         title = getString(R.string.comment_likes);
