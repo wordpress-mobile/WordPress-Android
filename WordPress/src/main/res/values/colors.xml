@@ -154,6 +154,7 @@
     <!-- Notifications -->
     <color name="inline_action_filled">@color/jetpack_green_50</color>
     <color name="background_like_header">@color/black_translucent_10</color>
+    <color name="background_dropdown_menu">@color/white</color>
     <color name="divider_likes">#3C3C43</color>
 
     <!-- Gravatar Info Banners -->
