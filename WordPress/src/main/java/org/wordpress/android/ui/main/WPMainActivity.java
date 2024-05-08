@@ -1301,19 +1301,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
         switch (pageType) {
             case MY_SITE:
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
-                mAnalyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, getSelectedSite());
+                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.MY_SITE, getSelectedSite());
                 break;
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.READER);
                 break;
             case NOTIFS:
                 ActivityId.trackLastActivity(ActivityId.NOTIFICATIONS);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED);
+                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.NOTIFS);
                 break;
             case ME:
                 ActivityId.trackLastActivity(ActivityId.ME);
-                AnalyticsTracker.track(Stat.ME_ACCESSED);
+                mJetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(PageType.ME);
                 break;
             default:
                 break;
