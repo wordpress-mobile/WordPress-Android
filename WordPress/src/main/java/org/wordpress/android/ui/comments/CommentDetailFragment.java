@@ -877,7 +877,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             mCommentsStoreAdapter.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
         }
 
-        // display "on [Post Title]..."
         binding.textPostTitle.setText(postTitle.trim());
     }
 
