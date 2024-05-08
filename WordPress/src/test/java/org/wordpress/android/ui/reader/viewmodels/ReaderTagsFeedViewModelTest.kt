@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -14,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
@@ -34,7 +36,6 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.Event
 import kotlin.test.assertIs
-import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
@@ -343,15 +344,46 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should send update like status request when like button is tapped if internet connection is available`() {
-    }
+    fun `Should send update like status request when like button is tapped`() = testCollectingUiStates {
+        // Given
+        val tagsFeedPostItem = TagsFeedPostItem(
+            siteName = "",
+            postDateLine = "",
+            postTitle = "",
+            postExcerpt = "",
+            postImageUrl = "",
+            postNumberOfLikesText = "",
+            postNumberOfCommentsText = "",
+            isPostLiked = false,
+            isLikeButtonEnabled = true,
+            postId = 123L,
+            blogId = 123L,
+            onSiteClick = {},
+            onPostCardClick = {},
+            onPostLikeClick = {},
+            onPostMoreMenuClick = {}
+        )
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems(items = listOf(tagsFeedPostItem))
+        val posts = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
+            delay(100)
+            posts
+        }
+        whenever(readerPostTableWrapper.getBlogPost(any(), any(), any()))
+            .thenReturn(ReaderPost())
+        whenever(postLikeUseCase.perform(any(), any(), any()))
+            .thenReturn(flowOf())
 
-    @Test
-    fun `Should revert like button UI if update like status request fails (RequestFailed)`() {
-    }
+        // When
+        viewModel.start(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onPostLikeClick(tagsFeedPostItem)
 
-    @Test
-    fun `Should revert like button UI if update like status request fails (NoNetwork)`() {
+        // Then
+        verify(postLikeUseCase).perform(any(), any(), any())
     }
 
     private fun mockMapLoadingTagFeedItems() {
