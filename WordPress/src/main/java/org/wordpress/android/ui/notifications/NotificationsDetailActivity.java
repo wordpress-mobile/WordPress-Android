@@ -366,7 +366,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
             getSupportActionBar().setTitle(title);
             // important for accessibility - talkback
-            if (title.isEmpty()) {
+            if (note.isCommentType()) {
                 setTitle(getString(R.string.notif_detail_screen_title, getString(R.string.comment)));
             } else {
                 setTitle(getString(R.string.notif_detail_screen_title, title));
