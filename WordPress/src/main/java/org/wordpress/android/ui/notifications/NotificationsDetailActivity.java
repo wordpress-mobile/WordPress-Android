@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.NoteExtensions;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
@@ -364,6 +365,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             // Force change the Action Bar title for 'new_post' notifications.
             if (note.isNewPostType()) {
                 title = getString(R.string.reader_title_post_detail);
+            }
+
+            if (NoteExtensions.isAchievement(note)) {
+                title = "";
             }
 
             getSupportActionBar().setTitle(title);
