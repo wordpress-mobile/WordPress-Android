@@ -220,27 +220,18 @@ class ReaderTagsFeedViewModel @Inject constructor(
         val uiState = _uiStateFlow.value as? UiState.Loaded ?: return
         // Finds the TagFeedItem associated with the post that should be updated. Return if the item is
         // not found.
-        val tagFeedItemToUpdate: TagFeedItem = uiState.data.firstOrNull { tagFeedItem ->
-            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
-                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-            } != null
-        } ?: return
+        val tagFeedItemToUpdate = findTagFeedItemToUpdate(uiState, postItemToUpdate) ?: return
+
         // Finds the index associated with the TagFeedItem to be updated found above. Return if the index is not found.
         val tagFeedItemToUpdateIndex = uiState.data.indexOf(tagFeedItemToUpdate)
         if (tagFeedItemToUpdateIndex != -1 && tagFeedItemToUpdate.postList is PostList.Loaded) {
             // Creates a new post list items collection with the post item updated values
-            val updatedTagFeedItemPostListItems = tagFeedItemToUpdate.postList.items.toMutableList().apply {
-                val postItemToUpdateIndex =
-                    indexOfFirst {
-                        it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-                    }
-                if (postItemToUpdateIndex != -1) {
-                    this[postItemToUpdateIndex] = postItemToUpdate.copy(
-                        isPostLiked = isPostLikedUpdated,
-                        isLikeButtonEnabled = isLikeButtonEnabled,
-                    )
-                }
-            }
+            val updatedTagFeedItemPostListItems = getPostListWithUpdatedPostItem(
+                postList = tagFeedItemToUpdate.postList,
+                postItemToUpdate = postItemToUpdate,
+                isPostLikedUpdated = isPostLikedUpdated,
+                isLikeButtonEnabled = isLikeButtonEnabled,
+            )
             // Creates a copy of the TagFeedItem with the updated post list items collection
             val updatedTagFeedItem = tagFeedItemToUpdate.copy(
                 postList = tagFeedItemToUpdate.postList.copy(
@@ -255,6 +246,32 @@ class ReaderTagsFeedViewModel @Inject constructor(
             // Updates the UI state value with the updated TagFeedItem collection
             _uiStateFlow.value = uiState.copy(data = updatedUiStateData)
         }
+    }
+
+    private fun getPostListWithUpdatedPostItem(
+        postList: PostList.Loaded,
+        postItemToUpdate: TagsFeedPostItem,
+        isPostLikedUpdated: Boolean,
+        isLikeButtonEnabled: Boolean
+    ) =
+        postList.items.toMutableList().apply {
+            val postItemToUpdateIndex =
+                indexOfFirst {
+                    it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+                }
+            if (postItemToUpdateIndex != -1) {
+                this[postItemToUpdateIndex] = postItemToUpdate.copy(
+                    isPostLiked = isPostLikedUpdated,
+                    isLikeButtonEnabled = isLikeButtonEnabled,
+                )
+            }
+        }
+
+    private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
+        uiState.data.firstOrNull { tagFeedItem ->
+        tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
+            it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+        } != null
     }
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
