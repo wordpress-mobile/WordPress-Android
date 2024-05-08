@@ -1330,6 +1330,8 @@
     <string name="stats_view_subscribers_chart">Subscribers</string>
     <string name="stats_view_subscribers">Subscribers</string>
     <string name="stats_view_emails">Emails</string>
+    <string name="stats_subscribers_marker_view_singular">Subscriber</string>
+    <string name="stats_subscribers_marker_view_plural">Subscribers</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
