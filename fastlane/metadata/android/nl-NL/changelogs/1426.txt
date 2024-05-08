@@ -1,0 +1,3 @@
+24.7:
+We hebben het scherm voor het kiezen van de site opnieuw ontworpen. Je kunt nu je favoriete sites vastzetten, recent bezochte sites bekijken en meer. We hebben ook de mogelijkheid om sites te tonen en te verbergen verwijderd.
+(Hebben we het woord "sites" genoeg gezegd? Wij denken van wel.)

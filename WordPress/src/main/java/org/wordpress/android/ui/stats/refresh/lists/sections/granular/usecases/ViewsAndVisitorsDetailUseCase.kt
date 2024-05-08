@@ -3,20 +3,21 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.time.VisitsAndViewsModel
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.DAYS
+import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
+import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.VIEWS_AND_VISITORS
 import org.wordpress.android.fluxc.store.stats.time.VisitsAndViewsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewUrl
+import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularStatefulUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.GranularUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.ViewsAndVisitorsDetailUseCase.UiState
@@ -38,10 +39,9 @@ import javax.inject.Named
 
 @Suppress("LongParameterList")
 class ViewsAndVisitorsDetailUseCase constructor(
-    statsGranularity: StatsGranularity,
     private val visitsAndViewsStore: VisitsAndViewsStore,
-    selectedDateProvider: SelectedDateProvider,
-    statsSiteProvider: StatsSiteProvider,
+    private val selectedDateProvider: SelectedDateProvider,
+    private val statsSiteProvider: StatsSiteProvider,
     private val statsDateFormatter: StatsDateFormatter,
     private val viewsAndVisitorsMapper: ViewsAndVisitorsMapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -49,14 +49,12 @@ class ViewsAndVisitorsDetailUseCase constructor(
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val statsWidgetUpdaters: StatsWidgetUpdaters,
     private val resourceProvider: ResourceProvider
-) : GranularStatefulUseCase<VisitsAndViewsModel, UiState>(
+) : BaseStatsUseCase<ViewsAndVisitorsDetailUseCase.ViewsAndVisitorsDetailUiModel, UiState>(
     VIEWS_AND_VISITORS,
     mainDispatcher,
     backgroundDispatcher,
-    statsSiteProvider,
-    selectedDateProvider,
-    statsGranularity,
-    UiState()
+    UiState(),
+    fetchParams = listOf(UseCaseParam.SelectedDateParam(WEEKS))
 ) {
     override fun buildLoadingItem(): List<BlockListItem> =
         listOf(
@@ -68,59 +66,89 @@ class ViewsAndVisitorsDetailUseCase constructor(
             )
         )
 
-    override suspend fun loadCachedData(selectedDate: Date, site: SiteModel): VisitsAndViewsModel? {
+    override suspend fun loadCachedData(): ViewsAndVisitorsDetailUiModel? {
         statsWidgetUpdaters.updateViewsWidget(statsSiteProvider.siteModel.siteId)
-        val cachedData = visitsAndViewsStore.getVisits(
-            site,
-            DAYS,
-            LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
-            selectedDate
-        )
-        if (cachedData != null) {
-            selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
+        val weeksCachedData = visitsAndViewsStore.getVisits(statsSiteProvider.siteModel, WEEKS, LimitMode.All)
+
+        // Get DAYS model for chart values
+        val selectedDate = getLastDate(weeksCachedData)
+        val daysCachedData = selectedDate?.let {
+            visitsAndViewsStore.getVisits(
+                statsSiteProvider.siteModel,
+                DAYS,
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
+                it,
+                false
+            )
         }
-        return cachedData
+        return if (weeksCachedData != null && daysCachedData != null) {
+            ViewsAndVisitorsDetailUiModel(weeksCachedData, daysCachedData)
+        } else {
+            null
+        }
     }
 
-    override suspend fun fetchRemoteData(
-        selectedDate: Date,
-        site: SiteModel,
-        forced: Boolean
-    ): State<VisitsAndViewsModel> {
-        AppLog.d(T.STATS, selectedDate.toString() )
-        val response = visitsAndViewsStore.fetchVisits(
-            site,
-            DAYS,
+    private fun getLastDate(model: VisitsAndViewsModel?): Date? {
+        selectedDateProvider.getSelectedDate(WEEKS)?.let { return it }
+        val lastDateString = model?.dates?.lastOrNull()?.period
+        return lastDateString?.let { statsDateFormatter.parseStatsDate(WEEKS, it) }
+    }
+
+    override suspend fun fetchRemoteData(forced: Boolean): State<ViewsAndVisitorsDetailUiModel> {
+        val weeksResponse = visitsAndViewsStore.fetchVisits(
+            statsSiteProvider.siteModel,
+            WEEKS,
             LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
-            selectedDate,
             forced
         )
-        val model = response.model
-        val error = response.error
+        val weeksModel = weeksResponse.model
+
+        // Fetch DAYS model for chart values
+        val selectedDate = getLastDate(weeksModel)
+        val daysResponse = selectedDate?.let {
+            visitsAndViewsStore.fetchVisits(
+                statsSiteProvider.siteModel,
+                DAYS,
+                LimitMode.Top(VIEWS_AND_VISITORS_ITEMS_TO_LOAD),
+                it,
+                forced,
+                false
+            )
+        }
+        val daysModel = daysResponse?.model
+
+        val error = getErrorMessage(weeksResponse) ?: getErrorMessage(daysResponse)
 
         return when {
             error != null -> {
-                selectedDateProvider.onDateLoadingFailed(statsGranularity)
-                State.Error(error.message ?: error.type.name)
+                selectedDateProvider.onDateLoadingFailed(WEEKS)
+                State.Error(error)
             }
-            model != null && model.dates.isNotEmpty() -> {
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
-                State.Data(model)
+
+            weeksModel != null &&
+                weeksModel.dates.isNotEmpty() &&
+                daysModel != null &&
+                daysModel.dates.isNotEmpty() -> {
+                selectedDateProvider.onDateLoadingSucceeded(WEEKS)
+                State.Data(ViewsAndVisitorsDetailUiModel(weeksModel, daysModel))
             }
             else -> {
-                selectedDateProvider.onDateLoadingSucceeded(statsGranularity)
+                selectedDateProvider.onDateLoadingSucceeded(WEEKS)
                 State.Empty()
             }
         }
     }
 
+    private fun getErrorMessage(response: StatsStore.OnStatsFetched<VisitsAndViewsModel>?) =
+        response?.error?.message ?: response?.error?.type?.name
+
     @Suppress("LongMethod")
     override fun buildUiModel(
-        domainModel: VisitsAndViewsModel,
+        domainModel: ViewsAndVisitorsDetailUiModel,
         uiState: UiState
     ): List<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
-        if (domainModel.dates.isNotEmpty()) {
+        if (domainModel.dates.isNotEmpty() && domainModel.daysDates.isNotEmpty()) {
             items.add(buildTitle())
 
             if (uiState.selectedPosition == 1) {
@@ -129,27 +157,17 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 items.add(viewsAndVisitorsMapper.buildChartLegendsBlue())
             }
 
-            val dateFromProvider = selectedDateProvider.getSelectedDate(statsGranularity)
-            val visibleLineCount = uiState.visibleLineCount ?: domainModel.dates.size
-            val availableDates = domainModel.dates.map {
-                statsDateFormatter.parseStatsDate(
-                    DAYS,
-                    it.period
-                )
-            }
+            val dateFromProvider = selectedDateProvider.getSelectedDate(WEEKS)
+            val availableDates = domainModel.dates.map { statsDateFormatter.parseStatsDate(WEEKS, it.period) }
             val selectedDate = dateFromProvider ?: availableDates.last()
             val index = availableDates.indexOf(selectedDate)
 
-            selectedDateProvider.selectDate(
-                selectedDate,
-                availableDates.takeLast(visibleLineCount),
-                DAYS
-            )
-            val selectedItem = domainModel.dates.getOrNull(index) ?: domainModel.dates.last()
+            selectedDateProvider.selectDate(selectedDate, availableDates, WEEKS)
+            val selectedItem = domainModel.daysDates.getOrNull(index) ?: domainModel.daysDates.last()
 
             items.add(
                 viewsAndVisitorsMapper.buildWeekTitle(
-                    domainModel.dates,
+                    domainModel.daysDates,
                     DAYS,
                     selectedItem,
                     uiState.selectedPosition
@@ -157,17 +175,17 @@ class ViewsAndVisitorsDetailUseCase constructor(
             )
             items.addAll(
                 viewsAndVisitorsMapper.buildChart(
-                    domainModel.dates,
+                    domainModel.daysDates,
                     DAYS,
                     this::onLineSelected,
-                    this::onLineChartDrawn,
+                    {},
                     uiState.selectedPosition,
                     selectedItem.period
                 )
             )
             items.add(
                 viewsAndVisitorsMapper.buildWeeksDetailInformation(
-                    domainModel.dates,
+                    domainModel.daysDates,
                     uiState.selectedPosition,
                     this::onTopTipsLinkClick
                 )
@@ -179,8 +197,8 @@ class ViewsAndVisitorsDetailUseCase constructor(
                 )
             )
         } else {
-            selectedDateProvider.onDateLoadingFailed(statsGranularity)
-            AppLog.e(T.STATS, "There is no data to be shown in the overview block")
+            selectedDateProvider.onDateLoadingFailed(WEEKS)
+            AppLog.e(T.STATS, "There is no data to be shown in the views & visitors block")
         }
         return items
     }
@@ -203,10 +221,6 @@ class ViewsAndVisitorsDetailUseCase constructor(
         }
     }
 
-    private fun onLineChartDrawn(visibleLineCount: Int) {
-        updateUiState { it.copy(visibleLineCount = visibleLineCount) }
-    }
-
     private fun onTopTipsLinkClick() {
         navigateTo(ViewUrl(TOP_TIPS_URL))
     }
@@ -216,7 +230,18 @@ class ViewsAndVisitorsDetailUseCase constructor(
         updateUiState { it.copy(selectedPosition = position) }
     }
 
-    data class UiState(val selectedPosition: Int = 0, val visibleLineCount: Int? = null)
+    data class UiState(val selectedPosition: Int = 0)
+
+    data class ViewsAndVisitorsDetailUiModel(
+        val period: String,
+        val dates: List<VisitsAndViewsModel.PeriodData>,
+        val daysDates: List<VisitsAndViewsModel.PeriodData>
+    ) {
+        constructor(
+            weeksModel: VisitsAndViewsModel,
+            daysModel: VisitsAndViewsModel
+        ) : this(weeksModel.period, weeksModel.dates, daysModel.dates)
+    }
 
     class ViewsAndVisitorsGranularUseCaseFactory
     @Inject constructor(
@@ -231,19 +256,17 @@ class ViewsAndVisitorsDetailUseCase constructor(
         private val statsWidgetUpdaters: StatsWidgetUpdaters,
         private val resourceProvider: ResourceProvider
     ) : GranularUseCaseFactory {
-        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) =
-            ViewsAndVisitorsDetailUseCase(
-                granularity,
-                visitsAndViewsStore,
-                selectedDateProvider,
-                statsSiteProvider,
-                statsDateFormatter,
-                viewsAndVisitorsMapper,
-                mainDispatcher,
-                backgroundDispatcher,
-                analyticsTracker,
-                statsWidgetUpdaters,
-                resourceProvider
-            )
+        override fun build(granularity: StatsGranularity, useCaseMode: UseCaseMode) = ViewsAndVisitorsDetailUseCase(
+            visitsAndViewsStore,
+            selectedDateProvider,
+            statsSiteProvider,
+            statsDateFormatter,
+            viewsAndVisitorsMapper,
+            mainDispatcher,
+            backgroundDispatcher,
+            analyticsTracker,
+            statsWidgetUpdaters,
+            resourceProvider
+        )
     }
 }

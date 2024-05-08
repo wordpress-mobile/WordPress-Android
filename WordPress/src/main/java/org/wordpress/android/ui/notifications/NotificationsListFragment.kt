@@ -8,7 +8,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -29,9 +28,9 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_FILTER_SELECTED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_FILTER_SELECTED
 import org.wordpress.android.databinding.NotificationFilterPopupBinding
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
@@ -343,7 +342,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     companion object {
         const val NOTE_ID_EXTRA = "noteId"
         const val NOTE_INSTANT_REPLY_EXTRA = "instantReply"
-        const val NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText"
         const val NOTE_MODERATE_ID_EXTRA = "moderateNoteId"
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
@@ -373,7 +371,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             activity: Activity?,
             noteId: String?,
             shouldShowKeyboard: Boolean,
-            replyText: String?,
             filter: Filter?,
             isTappedFromPushNotification: Boolean
         ) {
@@ -385,9 +382,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             }
             val detailIntent = getOpenNoteIntent(activity, noteId)
             detailIntent.putExtra(NOTE_INSTANT_REPLY_EXTRA, shouldShowKeyboard)
-            if (!TextUtils.isEmpty(replyText)) {
-                detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText)
-            }
             detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
             detailIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, isTappedFromPushNotification)
             openNoteForReplyWithParams(detailIntent, activity)

@@ -45,7 +45,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.databinding.CommentActionFooterBinding;
 import org.wordpress.android.databinding.CommentDetailFragmentBinding;
 import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
-import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -128,32 +127,31 @@ import kotlinx.coroutines.GlobalScope;
  *
  * @deprecated Comments are being refactored as part of Comments Unification project. If you are adding any
  * features or modifying this class, please ping develric or klymyam
+ *
+ * Use [SiteCommentDetailFragment] or [NotificationCommentDetailFragment] instead before removing this class
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
 public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
         OnCollapseListener {
-    private static final String KEY_MODE = "KEY_MODE";
-    private static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
-    private static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
-    private static final String KEY_NOTE_ID = "KEY_NOTE_ID";
-    private static final String KEY_REPLY_TEXT = "KEY_REPLY_TEXT";
+    protected static final String KEY_MODE = "KEY_MODE";
+    protected static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
+    protected static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
+    protected static final String KEY_NOTE_ID = "KEY_NOTE_ID";
+    protected static final int INTENT_COMMENT_EDITOR = 1010;
+    protected static final float NORMAL_OPACITY = 1f;
 
-    private static final int INTENT_COMMENT_EDITOR = 1010;
-    private static final float NORMAL_OPACITY = 1f;
+    @Nullable protected CommentModel mComment;
+    @Nullable protected SiteModel mSite;
 
-    @Nullable private CommentModel mComment;
-    @Nullable private SiteModel mSite;
-
-    @Nullable private Note mNote;
+    @Nullable protected Note mNote;
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
     @Nullable private String mRestoredReplyText;
-    @Nullable private String mRestoredNoteId;
-    private boolean mIsUsersBlog = false;
-    private boolean mShouldFocusReplyField;
+    protected boolean mIsUsersBlog = false;
+    protected boolean mShouldFocusReplyField;
     @Nullable private String mPreviousStatus;
-    private float mMediumOpacity;
+    protected float mMediumOpacity;
 
     @Inject AccountStore mAccountStore;
     @SuppressWarnings("deprecation")
@@ -169,7 +167,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private OnPostClickListener mOnPostClickListener;
     @Nullable private OnCommentActionListener mOnCommentActionListener;
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
-
     @Nullable private CommentSource mCommentSource; // this will be non-null when onCreate()
 
     /*
@@ -179,40 +176,9 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
      */
     @NonNull private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
 
-    @Nullable private CommentDetailFragmentBinding mBinding = null;
-    @Nullable private ReaderIncludeCommentBoxBinding mReplyBinding = null;
-    @Nullable private CommentActionFooterBinding mActionBinding = null;
-
-    /*
-     * used when called from comment list
-     */
-    @SuppressWarnings("deprecation")
-    static CommentDetailFragment newInstance(
-            @NonNull SiteModel site,
-            CommentModel commentModel
-    ) {
-        CommentDetailFragment fragment = new CommentDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_MODE, CommentSource.SITE_COMMENTS);
-        args.putInt(KEY_SITE_LOCAL_ID, site.getId());
-        args.putLong(KEY_COMMENT_ID, commentModel.getRemoteCommentId());
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /*
-     * used when called from notification list for a comment notification
-     */
-    @SuppressWarnings("deprecation")
-    public static CommentDetailFragment newInstance(final String noteId, final String replyText) {
-        CommentDetailFragment fragment = new CommentDetailFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(KEY_MODE, CommentSource.NOTIFICATION);
-        args.putString(KEY_NOTE_ID, noteId);
-        args.putString(KEY_REPLY_TEXT, replyText);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    @Nullable protected CommentDetailFragmentBinding mBinding = null;
+    @Nullable protected ReaderIncludeCommentBoxBinding mReplyBinding = null;
+    @Nullable protected CommentActionFooterBinding mActionBinding = null;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -221,29 +187,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         mCommentSource = (CommentSource) requireArguments().getSerializable(KEY_MODE);
-
-        switch (mCommentSource) {
-            case SITE_COMMENTS:
-                setComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID));
-                break;
-            case NOTIFICATION:
-                setNote(requireArguments().getString(KEY_NOTE_ID));
-                setReplyText(requireArguments().getString(KEY_REPLY_TEXT));
-                break;
-        }
-
-        if (savedInstanceState != null) {
-            if (savedInstanceState.getString(KEY_NOTE_ID) != null) {
-                // The note will be set in onResume()
-                // See WordPress.deferredInit()
-                mRestoredNoteId = savedInstanceState.getString(KEY_NOTE_ID);
-            } else {
-                int siteId = savedInstanceState.getInt(KEY_SITE_LOCAL_ID);
-                long commentId = savedInstanceState.getLong(KEY_COMMENT_ID);
-                setComment(commentId, siteId);
-            }
-        }
-
         setHasOptionsMenu(true);
     }
 
@@ -441,12 +384,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
 
-        // Set the note if we retrieved the noteId from savedInstanceState
-        if (!TextUtils.isEmpty(mRestoredNoteId)) {
-            setNote(mRestoredNoteId);
-            mRestoredNoteId = null;
-        }
-
         CollapseFullScreenDialogFragment fragment = null;
         if (mComment != null) {
             // reattach listeners to collapsible reply dialog
@@ -497,14 +434,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         }
     }
 
-    private void setComment(final long commentRemoteId, final int siteLocalId) {
-        final SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
-        if (site != null) {
-            setComment(site, mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, commentRemoteId));
-        }
-    }
-
-    private void setComment(
+    protected void setComment(
             @NonNull final SiteModel site,
             @Nullable final CommentModel comment
     ) {
@@ -532,59 +462,16 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     @Nullable
-    @Override
-    public Note getNote() {
+    private Note getNote() {
         return mNote;
     }
 
-    private SiteModel createDummyWordPressComSite(long siteId) {
+    protected SiteModel createDummyWordPressComSite(long siteId) {
         SiteModel site = new SiteModel();
         site.setIsWPCom(true);
         site.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
         site.setSiteId(siteId);
         return site;
-    }
-
-    public void setNote(@NonNull Note note) {
-        mNote = note;
-        mSite = mSiteStore.getSiteBySiteId(note.getSiteId());
-        if (mSite == null) {
-            // This should not exist, we should clean that screen so a note without a site/comment can be displayed
-            mSite = createDummyWordPressComSite(mNote.getSiteId());
-        }
-        if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-            showComment(mBinding, mReplyBinding, mActionBinding, mSite, mComment, mNote);
-        }
-    }
-
-    @Override
-    public void setNote(String noteId) {
-        if (noteId == null) {
-            showErrorToastAndFinish();
-            return;
-        }
-
-        Note note = NotificationsTable.getNoteById(noteId);
-        if (note == null) {
-            showErrorToastAndFinish();
-        } else {
-            setNote(note);
-        }
-    }
-
-    private void setReplyText(String replyText) {
-        if (replyText == null) {
-            return;
-        }
-        mRestoredReplyText = replyText;
-    }
-
-    private void showErrorToastAndFinish() {
-        AppLog.e(AppLog.T.NOTIFS, "Note could not be found.");
-        if (getActivity() != null) {
-            ToastUtils.showToast(getActivity(), R.string.error_notification_open);
-            getActivity().finish();
-        }
     }
 
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
@@ -721,7 +608,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     /*
      * display the current comment
      */
-    private void showComment(
+    protected void showComment(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull CommentActionFooterBinding actionBinding,

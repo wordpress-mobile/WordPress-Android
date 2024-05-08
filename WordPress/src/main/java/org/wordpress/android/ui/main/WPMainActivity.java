@@ -1085,7 +1085,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                                             NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                                             false);
                                     NotificationsListFragment.openNoteForReply(WPMainActivity.this, noteId,
-                                            shouldShowKeyboard, null, Filter.ALL, true);
+                                            shouldShowKeyboard, Filter.ALL, true);
                                     return null;
                                 }
                             }

@@ -1148,8 +1148,6 @@
             android:label="@string/site_monitoring"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
-
     </application>
     <queries>
         <intent>

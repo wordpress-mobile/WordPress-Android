@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,12 +101,18 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         return context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
     }
 
-    private String constructGravatarUrl(Context context, AccountModel account) {
+    private @NonNull String constructGravatarUrl(Context context, @Nullable AccountModel account) {
+        if (account == null || account.getAvatarUrl() == null) {
+            return "";
+        }
         return WPAvatarUtils.rewriteAvatarUrl(account.getAvatarUrl(), getAvatarSize(context),
                 DefaultAvatarOption.Status404.INSTANCE);
     }
 
-    private String constructGravatarUrl(Context context, SiteModel site) {
+    private @NonNull String constructGravatarUrl(Context context, @Nullable SiteModel site) {
+        if (site == null || site.getEmail() == null) {
+            return "";
+        }
         return new AvatarUrl(
                 new Email(site.getEmail()),
                 new AvatarQueryOptions(getAvatarSize(context), DefaultAvatarOption.Status404.INSTANCE, null, null)

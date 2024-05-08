@@ -1,0 +1,3 @@
+24.7:
+Kami mendesain ulang tampilan pemilih situs. Sekarang, Anda bisa menyematkan situs favorit, melihat situs yang baru-baru ini diakses, dan masih banyak lagi. Kami juga menghapus fitur untuk menampilkan dan menyembunyikan situs.
+(Apa pembaruan kami terkait "situs" sudah lengkap? Kami rasa sudah.)

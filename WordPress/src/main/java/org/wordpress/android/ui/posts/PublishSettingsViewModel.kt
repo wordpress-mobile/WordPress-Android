@@ -71,8 +71,9 @@ constructor(
 
     open fun start(postRepository: EditPostRepository?) {
         editPostRepository = postRepository
-        val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
-            ?: localeManagerWrapper.getCurrentCalendar()
+        val startCalendar = postRepository?.takeIf { it.hasPost() }?.let {
+            getCurrentPublishDateAsCalendar(it)
+        } ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)
         onPostStatusChanged(postRepository?.getPost())
     }
@@ -187,21 +188,23 @@ constructor(
     }
 
     fun onAddToCalendar(postRepository: EditPostRepository) {
-        val startTime = DateTimeUtils.dateFromIso8601(postRepository.dateCreated).time
-        val site = siteStore.getSiteByLocalId(postRepository.localSiteId)
-        val title = resourceProvider.getString(
-            R.string.calendar_scheduled_post_title,
-            postRepository.title
-        )
-        val appName = resourceProvider.getString(R.string.app_name)
-        val description = resourceProvider.getString(
-            R.string.calendar_scheduled_post_description,
-            postRepository.title,
-            site?.name ?: site?.url ?: "",
-            appName,
-            postRepository.link
-        )
-        _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
+        DateTimeUtils.dateFromIso8601(postRepository.dateCreated)?.let {
+            val startTime = it.time
+            val site = siteStore.getSiteByLocalId(postRepository.localSiteId)
+            val title = resourceProvider.getString(
+                R.string.calendar_scheduled_post_title,
+                postRepository.title
+            )
+            val appName = resourceProvider.getString(R.string.app_name)
+            val description = resourceProvider.getString(
+                R.string.calendar_scheduled_post_description,
+                postRepository.title,
+                site?.name ?: site?.url ?: "",
+                appName,
+                postRepository.link
+            )
+            _onAddToCalendar.value = Event(CalendarEvent(title, description, startTime))
+        } ?: _onToast.postValue(Event(resourceProvider.getString(R.string.post_settings_add_to_calendar_error)))
     }
 
     private fun getCurrentPublishDateAsCalendar(postRepository: EditPostRepository): Calendar {

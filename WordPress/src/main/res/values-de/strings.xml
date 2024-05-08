@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-16 07:37:12+0000
+Translation-Revision-Date: 2024-04-30 07:31:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="page_upload_conflict_error">Es existiert eine neuere Revision dieser Seite</string>
+    <string name="editor_updating_content">Inhalt wird aktualisiert</string>
+    <string name="stats_subscribers">Abonnenten</string>
+    <string name="stats_subscribers_subscribers">Abonnenten</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Letzte Woche hattest du %1$s Aufrufe und 1 Kommentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Letzte Woche hattest du %1$s Aufrufe und 1 Like</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Letzte Woche hattest du %1$s Aufrufe, 1 Like und 1 Kommentar.</string>
@@ -59,6 +63,7 @@ Language: de
     <string name="gutenberg_native_copy_error_details">Fehlerdetails kopieren</string>
     <string name="gutenberg_native_button_to_copy_post_text">Button zum Kopieren des Beitragstexts</string>
     <string name="gutenberg_native_button_to_copy_error_details">Button zum Kopieren von Fehlerdetails</string>
+    <string name="editor_updating_content_failed">Das Aktualisieren des Beitragsinhalts ist fehlgeschlagen</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Videountertitel. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Videountertitel. Leer</string>
     <string name="gutenberg_native_edit_video_024aee6d">Video bearbeiten</string>
@@ -131,10 +136,6 @@ Language: de
     <string name="reader_filter_empty_blogs_list">Sieh dir die neuesten Beiträge der Blogs an, die du abonniert hast</string>
     <string name="reader_filter_by_tag_title">Nach Schlagwort filtern</string>
     <string name="reader_filter_by_blog_title">Nach Blog filtern</string>
-    <string name="stats_timeframe_by_year">Nach Jahr</string>
-    <string name="stats_timeframe_by_month">Nach Monat</string>
-    <string name="stats_timeframe_by_week">Nach Woche</string>
-    <string name="stats_timeframe_by_day">Nach Tag</string>
     <string name="gutenberg_native_waiting_for_connection">Warten auf Verbindung</string>
     <string name="stats_traffic">Traffic</string>
     <string name="gutenberg_native_working_offline">Offline arbeiten</string>
@@ -1167,6 +1168,7 @@ Language: de
     <string name="gutenberg_native_add_title">Titel hinzufügen</string>
     <string name="gutenberg_native_no_preview_available">Keine Vorschau verfügbar</string>
     <string name="gutenberg_native_loading">Wird geladen</string>
+    <string name="gutenberg_native_link_label">Link-Label</string>
     <string name="gutenberg_native_text_color">Textfarbe</string>
     <string name="gutenberg_native_s_link">%s Link</string>
     <string name="gutenberg_native_padding">Innenabstand</string>

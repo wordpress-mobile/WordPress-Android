@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FormattableRangeType;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.NoteExtensions;
 import org.wordpress.android.push.GCMMessageHandler;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
@@ -40,7 +41,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.comments.CommentActions;
-import org.wordpress.android.ui.comments.CommentDetailFragment;
+import org.wordpress.android.ui.comments.NotificationCommentDetailFragment;
 import org.wordpress.android.ui.engagement.EngagedPeopleListFragment;
 import org.wordpress.android.ui.engagement.ListScenarioUtils;
 import org.wordpress.android.ui.notifications.adapters.Filter;
@@ -364,6 +365,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 title = "";
             }
 
+            if (NoteExtensions.isAchievement(note)) {
+                title = "";
+            }
+
             getSupportActionBar().setTitle(title);
             // important for accessibility - talkback
             if (note.isCommentType()) {
@@ -404,11 +409,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             // show comment detail for comment notifications
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
                     false);
-            fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA));
+            fragment = NotificationCommentDetailFragment.newInstance(note.getId());
 
             if (isInstantReply) {
-                ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
+                ((NotificationCommentDetailFragment) fragment).enableShouldFocusReplyField();
             }
         } else if (note.isAutomattcherType()) {
             // show reader post detail for automattchers about posts - note that comment

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 10:25:32+0000
+Translation-Revision-Date: 2024-05-03 08:02:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
 -->
 <resources>
+    <string name="page_upload_conflict_error">Hai unha revisión máis recente desta páxina</string>
+    <string name="editor_updating_content">Actualizando o contido</string>
+    <string name="stats_subscribers">Subscritores</string>
+    <string name="stats_subscribers_subscribers">Subscritores</string>
     <string name="weekly_roundup_notification_text_views_and_like">A semana pasada tiveches %1$s visitas e 1 Gústame</string>
     <string name="weekly_roundup_notification_text_views_and_comment">A semana pasada tiveches %1$s visitas e 1 comentario</string>
     <string name="weekly_roundup_notification_text_views_like_comment">A semana pasada tiveches %1$s visitas, 1 Gústame e 1 comentario.</string>
@@ -59,6 +63,7 @@ Language: gl_ES
     <string name="gutenberg_native_tap_here_to_copy_error_details">Pulsa aquí para copiar os detalles do erro.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">O editor atopou un erro inesperado.</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Podes copiar o texto da túa entrada en caso de que o teu contido se vexa afectado. Copia os detalles do erro para depuralo e compartilo co servizo de asistencia.</string>
+    <string name="editor_updating_content_failed">Erro ao actualizar o contido</string>
     <string name="notifications_unread_content_description">Non lido</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editar o vídeo</string>
     <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>
@@ -131,10 +136,6 @@ Language: gl_ES
     <string name="reader_filter_empty_blogs_action">Subscríbete a un blog</string>
     <string name="reader_filter_empty_blogs_list_title">Non hai subscricións ao blog</string>
     <string name="reader_filter_empty_blogs_list">Ver as últimas entradas dos blogs aos que estás subscrito</string>
-    <string name="stats_timeframe_by_day">Por día</string>
-    <string name="stats_timeframe_by_year">Por ano</string>
-    <string name="stats_timeframe_by_week">Por semana</string>
-    <string name="stats_timeframe_by_month">Por mes</string>
     <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
     <string name="gutenberg_native_working_offline">Traballo sen conexión</string>
@@ -1167,6 +1168,7 @@ Language: gl_ES
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_add_title">Engade o título</string>
     <string name="gutenberg_native_loading">Cargando</string>
+    <string name="gutenberg_native_link_label">Etiqueta do enlace</string>
     <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recheo</string>
