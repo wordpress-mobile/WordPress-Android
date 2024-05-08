@@ -342,7 +342,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     companion object {
         const val NOTE_ID_EXTRA = "noteId"
         const val NOTE_INSTANT_REPLY_EXTRA = "instantReply"
-        const val NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText"
         const val NOTE_MODERATE_ID_EXTRA = "moderateNoteId"
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
