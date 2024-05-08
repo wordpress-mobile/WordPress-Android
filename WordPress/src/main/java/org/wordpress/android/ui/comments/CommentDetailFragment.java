@@ -132,8 +132,8 @@ import kotlinx.coroutines.GlobalScope;
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
-public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
-        OnCollapseListener {
+public abstract class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment,
+        OnConfirmListener, OnCollapseListener {
     protected static final String KEY_MODE = "KEY_MODE";
     protected static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     protected static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -862,14 +862,11 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                 }
             });
 
-            // TODO: move following code to subclasses once we extract new fragments
-            if (mCommentSource == CommentSource.NOTIFICATION) {
-                binding.headerView.setVisibility(View.GONE);
-            } else {
-                binding.headerView.setVisibility(View.VISIBLE);
-            }
+            handleHeaderVisibility();
         }
     }
+
+    abstract void handleHeaderVisibility();
 
     // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
     private void trackModerationEvent(final CommentStatus newStatus) {

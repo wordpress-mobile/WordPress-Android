@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.unified.CommentSource
@@ -20,6 +21,10 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
         } else {
             handleComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID))
         }
+    }
+
+    override fun handleHeaderVisibility() {
+        mBinding?.headerView?.isVisible = true
     }
 
     private fun handleComment(commentRemoteId: Long, siteLocalId: Int) {
