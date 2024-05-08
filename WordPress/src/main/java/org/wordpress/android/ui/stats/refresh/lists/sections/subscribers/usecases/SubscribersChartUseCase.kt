@@ -68,7 +68,7 @@ class SubscribersChartUseCase @Inject constructor(
         return items
     }
 
-    private fun buildTitle() = Title(R.string.stats_view_subscribers_chart)
+    private fun buildTitle() = Title(R.string.stats_view_subscriber_growth)
 
     private fun onLineSelected() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_SUBSCRIBERS_CHART_TAPPED)
