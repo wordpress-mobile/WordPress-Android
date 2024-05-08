@@ -22,30 +22,54 @@
         app:cardCornerRadius="@dimen/notifications_like_header_radius"
         app:cardElevation="0dp">
 
-        <!-- This header only display the title from posts -->
-
-        <TextView
-            android:id="@+id/text_post_title"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-            android:ellipsize="end"
-            android:lines="1"
-            android:paddingVertical="@dimen/page_list_row_vertical_padding"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="Snippet" />
+            android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/header_arrow"
-            android:layout_width="@dimen/notifications_like_header_icon_size"
-            android:layout_height="@dimen/notifications_like_header_icon_size"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:importantForAccessibility="no"
-            android:src="@drawable/ic_arrow_right_white_24dp"
-            android:layout_gravity="end|center_vertical"
-            app:tint="?attr/colorOnSurface" />
+            <ImageView
+                android:id="@+id/header_avatar"
+                android:layout_width="@dimen/avatar_sz_extra_small"
+                android:layout_height="@dimen/avatar_sz_extra_small"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginVertical="@dimen/margin_small_medium"
+                android:contentDescription="@string/reader_avatar_desc"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/text_post_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:ellipsize="end"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/header_arrow"
+                app:layout_constraintStart_toEndOf="@+id/header_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_goneMarginStart="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_medium_large"
+                android:lines="1"
+                android:paddingVertical="@dimen/page_list_row_vertical_padding"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="Snippet" />
+
+            <ImageView
+                android:id="@+id/header_arrow"
+                android:layout_width="@dimen/notifications_like_header_icon_size"
+                android:layout_height="@dimen/notifications_like_header_icon_size"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:importantForAccessibility="no"
+                android:src="@drawable/arrow_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:tint="?attr/colorOnSurface" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.core.widget.NestedScrollView
