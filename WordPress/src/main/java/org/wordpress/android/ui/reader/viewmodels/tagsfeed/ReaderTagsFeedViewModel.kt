@@ -197,8 +197,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostLikeClick(postItem: TagsFeedPostItem) {
-        AppLog.e(AppLog.T.READER, "RL-> onPostLikeClick - postItem isLiked = ${postItem.isPostLiked}")
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onPostLikeClick(postItem: TagsFeedPostItem) {
         // Immediately update the UI and disable the like button. If the request fails, show error and revert UI state.
         // If the request fails or succeeds, the like button is enabled again.
         val isPostLikedUpdated = !postItem.isPostLiked

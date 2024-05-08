@@ -22,9 +22,9 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.ReaderTestUtils
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
-import org.wordpress.android.ui.reader.ReaderTestUtils
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.Event
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
@@ -300,6 +301,59 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         assertThat(collectedUiStates).last().isInstanceOf(ReaderTagsFeedViewModel.UiState.Empty::class.java)
     }
 
+    @Test
+    fun `Should update UI immediately when like button is tapped`() = testCollectingUiStates {
+        // Given
+        val tagsFeedPostItem = TagsFeedPostItem(
+            siteName = "",
+            postDateLine = "",
+            postTitle = "",
+            postExcerpt = "",
+            postImageUrl = "",
+            postNumberOfLikesText = "",
+            postNumberOfCommentsText = "",
+            isPostLiked = false,
+            isLikeButtonEnabled = true,
+            postId = 123L,
+            blogId = 123L,
+            onSiteClick = {},
+            onPostCardClick = {},
+            onPostLikeClick = {},
+            onPostMoreMenuClick = {}
+        )
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems(items = listOf(tagsFeedPostItem))
+        val posts = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
+            delay(100)
+            posts
+        }
+
+        // When
+        viewModel.start(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onPostLikeClick(tagsFeedPostItem)
+
+        // Then
+        val latestUiState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
+        val latestUiStatePostList = (latestUiState.data.first().postList as ReaderTagsFeedViewModel.PostList.Loaded)
+        assertThat(latestUiStatePostList.items.first().isPostLiked).isEqualTo(!tagsFeedPostItem.isPostLiked)
+    }
+
+    @Test
+    fun `Should send update like status request when like button is tapped if internet connection is available`() {
+    }
+
+    @Test
+    fun `Should revert like button UI if update like status request fails (RequestFailed)`() {
+    }
+
+    @Test
+    fun `Should revert like button UI if update like status request fails (NoNetwork)`() {
+    }
+
     private fun mockMapLoadingTagFeedItems() {
         whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
             .thenAnswer {
@@ -318,10 +372,10 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             }
     }
 
-    private fun mockMapLoadedTagFeedItems() {
+    private fun mockMapLoadedTagFeedItems(items: List<TagsFeedPostItem> = emptyList()) {
         whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
             .thenAnswer {
-                getLoadedTagFeedItem(it.getArgument(0))
+                getLoadedTagFeedItem(it.getArgument(0), items)
             }
     }
 
@@ -332,10 +386,11 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             }
     }
 
-    private fun getLoadedTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
-        ReaderTagsFeedViewModel.TagChip(tag, {}),
-        ReaderTagsFeedViewModel.PostList.Loaded(listOf())
-    )
+    private fun getLoadedTagFeedItem(tag: ReaderTag, items: List<TagsFeedPostItem> = emptyList()) =
+        ReaderTagsFeedViewModel.TagFeedItem(
+            ReaderTagsFeedViewModel.TagChip(tag, {}),
+            ReaderTagsFeedViewModel.PostList.Loaded(items)
+        )
 
     private fun getErrorTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
         ReaderTagsFeedViewModel.TagChip(tag, {}),
