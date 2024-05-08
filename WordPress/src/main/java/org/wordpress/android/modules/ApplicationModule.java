@@ -15,7 +15,7 @@ import com.tenor.android.core.network.ApiService;
 import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.InAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateManager;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
@@ -24,6 +24,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreStepsProvider;
 import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
+import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -82,6 +84,20 @@ public abstract class ApplicationModule {
     @Provides
     public static AppUpdateManager provideAppUpdateManager(@ApplicationContext Context context) {
         return AppUpdateManagerFactory.create(context);
+    }
+
+    @Provides
+    public static InAppUpdateManager provideInAppUpdateManager(
+            AppUpdateManager appUpdateManager,
+            RemoteConfigWrapper remoteConfigWrapper,
+            BuildConfigWrapper buildConfigWrapper
+    ) {
+        return new InAppUpdateManager(
+                appUpdateManager,
+                remoteConfigWrapper,
+                buildConfigWrapper,
+                System::currentTimeMillis
+        );
     }
 
     @Provides

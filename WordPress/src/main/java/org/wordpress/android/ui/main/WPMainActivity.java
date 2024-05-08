@@ -41,7 +41,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.InAppUpdateManager;
+import org.wordpress.android.inappupdate.IInAppUpdateListener;
+import org.wordpress.android.inappupdate.InAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -1204,39 +1205,53 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
-        checkForAnyPendingInAppUpdates();
+        checkForInAppUpdate();
 
         mIsChangingConfiguration = false;
     }
 
-    private void checkForAnyPendingInAppUpdates() {
-        mInAppUpdateManager.getInAppUpdateManager().addOnSuccessListener(appUpdateInfo -> {
-            Log.e("WPMainActivity", "checkForAnyPendingInAppUpdates: " + appUpdateInfo);
-            if (mInAppUpdateManager.isImmediateUpdateInProgress(appUpdateInfo)) {
-                mInAppUpdateManager.requestImmediateUpdate(appUpdateInfo, WPMainActivity.this);
-            } else if (mInAppUpdateManager.isFlexibleUpdateInProgress(appUpdateInfo)) {
-                showSnackBarForUpdate();
-            } else {
-                mInAppUpdateManager.checkForAppUpdate(WPMainActivity.this);
-                mInAppUpdateManager.registerUpdateListener(mInstallStateUpdatedListener);
-            }
-        });
+    private void checkForInAppUpdate() {
+        Log.e("WPMainActivity", "checkForInAppUpdate() called");
+        mInAppUpdateManager.checkForAppUpdate(this, mInAppUpdateListener);
     }
 
-    @Nullable InstallStateUpdatedListener mInstallStateUpdatedListener = state -> {
-        Log.e("WPMainActivity", "installStateUpdatedListener: " + state.installStatus());
-        if (state.installStatus() == InstallStatus.DOWNLOADED) {
-            removeInstallStateUpdateListener();
-            showSnackBarForUpdate();
-        } else if (state.installStatus() == InstallStatus.INSTALLED) {
-            removeInstallStateUpdateListener();
-            showSnackBarForUpdate();
-        } else if (state.installStatus() == InstallStatus.CANCELED || InstallStatus.FAILED == state.installStatus()) {
-            removeInstallStateUpdateListener();
-        } else if (state.installStatus() == InstallStatus.PENDING) {
-            showSnackBarForUpdate();
+    @NonNull final IInAppUpdateListener mInAppUpdateListener = new IInAppUpdateListener() {
+
+        @Override public void onAppUpdatePending() {
+
+        }
+
+        @Override public void onAppUpdateDownloaded() {
+            popupSnackbarForCompleteUpdate();
+        }
+        @Override public void onAppUpdateStarted(int type) {
+            /* do nothing */
+        }
+
+        @Override public void onAppUpdateInstalled() {
+            /* do nothing */
+        }
+
+        @Override public void onAppUpdateFailed() {
+            /* do nothing */
+        }
+
+        @Override public void onAppUpdateCancelled() {
+            // Todo do I need to handle this?
+            /* do nothing */
         }
     };
+
+    private void popupSnackbarForCompleteUpdate() {
+        Log.e("WPMainActivity", "showSnackBarForUpdate()");
+        WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
+                  .setAction(R.string.update_now, v -> {
+                      mInAppUpdateManager.completeUpdate();
+
+                      // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
+                  })
+                  .show();
+    }
 
     private void checkQuickStartNotificationStatus() {
         SiteModel selectedSite = getSelectedSite();
@@ -1507,16 +1522,24 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
                 Log.e("Update request code", "onActivityResult: " + requestCode + " " + resultCode);
                 if (resultCode == RESULT_CANCELED) {
-                    removeInstallStateUpdateListener();
+                    mInAppUpdateManager.cancelAppUpdate();
                     break;
                 }
-                showSnackBarForUpdate();
+                // Todo how to handle this?
                 break;
-        }
-    }
 
-    private void removeInstallStateUpdateListener() {
-        mInAppUpdateManager.unregisterListener(mInstallStateUpdatedListener);
+                /*
+                There are several values you might receive from the onActivityResult() callback:
+
+                RESULT_OK: The user has accepted the update. For immediate updates, you might not receive this callback
+                because the update should already be finished by the time control is given back to your app.
+
+                RESULT_CANCELED: The user has denied or canceled the update.
+
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED: Some other error prevented either the user from providing
+                consent or the update from proceeding.
+                 */
+        }
     }
 
     private void appLanguageChanged() {
@@ -1937,15 +1960,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
     }
 
-    private void showSnackBarForUpdate() {
-        Log.e("WPMainActivity", "showSnackBarForUpdate()");
-        WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
-                  .setAction(R.string.update_now, v -> {
-                      mInAppUpdateManager.completeUpdate();
-                      // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
-                  })
-                  .show();
-    }
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
     // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
