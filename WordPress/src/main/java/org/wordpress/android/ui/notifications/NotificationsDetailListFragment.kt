@@ -142,12 +142,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             reloadNoteBlocks()
             restoredNoteId = null
         }
-        if (note == null) {
+        if (notification == null) {
             showErrorToastAndFinish()
         }
 
         val animation = view?.findViewById<LottieAnimationView>(R.id.confetti)
-        if (note?.isViewMilestoneType == true) {
+        if (notification?.isViewMilestoneType == true) {
             animation?.visibility = View.VISIBLE
             animation?.playAnimation()
         } else {
@@ -162,11 +162,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         super.onPause()
     }
 
-    override fun getNote(): Note? {
-        return notification
-    }
-
-    override fun setNote(noteId: String?) {
+    private fun setNote(noteId: String?) {
         if (noteId == null) {
             showErrorToastAndFinish()
             return
@@ -269,7 +265,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
             val detailActivity = activity as NotificationsDetailActivity
             if (siteId != 0L) {
-                detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
+                detailActivity.showBlogPreviewActivity(siteId, notification?.isFollowType)
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl)
             }
@@ -282,10 +278,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             when (clickedSpan.rangeType) {
                 SITE ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.id, note?.isFollowType)
+                    activity.showBlogPreviewActivity(clickedSpan.id, notification?.isFollowType)
                 USER ->
                     // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.siteId, note?.isFollowType)
+                    activity.showBlogPreviewActivity(clickedSpan.siteId, notification?.isFollowType)
                 POST ->
                     // Show post detail
                     activity.showPostActivity(clickedSpan.siteId, clickedSpan.id)
@@ -321,6 +317,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
     }
+
     private val mOnGravatarClickedListener = object : OnGravatarClickedListener {
         override fun onGravatarClicked(siteId: Long, userId: Long, siteUrl: String?) {
             if (!isAdded || activity !is NotificationsDetailActivity) {
@@ -330,7 +327,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             if (siteId == 0L && !TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl)
             } else if (siteId != 0L) {
-                detailActivity.showBlogPreviewActivity(siteId, note?.isFollowType)
+                detailActivity.showBlogPreviewActivity(siteId, notification?.isFollowType)
             }
         }
     }
@@ -545,7 +542,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 rootLayout!!.gravity = Gravity.CENTER_VERTICAL
             }
             if (noteBlockAdapter == null) {
-                noteBlockAdapter = NoteBlockAdapter(activity, noteList)
+                noteBlockAdapter = NoteBlockAdapter(requireContext(), noteList)
                 listAdapter = noteBlockAdapter
             } else {
                 noteBlockAdapter!!.setNoteList(noteList)

@@ -39,7 +39,7 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         final CommentModel comment = getComment(position);
-        return CommentDetailFragment.newInstance(mSite, comment);
+        return SiteCommentDetailFragment.newInstance(mSite, comment);
     }
 
     void onNewItems(CommentList commentList) {
