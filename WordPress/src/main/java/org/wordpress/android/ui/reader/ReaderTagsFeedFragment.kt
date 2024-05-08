@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
@@ -29,6 +30,7 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 /**
@@ -76,6 +78,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeSubFilterViewModel(savedInstanceState)
         observeActionEvents()
         observeNavigationEvents()
+        observeErrorMessageEvents()
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -248,9 +251,18 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    private fun observeErrorMessageEvents() {
+        viewModel.errorMessageEvents.observeEvent(viewLifecycleOwner) { stringRes ->
+            activity?.findViewById<View?>(android.R.id.content)?.let { view ->
+                WPSnackbar.make(view, getString(stringRes), Snackbar.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun showBookmarkSavedLocallyDialog(
         bookmarkDialog: ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
     ) {
+        // TODO show bookmark saved dialog?
         bookmarkDialog.buttonLabel
 //        if (bookmarksSavedLocallyDialog == null) {
 //            MaterialAlertDialogBuilder(requireActivity())

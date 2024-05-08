@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -16,6 +17,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.viewmodel.Event
@@ -30,6 +32,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val readerTagsFeedUiStateMapper: ReaderTagsFeedUiStateMapper,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val postLikeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
@@ -40,6 +43,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _errorMessageEvents = MediatorLiveData<Event<Int>>()
+    val errorMessageEvents: LiveData<Event<Int>> = _errorMessageEvents
 
     private var hasInitialized = false
 
@@ -190,8 +196,125 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostLikeClick() {
-        // TODO
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun onPostLikeClick(postItem: TagsFeedPostItem) {
+        // Immediately update the UI and disable the like button. If the request fails, show error and revert UI state.
+        // If the request fails or succeeds, the like button is enabled again.
+        val isPostLikedUpdated = !postItem.isPostLiked
+        updatePostItemUI(
+            postItemToUpdate = postItem,
+            isPostLikedUpdated = isPostLikedUpdated,
+            isLikeButtonEnabled = false,
+        )
+
+        // After updating the like button UI to the intended state and disabling the like button, send a request to the
+        // like endpoint by using the PostLikeUseCase
+        likePostRemote(postItem, isPostLikedUpdated)
+    }
+
+    private fun updatePostItemUI(
+        postItemToUpdate: TagsFeedPostItem,
+        isPostLikedUpdated: Boolean,
+        isLikeButtonEnabled: Boolean,
+    ) {
+        val uiState = _uiStateFlow.value as? UiState.Loaded ?: return
+        // Finds the TagFeedItem associated with the post that should be updated. Return if the item is
+        // not found.
+        val tagFeedItemToUpdate = findTagFeedItemToUpdate(uiState, postItemToUpdate) ?: return
+
+        // Finds the index associated with the TagFeedItem to be updated found above. Return if the index is not found.
+        val tagFeedItemToUpdateIndex = uiState.data.indexOf(tagFeedItemToUpdate)
+        if (tagFeedItemToUpdateIndex != -1 && tagFeedItemToUpdate.postList is PostList.Loaded) {
+            // Creates a new post list items collection with the post item updated values
+            val updatedTagFeedItemPostListItems = getPostListWithUpdatedPostItem(
+                postList = tagFeedItemToUpdate.postList,
+                postItemToUpdate = postItemToUpdate,
+                isPostLikedUpdated = isPostLikedUpdated,
+                isLikeButtonEnabled = isLikeButtonEnabled,
+            )
+            // Creates a copy of the TagFeedItem with the updated post list items collection
+            val updatedTagFeedItem = tagFeedItemToUpdate.copy(
+                postList = tagFeedItemToUpdate.postList.copy(
+                    items = updatedTagFeedItemPostListItems
+                )
+            )
+            // Creates a new TagFeedItem collection with the updated TagFeedItem
+            val updatedUiStateData = mutableListOf<TagFeedItem>().apply {
+                addAll(uiState.data)
+                this[tagFeedItemToUpdateIndex] = updatedTagFeedItem
+            }
+            // Updates the UI state value with the updated TagFeedItem collection
+            _uiStateFlow.value = uiState.copy(data = updatedUiStateData)
+        }
+    }
+
+    private fun getPostListWithUpdatedPostItem(
+        postList: PostList.Loaded,
+        postItemToUpdate: TagsFeedPostItem,
+        isPostLikedUpdated: Boolean,
+        isLikeButtonEnabled: Boolean
+    ) =
+        postList.items.toMutableList().apply {
+            val postItemToUpdateIndex =
+                indexOfFirst {
+                    it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+                }
+            if (postItemToUpdateIndex != -1) {
+                this[postItemToUpdateIndex] = postItemToUpdate.copy(
+                    isPostLiked = isPostLikedUpdated,
+                    isLikeButtonEnabled = isLikeButtonEnabled,
+                )
+            }
+        }
+
+    private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
+        uiState.data.firstOrNull { tagFeedItem ->
+        tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
+            it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+        } != null
+    }
+
+    private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let {
+                postLikeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+                    when (it) {
+                        is PostLikeUseCase.PostLikeState.Success -> {
+                            // Re-enable like button without changing the current post item UI.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
+                        }
+
+                        is PostLikeUseCase.PostLikeState.Failed.NoNetwork -> {
+                            // Revert post item like button UI to the previous state and re-enable like button.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = !isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
+                            _errorMessageEvents.postValue(Event(R.string.no_network_message))
+                        }
+
+                        is PostLikeUseCase.PostLikeState.Failed.RequestFailed -> {
+                            // Revert post item like button UI to the previous state and re-enable like button.
+                            updatePostItemUI(
+                                postItemToUpdate = postItem,
+                                isPostLikedUpdated = !isPostLikedUpdated,
+                                isLikeButtonEnabled = true,
+                            )
+                            _errorMessageEvents.postValue(Event(R.string.reader_error_request_failed_title))
+                        }
+
+                        else -> {
+                            // no-op
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun onPostMoreMenuClick() {
