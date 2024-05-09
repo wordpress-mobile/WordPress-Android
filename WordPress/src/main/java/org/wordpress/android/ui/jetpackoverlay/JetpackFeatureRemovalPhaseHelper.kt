@@ -136,13 +136,13 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         when (pageType) {
             PageType.MY_SITE -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, site)
             PageType.READER -> {
-                if (!shouldShowStaticPage()) {
+                if (arePosterizedPagesVisible()) {
                     analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED)
                 }
             }
 
             PageType.NOTIFS -> {
-                if (!shouldShowStaticPage()) {
+                if (arePosterizedPagesVisible()) {
                     analyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED)
                 }
             }
@@ -178,6 +178,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun getPhaseFourOverlayFrequency(): Int {
         return jetpackPhaseFourOverlayFrequencyConfig.getValue()
     }
+
+    private fun arePosterizedPagesVisible() = !shouldShowStaticPage()
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time
