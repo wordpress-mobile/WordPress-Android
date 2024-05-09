@@ -455,7 +455,7 @@ public class PeopleUtils {
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
                                     continue;
                                 case "invalid_input_following":
-                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_FOLLOWING);
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_SUBSCRIBED);
                                     continue;
                                 case "invalid_user_blocked_invites":
                                     callback.onUsernameValidation(username, ValidationResult.BLOCKED_INVITES);
@@ -518,7 +518,7 @@ public class PeopleUtils {
         enum ValidationResult {
             USER_NOT_FOUND,
             ALREADY_MEMBER,
-            ALREADY_FOLLOWING,
+            ALREADY_SUBSCRIBED,
             BLOCKED_INVITES,
             INVALID_EMAIL,
             USER_FOUND
