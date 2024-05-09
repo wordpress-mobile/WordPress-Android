@@ -57,18 +57,13 @@ class CommentUserNoteBlock(
         mNoteBlockHolder = view.tag as CommentUserNoteBlockHolder
         setUserName()
         setUserCommentAgo()
-        setUserCommentSite()
         setUserAvatar()
         setUserComment()
-        setCommentStatus(view)
         return view
     }
 
     private fun setUserName() {
-        mNoteBlockHolder?.mNameTextView?.text = HtmlCompat.fromHtml(
-            "<strong>$noteText</strong>",
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
+        mNoteBlockHolder?.mNameTextView?.text = noteText.toString()
     }
 
     private fun setUserCommentAgo() {
@@ -76,24 +71,6 @@ class CommentUserNoteBlock(
             timestamp,
             mNoteBlockHolder?.mAgoTextView?.context
         )
-    }
-
-    private fun setUserCommentSite() {
-        if (!TextUtils.isEmpty(metaHomeTitle) || !TextUtils.isEmpty(metaSiteUrl)) {
-            mNoteBlockHolder?.mBulletTextView?.visibility = View.VISIBLE
-            mNoteBlockHolder?.mSiteTextView?.visibility = View.VISIBLE
-            if (!TextUtils.isEmpty(metaHomeTitle)) {
-                mNoteBlockHolder?.mSiteTextView?.text = metaHomeTitle
-            } else {
-                mNoteBlockHolder?.mSiteTextView?.text =
-                    metaSiteUrl?.replace("http://", "")?.replace("https://", "")
-            }
-        } else {
-            mNoteBlockHolder?.mBulletTextView?.visibility = View.GONE
-            mNoteBlockHolder?.mSiteTextView?.visibility = View.GONE
-        }
-        mNoteBlockHolder?.mSiteTextView?.importantForAccessibility =
-            View.IMPORTANT_FOR_ACCESSIBILITY_NO
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -132,42 +109,6 @@ class CommentUserNoteBlock(
         mNoteBlockHolder?.mCommentTextView?.text = spannable
     }
 
-    @Suppress("MagicNumber")
-    private fun setCommentStatus(view: View) {
-        // Change display based on comment status and type:
-        // 1. Comment replies are indented and have a 'pipe' background
-        // 2. Unapproved comments have different background and text color
-        var paddingStart = ViewCompat.getPaddingStart(view)
-        val paddingTop = view.paddingTop
-        val paddingEnd = ViewCompat.getPaddingEnd(view)
-        val paddingBottom = view.paddingBottom
-        if (mCommentStatus == CommentStatus.UNAPPROVED) {
-            if (hasCommentNestingLevel()) {
-                paddingStart = mIndentedLeftPadding
-                view.setBackgroundResource(R.drawable.bg_rectangle_warning_surface_with_padding)
-            } else {
-                view.setBackgroundResource(R.drawable.bg_rectangle_warning_surface)
-            }
-            mNoteBlockHolder?.mDividerView?.visibility = View.INVISIBLE
-        } else {
-            if (hasCommentNestingLevel()) {
-                paddingStart = mIndentedLeftPadding
-                view.setBackgroundResource(R.drawable.comment_reply_background)
-                mNoteBlockHolder?.mDividerView?.visibility = View.INVISIBLE
-            } else {
-                view.setBackgroundColor(mNormalBackgroundColor)
-                mNoteBlockHolder?.mDividerView?.visibility = View.VISIBLE
-            }
-        }
-        ViewCompat.setPaddingRelative(view, paddingStart, paddingTop, paddingEnd, paddingBottom)
-        // If status was changed, fade in the view
-        if (mStatusChanged) {
-            mStatusChanged = false
-            view.alpha = 0.4f
-            view.animate().alpha(1.0f).start()
-        }
-    }
-
     private fun getCommentTextOfNotification(noteBlockHolder: CommentUserNoteBlockHolder?): Spannable {
         val builder = mNotificationsUtilsWrapper.getSpannableContentForRanges(
             mCommentData,
@@ -199,8 +140,6 @@ class CommentUserNoteBlock(
     private inner class CommentUserNoteBlockHolder constructor(view: View) {
         val mAvatarImageView: ImageView = view.findViewById(R.id.user_avatar)
         val mNameTextView: TextView = view.findViewById(R.id.user_name)
-        val mBulletTextView: TextView = view.findViewById(R.id.user_comment_bullet)
-        val mDividerView: View = view.findViewById(R.id.divider_view)
         val mAgoTextView: TextView = view.findViewById<TextView?>(R.id.user_comment_ago).apply {
             visibility = View.VISIBLE
         }
@@ -209,11 +148,6 @@ class CommentUserNoteBlock(
             setOnClickListener {
                 // show all comments on this post when user clicks the comment text
                 onNoteBlockTextClickListener?.showReaderPostComments()
-            }
-        }
-        val mSiteTextView: TextView = view.findViewById<TextView?>(R.id.user_comment_site).apply {
-            setOnClickListener {
-                onNoteBlockTextClickListener?.showSitePreview(metaSiteId, metaSiteUrl)
             }
         }
     }

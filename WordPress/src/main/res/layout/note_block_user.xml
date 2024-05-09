@@ -69,10 +69,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:background="@drawable/notifications_list_divider_full_width" />
-
 </LinearLayout>

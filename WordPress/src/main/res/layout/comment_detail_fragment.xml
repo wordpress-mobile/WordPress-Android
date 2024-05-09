@@ -5,6 +5,7 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,83 +24,51 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
-                android:paddingTop="@dimen/margin_large"
-                android:paddingEnd="@dimen/margin_extra_large">
+                android:paddingTop="@dimen/margin_large">
 
                 <ImageView
                     android:id="@+id/image_avatar"
-                    style="@style/ReaderImageView.Avatar"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_large"
-                    android:importantForAccessibility="no" />
+                    android:layout_width="@dimen/avatar_sz_medium"
+                    android:layout_height="@dimen/avatar_sz_medium"
+                    android:importantForAccessibility="no"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_name"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/text_date"
-                    android:layout_toEndOf="@+id/image_avatar"
-                    android:background="?android:selectableItemBackground"
                     android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="1"
-                    android:textAlignment="viewStart"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="@dimen/text_sz_extra_large"
-                    tools:text="text_name" />
+                    android:singleLine="true"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/material_on_surface_emphasis_high_type"
+                    app:layout_constraintBottom_toTopOf="@+id/text_post_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/image_avatar"
+                    tools:text="Bob Ross" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_post_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_name"
-                    android:layout_alignStart="@+id/text_name"
-                    android:layout_toStartOf="@+id/text_status"
-                    android:accessibilityTraversalAfter="@+id/text_name"
-                    android:alpha="@dimen/material_emphasis_medium"
-                    android:background="?android:selectableItemBackground"
                     android:ellipsize="end"
-                    android:gravity="start"
-                    android:maxLines="1"
-                    android:paddingTop="@dimen/margin_extra_small"
-                    android:paddingBottom="@dimen/margin_extra_small"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="text_post_title" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_date"
-                    style="@style/ReaderTextView.Date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:accessibilityTraversalAfter="@+id/text_post_title"
-                    android:maxLines="1"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="date" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/text_post_title"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:accessibilityTraversalAfter="@+id/text_date"
-                    android:textSize="@dimen/text_sz_small"
-                    android:visibility="visible"
-                    tools:ignore="UnusedAttribute"
-                    tools:text="STATUS" />
-            </RelativeLayout>
+                    android:singleLine="true"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:textColor="@color/material_on_surface_emphasis_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/text_name"
+                    tools:text="bobross" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!--
                 textIsSelectable is set to false here to avoid
@@ -110,17 +79,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
+                android:paddingBottom="@dimen/margin_large"
+                android:paddingEnd="@dimen/margin_extra_large"
                 android:paddingStart="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_large"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingBottom="@dimen/margin_large"
                 android:textAppearance="?attr/textAppearanceBody1"
                 android:textColorLink="?attr/colorSecondary"
                 android:textIsSelectable="false"
                 tools:text="text_content" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
@@ -143,5 +111,4 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone" />
-
 </RelativeLayout>

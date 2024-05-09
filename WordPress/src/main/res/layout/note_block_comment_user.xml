@@ -5,20 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/comment_avatar_margin_top"
-    android:paddingEnd="@dimen/margin_extra_large">
+    android:paddingTop="@dimen/margin_extra_medium_large">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/user_avatar"
-            android:layout_width="@dimen/avatar_sz_small"
-            android:layout_height="@dimen/avatar_sz_small"
+            android:layout_width="@dimen/avatar_sz_medium"
+            android:layout_height="@dimen/avatar_sz_medium"
             tools:ignore="ContentDescription" />
 
         <LinearLayout
@@ -33,63 +32,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:gravity="start"
-                android:includeFontPadding="false"
                 android:singleLine="true"
-                android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/material_on_surface_emphasis_high_type"
                 tools:text="Bob Ross" />
 
-            <LinearLayout
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_comment_ago"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_comment_ago"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="start"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    android:visibility="gone"
-                    tools:text="5h"
-                    tools:visibility="visible" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_comment_bullet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_small"
-                    android:gravity="start"
-                    android:importantForAccessibility="no"
-                    android:includeFontPadding="false"
-                    android:text="@string/bullet"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    android:textStyle="bold" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_comment_site"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:ellipsize="end"
-                    android:focusable="true"
-                    android:gravity="start"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:textAlignment="viewStart"
-                    android:textAppearance="?attr/textAppearanceSubtitle1"
-                    android:textColor="?attr/wpColorOnSurfaceMedium"
-                    tools:text="example.com" />
-            </LinearLayout>
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/material_on_surface_emphasis_medium"
+                tools:text="bobross" />
 
         </LinearLayout>
     </LinearLayout>
@@ -98,18 +54,10 @@
         android:id="@+id/user_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_extra_large"
         android:background="?android:selectableItemBackground"
-        android:fontFamily="sans-serif"
-        android:paddingBottom="@dimen/margin_medium"
-        android:textAppearance="?attr/textAppearanceBody1"
+        android:textAppearance="?attr/textAppearanceBody2"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
-
-    <View
-        android:id="@+id/divider_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:background="@drawable/notifications_list_divider_full_width" />
 </LinearLayout>
 
 

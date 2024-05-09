@@ -96,7 +96,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -687,11 +686,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         binding.textName.setText(
                 comment.getAuthorName() == null ? getString(R.string.anonymous) : comment.getAuthorName()
         );
-        binding.textDate.setText(
-                DateTimeUtils.javaDateToTimeSpan(
-                        DateTimeUtils.dateFromIso8601(comment.getDatePublished()), WordPress.getContext()
-                )
-        );
 
         String renderingError = getString(R.string.comment_unable_to_show_error);
         binding.textContent.post(() -> CommentUtils.displayHtmlComment(
@@ -1107,19 +1101,6 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (canLike(site)) {
             actionBinding.btnLike.setVisibility(View.VISIBLE);
             toggleLikeButton(actionBinding, comment.getILike());
-        }
-
-        // comment status is only shown if this comment is from one of this user's blogs and the
-        // comment hasn't been CommentStatus.APPROVED
-        if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
-            binding.textStatus.setText(getString(statusTextResId).toUpperCase(Locale.getDefault()));
-            binding.textStatus.setTextColor(statusColor);
-            if (binding.textStatus.getVisibility() != View.VISIBLE) {
-                binding.textStatus.clearAnimation();
-                AniUtils.fadeIn(binding.textStatus, AniUtils.Duration.LONG);
-            }
-        } else {
-            binding.textStatus.setVisibility(View.GONE);
         }
 
         if (canModerate()) {
