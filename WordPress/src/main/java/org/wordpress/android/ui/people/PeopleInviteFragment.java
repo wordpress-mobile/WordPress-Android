@@ -533,7 +533,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 return getString(R.string.invite_username_not_found, username);
             case ALREADY_MEMBER:
                 return getString(R.string.invite_already_a_member, username);
-            case ALREADY_FOLLOWING:
+            case ALREADY_SUBSCRIBED:
                 return getString(R.string.invite_already_subscribed, username);
             case BLOCKED_INVITES:
                 return getString(R.string.invite_user_blocked_invites, username);
