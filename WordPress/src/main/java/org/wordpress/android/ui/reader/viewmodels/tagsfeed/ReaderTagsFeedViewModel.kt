@@ -55,11 +55,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
-        // don't start again if the tags match
-        if (_uiStateFlow.value is UiState.Loaded &&
-            tags == (_uiStateFlow.value as UiState.Loaded).data.map { it.tagChip.tag }
-        ) {
-            return
+        // don't start again if the tags match, unless the user requested a refresh
+        (_uiStateFlow.value as? UiState.Loaded)?.let { loadedState ->
+            if (!loadedState.isRefreshing && tags == loadedState.data.map { it.tagChip.tag }) {
+                return
+            }
         }
 
         if (tags.isEmpty()) {
@@ -74,7 +74,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         // Initially add all tags to the list with the posts loading UI
         _uiStateFlow.update {
-            readerTagsFeedUiStateMapper.mapInitialPostsUiState(tags, ::onTagClick, ::onItemEnteredView)
+            readerTagsFeedUiStateMapper.mapInitialPostsUiState(
+                tags,
+                false,
+                ::onTagClick,
+                ::onItemEnteredView,
+                ::onRefresh
+            )
         }
     }
 
@@ -162,8 +168,15 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     updatedLoadedData[existingIndex] = updatedItem
                 }
 
-            UiState.Loaded(updatedLoadedData)
+            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(updatedLoadedData)
         }
+    }
+
+    private fun onRefresh() {
+        _uiStateFlow.update {
+            (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
+        }
+        _actionEvents.value = ActionEvent.RefreshTagsFeed
     }
 
     @VisibleForTesting
@@ -286,15 +299,15 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
         uiState.data.firstOrNull { tagFeedItem ->
-        tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
-            it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-        } != null
-    }
+            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
+                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+            } != null
+        }
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
-            findPost(postItem.postId, postItem.blogId)?.let {
-                postLikeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+            findPost(postItem.postId, postItem.blogId)?.let { post ->
+                postLikeUseCase.perform(post, !post.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
                     when (it) {
                         is PostLikeUseCase.PostLikeState.Success -> {
                             // Re-enable like button without changing the current post item UI.
@@ -348,11 +361,18 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+
+        data object RefreshTagsFeed : ActionEvent()
     }
 
     sealed class UiState {
         data object Initial : UiState()
-        data class Loaded(val data: List<TagFeedItem>) : UiState()
+
+        data class Loaded(
+            val data: List<TagFeedItem>,
+            val isRefreshing: Boolean = false,
+            val onRefresh: () -> Unit = {},
+        ) : UiState()
 
         data object Loading : UiState()
 
