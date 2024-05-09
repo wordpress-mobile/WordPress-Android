@@ -68,7 +68,9 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         // Setting this user agent makes Calypso sites hide any WordPress UIs (e.g. Masterbar, banners, etc.).
-        mWebView.getSettings().setUserAgentString(mUserAgent.toString());
+        if (mUserAgent != null) {
+            mWebView.getSettings().setUserAgentString(mUserAgent.toString());
+        }
         configureWebView();
 
         if (savedInstanceState == null) {
