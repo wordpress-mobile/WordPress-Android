@@ -31,8 +31,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.play.core.install.InstallStateUpdatedListener;
-import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
@@ -191,6 +189,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
+import static com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
@@ -1246,7 +1245,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         Log.e("WPMainActivity", "showSnackBarForUpdate()");
         WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
                   .setAction(R.string.update_now, v -> {
-                      mInAppUpdateManager.completeUpdate();
+                      mInAppUpdateManager.completeAppUpdate();
 
                       // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
                   })
@@ -1520,25 +1519,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case InAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
             case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
-                Log.e("Update request code", "onActivityResult: " + requestCode + " " + resultCode);
-                if (resultCode == RESULT_CANCELED) {
+                if (resultCode == RESULT_OK) {
+                    // The user has accepted the update
+                    mInAppUpdateManager.onUserAcceptedAppUpdate();
+                } else if (resultCode == RESULT_CANCELED || resultCode == RESULT_IN_APP_UPDATE_FAILED) {
+                    // The user denied the update or an error occurred
                     mInAppUpdateManager.cancelAppUpdate();
-                    break;
                 }
-                // Todo how to handle this?
                 break;
-
-                /*
-                There are several values you might receive from the onActivityResult() callback:
-
-                RESULT_OK: The user has accepted the update. For immediate updates, you might not receive this callback
-                because the update should already be finished by the time control is given back to your app.
-
-                RESULT_CANCELED: The user has denied or canceled the update.
-
-                ActivityResult.RESULT_IN_APP_UPDATE_FAILED: Some other error prevented either the user from providing
-                consent or the update from proceeding.
-                 */
         }
     }
 

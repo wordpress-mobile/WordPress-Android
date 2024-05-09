@@ -22,6 +22,7 @@ import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_T
 import com.google.android.play.core.install.model.UpdateAvailability.UNKNOWN
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_NOT_AVAILABLE
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.RemoteConfigWrapper
@@ -31,6 +32,7 @@ import javax.inject.Singleton
 @Singleton
 @Suppress("TooManyFunctions")
 class InAppUpdateManager(
+    @ApplicationContext private val applicationContext: Context,
     private val appUpdateManager: AppUpdateManager,
     private val remoteConfigWrapper: RemoteConfigWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -67,7 +69,7 @@ class InAppUpdateManager(
                         requestImmediateUpdate(appUpdateInfo, activity)
                     } else {
                         Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, flexible update")
-                        if (shouldRequestFlexibleUpdate(activity)) {
+                        if (shouldRequestFlexibleUpdate()) {
                             requestFlexibleUpdate(appUpdateInfo, activity)
                         }
                     }
@@ -103,12 +105,16 @@ class InAppUpdateManager(
         }
     }
 
-    fun completeUpdate() {
+    fun completeAppUpdate() {
         appUpdateManager.completeUpdate()
     }
 
     fun cancelAppUpdate() {
         appUpdateManager.unregisterListener(installStateListener)
+    }
+
+    fun onUserAcceptedAppUpdate() {
+        resetLastUpdateRequestedTime()
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
@@ -128,7 +134,7 @@ class InAppUpdateManager(
         val requestCode = if (updateType == AppUpdateType.IMMEDIATE) {
             APP_UPDATE_IMMEDIATE_REQUEST_CODE
         } else {
-            setLastUpdateRequestedTime(activity)
+            setLastUpdateRequestedTime()
             APP_UPDATE_FLEXIBLE_REQUEST_CODE
         }
         try {
@@ -141,6 +147,7 @@ class InAppUpdateManager(
         } catch (e: Exception) {
             Log.e("AppUpdateChecker", "requestUpdate for type: $updateType, exception occurred")
             Log.e("AppUpdateChecker", e.message.toString())
+            appUpdateManager.unregisterListener(installStateListener)
         }
     }
 
@@ -149,25 +156,36 @@ class InAppUpdateManager(
         override fun onStateUpdate(state: InstallState) {
             when (state.installStatus()) {
                 DOWNLOADED -> {
+                    Log.e("AppUpdateChecker", "installStateListener DOWNLOADED")
                     updateListener?.onAppUpdateDownloaded()
                 }
                 INSTALLED -> {
+                    Log.e("AppUpdateChecker", "installStateListener INSTALLED")
                     updateListener?.onAppUpdateInstalled()
                     appUpdateManager.unregisterListener(this) // 'this' refers to the listener object
                 }
                 CANCELED -> {
+                    Log.e("AppUpdateChecker", "installStateListener CANCELED")
                     updateListener?.onAppUpdateCancelled()
                     appUpdateManager.unregisterListener(this)
                 }
                 FAILED -> {
+                    Log.e("AppUpdateChecker", "installStateListener FAILED")
                     updateListener?.onAppUpdateFailed()
                     appUpdateManager.unregisterListener(this)
                 }
                 PENDING -> {
+                    Log.e("AppUpdateChecker", "installStateListener PENDING")
                     updateListener?.onAppUpdatePending()
                 }
-                DOWNLOADING, INSTALLING, InstallStatus.UNKNOWN -> {
-                    // Do nothing
+                DOWNLOADING -> {
+                    Log.e("AppUpdateChecker", "installStateListener DOWNLOADING")
+                }
+                INSTALLING -> {
+                    Log.e("AppUpdateChecker", "installStateListener INSTALLING")
+                }
+                InstallStatus.UNKNOWN -> {
+                    Log.e("AppUpdateChecker", "installStateListener UNKNOWN")
                 }
             }
         }
@@ -185,22 +203,30 @@ class InAppUpdateManager(
                 && !isImmediateUpdateNecessary()
     }
 
-    private fun setLastUpdateRequestedTime(context: Context) {
-        val sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+    private fun setLastUpdateRequestedTime() {
+        val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTimeProvider.invoke())
             apply()
         }
     }
 
-    private fun getLastUpdateRequestedTime(context: Context): Long {
+    private fun resetLastUpdateRequestedTime() {
+        val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        sharedPref.edit().apply {
+            putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, -1L)
+            apply()
+        }
+    }
+
+    private fun getLastUpdateRequestedTime(): Long {
         val defaultValue = -1L
-        return context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        return applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .getLong(KEY_LAST_APP_UPDATE_CHECK_TIME, defaultValue)
     }
 
-    private fun shouldRequestFlexibleUpdate(context: Context) =
-        currentTimeProvider.invoke() - getLastUpdateRequestedTime(context) >= FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS
+    private fun shouldRequestFlexibleUpdate() =
+        currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS
 
 
     /**

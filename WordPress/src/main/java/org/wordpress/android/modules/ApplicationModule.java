@@ -88,11 +88,13 @@ public abstract class ApplicationModule {
 
     @Provides
     public static InAppUpdateManager provideInAppUpdateManager(
+            @ApplicationContext Context context,
             AppUpdateManager appUpdateManager,
             RemoteConfigWrapper remoteConfigWrapper,
             BuildConfigWrapper buildConfigWrapper
     ) {
         return new InAppUpdateManager(
+                context,
                 appUpdateManager,
                 remoteConfigWrapper,
                 buildConfigWrapper,
