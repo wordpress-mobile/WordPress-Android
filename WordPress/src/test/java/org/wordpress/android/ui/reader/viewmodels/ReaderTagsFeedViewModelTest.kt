@@ -406,7 +406,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     private fun mockMapInitialTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any()))
             .thenAnswer {
                 val tags = it.getArgument<List<ReaderTag>>(0)
                 ReaderTagsFeedViewModel.UiState.Loaded(
