@@ -117,3 +117,5 @@
 /reports/products
 
 /options
+
+/shipping_methods
