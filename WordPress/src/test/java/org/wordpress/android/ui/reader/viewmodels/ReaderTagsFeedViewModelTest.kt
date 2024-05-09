@@ -20,6 +20,7 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.getOrAwaitValue
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -288,10 +289,15 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             posts2
         }
         mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
         mockMapLoadedTagFeedItems()
 
         // When
         viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
         advanceUntilIdle()
         val firstCollectedStates = collectedUiStates.toList()
         Mockito.clearInvocations(readerPostRepository)
@@ -302,6 +308,54 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         assertThat(collectedUiStates).isEqualTo(firstCollectedStates) // still same states, nothing new emitted
         verifyNoInteractions(readerPostRepository)
+    }
+
+    @Suppress("LongMethod")
+    @Test
+    fun `given tags fetched, when start again refreshing, then move back to initial state`() = testCollectingUiStates {
+        // Given
+        val tag1 = ReaderTestUtils.createTag("tag1")
+        val tag2 = ReaderTestUtils.createTag("tag2")
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val posts2 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
+            delay(100)
+            posts1
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag2)).doSuspendableAnswer {
+            delay(200)
+            posts2
+        }
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+
+        // When
+        viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
+        advanceUntilIdle()
+
+        viewModel.onRefresh()
+
+        // Then
+        viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+
+        val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
+        assertThat(loadedState.data).isEqualTo(
+            listOf(
+                    getInitialTagFeedItem(tag1),
+                    getInitialTagFeedItem(tag2)
+                )
+            )
+        assertThat(loadedState.isRefreshing).isFalse()
     }
 
     @Suppress("LongMethod")
@@ -318,6 +372,83 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         assertThat(collectedUiStates).last().isInstanceOf(ReaderTagsFeedViewModel.UiState.Empty::class.java)
     }
 
+    @Suppress("LongMethod")
+    @Test
+    fun `given tags fetched, when refreshing, then update isRefreshing status`() = testCollectingUiStates {
+        // Given
+        val tag1 = ReaderTestUtils.createTag("tag1")
+        val tag2 = ReaderTestUtils.createTag("tag2")
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val posts2 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
+            delay(100)
+            posts1
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag2)).doSuspendableAnswer {
+            delay(200)
+            posts2
+        }
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+
+        // When
+        viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
+        advanceUntilIdle()
+
+        // Then
+        viewModel.onRefresh()
+
+        val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
+        assertThat(loadedState.isRefreshing).isTrue()
+    }
+
+    @Suppress("LongMethod")
+    @Test
+    fun `given tags fetched, when refreshing, then RefreshTagsFeed action is posted`() = testCollectingUiStates {
+        // Given
+        val tag1 = ReaderTestUtils.createTag("tag1")
+        val tag2 = ReaderTestUtils.createTag("tag2")
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val posts2 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
+            delay(100)
+            posts1
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag2)).doSuspendableAnswer {
+            delay(200)
+            posts2
+        }
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+
+        // When
+        viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
+        advanceUntilIdle()
+
+        // Then
+        viewModel.onRefresh()
+
+        val action = viewModel.actionEvents.getOrAwaitValue()
+        assertThat(action).isEqualTo(ActionEvent.RefreshTagsFeed)
+    }
     @Test
     fun `Should update UI immediately when like button is tapped`() = testCollectingUiStates {
         // Given

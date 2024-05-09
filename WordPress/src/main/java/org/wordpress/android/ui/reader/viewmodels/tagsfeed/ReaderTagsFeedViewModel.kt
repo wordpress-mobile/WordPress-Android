@@ -172,7 +172,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onRefresh() {
+    @VisibleForTesting
+    fun onRefresh() {
         _uiStateFlow.update {
             (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
         }
