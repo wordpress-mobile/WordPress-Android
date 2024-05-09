@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 
-import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +24,6 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ReaderTagsFeedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -89,8 +86,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
     /**
      * Fetch posts for a single tag. This method will emit a new state to [uiStateFlow] for different [UiState]s:
      * [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty], but only for the tag being fetched.
-     *
-     * Can be used for retrying a failed fetch, for instance.
      */
     @Suppress("SwallowedException")
     private suspend fun fetchTag(tag: ReaderTag) {
@@ -166,7 +161,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onItemEnteredView(item: TagFeedItem) {
+    @VisibleForTesting
+    fun onItemEnteredView(item: TagFeedItem) {
         if (item.postList != PostList.Initial) {
             // do nothing as it's still loading or already loaded
             return
@@ -181,7 +177,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     fun onTagClick(readerTag: ReaderTag) {
         _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
@@ -190,7 +186,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     fun onSiteClick(postItem: TagsFeedPostItem) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
