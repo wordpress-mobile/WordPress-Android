@@ -712,6 +712,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
+                // todo: annmarie
+                case CREATE_NEW_POST_FROM_AUDIO_AI:
+                    launchAudioRecorderForPostWithAI(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
+                    break;
                 case CREATE_NEW_POST:
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
                     break;
@@ -1295,6 +1299,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
+    }
+
+    private void launchAudioRecorderForPostWithAI(PagePostCreationSourcesDetail source,
+                                     final int promptId,
+                                     final EntryPoint entryPoint) {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        // todo: annmarie - does this need to be a launch with result?
+        mActivityNavigator.launchAudioRecorderForPost(this, getSelectedSite(), source, entryPoint);
     }
 
     private void trackLastVisiblePage(@NonNull final PageType pageType) {

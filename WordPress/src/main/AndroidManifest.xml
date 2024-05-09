@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -825,6 +826,12 @@
 
         <activity
             android:name=".ui.domains.management.newdomainsearch.NewDomainSearchActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity android:name=".ui.audio.AudioRecorderActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity android:name=".ui.recorder.AudioRecorderActivity"
             android:theme="@style/WordPress.NoActionBar" />
 
         <!-- Services -->

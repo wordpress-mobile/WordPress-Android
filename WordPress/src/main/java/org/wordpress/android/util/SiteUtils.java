@@ -359,6 +359,7 @@ public class SiteUtils {
                || site.getPlanId() == PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID;
     }
 
+    // todo: annmarie - this needs to be updated to include access to audio options
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
     }

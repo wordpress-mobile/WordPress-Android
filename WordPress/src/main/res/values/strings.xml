@@ -2439,6 +2439,7 @@
     <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
 
     <string name="my_site_bottom_sheet_title">Add new</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio with AI</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>

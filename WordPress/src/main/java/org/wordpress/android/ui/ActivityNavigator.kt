@@ -7,6 +7,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.recorder.AudioRecorderActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.blazecampaigns.ARG_EXTRA_BLAZE_CAMPAIGN_PAGE
 import org.wordpress.android.ui.blaze.blazecampaigns.BlazeCampaignPage
@@ -26,6 +27,8 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.menu.KEY_QUICK_START_EVENT
 import org.wordpress.android.ui.mysite.menu.MenuActivity
 import org.wordpress.android.ui.mysite.personalization.PersonalizationActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
+import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.sitemonitor.SiteMonitorParentActivity
 import org.wordpress.android.ui.sitemonitor.SiteMonitorType
@@ -200,5 +203,17 @@ class ActivityNavigator @Inject constructor() {
             .addNextIntent(mainActivityIntent)
             .addNextIntent(intent)
             .startActivities()
+    }
+
+    fun launchAudioRecorderForPost(context: Context,
+                                   site: SiteModel?,
+                                   source: PagePostCreationSourcesDetail,
+                                   entryPoint: PostUtils.EntryPoint?
+    ) {
+        val intent = Intent(context, AudioRecorderActivity::class.java)
+        intent.putExtra(WordPress.SITE, site)
+        intent.putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, entryPoint)
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source)
+        context.startActivity(intent)
     }
 }

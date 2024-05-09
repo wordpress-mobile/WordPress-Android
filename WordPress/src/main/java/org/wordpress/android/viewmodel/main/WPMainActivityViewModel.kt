@@ -25,6 +25,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGI
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST_FROM_AUDIO_AI
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -194,6 +195,20 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = null
             )
         )
+        // todo: annmarie - show the new audio recorder action in the FAB
+        // todo: annmarie - need to manage the access - there might be an endpoint to tell us if this is the case
+        // todo: annmarie - what happens if they are out of coin to use the AI recorder feature?
+        // Post from audio with AI
+        if (buildConfigWrapper.isJetpackApp) {
+            actionsList.add(
+                CreateAction(
+                    actionType = CREATE_NEW_POST_FROM_AUDIO_AI,
+                    iconRes = R.drawable.ic_mic_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_post_from_audio,
+                    onClickAction = ::onCreateActionClicked
+                )
+            )
+        }
         actionsList.add(
             CreateAction(
                 actionType = CREATE_NEW_POST,
