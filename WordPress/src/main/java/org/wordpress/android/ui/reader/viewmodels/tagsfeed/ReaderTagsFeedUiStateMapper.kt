@@ -35,7 +35,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     ),
                     postTitle = it.title,
                     postExcerpt = it.excerpt,
-                    postImageUrl = it.blogImageUrl,
+                    postImageUrl = it.featuredImage,
                     postNumberOfLikesText = if (it.numLikes > 0) readerUtilsWrapper.getShortLikeLabelText(
                         numLikes = it.numLikes
                     ) else "",

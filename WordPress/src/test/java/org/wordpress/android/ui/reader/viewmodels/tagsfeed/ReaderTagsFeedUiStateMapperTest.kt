@@ -35,7 +35,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             blogName = "Name"
             title = "Title"
             excerpt = "Excerpt"
-            blogImageUrl = "url"
+            featuredImage = "url"
             numLikes = 5
             numReplies = 10
             isLikedByCurrentUser = true
@@ -95,7 +95,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postDateLine = dateLine,
                         postTitle = readerPost.title,
                         postExcerpt = readerPost.excerpt,
-                        postImageUrl = readerPost.blogImageUrl,
+                        postImageUrl = readerPost.featuredImage,
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
