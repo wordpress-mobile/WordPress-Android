@@ -83,7 +83,7 @@ class InAppUpdateManager(
                             "checkPlayStoreUpdate called, checcking update, immediate update in progress"
                         )
                         requestImmediateUpdate(appUpdateInfo, activity)
-                    } else if (isFlexibleUpdateInProgress(appUpdateInfo)) {
+                    } else {
                         Log.e(
                             "AppUpdateChecker",
                             "checkPlayStoreUpdate called, checcking update, flexible update in progress"
