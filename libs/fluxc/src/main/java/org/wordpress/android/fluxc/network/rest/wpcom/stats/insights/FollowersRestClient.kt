@@ -67,7 +67,7 @@ class FollowersRestClient @Inject constructor(
     }
 
     enum class FollowerType(val path: String) {
-        EMAIL("email"), WP_COM("wpcom")
+        ALL("all"), EMAIL("email"), WP_COM("wpcom")
     }
 
     data class FollowersResponse(
