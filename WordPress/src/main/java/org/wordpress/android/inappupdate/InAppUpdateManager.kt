@@ -18,7 +18,6 @@ import com.google.android.play.core.install.model.InstallStatus.FAILED
 import com.google.android.play.core.install.model.InstallStatus.INSTALLED
 import com.google.android.play.core.install.model.InstallStatus.INSTALLING
 import com.google.android.play.core.install.model.InstallStatus.PENDING
-import com.google.android.play.core.install.model.InstallStatus.REQUIRES_UI_INTENT
 import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
 import com.google.android.play.core.install.model.UpdateAvailability.UNKNOWN
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
@@ -26,7 +25,6 @@ import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_NOT_
 
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.RemoteConfigWrapper
-import javax.inject.Inject
 import javax.inject.Singleton
 
 
@@ -222,7 +220,12 @@ class InAppUpdateManager(
      *
      * @return The version code of the last blocking app update.
      */
-    private fun getLastBlockingAppVersion(): Int = remoteConfigWrapper.getInAppUpdateBlockingVersion()
+    private fun getLastBlockingAppVersion(): Int =
+        if (buildConfigWrapper.isJetpackApp) {
+            remoteConfigWrapper.getJetpackInAppUpdateBlockingVersion()
+        } else {
+            remoteConfigWrapper.getWordPressInAppUpdateBlockingVersion()
+        }
 
     /**
      * Extracts the available version code for the app update from the given update information.
