@@ -182,7 +182,8 @@ fun ReaderTagsFeedPostListItem(
             TextButton(
                 modifier = Modifier.defaultMinSize(minWidth = 1.dp),
                 contentPadding = PaddingValues(0.dp),
-                onClick = { onPostLikeClick() },
+                onClick = { onPostLikeClick(item) },
+                enabled = isLikeButtonEnabled,
             ) {
                 Icon(
                     modifier = Modifier.size(24.dp),
@@ -200,11 +201,19 @@ fun ReaderTagsFeedPostListItem(
                             R.string.reader_label_like
                         }
                     ),
-                    tint = secondaryElementColor,
+                    tint = if (isPostLiked) {
+                        androidx.compose.material.MaterialTheme.colors.primary
+                    } else {
+                        secondaryElementColor
+                    },
                 )
                 Text(
                     text = stringResource(R.string.reader_label_like),
-                    color = secondaryElementColor,
+                    color = if (isPostLiked) {
+                        androidx.compose.material.MaterialTheme.colors.primary
+                    } else {
+                        secondaryElementColor
+                    },
                 )
             }
             Spacer(Modifier.weight(1f))
@@ -288,6 +297,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -322,6 +332,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -342,6 +353,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -362,6 +374,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -383,6 +396,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -404,6 +418,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -437,6 +452,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
@@ -469,6 +485,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                             postNumberOfLikesText = "15 likes",
                             postNumberOfCommentsText = "4 comments",
                             isPostLiked = true,
+                            isLikeButtonEnabled = true,
                             blogId = 123L,
                             postId = 123L,
                             onSiteClick = {},
