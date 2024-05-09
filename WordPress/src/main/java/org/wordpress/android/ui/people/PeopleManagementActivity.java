@@ -321,7 +321,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.SUBSCRIBERS, isFreshList, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -333,7 +333,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.FOLLOWERS, isFirstPage, false);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.SUBSCRIBERS, isFirstPage, false);
                 }
                 mFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -364,7 +364,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFreshList, true);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_SUBSCRIBERS, isFreshList, true);
                 }
 
                 refreshOnScreenFragmentDetails();
@@ -376,7 +376,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
                 PeopleListFragment peopleListFragment = getListFragment();
                 if (peopleListFragment != null) {
                     boolean isFirstPage = page == 1;
-                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_FOLLOWERS, isFirstPage, false);
+                    peopleListFragment.fetchingRequestFinished(PeopleListFilter.EMAIL_SUBSCRIBERS, isFirstPage, false);
                 }
                 mEmailFollowersFetchRequestInProgress = false;
                 ToastUtils.showToast(PeopleManagementActivity.this,
@@ -630,9 +630,9 @@ public class PeopleManagementActivity extends LocaleAwareActivity
     public boolean onFetchFirstPage(PeopleListFilter filter) {
         if (filter == PeopleListFilter.TEAM && !mHasRefreshedUsers) {
             return fetchUsersList(mSite, 0);
-        } else if (filter == PeopleListFilter.FOLLOWERS && !mHasRefreshedFollowers) {
+        } else if (filter == PeopleListFilter.SUBSCRIBERS && !mHasRefreshedFollowers) {
             return fetchFollowersList(mSite, 1);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mHasRefreshedEmailFollowers) {
+        } else if (filter == PeopleListFilter.EMAIL_SUBSCRIBERS && !mHasRefreshedEmailFollowers) {
             return fetchEmailFollowersList(mSite, 1);
         } else if (filter == PeopleListFilter.VIEWERS && !mHasRefreshedViewers) {
             return fetchViewersList(mSite, 0);
@@ -645,10 +645,10 @@ public class PeopleManagementActivity extends LocaleAwareActivity
         if (filter == PeopleListFilter.TEAM && !mUsersEndOfListReached) {
             int count = PeopleTable.getUsersCountForLocalBlogId(mSite.getId());
             return fetchUsersList(mSite, count);
-        } else if (filter == PeopleListFilter.FOLLOWERS && !mFollowersEndOfListReached) {
+        } else if (filter == PeopleListFilter.SUBSCRIBERS && !mFollowersEndOfListReached) {
             int pageToFetch = mFollowersLastFetchedPage + 1;
             return fetchFollowersList(mSite, pageToFetch);
-        } else if (filter == PeopleListFilter.EMAIL_FOLLOWERS && !mEmailFollowersEndOfListReached) {
+        } else if (filter == PeopleListFilter.EMAIL_SUBSCRIBERS && !mEmailFollowersEndOfListReached) {
             int pageToFetch = mEmailFollowersLastFetchedPage + 1;
             return fetchEmailFollowersList(mSite, pageToFetch);
         } else if (filter == PeopleListFilter.VIEWERS && !mViewersEndOfListReached) {
