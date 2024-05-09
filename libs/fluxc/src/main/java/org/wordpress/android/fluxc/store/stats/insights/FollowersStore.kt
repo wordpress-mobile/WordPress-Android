@@ -8,11 +8,13 @@ import org.wordpress.android.fluxc.model.stats.LimitMode.All
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.ALL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.FollowersSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.WpComFollowersSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
@@ -26,11 +28,18 @@ import javax.inject.Singleton
 class FollowersStore
 @Inject constructor(
     private val restClient: FollowersRestClient,
+    private val followersSqlUtils: FollowersSqlUtils,
     private val wpComFollowersSqlUtils: WpComFollowersSqlUtils,
     private val emailFollowersSqlUtils: EmailFollowersSqlUtils,
     private val insightsMapper: InsightsMapper,
     private val coroutineEngine: CoroutineEngine
 ) {
+    suspend fun fetchFollowers(
+        siteModel: SiteModel,
+        fetchMode: PagedMode,
+        forced: Boolean = false
+    ) = fetchFollowers(siteModel, forced, ALL, fetchMode, followersSqlUtils)
+
     suspend fun fetchWpComFollowers(
         siteModel: SiteModel,
         fetchMode: PagedMode,
@@ -99,6 +108,8 @@ class FollowersStore
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
     }
+
+    fun getFollowers(site: SiteModel, cacheMode: LimitMode) = getFollowers(site, ALL, cacheMode, followersSqlUtils)
 
     fun getWpComFollowers(site: SiteModel, cacheMode: LimitMode): FollowersModel? {
         return getFollowers(site, WP_COM, cacheMode, wpComFollowersSqlUtils)
