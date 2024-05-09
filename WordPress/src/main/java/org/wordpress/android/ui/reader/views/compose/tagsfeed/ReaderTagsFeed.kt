@@ -62,6 +62,8 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 
+private const val LOADING_POSTS_COUNT = 5
+
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
     Box(
@@ -172,14 +174,12 @@ private fun Loading() {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
                     userScrollEnabled = false,
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Large.value),
+                    contentPadding = PaddingValues(horizontal = Margin.Large.value),
                 ) {
-                    item {
+                    items(LOADING_POSTS_COUNT) {
                         ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
                     }
                 }
             }
@@ -264,16 +264,14 @@ private fun PostListLoading() {
         modifier = Modifier
             .fillMaxWidth(),
         userScrollEnabled = false,
+        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
         contentPadding = PaddingValues(
             start = Margin.Large.value,
             end = Margin.Large.value
         ),
     ) {
-        item {
+        items(LOADING_POSTS_COUNT) {
             ReaderTagsFeedPostListItemLoading()
-            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
-            ReaderTagsFeedPostListItemLoading()
-            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
         }
     }
 }
