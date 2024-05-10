@@ -79,11 +79,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
     fun start(tags: List<ReaderTag>) {
-        // don't start again if the tags match
-        if (_uiStateFlow.value is UiState.Loaded &&
-            tags == (_uiStateFlow.value as UiState.Loaded).data.map { it.tagChip.tag }
-        ) {
-            return
+        // don't start again if the tags match, unless the user requested a refresh
+        (_uiStateFlow.value as? UiState.Loaded)?.let { loadedState ->
+            if (!loadedState.isRefreshing && tags == loadedState.data.map { it.tagChip.tag }) {
+                return
+            }
         }
 
         if (tags.isEmpty()) {
@@ -100,13 +100,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         // Initially add all tags to the list with the posts loading UI
         _uiStateFlow.update {
-            readerTagsFeedUiStateMapper.mapLoadingPostsUiState(tags, ::onTagClick)
-        }
-        // Fetch all posts and update the posts loading UI to either loaded or error when the request finishes
-        launch {
-            tags.forEach {
-                fetchTag(it)
-            }
+            readerTagsFeedUiStateMapper.mapInitialPostsUiState(
+                tags,
+                false,
+                ::onTagClick,
+                ::onItemEnteredView,
+                ::onRefresh
+            )
         }
     }
 
@@ -130,74 +130,105 @@ class ReaderTagsFeedViewModel @Inject constructor(
     /**
      * Fetch posts for a single tag. This method will emit a new state to [uiStateFlow] for different [UiState]s:
      * [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty], but only for the tag being fetched.
-     *
-     * Can be used for retrying a failed fetch, for instance.
      */
     @Suppress("SwallowedException")
     private suspend fun fetchTag(tag: ReaderTag) {
-        val updatedLoadedData = getUpdatedLoadedData()
-        // At this point, all tag feed items already exist in the UI with the loading status.
-        // We need it's index to update it to either Loaded or Error when the request is finished.
-        val existingIndex = updatedLoadedData.indexOfFirst { it.tagChip.tag == tag }
-        // Remove the current row of this tag (which is loading). This will be used to later add an updated item with
-        // either Loaded or Error status, depending on the result of the request.
-        updatedLoadedData.removeAll { it.tagChip.tag == tag }
-        try {
+        // Set the tag to loading state
+        updateTagFeedItem(
+            readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(
+                tag = tag,
+                onTagClick = ::onTagClick,
+                onItemEnteredView = ::onItemEnteredView,
+            )
+        )
+
+        val updatedItem: TagFeedItem = try {
             // Fetch posts for tag
             val posts = readerPostRepository.fetchNewerPostsForTag(tag)
             if (posts.isNotEmpty()) {
-                updatedLoadedData.add(
-                    existingIndex,
-                    readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
-                        tag = tag,
-                        posts = posts,
-                        onTagClick = ::onTagClick,
-                        onSiteClick = ::onSiteClick,
-                        onPostCardClick = ::onPostCardClick,
-                        onPostLikeClick = ::onPostLikeClick,
-                        onPostMoreMenuClick = ::onPostMoreMenuClick,
-                    )
+                readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
+                    tag = tag,
+                    posts = posts,
+                    onTagClick = ::onTagClick,
+                    onSiteClick = ::onSiteClick,
+                    onPostCardClick = ::onPostCardClick,
+                    onPostLikeClick = ::onPostLikeClick,
+                    onPostMoreMenuClick = ::onPostMoreMenuClick,
+                    onItemEnteredView = ::onItemEnteredView,
                 )
             } else {
-                updatedLoadedData.add(
-                    existingIndex,
-                    readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
-                        tag = tag,
-                        errorType = ErrorType.NoContent,
-                        onTagClick = ::onTagClick,
-                        onRetryClick = ::onRetryClick,
-                    )
+                readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
+                    tag = tag,
+                    errorType = ErrorType.NoContent,
+                    onTagClick = ::onTagClick,
+                    onRetryClick = ::onRetryClick,
+                    onItemEnteredView = ::onItemEnteredView,
                 )
             }
         } catch (e: ReaderPostFetchException) {
-            updatedLoadedData.add(
-                existingIndex,
-                readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
-                    tag = tag,
-                    errorType = ErrorType.Default,
-                    onTagClick = ::onTagClick,
-                    onRetryClick = ::onRetryClick,
-                )
+            readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
+                tag = tag,
+                errorType = ErrorType.Default,
+                onTagClick = ::onTagClick,
+                onRetryClick = ::onRetryClick,
+                onItemEnteredView = ::onItemEnteredView,
             )
         }
-        _uiStateFlow.update { UiState.Loaded(updatedLoadedData) }
+
+        updateTagFeedItem(updatedItem)
     }
 
-    private fun getUpdatedLoadedData(): MutableList<TagFeedItem> {
+    private fun getLoadedData(uiState: UiState): MutableList<TagFeedItem> {
         val updatedLoadedData = mutableListOf<TagFeedItem>()
-        val currentUiState = _uiStateFlow.value
-        if (currentUiState is UiState.Loaded) {
-            val currentLoadedData = currentUiState.data
-            updatedLoadedData.addAll(currentLoadedData)
+        if (uiState is UiState.Loaded) {
+            updatedLoadedData.addAll(uiState.data)
         }
         return updatedLoadedData
+    }
+
+    // Update the UI state for a single feed item, making sure to do it atomically so we don't lose any updates.
+    private fun updateTagFeedItem(updatedItem: TagFeedItem) {
+        _uiStateFlow.update { uiState ->
+            val updatedLoadedData = getLoadedData(uiState)
+
+            // At this point, all tag feed items already exist in the UI.
+            // We need it's index to update it and keep it in the same place.
+            updatedLoadedData.indexOfFirst { it.tagChip.tag == updatedItem.tagChip.tag }
+                .takeIf { it >= 0 }
+                ?.let { existingIndex ->
+                    // Update item
+                    updatedLoadedData[existingIndex] = updatedItem
+                }
+
+            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(updatedLoadedData)
+        }
+    }
+
+    @VisibleForTesting
+    fun onRefresh() {
+        _uiStateFlow.update {
+            (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
+        }
+        _actionEvents.value = ActionEvent.RefreshTagsFeed
+    }
+
+    @VisibleForTesting
+    fun onItemEnteredView(item: TagFeedItem) {
+        if (item.postList != PostList.Initial) {
+            // do nothing as it's still loading or already loaded
+            return
+        }
+
+        launch {
+            fetchTag(item.tagChip.tag)
+        }
     }
 
     private fun onOpenTagsListClick() {
         // TODO
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     fun onTagClick(readerTag: ReaderTag) {
         _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
     }
@@ -206,7 +237,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
         // TODO
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    @VisibleForTesting
     fun onSiteClick(postItem: TagsFeedPostItem) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
@@ -308,8 +339,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
-            findPost(postItem.postId, postItem.blogId)?.let {
-                postLikeUseCase.perform(it, !it.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+            findPost(postItem.postId, postItem.blogId)?.let { post ->
+                postLikeUseCase.perform(post, !post.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
                     when (it) {
                         is PostLikeUseCase.PostLikeState.Success -> {
                             // Re-enable like button without changing the current post item UI.
@@ -405,13 +436,20 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     sealed class ActionEvent {
         data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+
+        data object RefreshTagsFeed : ActionEvent()
     }
 
     sealed class UiState {
-        object Initial : UiState()
-        data class Loaded(val data: List<TagFeedItem>) : UiState()
+        data object Initial : UiState()
 
-        object Loading : UiState()
+        data class Loaded(
+            val data: List<TagFeedItem>,
+            val isRefreshing: Boolean = false,
+            val onRefresh: () -> Unit = {},
+        ) : UiState()
+
+        data object Loading : UiState()
 
         data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
     }
@@ -419,7 +457,12 @@ class ReaderTagsFeedViewModel @Inject constructor(
     data class TagFeedItem(
         val tagChip: TagChip,
         val postList: PostList,
-    )
+        private val onItemEnteredView: (TagFeedItem) -> Unit = {},
+    ) {
+        fun onEnteredView() {
+            onItemEnteredView(this)
+        }
+    }
 
     data class TagChip(
         val tag: ReaderTag,
@@ -427,9 +470,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
     )
 
     sealed class PostList {
+        data object Initial : PostList()
+
         data class Loaded(val items: List<TagsFeedPostItem>) : PostList()
 
-        object Loading : PostList()
+        data object Loading : PostList()
 
         data class Error(
             val type: ErrorType,

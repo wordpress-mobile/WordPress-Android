@@ -35,7 +35,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             blogName = "Name"
             title = "Title"
             excerpt = "Excerpt"
-            blogImageUrl = "url"
+            featuredImage = "url"
             numLikes = 5
             numReplies = 10
             isLikedByCurrentUser = true
@@ -56,6 +56,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
         val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
 
         val dateLine = "dateLine"
         val numberLikesText = "numberLikesText"
@@ -79,6 +80,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             onPostCardClick = onPostCardClick,
             onPostLikeClick = onPostLikeClick,
             onPostMoreMenuClick = onPostMoreMenuClick,
+            onItemEnteredView = onItemEnteredView,
         )
         // Then
         val expected = ReaderTagsFeedViewModel.TagFeedItem(
@@ -93,7 +95,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postDateLine = dateLine,
                         postTitle = readerPost.title,
                         postExcerpt = readerPost.excerpt,
-                        postImageUrl = readerPost.blogImageUrl,
+                        postImageUrl = readerPost.featuredImage,
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
@@ -107,6 +109,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                     )
                 )
             ),
+            onItemEnteredView = onItemEnteredView,
         )
         assertEquals(expected, actual)
     }
@@ -124,12 +127,14 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val errorType = ReaderTagsFeedViewModel.ErrorType.Default
         val onTagClick: (ReaderTag) -> Unit = {}
         val onRetryClick = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
         // When
         val actual = classToTest.mapErrorTagFeedItem(
             tag = readerTag,
             errorType = errorType,
             onTagClick = onTagClick,
             onRetryClick = onRetryClick,
+            onItemEnteredView = onItemEnteredView,
         )
 
         // Then
@@ -141,7 +146,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             postList = ReaderTagsFeedViewModel.PostList.Error(
                 type = errorType,
                 onRetryClick = onRetryClick,
-            )
+            ),
+            onItemEnteredView = onItemEnteredView,
         )
         assertEquals(expected, actual)
     }
@@ -150,6 +156,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
     fun `Should map loading posts UI state correctly`() {
         // Given
         val onTagClick: (ReaderTag) -> Unit = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+        val onRefresh: () -> Unit = {}
         val tag1 = ReaderTag(
             "tag",
             "tag",
@@ -167,9 +175,12 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val tags = listOf(tag1, tag2)
 
         // When
-        val actual = classToTest.mapLoadingPostsUiState(
+        val actual = classToTest.mapInitialPostsUiState(
             tags = tags,
+            isRefreshing = true,
             onTagClick = onTagClick,
+            onItemEnteredView = onItemEnteredView,
+            onRefresh = onRefresh,
         )
 
         // Then
@@ -180,16 +191,20 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         tag = tag1,
                         onTagClick = onTagClick,
                     ),
-                    postList = ReaderTagsFeedViewModel.PostList.Loading,
+                    postList = ReaderTagsFeedViewModel.PostList.Initial,
+                    onItemEnteredView = onItemEnteredView,
                 ),
                 ReaderTagsFeedViewModel.TagFeedItem(
                     tagChip = ReaderTagsFeedViewModel.TagChip(
                         tag = tag2,
                         onTagClick = onTagClick,
                     ),
-                    postList = ReaderTagsFeedViewModel.PostList.Loading,
+                    postList = ReaderTagsFeedViewModel.PostList.Initial,
+                    onItemEnteredView = onItemEnteredView,
                 )
-            )
+            ),
+            isRefreshing = true,
+            onRefresh = onRefresh,
         )
         assertEquals(expected, actual)
     }

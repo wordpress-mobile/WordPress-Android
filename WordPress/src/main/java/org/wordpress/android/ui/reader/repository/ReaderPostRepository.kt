@@ -3,7 +3,9 @@ package org.wordpress.android.ui.reader.repository
 import com.android.volley.VolleyError
 import com.wordpress.rest.RestRequest
 import dagger.Reusable
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wordpress.android.WordPress.Companion.getRestClientUtilsV1_2
 import org.wordpress.android.datasets.ReaderPostTable
@@ -11,6 +13,7 @@ import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
@@ -23,6 +26,7 @@ import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.UrlUtils
 import java.util.Locale
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -30,13 +34,14 @@ import kotlin.coroutines.resumeWithException
 class ReaderPostRepository @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val localSource: ReaderPostLocalSource,
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
 ) {
     /**
      * Fetches and returns the most recent posts for the passed tag, respecting the maxPosts limit.
      * It always fetches the most recent posts, saves them to the local DB and returns the latest from that cache.
      */
-    suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList {
-        return suspendCancellableCoroutine { cont ->
+    suspend fun fetchNewerPostsForTag(tag: ReaderTag, maxPosts: Int = 10): ReaderPostList = withContext(ioDispatcher) {
+        suspendCancellableCoroutine { cont ->
             val resultListener = UpdateResultListener { result ->
                 if (result == ReaderActions.UpdateResult.FAILED) {
                     cont.resumeWithException(

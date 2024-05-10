@@ -128,6 +128,10 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 is ActionEvent.OpenTagPostsFeed -> {
                     subFilterViewModel.setSubfilterFromTag(it.readerTag)
                 }
+
+                ActionEvent.RefreshTagsFeed -> {
+                    subFilterViewModel.updateTagsAndSites()
+                }
             }
         }
     }
