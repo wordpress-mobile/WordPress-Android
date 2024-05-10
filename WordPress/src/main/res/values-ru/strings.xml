@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-01 16:54:07+0000
+Translation-Revision-Date: 2024-05-06 09:04:04+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
-    <string name="page_upload_conflict_error">Найдена более свежая редакция страницы.</string>
-    <string name="editor_updating_content">Обновление контента</string>
+    <string name="page_upload_conflict_error">Найдена более свежая редакция страницы</string>
+    <string name="editor_updating_content">Обновление содержимого</string>
     <string name="stats_subscribers">Подписчики</string>
     <string name="stats_subscribers_subscribers">Подписчики</string>
     <string name="weekly_roundup_notification_text_views_and_comment">За последнюю неделю вы получили: просмотров — %1$s, комментариев — 1</string>
@@ -36,12 +36,14 @@ Language: ru
     <string name="reader_preferences_screen_font_family_label">Шрифт</string>
     <string name="reader_preferences_screen_theme_label">Цветовая схема</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">отправить отзыв</string>
+    <string name="experimental_badge">&lt;Экспериментальный&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Очистить выбранный цвет</string>
     <string name="reader_no_followed_tags_text_title">Нет подписок на метки</string>
     <string name="reader_toast_err_tag_already_following">Вы уже подписаны на эту метку</string>
     <string name="reader_menu_reading_preferences">Читательские предпочтения</string>
     <string name="reader_page_followed_tags_text_title">Отслеживаемые метки</string>
     <string name="reader_preferences_theme_candy">Карамель</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
     <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">Вечер</string>
     <string name="reader_preferences_theme_sepia">Сепия</string>
@@ -54,14 +56,14 @@ Language: ru
     <string name="reader_filter_empty_tags_action_follow">Подписаться на метку</string>
     <string name="button_read">Читать</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Вы можете копировать текст своей записи на случай, если ваш контент окажется повреждён. Скопируйте данные об ошибке, чтобы сообщить их инженерам поддержки и устранить неполадку.</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Нажмите здесь, чтобы скопировать текст записи</string>
     <string name="gutenberg_native_tap_here_to_copy_error_details">Нажмите здесь, чтобы скопировать данные об ошибке</string>
     <string name="gutenberg_native_copy_post_text">Скопировать текст записи</string>
     <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
     <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
     <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
-    <string name="editor_updating_content_failed">Не удалось обновить контент</string>
+    <string name="editor_updating_content_failed">Не удалось обновить содержимое</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>
@@ -82,7 +84,7 @@ Language: ru
     <string name="site_monitoring">Мониторинг сайтов</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и теги. Перейдите в раздел &lt;b&gt;Подписки&lt;/b&gt;, чтобы просмотреть подписной контент и управлять своими подписками.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Перейти в «Подписки»</string>
-    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось.</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
     <string name="reader_no_recommended_blogs_title">Нет рекомендуемых блогов</string>
     <string name="reader_no_posts_with_this_tag">Нет записей с этой меткой</string>

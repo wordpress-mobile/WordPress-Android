@@ -735,7 +735,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 startProgress(false);
                 mAvatarService.upload(file, new Email(mAccountStore.getAccount().getEmail()),
                         Objects.requireNonNull(mAccountStore.getAccessToken()),
-                        new GravatarListener<Unit>() {
+                        new GravatarListener<Unit, ErrorType>() {
                             @Override
                             public void onSuccess(@NonNull Unit response) {
                                 endProgress();
@@ -836,7 +836,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 mAvatarService.upload(file, new Email(mEmail), mToken,
-                        new GravatarListener<Unit>() {
+                        new GravatarListener<Unit, ErrorType>() {
                             @Override
                             public void onSuccess(@NonNull Unit response) {
                                 AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");

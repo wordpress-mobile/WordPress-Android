@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-30 06:03:35+0000
+Translation-Revision-Date: 2024-05-06 19:05:52+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
@@ -2531,7 +2531,7 @@ Language: ro
     <string name="privacy_policy_learn_more_header">Politică de confidențialitate</string>
     <string name="cookie_policy_learn_more_caption">Partajează informații cu instrumentul nostru de analitice despre utilizarea serviciilor în timp ce ești autentificat în contul tău WordPress.com.</string>
     <string name="cookie_policy_learn_more_header">Politică cookie-uri</string>
-    <string name="preference_privacy_settings">Setări confidențialitate</string>
+    <string name="preference_privacy_settings">Setări pentru confidențialitate</string>
     <string name="preference_collect_information">Colectează informații</string>
     <string name="post_submitted">Am trimis articolul</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca site-ul să fie în stare bună.</string>
