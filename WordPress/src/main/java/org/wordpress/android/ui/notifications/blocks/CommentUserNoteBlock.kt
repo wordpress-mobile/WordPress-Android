@@ -8,8 +8,6 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
-import androidx.core.view.ViewCompat
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.tools.FormattableContent
@@ -132,8 +130,6 @@ class CommentUserNoteBlock(
         }
         return builder
     }
-
-    private fun hasCommentNestingLevel(): Boolean = mCommentData?.nestLevel?.let { return it > 0 } ?: false
 
     override fun getViewHolder(view: View): Any = CommentUserNoteBlockHolder(view)
 
