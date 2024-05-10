@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +27,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,10 +45,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+
+private val ITEM_MAX_WIDTH = 320.dp
+private val ITEM_HEIGHT = 150.dp // TODO thomashortadev do we want SP instead of DP? to change based on font size)
+private const val ITEM_WIDTH_PERCENTAGE = 0.8f
+private const val CONTENT_MAX_LINES = 3
+private const val TITLE_MAX_LINES = 2
 
 @Composable
 fun ReaderTagsFeedPostListItem(
@@ -55,10 +66,17 @@ fun ReaderTagsFeedPostListItem(
     val secondaryElementColor = baseColor.copy(
         alpha = 0.6F
     )
+
+    val localConfiguration = LocalConfiguration.current
+    val screenWidth = remember(localConfiguration) {
+        localConfiguration.screenWidthDp.dp
+    }
+
     Column(
         modifier = Modifier
-            .width(240.dp)
-            .height(340.dp)
+            .widthIn(max = ITEM_MAX_WIDTH)
+            .width(screenWidth * ITEM_WIDTH_PERCENTAGE)
+            .height(ITEM_HEIGHT)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -95,51 +113,67 @@ fun ReaderTagsFeedPostListItem(
                 color = secondaryElementColor,
             )
         }
-        // Post title
-        Text(
-            modifier = Modifier
-                .padding(top = Margin.Medium.value)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = { onPostCardClick(item) },
-                ),
-            text = postTitle,
-            style = MaterialTheme.typography.titleMedium,
-            color = baseColor,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        // Post excerpt
-        Text(
-            modifier = Modifier
-                .padding(
-                    top = Margin.Small.value,
-                    bottom = Margin.Medium.value,
+
+        Spacer(modifier = Modifier.height(Margin.Small.value))
+
+        // Post content row
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Post title and excerpt Column
+            Column(
+                modifier = Modifier.weight(1f),
+            ) {
+                // TODO thomashortadev improve this to avoid an initial composition with the wrong value
+                var excerptMaxLines by remember { mutableIntStateOf(2) }
+
+                // Post title
+                Text(
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { onPostCardClick(item) },
+                        ),
+                    text = postTitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = baseColor,
+                    maxLines = TITLE_MAX_LINES,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { layoutResult ->
+                        excerptMaxLines = CONTENT_MAX_LINES - layoutResult.lineCount
+                    },
                 )
-                .conditionalThen(
-                    predicate = postImageUrl.isBlank(),
-                    other = Modifier.height(180.dp)
+                Spacer(Modifier.height(Margin.Medium.value))
+                // Post excerpt
+                Text(
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { onPostCardClick(item) },
+                        ),
+                    text = postExcerpt,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = primaryElementColor,
+                    maxLines = excerptMaxLines, // TODO thomashortadev max lines should be (3 - title_lines_used)
+                    overflow = TextOverflow.Ellipsis,
                 )
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
+            }
+
+            // Post image
+            if (postImageUrl.isNotBlank()) {
+                PostImage(
+                    imageUrl = postImageUrl,
                     onClick = { onPostCardClick(item) },
-                ),
-            text = postExcerpt,
-            style = MaterialTheme.typography.bodySmall,
-            color = primaryElementColor,
-            maxLines = if (!postImageUrl.isBlank()) 2 else 10,
-            overflow = TextOverflow.Ellipsis,
-        )
-        // Post image
-        if (!postImageUrl.isBlank()) {
-            PostImage(
-                imageUrl = postImageUrl,
-                onClick = { onPostCardClick(item) },
-            )
+                )
+            }
         }
+
         Spacer(Modifier.weight(1f))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -172,7 +206,9 @@ fun ReaderTagsFeedPostListItem(
                 maxLines = 1,
             )
         }
-        Spacer(Modifier.height(Margin.Medium.value))
+
+        Spacer(Modifier.height(Margin.Small.value))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -242,8 +278,7 @@ fun PostImage(
 ) {
     AsyncImage(
         modifier = modifier
-            .fillMaxWidth()
-            .height(150.dp)
+            .size(64.dp)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
             .clickable { onClick() },
         model = ImageRequest.Builder(LocalContext.current)
