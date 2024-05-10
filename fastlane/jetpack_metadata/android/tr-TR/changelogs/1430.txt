@@ -1,0 +1,3 @@
+24.8:
+Sağdan sola yazılan dilleri kullanan kullanıcılar için İstatistikler ekranındaki yüzdeler artık doğru konumda görünüyor. Harika.
+
