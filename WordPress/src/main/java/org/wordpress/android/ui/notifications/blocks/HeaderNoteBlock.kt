@@ -104,6 +104,9 @@ class HeaderNoteBlock(
 
     fun getHeader(headerIndex: Int): FormattableContent? = mHeadersList?.getOrNull(headerIndex)
 
+    /**
+     * Set whether this is a reply to a comment
+     */
     fun setReplyToComment(isReplyToComment: Boolean) {
         replyToComment = isReplyToComment
     }
