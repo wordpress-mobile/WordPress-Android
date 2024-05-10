@@ -24,9 +24,12 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTestUtils
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
+import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
@@ -34,6 +37,7 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiState
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import kotlin.test.assertIs
 
@@ -55,7 +59,19 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     lateinit var postLikeUseCase: PostLikeUseCase
 
     @Mock
+    lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+
+    @Mock
+    lateinit var readerPostUiStateBuilder: ReaderPostUiStateBuilder
+
+    @Mock
+    lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+
+    @Mock
     lateinit var navigationEvents: MediatorLiveData<Event<ReaderNavigationEvents>>
+
+    @Mock
+    lateinit var snackbarEvents: MediatorLiveData<Event<SnackbarMessageHolder>>
 
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
@@ -81,9 +97,14 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostCardActionsHandler = readerPostCardActionsHandler,
             readerPostTableWrapper = readerPostTableWrapper,
             postLikeUseCase = postLikeUseCase,
+            readerPostMoreButtonUiStateBuilder = readerPostMoreButtonUiStateBuilder,
+            readerPostUiStateBuilder = readerPostUiStateBuilder,
+            displayUtilsWrapper = displayUtilsWrapper,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
+        whenever(readerPostCardActionsHandler.snackbarEvents)
+            .thenReturn(snackbarEvents)
         observeActionEvents()
         observeNavigationEvents()
     }

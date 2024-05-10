@@ -55,7 +55,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val onSiteClick: (TagsFeedPostItem) -> Unit = {}
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
-        val onPostMoreMenuClick = {}
+        val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit = {}
 
         val dateLine = "dateLine"
         val numberLikesText = "numberLikesText"
