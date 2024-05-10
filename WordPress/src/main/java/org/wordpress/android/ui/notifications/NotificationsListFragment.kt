@@ -143,7 +143,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 textFilterAll.setOnClickListener(getFilterClickListener(TabPosition.All, popupWindow))
                 textFilterUnread.setOnClickListener(getFilterClickListener(TabPosition.Unread, popupWindow))
                 textFilterComments.setOnClickListener(getFilterClickListener(TabPosition.Comment, popupWindow))
-                textFilterFollows.setOnClickListener(getFilterClickListener(TabPosition.Follow, popupWindow))
+                textFilterSubscribers.setOnClickListener(getFilterClickListener(TabPosition.Subscribers, popupWindow))
                 textFilterLikes.setOnClickListener(getFilterClickListener(TabPosition.Like, popupWindow))
             }.root
         popupWindow.showAsDropDown(anchorView)

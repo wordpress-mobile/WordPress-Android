@@ -50,12 +50,12 @@
             android:textSize="@dimen/text_sz_large" />
 
         <TextView
-            android:id="@+id/text_filter_follows"
+            android:id="@+id/text_filter_subscribers"
             android:layout_width="match_parent"
             android:background="?attr/selectableItemBackground"
             android:layout_height="wrap_content"
             android:padding="@dimen/notifications_item_action_padding"
-            android:text="@string/notifications_tab_title_follows"
+            android:text="@string/notifications_tab_title_subscribers"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large" />
 
