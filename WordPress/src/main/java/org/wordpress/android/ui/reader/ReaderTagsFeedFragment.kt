@@ -91,6 +91,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeActionEvents()
         observeNavigationEvents()
         observeErrorMessageEvents()
+        observeSnackbarEvents()
         observeOpenMoreMenuEvents()
     }
 

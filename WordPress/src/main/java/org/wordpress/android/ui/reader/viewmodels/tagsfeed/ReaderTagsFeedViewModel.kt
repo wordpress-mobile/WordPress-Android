@@ -357,8 +357,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                val photonWidth: Int = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
-                val photonHeight: Int = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
+                val photonWidth = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+                val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
                 _openMoreMenuEvents.postValue(
                     MoreMenuUiState(
                         readerCardUiState = readerPostUiStateBuilder.mapPostToNewUiState(
@@ -367,13 +367,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
                             photonWidth = photonWidth,
                             photonHeight = photonHeight,
                             postListType = ReaderTypes.ReaderPostListType.TAGS_FEED,
-                            onButtonClicked = {_, _, _ -> },
-                            onItemClicked = {_, _ -> },
+                            onButtonClicked = { _, _, _ -> },
+                            onItemClicked = { _, _ -> },
                             onItemRendered = {},
                             onMoreButtonClicked = {},
                             onMoreDismissed = {},
-                            onVideoOverlayClicked = {_, _ ->},
-                            onPostHeaderViewClicked = {_, _ -> },
+                            onVideoOverlayClicked = { _, _ -> },
+                            onPostHeaderViewClicked = { _, _ -> },
                         ),
                         readerPostCardActions = items,
                     )
