@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.stats.subscribers.PostsModel.PostModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient.AllTimeResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient.CommentsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType
+import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.ALL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.EMAIL
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowerType.WP_COM
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.FollowersRestClient.FollowersResponse
@@ -152,6 +153,7 @@ class InsightsMapper @Inject constructor(val statsUtils: StatsUtils) {
             }
         }
         val total = when (followerType) {
+            ALL -> response.total
             WP_COM -> response.totalWpCom
             EMAIL -> response.totalEmail
         }

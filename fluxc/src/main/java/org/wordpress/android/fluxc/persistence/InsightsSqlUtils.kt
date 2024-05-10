@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.COMMENTS_
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.DETAILED_POST_STATS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAILS_SUBSCRIBERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.EMAIL_FOLLOWERS
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.FOLLOWERS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.LATEST_POST_DETAIL_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.MOST_POPULAR_INSIGHTS
 import org.wordpress.android.fluxc.persistence.StatsSqlUtils.BlockType.POSTING_ACTIVITY
@@ -143,6 +144,16 @@ constructor(
         statsRequestSqlUtils,
         SUMMARY,
         SummaryResponse::class.java
+    )
+
+    class FollowersSqlUtils @Inject constructor(
+        statsSqlUtils: StatsSqlUtils,
+        statsRequestSqlUtils: StatsRequestSqlUtils
+    ) : InsightsSqlUtils<FollowersResponse>(
+        statsSqlUtils,
+        statsRequestSqlUtils,
+        FOLLOWERS,
+        FollowersResponse::class.java
     )
 
     class WpComFollowersSqlUtils
