@@ -63,6 +63,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 
 private const val LOADING_POSTS_COUNT = 5
+val READER_TAGS_FEED_ITEM_HEIGHT = 150.dp // TODO thomashortadev do we want SP? to change based on font size)
 
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
@@ -305,7 +306,7 @@ private fun PostListLoaded(
             )
             Box(
                 modifier = Modifier
-                    .height(340.dp)
+                    .height(READER_TAGS_FEED_ITEM_HEIGHT)
                     .padding(
                         start = Margin.ExtraLarge.value,
                         end = Margin.ExtraLarge.value,

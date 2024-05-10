@@ -50,7 +50,6 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
 private val ITEM_MAX_WIDTH = 320.dp
-private val ITEM_HEIGHT = 150.dp // TODO thomashortadev do we want SP instead of DP? to change based on font size)
 private const val ITEM_WIDTH_PERCENTAGE = 0.8f
 private const val CONTENT_MAX_LINES = 3
 private const val TITLE_MAX_LINES = 2
@@ -76,7 +75,7 @@ fun ReaderTagsFeedPostListItem(
         modifier = Modifier
             .widthIn(max = ITEM_MAX_WIDTH)
             .width(screenWidth * ITEM_WIDTH_PERCENTAGE)
-            .height(ITEM_HEIGHT)
+            .height(READER_TAGS_FEED_ITEM_HEIGHT)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
