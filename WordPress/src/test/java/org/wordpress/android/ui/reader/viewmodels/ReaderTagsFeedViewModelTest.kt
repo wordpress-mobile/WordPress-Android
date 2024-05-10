@@ -89,7 +89,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given valid tag, when fetchTag, then UI state should update properly`() = testCollectingUiStates {
+    fun `given valid tag, when loaded, then UI state should update properly`() = testCollectingUiStates {
         // Given
         val tag = ReaderTestUtils.createTag("tag")
         val posts = ReaderPostList().apply {
@@ -99,11 +99,14 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(100)
             posts
         }
+        mockMapInitialTagFeedItems()
         mockMapLoadingTagFeedItems()
         mockMapLoadedTagFeedItems()
 
         // When
         viewModel.start(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
 
         // Then
@@ -115,7 +118,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given invalid tag, when fetchTag, then UI state should update properly`() = testCollectingUiStates {
+    fun `given invalid tag, when loaded, then UI state should update properly`() = testCollectingUiStates {
         // Given
         val tag = ReaderTestUtils.createTag("tag")
         val error = ReaderPostFetchException("error")
@@ -123,11 +126,14 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(100)
             throw error
         }
+        mockMapInitialTagFeedItems()
         mockMapLoadingTagFeedItems()
         mockMapErrorTagFeedItems()
 
         // When
         viewModel.start(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
 
         // Then
@@ -140,7 +146,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Suppress("LongMethod")
     @Test
-    fun `given valid tags, when start, then UI state should update properly`() = testCollectingUiStates {
+    fun `given valid tags, when loaded, then UI state should update properly`() = testCollectingUiStates {
         // Given
         val tag1 = ReaderTestUtils.createTag("tag1")
         val tag2 = ReaderTestUtils.createTag("tag2")
@@ -158,11 +164,16 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(200)
             posts2
         }
+        mockMapInitialTagFeedItems()
         mockMapLoadingTagFeedItems()
         mockMapLoadedTagFeedItems()
 
         // When
         viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
         advanceUntilIdle()
 
         // Then
@@ -178,7 +189,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Suppress("LongMethod")
     @Test
-    fun `given valid and invalid tags, when fetchAll, then UI state should update properly`() = testCollectingUiStates {
+    fun `given valid and invalid tags, when loaded, then UI state should update properly`() = testCollectingUiStates {
         // Given
         val tag1 = ReaderTestUtils.createTag("tag1")
         val tag2 = ReaderTestUtils.createTag("tag2")
@@ -194,12 +205,17 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(200)
             throw error2
         }
+        mockMapInitialTagFeedItems()
         mockMapLoadingTagFeedItems()
         mockMapLoadedTagFeedItems()
         mockMapErrorTagFeedItems()
 
         // When
         viewModel.start(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
         advanceUntilIdle()
 
         // Then
@@ -271,7 +287,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             delay(200)
             posts2
         }
-        mockMapLoadingTagFeedItems()
+        mockMapInitialTagFeedItems()
         mockMapLoadedTagFeedItems()
 
         // When
@@ -322,6 +338,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             onPostLikeClick = {},
             onPostMoreMenuClick = {}
         )
+        mockMapInitialTagFeedItems()
         mockMapLoadingTagFeedItems()
         mockMapLoadedTagFeedItems(items = listOf(tagsFeedPostItem))
         val posts = ReaderPostList().apply {
@@ -334,6 +351,8 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         // When
         viewModel.start(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
         viewModel.onPostLikeClick(tagsFeedPostItem)
 
@@ -386,37 +405,46 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         verify(postLikeUseCase).perform(any(), any(), any())
     }
 
-    private fun mockMapLoadingTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapLoadingPostsUiState(any(), any()))
+    private fun mockMapInitialTagFeedItems() {
+        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any()))
             .thenAnswer {
                 val tags = it.getArgument<List<ReaderTag>>(0)
                 ReaderTagsFeedViewModel.UiState.Loaded(
-                    tags.map { tag ->
-                        ReaderTagsFeedViewModel.TagFeedItem(
-                            tagChip = ReaderTagsFeedViewModel.TagChip(
-                                tag = tag,
-                                onTagClick = {},
-                            ),
-                            postList = ReaderTagsFeedViewModel.PostList.Loading,
-                        )
-                    }
+                    tags.map { tag -> getInitialTagFeedItem(tag) }
+                )
+            }
+    }
+
+    private fun mockMapLoadingTagFeedItems() {
+        whenever(readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(any(), any(), any()))
+            .thenAnswer {
+                val tag = it.getArgument<ReaderTag>(0)
+                ReaderTagsFeedViewModel.TagFeedItem(
+                    ReaderTagsFeedViewModel.TagChip(tag, {}),
+                    ReaderTagsFeedViewModel.PostList.Loading
                 )
             }
     }
 
     private fun mockMapLoadedTagFeedItems(items: List<TagsFeedPostItem> = emptyList()) {
-        whenever(readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any()))
-            .thenAnswer {
-                getLoadedTagFeedItem(it.getArgument(0), items)
-            }
+        whenever(
+            readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any(), any())
+        ).thenAnswer {
+            getLoadedTagFeedItem(it.getArgument(0), items)
+        }
     }
 
     private fun mockMapErrorTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any(), any()))
             .thenAnswer {
                 getErrorTagFeedItem(it.getArgument(0))
             }
     }
+
+    private fun getInitialTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
+        ReaderTagsFeedViewModel.TagChip(tag, {}),
+        ReaderTagsFeedViewModel.PostList.Initial
+    )
 
     private fun getLoadedTagFeedItem(tag: ReaderTag, items: List<TagsFeedPostItem> = emptyList()) =
         ReaderTagsFeedViewModel.TagFeedItem(
