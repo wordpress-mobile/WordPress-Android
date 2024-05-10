@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,6 +14,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes
 import org.wordpress.android.ui.reader.discover.FEATURED_IMAGE_HEIGHT_WIDTH_RATION
 import org.wordpress.android.ui.reader.discover.PHOTON_WIDTH_QUALITY_RATION
@@ -56,8 +58,15 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
+    // Unlike the snackbarEvents observable which only expects messages from ReaderPostCardActionsHandler,
+    // this observable is controlled by this ViewModel.
     private val _errorMessageEvents = MediatorLiveData<Event<Int>>()
     val errorMessageEvents: LiveData<Event<Int>> = _errorMessageEvents
+
+    // This observable just expects messages from ReaderPostCardActionsHandler. Nothing is directly triggered
+    // from this ViewModel.
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _openMoreMenuEvents = SingleLiveEvent<MoreMenuUiState>()
     val openMoreMenuEvents: LiveData<MoreMenuUiState> = _openMoreMenuEvents
@@ -84,7 +93,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         if (!hasInitialized) {
             hasInitialized = true
+            readerPostCardActionsHandler.initScope(viewModelScope)
             initNavigationEvents()
+            initSnackbarEvents()
         }
 
         // Initially add all tags to the list with the posts loading UI
@@ -107,6 +118,12 @@ class ReaderTagsFeedViewModel @Inject constructor(
 //                pendingReblogPost = target.post
 //            }
             _navigationEvents.value = event
+        }
+    }
+
+    private fun initSnackbarEvents() {
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
         }
     }
 

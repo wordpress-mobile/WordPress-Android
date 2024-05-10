@@ -277,6 +277,26 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    private fun observeSnackbarEvents() {
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
+            activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
+                with(snackbarMessageHolder) {
+                    val snackbar = WPSnackbar.make(
+                        coordinator,
+                        uiHelpers.getTextOfUiString(requireContext(), message),
+                        Snackbar.LENGTH_LONG
+                    )
+                    if (buttonTitle != null) {
+                        snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
+                            buttonAction.invoke()
+                        }
+                    }
+                    snackbar.show()
+                }
+            }
+        }
+    }
+
     private fun observeOpenMoreMenuEvents() {
         viewModel.openMoreMenuEvents.observe(viewLifecycleOwner) {
             val readerCardUiState = it.readerCardUiState
