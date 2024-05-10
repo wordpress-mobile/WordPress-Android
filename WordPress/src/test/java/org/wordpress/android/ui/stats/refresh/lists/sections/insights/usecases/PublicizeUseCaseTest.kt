@@ -102,7 +102,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
             assertTitle(this[0])
             val header = this[1] as Header
             assertThat(header.startLabel).isEqualTo(R.string.stats_publicize_service_label)
-            assertThat(header.endLabel).isEqualTo(R.string.stats_publicize_followers_label)
+            assertThat(header.endLabel).isEqualTo(R.string.stats_publicize_subscribers_label)
             assertThat(this[2]).isEqualTo(mockedItem)
         }
     }
@@ -138,7 +138,7 @@ class PublicizeUseCaseTest : BaseUnitTest() {
             assertTitle(this[0])
             val header = this[1] as Header
             assertThat(header.startLabel).isEqualTo(R.string.stats_publicize_service_label)
-            assertThat(header.endLabel).isEqualTo(R.string.stats_publicize_followers_label)
+            assertThat(header.endLabel).isEqualTo(R.string.stats_publicize_subscribers_label)
             assertThat(this[2]).isEqualTo(mockedItem)
             assertLink(this[3])
         }

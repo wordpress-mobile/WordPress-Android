@@ -171,7 +171,7 @@ class StatsViewAllViewModelFactory(
                 )
                 FOLLOWERS -> Pair(
                     insightsUseCases.first { it is FollowersUseCase },
-                    R.string.stats_view_followers
+                    R.string.stats_view_subscribers
                 )
                 TAGS_AND_CATEGORIES -> Pair(
                     insightsUseCases.first { it is TagsAndCategoriesUseCase },

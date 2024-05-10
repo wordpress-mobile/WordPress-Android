@@ -44,7 +44,7 @@ class TotalFollowersUseCase @Inject constructor(
     private val useCaseMode: UseCaseMode,
     private val statsUtils: StatsUtils
 ) : StatelessUseCase<Int>(TOTAL_FOLLOWERS, mainDispatcher, bgDispatcher) {
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(TitleWithMore(R.string.stats_view_total_subscribers))
 
     override fun buildEmptyItem() = buildUiModel(0)
 
@@ -88,7 +88,7 @@ class TotalFollowersUseCase @Inject constructor(
             extraBottomMargin = true
         ))
         if (totalStatsMapper.shouldShowFollowersGuideCard(domainModel)) {
-            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_followers_guide_card)))
+            items.add(ListItemGuideCard(resourceProvider.getString(R.string.stats_insights_subscribers_guide_card)))
         }
         return items
     }
@@ -98,7 +98,7 @@ class TotalFollowersUseCase @Inject constructor(
     }
 
     private fun buildTitle() = TitleWithMore(
-        R.string.stats_view_total_followers,
+        R.string.stats_view_total_subscribers,
         navigationAction = if (useCaseMode == VIEW_ALL) null else ListItemInteraction.create(this::onViewMoreClick)
     )
 
