@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,10 +47,7 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
-private val ITEM_MAX_WIDTH = 320.dp
-private const val ITEM_WIDTH_PERCENTAGE = 0.8f
-private const val CONTENT_MAX_LINES = 3
-private const val TITLE_MAX_LINES = 2
+private const val CONTENT_TOTAL_LINES = 3
 
 @Composable
 fun ReaderTagsFeedPostListItem(
@@ -66,16 +61,10 @@ fun ReaderTagsFeedPostListItem(
         alpha = 0.6F
     )
 
-    val localConfiguration = LocalConfiguration.current
-    val screenWidth = remember(localConfiguration) {
-        localConfiguration.screenWidthDp.dp
-    }
-
     Column(
         modifier = Modifier
-            .widthIn(max = ITEM_MAX_WIDTH)
-            .width(screenWidth * ITEM_WIDTH_PERCENTAGE)
-            .height(READER_TAGS_FEED_ITEM_HEIGHT)
+            .width(ReaderTagsFeedComposeUtils.PostItemWidth)
+            .height(ReaderTagsFeedComposeUtils.POST_ITEM_HEIGHT)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -124,6 +113,7 @@ fun ReaderTagsFeedPostListItem(
             // Post title and excerpt Column
             Column(
                 modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             ) {
                 // TODO thomashortadev improve this to avoid an initial composition with the wrong value
                 var excerptMaxLines by remember { mutableIntStateOf(2) }
@@ -139,13 +129,13 @@ fun ReaderTagsFeedPostListItem(
                     text = postTitle,
                     style = MaterialTheme.typography.titleMedium,
                     color = baseColor,
-                    maxLines = TITLE_MAX_LINES,
+                    maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
                     overflow = TextOverflow.Ellipsis,
                     onTextLayout = { layoutResult ->
-                        excerptMaxLines = CONTENT_MAX_LINES - layoutResult.lineCount
+                        excerptMaxLines = CONTENT_TOTAL_LINES - layoutResult.lineCount
                     },
                 )
-                Spacer(Modifier.height(Margin.Medium.value))
+
                 // Post excerpt
                 Text(
                     modifier = Modifier
@@ -173,6 +163,7 @@ fun ReaderTagsFeedPostListItem(
 
         Spacer(Modifier.weight(1f))
 
+        // Likes and comments row
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -208,6 +199,7 @@ fun ReaderTagsFeedPostListItem(
 
         Spacer(Modifier.height(Margin.Small.value))
 
+        // Actions row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -277,7 +269,7 @@ fun PostImage(
 ) {
     AsyncImage(
         modifier = modifier
-            .size(64.dp)
+            .size(ReaderTagsFeedComposeUtils.POST_ITEM_IMAGE_SIZE)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
             .clickable { onClick() },
         model = ImageRequest.Builder(LocalContext.current)
@@ -298,12 +290,12 @@ fun ReaderTagsFeedPostListItemPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 16.dp, bottom = 16.dp)
         ) {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 24.dp),
+                contentPadding = PaddingValues(24.dp),
+                horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
             ) {
                 item {
                     ReaderTagsFeedPostListItem(
@@ -340,7 +332,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -375,7 +368,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -396,7 +390,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -417,7 +412,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -439,7 +435,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
@@ -461,7 +458,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -495,7 +493,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +

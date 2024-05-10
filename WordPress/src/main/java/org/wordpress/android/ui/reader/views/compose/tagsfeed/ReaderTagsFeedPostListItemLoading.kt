@@ -3,14 +3,16 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,16 +28,17 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderTagsFeedPostListItemLoading() {
-    val backgroundColor = if (isSystemInDarkTheme()) {
+    val contentColor = if (isSystemInDarkTheme()) {
         AppColor.White.copy(alpha = 0.12F)
     } else {
         AppColor.Black.copy(alpha = 0.08F)
     }
     Column(
         modifier = Modifier
-            .width(240.dp)
-            .height(340.dp),
+            .width(ReaderTagsFeedComposeUtils.PostItemWidth)
+            .height(ReaderTagsFeedComposeUtils.POST_ITEM_HEIGHT)
     ) {
+        // Site info placeholder
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -45,54 +48,83 @@ fun ReaderTagsFeedPostListItemLoading() {
                     .width(99.dp)
                     .height(8.dp)
                     .clip(shape = RoundedCornerShape(16.dp))
-                    .background(backgroundColor),
+                    .background(contentColor),
             )
         }
-        Box(
-            modifier = Modifier
-                .padding(top = Margin.Large.value)
-                .width(204.dp)
-                .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(backgroundColor),
-        )
-        Box(
-            modifier = Modifier
-                .padding(top = Margin.Large.value)
-                .width(140.dp)
-                .height(18.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(backgroundColor),
-        )
-        Box(
-            modifier = Modifier
-                .padding(top = Margin.Large.value)
-                .fillMaxWidth()
-                .height(150.dp)
-                .clip(shape = RoundedCornerShape(8.dp))
-                .background(backgroundColor),
-        )
-        Box(
-            modifier = Modifier
-                .padding(
-                    start = Margin.Small.value,
-                    top = Margin.Large.value,
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Content row placeholder
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            // Post title and excerpt Column placeholder
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+            ) {
+                // Title placeholder
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.75f)
+                        .height(18.dp)
+                        .clip(shape = RoundedCornerShape(16.dp))
+                        .background(contentColor),
                 )
+
+                // Excerpt placeholder
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .background(contentColor),
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.9f)
+                            .height(8.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .background(contentColor),
+                    )
+                }
+            }
+
+            // Image placeholder
+            Box(
+                modifier = Modifier
+                    .size(ReaderTagsFeedComposeUtils.POST_ITEM_IMAGE_SIZE)
+                    .clip(shape = RoundedCornerShape(8.dp))
+                    .background(contentColor),
+            )
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        // Likes and comments placeholder
+        Box(
+            modifier = Modifier
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp))
-                .background(backgroundColor),
+                .background(contentColor),
         )
+
+        Spacer(Modifier.height(Margin.Medium.value))
+
+        // Actions placeholder
         Box(
             modifier = Modifier
-                .padding(
-                    start = Margin.Small.value,
-                    top = Margin.Large.value,
-                )
                 .width(170.dp)
                 .height(8.dp)
                 .clip(shape = RoundedCornerShape(16.dp))
-                .background(backgroundColor),
+                .background(contentColor),
         )
     }
 }
@@ -110,14 +142,10 @@ fun ReaderTagsFeedPostListItemLoadingPreview() {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth(),
+                contentPadding = PaddingValues(24.dp),
+                horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
             ) {
-                item {
-                    ReaderTagsFeedPostListItemLoading()
-                    Spacer(Modifier.width(12.dp))
-                    ReaderTagsFeedPostListItemLoading()
-                    Spacer(Modifier.width(12.dp))
-                    ReaderTagsFeedPostListItemLoading()
-                    Spacer(Modifier.width(12.dp))
+                items(5) {
                     ReaderTagsFeedPostListItemLoading()
                 }
             }
