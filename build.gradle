@@ -25,7 +25,7 @@ ext {
     automatticTracksVersion = '5.0.0'
     gutenbergMobileVersion = 'v1.118.0'
     wordPressAztecVersion = 'v2.1.3'
-    wordPressFluxCVersion = '3005-d455ac39c1805965df2f32f0ada4cc7768a094c1'
+    wordPressFluxCVersion = 'trunk-6fc2cb7dd5f122c494bff981bf865dd8a22c9fbb'
     wordPressLoginVersion = '1.15.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
