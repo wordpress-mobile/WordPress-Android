@@ -44,6 +44,7 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.AllTimeSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.CommentsInsightsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.DetailedPostStatsSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.EmailFollowersSqlUtils
+import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.FollowersSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.LatestPostDetailSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.PublicizeSqlUtils
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TagsSqlUtils
@@ -82,6 +83,8 @@ class InsightsStoreTest {
     @Mock lateinit var todayInsightsRestClient: TodayInsightsRestClient
     @Mock lateinit var allTimeSqlUtils: AllTimeSqlUtils
     @Mock lateinit var commentInsightsSqlUtils: CommentsInsightsSqlUtils
+    @Mock
+    lateinit var followersSqlUtils: FollowersSqlUtils
     @Mock lateinit var wpComFollowersSqlUtils: WpComFollowersSqlUtils
     @Mock lateinit var emailFollowersSqlUtils: EmailFollowersSqlUtils
     @Mock lateinit var latestPostDetailSqlUtils: LatestPostDetailSqlUtils
@@ -112,11 +115,12 @@ class InsightsStoreTest {
                 initCoroutineEngine()
         )
         followersStore = FollowersStore(
-                followersRestClient,
-                wpComFollowersSqlUtils,
-                emailFollowersSqlUtils,
-                mapper,
-                initCoroutineEngine()
+            followersRestClient,
+            followersSqlUtils,
+            wpComFollowersSqlUtils,
+            emailFollowersSqlUtils,
+            mapper,
+            initCoroutineEngine()
         )
         latestPostStore = LatestPostInsightsStore(
                 latestPostInsightsRestClient,
