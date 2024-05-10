@@ -169,6 +169,7 @@ class StatsSqlUtils @Inject constructor() {
         POSTING_ACTIVITY,
         FILE_DOWNLOADS,
         SUBSCRIBERS,
+        FOLLOWERS,
         EMAILS_SUBSCRIBERS
     }
 }
