@@ -126,6 +126,10 @@ class FollowersStore
         sqlUtils: InsightsSqlUtils<FollowersResponse>
     ) = coroutineEngine.run(STATS, this, "getFollowers") {
         val followerResponses = sqlUtils.selectAll(site)
-        insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
+        if (followerResponses.isEmpty()) {
+            null
+        } else {
+            insightsMapper.mapAndMergeFollowersModels(followerResponses, followerType, cacheMode)
+        }
     }
 }
