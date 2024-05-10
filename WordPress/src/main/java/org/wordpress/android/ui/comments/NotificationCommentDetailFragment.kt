@@ -39,8 +39,8 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
                 mSite = createDummyWordPressComSite(mNote!!.siteId.toLong())
             }
-            if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mActionBinding!!, mSite!!, mComment, mNote)
+            if (mBinding != null && mReplyBinding != null) {
+                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, mNote)
             }
         }
     }
