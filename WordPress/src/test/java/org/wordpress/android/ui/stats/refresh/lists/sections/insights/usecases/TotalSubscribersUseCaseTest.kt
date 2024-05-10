@@ -10,70 +10,46 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.LimitMode
-import org.wordpress.android.fluxc.model.stats.subscribers.SubscribersModel
-import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.fluxc.model.stats.SummaryModel
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.stats.subscribers.SubscribersStore
-import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode
+import org.wordpress.android.fluxc.store.stats.insights.SummaryStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TitleWithMore
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE_WITH_MORE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
-import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.viewmodel.ResourceProvider
 
 @ExperimentalCoroutinesApi
-class TotalFollowersUseCaseTest : BaseUnitTest() {
+class TotalSubscribersUseCaseTest : BaseUnitTest() {
     @Mock
-    lateinit var subscribersStore: SubscribersStore
+    lateinit var insightsStore: SummaryStore
 
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
 
     @Mock
-    lateinit var totalStatsMapper: TotalStatsMapper
-
-    @Mock
-    lateinit var resourceProvider: ResourceProvider
-
-    @Mock
     lateinit var site: SiteModel
-
-    @Mock
-    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-
-    @Mock
-    lateinit var useCaseMode: UseCaseMode
 
     @Mock
     lateinit var statsUtils: StatsUtils
 
-    @Mock
-    lateinit var actionCardHandler: ActionCardHandler
-    private lateinit var useCase: TotalFollowersUseCase
-    private val subscribers = 10L
+    private lateinit var useCase: TotalSubscribersUseCase
+    private val followers = 100
 
     @Before
     fun setUp() {
-        useCase = TotalFollowersUseCase(
+        useCase = TotalSubscribersUseCase(
             testDispatcher(),
             testDispatcher(),
-            subscribersStore,
+            insightsStore,
             statsSiteProvider,
-            resourceProvider,
-            totalStatsMapper,
-            analyticsTrackerWrapper,
-            actionCardHandler,
-            useCaseMode,
             statsUtils
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -84,12 +60,9 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     fun `maps summary to UI model`() = test {
         val forced = false
         val refresh = true
-        val periodData = SubscribersModel.PeriodData("2024-04-24", subscribers)
-        val modelPeriod = "2024-05-03"
-        val model = SubscribersModel(modelPeriod, listOf(periodData))
-        whenever(subscribersStore.getSubscribers(site, StatsGranularity.DAYS, LimitMode.Top(1))).thenReturn(model)
-        whenever(subscribersStore.fetchSubscribers(site, StatsGranularity.DAYS, LimitMode.Top(1)))
-            .thenReturn(OnStatsFetched(model))
+        val model = SummaryModel(0, 0, followers)
+        whenever(insightsStore.getSummary(site)).thenReturn(model)
+        whenever(insightsStore.fetchSummary(site, forced)).thenReturn(OnStatsFetched(model))
 
         val result = loadSummary(refresh, forced)
 
@@ -106,8 +79,9 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
         val forced = false
         val refresh = true
         val message = "Generic error"
-        whenever(subscribersStore.fetchSubscribers(site, StatsGranularity.DAYS, LimitMode.Top(1), forced))
-            .thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
+        whenever(insightsStore.fetchSummary(site, forced)).thenReturn(
+            OnStatsFetched(StatsError(GENERIC_ERROR, message))
+        )
 
         val result = loadSummary(refresh, forced)
 
@@ -115,14 +89,14 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
     }
 
     private fun assertTitle(item: BlockListItem) {
-        assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
-        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_subscribers)
+        assertThat(item.type).isEqualTo(TITLE)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_total_subscribers)
     }
 
     private fun assertValue(blockListItem: BlockListItem) {
         assertThat(blockListItem.type).isEqualTo(VALUE_WITH_CHART_ITEM)
         val item = blockListItem as ValueWithChartItem
-        assertThat(item.value).isEqualTo(subscribers.toString())
+        assertThat(item.value).isEqualTo(followers.toString())
     }
 
     private suspend fun loadSummary(refresh: Boolean, forced: Boolean): UseCaseModel {

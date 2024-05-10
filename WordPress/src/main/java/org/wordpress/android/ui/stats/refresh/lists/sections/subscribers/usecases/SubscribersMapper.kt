@@ -19,7 +19,7 @@ class SubscribersMapper @Inject constructor(
         }
 
         val contentDescriptions = statsUtils.getSubscribersChartEntryContentDescriptions(
-            R.string.stats_subscribers_subscribers,
+            R.string.stats_view_subscribers_chart,
             chartItems
         )
 

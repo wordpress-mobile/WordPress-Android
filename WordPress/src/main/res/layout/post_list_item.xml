@@ -46,7 +46,6 @@
             android:id="@+id/more"
             android:layout_width="@dimen/post_list_more_icon_size"
             android:layout_height="@dimen/post_list_more_icon_size"
-            android:importantForAccessibility="no"
             android:src="@drawable/gb_ic_more_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             android:background="?attr/selectableItemBackgroundBorderless"

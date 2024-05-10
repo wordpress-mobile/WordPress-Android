@@ -52,9 +52,11 @@ import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
 import org.wordpress.android.ui.compose.components.buttons.WPSwitch
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.utils.LocaleAwareComposable
 import org.wordpress.android.ui.compose.utils.uiStringText
 import org.wordpress.android.ui.mysite.items.listitem.ListItemAction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.LocaleManager
 
 @AndroidEntryPoint
 class PersonalizationActivity : AppCompatActivity() {
@@ -64,8 +66,14 @@ class PersonalizationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AppTheme {
-                viewModel.start()
-                PersonalizationScreen()
+                val language by viewModel.appLanguage.observeAsState("")
+
+                LocaleAwareComposable(
+                    locale = LocaleManager.languageLocale(language),
+                ) {
+                    viewModel.start()
+                    PersonalizationScreen()
+                }
             }
         }
         viewModel.onSelectedSiteMissing.observe(this) { finish() }
@@ -193,7 +201,7 @@ class PersonalizationActivity : AppCompatActivity() {
                             state = shortcutState,
                             actionIcon = R.drawable.ic_personalization_quick_link_remove_circle,
                             actionIconTint = Color(0xFFD63638),
-                            actionButtonClick = { viewModel.removeShortcut(shortcutState)}
+                            actionButtonClick = { viewModel.removeShortcut(shortcutState) }
                         )
                     }
                 }
