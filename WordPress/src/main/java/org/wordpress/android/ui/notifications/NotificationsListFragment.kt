@@ -143,7 +143,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 textFilterAll.setOnClickListener(getFilterClickListener(TabPosition.All, popupWindow))
                 textFilterUnread.setOnClickListener(getFilterClickListener(TabPosition.Unread, popupWindow))
                 textFilterComments.setOnClickListener(getFilterClickListener(TabPosition.Comment, popupWindow))
-                textFilterFollows.setOnClickListener(getFilterClickListener(TabPosition.Follow, popupWindow))
+                textFilterSubscribers.setOnClickListener(getFilterClickListener(TabPosition.Subscribers, popupWindow))
                 textFilterLikes.setOnClickListener(getFilterClickListener(TabPosition.Like, popupWindow))
             }.root
         popupWindow.showAsDropDown(anchorView)
@@ -350,7 +350,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             All(R.string.notifications_tab_title_all, Filter.ALL),
             Unread(R.string.notifications_tab_title_unread_notifications, Filter.UNREAD),
             Comment(R.string.notifications_tab_title_comments, Filter.COMMENT),
-            Follow(R.string.notifications_tab_title_follows, Filter.FOLLOW),
+            Subscribers(R.string.notifications_tab_title_subscribers, Filter.FOLLOW),
             Like(R.string.notifications_tab_title_likes, Filter.LIKE);
         }
 

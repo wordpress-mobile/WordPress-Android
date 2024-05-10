@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -80,7 +79,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -115,8 +113,8 @@ import kotlinx.coroutines.GlobalScope;
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
-public class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment, OnConfirmListener,
-        OnCollapseListener {
+public abstract class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment,
+        OnConfirmListener, OnCollapseListener {
     protected static final String KEY_MODE = "KEY_MODE";
     protected static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     protected static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -149,8 +147,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     @Nullable private OnPostClickListener mOnPostClickListener;
     @Nullable private OnCommentActionListener mOnCommentActionListener;
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
-
-    private CommentSource mCommentSource;
+    @Nullable private CommentSource mCommentSource; // this will be non-null when onCreate()
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
@@ -629,8 +626,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     private void setPostTitle(
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull CommentModel comment,
-            String postTitle,
-            boolean isHyperlink
+            String postTitle
     ) {
         if (!isAdded()) {
             return;
@@ -646,22 +642,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             mCommentsStoreAdapter.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
         }
 
-        // display "on [Post Title]..."
-        if (isHyperlink) {
-            String html = getString(R.string.on)
-                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
-                    ContextExtensionsKt.getColorResIdFromAttribute(
-                            requireActivity(),
-                            com.google.android.material.R.attr.colorPrimary
-                    ))
-                          + ">"
-                          + postTitle.trim()
-                          + "</font>";
-            binding.textPostTitle.setText(HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY));
-        } else {
-            String text = getString(R.string.on) + " " + postTitle.trim();
-            binding.textPostTitle.setText(text);
-        }
+        binding.textPostTitle.setText(postTitle.trim());
     }
 
     /*
@@ -698,7 +679,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
             hasTitle = false;
         }
         if (hasTitle) {
-            setPostTitle(binding, comment, title, canRequestPost);
+            setPostTitle(binding, comment, title);
         } else if (canRequestPost) {
             binding.textPostTitle.setText(postExists ? R.string.untitled : R.string.loading);
         }
@@ -728,7 +709,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                                                     comment.getRemotePostId()
                                             );
                                             if (!TextUtils.isEmpty(postTitle)) {
-                                                setPostTitle(binding, comment, postTitle, true);
+                                                setPostTitle(binding, comment, postTitle);
                                             } else {
                                                 binding.textPostTitle.setText(R.string.untitled);
                                             }
@@ -741,7 +722,7 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                                 });
             }
 
-            binding.textPostTitle.setOnClickListener(v -> {
+            binding.headerView.setOnClickListener(v -> {
                 if (mOnPostClickListener != null) {
                     mOnPostClickListener.onPostClicked(
                             getNote(),
@@ -758,8 +739,12 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
                     );
                 }
             });
+
+            handleHeaderVisibility();
         }
     }
+
+    abstract void handleHeaderVisibility();
 
     // TODO klymyam remove legacy comment tracking after new comments are shipped and new funnels are made
     private void trackModerationEvent(final CommentStatus newStatus) {

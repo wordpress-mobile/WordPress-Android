@@ -103,8 +103,8 @@ class SubscribersUseCaseTest : BaseUnitTest() {
             listOf(FollowerModel(avatar, user, url, dateSubscribed)),
             hasMore = false
         )
-        whenever(store.getWpComFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(model)
-        whenever(store.fetchWpComFollowers(site, blockInitialMode)).thenReturn(OnStatsFetched(model))
+        whenever(store.getFollowers(site, LimitMode.Top(blockPageSize))).thenReturn(model)
+        whenever(store.fetchFollowers(site, blockInitialMode)).thenReturn(OnStatsFetched(model))
 
         val result = loadFollowers(refresh)
 
@@ -115,7 +115,7 @@ class SubscribersUseCaseTest : BaseUnitTest() {
     @Test
     fun `maps empty followers to UI model`() = test {
         val refresh = true
-        whenever(store.fetchWpComFollowers(site, blockInitialMode))
+        whenever(store.fetchFollowers(site, blockInitialMode))
             .thenReturn(OnStatsFetched(model = FollowersModel(0, listOf(), hasMore = false)))
 
         val result = loadFollowers(refresh)
@@ -127,7 +127,7 @@ class SubscribersUseCaseTest : BaseUnitTest() {
     fun `maps error item to UI model`() = test {
         val refresh = true
         val message = "Generic error"
-        whenever(store.fetchWpComFollowers(site, blockInitialMode))
+        whenever(store.fetchFollowers(site, blockInitialMode))
             .thenReturn(OnStatsFetched(StatsError(GENERIC_ERROR, message)))
 
         val result = loadFollowers(refresh)
@@ -145,15 +145,15 @@ class SubscribersUseCaseTest : BaseUnitTest() {
             List(10) { FollowerModel(avatar, user, url, dateSubscribed) },
             hasMore = true
         )
-        whenever(store.getWpComFollowers(site, LimitMode.All)).thenReturn(model)
-        whenever(store.fetchWpComFollowers(site, viewAllInitialLoadMode)).thenReturn(OnStatsFetched(model))
+        whenever(store.getFollowers(site, LimitMode.All)).thenReturn(model)
+        whenever(store.fetchFollowers(site, viewAllInitialLoadMode)).thenReturn(OnStatsFetched(model))
 
         val updatedModel = FollowersModel(
             totalCount,
             List(11) { FollowerModel(avatar, user, url, dateSubscribed) },
             hasMore = false
         )
-        whenever(store.fetchWpComFollowers(site, viewAllMoreLoadMode, true)).thenReturn(OnStatsFetched(updatedModel))
+        whenever(store.fetchFollowers(site, viewAllMoreLoadMode, true)).thenReturn(OnStatsFetched(updatedModel))
 
         val result = loadFollowers(refresh)
 
@@ -198,7 +198,7 @@ class SubscribersUseCaseTest : BaseUnitTest() {
     }
 
     private fun List<BlockListItem>.assertFollowers() {
-        assertThat(this).hasSize(3)
+        assertThat(this).hasSize(4)
         assertTitle(this[0])
         assertThat(this[1]).isEqualTo(Header(R.string.stats_name_label, R.string.stats_subscriber_since_label))
         val follower = this[2] as ListItemWithIcon

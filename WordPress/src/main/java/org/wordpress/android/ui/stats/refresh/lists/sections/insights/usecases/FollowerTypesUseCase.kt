@@ -113,7 +113,7 @@ class FollowerTypesUseCase @Inject constructor(
                 )
 
                 val contentDescription = resourceProvider.getString(
-                    R.string.stats_total_followers_content_description,
+                    R.string.stats_total_subscribers_content_description,
                     it.value,
                     formattedPercentage
                 )

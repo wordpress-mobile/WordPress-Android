@@ -26,11 +26,9 @@
                 android:layout_marginStart="@dimen/margin_medium"
                 android:layout_marginVertical="@dimen/margin_small_medium"
                 android:contentDescription="@string/reader_avatar_desc"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/header_arrow"
@@ -38,7 +36,7 @@
                 android:layout_height="@dimen/notifications_like_header_icon_size"
                 android:layout_marginEnd="@dimen/margin_large"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_arrow_right_white_24dp"
+                android:src="@drawable/arrow_right"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

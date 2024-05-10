@@ -3,6 +3,7 @@
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.ui.comments.unified.CommentSource
@@ -23,6 +24,10 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
         } else {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
+    }
+
+    override fun handleHeaderVisibility() {
+        mBinding?.headerView?.isGone = true
     }
 
     private fun handleNote(noteId: String) {

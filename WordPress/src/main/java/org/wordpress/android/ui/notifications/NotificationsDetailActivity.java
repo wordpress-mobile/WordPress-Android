@@ -78,7 +78,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.models.Note.NOTE_COMMENT_LIKE_TYPE;
-import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
@@ -348,7 +347,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                 // set a default title if title is not set within the note
                 switch (note.getRawType()) {
                     case NOTE_FOLLOW_TYPE:
-                        title = getString(R.string.follows);
+                        title = getString(R.string.subscribers);
                         break;
                     case NOTE_COMMENT_LIKE_TYPE:
                         title = getString(R.string.comment_likes);
@@ -356,15 +355,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                     case NOTE_LIKE_TYPE:
                         title = getString(R.string.like);
                         break;
-                    case NOTE_COMMENT_TYPE:
-                        title = getString(R.string.comment);
-                        break;
                 }
             }
 
-            // Force change the Action Bar title for 'new_post' notifications.
+            // Force change the Action Bar title for 'new_post' and 'comment' notifications.
             if (note.isNewPostType()) {
                 title = getString(R.string.reader_title_post_detail);
+            } else if (note.isCommentType()) {
+                title = "";
             }
 
             if (NoteExtensions.isAchievement(note)) {
@@ -373,7 +371,11 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
 
             getSupportActionBar().setTitle(title);
             // important for accessibility - talkback
-            setTitle(getString(R.string.notif_detail_screen_title, title));
+            if (note.isCommentType()) {
+                setTitle(getString(R.string.notif_detail_screen_title, getString(R.string.comment)));
+            } else {
+                setTitle(getString(R.string.notif_detail_screen_title, title));
+            }
         }
     }
 

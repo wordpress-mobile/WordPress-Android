@@ -74,7 +74,7 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
         whenever(
             resourceProvider.getString(
-                eq(R.string.stats_total_followers_content_description),
+                eq(R.string.stats_total_subscribers_content_description),
                 any<Int>(),
                 any<String>()
             )

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.jetpackoverlay
 
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
@@ -9,7 +11,9 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseS
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseStaticPosters
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseOneConfig
@@ -40,7 +44,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     private val jetpackFeatureRemovalNewUsersConfig: JetpackFeatureRemovalNewUsersConfig,
     private val jetpackFeatureRemovalSelfHostedUsersConfig: JetpackFeatureRemovalSelfHostedUsersConfig,
     private val jetpackFeatureRemovalStaticPostersConfig: JetpackFeatureRemovalStaticPostersConfig,
-    private val jetpackPhaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig
+    private val jetpackPhaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
     fun getCurrentPhase(): JetpackFeatureRemovalPhase? {
         return if (buildConfigWrapper.isJetpackApp) null
@@ -126,6 +131,26 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
         }
     }
 
+    @JvmOverloads
+    fun trackPageAccessedEventIfNeeded(pageType: PageType, site: SiteModel? = null) {
+        when (pageType) {
+            PageType.MY_SITE -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, site)
+            PageType.READER -> {
+                if (arePosterizedPagesVisible()) {
+                    analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_ACCESSED)
+                }
+            }
+
+            PageType.NOTIFS -> {
+                if (arePosterizedPagesVisible()) {
+                    analyticsTrackerWrapper.track(AnalyticsTracker.Stat.NOTIFICATIONS_ACCESSED)
+                }
+            }
+
+            PageType.ME -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.ME_ACCESSED)
+        }
+    }
+
     fun shouldShowNotifications(): Boolean {
         val currentPhase = getCurrentPhase() ?: return true
         return when (currentPhase) {
@@ -153,6 +178,8 @@ class JetpackFeatureRemovalPhaseHelper @Inject constructor(
     fun getPhaseFourOverlayFrequency(): Int {
         return jetpackPhaseFourOverlayFrequencyConfig.getValue()
     }
+
+    private fun arePosterizedPagesVisible() = !shouldShowStaticPage()
 }
 // Global overlay frequency is the frequency at which the overlay is shown across the features
 // no matter which feature was accessed last time

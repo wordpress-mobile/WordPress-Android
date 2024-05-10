@@ -85,7 +85,7 @@ class PublicizeUseCase
         if (domainModel.services.isEmpty()) {
             items.add(Empty())
         } else {
-            val header = Header(R.string.stats_publicize_service_label, R.string.stats_publicize_followers_label)
+            val header = Header(R.string.stats_publicize_service_label, R.string.stats_publicize_subscribers_label)
             items.add(header)
             items.addAll(domainModel.services.let {
                 mapper.map(it, header)

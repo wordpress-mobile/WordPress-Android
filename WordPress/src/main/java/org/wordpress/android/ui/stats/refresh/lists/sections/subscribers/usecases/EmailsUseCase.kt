@@ -16,6 +16,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.St
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseMode.VIEW_ALL
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.InsightUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -29,6 +30,7 @@ class EmailsUseCase @Inject constructor(
     private val emailsStore: EmailsStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val statsUtils: StatsUtils,
+    private val contentDescriptionHelper: ContentDescriptionHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val useCaseMode: UseCaseMode
 ) : StatelessUseCase<PostsModel>(EMAILS, mainDispatcher, bgDispatcher) {
@@ -76,7 +78,22 @@ class EmailsUseCase @Inject constructor(
             )
             items.add(header)
             val postsList = mutableListOf<BlockListItem>()
-            domainModel.posts.take(itemsToShow).forEach { post -> postsList.add(mapPost(post)) }
+            domainModel.posts.take(itemsToShow).forEach { post ->
+                val value1 = statsUtils.toFormattedString(post.opens)
+                val value2 = statsUtils.toFormattedString(post.clicks)
+                val listItem = BlockListItem.ListItemWithTwoValues(
+                    text = post.title,
+                    value1 = value1,
+                    value2 = value2,
+                    contentDescription = contentDescriptionHelper.buildContentDescription(
+                        header,
+                        post.title,
+                        value1,
+                        value2
+                    )
+                )
+                postsList.add(listItem)
+            }
 
             items.addAll(postsList)
             if (useCaseMode == UseCaseMode.BLOCK && domainModel.posts.size > BLOCK_ITEM_COUNT) {
@@ -93,12 +110,6 @@ class EmailsUseCase @Inject constructor(
 
     private fun buildTitle() = BlockListItem.Title(R.string.stats_view_emails)
 
-    private fun mapPost(post: PostsModel.PostModel) = BlockListItem.ListItemWithTwoValues(
-        text = post.title,
-        value1 = statsUtils.toFormattedString(post.opens),
-        value2 = statsUtils.toFormattedString(post.clicks)
-    )
-
     private fun onLinkClick() {
         analyticsTracker.track(AnalyticsTracker.Stat.STATS_EMAILS_VIEW_MORE_TAPPED)
         navigateTo(NavigationTarget.EmailsStats)
@@ -110,6 +121,7 @@ class EmailsUseCase @Inject constructor(
         private val emailsStore: EmailsStore,
         private val statsSiteProvider: StatsSiteProvider,
         private val statsUtils: StatsUtils,
+        private val contentDescriptionHelper: ContentDescriptionHelper,
         private val analyticsTracker: AnalyticsTrackerWrapper
     ) : InsightUseCaseFactory {
         override fun build(useCaseMode: UseCaseMode) = EmailsUseCase(
@@ -118,6 +130,7 @@ class EmailsUseCase @Inject constructor(
             emailsStore,
             statsSiteProvider,
             statsUtils,
+            contentDescriptionHelper,
             analyticsTracker,
             useCaseMode
         )
