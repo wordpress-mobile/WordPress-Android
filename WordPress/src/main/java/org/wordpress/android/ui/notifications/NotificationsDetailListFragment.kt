@@ -349,7 +349,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 imageManager,
                 notificationsUtilsWrapper
             )
-            headerNoteBlock.setIsComment(note.isCommentType)
+            headerNoteBlock.setReplyToComment(note.isCommentReplyType)
             noteList.add(headerNoteBlock)
         }
 

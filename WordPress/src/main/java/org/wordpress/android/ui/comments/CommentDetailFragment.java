@@ -78,6 +78,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -85,7 +86,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -516,7 +516,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             // Hide container views when comment is null (will happen when opened from a notification).
             showCommentWhenNull(binding, replyBinding, note);
         } else {
-            showCommentWhenNonNull(binding, replyBinding, site, comment, note);
+            showCommentWhenNonNull(binding, replyBinding, site, comment);
         }
     }
 
@@ -559,8 +559,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             @NonNull CommentDetailFragmentBinding binding,
             @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull SiteModel site,
-            @NonNull CommentModel comment,
-            @Nullable Note note
+            @NonNull CommentModel comment
     ) {
         // These two views contain all the other views except the progress bar.
         binding.nestedScrollView.setVisibility(View.VISIBLE);
@@ -595,18 +594,11 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
                     v -> ReaderActivityLauncher.openUrl(getActivity(), comment.getAuthorUrl());
             binding.imageAvatar.setOnClickListener(authorListener);
             binding.textName.setOnClickListener(authorListener);
-            binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
-                    binding.textName.getContext(),
-                    com.google.android.material.R.attr.colorPrimary)
-            );
-        } else {
-            binding.textName.setTextColor(ContextExtensionsKt.getColorFromAttribute(
-                    binding.textName.getContext(),
-                    com.google.android.material.R.attr.colorOnSurface)
-            );
         }
 
         showPostTitle(binding, comment, site);
+        binding.textSite.setText(DateTimeUtils.javaDateToTimeSpan(
+                DateTimeUtils.dateFromIso8601(comment.getDatePublished()), WordPress.getContext()));
 
         // make sure reply box is showing
         if (replyBinding.layoutContainer.getVisibility() != View.VISIBLE && canReply()) {
@@ -1085,44 +1077,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             if (isAdded() && !TextUtils.isEmpty(event.error.message)) {
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
-        }
-    }
-
-    private void announceCommentStatusChangeForAccessibility(CommentStatus newStatus) {
-        int resId = -1;
-        switch (newStatus) {
-            case APPROVED:
-                resId = R.string.comment_approved_talkback;
-                break;
-            case UNAPPROVED:
-                resId = R.string.comment_unapproved_talkback;
-                break;
-            case SPAM:
-                resId = R.string.comment_spam_talkback;
-                break;
-            case TRASH:
-                resId = R.string.comment_trash_talkback;
-                break;
-            case DELETED:
-                resId = R.string.comment_delete_talkback;
-                break;
-            case UNSPAM:
-                resId = R.string.comment_unspam_talkback;
-                break;
-            case UNTRASH:
-                resId = R.string.comment_untrash_talkback;
-                break;
-            case UNREPLIED:
-            case ALL:
-                // ignore
-                break;
-            default:
-                AppLog.w(T.COMMENTS,
-                        "AnnounceCommentStatusChangeForAccessibility - Missing switch branch for comment status: "
-                        + newStatus);
-        }
-        if (resId != -1 && getView() != null) {
-            getView().announceForAccessibility(getText(resId));
         }
     }
 
