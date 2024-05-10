@@ -23,7 +23,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -58,6 +62,8 @@ import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 
+private const val LOADING_POSTS_COUNT = 5
+
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
     Box(
@@ -77,46 +83,66 @@ fun ReaderTagsFeed(uiState: UiState) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun Loaded(uiState: UiState.Loaded) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-    ) {
-        items(
-            items = uiState.data,
-        ) { item ->
-            val tagChip = item.tagChip
-            val postList = item.postList
-
-            LaunchedEffect(Unit) {
-                item.onEnteredView()
-            }
-
-            val backgroundColor = if (isSystemInDarkTheme()) {
-                AppColor.White.copy(alpha = 0.12F)
-            } else {
-                AppColor.Black.copy(alpha = 0.08F)
-            }
-            Spacer(modifier = Modifier.height(Margin.Large.value))
-            // Tag chip UI
-            ReaderFilterChip(
-                modifier = Modifier.padding(
-                    start = Margin.Large.value,
-                ),
-                text = UiString.UiStringText(tagChip.tag.tagTitle),
-                onClick = { tagChip.onTagClick(tagChip.tag) },
-                height = 36.dp,
-            )
-            Spacer(modifier = Modifier.height(Margin.Large.value))
-            // Posts list UI
-            when (postList) {
-                is PostList.Initial, is PostList.Loading -> PostListLoading()
-                is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
-                is PostList.Error -> PostListError(backgroundColor, tagChip, postList)
-            }
-            Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = uiState.isRefreshing,
+        onRefresh = {
+            uiState.onRefresh()
         }
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(state = pullRefreshState),
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+        ) {
+            items(
+                items = uiState.data,
+            ) { item ->
+                val tagChip = item.tagChip
+                val postList = item.postList
+
+                LaunchedEffect(item.postList) {
+                    item.onEnteredView()
+                }
+
+                val backgroundColor = if (isSystemInDarkTheme()) {
+                    AppColor.White.copy(alpha = 0.12F)
+                } else {
+                    AppColor.Black.copy(alpha = 0.08F)
+                }
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                // Tag chip UI
+                ReaderFilterChip(
+                    modifier = Modifier.padding(
+                        start = Margin.Large.value,
+                    ),
+                    text = UiString.UiStringText(tagChip.tag.tagTitle),
+                    onClick = { tagChip.onTagClick(tagChip.tag) },
+                    height = 36.dp,
+                )
+                Spacer(modifier = Modifier.height(Margin.Large.value))
+                // Posts list UI
+                when (postList) {
+                    is PostList.Initial, is PostList.Loading -> PostListLoading()
+                    is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
+                    is PostList.Error -> PostListError(backgroundColor, tagChip, postList)
+                }
+                Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
+            }
+        }
+
+        PullRefreshIndicator(
+            refreshing = uiState.isRefreshing,
+            state = pullRefreshState,
+            modifier = Modifier.align(Alignment.TopCenter),
+        )
     }
 }
 
@@ -148,14 +174,12 @@ private fun Loading() {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 12.dp),
                     userScrollEnabled = false,
+                    horizontalArrangement = Arrangement.spacedBy(Margin.Large.value),
+                    contentPadding = PaddingValues(horizontal = Margin.Large.value),
                 ) {
-                    item {
+                    items(LOADING_POSTS_COUNT) {
                         ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
-                        ReaderTagsFeedPostListItemLoading()
-                        Spacer(Modifier.width(12.dp))
                     }
                 }
             }
@@ -240,16 +264,14 @@ private fun PostListLoading() {
         modifier = Modifier
             .fillMaxWidth(),
         userScrollEnabled = false,
+        horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
         contentPadding = PaddingValues(
             start = Margin.Large.value,
             end = Margin.Large.value
         ),
     ) {
-        item {
+        items(LOADING_POSTS_COUNT) {
             ReaderTagsFeedPostListItemLoading()
-            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
-            ReaderTagsFeedPostListItemLoading()
-            Spacer(Modifier.width(Margin.ExtraMediumLarge.value))
         }
     }
 }
@@ -272,9 +294,9 @@ private fun PostListLoaded(
         items(
             items = postList.items,
         ) { postItem ->
-                ReaderTagsFeedPostListItem(
-                    item = postItem
-                )
+            ReaderTagsFeedPostListItem(
+                item = postItem
+            )
         }
         item {
             val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black

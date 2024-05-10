@@ -35,7 +35,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     ),
                     postTitle = it.title,
                     postExcerpt = it.excerpt,
-                    postImageUrl = it.blogImageUrl,
+                    postImageUrl = it.featuredImage,
                     postNumberOfLikesText = if (it.numLikes > 0) readerUtilsWrapper.getShortLikeLabelText(
                         numLikes = it.numLikes
                     ) else "",
@@ -77,11 +77,13 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
 
     fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
+        isRefreshing: Boolean,
         onTagClick: (ReaderTag) -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
+        onRefresh: () -> Unit,
     ): ReaderTagsFeedViewModel.UiState.Loaded =
         ReaderTagsFeedViewModel.UiState.Loaded(
-            tags.map { tag ->
+            data = tags.map { tag ->
                 ReaderTagsFeedViewModel.TagFeedItem(
                     tagChip = ReaderTagsFeedViewModel.TagChip(
                         tag = tag,
@@ -90,7 +92,9 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     postList = ReaderTagsFeedViewModel.PostList.Initial,
                     onItemEnteredView = onItemEnteredView,
                 )
-            }
+            },
+            isRefreshing = isRefreshing,
+            onRefresh = onRefresh,
         )
 
     fun mapLoadingTagFeedItem(

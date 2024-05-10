@@ -35,7 +35,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             blogName = "Name"
             title = "Title"
             excerpt = "Excerpt"
-            blogImageUrl = "url"
+            featuredImage = "url"
             numLikes = 5
             numReplies = 10
             isLikedByCurrentUser = true
@@ -95,7 +95,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                         postDateLine = dateLine,
                         postTitle = readerPost.title,
                         postExcerpt = readerPost.excerpt,
-                        postImageUrl = readerPost.blogImageUrl,
+                        postImageUrl = readerPost.featuredImage,
                         postNumberOfLikesText = numberLikesText,
                         postNumberOfCommentsText = numberCommentsText,
                         isPostLiked = readerPost.isLikedByCurrentUser,
@@ -157,6 +157,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         // Given
         val onTagClick: (ReaderTag) -> Unit = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+        val onRefresh: () -> Unit = {}
         val tag1 = ReaderTag(
             "tag",
             "tag",
@@ -176,8 +177,10 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         // When
         val actual = classToTest.mapInitialPostsUiState(
             tags = tags,
+            isRefreshing = true,
             onTagClick = onTagClick,
             onItemEnteredView = onItemEnteredView,
+            onRefresh = onRefresh,
         )
 
         // Then
@@ -199,7 +202,9 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                     postList = ReaderTagsFeedViewModel.PostList.Initial,
                     onItemEnteredView = onItemEnteredView,
                 )
-            )
+            ),
+            isRefreshing = true,
+            onRefresh = onRefresh,
         )
         assertEquals(expected, actual)
     }
