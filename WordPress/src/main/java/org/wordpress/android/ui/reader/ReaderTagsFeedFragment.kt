@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.reader
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.ViewCompat.animate
@@ -12,12 +14,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
@@ -28,6 +32,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -62,6 +67,9 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     @Inject
     lateinit var readerTracker: ReaderTracker
 
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
 
@@ -79,6 +87,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeActionEvents()
         observeNavigationEvents()
         observeErrorMessageEvents()
+        observeOpenMoreMenuEvents()
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -256,6 +265,29 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             activity?.findViewById<View?>(android.R.id.content)?.let { view ->
                 WPSnackbar.make(view, getString(stringRes), Snackbar.LENGTH_LONG).show()
             }
+        }
+    }
+
+    private fun observeOpenMoreMenuEvents() {
+        viewModel.openMoreMenuEvents.observe(viewLifecycleOwner) {
+            val readerCardUiState = it.readerCardUiState
+            val blogId = readerCardUiState.blogId
+            val postId = readerCardUiState.postId
+            val anchorView = binding.composeView.findViewWithTag<View>("$blogId$postId")
+            readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
+            val listPopup = ListPopupWindow(anchorView.context)
+            listPopup.width = anchorView.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+            listPopup.setAdapter(ReaderMenuAdapter(anchorView.context, uiHelpers, it.readerPostCardActions))
+            listPopup.setDropDownGravity(Gravity.END)
+            listPopup.anchorView = anchorView
+            listPopup.isModal = true
+            listPopup.setOnItemClickListener { _, _, position, _ ->
+                listPopup.dismiss()
+                val item = it.readerPostCardActions[position]
+                item.onClicked?.invoke(postId, blogId, item.type)
+            }
+            listPopup.setOnDismissListener { readerCardUiState.onMoreDismissed.invoke(readerCardUiState) }
+            listPopup.show()
         }
     }
 

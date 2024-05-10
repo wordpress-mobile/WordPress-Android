@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
-import androidx.compose.foundation.background
+import android.widget.Button
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,24 +18,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -42,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
@@ -50,6 +46,7 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
+@SuppressLint("ResourceType")
 @Composable
 fun ReaderTagsFeedPostListItem(
     item: TagsFeedPostItem,
@@ -224,27 +221,36 @@ fun ReaderTagsFeedPostListItem(
             }
             Spacer(Modifier.weight(1f))
             // More menu ("…")
-            Column(
-                horizontalAlignment = Alignment.End,
-            ) {
-                var isMenuVisible by remember { mutableStateOf(false) }
-                IconButton(
-                    modifier = Modifier.size(24.dp),
-                    onClick = {
-                        onPostMoreMenuClick()
-                        isMenuVisible = !isMenuVisible
-                    },
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
-                        contentDescription = stringResource(R.string.show_more_desc),
-                        tint = secondaryElementColor,
-                    )
+            AndroidView(
+                factory = { context ->
+                    Button(context).apply {
+                        text = "..."
+                        tag = "${item.blogId}${item.postId}"
+                        setOnClickListener { onPostMoreMenuClick(item) }
+                    }
                 }
-                ReaderTagsFeedMoreMenu(
-                    expanded = isMenuVisible,
-                )
-            }
+            )
+//            Column(
+//                horizontalAlignment = Alignment.End,
+//            ) {
+//                var isMenuVisible by remember { mutableStateOf(false) }
+//                IconButton(
+//                    modifier = Modifier.size(24.dp),
+//                    onClick = {
+//                        onPostMoreMenuClick()
+//                        isMenuVisible = !isMenuVisible
+//                    },
+//                ) {
+//                    Icon(
+//                        painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
+//                        contentDescription = stringResource(R.string.show_more_desc),
+//                        tint = secondaryElementColor,
+//                    )
+//                }
+//                ReaderTagsFeedMoreMenu(
+//                    expanded = isMenuVisible,
+//                )
+//            }
         }
     }
 }

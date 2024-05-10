@@ -13,13 +13,22 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.ReaderTypes
+import org.wordpress.android.ui.reader.discover.FEATURED_IMAGE_HEIGHT_WIDTH_RATION
+import org.wordpress.android.ui.reader.discover.PHOTON_WIDTH_QUALITY_RATION
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
+import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -34,6 +43,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val postLikeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
+    private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -46,6 +58,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private val _errorMessageEvents = MediatorLiveData<Event<Int>>()
     val errorMessageEvents: LiveData<Event<Int>> = _errorMessageEvents
+
+    private val _openMoreMenuEvents = SingleLiveEvent<MoreMenuUiState>()
+    val openMoreMenuEvents: LiveData<MoreMenuUiState> = _openMoreMenuEvents
 
     private var hasInitialized = false
 
@@ -269,10 +284,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
         uiState.data.firstOrNull { tagFeedItem ->
-        tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
-            it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
-        } != null
-    }
+            tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
+                it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
+            } != null
+        }
 
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
@@ -317,8 +332,50 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostMoreMenuClick() {
-        // TODO
+    private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let { post ->
+                val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                    post = post,
+                    includeBookmark = true,
+                    onButtonClicked = ::onMoreMenuButtonClicked,
+                )
+                val photonWidth: Int = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+                val photonHeight: Int = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
+                _openMoreMenuEvents.postValue(
+                    MoreMenuUiState(
+                        readerCardUiState = readerPostUiStateBuilder.mapPostToNewUiState(
+                            source = ReaderTracker.SOURCE_TAGS_FEED,
+                            post = post,
+                            photonWidth = photonWidth,
+                            photonHeight = photonHeight,
+                            postListType = ReaderTypes.ReaderPostListType.TAGS_FEED,
+                            onButtonClicked = {_, _, _ -> },
+                            onItemClicked = {_, _ -> },
+                            onItemRendered = {},
+                            onMoreButtonClicked = {},
+                            onMoreDismissed = {},
+                            onVideoOverlayClicked = {_, _ ->},
+                            onPostHeaderViewClicked = {_, _ -> },
+                        ),
+                        readerPostCardActions = items,
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onMoreMenuButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.onAction(
+                    it,
+                    type,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_DISCOVER
+                )
+            }
+        }
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
@@ -368,4 +425,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data object NoContent : ErrorType
     }
+
+    data class MoreMenuUiState(
+        val readerCardUiState: ReaderCardUiState.ReaderPostNewUiState,
+        val readerPostCardActions: List<ReaderPostCardAction>,
+    )
 }

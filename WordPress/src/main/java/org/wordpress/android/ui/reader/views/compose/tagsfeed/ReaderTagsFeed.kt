@@ -418,7 +418,7 @@ data class TagsFeedPostItem(
     val onSiteClick: (TagsFeedPostItem) -> Unit,
     val onPostCardClick: (TagsFeedPostItem) -> Unit,
     val onPostLikeClick: (TagsFeedPostItem) -> Unit,
-    val onPostMoreMenuClick: () -> Unit,
+    val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit,
 )
 
 @Preview
