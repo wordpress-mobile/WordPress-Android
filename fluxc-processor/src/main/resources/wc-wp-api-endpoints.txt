@@ -117,3 +117,6 @@
 /reports/products
 
 /options
+
+/shipping_methods
+/shipping_methods/<id>#String
