@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.upload;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
@@ -55,6 +57,7 @@ public class PostUploadModelTest {
 
     @Test
     public void testPostError() {
+        Mockito.mockStatic(Log.class);
         PostUploadModel postUploadModel = new PostUploadModel(1);
 
         assertNull(postUploadModel.getPostError());
