@@ -154,14 +154,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
             val updatedLoadedData = getLoadedData(uiState)
 
             // At this point, all tag feed items already exist in the UI.
-            // We need it's index to update it and keep it in place.
-            val existingIndex = updatedLoadedData.indexOfFirst { it.tagChip.tag == updatedItem.tagChip.tag }
-
-            // Remove the current row(s) of this tag, so we don't have duplicates.
-            updatedLoadedData.removeAll { it.tagChip.tag == updatedItem.tagChip.tag }
-
-            // Add the updated item in the correct position.
-            updatedLoadedData.add(existingIndex, updatedItem)
+            // We need it's index to update it and keep it in the same place.
+            updatedLoadedData.indexOfFirst { it.tagChip.tag == updatedItem.tagChip.tag }
+                .takeIf { it >= 0 }
+                ?.let { existingIndex ->
+                    // Update item
+                    updatedLoadedData[existingIndex] = updatedItem
+                }
 
             UiState.Loaded(updatedLoadedData)
         }
