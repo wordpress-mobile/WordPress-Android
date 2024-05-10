@@ -210,49 +210,15 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
                 is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
                 is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-                is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
-                    context,
-                    event.blogId,
-                    event.postId,
-                    ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
-                )
-
-                is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                is ReaderNavigationEvents.ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
-                    this@ReaderTagsFeedFragment,
-                    event.preselectedSite,
-                    event.mode
-                )
-
-                is ReaderNavigationEvents.OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(
-                    activity,
-                    event.site,
-                    event.post,
-                    event.source
-                )
-
-                is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
                 is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> {
                     showBookmarkSavedLocallyDialog(event)
                 }
-                is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                    context,
-                    event.tag,
-                    ReaderTracker.SOURCE_DISCOVER,
-                    readerTracker
-                )
-
-                is ReaderNavigationEvents.ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(
-                    context,
-                    event.videoUrl
-                )
-
                 is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     event.siteId,
                     event.feedId,
                     event.isFollowed,
-                    ReaderTracker.SOURCE_DISCOVER,
+                    ReaderTracker.SOURCE_TAGS_FEED,
                     readerTracker
                 )
 
@@ -268,7 +234,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                     ReaderActivityLauncher.OpenUrlType.INTERNAL
                 )
 
-                is ReaderNavigationEvents.ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
                 else -> Unit // Do Nothing
             }
         }
