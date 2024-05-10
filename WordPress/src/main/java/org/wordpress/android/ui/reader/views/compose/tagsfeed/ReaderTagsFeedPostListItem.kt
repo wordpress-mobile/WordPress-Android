@@ -2,7 +2,8 @@ package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.widget.Button
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
@@ -45,6 +47,8 @@ import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 
 @SuppressLint("ResourceType")
 @Composable
@@ -220,37 +224,33 @@ fun ReaderTagsFeedPostListItem(
                 )
             }
             Spacer(Modifier.weight(1f))
-            // More menu ("…")
+            // More menu ("…"). It's an AndroidView because we must have a way to get the view and inflate the existing
+            // menu, which is a ListPopupWindow and requires an achor.
             AndroidView(
                 factory = { context ->
-                    Button(context).apply {
-                        text = "..."
+                    ImageView(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon),
+                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon)
+                        )
+                        setImageResource(R.drawable.ic_more_ellipsis_horizontal_squares)
+                        contentDescription = context.resources.getString(R.string.show_more_desc)
+                        setBackgroundResource(
+                            context.getDrawableResIdFromAttribute(
+                                com.google.android.material.R.attr.selectableItemBackgroundBorderless
+                            )
+                        )
+                        setColorFilter(
+                            ContextCompat.getColor(
+                                context,
+                                context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
+                            )
+                        )
                         tag = "${item.blogId}${item.postId}"
                         setOnClickListener { onPostMoreMenuClick(item) }
                     }
                 }
             )
-//            Column(
-//                horizontalAlignment = Alignment.End,
-//            ) {
-//                var isMenuVisible by remember { mutableStateOf(false) }
-//                IconButton(
-//                    modifier = Modifier.size(24.dp),
-//                    onClick = {
-//                        onPostMoreMenuClick()
-//                        isMenuVisible = !isMenuVisible
-//                    },
-//                ) {
-//                    Icon(
-//                        painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
-//                        contentDescription = stringResource(R.string.show_more_desc),
-//                        tint = secondaryElementColor,
-//                    )
-//                }
-//                ReaderTagsFeedMoreMenu(
-//                    expanded = isMenuVisible,
-//                )
-//            }
         }
     }
 }
