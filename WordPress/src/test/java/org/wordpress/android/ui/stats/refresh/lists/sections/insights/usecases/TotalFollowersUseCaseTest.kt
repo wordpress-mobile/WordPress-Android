@@ -116,7 +116,7 @@ class TotalFollowersUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE_WITH_MORE)
-        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_followers)
+        assertThat((item as TitleWithMore).textResource).isEqualTo(R.string.stats_view_total_subscribers)
     }
 
     private fun assertValue(blockListItem: BlockListItem) {
