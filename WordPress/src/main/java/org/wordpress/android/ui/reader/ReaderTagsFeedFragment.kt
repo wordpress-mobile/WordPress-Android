@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
@@ -73,6 +75,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
 
+    private var bookmarksSavedLocallyDialog: AlertDialog? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ReaderTagFeedFragmentLayoutBinding.bind(view)
@@ -88,6 +92,11 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeNavigationEvents()
         observeErrorMessageEvents()
         observeOpenMoreMenuEvents()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bookmarksSavedLocallyDialog?.dismiss()
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -296,23 +305,23 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     ) {
         // TODO show bookmark saved dialog?
         bookmarkDialog.buttonLabel
-//        if (bookmarksSavedLocallyDialog == null) {
-//            MaterialAlertDialogBuilder(requireActivity())
-//                .setTitle(getString(bookmarkDialog.title))
-//                .setMessage(getString(bookmarkDialog.message))
-//                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
-//                    bookmarkDialog.okButtonAction.invoke()
-//                }
-//                .setOnDismissListener {
-//                    bookmarksSavedLocallyDialog = null
-//                }
-//                .setCancelable(false)
-//                .create()
-//                .let {
-//                    bookmarksSavedLocallyDialog = it
-//                    it.show()
-//                }
-//        }
+        if (bookmarksSavedLocallyDialog == null) {
+            MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(bookmarkDialog.title))
+                .setMessage(getString(bookmarkDialog.message))
+                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                    bookmarkDialog.okButtonAction.invoke()
+                }
+                .setOnDismissListener {
+                    bookmarksSavedLocallyDialog = null
+                }
+                .setCancelable(false)
+                .create()
+                .let {
+                    bookmarksSavedLocallyDialog = it
+                    it.show()
+                }
+        }
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
