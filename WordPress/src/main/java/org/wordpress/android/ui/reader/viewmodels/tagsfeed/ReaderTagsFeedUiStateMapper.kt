@@ -58,6 +58,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         onItemEnteredView = onItemEnteredView,
     )
 
+    @Suppress("LongParameterList")
     fun mapErrorTagFeedItem(
         tag: ReaderTag,
         errorType: ReaderTagsFeedViewModel.ErrorType,
@@ -79,6 +80,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             onItemEnteredView = onItemEnteredView,
         )
 
+    @Suppress("LongParameterList")
     fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
         isRefreshing: Boolean,

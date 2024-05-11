@@ -60,7 +60,6 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.AppLog
 
 private const val LOADING_POSTS_COUNT = 5
 
