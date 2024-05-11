@@ -303,7 +303,7 @@ private fun PostListLoaded(
             )
             Box(
                 modifier = Modifier
-                    .height(ReaderTagsFeedComposeUtils.POST_ITEM_HEIGHT)
+                    .height(ReaderTagsFeedComposeUtils.PostItemHeight)
                     .padding(
                         start = Margin.ExtraLarge.value,
                         end = Margin.ExtraLarge.value,

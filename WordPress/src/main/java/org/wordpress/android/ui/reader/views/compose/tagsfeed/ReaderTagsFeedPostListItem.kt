@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -26,19 +27,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -46,8 +48,10 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import kotlin.math.min
 
-private const val CONTENT_TOTAL_LINES = 3
+private const val CONTENT_TOTAL_LINES_WITH_INTERACTIONS = 3
+private const val CONTENT_TOTAL_LINES_NO_INTERACTIONS = 4
 
 @Composable
 fun ReaderTagsFeedPostListItem(
@@ -61,10 +65,12 @@ fun ReaderTagsFeedPostListItem(
         alpha = 0.6F
     )
 
+    val hasInteractions = postNumberOfLikesText.isNotBlank() || postNumberOfCommentsText.isNotBlank()
+
     Column(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
-            .height(ReaderTagsFeedComposeUtils.POST_ITEM_HEIGHT)
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -110,47 +116,16 @@ fun ReaderTagsFeedPostListItem(
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Post title and excerpt Column
-            Column(
+            // Post text content
+            PostTextContent(
+                title = postTitle,
+                excerpt = postExcerpt,
+                onClick = { onPostCardClick(item) },
+                titleColor = baseColor,
+                excerptColor = primaryElementColor,
+                hasInteractions = hasInteractions,
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
-            ) {
-                // TODO thomashortadev improve this to avoid an initial composition with the wrong value
-                var excerptMaxLines by remember { mutableIntStateOf(2) }
-
-                // Post title
-                Text(
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = { onPostCardClick(item) },
-                        ),
-                    text = postTitle,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = baseColor,
-                    maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { layoutResult ->
-                        excerptMaxLines = CONTENT_TOTAL_LINES - layoutResult.lineCount
-                    },
-                )
-
-                // Post excerpt
-                Text(
-                    modifier = Modifier
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = { onPostCardClick(item) },
-                        ),
-                    text = postExcerpt,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = primaryElementColor,
-                    maxLines = excerptMaxLines, // TODO thomashortadev max lines should be (3 - title_lines_used)
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+            )
 
             // Post image
             if (postImageUrl.isNotBlank()) {
@@ -164,46 +139,49 @@ fun ReaderTagsFeedPostListItem(
         Spacer(Modifier.weight(1f))
 
         // Likes and comments row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // Number of likes
-            Text(
-                text = postNumberOfLikesText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = secondaryElementColor,
-                maxLines = 1,
-            )
-            Spacer(Modifier.height(Margin.Medium.value))
-            // "•" separator. We should only show it if likes *and* comments text is not empty.
-            if (postNumberOfLikesText.isNotBlank() && postNumberOfCommentsText.isNotBlank()) {
+        if (hasInteractions) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Number of likes
                 Text(
-                    modifier = Modifier.padding(
-                        horizontal = Margin.Small.value
-                    ),
-                    text = "•",
+                    text = postNumberOfLikesText,
                     style = MaterialTheme.typography.bodyMedium,
                     color = secondaryElementColor,
+                    maxLines = 1,
+                )
+                Spacer(Modifier.height(Margin.Medium.value))
+                // "•" separator. We should only show it if likes *and* comments text is not empty.
+                if (postNumberOfLikesText.isNotBlank() && postNumberOfCommentsText.isNotBlank()) {
+                    Text(
+                        modifier = Modifier.padding(
+                            horizontal = Margin.Small.value
+                        ),
+                        text = "•",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = secondaryElementColor,
+                    )
+                }
+                // Number of comments
+                Text(
+                    text = postNumberOfCommentsText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = secondaryElementColor,
+                    maxLines = 1,
                 )
             }
-            // Number of comments
-            Text(
-                text = postNumberOfCommentsText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = secondaryElementColor,
-                maxLines = 1,
-            )
-        }
 
-        Spacer(Modifier.height(Margin.Small.value))
+            Spacer(Modifier.height(Margin.Small.value))
+        }
 
         // Actions row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Like action
             TextButton(
@@ -279,6 +257,76 @@ fun PostImage(
         contentDescription = null,
         contentScale = ContentScale.Crop,
     )
+}
+
+// Post title and excerpt Column
+@Composable
+fun PostTextContent(
+    title: String,
+    excerpt: String,
+    titleColor: Color,
+    excerptColor: Color,
+    hasInteractions: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val totalLines = if (hasInteractions) {
+        CONTENT_TOTAL_LINES_WITH_INTERACTIONS
+    } else {
+        CONTENT_TOTAL_LINES_NO_INTERACTIONS
+    }
+
+    BoxWithConstraints(
+        modifier = modifier,
+    ) {
+        val density = LocalDensity.current
+        val maxWidthPx = with(density) {
+            maxWidth.toPx().toInt()
+        }
+
+        val textMeasurer = rememberTextMeasurer()
+        val textLayoutResult = textMeasurer.measure(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            constraints = Constraints(maxWidth = maxWidthPx),
+        )
+        val titleLines = min(textLayoutResult.lineCount, ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES)
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+        ) {
+            // Post title
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick,
+                    ),
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = titleColor,
+                maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
+                overflow = TextOverflow.Ellipsis,
+            )
+
+            // Post excerpt
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick,
+                    ),
+                text = excerpt,
+                style = MaterialTheme.typography.bodySmall,
+                color = excerptColor,
+                maxLines = totalLines - titleLines,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
 }
 
 @Preview

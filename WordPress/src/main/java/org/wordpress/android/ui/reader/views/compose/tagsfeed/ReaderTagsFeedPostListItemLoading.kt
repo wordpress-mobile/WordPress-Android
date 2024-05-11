@@ -36,7 +36,7 @@ fun ReaderTagsFeedPostListItemLoading() {
     Column(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
-            .height(ReaderTagsFeedComposeUtils.POST_ITEM_HEIGHT)
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight)
     ) {
         // Site info placeholder
         Row(
