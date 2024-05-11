@@ -229,8 +229,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onOpenTagsListClick() {
-        // TODO
+    @VisibleForTesting
+    fun onOpenTagsListClick() {
+        _actionEvents.value = ActionEvent.ShowTagsList
     }
 
     @VisibleForTesting
@@ -450,6 +451,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         data class OpenTagPostList(val readerTag: ReaderTag) : ActionEvent()
 
         data object RefreshTagsFeed : ActionEvent()
+
+        data object ShowTagsList : ActionEvent()
     }
 
     sealed class UiState {

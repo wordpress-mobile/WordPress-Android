@@ -252,7 +252,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit OpenTagPostsFeed when onTagChipClick is called`() {
+    fun `Should emit FilterTagPostsFeed when onTagChipClick is called`() {
         // When
         viewModel.onTagChipClick(tag)
 
@@ -261,7 +261,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit OpenTagPostsFeed when onMoreFromTagClick is called`() {
+    fun `Should emit OpenTagPostList when onMoreFromTagClick is called`() {
         // When
         viewModel.onMoreFromTagClick(tag)
 
@@ -269,6 +269,14 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         assertIs<ActionEvent.OpenTagPostList>(actionEvents.first())
     }
 
+    @Test
+    fun `Should emit ShowTagsList when onOpenTagsListClick is called`() {
+        // When
+        viewModel.onOpenTagsListClick()
+
+        // Then
+        assertIs<ActionEvent.ShowTagsList>(actionEvents.first())
+    }
 
     @Test
     fun `Should emit ShowBlogPreview when onSiteClick is called`() = test {
@@ -480,6 +488,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val action = viewModel.actionEvents.getOrAwaitValue()
         assertThat(action).isEqualTo(ActionEvent.RefreshTagsFeed)
     }
+
     @Test
     fun `Should update UI immediately when like button is tapped`() = testCollectingUiStates {
         // Given

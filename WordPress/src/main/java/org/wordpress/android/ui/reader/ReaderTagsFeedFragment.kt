@@ -24,6 +24,7 @@ import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -139,6 +140,17 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 ActionEvent.RefreshTagsFeed -> {
                     subFilterViewModel.updateTagsAndSites()
                 }
+
+                ActionEvent.ShowTagsList -> {
+                    val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+                    if (readerInterestsFragment == null) {
+                        (parentFragment as? ReaderFragment)?.childFragmentManager?.beginTransaction()?.replace(
+                            R.id.interests_fragment_container,
+                            ReaderInterestsFragment(),
+                            ReaderInterestsFragment.TAG
+                        )?.commitNow()
+                    }
+                }
             }
         }
     }
@@ -220,6 +232,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> {
                     showBookmarkSavedLocallyDialog(event)
                 }
+
                 is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     event.siteId,
