@@ -19,12 +19,10 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
@@ -125,8 +123,17 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     private fun observeActionEvents() {
         viewModel.actionEvents.observe(viewLifecycleOwner) {
             when (it) {
-                is ActionEvent.OpenTagPostsFeed -> {
+                is ActionEvent.FilterTagPostsFeed -> {
                     subFilterViewModel.setSubfilterFromTag(it.readerTag)
+                }
+
+                is ActionEvent.OpenTagPostList -> {
+                    ReaderActivityLauncher.showReaderTagPreview(
+                        context,
+                        it.readerTag,
+                        ReaderTracker.SOURCE_TAGS_FEED,
+                        readerTracker,
+                    )
                 }
 
                 ActionEvent.RefreshTagsFeed -> {

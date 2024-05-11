@@ -103,7 +103,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
             readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                 tags,
                 false,
-                ::onTagClick,
+                ::onTagChipClick,
+                ::onMoreFromTagClick,
                 ::onItemEnteredView,
                 ::onRefresh
             )
@@ -137,7 +138,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         updateTagFeedItem(
             readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(
                 tag = tag,
-                onTagClick = ::onTagClick,
+                onTagChipClick = ::onTagChipClick,
+                onMoreFromTagClick = ::onMoreFromTagClick,
                 onItemEnteredView = ::onItemEnteredView,
             )
         )
@@ -149,7 +151,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
                     tag = tag,
                     posts = posts,
-                    onTagClick = ::onTagClick,
+                    onTagChipClick = ::onTagChipClick,
+                    onMoreFromTagClick = ::onMoreFromTagClick,
                     onSiteClick = ::onSiteClick,
                     onPostCardClick = ::onPostCardClick,
                     onPostLikeClick = ::onPostLikeClick,
@@ -160,7 +163,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                     tag = tag,
                     errorType = ErrorType.NoContent,
-                    onTagClick = ::onTagClick,
+                    onTagChipClick = ::onTagChipClick,
+                    onMoreFromTagClick = ::onMoreFromTagClick,
                     onRetryClick = ::onRetryClick,
                     onItemEnteredView = ::onItemEnteredView,
                 )
@@ -169,7 +173,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
             readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                 tag = tag,
                 errorType = ErrorType.Default,
-                onTagClick = ::onTagClick,
+                onTagChipClick = ::onTagChipClick,
+                onMoreFromTagClick = ::onMoreFromTagClick,
                 onRetryClick = ::onRetryClick,
                 onItemEnteredView = ::onItemEnteredView,
             )
@@ -229,8 +234,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     @VisibleForTesting
-    fun onTagClick(readerTag: ReaderTag) {
-        _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
+    fun onTagChipClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.FilterTagPostsFeed(readerTag)
+    }
+
+    @VisibleForTesting
+    fun onMoreFromTagClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
     private fun onRetryClick() {
@@ -435,7 +445,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+        data class FilterTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+
+        data class OpenTagPostList(val readerTag: ReaderTag) : ActionEvent()
 
         data object RefreshTagsFeed : ActionEvent()
     }
@@ -466,7 +478,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     data class TagChip(
         val tag: ReaderTag,
-        val onTagClick: (ReaderTag) -> Unit,
+        val onTagChipClick: (ReaderTag) -> Unit,
+        val onMoreFromTagClick: (ReaderTag) -> Unit,
     )
 
     sealed class PostList {

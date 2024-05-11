@@ -252,13 +252,23 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should emit OpenTagPostsFeed when onTagClick is called`() {
+    fun `Should emit OpenTagPostsFeed when onTagChipClick is called`() {
         // When
-        viewModel.onTagClick(tag)
+        viewModel.onTagChipClick(tag)
 
         // Then
-        assertIs<ActionEvent.OpenTagPostsFeed>(actionEvents.first())
+        assertIs<ActionEvent.FilterTagPostsFeed>(actionEvents.first())
     }
+
+    @Test
+    fun `Should emit OpenTagPostsFeed when onMoreFromTagClick is called`() {
+        // When
+        viewModel.onMoreFromTagClick(tag)
+
+        // Then
+        assertIs<ActionEvent.OpenTagPostList>(actionEvents.first())
+    }
+
 
     @Test
     fun `Should emit ShowBlogPreview when onSiteClick is called`() = test {
@@ -372,10 +382,10 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
         assertThat(loadedState.data).isEqualTo(
             listOf(
-                    getInitialTagFeedItem(tag1),
-                    getInitialTagFeedItem(tag2)
-                )
+                getInitialTagFeedItem(tag1),
+                getInitialTagFeedItem(tag2)
             )
+        )
         assertThat(loadedState.isRefreshing).isFalse()
     }
 
@@ -558,7 +568,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     private fun mockMapInitialTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any(), any()))
             .thenAnswer {
                 val tags = it.getArgument<List<ReaderTag>>(0)
                 ReaderTagsFeedViewModel.UiState.Loaded(
@@ -568,11 +578,11 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     private fun mockMapLoadingTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(any(), any(), any(), any()))
             .thenAnswer {
                 val tag = it.getArgument<ReaderTag>(0)
                 ReaderTagsFeedViewModel.TagFeedItem(
-                    ReaderTagsFeedViewModel.TagChip(tag, {}),
+                    ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
                     ReaderTagsFeedViewModel.PostList.Loading
                 )
             }
@@ -580,32 +590,34 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     private fun mockMapLoadedTagFeedItems(items: List<TagsFeedPostItem> = emptyList()) {
         whenever(
-            readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(any(), any(), any(), any(), any(), any(), any(), any())
+            readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
+                any(), any(), any(), any(), any(), any(), any(), any(), any()
+            )
         ).thenAnswer {
             getLoadedTagFeedItem(it.getArgument(0), items)
         }
     }
 
     private fun mockMapErrorTagFeedItems() {
-        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any(), any()))
+        whenever(readerTagsFeedUiStateMapper.mapErrorTagFeedItem(any(), any(), any(), any(), any(), any()))
             .thenAnswer {
                 getErrorTagFeedItem(it.getArgument(0))
             }
     }
 
     private fun getInitialTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
-        ReaderTagsFeedViewModel.TagChip(tag, {}),
+        ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
         ReaderTagsFeedViewModel.PostList.Initial
     )
 
     private fun getLoadedTagFeedItem(tag: ReaderTag, items: List<TagsFeedPostItem> = emptyList()) =
         ReaderTagsFeedViewModel.TagFeedItem(
-            ReaderTagsFeedViewModel.TagChip(tag, {}),
+            ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
             ReaderTagsFeedViewModel.PostList.Loaded(items)
         )
 
     private fun getErrorTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
-        ReaderTagsFeedViewModel.TagChip(tag, {}),
+        ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
         ReaderTagsFeedViewModel.PostList.Error(
             ReaderTagsFeedViewModel.ErrorType.Default, {}
         ),

@@ -124,7 +124,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                         start = Margin.Large.value,
                     ),
                     text = UiString.UiStringText(tagChip.tag.tagTitle),
-                    onClick = { tagChip.onTagClick(tagChip.tag) },
+                    onClick = { tagChip.onTagChipClick(tagChip.tag) },
                     height = 36.dp,
                 )
                 Spacer(modifier = Modifier.height(Margin.Large.value))
@@ -318,8 +318,7 @@ private fun PostListLoaded(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = rememberRipple(bounded = false),
                             onClick = {
-                                tagChip.onTagClick(tagChip.tag)
-                                AppLog.e(AppLog.T.READER, "RL-> Tag clicked")
+                                tagChip.onMoreFromTagClick(tagChip.tag)
                             }
                         ),
                     verticalArrangement = Arrangement.Center,
@@ -556,19 +555,19 @@ fun ReaderTagsFeedLoaded() {
             uiState = UiState.Loaded(
                 data = listOf(
                     TagFeedItem(
-                        tagChip = TagChip(readerTag, {}),
+                        tagChip = TagChip(readerTag, {}, {}),
                         postList = postListLoaded
                     ),
                     TagFeedItem(
-                        tagChip = TagChip(readerTag, {}),
+                        tagChip = TagChip(readerTag, {}, {}),
                         postList = PostList.Initial,
                     ),
                     TagFeedItem(
-                        tagChip = TagChip(readerTag, {}),
+                        tagChip = TagChip(readerTag, {}, {}),
                         postList = PostList.Error(ErrorType.Default, {}),
                     ),
                     TagFeedItem(
-                        tagChip = TagChip(readerTag, {}),
+                        tagChip = TagChip(readerTag, {}, {}),
                         postList = PostList.Error(ErrorType.NoContent, {}),
                     ),
                 )
