@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploade
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.InvalidRequest
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.MissingFile
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.NoConnection
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.OutOfMemoryException
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.UnsatisfiedLinkException
@@ -162,6 +163,8 @@ class EncryptedLogStore @Inject constructor(
             }
         } catch (e: UnsatisfiedLinkError) {
             handleFailedUpload(encryptedLog, UnsatisfiedLinkException)
+        } catch (e: OutOfMemoryError) {
+            handleFailedUpload(encryptedLog, OutOfMemoryException)
         }
     }
 
@@ -312,6 +315,7 @@ class EncryptedLogStore @Inject constructor(
         object NoConnection : UploadEncryptedLogError()
         object MissingFile : UploadEncryptedLogError()
         object UnsatisfiedLinkException : UploadEncryptedLogError()
+        object OutOfMemoryException : UploadEncryptedLogError()
     }
 
     /**
