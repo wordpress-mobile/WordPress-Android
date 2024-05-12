@@ -225,7 +225,7 @@ class EncryptedLogStore @Inject constructor(
     private fun mapUploadEncryptedLogError(error: UploadEncryptedLogError): EncryptedLogUploadFailureType {
         return when (error) {
             NoConnection, TooManyRequests -> CONNECTION_FAILURE
-            InvalidRequest, MissingFile, UnsatisfiedLinkException -> IRRECOVERABLE_FAILURE
+            InvalidRequest, MissingFile, UnsatisfiedLinkException, OutOfMemoryException -> IRRECOVERABLE_FAILURE
             is Unknown -> if ((HTTP_STATUS_CODE_500..HTTP_STATUS_CODE_599).contains(error.statusCode)) {
                 CONNECTION_FAILURE
             } else {
