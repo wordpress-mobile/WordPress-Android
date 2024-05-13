@@ -19,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VIEWS
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDataTypeSelectionViewModel.DataType.VISITORS
 import org.wordpress.android.usecase.social.JetpackSocialFlow
+import org.wordpress.android.util.BuildConfigWrapper
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +32,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class AppPrefsWrapper @Inject constructor() {
+class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWrapper) {
     var featureAnnouncementShownVersion: Int
         get() = AppPrefs.getFeatureAnnouncementShownVersion()
         set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
@@ -450,6 +451,9 @@ class AppPrefsWrapper @Inject constructor() {
         AppPrefs.getShouldHideDynamicCard(id)
 
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
+
+    fun getDebugBooleanPref(key: String, default: Boolean = false) =
+        buildConfigWrapper.isDebug() && AppPrefs.getRawBoolean({ key }, default)
 
     fun setString(prefKey: PrefKey, value: String) {
         AppPrefs.setString(prefKey, value)

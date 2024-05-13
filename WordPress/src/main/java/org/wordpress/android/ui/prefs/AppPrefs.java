@@ -387,6 +387,10 @@ public class AppPrefs {
         return Boolean.parseBoolean(value);
     }
 
+    public static boolean getRawBoolean(@NonNull final PrefKey key, boolean def) {
+        return prefs().getBoolean(key.name(), def);
+    }
+
     public static void putBoolean(final PrefKey key, final boolean value) {
         prefs().edit().putBoolean(key.name(), value).apply();
     }
