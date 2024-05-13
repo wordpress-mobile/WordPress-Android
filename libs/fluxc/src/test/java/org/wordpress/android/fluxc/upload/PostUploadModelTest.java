@@ -1,22 +1,20 @@
 package org.wordpress.android.fluxc.upload;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class PostUploadModelTest {
     @Test
@@ -57,7 +55,6 @@ public class PostUploadModelTest {
 
     @Test
     public void testPostError() {
-        Mockito.mockStatic(Log.class);
         PostUploadModel postUploadModel = new PostUploadModel(1);
 
         assertNull(postUploadModel.getPostError());
