@@ -113,11 +113,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun initNavigationEvents() {
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
-            // TODO reblog supported in this screen? See ReaderPostDetailViewModel and ReaderDiscoverViewModel
-//            val target = event.peekContent()
-//            if (target is ReaderNavigationEvents.ShowSitePickerForResult) {
-//                pendingReblogPost = target.post
-//            }
             _navigationEvents.value = event
         }
     }
