@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.upload;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -38,6 +40,7 @@ public class MediaUploadModelTest {
 
     @Test
     public void testMediaError() {
+        Mockito.mockStatic(Log.class);
         MediaUploadModel mediaUploadModel = new MediaUploadModel(1);
 
         assertNull(mediaUploadModel.getMediaError());
