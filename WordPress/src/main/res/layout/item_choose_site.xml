@@ -78,6 +78,7 @@
             app:layout_constraintEnd_toStartOf="@+id/pin"
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toTopOf="@+id/avatar_container"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="Around the World with Pam" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -95,6 +96,7 @@
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toBottomOf="@+id/text_title"
             app:layout_constraintVertical_chainStyle="packed"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="pamelanguyen.com" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
