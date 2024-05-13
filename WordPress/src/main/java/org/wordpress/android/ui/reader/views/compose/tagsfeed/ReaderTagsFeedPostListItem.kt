@@ -48,10 +48,9 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
-import kotlin.math.min
 
-private const val CONTENT_TOTAL_LINES_WITH_INTERACTIONS = 3
-private const val CONTENT_TOTAL_LINES_NO_INTERACTIONS = 4
+private const val CONTENT_TOTAL_LINES_WITH_INTERACTIONS = 4
+private const val CONTENT_TOTAL_LINES_NO_INTERACTIONS = 5
 
 @Composable
 fun ReaderTagsFeedPostListItem(
@@ -112,7 +111,9 @@ fun ReaderTagsFeedPostListItem(
 
         // Post content row
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -124,7 +125,9 @@ fun ReaderTagsFeedPostListItem(
                 titleColor = baseColor,
                 excerptColor = primaryElementColor,
                 hasInteractions = hasInteractions,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
             )
 
             // Post image
@@ -135,8 +138,6 @@ fun ReaderTagsFeedPostListItem(
                 )
             }
         }
-
-        Spacer(Modifier.weight(1f))
 
         // Likes and comments row
         if (hasInteractions) {
@@ -270,10 +271,12 @@ fun PostTextContent(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val totalLines = if (hasInteractions) {
-        CONTENT_TOTAL_LINES_WITH_INTERACTIONS
-    } else {
-        CONTENT_TOTAL_LINES_NO_INTERACTIONS
+    val totalLines = remember(hasInteractions) {
+        if (hasInteractions) {
+            CONTENT_TOTAL_LINES_WITH_INTERACTIONS
+        } else {
+            CONTENT_TOTAL_LINES_NO_INTERACTIONS
+        }
     }
 
     BoxWithConstraints(
@@ -285,16 +288,28 @@ fun PostTextContent(
         }
 
         val textMeasurer = rememberTextMeasurer()
-        val textLayoutResult = textMeasurer.measure(
+        val titleLayoutResult = textMeasurer.measure(
             text = title,
             style = MaterialTheme.typography.titleMedium,
+            maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
+            overflow = TextOverflow.Ellipsis,
             constraints = Constraints(maxWidth = maxWidthPx),
         )
-        val titleLines = min(textLayoutResult.lineCount, ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES)
+        val titleLines = titleLayoutResult.lineCount
+
+        // Check if excerpt is ellipsized
+        val excerptMaxLines = totalLines - titleLines
+        val excerptLayoutResult = textMeasurer.measure(
+            text = excerpt,
+            style = MaterialTheme.typography.bodySmall,
+            maxLines = excerptMaxLines,
+            overflow = TextOverflow.Ellipsis,
+            constraints = Constraints(maxWidth = maxWidthPx),
+        )
+        val isExcerptFullHeight = excerptLayoutResult.lineCount == excerptMaxLines
 
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
         ) {
             // Post title
             Text(
@@ -311,6 +326,10 @@ fun PostTextContent(
                 overflow = TextOverflow.Ellipsis,
             )
 
+            Spacer(
+                if (isExcerptFullHeight) Modifier.weight(1f) else Modifier.height(Margin.Medium.value)
+            )
+
             // Post excerpt
             Text(
                 modifier = Modifier
@@ -322,9 +341,13 @@ fun PostTextContent(
                 text = excerpt,
                 style = MaterialTheme.typography.bodySmall,
                 color = excerptColor,
-                maxLines = totalLines - titleLines,
+                maxLines = excerptMaxLines,
                 overflow = TextOverflow.Ellipsis,
             )
+
+            if (isExcerptFullHeight) {
+                Spacer(Modifier.weight(1f))
+            }
         }
     }
 }

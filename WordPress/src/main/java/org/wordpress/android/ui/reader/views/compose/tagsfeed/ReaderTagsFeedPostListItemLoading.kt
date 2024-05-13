@@ -36,11 +36,14 @@ fun ReaderTagsFeedPostListItemLoading() {
     Column(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
-            .height(ReaderTagsFeedComposeUtils.PostItemHeight)
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight),
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
         // Site info placeholder
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(24.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -52,27 +55,38 @@ fun ReaderTagsFeedPostListItemLoading() {
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
         // Content row placeholder
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Post title and excerpt Column placeholder
             Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
+                modifier = Modifier
+                    .weight(1f),
             ) {
                 // Title placeholder
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.75f)
+                        .fillMaxWidth(0.9f)
                         .height(18.dp)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .background(contentColor),
                 )
+
+                Spacer(modifier = Modifier.height(Margin.Medium.value))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(18.dp)
+                        .clip(shape = RoundedCornerShape(16.dp))
+                        .background(contentColor),
+                )
+
+                Spacer(modifier = Modifier.height(Margin.Medium.value))
 
                 // Excerpt placeholder
                 Column(
@@ -93,6 +107,20 @@ fun ReaderTagsFeedPostListItemLoading() {
                             .clip(shape = RoundedCornerShape(16.dp))
                             .background(contentColor),
                     )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.85f)
+                            .height(8.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .background(contentColor),
+                    )
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .height(8.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                            .background(contentColor),
+                    )
                 }
             }
 
@@ -105,24 +133,22 @@ fun ReaderTagsFeedPostListItemLoading() {
             )
         }
 
-        Spacer(Modifier.weight(1f))
-
         // Likes and comments placeholder
-        Box(
-            modifier = Modifier
-                .width(170.dp)
-                .height(8.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(contentColor),
-        )
+//        Box(
+//            modifier = Modifier
+//                .width(170.dp)
+//                .height(12.dp)
+//                .clip(shape = RoundedCornerShape(16.dp))
+//                .background(contentColor),
+//        )
 
-        Spacer(Modifier.height(Margin.Medium.value))
+//        Spacer(Modifier.height(Margin.Medium.value))
 
         // Actions placeholder
         Box(
             modifier = Modifier
                 .width(170.dp)
-                .height(8.dp)
+                .height(16.dp)
                 .clip(shape = RoundedCornerShape(16.dp))
                 .background(contentColor),
         )
