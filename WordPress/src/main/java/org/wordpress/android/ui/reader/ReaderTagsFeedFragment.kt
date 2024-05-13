@@ -269,19 +269,21 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     private fun observeSnackbarEvents() {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
-            activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
-                with(snackbarMessageHolder) {
-                    val snackbar = WPSnackbar.make(
-                        coordinator,
-                        uiHelpers.getTextOfUiString(requireContext(), message),
-                        Snackbar.LENGTH_LONG
-                    )
-                    if (buttonTitle != null) {
-                        snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
-                            buttonAction.invoke()
+            if (isAdded) {
+                activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
+                    with(snackbarMessageHolder) {
+                        val snackbar = WPSnackbar.make(
+                            coordinator,
+                            uiHelpers.getTextOfUiString(requireContext(), message),
+                            Snackbar.LENGTH_LONG
+                        )
+                        if (buttonTitle != null) {
+                            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
+                                buttonAction.invoke()
+                            }
                         }
+                        snackbar.show()
                     }
-                    snackbar.show()
                 }
             }
         }
@@ -293,20 +295,22 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
             val blogId = readerCardUiState.blogId
             val postId = readerCardUiState.postId
             val anchorView = binding.composeView.findViewWithTag<View>("$blogId$postId")
-            readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
-            val listPopup = ListPopupWindow(anchorView.context)
-            listPopup.width = anchorView.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
-            listPopup.setAdapter(ReaderMenuAdapter(anchorView.context, uiHelpers, it.readerPostCardActions))
-            listPopup.setDropDownGravity(Gravity.END)
-            listPopup.anchorView = anchorView
-            listPopup.isModal = true
-            listPopup.setOnItemClickListener { _, _, position, _ ->
-                listPopup.dismiss()
-                val item = it.readerPostCardActions[position]
-                item.onClicked?.invoke(postId, blogId, item.type)
+            if (anchorView != null) {
+                readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
+                val listPopup = ListPopupWindow(anchorView.context)
+                listPopup.width = anchorView.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+                listPopup.setAdapter(ReaderMenuAdapter(anchorView.context, uiHelpers, it.readerPostCardActions))
+                listPopup.setDropDownGravity(Gravity.END)
+                listPopup.anchorView = anchorView
+                listPopup.isModal = true
+                listPopup.setOnItemClickListener { _, _, position, _ ->
+                    listPopup.dismiss()
+                    val item = it.readerPostCardActions[position]
+                    item.onClicked?.invoke(postId, blogId, item.type)
+                }
+                listPopup.setOnDismissListener { readerCardUiState.onMoreDismissed.invoke(readerCardUiState) }
+                listPopup.show()
             }
-            listPopup.setOnDismissListener { readerCardUiState.onMoreDismissed.invoke(readerCardUiState) }
-            listPopup.show()
         }
     }
 
