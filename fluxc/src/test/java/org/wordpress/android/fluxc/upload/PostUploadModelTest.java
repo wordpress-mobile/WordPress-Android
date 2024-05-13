@@ -1,11 +1,5 @@
 package org.wordpress.android.fluxc.upload;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import android.text.TextUtils;
 
 import org.junit.Test;
@@ -15,6 +9,12 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class PostUploadModelTest {
     @Test
