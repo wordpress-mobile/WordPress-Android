@@ -1,9 +1,14 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+25.0
+-----
+
+
 24.9
 -----
 * [*] [Jetpack-only] Removed Social section from the detail screen of Total Followers card [https://github.com/wordpress-mobile/WordPress-Android/pull/20763]
 * [***] [Jetpack-only] Reorganized Stats to include updated Traffic and Insights tabs, along with a newly added Subscribers tab to improve subscriber metrics analysis [https://github.com/wordpress-mobile/WordPress-Android/pull/20756]
+* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
 
 24.8
 -----

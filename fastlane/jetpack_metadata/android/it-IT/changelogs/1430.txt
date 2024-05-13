@@ -1,0 +1,3 @@
+24.8:
+Nella pagina Statistiche ora le percentuali sono nella posizione corretta per gli utenti di lingue da destra a sinistra. Proprio così!
+

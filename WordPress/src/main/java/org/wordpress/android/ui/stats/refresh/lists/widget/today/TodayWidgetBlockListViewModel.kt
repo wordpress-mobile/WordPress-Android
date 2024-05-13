@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvid
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class TodayWidgetBlockListViewModel
     private val todayWidgetUpdater: TodayWidgetUpdater,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val statsUtils: StatsUtils,
-    private val trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    private val trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : WidgetBlockListViewModel {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT

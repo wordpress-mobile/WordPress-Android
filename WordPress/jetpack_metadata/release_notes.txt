@@ -1,2 +1,4 @@
-On the Stats screen, percentages now appear in their correct position for right-to-left language users. Right on.
+* [*] [Jetpack-only] Removed Social section from the detail screen of Total Followers card [https://github.com/wordpress-mobile/WordPress-Android/pull/20763]
+* [***] [Jetpack-only] Reorganized Stats to include updated Traffic and Insights tabs, along with a newly added Subscribers tab to improve subscriber metrics analysis [https://github.com/wordpress-mobile/WordPress-Android/pull/20756]
+* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
 

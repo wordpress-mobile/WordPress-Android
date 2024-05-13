@@ -46,7 +46,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -65,7 +65,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
 
     @Inject
-    lateinit var mStatsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     private val viewModel: StatsViewModel by activityViewModels()
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
@@ -100,7 +100,7 @@ class StatsFragment : Fragment(R.layout.stats_fragment), ScrollableViewInitializ
     }
 
     private fun StatsFragmentBinding.initializeViews() {
-        statsTrafficTabEnabled = mStatsTrafficSubscribersTabFeatureConfig.isEnabled()
+        statsTrafficTabEnabled = mStatsTrafficSubscribersTabsFeatureConfig.isEnabled()
 
         val adapter = StatsPagerAdapter(this@StatsFragment)
         statsPager.adapter = adapter
