@@ -126,7 +126,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag))
+        viewModel.onTagsChanged(listOf(tag))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
@@ -153,7 +153,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapErrorTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag))
+        viewModel.onTagsChanged(listOf(tag))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
@@ -191,7 +191,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -233,7 +233,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapErrorTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -332,7 +332,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -342,7 +342,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         Mockito.clearInvocations(readerPostRepository)
 
         // Then
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
 
         assertThat(collectedUiStates).isEqualTo(firstCollectedStates) // still same states, nothing new emitted
@@ -374,7 +374,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -384,7 +384,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         viewModel.onRefresh()
 
         // Then
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
 
         val loadedState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.Loaded
@@ -404,7 +404,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val tags = emptyList<ReaderTag>()
 
         // When
-        viewModel.start(tags)
+        viewModel.onTagsChanged(tags)
         advanceUntilIdle()
 
         // Then
@@ -436,7 +436,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -475,7 +475,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         mockMapLoadedTagFeedItems()
 
         // When
-        viewModel.start(listOf(tag1, tag2))
+        viewModel.onTagsChanged(listOf(tag1, tag2))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
         advanceUntilIdle()
@@ -486,7 +486,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         viewModel.onRefresh()
 
         val action = viewModel.actionEvents.getOrAwaitValue()
-        assertThat(action).isEqualTo(ActionEvent.RefreshTagsFeed)
+        assertThat(action).isEqualTo(ActionEvent.RefreshTags)
     }
 
     @Test
@@ -521,7 +521,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         }
 
         // When
-        viewModel.start(listOf(tag))
+        viewModel.onTagsChanged(listOf(tag))
         advanceUntilIdle()
         viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
         advanceUntilIdle()
@@ -568,12 +568,21 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             .thenReturn(flowOf())
 
         // When
-        viewModel.start(listOf(tag))
+        viewModel.onTagsChanged(listOf(tag))
         advanceUntilIdle()
         viewModel.onPostLikeClick(tagsFeedPostItem)
 
         // Then
         verify(postLikeUseCase).perform(any(), any(), any())
+    }
+
+    @Test
+    fun `Should emit RefreshTags when onBackFromTagDetails is called`() {
+        // When
+        viewModel.onBackFromTagDetails()
+
+        // Then
+        assertIs<ActionEvent.RefreshTags>(actionEvents.first())
     }
 
     private fun mockMapInitialTagFeedItems() {

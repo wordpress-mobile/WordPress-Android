@@ -78,8 +78,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
-    fun start(tags: List<ReaderTag>) {
-        // don't start again if the tags match, unless the user requested a refresh
+    fun onTagsChanged(tags: List<ReaderTag>) {
+        // don't fetch tags again if the tags match, unless the user requested a refresh
         (_uiStateFlow.value as? UiState.Loaded)?.let { loadedState ->
             if (!loadedState.isRefreshing && tags == loadedState.data.map { it.tagChip.tag }) {
                 return
@@ -98,7 +98,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
             initSnackbarEvents()
         }
 
-        // Initially add all tags to the list with the posts loading UI
+        // Add tags to the list with the posts loading UI
         _uiStateFlow.update {
             readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                 tags,
@@ -209,7 +209,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         _uiStateFlow.update {
             (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
         }
-        _actionEvents.value = ActionEvent.RefreshTagsFeed
+        _actionEvents.value = ActionEvent.RefreshTags
+    }
+
+    fun onBackFromTagDetails() {
+        _actionEvents.value = ActionEvent.RefreshTags
     }
 
     @VisibleForTesting
@@ -445,7 +449,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class OpenTagPostList(val readerTag: ReaderTag) : ActionEvent()
 
-        data object RefreshTagsFeed : ActionEvent()
+        data object RefreshTags : ActionEvent()
 
         data object ShowTagsList : ActionEvent()
     }

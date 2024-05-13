@@ -1,8 +1,14 @@
 package org.wordpress.android.ui.reader
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.compose.runtime.collectAsState
@@ -17,6 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.ViewPagerFragment
@@ -76,6 +83,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     private var bookmarksSavedLocallyDialog: AlertDialog? = null
 
+    private var readerPostListActivityResultLauncher: ActivityResultLauncher<Intent>? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ReaderTagFeedFragmentLayoutBinding.bind(view)
@@ -99,6 +108,11 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         bookmarksSavedLocallyDialog?.dismiss()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        initReaderPostListActivityResultLauncher()
+    }
+
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
         subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForTag(
             this,
@@ -109,7 +123,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         // TODO not triggered when there's no internet, so the error/no connection UI is not shown.
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
-            viewModel.start(tags)
+            viewModel.onTagsChanged(tags)
         }
 
         subFilterViewModel.currentSubFilter.observe(viewLifecycleOwner) { subFilter ->
@@ -129,15 +143,22 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 }
 
                 is ActionEvent.OpenTagPostList -> {
-                    ReaderActivityLauncher.showReaderTagPreview(
-                        context,
-                        it.readerTag,
-                        ReaderTracker.SOURCE_TAGS_FEED,
-                        readerTracker,
+                    if (!isAdded) {
+                        return@observe
+                    }
+                    readerTracker.trackTag(
+                        Stat.READER_TAG_PREVIEWED,
+                        it.readerTag.tagSlug,
+                        ReaderTracker.SOURCE_TAGS_FEED
+                    )
+                    readerPostListActivityResultLauncher?.launch(
+                        ReaderActivityLauncher.createReaderTagPreviewIntent(
+                            requireActivity(), it.readerTag, ReaderTracker.SOURCE_TAGS_FEED
+                        )
                     )
                 }
 
-                ActionEvent.RefreshTagsFeed -> {
+                ActionEvent.RefreshTags -> {
                     subFilterViewModel.updateTagsAndSites()
                 }
 
@@ -338,6 +359,22 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    private fun initReaderPostListActivityResultLauncher() {
+        readerPostListActivityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null) {
+                    val shouldRefreshTagsFeed = data.getBooleanExtra(RESULT_SHOULD_REFRESH_TAGS_FEED, false)
+                    if (shouldRefreshTagsFeed) {
+                        viewModel.onBackFromTagDetails()
+                    }
+                }
+            }
+        }
+    }
+
     override fun getScrollableViewForUniqueIdProvision(): View {
         return binding.composeView
     }
@@ -347,6 +384,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     companion object {
+        const val RESULT_SHOULD_REFRESH_TAGS_FEED = "RESULT_SHOULD_REFRESH_TAGS_FEED"
+
         private const val ARG_TAGS_FEED_TAG = "tags_feed_tag"
         private const val POST_LIST_FADE_DURATION = 250L
         private const val POST_LIST_FADE_IN_DELAY = 300L
