@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+25.0
+-----
+
+
 24.9
 -----
 * [*] [Jetpack-only] Removed Social section from the detail screen of Total Followers card [https://github.com/wordpress-mobile/WordPress-Android/pull/20763]

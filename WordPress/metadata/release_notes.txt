@@ -1,1 +1,2 @@
-April showers bring May flowers, but they unfortunately don’t bring release notes. Stay Juned for the next update.
+* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
+
