@@ -1243,10 +1243,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void popupSnackbarForCompleteUpdate() {
         Log.e("WPMainActivity", "showSnackBarForUpdate()");
-        WPSnackbar.make(findViewById(R.id.coordinator), R.string.update_available, Snackbar.LENGTH_LONG)
-                  .setAction(R.string.update_now, v -> {
+        WPSnackbar.make(findViewById(R.id.coordinator), R.string.in_app_update_available, Snackbar.LENGTH_INDEFINITE)
+                  .setAction(R.string.in_app_update_restart, v -> {
                       mInAppUpdateManager.completeAppUpdate();
-
                       // todo: AnalyticsTracker.track(Stat.IN_APP_UPDATE_COMPLETED);
                   })
                   .show();
