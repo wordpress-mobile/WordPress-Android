@@ -42,7 +42,7 @@ class InAppUpdateManager(
     private var updateListener: IInAppUpdateListener? = null
 
     fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
-        Log.e("AppUpdateChecker", "checkPlayStoreUpdate called")
+        Log.e(TAG, "checkForAppUpdate() entered")
 
         updateListener = listener
 
@@ -50,25 +50,32 @@ class InAppUpdateManager(
 
         appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
 
-            Log.e("AppUpdateChecker", appUpdateInfo.toString())
-            Log.e("AppUpdateChecker", appUpdateInfo.updateAvailability().toString())
-            Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checking update, success")
+            Log.e(TAG, "checkForAppUpdate(): success")
 
             val updateAvailability = appUpdateInfo.updateAvailability()
 
+            // If the update is downloaded but not installed,
+            // notify the user to complete the update.
+            if (appUpdateInfo.installStatus() == DOWNLOADED) {
+                Log.e(TAG, "checkForAppUpdate(): appUpdateInfo.installStatus() == DOWNLOADED")
+                listener.onAppUpdateDownloaded()
+                Log.e(TAG, "checkForAppUpdate(): listener.onAppUpdateDownloaded() called")
+                return@addOnSuccessListener
+            }
+
             when (updateAvailability) {
                 UPDATE_NOT_AVAILABLE -> {
-                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checking update, no update available")
+                    Log.e(TAG, "checkForAppUpdate(): no update available")
                     return@addOnSuccessListener
                 }
 
                 UPDATE_AVAILABLE -> {
-                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update available")
+                    Log.e(TAG, "checkForAppUpdate(): update available")
                     if (isImmediateUpdateNecessary()) {
-                        Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, immediate update")
+                        Log.e(TAG, "checkForAppUpdate(): isImmediateUpdateNecessary == true")
                         requestImmediateUpdate(appUpdateInfo, activity)
                     } else {
-                        Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, flexible update")
+                        Log.e(TAG, "checkForAppUpdate(): isImmediateUpdateNecessary == false")
                         if (shouldRequestFlexibleUpdate()) {
                             requestFlexibleUpdate(appUpdateInfo, activity)
                         }
@@ -76,53 +83,52 @@ class InAppUpdateManager(
                 }
 
                 DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
-                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update in progress")
+                    Log.e(TAG, "checkForAppUpdate(): UPDATE_IN_PROGRESS")
                     if (isImmediateUpdateInProgress(appUpdateInfo)) {
-                        Log.e(
-                            "AppUpdateChecker",
-                            "checkPlayStoreUpdate called, checcking update, immediate update in progress"
-                        )
+                        Log.e(TAG, "checkForAppUpdate(): isImmediateUpdateNecessary == true")
                         requestImmediateUpdate(appUpdateInfo, activity)
                     } else {
-                        Log.e(
-                            "AppUpdateChecker",
-                            "checkPlayStoreUpdate called, checcking update, flexible update in progress"
-                        )
+                        Log.e(TAG, "checkForAppUpdate(): isImmediateUpdateNecessary == false")
                         requestFlexibleUpdate(appUpdateInfo, activity)
                     }
                 }
 
                 UNKNOWN -> {
-                    Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, update available")
+                    Log.e(TAG, "checkForAppUpdate(): UNKNOWN")
                     return@addOnSuccessListener
                 }
             }
         }
 
         appUpdateInfoTask.addOnFailureListener { exception ->
-            Log.e("AppUpdateChecker", "checkPlayStoreUpdate called, checcking update, failure")
-            Log.e("AppUpdateChecker", exception.message.toString())
+            Log.e(TAG, "checkForAppUpdate():, checking update, failure")
+            Log.e(TAG, exception.message.toString())
         }
     }
 
     fun completeAppUpdate() {
+        Log.e(TAG, "completeAppUpdate(): entered")
         appUpdateManager.completeUpdate()
     }
 
     fun cancelAppUpdate() {
+        Log.e(TAG, "cancelAppUpdate(): entered")
         appUpdateManager.unregisterListener(installStateListener)
     }
 
     fun onUserAcceptedAppUpdate() {
+        Log.e(TAG, "onUserAcceptedAppUpdate(): entered")
         resetLastUpdateRequestedTime()
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
+        Log.e(TAG, "requestImmediateUpdate(): entered")
         updateListener?.onAppUpdateStarted(AppUpdateType.IMMEDIATE)
         requestUpdate(AppUpdateType.IMMEDIATE, appUpdateInfo, activity)
     }
 
     private fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
+        Log.e(TAG, "requestFlexibleUpdate(): entered")
         appUpdateManager.registerListener(installStateListener)
         updateListener?.onAppUpdateStarted(AppUpdateType.FLEXIBLE)
         requestUpdate(AppUpdateType.FLEXIBLE, appUpdateInfo, activity)
@@ -130,7 +136,7 @@ class InAppUpdateManager(
 
     @Suppress("TooGenericExceptionCaught")
     private fun requestUpdate(updateType: Int, appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        Log.e("AppUpdateChecker", "requestUpdate called for type: $updateType")
+        Log.e(TAG, "requestUpdate(): entered with updateType = $updateType")
         val requestCode = if (updateType == AppUpdateType.IMMEDIATE) {
             APP_UPDATE_IMMEDIATE_REQUEST_CODE
         } else {
@@ -145,8 +151,8 @@ class InAppUpdateManager(
                 requestCode
             )
         } catch (e: Exception) {
-            Log.e("AppUpdateChecker", "requestUpdate for type: $updateType, exception occurred")
-            Log.e("AppUpdateChecker", e.message.toString())
+            Log.e(TAG, "requestUpdate for type: $updateType, exception occurred")
+            Log.e(TAG, e.message.toString())
             appUpdateManager.unregisterListener(installStateListener)
         }
     }
@@ -156,62 +162,83 @@ class InAppUpdateManager(
         override fun onStateUpdate(state: InstallState) {
             when (state.installStatus()) {
                 DOWNLOADED -> {
-                    Log.e("AppUpdateChecker", "installStateListener DOWNLOADED")
+                    Log.e(TAG, "installStateListener DOWNLOADED")
                     updateListener?.onAppUpdateDownloaded()
                 }
                 INSTALLED -> {
-                    Log.e("AppUpdateChecker", "installStateListener INSTALLED")
+                    Log.e(TAG, "installStateListener INSTALLED")
                     updateListener?.onAppUpdateInstalled()
                     appUpdateManager.unregisterListener(this) // 'this' refers to the listener object
                 }
                 CANCELED -> {
-                    Log.e("AppUpdateChecker", "installStateListener CANCELED")
+                    Log.e(TAG, "installStateListener CANCELED")
                     updateListener?.onAppUpdateCancelled()
                     appUpdateManager.unregisterListener(this)
                 }
                 FAILED -> {
-                    Log.e("AppUpdateChecker", "installStateListener FAILED")
+                    Log.e(TAG, "installStateListener FAILED")
                     updateListener?.onAppUpdateFailed()
                     appUpdateManager.unregisterListener(this)
                 }
                 PENDING -> {
-                    Log.e("AppUpdateChecker", "installStateListener PENDING")
+                    Log.e(TAG, "installStateListener PENDING")
                     updateListener?.onAppUpdatePending()
                 }
                 DOWNLOADING -> {
-                    Log.e("AppUpdateChecker", "installStateListener DOWNLOADING")
+                    Log.e(TAG, "installStateListener DOWNLOADING")
                 }
                 INSTALLING -> {
-                    Log.e("AppUpdateChecker", "installStateListener INSTALLING")
+                    Log.e(TAG, "installStateListener INSTALLING")
                 }
                 InstallStatus.UNKNOWN -> {
-                    Log.e("AppUpdateChecker", "installStateListener UNKNOWN")
+                    Log.e(TAG, "installStateListener UNKNOWN")
                 }
             }
         }
     }
 
     private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+        Log.e(TAG, "isImmediateUpdateInProgress(): entered, " +
+                "appUpdateInfo.updateAvailability() = ${appUpdateInfo.updateAvailability()}," +
+                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) = ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
+                "isImmediateUpdateNecessary = ${isImmediateUpdateNecessary()}")
+        val result = appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 && isImmediateUpdateNecessary()
+
+        Log.e(TAG, "isImmediateUpdateInProgress(): result = $result")
+
+        return result
+
     }
 
     private fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
-        return appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+        Log.e(TAG, "isFlexibleUpdateInProgress(): entered, " +
+                "appUpdateInfo.updateAvailability() = ${appUpdateInfo.updateAvailability()}," +
+                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) = ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
+                "isImmediateUpdateNecessary = ${isImmediateUpdateNecessary()}")
+        val result = appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
                 && !isImmediateUpdateNecessary()
+
+        Log.e(TAG, "isFlexibleUpdateInProgress(): result = $result")
+
+        return result
     }
 
     private fun setLastUpdateRequestedTime() {
+        Log.e(TAG, "setLastUpdateRequestedTime(): entered")
+        val currentTime = currentTimeProvider.invoke()
+        Log.e(TAG, "setLastUpdateRequestedTime(): currentTime = $currentTime")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
-            putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTimeProvider.invoke())
+            putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTime)
             apply()
         }
     }
 
     private fun resetLastUpdateRequestedTime() {
+        Log.e(TAG, "resetLastUpdateRequestedTime(): entered")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, -1L)
@@ -221,12 +248,20 @@ class InAppUpdateManager(
 
     private fun getLastUpdateRequestedTime(): Long {
         val defaultValue = -1L
-        return applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val result = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .getLong(KEY_LAST_APP_UPDATE_CHECK_TIME, defaultValue)
+
+        Log.e(TAG, "getLastUpdateRequestedTime(): result = $result")
+
+        return result
     }
 
-    private fun shouldRequestFlexibleUpdate() =
-        currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS
+    private fun shouldRequestFlexibleUpdate(): Boolean {
+        Log.e(TAG, "shouldRequestFlexibleUpdate(): entered")
+        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS
+        Log.e(TAG, "shouldRequestFlexibleUpdate(): result = $result")
+        return result
+    }
 
 
     /**
@@ -270,11 +305,22 @@ class InAppUpdateManager(
      *
      * @return `true` if the current app version is lower than the last blocking app version, otherwise `false`.
      */
-    private fun isImmediateUpdateNecessary() = getCurrentAppVersion() < getLastBlockingAppVersion()
+    private fun isImmediateUpdateNecessary(): Boolean {
+        Log.e(TAG, "isImmediateUpdateNecessary(): entered")
+        val currentVersion = getCurrentAppVersion()
+        val getLastBlockingAppVersion = getLastBlockingAppVersion()
+        Log.e(TAG, "isImmediateUpdateNecessary() called")
+        Log.e(TAG, "currentVersion = $currentVersion, lastBlockingVersion = $getLastBlockingAppVersion")
+        val result = getCurrentAppVersion() < getLastBlockingAppVersion()
+        Log.e(TAG, "isImmediateUpdateNecessary(): result = $result")
+        return result
+    }
 
     companion object {
         const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
         const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
+
+        private const val TAG = "AppUpdateChecker"
 
         private const val PREF_NAME = "in_app_update_prefs"
         private const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
