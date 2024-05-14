@@ -192,7 +192,9 @@ public class HistoryDetailContainerFragment extends Fragment {
         final ArrayList<Revision> revisions = new ArrayList<>();
         for (int i = 0; i < revisionModels.size(); i++) {
             final RevisionModel current = revisionModels.get(i);
-            revisions.add(new Revision(current));
+            if (current != null) {
+                revisions.add(new Revision(current));
+            }
         }
         return revisions;
     }
