@@ -25,6 +25,9 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
+private val ThinLineHeight = 10.dp
+private val ThickLineHeight = 16.dp
+
 @Composable
 fun ReaderTagsFeedPostListItemLoading() {
     val contentColor = if (isSystemInDarkTheme()) {
@@ -48,7 +51,7 @@ fun ReaderTagsFeedPostListItemLoading() {
             Box(
                 modifier = Modifier
                     .width(150.dp)
-                    .height(8.dp)
+                    .height(ThinLineHeight)
                     .clip(shape = RoundedCornerShape(16.dp))
                     .background(contentColor),
             )
@@ -71,14 +74,14 @@ fun ReaderTagsFeedPostListItemLoading() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.95f)
-                        .height(16.dp)
+                        .height(ThickLineHeight)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .background(contentColor),
                 )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .height(16.dp)
+                        .height(ThickLineHeight)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .background(contentColor),
                 )
@@ -102,14 +105,14 @@ fun ReaderTagsFeedPostListItemLoading() {
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
-                    .height(8.dp)
+                    .height(ThinLineHeight)
                     .clip(shape = RoundedCornerShape(16.dp))
                     .background(contentColor),
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth(0.5f)
-                    .height(8.dp)
+                    .height(ThinLineHeight)
                     .clip(shape = RoundedCornerShape(16.dp))
                     .background(contentColor),
             )
