@@ -317,7 +317,21 @@ class SubFilterViewModel @Inject constructor(
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
         // We should not track subfilter selected if we're clearing a filter that is currently applied.
         if (!subfilterListItem.isClearingFilter) {
-            readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+            val filterItemType = when(subfilterListItem.type) {
+                SubfilterListItem.ItemType.SITE -> FilterItemType.Blog
+                SubfilterListItem.ItemType.TAG -> FilterItemType.Tag
+                else -> null
+            }
+            if (filterItemType != null) {
+                readerTracker.track(
+                    Stat.READER_FILTER_SHEET_ITEM_SELECTED,
+                    mutableMapOf("type" to filterItemType.trackingValue)
+                )
+            } else {
+                readerTracker.track(
+                    Stat.READER_FILTER_SHEET_ITEM_SELECTED,
+                )
+            }
         }
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
@@ -424,5 +438,11 @@ class SubFilterViewModel @Inject constructor(
         fun getViewModelKeyForTag(tag: ReaderTag): String {
             return SUBFILTER_VM_BASE_KEY + tag.keyString
         }
+    }
+
+    sealed class FilterItemType(val trackingValue: String) {
+        object Tag : FilterItemType("tag")
+
+        object Blog : FilterItemType("blog")
     }
 }
