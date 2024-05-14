@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.UrlUtilsWrapper
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -22,9 +23,12 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
 
     private val readerUtilsWrapper = mock<ReaderUtilsWrapper>()
 
+    private val urlUtilsWrapper = mock<UrlUtilsWrapper>()
+
     private val classToTest: ReaderTagsFeedUiStateMapper = ReaderTagsFeedUiStateMapper(
         dateTimeUtilsWrapper = dateTimeUtilsWrapper,
         readerUtilsWrapper = readerUtilsWrapper,
+        urlUtilsWrapper = urlUtilsWrapper,
     )
 
     @Suppress("LongMethod")
@@ -92,6 +96,96 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                 listOf(
                     TagsFeedPostItem(
                         siteName = readerPost.blogName,
+                        postDateLine = dateLine,
+                        postTitle = readerPost.title,
+                        postExcerpt = readerPost.excerpt,
+                        postImageUrl = readerPost.featuredImage,
+                        postNumberOfLikesText = numberLikesText,
+                        postNumberOfCommentsText = numberCommentsText,
+                        isPostLiked = readerPost.isLikedByCurrentUser,
+                        isLikeButtonEnabled = true,
+                        postId = 0L,
+                        blogId = 0L,
+                        onSiteClick = onSiteClick,
+                        onPostLikeClick = onPostLikeClick,
+                        onPostCardClick = onPostCardClick,
+                        onPostMoreMenuClick = onPostMoreMenuClick,
+                    )
+                )
+            ),
+            onItemEnteredView = onItemEnteredView,
+        )
+        assertEquals(expected, actual)
+    }
+
+    @Suppress("LongMethod")
+    @Test
+    fun `Should map loaded TagFeedItem correctly with blank blog name`() {
+        // Given
+        val readerPost = ReaderPost().apply {
+            blogName = ""
+            blogUrl = "https://blogurl.wordpress.com"
+            title = "Title"
+            excerpt = "Excerpt"
+            featuredImage = "url"
+            numLikes = 5
+            numReplies = 10
+            isLikedByCurrentUser = true
+            datePublished = ""
+        }
+        val postList = ReaderPostList().apply {
+            add(readerPost)
+        }
+        val readerTag = ReaderTag(
+            "tag",
+            "tag",
+            "tag",
+            "endpoint",
+            ReaderTagType.FOLLOWED,
+        )
+        val onTagClick = { _: ReaderTag -> }
+        val onSiteClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
+        val onPostMoreMenuClick = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+
+        val dateLine = "dateLine"
+        val numberLikesText = "numberLikesText"
+        val numberCommentsText = "numberCommentsText"
+
+        // When
+        whenever(dateTimeUtilsWrapper.dateFromIso8601(any()))
+            .thenReturn(Date(0))
+        whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(any()))
+            .thenReturn(dateLine)
+        whenever(readerUtilsWrapper.getShortLikeLabelText(readerPost.numLikes))
+            .thenReturn(numberLikesText)
+        whenever(readerUtilsWrapper.getShortCommentLabelText(readerPost.numReplies))
+            .thenReturn(numberCommentsText)
+        whenever(urlUtilsWrapper.removeScheme(readerPost.blogUrl))
+            .thenReturn("blogurl.wordpress.com")
+
+        val actual = classToTest.mapLoadedTagFeedItem(
+            tag = readerTag,
+            posts = postList,
+            onTagClick = onTagClick,
+            onSiteClick = onSiteClick,
+            onPostCardClick = onPostCardClick,
+            onPostLikeClick = onPostLikeClick,
+            onPostMoreMenuClick = onPostMoreMenuClick,
+            onItemEnteredView = onItemEnteredView,
+        )
+        // Then
+        val expected = ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = readerTag,
+                onTagClick = onTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Loaded(
+                listOf(
+                    TagsFeedPostItem(
+                        siteName = "blogurl.wordpress.com",
                         postDateLine = dateLine,
                         postTitle = readerPost.title,
                         postExcerpt = readerPost.excerpt,

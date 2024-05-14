@@ -5,11 +5,13 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.UrlUtilsWrapper
 import javax.inject.Inject
 
 class ReaderTagsFeedUiStateMapper @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val urlUtilsWrapper: UrlUtilsWrapper,
 ) {
     @Suppress("LongParameterList")
     fun mapLoadedTagFeedItem(
@@ -27,25 +29,26 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             onTagClick = onTagClick,
         ),
         postList = ReaderTagsFeedViewModel.PostList.Loaded(
-            posts.map {
+            posts.map { post ->
                 TagsFeedPostItem(
-                    siteName = it.blogName,
+                    siteName = post.blogName.takeIf { it.isNotBlank() }
+                        ?: post.blogUrl.let { urlUtilsWrapper.removeScheme(it) },
                     postDateLine = dateTimeUtilsWrapper.javaDateToTimeSpan(
-                        it.getDisplayDate(dateTimeUtilsWrapper)
+                        post.getDisplayDate(dateTimeUtilsWrapper)
                     ),
-                    postTitle = it.title,
-                    postExcerpt = it.excerpt,
-                    postImageUrl = it.featuredImage,
-                    postNumberOfLikesText = if (it.numLikes > 0) readerUtilsWrapper.getShortLikeLabelText(
-                        numLikes = it.numLikes
+                    postTitle = post.title,
+                    postExcerpt = post.excerpt,
+                    postImageUrl = post.featuredImage,
+                    postNumberOfLikesText = if (post.numLikes > 0) readerUtilsWrapper.getShortLikeLabelText(
+                        numLikes = post.numLikes
                     ) else "",
-                    postNumberOfCommentsText = if (it.numReplies > 0) readerUtilsWrapper.getShortCommentLabelText(
-                        numComments = it.numReplies
+                    postNumberOfCommentsText = if (post.numReplies > 0) readerUtilsWrapper.getShortCommentLabelText(
+                        numComments = post.numReplies
                     ) else "",
-                    isPostLiked = it.isLikedByCurrentUser,
+                    isPostLiked = post.isLikedByCurrentUser,
                     isLikeButtonEnabled = true,
-                    postId = it.postId,
-                    blogId = it.blogId,
+                    postId = post.postId,
+                    blogId = post.blogId,
                     onSiteClick = onSiteClick,
                     onPostCardClick = onPostCardClick,
                     onPostLikeClick = onPostLikeClick,
