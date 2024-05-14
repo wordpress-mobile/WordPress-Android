@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
@@ -25,6 +26,9 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
     }
+
+    override fun getCommentIdentifier(): CommentIdentifier =
+        CommentIdentifier.NotificationCommentIdentifier(mNote!!.id, mNote!!.commentId);
 
     override fun handleHeaderVisibility() {
         mBinding?.headerView?.isGone = true

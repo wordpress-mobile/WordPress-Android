@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
@@ -62,8 +63,11 @@ import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
+import org.wordpress.android.ui.comments.unified.CommentActionPopupHandler;
+import org.wordpress.android.ui.comments.unified.CommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
+import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -158,6 +162,8 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
     @Nullable protected CommentDetailFragmentBinding mBinding = null;
     @Nullable protected ReaderIncludeCommentBoxBinding mReplyBinding = null;
+
+    private final OnEditCommentListener mOnEditCommentListener = this::editComment;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -271,6 +277,10 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         // this is necessary in order for anchor tags in the comment text to be clickable
         mBinding.textContent.setLinksClickable(true);
         mBinding.textContent.setMovementMethod(WPLinkMovementMethod.getInstance());
+
+        mBinding.imageMore.setOnClickListener(v ->
+                CommentActionPopupHandler.show(mBinding.imageMore, mOnEditCommentListener)
+        );
 
         mReplyBinding.editComment.setHint(R.string.reader_hint_comment_on_comment);
         mReplyBinding.editComment.setOnEditorActionListener((v, actionId, event) -> {
@@ -497,6 +507,40 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             mNotificationsDetailListFragment.refreshBlocksForEditedComment(note.getId());
         }
     }
+
+    /**
+     * open the comment for editing
+     */
+    @SuppressWarnings("deprecation")
+    private void editComment() {
+        if (!isAdded()) {
+            return;
+        }
+        if (mCommentSource != null) {
+            AnalyticsUtils.trackCommentActionWithSiteDetails(
+                    Stat.COMMENT_EDITOR_OPENED,
+                    mCommentSource.toAnalyticsCommentActionSource(),
+                    mSite
+            );
+        }
+
+        // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
+        // won't be called in this fragment
+        // https://code.google.com/p/android/issues/detail?id=15394#c45
+        final CommentIdentifier commentIdentifier = getCommentIdentifier();
+        if (commentIdentifier != null) {
+            final Intent intent = UnifiedCommentsEditActivity.createIntent(
+                    requireActivity(),
+                    commentIdentifier,
+                    mSite
+            );
+            startActivityForResult(intent, INTENT_COMMENT_EDITOR);
+        } else {
+            throw new IllegalArgumentException("CommentIdentifier cannot be null");
+        }
+    }
+
+    abstract CommentIdentifier getCommentIdentifier();
 
     /*
      * display the current comment
@@ -956,6 +1000,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
+        mNotificationsDetailListFragment.setOnEditCommentListener(mOnEditCommentListener);
         fragmentTransaction.replace(binding.commentContentContainer.getId(), mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
     }
@@ -1103,5 +1148,12 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             mSuggestionServiceConnectionManager.unbindFromService();
         }
         super.onDestroy();
+    }
+
+    /**
+     * Listener for the edit comment action in [NotificationsDetailListFragment]
+     */
+    public interface OnEditCommentListener {
+        void onClicked();
     }
 }

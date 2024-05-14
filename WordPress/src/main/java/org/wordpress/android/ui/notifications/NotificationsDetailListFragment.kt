@@ -43,6 +43,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
+import org.wordpress.android.ui.comments.CommentDetailFragment
+import org.wordpress.android.ui.comments.unified.CommentActionPopupHandler
 import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
@@ -73,6 +75,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
+    private var onEditCommentListener: CommentDetailFragment.OnEditCommentListener? = null
     private var restoredListPosition = 0
     private var notification: Note? = null
     private var rootLayout: LinearLayout? = null
@@ -269,6 +272,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             } else if (!TextUtils.isEmpty(siteUrl)) {
                 detailActivity.showWebViewActivityForUrl(siteUrl)
             }
+        }
+
+        override fun showActionPopup(view: View) {
+            CommentActionPopupHandler.show(view, onEditCommentListener)
         }
 
         fun handleNoteBlockSpanClick(
@@ -652,6 +659,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 note.commentId
             )
         }
+    }
+
+    fun setOnEditCommentListener(listener: CommentDetailFragment.OnEditCommentListener){
+        onEditCommentListener = listener
     }
 
     companion object {
