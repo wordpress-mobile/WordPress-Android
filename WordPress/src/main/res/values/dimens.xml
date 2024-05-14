@@ -263,6 +263,7 @@
     <dimen name="comment_avatar_sz">40dp</dimen>
     <dimen name="comment_status_dot_sz">8dp</dimen>
     <dimen name="comment_list_divider_start_offset">72dp</dimen>
+    <dimen name="comment_action_popup_width">200dp</dimen>
 
     <!-- notifications -->
     <dimen name="notifications_max_image_size">240dp</dimen>

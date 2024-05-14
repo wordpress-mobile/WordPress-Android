@@ -21,21 +21,21 @@ import org.wordpress.android.util.image.ImageType
 // A user block with slightly different formatting for display in a comment detail
 @Suppress("LongParameterList")
 class CommentUserNoteBlock(
-    private val mContext: Context?, noteObject: FormattableContent,
-    private val mCommentData: FormattableContent?,
+    private val context: Context?, noteObject: FormattableContent,
+    private val commentData: FormattableContent?,
     private val timestamp: Long, onNoteBlockTextClickListener: OnNoteBlockTextClickListener?,
     onGravatarClickedListener: OnGravatarClickedListener?,
     imageManager: ImageManager,
     notificationsUtilsWrapper: NotificationsUtilsWrapper
 ) : UserNoteBlock(
-    mContext, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
+    context, noteObject, onNoteBlockTextClickListener, onGravatarClickedListener, imageManager,
     notificationsUtilsWrapper
 ) {
-    private var mCommentStatus = CommentStatus.APPROVED
-    private var mNormalBackgroundColor = 0
-    private var mIndentedLeftPadding = 0
-    private var mStatusChanged = false
-    private var mNoteBlockHolder: CommentUserNoteBlockHolder? = null
+    private var commentStatus = CommentStatus.APPROVED
+    private var normalBackgroundColor = 0
+    private var indentedLeftPadding = 0
+    private var statusChanged = false
+    private var holder: CommentUserNoteBlockHolder? = null
 
     override val blockType: BlockType
         get() = BlockType.USER_COMMENT
@@ -43,7 +43,7 @@ class CommentUserNoteBlock(
         get() = R.layout.note_block_comment_user
 
     init {
-        avatarSize = mContext?.resources?.getDimensionPixelSize(R.dimen.avatar_sz_small) ?: 0
+        avatarSize = context?.resources?.getDimensionPixelSize(R.dimen.avatar_sz_small) ?: 0
     }
 
     interface OnCommentStatusChangeListener {
@@ -52,7 +52,7 @@ class CommentUserNoteBlock(
 
     @SuppressLint("ClickableViewAccessibility") // fixed by setting a click listener to avatarImageView
     override fun configureView(view: View): View {
-        mNoteBlockHolder = view.tag as CommentUserNoteBlockHolder
+        holder = view.tag as CommentUserNoteBlockHolder
         setUserName()
         setUserCommentAgo()
         setUserAvatar()
@@ -61,13 +61,13 @@ class CommentUserNoteBlock(
     }
 
     private fun setUserName() {
-        mNoteBlockHolder?.mNameTextView?.text = noteText.toString()
+        holder?.textName?.text = noteText.toString()
     }
 
     private fun setUserCommentAgo() {
-        mNoteBlockHolder?.mAgoTextView?.text = DateTimeUtils.timeSpanFromTimestamp(
+        holder?.textDate?.text = DateTimeUtils.timeSpanFromTimestamp(
             timestamp,
-            mNoteBlockHolder?.mAgoTextView?.context
+            holder?.textDate?.context
         )
     }
 
@@ -76,41 +76,41 @@ class CommentUserNoteBlock(
         var imageUrl = ""
         if (hasImageMediaItem()) {
             noteMediaItem?.url?.let { imageUrl = WPAvatarUtils.rewriteAvatarUrl(it, avatarSize) }
-            mNoteBlockHolder?.mAvatarImageView?.contentDescription =
-                mContext?.getString(R.string.profile_picture, noteText.toString())
+            holder?.imageAvatar?.contentDescription =
+                context?.getString(R.string.profile_picture, noteText.toString())
             if (!TextUtils.isEmpty(userUrl)) {
-                mNoteBlockHolder?.mAvatarImageView?.setOnClickListener { showBlogPreview() }
-                mNoteBlockHolder?.mAvatarImageView?.setOnTouchListener(mOnGravatarTouchListener)
+                holder?.imageAvatar?.setOnClickListener { showBlogPreview() }
+                holder?.imageAvatar?.setOnTouchListener(mOnGravatarTouchListener)
             } else {
-                mNoteBlockHolder?.mAvatarImageView?.setOnClickListener(null)
-                mNoteBlockHolder?.mAvatarImageView?.setOnTouchListener(null)
-                mNoteBlockHolder?.mAvatarImageView?.contentDescription = null
+                holder?.imageAvatar?.setOnClickListener(null)
+                holder?.imageAvatar?.setOnTouchListener(null)
+                holder?.imageAvatar?.contentDescription = null
             }
         } else {
-            mNoteBlockHolder?.mAvatarImageView?.setOnClickListener(null)
-            mNoteBlockHolder?.mAvatarImageView?.setOnTouchListener(null)
-            mNoteBlockHolder?.mAvatarImageView?.contentDescription = null
+            holder?.imageAvatar?.setOnClickListener(null)
+            holder?.imageAvatar?.setOnTouchListener(null)
+            holder?.imageAvatar?.contentDescription = null
         }
-        mNoteBlockHolder?.mAvatarImageView?.let {
+        holder?.imageAvatar?.let {
             mImageManager.loadIntoCircle(it, ImageType.AVATAR_WITH_BACKGROUND, imageUrl)
         }
     }
 
     private fun setUserComment() {
-        val spannable = getCommentTextOfNotification(mNoteBlockHolder)
+        val spannable = getCommentTextOfNotification(holder)
         val spans = spannable.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java)
-        mContext?.let {
+        context?.let {
             for (span in spans) {
                 span.enableColors(it)
             }
         }
-        mNoteBlockHolder?.mCommentTextView?.text = spannable
+        holder?.textComment?.text = spannable
     }
 
     private fun getCommentTextOfNotification(noteBlockHolder: CommentUserNoteBlockHolder?): Spannable {
         val builder = mNotificationsUtilsWrapper.getSpannableContentForRanges(
-            mCommentData,
-            noteBlockHolder?.mCommentTextView,
+            commentData,
+            noteBlockHolder?.textComment,
             onNoteBlockTextClickListener,
             false
         )
@@ -134,36 +134,39 @@ class CommentUserNoteBlock(
     override fun getViewHolder(view: View): Any = CommentUserNoteBlockHolder(view)
 
     private inner class CommentUserNoteBlockHolder constructor(view: View) {
-        val mAvatarImageView: ImageView = view.findViewById(R.id.user_avatar)
-        val mNameTextView: TextView = view.findViewById(R.id.user_name)
-        val mAgoTextView: TextView = view.findViewById<TextView?>(R.id.user_comment_ago).apply {
+        val imageAvatar: ImageView = view.findViewById(R.id.user_avatar)
+        val textName: TextView = view.findViewById(R.id.user_name)
+        val textDate: TextView = view.findViewById<TextView?>(R.id.user_comment_ago).apply {
             visibility = View.VISIBLE
         }
-        val mCommentTextView: TextView = view.findViewById<TextView?>(R.id.user_comment).apply {
+        val textComment: TextView = view.findViewById<TextView?>(R.id.user_comment).apply {
             movementMethod = NoteBlockLinkMovementMethod()
             setOnClickListener {
                 // show all comments on this post when user clicks the comment text
                 onNoteBlockTextClickListener?.showReaderPostComments()
             }
         }
+        val buttonMore = view.findViewById<View>(R.id.image_more).apply {
+            setOnClickListener { onNoteBlockTextClickListener?.showActionPopup(this)  }
+        }
     }
 
     fun configureResources(context: Context?) {
-        mNormalBackgroundColor = context?.getColorFromAttribute(com.google.android.material.R.attr.colorSurface) ?: 0
+        normalBackgroundColor = context?.getColorFromAttribute(com.google.android.material.R.attr.colorSurface) ?: 0
         // Double margin_extra_large for increased indent in comment replies
-        mIndentedLeftPadding = (context?.resources?.getDimensionPixelSize(R.dimen.margin_extra_large) ?: 0) * 2
+        indentedLeftPadding = (context?.resources?.getDimensionPixelSize(R.dimen.margin_extra_large) ?: 0) * 2
     }
 
     val onCommentChangeListener: OnCommentStatusChangeListener =
         object : OnCommentStatusChangeListener {
             override fun onCommentStatusChanged(newStatus: CommentStatus) {
-                mCommentStatus = newStatus
-                mStatusChanged = true
+                commentStatus = newStatus
+                statusChanged = true
             }
         }
 
     fun setCommentStatus(status: CommentStatus) {
-        mCommentStatus = status
+        commentStatus = status
     }
 
     companion object {
