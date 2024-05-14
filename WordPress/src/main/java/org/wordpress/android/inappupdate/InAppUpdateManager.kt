@@ -71,6 +71,14 @@ class InAppUpdateManager(
 
                 UPDATE_AVAILABLE -> {
                     Log.e(TAG, "checkForAppUpdate(): update available")
+
+                    // reset saved values if new update is available
+                    val updateVersion = getAvailableUpdateAppVersion(appUpdateInfo)
+                    Log.e(TAG, "checkForAppUpdate(): updateVersion = $updateVersion")
+                    if (updateVersion != getLastUpdateRequestedVersion()) {
+                        resetLastUpdateRequestInfo()
+                    }
+
                     if (isImmediateUpdateNecessary()) {
                         Log.e(TAG, "checkForAppUpdate(): isImmediateUpdateNecessary == true")
                         requestImmediateUpdate(appUpdateInfo, activity)
@@ -118,7 +126,7 @@ class InAppUpdateManager(
 
     fun onUserAcceptedAppUpdate() {
         Log.e(TAG, "onUserAcceptedAppUpdate(): entered")
-        resetLastUpdateRequestedTime()
+        //resetLastUpdateRequestedTime()
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
@@ -140,7 +148,7 @@ class InAppUpdateManager(
         val requestCode = if (updateType == AppUpdateType.IMMEDIATE) {
             APP_UPDATE_IMMEDIATE_REQUEST_CODE
         } else {
-            setLastUpdateRequestedTime()
+            saveLastUpdateRequestInfo(appUpdateInfo)
             APP_UPDATE_FLEXIBLE_REQUEST_CODE
         }
         try {
@@ -226,24 +234,36 @@ class InAppUpdateManager(
         return result
     }
 
-    private fun setLastUpdateRequestedTime() {
+    private fun saveLastUpdateRequestInfo(appUpdateInfo: AppUpdateInfo) {
         Log.e(TAG, "setLastUpdateRequestedTime(): entered")
         val currentTime = currentTimeProvider.invoke()
         Log.e(TAG, "setLastUpdateRequestedTime(): currentTime = $currentTime")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
+            putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, getAvailableUpdateAppVersion(appUpdateInfo))
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTime)
             apply()
         }
     }
 
-    private fun resetLastUpdateRequestedTime() {
+    private fun resetLastUpdateRequestInfo() {
         Log.e(TAG, "resetLastUpdateRequestedTime(): entered")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
+            putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, -1)
             putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, -1L)
             apply()
         }
+    }
+
+    private fun getLastUpdateRequestedVersion(): Int {
+        val defaultValue = -1
+        val result = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, defaultValue)
+
+        Log.e(TAG, "getLastUpdateRequestedVersion(): result = $result")
+
+        return result
     }
 
     private fun getLastUpdateRequestedTime(): Long {
@@ -323,6 +343,7 @@ class InAppUpdateManager(
         private const val TAG = "AppUpdateChecker"
 
         private const val PREF_NAME = "in_app_update_prefs"
+        private const val KEY_LAST_APP_UPDATE_CHECK_VERSION = "last_app_update_check_version"
         private const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
         private const val FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS: Long = 1000 * 60 * 60 * 24 * 5 // 5 days
     }
