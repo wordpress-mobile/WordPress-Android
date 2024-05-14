@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -49,8 +50,8 @@ import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 
-private const val CONTENT_TOTAL_LINES_WITH_INTERACTIONS = 4
-private const val CONTENT_TOTAL_LINES_NO_INTERACTIONS = 5
+private const val CONTENT_TOTAL_LINES = 3
+
 
 @Composable
 fun ReaderTagsFeedPostListItem(
@@ -69,10 +70,13 @@ fun ReaderTagsFeedPostListItem(
     Column(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
-            .height(ReaderTagsFeedComposeUtils.PostItemHeight)
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight),
+        verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .heightIn(min = 24.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Site name
@@ -107,8 +111,6 @@ fun ReaderTagsFeedPostListItem(
             )
         }
 
-        Spacer(modifier = Modifier.height(Margin.Small.value))
-
         // Post content row
         Row(
             modifier = Modifier
@@ -124,10 +126,8 @@ fun ReaderTagsFeedPostListItem(
                 onClick = { onPostCardClick(item) },
                 titleColor = baseColor,
                 excerptColor = primaryElementColor,
-                hasInteractions = hasInteractions,
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .weight(1f),
             )
 
             // Post image
@@ -141,6 +141,8 @@ fun ReaderTagsFeedPostListItem(
 
         // Likes and comments row
         if (hasInteractions) {
+            val interactionTextStyle = MaterialTheme.typography.bodySmall
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -149,7 +151,7 @@ fun ReaderTagsFeedPostListItem(
                 // Number of likes
                 Text(
                     text = postNumberOfLikesText,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = interactionTextStyle,
                     color = secondaryElementColor,
                     maxLines = 1,
                 )
@@ -161,20 +163,18 @@ fun ReaderTagsFeedPostListItem(
                             horizontal = Margin.Small.value
                         ),
                         text = "•",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = interactionTextStyle,
                         color = secondaryElementColor,
                     )
                 }
                 // Number of comments
                 Text(
                     text = postNumberOfCommentsText,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = interactionTextStyle,
                     color = secondaryElementColor,
                     maxLines = 1,
                 )
             }
-
-            Spacer(Modifier.height(Margin.Small.value))
         }
 
         // Actions row
@@ -267,18 +267,9 @@ fun PostTextContent(
     excerpt: String,
     titleColor: Color,
     excerptColor: Color,
-    hasInteractions: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val totalLines = remember(hasInteractions) {
-        if (hasInteractions) {
-            CONTENT_TOTAL_LINES_WITH_INTERACTIONS
-        } else {
-            CONTENT_TOTAL_LINES_NO_INTERACTIONS
-        }
-    }
-
     BoxWithConstraints(
         modifier = modifier,
     ) {
@@ -288,28 +279,24 @@ fun PostTextContent(
         }
 
         val textMeasurer = rememberTextMeasurer()
-        val titleLayoutResult = textMeasurer.measure(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
-            overflow = TextOverflow.Ellipsis,
-            constraints = Constraints(maxWidth = maxWidthPx),
-        )
-        val titleLines = titleLayoutResult.lineCount
+        val titleStyle = MaterialTheme.typography.titleMedium
 
-        // Check if excerpt is ellipsized
-        val excerptMaxLines = totalLines - titleLines
-        val excerptLayoutResult = textMeasurer.measure(
-            text = excerpt,
-            style = MaterialTheme.typography.bodySmall,
-            maxLines = excerptMaxLines,
-            overflow = TextOverflow.Ellipsis,
-            constraints = Constraints(maxWidth = maxWidthPx),
-        )
-        val isExcerptFullHeight = excerptLayoutResult.lineCount == excerptMaxLines
+        val excerptMaxLines = remember(title, titleStyle, maxWidthPx) {
+            val titleLayoutResult = textMeasurer.measure(
+                text = title,
+                style = titleStyle,
+                maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
+                overflow = TextOverflow.Ellipsis,
+                constraints = Constraints(maxWidth = maxWidthPx),
+            )
+
+            val titleLines = titleLayoutResult.lineCount
+            CONTENT_TOTAL_LINES - titleLines
+        }
 
         Column(
             modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
         ) {
             // Post title
             Text(
@@ -326,10 +313,6 @@ fun PostTextContent(
                 overflow = TextOverflow.Ellipsis,
             )
 
-            Spacer(
-                if (isExcerptFullHeight) Modifier.weight(1f) else Modifier.height(Margin.Medium.value)
-            )
-
             // Post excerpt
             Text(
                 modifier = Modifier
@@ -344,10 +327,6 @@ fun PostTextContent(
                 maxLines = excerptMaxLines,
                 overflow = TextOverflow.Ellipsis,
             )
-
-            if (isExcerptFullHeight) {
-                Spacer(Modifier.weight(1f))
-            }
         }
     }
 }
