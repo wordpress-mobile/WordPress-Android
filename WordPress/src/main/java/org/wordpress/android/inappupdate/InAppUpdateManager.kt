@@ -301,12 +301,8 @@ class InAppUpdateManager(
      *
      * @return The version code of the last blocking app update.
      */
-    private fun getLastBlockingAppVersion(): Int =
-        if (buildConfigWrapper.isJetpackApp) {
-            remoteConfigWrapper.getJetpackInAppUpdateBlockingVersion()
-        } else {
-            remoteConfigWrapper.getWordPressInAppUpdateBlockingVersion()
-        }
+    private fun getLastBlockingAppVersion(): Int = remoteConfigWrapper.getInAppUpdateBlockingVersion()
+
 
     /**
      * Extracts the available version code for the app update from the given update information.
