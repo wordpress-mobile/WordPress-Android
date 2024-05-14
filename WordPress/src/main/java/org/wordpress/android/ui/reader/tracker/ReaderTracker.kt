@@ -88,6 +88,7 @@ class ReaderTracker @Inject constructor(
                 ReaderTab.A8C -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_A8C_SHOWN)
                 ReaderTab.P2 -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_P2_SHOWN)
                 ReaderTab.CUSTOM -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN)
+                ReaderTab.TAGS_FEED -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_TAGS_FEED_SHOWN)
             }
             appPrefsWrapper.setReaderActiveTab(readerTab)
         }
@@ -516,7 +517,8 @@ enum class ReaderTab(
     SAVED(4, ReaderTracker.SOURCE_SAVED),
     CUSTOM(5, ReaderTracker.SOURCE_CUSTOM),
     A8C(6, ReaderTracker.SOURCE_A8C),
-    P2(7, ReaderTracker.SOURCE_P2);
+    P2(7, ReaderTracker.SOURCE_P2),
+    TAGS_FEED(8, ReaderTracker.SOURCE_TAGS_FEED);
 
     companion object {
         fun fromId(id: Int): ReaderTab {
@@ -528,6 +530,7 @@ enum class ReaderTab(
                 A8C.id -> A8C
                 P2.id -> P2
                 CUSTOM.id -> CUSTOM
+                TAGS_FEED.id -> TAGS_FEED
                 else -> throw RuntimeException("Unexpected ReaderTab id")
             }
         }
@@ -541,6 +544,7 @@ enum class ReaderTab(
                 readerTag.isDiscover -> DISCOVER
                 readerTag.isA8C -> A8C
                 readerTag.isP2 -> P2
+                readerTag.isTags -> TAGS_FEED
                 else -> CUSTOM
             }
         }
