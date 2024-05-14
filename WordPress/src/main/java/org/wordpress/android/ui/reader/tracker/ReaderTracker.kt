@@ -404,6 +404,7 @@ class ReaderTracker @Inject constructor(
             readerTag.isA8C -> "a8c"
             readerTag.isListTopic -> "list"
             readerTag.isP2 -> "p2"
+            readerTag.isTags -> "tags"
             else -> null
         }?.let { trackingId ->
             analyticsTrackerWrapper.track(

@@ -326,6 +326,23 @@ class ReaderTrackerTest {
     }
 
     @Test
+    fun `Should track dropdown menu tags feed item tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                null,
+                ReaderTagType.TAGS,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "tags"),
+        )
+    }
+
+    @Test
     fun `Should track post with reading preferences returned from ReadingPreferencesTracker`() {
         val post = ReaderPost()
         val readingPreferences = ReaderReadingPreferences()
