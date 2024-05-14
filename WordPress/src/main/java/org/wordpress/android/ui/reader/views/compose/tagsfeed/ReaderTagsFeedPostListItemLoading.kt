@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,7 +47,7 @@ fun ReaderTagsFeedPostListItemLoading() {
         ) {
             Box(
                 modifier = Modifier
-                    .width(99.dp)
+                    .width(150.dp)
                     .height(8.dp)
                     .clip(shape = RoundedCornerShape(16.dp))
                     .background(contentColor),
@@ -66,62 +65,23 @@ fun ReaderTagsFeedPostListItemLoading() {
             Column(
                 modifier = Modifier
                     .weight(1f),
+                verticalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             ) {
                 // Title placeholder
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth(0.9f)
-                        .height(18.dp)
+                        .fillMaxWidth(0.95f)
+                        .height(16.dp)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .background(contentColor),
                 )
-
-                Spacer(modifier = Modifier.height(Margin.Medium.value))
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .height(18.dp)
+                        .height(16.dp)
                         .clip(shape = RoundedCornerShape(16.dp))
                         .background(contentColor),
                 )
-
-                Spacer(modifier = Modifier.height(Margin.Medium.value))
-
-                // Excerpt placeholder
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(8.dp)
-                            .clip(shape = RoundedCornerShape(16.dp))
-                            .background(contentColor),
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.9f)
-                            .height(8.dp)
-                            .clip(shape = RoundedCornerShape(16.dp))
-                            .background(contentColor),
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.85f)
-                            .height(8.dp)
-                            .clip(shape = RoundedCornerShape(16.dp))
-                            .background(contentColor),
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .height(8.dp)
-                            .clip(shape = RoundedCornerShape(16.dp))
-                            .background(contentColor),
-                    )
-                }
             }
 
             // Image placeholder
@@ -133,25 +93,27 @@ fun ReaderTagsFeedPostListItemLoading() {
             )
         }
 
-        // Likes and comments placeholder
-//        Box(
-//            modifier = Modifier
-//                .width(170.dp)
-//                .height(12.dp)
-//                .clip(shape = RoundedCornerShape(16.dp))
-//                .background(contentColor),
-//        )
-
-//        Spacer(Modifier.height(Margin.Medium.value))
-
-        // Actions placeholder
-        Box(
+        // Likes and comments + actions placeholder
+        Column(
             modifier = Modifier
-                .width(170.dp)
-                .height(16.dp)
-                .clip(shape = RoundedCornerShape(16.dp))
-                .background(contentColor),
-        )
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Margin.MediumLarge.value),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(8.dp)
+                    .clip(shape = RoundedCornerShape(16.dp))
+                    .background(contentColor),
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(8.dp)
+                    .clip(shape = RoundedCornerShape(16.dp))
+                    .background(contentColor),
+            )
+        }
     }
 }
 
