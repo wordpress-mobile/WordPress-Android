@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.debug.preferences
 
 import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.eq
@@ -19,11 +20,13 @@ class DebugSharedPreferenceFlagsViewModelTest {
 
     @Test
     fun `WHEN init THEN should load the flags from the prefs`() {
-        whenever(prefsWrapper.getAllPrefs()).thenReturn(mapOf("key" to true))
+        DebugPrefs.entries.forEach {
+            whenever(prefsWrapper.getDebugBooleanPref(it.key, false)).thenReturn(false)
+        }
 
         initViewModel()
 
-        assertTrue(viewModel.uiStateFlow.value["key"]!!)
+        assertFalse(viewModel.uiStateFlow.value.isEmpty())
     }
 
     @Test
