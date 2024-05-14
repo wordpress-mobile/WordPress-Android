@@ -72,7 +72,7 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 import javax.inject.Named
 
-class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
+open class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var restoredListPosition = 0
     private var notification: Note? = null
     private var rootLayout: LinearLayout? = null
