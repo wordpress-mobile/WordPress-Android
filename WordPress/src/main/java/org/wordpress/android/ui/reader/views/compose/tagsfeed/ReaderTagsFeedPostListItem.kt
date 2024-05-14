@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -23,7 +26,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -43,16 +45,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
+import org.wordpress.android.util.extensions.getColorResIdFromAttribute
+import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 
 private const val CONTENT_TOTAL_LINES = 3
 
-
+@SuppressLint("ResourceType")
 @Composable
 fun ReaderTagsFeedPostListItem(
     item: TagsFeedPostItem,
@@ -223,19 +229,33 @@ fun ReaderTagsFeedPostListItem(
                 )
             }
             Spacer(Modifier.weight(1f))
-            // More menu ("…")
-            IconButton(
-                modifier = Modifier.size(24.dp),
-                onClick = {
-                    onPostMoreMenuClick()
-                },
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_more_ellipsis_horizontal_squares),
-                    contentDescription = stringResource(R.string.show_more_desc),
-                    tint = secondaryElementColor,
-                )
-            }
+            // More menu ("…"). It's an AndroidView because we must have a way to get the view and inflate the existing
+            // menu, which is a ListPopupWindow and requires an achor.
+            AndroidView(
+                factory = { context ->
+                    ImageView(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon),
+                            context.resources.getDimensionPixelSize(R.dimen.reader_post_card_new_more_icon)
+                        )
+                        setImageResource(R.drawable.ic_more_ellipsis_horizontal_squares)
+                        contentDescription = context.resources.getString(R.string.show_more_desc)
+                        setBackgroundResource(
+                            context.getDrawableResIdFromAttribute(
+                                com.google.android.material.R.attr.selectableItemBackgroundBorderless
+                            )
+                        )
+                        setColorFilter(
+                            ContextCompat.getColor(
+                                context,
+                                context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
+                            )
+                        )
+                        tag = "${item.blogId}${item.postId}"
+                        setOnClickListener { onPostMoreMenuClick(item) }
+                    }
+                }
+            )
         }
     }
 }

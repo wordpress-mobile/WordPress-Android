@@ -17,16 +17,18 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     fun mapLoadedTagFeedItem(
         tag: ReaderTag,
         posts: ReaderPostList,
-        onTagClick: (ReaderTag) -> Unit,
+        onTagChipClick: (ReaderTag) -> Unit,
+        onMoreFromTagClick: (ReaderTag) -> Unit,
         onSiteClick: (TagsFeedPostItem) -> Unit,
         onPostCardClick: (TagsFeedPostItem) -> Unit,
         onPostLikeClick: (TagsFeedPostItem) -> Unit,
-        onPostMoreMenuClick: () -> Unit,
+        onPostMoreMenuClick: (TagsFeedPostItem) -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ) = ReaderTagsFeedViewModel.TagFeedItem(
         tagChip = ReaderTagsFeedViewModel.TagChip(
             tag = tag,
-            onTagClick = onTagClick,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
         ),
         postList = ReaderTagsFeedViewModel.PostList.Loaded(
             posts.map { post ->
@@ -59,17 +61,20 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         onItemEnteredView = onItemEnteredView,
     )
 
+    @Suppress("LongParameterList")
     fun mapErrorTagFeedItem(
         tag: ReaderTag,
         errorType: ReaderTagsFeedViewModel.ErrorType,
-        onTagClick: (ReaderTag) -> Unit,
+        onTagChipClick: (ReaderTag) -> Unit,
+        onMoreFromTagClick: (ReaderTag) -> Unit,
         onRetryClick: () -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ): ReaderTagsFeedViewModel.TagFeedItem =
         ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
                 tag = tag,
-                onTagClick = onTagClick,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
             ),
             postList = ReaderTagsFeedViewModel.PostList.Error(
                 type = errorType,
@@ -78,10 +83,12 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
             onItemEnteredView = onItemEnteredView,
         )
 
+    @Suppress("LongParameterList")
     fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
         isRefreshing: Boolean,
-        onTagClick: (ReaderTag) -> Unit,
+        onTagChipClick: (ReaderTag) -> Unit,
+        onMoreFromTagClick: (ReaderTag) -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
         onRefresh: () -> Unit,
     ): ReaderTagsFeedViewModel.UiState.Loaded =
@@ -90,7 +97,8 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                 ReaderTagsFeedViewModel.TagFeedItem(
                     tagChip = ReaderTagsFeedViewModel.TagChip(
                         tag = tag,
-                        onTagClick = onTagClick,
+                        onTagChipClick = onTagChipClick,
+                        onMoreFromTagClick = onMoreFromTagClick,
                     ),
                     postList = ReaderTagsFeedViewModel.PostList.Initial,
                     onItemEnteredView = onItemEnteredView,
@@ -102,13 +110,15 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
 
     fun mapLoadingTagFeedItem(
         tag: ReaderTag,
-        onTagClick: (ReaderTag) -> Unit,
+        onTagChipClick: (ReaderTag) -> Unit,
+        onMoreFromTagClick: (ReaderTag) -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ): ReaderTagsFeedViewModel.TagFeedItem =
         ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
                 tag = tag,
-                onTagClick = onTagClick,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
             ),
             postList = ReaderTagsFeedViewModel.PostList.Loading,
             onItemEnteredView = onItemEnteredView,

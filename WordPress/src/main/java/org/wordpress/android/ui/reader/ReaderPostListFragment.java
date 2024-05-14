@@ -779,6 +779,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         initReaderSubsActivityResultLauncher();
+
+        final Activity activity = getActivity();
+        if (activity != null) {
+            final Intent intent = new Intent();
+            intent.putExtra(ReaderTagsFeedFragment.RESULT_SHOULD_REFRESH_TAGS_FEED, true);
+            activity.setResult(Activity.RESULT_OK, intent);
+        }
     }
 
     private void initReaderSubsActivityResultLauncher() {
