@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.viewmodels.tagsfeed
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,13 +14,23 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderTypes
+import org.wordpress.android.ui.reader.discover.FEATURED_IMAGE_HEIGHT_WIDTH_RATION
+import org.wordpress.android.ui.reader.discover.PHOTON_WIDTH_QUALITY_RATION
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
+import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -34,6 +45,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val postLikeUseCase: PostLikeUseCase,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
+    private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -44,8 +58,18 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
+    // Unlike the snackbarEvents observable which only expects messages from ReaderPostCardActionsHandler,
+    // this observable is controlled by this ViewModel.
     private val _errorMessageEvents = MediatorLiveData<Event<Int>>()
     val errorMessageEvents: LiveData<Event<Int>> = _errorMessageEvents
+
+    // This observable just expects messages from ReaderPostCardActionsHandler. Nothing is directly triggered
+    // from this ViewModel.
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _openMoreMenuEvents = SingleLiveEvent<MoreMenuUiState>()
+    val openMoreMenuEvents: LiveData<MoreMenuUiState> = _openMoreMenuEvents
 
     private var hasInitialized = false
 
@@ -54,8 +78,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
      * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
      */
-    fun start(tags: List<ReaderTag>) {
-        // don't start again if the tags match, unless the user requested a refresh
+    fun onTagsChanged(tags: List<ReaderTag>) {
+        // don't fetch tags again if the tags match, unless the user requested a refresh
         (_uiStateFlow.value as? UiState.Loaded)?.let { loadedState ->
             if (!loadedState.isRefreshing && tags == loadedState.data.map { it.tagChip.tag }) {
                 return
@@ -69,15 +93,18 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         if (!hasInitialized) {
             hasInitialized = true
+            readerPostCardActionsHandler.initScope(viewModelScope)
             initNavigationEvents()
+            initSnackbarEvents()
         }
 
-        // Initially add all tags to the list with the posts loading UI
+        // Add tags to the list with the posts loading UI
         _uiStateFlow.update {
             readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                 tags,
                 false,
-                ::onTagClick,
+                ::onTagChipClick,
+                ::onMoreFromTagClick,
                 ::onItemEnteredView,
                 ::onRefresh
             )
@@ -86,12 +113,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private fun initNavigationEvents() {
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
-            // TODO reblog supported in this screen? See ReaderPostDetailViewModel and ReaderDiscoverViewModel
-//            val target = event.peekContent()
-//            if (target is ReaderNavigationEvents.ShowSitePickerForResult) {
-//                pendingReblogPost = target.post
-//            }
             _navigationEvents.value = event
+        }
+    }
+
+    private fun initSnackbarEvents() {
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
         }
     }
 
@@ -105,7 +133,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         updateTagFeedItem(
             readerTagsFeedUiStateMapper.mapLoadingTagFeedItem(
                 tag = tag,
-                onTagClick = ::onTagClick,
+                onTagChipClick = ::onTagChipClick,
+                onMoreFromTagClick = ::onMoreFromTagClick,
                 onItemEnteredView = ::onItemEnteredView,
             )
         )
@@ -117,7 +146,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 readerTagsFeedUiStateMapper.mapLoadedTagFeedItem(
                     tag = tag,
                     posts = posts,
-                    onTagClick = ::onTagClick,
+                    onTagChipClick = ::onTagChipClick,
+                    onMoreFromTagClick = ::onMoreFromTagClick,
                     onSiteClick = ::onSiteClick,
                     onPostCardClick = ::onPostCardClick,
                     onPostLikeClick = ::onPostLikeClick,
@@ -128,7 +158,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                     tag = tag,
                     errorType = ErrorType.NoContent,
-                    onTagClick = ::onTagClick,
+                    onTagChipClick = ::onTagChipClick,
+                    onMoreFromTagClick = ::onMoreFromTagClick,
                     onRetryClick = ::onRetryClick,
                     onItemEnteredView = ::onItemEnteredView,
                 )
@@ -137,7 +168,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
             readerTagsFeedUiStateMapper.mapErrorTagFeedItem(
                 tag = tag,
                 errorType = ErrorType.Default,
-                onTagClick = ::onTagClick,
+                onTagChipClick = ::onTagChipClick,
+                onMoreFromTagClick = ::onMoreFromTagClick,
                 onRetryClick = ::onRetryClick,
                 onItemEnteredView = ::onItemEnteredView,
             )
@@ -177,7 +209,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         _uiStateFlow.update {
             (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
         }
-        _actionEvents.value = ActionEvent.RefreshTagsFeed
+        _actionEvents.value = ActionEvent.RefreshTags
+    }
+
+    fun onBackFromTagDetails() {
+        _actionEvents.value = ActionEvent.RefreshTags
     }
 
     @VisibleForTesting
@@ -192,13 +228,19 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onOpenTagsListClick() {
-        // TODO
+    @VisibleForTesting
+    fun onOpenTagsListClick() {
+        _actionEvents.value = ActionEvent.ShowTagsList
     }
 
     @VisibleForTesting
-    fun onTagClick(readerTag: ReaderTag) {
-        _actionEvents.value = ActionEvent.OpenTagPostsFeed(readerTag)
+    fun onTagChipClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.FilterTagPostsFeed(readerTag)
+    }
+
+    @VisibleForTesting
+    fun onMoreFromTagClick(readerTag: ReaderTag) {
+        _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
     private fun onRetryClick() {
@@ -348,8 +390,50 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostMoreMenuClick() {
-        // TODO
+    private fun onPostMoreMenuClick(postItem: TagsFeedPostItem) {
+        launch {
+            findPost(postItem.postId, postItem.blogId)?.let { post ->
+                val items = readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
+                    post = post,
+                    includeBookmark = true,
+                    onButtonClicked = ::onMoreMenuButtonClicked,
+                )
+                val photonWidth = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+                val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
+                _openMoreMenuEvents.postValue(
+                    MoreMenuUiState(
+                        readerCardUiState = readerPostUiStateBuilder.mapPostToNewUiState(
+                            source = ReaderTracker.SOURCE_TAGS_FEED,
+                            post = post,
+                            photonWidth = photonWidth,
+                            photonHeight = photonHeight,
+                            postListType = ReaderTypes.ReaderPostListType.TAGS_FEED,
+                            onButtonClicked = { _, _, _ -> },
+                            onItemClicked = { _, _ -> },
+                            onItemRendered = {},
+                            onMoreButtonClicked = {},
+                            onMoreDismissed = {},
+                            onVideoOverlayClicked = { _, _ -> },
+                            onPostHeaderViewClicked = { _, _ -> },
+                        ),
+                        readerPostCardActions = items,
+                    )
+                )
+            }
+        }
+    }
+
+    private fun onMoreMenuButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+        launch {
+            findPost(postId, blogId)?.let {
+                readerPostCardActionsHandler.onAction(
+                    it,
+                    type,
+                    isBookmarkList = false,
+                    source = ReaderTracker.SOURCE_DISCOVER
+                )
+            }
+        }
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
@@ -361,9 +445,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     sealed class ActionEvent {
-        data class OpenTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
+        data class FilterTagPostsFeed(val readerTag: ReaderTag) : ActionEvent()
 
-        data object RefreshTagsFeed : ActionEvent()
+        data class OpenTagPostList(val readerTag: ReaderTag) : ActionEvent()
+
+        data object RefreshTags : ActionEvent()
+
+        data object ShowTagsList : ActionEvent()
     }
 
     sealed class UiState {
@@ -392,7 +480,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     data class TagChip(
         val tag: ReaderTag,
-        val onTagClick: (ReaderTag) -> Unit,
+        val onTagChipClick: (ReaderTag) -> Unit,
+        val onMoreFromTagClick: (ReaderTag) -> Unit,
     )
 
     sealed class PostList {
@@ -413,4 +502,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data object NoContent : ErrorType
     }
+
+    data class MoreMenuUiState(
+        val readerCardUiState: ReaderCardUiState.ReaderPostNewUiState,
+        val readerPostCardActions: List<ReaderPostCardAction>,
+    )
 }

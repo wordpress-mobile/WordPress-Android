@@ -1,7 +1,16 @@
 package org.wordpress.android.ui.reader
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.ViewCompat.animate
@@ -9,17 +18,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
@@ -28,6 +40,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.ReaderTagsFeed
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
@@ -62,8 +75,15 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     @Inject
     lateinit var readerTracker: ReaderTracker
 
+    @Inject
+    lateinit var uiHelpers: UiHelpers
+
     // binding
     private lateinit var binding: ReaderTagFeedFragmentLayoutBinding
+
+    private var bookmarksSavedLocallyDialog: AlertDialog? = null
+
+    private var readerPostListActivityResultLauncher: ActivityResultLauncher<Intent>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,6 +99,18 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeActionEvents()
         observeNavigationEvents()
         observeErrorMessageEvents()
+        observeSnackbarEvents()
+        observeOpenMoreMenuEvents()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        bookmarksSavedLocallyDialog?.dismiss()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        initReaderPostListActivityResultLauncher()
     }
 
     private fun observeSubFilterViewModel(savedInstanceState: Bundle?) {
@@ -91,7 +123,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         // TODO not triggered when there's no internet, so the error/no connection UI is not shown.
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) { subFilters ->
             val tags = subFilters.filterIsInstance<SubfilterListItem.Tag>().map { it.tag }
-            viewModel.start(tags)
+            viewModel.onTagsChanged(tags)
         }
 
         subFilterViewModel.currentSubFilter.observe(viewLifecycleOwner) { subFilter ->
@@ -106,12 +138,39 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     private fun observeActionEvents() {
         viewModel.actionEvents.observe(viewLifecycleOwner) {
             when (it) {
-                is ActionEvent.OpenTagPostsFeed -> {
+                is ActionEvent.FilterTagPostsFeed -> {
                     subFilterViewModel.setSubfilterFromTag(it.readerTag)
                 }
 
-                ActionEvent.RefreshTagsFeed -> {
+                is ActionEvent.OpenTagPostList -> {
+                    if (!isAdded) {
+                        return@observe
+                    }
+                    readerTracker.trackTag(
+                        Stat.READER_TAG_PREVIEWED,
+                        it.readerTag.tagSlug,
+                        ReaderTracker.SOURCE_TAGS_FEED
+                    )
+                    readerPostListActivityResultLauncher?.launch(
+                        ReaderActivityLauncher.createReaderTagPreviewIntent(
+                            requireActivity(), it.readerTag, ReaderTracker.SOURCE_TAGS_FEED
+                        )
+                    )
+                }
+
+                ActionEvent.RefreshTags -> {
                     subFilterViewModel.updateTagsAndSites()
+                }
+
+                ActionEvent.ShowTagsList -> {
+                    val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+                    if (readerInterestsFragment == null) {
+                        (parentFragment as? ReaderFragment)?.childFragmentManager?.beginTransaction()?.replace(
+                            R.id.interests_fragment_container,
+                            ReaderInterestsFragment(),
+                            ReaderInterestsFragment.TAG
+                        )?.commitNow()
+                    }
                 }
             }
         }
@@ -191,49 +250,16 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
                 is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
                 is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-                is ReaderNavigationEvents.ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
-                    context,
-                    event.blogId,
-                    event.postId,
-                    ThreadedCommentsActionSource.READER_POST_CARD.sourceDescription
-                )
-
-                is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                is ReaderNavigationEvents.ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
-                    this@ReaderTagsFeedFragment,
-                    event.preselectedSite,
-                    event.mode
-                )
-
-                is ReaderNavigationEvents.OpenEditorForReblog -> ActivityLauncher.openEditorForReblog(
-                    activity,
-                    event.site,
-                    event.post,
-                    event.source
-                )
-
-                is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
                 is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> {
                     showBookmarkSavedLocallyDialog(event)
                 }
-                is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(
-                    context,
-                    event.tag,
-                    ReaderTracker.SOURCE_DISCOVER,
-                    readerTracker
-                )
-
-                is ReaderNavigationEvents.ShowVideoViewer -> ReaderActivityLauncher.showReaderVideoViewer(
-                    context,
-                    event.videoUrl
-                )
 
                 is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
                     context,
                     event.siteId,
                     event.feedId,
                     event.isFollowed,
-                    ReaderTracker.SOURCE_DISCOVER,
+                    ReaderTracker.SOURCE_TAGS_FEED,
                     readerTracker
                 )
 
@@ -249,7 +275,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                     ReaderActivityLauncher.OpenUrlType.INTERNAL
                 )
 
-                is ReaderNavigationEvents.ShowReaderSubs -> ReaderActivityLauncher.showReaderSubs(context)
                 else -> Unit // Do Nothing
             }
         }
@@ -263,28 +288,91 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         }
     }
 
+    private fun observeSnackbarEvents() {
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
+            if (isAdded) {
+                activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
+                    with(snackbarMessageHolder) {
+                        val snackbar = WPSnackbar.make(
+                            coordinator,
+                            uiHelpers.getTextOfUiString(requireContext(), message),
+                            Snackbar.LENGTH_LONG
+                        )
+                        if (buttonTitle != null) {
+                            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
+                                buttonAction.invoke()
+                            }
+                        }
+                        snackbar.show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeOpenMoreMenuEvents() {
+        viewModel.openMoreMenuEvents.observe(viewLifecycleOwner) {
+            val readerCardUiState = it.readerCardUiState
+            val blogId = readerCardUiState.blogId
+            val postId = readerCardUiState.postId
+            val anchorView = binding.composeView.findViewWithTag<View>("$blogId$postId")
+            if (anchorView != null) {
+                readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
+                val listPopup = ListPopupWindow(anchorView.context)
+                listPopup.width = anchorView.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
+                listPopup.setAdapter(ReaderMenuAdapter(anchorView.context, uiHelpers, it.readerPostCardActions))
+                listPopup.setDropDownGravity(Gravity.END)
+                listPopup.anchorView = anchorView
+                listPopup.isModal = true
+                listPopup.setOnItemClickListener { _, _, position, _ ->
+                    listPopup.dismiss()
+                    val item = it.readerPostCardActions[position]
+                    item.onClicked?.invoke(postId, blogId, item.type)
+                }
+                listPopup.setOnDismissListener { readerCardUiState.onMoreDismissed.invoke(readerCardUiState) }
+                listPopup.show()
+            }
+        }
+    }
+
     private fun showBookmarkSavedLocallyDialog(
         bookmarkDialog: ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
     ) {
         // TODO show bookmark saved dialog?
         bookmarkDialog.buttonLabel
-//        if (bookmarksSavedLocallyDialog == null) {
-//            MaterialAlertDialogBuilder(requireActivity())
-//                .setTitle(getString(bookmarkDialog.title))
-//                .setMessage(getString(bookmarkDialog.message))
-//                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
-//                    bookmarkDialog.okButtonAction.invoke()
-//                }
-//                .setOnDismissListener {
-//                    bookmarksSavedLocallyDialog = null
-//                }
-//                .setCancelable(false)
-//                .create()
-//                .let {
-//                    bookmarksSavedLocallyDialog = it
-//                    it.show()
-//                }
-//        }
+        if (bookmarksSavedLocallyDialog == null) {
+            MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(bookmarkDialog.title))
+                .setMessage(getString(bookmarkDialog.message))
+                .setPositiveButton(getString(bookmarkDialog.buttonLabel)) { _, _ ->
+                    bookmarkDialog.okButtonAction.invoke()
+                }
+                .setOnDismissListener {
+                    bookmarksSavedLocallyDialog = null
+                }
+                .setCancelable(false)
+                .create()
+                .let {
+                    bookmarksSavedLocallyDialog = it
+                    it.show()
+                }
+        }
+    }
+
+    private fun initReaderPostListActivityResultLauncher() {
+        readerPostListActivityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                if (data != null) {
+                    val shouldRefreshTagsFeed = data.getBooleanExtra(RESULT_SHOULD_REFRESH_TAGS_FEED, false)
+                    if (shouldRefreshTagsFeed) {
+                        viewModel.onBackFromTagDetails()
+                    }
+                }
+            }
+        }
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
@@ -296,6 +384,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     }
 
     companion object {
+        const val RESULT_SHOULD_REFRESH_TAGS_FEED = "RESULT_SHOULD_REFRESH_TAGS_FEED"
+
         private const val ARG_TAGS_FEED_TAG = "tags_feed_tag"
         private const val POST_LIST_FADE_DURATION = 250L
         private const val POST_LIST_FADE_IN_DELAY = 300L

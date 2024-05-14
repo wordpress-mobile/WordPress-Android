@@ -51,11 +51,12 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             "endpoint",
             ReaderTagType.FOLLOWED,
         )
-        val onTagClick = { _: ReaderTag -> }
+        val onTagChipClick = { _: ReaderTag -> }
+        val onMoreFromTagClick = { _: ReaderTag -> }
         val onSiteClick: (TagsFeedPostItem) -> Unit = {}
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
-        val onPostMoreMenuClick = {}
+        val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
 
         val dateLine = "dateLine"
@@ -75,7 +76,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val actual = classToTest.mapLoadedTagFeedItem(
             tag = readerTag,
             posts = postList,
-            onTagClick = onTagClick,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
             onSiteClick = onSiteClick,
             onPostCardClick = onPostCardClick,
             onPostLikeClick = onPostLikeClick,
@@ -86,7 +88,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val expected = ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
                 tag = readerTag,
-                onTagClick = onTagClick,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
             ),
             postList = ReaderTagsFeedViewModel.PostList.Loaded(
                 listOf(
@@ -125,14 +128,16 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             ReaderTagType.FOLLOWED,
         )
         val errorType = ReaderTagsFeedViewModel.ErrorType.Default
-        val onTagClick: (ReaderTag) -> Unit = {}
+        val onTagChipClick: (ReaderTag) -> Unit = {}
+        val onMoreFromTagClick: (ReaderTag) -> Unit = {}
         val onRetryClick = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
         // When
         val actual = classToTest.mapErrorTagFeedItem(
             tag = readerTag,
             errorType = errorType,
-            onTagClick = onTagClick,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
             onRetryClick = onRetryClick,
             onItemEnteredView = onItemEnteredView,
         )
@@ -141,7 +146,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val expected = ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
                 tag = readerTag,
-                onTagClick = onTagClick,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
             ),
             postList = ReaderTagsFeedViewModel.PostList.Error(
                 type = errorType,
@@ -155,7 +161,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
     @Test
     fun `Should map loading posts UI state correctly`() {
         // Given
-        val onTagClick: (ReaderTag) -> Unit = {}
+        val onTagChipClick: (ReaderTag) -> Unit = {}
+        val onMoreFromTagClick: (ReaderTag) -> Unit = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
         val onRefresh: () -> Unit = {}
         val tag1 = ReaderTag(
@@ -178,7 +185,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val actual = classToTest.mapInitialPostsUiState(
             tags = tags,
             isRefreshing = true,
-            onTagClick = onTagClick,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
             onItemEnteredView = onItemEnteredView,
             onRefresh = onRefresh,
         )
@@ -189,7 +197,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                 ReaderTagsFeedViewModel.TagFeedItem(
                     tagChip = ReaderTagsFeedViewModel.TagChip(
                         tag = tag1,
-                        onTagClick = onTagClick,
+                        onTagChipClick = onTagChipClick,
+                        onMoreFromTagClick = onMoreFromTagClick,
                     ),
                     postList = ReaderTagsFeedViewModel.PostList.Initial,
                     onItemEnteredView = onItemEnteredView,
@@ -197,7 +206,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
                 ReaderTagsFeedViewModel.TagFeedItem(
                     tagChip = ReaderTagsFeedViewModel.TagChip(
                         tag = tag2,
-                        onTagClick = onTagClick,
+                        onTagChipClick = onTagChipClick,
+                        onMoreFromTagClick = onMoreFromTagClick,
                     ),
                     postList = ReaderTagsFeedViewModel.PostList.Initial,
                     onItemEnteredView = onItemEnteredView,
