@@ -15,11 +15,16 @@ class DebugSharedPreferenceFlagsViewModel @Inject constructor(
     val uiStateFlow = _uiStateFlow.asStateFlow()
 
     init {
-        val flags = DebugPrefs.entries.mapNotNull {
+        val flags = prefsWrapper.getAllPrefs().mapNotNull { (key, value) ->
+            if (value is Boolean) key to value else null
+        }.toMap()
+
+        val explicitFlags = DebugPrefs.entries.mapNotNull {
             // Only supporting boolean for now.
             if (it.type == Boolean::class) it else null
         }.associate { it.key to prefsWrapper.getDebugBooleanPref(it.key, false) }
-        _uiStateFlow.value = flags
+        
+        _uiStateFlow.value = flags + explicitFlags
     }
 
     fun setFlag(key: String, value: Boolean) {
