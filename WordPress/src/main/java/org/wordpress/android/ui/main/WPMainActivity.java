@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.inappupdate.IInAppUpdateListener;
-import org.wordpress.android.inappupdate.InAppUpdateManager;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -301,7 +301,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
 
-    @Inject InAppUpdateManager mInAppUpdateManager;
+    @Inject IInAppUpdateManager mInAppUpdateManager;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
@@ -1516,11 +1516,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
-            case InAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
-            case InAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+            case IInAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
+            case IInAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     // The user has accepted the update
-                    mInAppUpdateManager.onUserAcceptedAppUpdate();
+                    //mInAppUpdateManager.onUserAcceptedAppUpdate();
                 } else if (resultCode == RESULT_CANCELED || resultCode == RESULT_IN_APP_UPDATE_FAILED) {
                     // The user denied the update or an error occurred
                     mInAppUpdateManager.cancelAppUpdate();

@@ -23,6 +23,8 @@ import com.google.android.play.core.install.model.UpdateAvailability.UNKNOWN
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_NOT_AVAILABLE
 import dagger.hilt.android.qualifiers.ApplicationContext
+import org.wordpress.android.inappupdate.IInAppUpdateManager.Companion.APP_UPDATE_FLEXIBLE_REQUEST_CODE
+import org.wordpress.android.inappupdate.IInAppUpdateManager.Companion.APP_UPDATE_IMMEDIATE_REQUEST_CODE
 
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.RemoteConfigWrapper
@@ -31,17 +33,17 @@ import javax.inject.Singleton
 
 @Singleton
 @Suppress("TooManyFunctions")
-class InAppUpdateManager(
+class InAppUpdateManagerImpl(
     @ApplicationContext private val applicationContext: Context,
     private val appUpdateManager: AppUpdateManager,
     private val remoteConfigWrapper: RemoteConfigWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val currentTimeProvider: () -> Long = {System.currentTimeMillis()}
-) {
+): IInAppUpdateManager {
 
     private var updateListener: IInAppUpdateListener? = null
 
-    fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
+    override fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
         Log.e(TAG, "checkForAppUpdate() entered")
 
         updateListener = listener
@@ -114,19 +116,18 @@ class InAppUpdateManager(
         }
     }
 
-    fun completeAppUpdate() {
+    override fun completeAppUpdate() {
         Log.e(TAG, "completeAppUpdate(): entered")
         appUpdateManager.completeUpdate()
     }
 
-    fun cancelAppUpdate() {
+    override fun cancelAppUpdate() {
         Log.e(TAG, "cancelAppUpdate(): entered")
         appUpdateManager.unregisterListener(installStateListener)
     }
 
     fun onUserAcceptedAppUpdate() {
         Log.e(TAG, "onUserAcceptedAppUpdate(): entered")
-        //resetLastUpdateRequestedTime()
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
@@ -333,8 +334,8 @@ class InAppUpdateManager(
     }
 
     companion object {
-        const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
-        const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
+        //const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
+        //const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
 
         private const val TAG = "AppUpdateChecker"
 

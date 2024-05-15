@@ -15,7 +15,9 @@ import com.tenor.android.core.network.ApiService;
 import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.inappupdate.InAppUpdateManager;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
+import org.wordpress.android.inappupdate.InAppUpdateManagerNoop;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
@@ -25,6 +27,7 @@ import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
@@ -87,19 +90,23 @@ public abstract class ApplicationModule {
     }
 
     @Provides
-    public static InAppUpdateManager provideInAppUpdateManager(
+    public static IInAppUpdateManager provideInAppUpdateManager(
             @ApplicationContext Context context,
             AppUpdateManager appUpdateManager,
             RemoteConfigWrapper remoteConfigWrapper,
-            BuildConfigWrapper buildConfigWrapper
+            BuildConfigWrapper buildConfigWrapper,
+            InAppUpdatesFeatureConfig inAppUpdatesFeatureConfig
     ) {
-        return new InAppUpdateManager(
+        // Check if in-app updates feature is enabled
+        return inAppUpdatesFeatureConfig.isEnabled()
+                ? new InAppUpdateManagerImpl(
                 context,
                 appUpdateManager,
                 remoteConfigWrapper,
                 buildConfigWrapper,
                 System::currentTimeMillis
-        );
+        )
+                : new InAppUpdateManagerNoop();
     }
 
     @Provides

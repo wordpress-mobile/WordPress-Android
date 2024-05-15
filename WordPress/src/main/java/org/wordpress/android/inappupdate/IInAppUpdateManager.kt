@@ -1,0 +1,14 @@
+package org.wordpress.android.inappupdate
+
+import android.app.Activity
+
+interface IInAppUpdateManager {
+    fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener)
+    fun completeAppUpdate()
+    fun cancelAppUpdate()
+
+    companion object {
+        const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
+        const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
+    }
+}
