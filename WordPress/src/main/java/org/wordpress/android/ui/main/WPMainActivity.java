@@ -31,6 +31,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
@@ -1517,15 +1518,22 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
             case IInAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
-            case IInAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
-                if (resultCode == RESULT_OK) {
-                    // The user has accepted the update
-                    //mInAppUpdateManager.onUserAcceptedAppUpdate();
-                } else if (resultCode == RESULT_CANCELED || resultCode == RESULT_IN_APP_UPDATE_FAILED) {
-                    // The user denied the update or an error occurred
-                    mInAppUpdateManager.cancelAppUpdate();
-                }
+                handleUpdateResult(resultCode, AppUpdateType.FLEXIBLE);
                 break;
+            case IInAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+                handleUpdateResult(resultCode, AppUpdateType.IMMEDIATE);
+                break;
+        }
+    }
+
+    // Handles the result of the app update request
+    private void handleUpdateResult(int resultCode, int updateType) {
+        if (resultCode == RESULT_OK) {
+            // The user accepted the update
+            mInAppUpdateManager.onUserAcceptedAppUpdate(updateType);
+        } else if (resultCode == RESULT_CANCELED) {
+            // The user denied the update
+            mInAppUpdateManager.cancelAppUpdate();
         }
     }
 

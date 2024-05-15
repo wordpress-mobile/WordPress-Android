@@ -38,6 +38,7 @@ class InAppUpdateManagerImpl(
     private val appUpdateManager: AppUpdateManager,
     private val remoteConfigWrapper: RemoteConfigWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
+    private val inAppUpdateAnalyticsTracker: InAppUpdateAnalyticsTracker,
     private val currentTimeProvider: () -> Long = {System.currentTimeMillis()}
 ): IInAppUpdateManager {
 
@@ -124,10 +125,12 @@ class InAppUpdateManagerImpl(
     override fun cancelAppUpdate() {
         Log.e(TAG, "cancelAppUpdate(): entered")
         appUpdateManager.unregisterListener(installStateListener)
+        inAppUpdateAnalyticsTracker.trackUpdateDismissed()
     }
 
-    fun onUserAcceptedAppUpdate() {
+    override fun onUserAcceptedAppUpdate(updateType: Int) {
         Log.e(TAG, "onUserAcceptedAppUpdate(): entered")
+        inAppUpdateAnalyticsTracker.trackUpdateAccepted(updateType)
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
@@ -159,6 +162,7 @@ class InAppUpdateManagerImpl(
                 AppUpdateOptions.newBuilder(updateType).build(),
                 requestCode
             )
+            inAppUpdateAnalyticsTracker.trackUpdateShown(updateType)
         } catch (e: Exception) {
             Log.e(TAG, "requestUpdate for type: $updateType, exception occurred")
             Log.e(TAG, e.message.toString())

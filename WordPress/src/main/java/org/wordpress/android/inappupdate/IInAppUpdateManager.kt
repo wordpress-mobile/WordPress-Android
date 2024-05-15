@@ -6,6 +6,7 @@ interface IInAppUpdateManager {
     fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener)
     fun completeAppUpdate()
     fun cancelAppUpdate()
+    fun onUserAcceptedAppUpdate(updateType: Int)
 
     companion object {
         const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001

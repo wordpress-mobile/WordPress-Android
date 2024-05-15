@@ -14,4 +14,8 @@ class InAppUpdateManagerNoop: IInAppUpdateManager {
     override fun cancelAppUpdate() {
         /* Empty implementation */
     }
+
+    override fun onUserAcceptedAppUpdate(updateType: Int) {
+        /* Empty implementation */
+    }
 }

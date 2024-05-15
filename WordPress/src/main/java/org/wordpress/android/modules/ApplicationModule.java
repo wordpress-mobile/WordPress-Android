@@ -16,6 +16,7 @@ import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateAnalyticsTracker;
 import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
 import org.wordpress.android.inappupdate.InAppUpdateManagerNoop;
 import org.wordpress.android.ui.ActivityNavigator;
@@ -95,7 +96,8 @@ public abstract class ApplicationModule {
             AppUpdateManager appUpdateManager,
             RemoteConfigWrapper remoteConfigWrapper,
             BuildConfigWrapper buildConfigWrapper,
-            InAppUpdatesFeatureConfig inAppUpdatesFeatureConfig
+            InAppUpdatesFeatureConfig inAppUpdatesFeatureConfig,
+            InAppUpdateAnalyticsTracker inAppUpdateAnalyticsTracker
     ) {
         // Check if in-app updates feature is enabled
         return inAppUpdatesFeatureConfig.isEnabled()
@@ -104,6 +106,7 @@ public abstract class ApplicationModule {
                 appUpdateManager,
                 remoteConfigWrapper,
                 buildConfigWrapper,
+                inAppUpdateAnalyticsTracker,
                 System::currentTimeMillis
         )
                 : new InAppUpdateManagerNoop();
