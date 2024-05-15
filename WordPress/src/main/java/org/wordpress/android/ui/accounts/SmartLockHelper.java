@@ -82,6 +82,10 @@ public class SmartLockHelper {
                 .build();
         Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
                 result -> {
+                    Activity currentActivity = getActivityAndCheckAvailability();
+                    if (currentActivity == null) {
+                        return;
+                    }
                     Status status = result.getStatus();
                     if (status.isSuccess()) {
                         Credential credential = result.getCredential();
@@ -89,10 +93,6 @@ public class SmartLockHelper {
                     } else {
                         if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
                             try {
-                                Activity currentActivity = getActivityAndCheckAvailability();
-                                if (currentActivity == null) {
-                                    return;
-                                }
                                 // Prompt the user to choose a saved credential
                                 status.startResolutionForResult(currentActivity, RequestCodes.SMART_LOCK_READ);
                             } catch (IntentSender.SendIntentException e) {
