@@ -261,9 +261,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostCardClick(postItem: TagsFeedPostItem) {
+    @VisibleForTesting
+    fun onPostCardClick(postItem: TagsFeedPostItem) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
+                readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+                    it.blogId, it.feedId, it.isFollowedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED,
+                )
                 readerPostCardActionsHandler.handleOnItemClicked(
                     it,
                     ReaderTracker.SOURCE_TAGS_FEED

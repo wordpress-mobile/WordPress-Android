@@ -600,6 +600,49 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         assertIs<ActionEvent.RefreshTags>(actionEvents.first())
     }
 
+    @Test
+    fun `Should track READER_POST_CARD_TAPPED when onPostCardClick is called`() = testCollectingUiStates {
+        // Given
+        val blogId = 123L
+        val feedId = 456L
+        val isFollowedByCurrentUser = true
+        whenever(readerPostTableWrapper.getBlogPost(any(), any(), any()))
+            .thenReturn(ReaderPost().apply {
+                this.blogId = blogId
+                this.feedId = feedId
+                this.isFollowedByCurrentUser = isFollowedByCurrentUser
+            })
+        // When
+        viewModel.onPostCardClick(
+            postItem = TagsFeedPostItem(
+                siteName = "",
+                postDateLine = "",
+                postTitle = "",
+                postExcerpt = "",
+                postImageUrl = "",
+                postNumberOfLikesText = "",
+                postNumberOfCommentsText = "",
+                isPostLiked = true,
+                isLikeButtonEnabled = true,
+                postId = 123L,
+                blogId = 123L,
+                onSiteClick = {},
+                onPostCardClick = {},
+                onPostLikeClick = {},
+                onPostMoreMenuClick = {}
+            )
+        )
+
+        // Then
+        verify(readerTracker).trackBlog(
+            stat = AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+            blogId = blogId,
+            feedId = feedId,
+            isFollowed = isFollowedByCurrentUser,
+            source = ReaderTracker.SOURCE_TAGS_FEED,
+        )
+    }
+
     private fun mockMapInitialTagFeedItems() {
         whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any(), any()))
             .thenAnswer {
