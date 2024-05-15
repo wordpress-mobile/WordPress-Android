@@ -175,4 +175,9 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         super.onCancel(dialog)
         viewModel.onBottomSheetCancelled()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }
