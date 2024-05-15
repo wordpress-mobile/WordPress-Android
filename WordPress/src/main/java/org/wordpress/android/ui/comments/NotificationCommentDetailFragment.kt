@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.fluxc.tools.FormattableRangeType
 import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
+import org.wordpress.android.ui.engagement.BottomSheetUiState
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_NOTIF_COMMENT_USER_PROFILE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 
@@ -25,6 +28,24 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
         } else {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
+    }
+
+    override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {
+        val user = mContentMapper.mapToFormattableContentList(mNote!!.body.toString())
+            .find { FormattableRangeType.fromString(it.type) == FormattableRangeType.USER }
+
+
+        return BottomSheetUiState.UserProfileUiState(
+            userAvatarUrl = mNote!!.iconURL,
+            blavatarUrl = "",
+            userName = user?.text ?: getString(R.string.anonymous),
+            userLogin =  "",
+            userBio = user?.meta?.titles?.tagline ?: "",
+            siteTitle = user?.meta?.titles?.home ?: getString(R.string.user_profile_untitled_site),
+            siteUrl = user?.ranges?.firstOrNull()?.url ?: "",
+            siteId = user?.meta?.ids?.site ?: 0L,
+            blogPreviewSource = SOURCE_NOTIF_COMMENT_USER_PROFILE
+        )
     }
 
     override fun getCommentIdentifier(): CommentIdentifier =

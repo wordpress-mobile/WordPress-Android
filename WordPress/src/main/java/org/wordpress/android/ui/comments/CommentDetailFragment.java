@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload
 import org.wordpress.android.fluxc.store.CommentsStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
@@ -67,7 +68,6 @@ import org.wordpress.android.ui.comments.unified.CommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
-import org.wordpress.android.ui.engagement.BottomSheetUiState;
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState;
 import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -147,6 +147,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @Inject ImageManager mImageManager;
     @Inject CommentsStore mCommentsStore;
     @Inject LocalCommentCacheUpdateHandler mLocalCommentCacheUpdateHandler;
+    @Inject FormattableContentMapper mContentMapper;
 
     private boolean mIsSubmittingReply = false;
     @Nullable private NotificationsDetailListFragment mNotificationsDetailListFragment;

@@ -192,7 +192,7 @@ class EngagedPeopleListFragment : Fragment() {
                 }
 
                 is OpenUserProfileBottomSheet -> {
-                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick, event.source)
+                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.source)
                 }
             }
 

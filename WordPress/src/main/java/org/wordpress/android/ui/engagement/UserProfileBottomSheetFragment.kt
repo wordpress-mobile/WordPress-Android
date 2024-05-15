@@ -1,7 +1,10 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.engagement
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +19,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.UserProfileBottomSheetBinding
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
+import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -40,9 +48,21 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
-    private lateinit var viewModel: UserProfileViewModel
+    @Inject
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
+    private var viewModel: UserProfileViewModel? = null
     private var binding: UserProfileBottomSheetBinding? = null
-    private val state by lazy { requireArguments().getSerializable(USER_PROFILE_STATE) as? UserProfileUiState }
+    private val state by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getSerializable(USER_PROFILE_STATE, UserProfileUiState::class.java)
+        } else {
+            requireArguments().getSerializable(USER_PROFILE_STATE) as? UserProfileUiState
+        }
+    }
 
     companion object {
         private const val USER_PROFILE_VIEW_MODEL_KEY = "user_profile_view_model_key"
@@ -82,14 +102,16 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val vmKey = requireArguments().getString(USER_PROFILE_VIEW_MODEL_KEY)!!
+        val vmKey = requireArguments().getString(USER_PROFILE_VIEW_MODEL_KEY)
 
         ViewCompat.setAccessibilityPaneTitle(view, getString(R.string.user_profile_bottom_sheet_description))
 
-        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-            .get(vmKey, UserProfileViewModel::class.java)
+        vmKey?.let {
+            viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
+                .get(vmKey, UserProfileViewModel::class.java)
+            initObservers()
+        }
 
-        initObservers()
         state?.let { binding?.setup(it) }
 
         dialog?.setOnShowListener { dialogInterface ->
@@ -108,7 +130,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     private fun initObservers() {
-        viewModel.bottomSheetUiState.observe(viewLifecycleOwner) { state ->
+        viewModel?.bottomSheetUiState?.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UserProfileUiState -> {
                     binding?.setup(state)
@@ -150,11 +172,11 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             siteTitle.text = state.siteTitle
             siteUrl.text = UrlUtils.getHost(state.siteUrl)
             siteData.setOnClickListener {
-                state.onSiteClickListener?.invoke(
-                    state.siteId,
-                    state.siteUrl,
-                    state.blogPreviewSource
-                )
+                if (state.siteId <= 0L && state.siteUrl.isNotEmpty()) {
+                    openSiteUrl(state.siteUrl, state.blogPreviewSource)
+                } else {
+                    openSiteId(state.siteId, state.blogPreviewSource)
+                }
             }
             siteSectionHeader.visibility = View.VISIBLE
             userSiteBlavatar.visibility = View.VISIBLE
@@ -166,6 +188,25 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    private fun openSiteId(siteId: Long, source: String) {
+        ReaderActivityLauncher.showReaderBlogPreview(
+            context,
+            siteId,
+            false,
+            source,
+            readerTracker
+        )
+    }
+
+    private fun openSiteUrl(url: String, source: String) {
+        analyticsUtilsWrapper.trackBlogPreviewedByUrl(source)
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+        } else {
+            WPWebViewActivity.openURL(context, url)
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
@@ -173,7 +214,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        viewModel.onBottomSheetCancelled()
+        viewModel?.onBottomSheetCancelled()
     }
 
     override fun onDestroyView() {

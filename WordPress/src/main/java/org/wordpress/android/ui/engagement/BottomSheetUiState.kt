@@ -12,7 +12,6 @@ sealed class BottomSheetUiState {
         val siteTitle: String,
         val siteUrl: String,
         val siteId: Long,
-        val onSiteClickListener: ((siteId: Long, siteUrl: String, source: String) -> Unit)? = null,
         val blogPreviewSource: String
     ) : BottomSheetUiState(), Serializable {
         val hasSiteUrl: Boolean = siteUrl.isNotBlank()
