@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
@@ -68,6 +67,9 @@ import org.wordpress.android.ui.comments.unified.CommentIdentifier;
 import org.wordpress.android.ui.comments.unified.CommentSource;
 import org.wordpress.android.ui.comments.unified.CommentsStoreAdapter;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity;
+import org.wordpress.android.ui.engagement.BottomSheetUiState;
+import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState;
+import org.wordpress.android.ui.engagement.UserProfileBottomSheetFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
@@ -163,7 +165,18 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @Nullable protected CommentDetailFragmentBinding mBinding = null;
     @Nullable protected ReaderIncludeCommentBoxBinding mReplyBinding = null;
 
-    private final OnEditCommentListener mOnEditCommentListener = this::editComment;
+    private final OnActionClickListener mOnActionClickListener = new OnActionClickListener() {
+        @Override public void onEditCommentClicked() {
+            editComment();
+        }
+
+        @Override public void onUserInfoClicked() {
+            UserProfileBottomSheetFragment.newInstance(getUserProfileUiState())
+                    .show(getChildFragmentManager(), UserProfileBottomSheetFragment.TAG);
+        }
+    };
+
+    abstract UserProfileUiState getUserProfileUiState();
 
     @Override
     @SuppressWarnings("deprecation")
@@ -279,7 +292,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         mBinding.textContent.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         mBinding.imageMore.setOnClickListener(v ->
-                CommentActionPopupHandler.show(mBinding.imageMore, mOnEditCommentListener)
+                CommentActionPopupHandler.show(mBinding.imageMore, mOnActionClickListener)
         );
 
         mReplyBinding.editComment.setHint(R.string.reader_hint_comment_on_comment);
@@ -1000,7 +1013,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         mNotificationsDetailListFragment = NotificationsDetailListFragment.newInstance(noteId);
-        mNotificationsDetailListFragment.setOnEditCommentListener(mOnEditCommentListener);
+        mNotificationsDetailListFragment.setOnEditCommentListener(mOnActionClickListener);
         fragmentTransaction.replace(binding.commentContentContainer.getId(), mNotificationsDetailListFragment);
         fragmentTransaction.commitAllowingStateLoss();
     }
@@ -1151,9 +1164,10 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     }
 
     /**
-     * Listener for the edit comment action in [NotificationsDetailListFragment]
+     * Listener for handling comment actions in [NotificationsDetailListFragment]
      */
-    public interface OnEditCommentListener {
-        void onClicked();
+    public interface OnActionClickListener {
+        void onEditCommentClicked();
+        void onUserInfoClicked();
     }
 }

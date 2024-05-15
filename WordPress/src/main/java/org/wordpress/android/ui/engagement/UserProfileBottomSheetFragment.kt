@@ -42,20 +42,34 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: UserProfileViewModel
     private var binding: UserProfileBottomSheetBinding? = null
+    private val state by lazy { requireArguments().getSerializable(USER_PROFILE_STATE) as? UserProfileUiState }
 
     companion object {
-        const val USER_PROFILE_VIEW_MODEL_KEY = "user_profile_view_model_key"
+        private const val USER_PROFILE_VIEW_MODEL_KEY = "user_profile_view_model_key"
+        private const val USER_PROFILE_STATE = "user_profile_state"
 
-        fun newInstance(viewModelKey: String): UserProfileBottomSheetFragment {
-            val fragment = UserProfileBottomSheetFragment()
-            val bundle = Bundle()
+        const val TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
-            bundle.putString(USER_PROFILE_VIEW_MODEL_KEY, viewModelKey)
+        /**
+         * For displaying the user profile when users are from Likes
+         */
+        fun newInstance(viewModelKey: String) = UserProfileBottomSheetFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putString(USER_PROFILE_VIEW_MODEL_KEY, viewModelKey)
+                }
+            }
 
-            fragment.arguments = bundle
-
-            return fragment
-        }
+        /**
+         * For displaying the user profile when users are from Comments or Notifications
+         */
+        @JvmStatic
+        fun newInstance(state: UserProfileUiState) = UserProfileBottomSheetFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putSerializable(USER_PROFILE_STATE, state)
+                }
+            }
     }
 
     override fun onCreateView(
@@ -76,6 +90,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             .get(vmKey, UserProfileViewModel::class.java)
 
         initObservers()
+        state?.let { binding?.setup(it) }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog

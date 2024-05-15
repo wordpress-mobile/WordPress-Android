@@ -5,19 +5,14 @@ package org.wordpress.android.ui.comments.unified
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
-import androidx.fragment.app.Fragment
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.CommentActionsBinding
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.comments.CommentDetailFragment
-import org.wordpress.android.ui.comments.unified.UnifiedCommentsEditActivity.Companion.createIntent
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
 
 object CommentActionPopupHandler {
     @JvmStatic
-    fun show(anchorView: View, listener: CommentDetailFragment.OnEditCommentListener?) {
+    fun show(anchorView: View, listener: CommentDetailFragment.OnActionClickListener?) {
         val popupWindow = PopupWindow(anchorView.context, null, R.style.WordPress)
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = anchorView.context.resources.getDimension(R.dimen.popup_over_toolbar_elevation)
@@ -25,7 +20,7 @@ object CommentActionPopupHandler {
             .inflate(LayoutInflater.from(anchorView.context))
             .apply {
                 textUserInfo.setOnClickListener {
-//                    EngagedListNavigationEvent.OpenUserProfileBottomSheet()
+                    listener?.onUserInfoClicked()
                     popupWindow.dismiss()
                 }
                 textShare.setOnClickListener {
@@ -33,7 +28,7 @@ object CommentActionPopupHandler {
                     popupWindow.dismiss()
                 }
                 textEditComment.setOnClickListener {
-                    listener?.onClicked()
+                    listener?.onEditCommentClicked()
                     popupWindow.dismiss()
                 }
                 textChangeStatus.setOnClickListener {

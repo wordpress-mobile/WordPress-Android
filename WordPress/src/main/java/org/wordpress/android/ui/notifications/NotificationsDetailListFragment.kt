@@ -75,7 +75,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
-    private var onEditCommentListener: CommentDetailFragment.OnEditCommentListener? = null
+    private var mOnActionClickListener: CommentDetailFragment.OnActionClickListener? = null
     private var restoredListPosition = 0
     private var notification: Note? = null
     private var rootLayout: LinearLayout? = null
@@ -275,7 +275,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         override fun showActionPopup(view: View) {
-            CommentActionPopupHandler.show(view, onEditCommentListener)
+            CommentActionPopupHandler.show(view, mOnActionClickListener)
         }
 
         fun handleNoteBlockSpanClick(
@@ -661,8 +661,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
     }
 
-    fun setOnEditCommentListener(listener: CommentDetailFragment.OnEditCommentListener){
-        onEditCommentListener = listener
+    fun setOnEditCommentListener(listener: CommentDetailFragment.OnActionClickListener){
+        mOnActionClickListener = listener
     }
 
     companion object {
