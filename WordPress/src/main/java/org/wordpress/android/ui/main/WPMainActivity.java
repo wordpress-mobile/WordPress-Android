@@ -190,7 +190,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static androidx.lifecycle.Lifecycle.State.STARTED;
-import static com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
@@ -1216,9 +1215,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     @NonNull final IInAppUpdateListener mInAppUpdateListener = new IInAppUpdateListener() {
-
         @Override public void onAppUpdatePending() {
-
+            /* do nothing */
         }
 
         @Override public void onAppUpdateDownloaded() {

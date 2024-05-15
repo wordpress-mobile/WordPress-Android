@@ -30,7 +30,6 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.config.RemoteConfigWrapper
 import javax.inject.Singleton
 
-
 @Singleton
 @Suppress("TooManyFunctions")
 class InAppUpdateManagerImpl(
@@ -41,7 +40,6 @@ class InAppUpdateManagerImpl(
     private val inAppUpdateAnalyticsTracker: InAppUpdateAnalyticsTracker,
     private val currentTimeProvider: () -> Long = {System.currentTimeMillis()}
 ): IInAppUpdateManager {
-
     private var updateListener: IInAppUpdateListener? = null
 
     override fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
@@ -213,28 +211,14 @@ class InAppUpdateManagerImpl(
     private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
         Log.e(TAG, "isImmediateUpdateInProgress(): entered, " +
                 "appUpdateInfo.updateAvailability() = ${appUpdateInfo.updateAvailability()}," +
-                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) = ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
+                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) " +
+                "= ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
                 "isImmediateUpdateNecessary = ${isImmediateUpdateNecessary()}")
         val result = appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 && isImmediateUpdateNecessary()
 
         Log.e(TAG, "isImmediateUpdateInProgress(): result = $result")
-
-        return result
-
-    }
-
-    private fun isFlexibleUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
-        Log.e(TAG, "isFlexibleUpdateInProgress(): entered, " +
-                "appUpdateInfo.updateAvailability() = ${appUpdateInfo.updateAvailability()}," +
-                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) = ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
-                "isImmediateUpdateNecessary = ${isImmediateUpdateNecessary()}")
-        val result = appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)
-                && !isImmediateUpdateNecessary()
-
-        Log.e(TAG, "isFlexibleUpdateInProgress(): result = $result")
 
         return result
     }
@@ -338,9 +322,6 @@ class InAppUpdateManagerImpl(
     }
 
     companion object {
-        //const val APP_UPDATE_IMMEDIATE_REQUEST_CODE = 1001
-        //const val APP_UPDATE_FLEXIBLE_REQUEST_CODE = 1002
-
         private const val TAG = "AppUpdateChecker"
 
         private const val PREF_NAME = "in_app_update_prefs"
