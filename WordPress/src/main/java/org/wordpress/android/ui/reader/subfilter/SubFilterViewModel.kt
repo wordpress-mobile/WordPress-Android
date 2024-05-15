@@ -443,9 +443,9 @@ class SubFilterViewModel @Inject constructor(
     }
 
     sealed class FilterItemType(val trackingValue: String) {
-        data object Tag : FilterItemType("tag")
+        data object Tag : FilterItemType("topic")
 
-        data object Blog : FilterItemType("blog")
+        data object Blog : FilterItemType("site")
 
         companion object {
             fun fromSubfilterListItem(subfilterListItem: SubfilterListItem): FilterItemType? =

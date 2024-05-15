@@ -458,7 +458,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.onSubfilterSelected(siteFilter)
         verify(readerTracker).track(
             stat = AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED,
-            properties = mutableMapOf("type" to "blog"),
+            properties = mutableMapOf("type" to "site"),
         )
     }
 
@@ -473,7 +473,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.onSubfilterSelected(tagFilter)
         verify(readerTracker).track(
             stat = AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED,
-            properties = mutableMapOf("type" to "tag"),
+            properties = mutableMapOf("type" to "topic"),
         )
     }
 
