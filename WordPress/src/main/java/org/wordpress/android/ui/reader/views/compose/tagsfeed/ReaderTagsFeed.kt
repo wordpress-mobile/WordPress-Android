@@ -41,6 +41,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -145,8 +148,14 @@ private fun Loaded(uiState: UiState.Loaded) {
 
 @Composable
 private fun Loading() {
+    val fetchingPostsLabel = stringResource(id = R.string.posts_fetching)
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clearAndSetSemantics {
+                contentDescription = fetchingPostsLabel
+            },
         userScrollEnabled = false,
     ) {
         val numberOfLoadingRows = 3
@@ -257,9 +266,13 @@ private fun Empty(uiState: UiState.Empty) {
 
 @Composable
 private fun PostListLoading() {
+    val loadingLabel = stringResource(id = R.string.loading)
     LazyRow(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clearAndSetSemantics {
+                contentDescription = loadingLabel
+            },
         userScrollEnabled = false,
         horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
         contentPadding = PaddingValues(
@@ -362,6 +375,7 @@ private fun PostListError(
         modifier = Modifier
             .height(250.dp)
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
             .padding(start = 60.dp, end = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
