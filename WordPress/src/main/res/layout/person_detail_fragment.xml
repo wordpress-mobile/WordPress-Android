@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:textAppearance="?attr/textAppearanceBody1"
-            tools:text="@string/title_follower" />
+            tools:text="@string/title_subscriber" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/subscribed_date_text"

@@ -24,13 +24,13 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.0.0'
     gutenbergMobileVersion = 'v1.118.0'
-    wordPressAztecVersion = 'v2.1.2'
-    wordPressFluxCVersion = 'trunk-eceaa9130d4307fc213d7acdad334104b8e57b16'
+    wordPressAztecVersion = 'v2.1.3'
+    wordPressFluxCVersion = '2.79.0'
     wordPressLoginVersion = '1.15.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
-    gravatarVersion = '0.2.0'
+    gravatarVersion = '0.3.0'
 
     // debug
     flipperVersion = '0.245.0'
@@ -88,7 +88,7 @@ ext {
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.16.0'
     squareupRetrofitVersion = '2.9.0'
-    uCropVersion = '2.2.8'
+    uCropVersion = '2.2.9'
     zendeskVersion = '5.1.2'
     googlePlayInAppUpdateVersion = '2.1.0'
 

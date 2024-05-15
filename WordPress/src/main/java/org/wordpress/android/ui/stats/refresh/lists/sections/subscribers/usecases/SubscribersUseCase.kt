@@ -53,14 +53,14 @@ class SubscribersUseCase @Inject constructor(
 
     override suspend fun loadCachedData(): FollowersModel? {
         val cacheMode = if (useCaseMode == VIEW_ALL) LimitMode.All else LimitMode.Top(itemsToLoad)
-        return followersStore.getWpComFollowers(statsSiteProvider.siteModel, cacheMode)
+        return followersStore.getFollowers(statsSiteProvider.siteModel, cacheMode)
     }
 
     override suspend fun fetchRemoteData(forced: Boolean) = fetchData(forced, PagedMode(itemsToLoad, false))
 
     private suspend fun fetchData(forced: Boolean, fetchMode: PagedMode): State<FollowersModel> {
         withContext(mainDispatcher) { updateUiState { it.copy(isLoading = true) } }
-        val response = followersStore.fetchWpComFollowers(statsSiteProvider.siteModel, fetchMode, forced)
+        val response = followersStore.fetchFollowers(statsSiteProvider.siteModel, fetchMode, forced)
 
         val model = response.model
         val error = response.error
@@ -98,9 +98,15 @@ class SubscribersUseCase @Inject constructor(
         } else {
             val header = Header(R.string.stats_name_label, R.string.stats_subscriber_since_label)
             items.add(header)
-            domainModel.followers.toUserItems(header).let { items.addAll(it) }
+            val followers = if (useCaseMode == VIEW_ALL) {
+                domainModel.followers
+            } else {
+                domainModel.followers.take(itemsToLoad)
+            }
 
-            if (domainModel.hasMore) {
+            followers.toUserItems(header).let { items.addAll(it) }
+
+            if (domainModel.hasMore || domainModel.followers.size < domainModel.totalCount) {
                 if (useCaseMode != VIEW_ALL) {
                     val buttonText = R.string.stats_insights_view_more
                     items.add(

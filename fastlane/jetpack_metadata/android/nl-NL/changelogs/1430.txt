@@ -1,0 +1,3 @@
+24.8
+Op het scherm Statistieken worden nu de percentages op de juiste plek weergegeven voor gebruikers die talen gebruiken die van rechts naar links gelezen worden. Recht zo die gaat.
+

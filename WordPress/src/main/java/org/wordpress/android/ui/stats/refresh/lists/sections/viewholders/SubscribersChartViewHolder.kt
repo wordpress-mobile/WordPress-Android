@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper
 import org.wordpress.android.ui.stats.refresh.utils.LineChartAccessibilityHelper.LineChartAccessibilityEvent
 import org.wordpress.android.ui.stats.refresh.utils.SubscribersChartLabelFormatter
+import org.wordpress.android.util.AppLog
 import kotlin.math.max
 import kotlin.math.min
 
@@ -237,7 +238,11 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun LineChart.resetChart() {
         fitScreen()
-        data?.clearValues()
+        try {
+            data?.clearValues()
+        } catch (e: UnsupportedOperationException) {
+            AppLog.e(AppLog.T.STATS, e)
+        }
         xAxis.valueFormatter = null
         notifyDataSetChanged()
         clear()

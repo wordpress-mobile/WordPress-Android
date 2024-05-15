@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             app:aevImage="@drawable/img_illustration_empty_results_216dp"
-            app:aevTitle="@string/people_empty_list_filtered_followers"
+            app:aevTitle="@string/people_empty_list_filtered_subscribers"
             tools:visibility="visible" />
 
         <org.wordpress.android.ui.FilteredRecyclerView

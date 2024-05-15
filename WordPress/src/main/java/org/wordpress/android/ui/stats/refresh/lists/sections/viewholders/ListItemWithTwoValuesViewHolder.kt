@@ -17,5 +17,6 @@ class ListItemWithTwoValuesViewHolder(parent: ViewGroup) : BlockListItemViewHold
         text.text = item.text
         value1.text = item.value1
         value2.text = item.value2
+        itemView.contentDescription = item.contentDescription
     }
 }

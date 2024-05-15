@@ -29,7 +29,7 @@ public class RoleUtils {
         RoleModel viewerOrFollowerRole = new RoleModel();
         // the remote expects "follower" as the role parameter even if the role is "viewer"
         viewerOrFollowerRole.setName("follower");
-        int displayNameRes = siteModel.isPrivate() ? R.string.role_viewer : R.string.role_follower;
+        int displayNameRes = siteModel.isPrivate() ? R.string.role_viewer : R.string.role_subscriber;
         viewerOrFollowerRole.setDisplayName(context.getString(displayNameRes));
         inviteRoles.add(viewerOrFollowerRole);
         return inviteRoles;

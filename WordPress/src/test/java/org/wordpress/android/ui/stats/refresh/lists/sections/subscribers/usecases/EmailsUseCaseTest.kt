@@ -25,6 +25,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListH
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Title
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TITLE
+import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -46,10 +47,14 @@ class EmailsUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var tracker: AnalyticsTrackerWrapper
 
+    @Mock
+    lateinit var contentDescriptionHelper: ContentDescriptionHelper
+
     private lateinit var useCase: EmailsUseCase
     private val itemsToLoad = 30
     private val firstPost = PostsModel.PostModel(1, "post1", "url.com", 10, 20)
     private val secondPost = PostsModel.PostModel(2, "post2", "url2.com", 30, 40)
+    private val contentDescription = "latest emails, opens, clicks"
 
     @Before
     fun setUp() {
@@ -59,11 +64,14 @@ class EmailsUseCaseTest : BaseUnitTest() {
             emailsStore,
             statsSiteProvider,
             statsUtils,
+            contentDescriptionHelper,
             tracker,
             BLOCK
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(contentDescriptionHelper.buildContentDescription(any(), any<String>(), any<String>(), any<String>()))
+            .thenReturn(contentDescription)
     }
 
     @Test
