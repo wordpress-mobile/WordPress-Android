@@ -146,11 +146,12 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
             "endpoint",
             ReaderTagType.FOLLOWED,
         )
-        val onTagClick = { _: ReaderTag -> }
+        val onTagChipClick = { _: ReaderTag -> }
+        val onMoreFromTagClick = { _: ReaderTag -> }
         val onSiteClick: (TagsFeedPostItem) -> Unit = {}
         val onPostCardClick: (TagsFeedPostItem) -> Unit = {}
         val onPostLikeClick: (TagsFeedPostItem) -> Unit = {}
-        val onPostMoreMenuClick = {}
+        val onPostMoreMenuClick: (TagsFeedPostItem) -> Unit = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
 
         val dateLine = "dateLine"
@@ -172,7 +173,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val actual = classToTest.mapLoadedTagFeedItem(
             tag = readerTag,
             posts = postList,
-            onTagClick = onTagClick,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
             onSiteClick = onSiteClick,
             onPostCardClick = onPostCardClick,
             onPostLikeClick = onPostLikeClick,
@@ -183,7 +185,8 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val expected = ReaderTagsFeedViewModel.TagFeedItem(
             tagChip = ReaderTagsFeedViewModel.TagChip(
                 tag = readerTag,
-                onTagClick = onTagClick,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
             ),
             postList = ReaderTagsFeedViewModel.PostList.Loaded(
                 listOf(
