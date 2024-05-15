@@ -249,6 +249,7 @@ class InAppUpdateManagerImpl(
         return result
     }
 
+    @Suppress("MagicNumber")
     private fun getFlexibleUpdateIntervalInMillis(): Long {
         Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): entered")
         val result = 1000 * 60 * 60 * 24 * remoteConfigWrapper.getInAppUpdateFlexibleIntervalInDays()
