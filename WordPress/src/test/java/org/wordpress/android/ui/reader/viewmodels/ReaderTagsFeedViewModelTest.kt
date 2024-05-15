@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.getOrAwaitValue
 import org.wordpress.android.models.ReaderPost
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
@@ -69,6 +71,9 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
+    lateinit var readerTracker: ReaderTracker
+
+    @Mock
     lateinit var navigationEvents: MediatorLiveData<Event<ReaderNavigationEvents>>
 
     @Mock
@@ -101,6 +106,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostMoreButtonUiStateBuilder = readerPostMoreButtonUiStateBuilder,
             readerPostUiStateBuilder = readerPostUiStateBuilder,
             displayUtilsWrapper = displayUtilsWrapper,
+            readerTracker = readerTracker,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
@@ -258,6 +264,15 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         // Then
         assertIs<ActionEvent.FilterTagPostsFeed>(actionEvents.first())
+    }
+
+    @Test
+    fun `Should track READER_TAG_HEADER_TAPPED when onTagChipClick is called`() {
+        // When
+        viewModel.onTagChipClick(tag)
+
+        // Then
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAG_HEADER_TAPPED)
     }
 
     @Test

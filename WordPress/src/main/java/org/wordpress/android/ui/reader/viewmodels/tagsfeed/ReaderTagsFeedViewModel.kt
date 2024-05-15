@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -48,6 +49,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val readerTracker: ReaderTracker,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -235,6 +237,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onTagChipClick(readerTag: ReaderTag) {
+        readerTracker.track(AnalyticsTracker.Stat.READER_TAG_HEADER_TAPPED)
         _actionEvents.value = ActionEvent.FilterTagPostsFeed(readerTag)
     }
 
