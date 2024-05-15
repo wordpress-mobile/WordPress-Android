@@ -217,7 +217,15 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun setDefaultSubfilter(isClearingFilter: Boolean) {
-        readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
+        val filterItemType = FilterItemType.fromSubfilterListItem(getCurrentSubfilterValue())
+        if (filterItemType != null) {
+            readerTracker.track(
+                Stat.READER_FILTER_SHEET_CLEARED,
+                mutableMapOf(FilterItemType.trackingEntry(filterItemType))
+            )
+        } else {
+            readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
+        }
         updateSubfilter(
             filter = SiteAll(
                 onClickAction = ::onSubfilterClicked,
@@ -317,20 +325,14 @@ class SubFilterViewModel @Inject constructor(
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
         // We should not track subfilter selected if we're clearing a filter that is currently applied.
         if (!subfilterListItem.isClearingFilter) {
-            val filterItemType = when(subfilterListItem.type) {
-                SubfilterListItem.ItemType.SITE -> FilterItemType.Blog
-                SubfilterListItem.ItemType.TAG -> FilterItemType.Tag
-                else -> null
-            }
+            val filterItemType = FilterItemType.fromSubfilterListItem(subfilterListItem)
             if (filterItemType != null) {
                 readerTracker.track(
                     Stat.READER_FILTER_SHEET_ITEM_SELECTED,
-                    mutableMapOf("type" to filterItemType.trackingValue)
+                    mutableMapOf(FilterItemType.trackingEntry(filterItemType))
                 )
             } else {
-                readerTracker.track(
-                    Stat.READER_FILTER_SHEET_ITEM_SELECTED,
-                )
+                readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED,)
             }
         }
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
@@ -444,5 +446,17 @@ class SubFilterViewModel @Inject constructor(
         data object Tag : FilterItemType("tag")
 
         data object Blog : FilterItemType("blog")
+
+        companion object {
+            fun fromSubfilterListItem(subfilterListItem: SubfilterListItem): FilterItemType? =
+                when(subfilterListItem.type) {
+                    SubfilterListItem.ItemType.SITE -> Blog
+                    SubfilterListItem.ItemType.TAG -> Tag
+                    else -> null
+                }
+
+            fun trackingEntry(filterItemType: FilterItemType): Pair<String, String> =
+                "type" to filterItemType.trackingValue
+        }
     }
 }
