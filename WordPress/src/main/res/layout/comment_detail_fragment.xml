@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_small"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/more"
                     android:padding="@dimen/margin_large"
                     android:src="@drawable/gb_ic_more_horizontal"
