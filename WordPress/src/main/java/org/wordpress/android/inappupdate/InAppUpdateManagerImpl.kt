@@ -244,9 +244,16 @@ class InAppUpdateManagerImpl(
 
     private fun shouldRequestFlexibleUpdate(): Boolean {
         Log.d(TAG, "shouldRequestFlexibleUpdate(): entered")
-        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS
+        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= getFlexibleUpdateIntervalInMillis()
         Log.d(TAG, "shouldRequestFlexibleUpdate(): result = $result")
         return result
+    }
+
+    private fun getFlexibleUpdateIntervalInMillis(): Long {
+        Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): entered")
+        val result = 1000 * 60 * 60 * 24 * remoteConfigWrapper.getInAppUpdateFlexibleIntervalInDays()
+        Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): result = $result")
+        return result.toLong()
     }
 
     private fun getCurrentAppVersion() = buildConfigWrapper.getAppVersionCode()
@@ -272,6 +279,5 @@ class InAppUpdateManagerImpl(
         private const val PREF_NAME = "in_app_update_prefs"
         private const val KEY_LAST_APP_UPDATE_CHECK_VERSION = "last_app_update_check_version"
         private const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
-        private const val FLEXIBLE_UPDATES_INTERVAL_IN_MILLIS: Long = 1000 * 60 * 60 * 24 * 5 // 5 days
     }
 }
