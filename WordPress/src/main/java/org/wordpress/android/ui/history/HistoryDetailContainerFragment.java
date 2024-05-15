@@ -172,6 +172,9 @@ public class HistoryDetailContainerFragment extends Fragment {
             mRevision = getArguments().getParcelable(EXTRA_CURRENT_REVISION);
 
             final long[] previousRevisionsIds = getArguments().getLongArray(EXTRA_PREVIOUS_REVISIONS_IDS);
+            if (previousRevisionsIds == null) {
+                return null;
+            }
             final List<RevisionModel> revisionModels = new ArrayList<>();
             final long postId = getArguments().getLong(EXTRA_POST_ID);
             final long siteId = getArguments().getLong(EXTRA_SITE_ID);
