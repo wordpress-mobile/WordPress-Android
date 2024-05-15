@@ -285,6 +285,16 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should track READER_TAGS_FEED_MORE_FROM_TAG_TAPPED when onMoreFromTagClick is called`() {
+        // When
+        viewModel.onMoreFromTagClick(tag)
+
+        // Then
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAGS_FEED_MORE_FROM_TAG_TAPPED)
+    }
+
+
+    @Test
     fun `Should emit ShowTagsList when onOpenTagsListClick is called`() {
         // When
         viewModel.onOpenTagsListClick()

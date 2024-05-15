@@ -243,6 +243,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onMoreFromTagClick(readerTag: ReaderTag) {
+        readerTracker.track(AnalyticsTracker.Stat.READER_TAGS_FEED_MORE_FROM_TAG_TAPPED)
         _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
