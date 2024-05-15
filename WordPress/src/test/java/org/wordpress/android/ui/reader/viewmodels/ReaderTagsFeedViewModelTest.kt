@@ -267,12 +267,12 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track READER_TAG_HEADER_TAPPED when onTagChipClick is called`() {
+    fun `Should track READER_TAGS_FEED_HEADER_TAPPED when onTagChipClick is called`() {
         // When
         viewModel.onTagChipClick(tag)
 
         // Then
-        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAG_HEADER_TAPPED)
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAGS_FEED_HEADER_TAPPED)
     }
 
     @Test

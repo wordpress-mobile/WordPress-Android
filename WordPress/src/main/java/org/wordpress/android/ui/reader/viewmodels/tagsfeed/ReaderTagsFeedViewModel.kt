@@ -237,7 +237,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onTagChipClick(readerTag: ReaderTag) {
-        readerTracker.track(AnalyticsTracker.Stat.READER_TAG_HEADER_TAPPED)
+        readerTracker.track(AnalyticsTracker.Stat.READER_TAGS_FEED_HEADER_TAPPED)
         _actionEvents.value = ActionEvent.FilterTagPostsFeed(readerTag)
     }
 
