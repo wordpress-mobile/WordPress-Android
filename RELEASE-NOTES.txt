@@ -2,6 +2,7 @@
 
 25.0
 -----
+* [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
 
 
 24.9
