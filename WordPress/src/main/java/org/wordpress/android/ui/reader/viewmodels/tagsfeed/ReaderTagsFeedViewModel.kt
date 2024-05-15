@@ -438,7 +438,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     it,
                     type,
                     isBookmarkList = false,
-                    source = ReaderTracker.SOURCE_DISCOVER
+                    source = ReaderTracker.SOURCE_TAGS_FEED,
                 )
             }
         }
