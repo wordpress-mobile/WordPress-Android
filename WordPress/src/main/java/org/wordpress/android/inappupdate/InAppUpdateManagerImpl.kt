@@ -98,7 +98,9 @@ class InAppUpdateManagerImpl(
         }
 
         if (isImmediateUpdateNecessary()) {
-            requestImmediateUpdate(appUpdateInfo, activity)
+            if (shouldRequestImmediateUpdate()) {
+                requestImmediateUpdate(appUpdateInfo, activity)
+            }
         } else if (shouldRequestFlexibleUpdate()) {
             requestFlexibleUpdate(appUpdateInfo, activity)
         }
@@ -128,10 +130,10 @@ class InAppUpdateManagerImpl(
     @Suppress("TooGenericExceptionCaught")
     private fun requestUpdate(updateType: Int, appUpdateInfo: AppUpdateInfo, activity: Activity) {
         Log.d(TAG, "requestUpdate(): entered with updateType = $updateType")
+        saveLastUpdateRequestInfo(appUpdateInfo)
         val requestCode = if (updateType == AppUpdateType.IMMEDIATE) {
             APP_UPDATE_IMMEDIATE_REQUEST_CODE
         } else {
-            saveLastUpdateRequestInfo(appUpdateInfo)
             APP_UPDATE_FLEXIBLE_REQUEST_CODE
         }
         try {
@@ -249,6 +251,13 @@ class InAppUpdateManagerImpl(
         return result
     }
 
+    private fun shouldRequestImmediateUpdate(): Boolean {
+        Log.d(TAG, "shouldRequestImmediateUpdate(): entered")
+        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS
+        Log.d(TAG, "shouldRequestFlexibleUpdate(): result = $result")
+        return result
+    }
+
     @Suppress("MagicNumber")
     private fun getFlexibleUpdateIntervalInMillis(): Long {
         Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): entered")
@@ -276,7 +285,7 @@ class InAppUpdateManagerImpl(
 
     companion object {
         private const val TAG = "AppUpdateChecker"
-
+        private const val IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS = 1000 * 60 * 5 // 5 minutes
         private const val PREF_NAME = "in_app_update_prefs"
         private const val KEY_LAST_APP_UPDATE_CHECK_VERSION = "last_app_update_check_version"
         private const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
