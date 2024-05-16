@@ -465,7 +465,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         noteBlock.setIsPingback()
                     }
                     if (isRepliedFooter(noteObject).not()) {
-                        // we don't handle replied footer anymore
+                        // we don't handle replied footer at the moment
+                        // it'd be better if we can display the replied comment
                         noteList.add(noteBlock)
                     }
                 } catch (e: JSONException) {
