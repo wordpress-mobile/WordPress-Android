@@ -249,7 +249,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
-    private fun onRetryClick(readerTag: ReaderTag) {
+    @VisibleForTesting
+    fun onRetryClick(readerTag: ReaderTag) {
         launch {
             fetchTag(readerTag)
         }
