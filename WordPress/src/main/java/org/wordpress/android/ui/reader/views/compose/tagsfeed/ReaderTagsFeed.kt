@@ -61,8 +61,6 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 
-private const val LOADING_POSTS_COUNT = 5
-
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
     Box(
@@ -177,7 +175,7 @@ private fun Loading() {
                     horizontalArrangement = Arrangement.spacedBy(Margin.Large.value),
                     contentPadding = PaddingValues(horizontal = Margin.Large.value),
                 ) {
-                    items(LOADING_POSTS_COUNT) {
+                    items(ReaderTagsFeedComposeUtils.LOADING_POSTS_COUNT) {
                         ReaderTagsFeedPostListItemLoading()
                     }
                 }
@@ -269,7 +267,7 @@ private fun PostListLoading() {
             end = Margin.Large.value
         ),
     ) {
-        items(LOADING_POSTS_COUNT) {
+        items(ReaderTagsFeedComposeUtils.LOADING_POSTS_COUNT) {
             ReaderTagsFeedPostListItemLoading()
         }
     }
@@ -304,7 +302,7 @@ private fun PostListLoaded(
             )
             Box(
                 modifier = Modifier
-                    .height(340.dp)
+                    .height(ReaderTagsFeedComposeUtils.PostItemHeight)
                     .padding(
                         start = Margin.ExtraLarge.value,
                         end = Margin.ExtraLarge.value,

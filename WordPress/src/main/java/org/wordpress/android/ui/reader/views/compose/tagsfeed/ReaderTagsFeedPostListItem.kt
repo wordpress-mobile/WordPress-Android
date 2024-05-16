@@ -7,7 +7,9 @@ import android.widget.ImageView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +18,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,24 +34,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.modifiers.conditionalThen
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
 import org.wordpress.android.util.extensions.getColorResIdFromAttribute
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
+
+private const val CONTENT_TOTAL_LINES = 3
 
 @SuppressLint("ResourceType")
 @Composable
@@ -62,13 +70,19 @@ fun ReaderTagsFeedPostListItem(
     val secondaryElementColor = baseColor.copy(
         alpha = 0.6F
     )
+
+    val hasInteractions = postNumberOfLikesText.isNotBlank() || postNumberOfCommentsText.isNotBlank()
+
     Column(
         modifier = Modifier
-            .width(240.dp)
-            .height(340.dp)
+            .width(ReaderTagsFeedComposeUtils.PostItemWidth)
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight),
+        verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .heightIn(min = 24.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // Site name
@@ -102,88 +116,79 @@ fun ReaderTagsFeedPostListItem(
                 color = secondaryElementColor,
             )
         }
-        // Post title
-        Text(
-            modifier = Modifier
-                .padding(top = Margin.Medium.value)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = { onPostCardClick(item) },
-                ),
-            text = postTitle,
-            style = MaterialTheme.typography.titleMedium,
-            color = baseColor,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis,
-        )
-        // Post excerpt
-        Text(
-            modifier = Modifier
-                .padding(
-                    top = Margin.Small.value,
-                    bottom = Margin.Medium.value,
-                )
-                .conditionalThen(
-                    predicate = postImageUrl.isBlank(),
-                    other = Modifier.height(180.dp)
-                )
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = { onPostCardClick(item) },
-                ),
-            text = postExcerpt,
-            style = MaterialTheme.typography.bodySmall,
-            color = primaryElementColor,
-            maxLines = if (!postImageUrl.isBlank()) 2 else 10,
-            overflow = TextOverflow.Ellipsis,
-        )
-        // Post image
-        if (!postImageUrl.isBlank()) {
-            PostImage(
-                imageUrl = postImageUrl,
-                onClick = { onPostCardClick(item) },
-            )
-        }
-        Spacer(Modifier.weight(1f))
+
+        // Post content row
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f),
+            horizontalArrangement = Arrangement.spacedBy(Margin.Medium.value),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Number of likes
-            Text(
-                text = postNumberOfLikesText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = secondaryElementColor,
-                maxLines = 1,
+            // Post text content
+            PostTextContent(
+                title = postTitle,
+                excerpt = postExcerpt,
+                onClick = { onPostCardClick(item) },
+                titleColor = baseColor,
+                excerptColor = primaryElementColor,
+                modifier = Modifier
+                    .weight(1f),
             )
-            Spacer(Modifier.height(Margin.Medium.value))
-            // "•" separator. We should only show it if likes *and* comments text is not empty.
-            if (postNumberOfLikesText.isNotBlank() && postNumberOfCommentsText.isNotBlank()) {
-                Text(
-                    modifier = Modifier.padding(
-                        horizontal = Margin.Small.value
-                    ),
-                    text = "•",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = secondaryElementColor,
+
+            // Post image
+            if (postImageUrl.isNotBlank()) {
+                PostImage(
+                    imageUrl = postImageUrl,
+                    onClick = { onPostCardClick(item) },
                 )
             }
-            // Number of comments
-            Text(
-                text = postNumberOfCommentsText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = secondaryElementColor,
-                maxLines = 1,
-            )
         }
-        Spacer(Modifier.height(Margin.Medium.value))
+
+        // Likes and comments row
+        if (hasInteractions) {
+            val interactionTextStyle = MaterialTheme.typography.bodySmall
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Number of likes
+                Text(
+                    text = postNumberOfLikesText,
+                    style = interactionTextStyle,
+                    color = secondaryElementColor,
+                    maxLines = 1,
+                )
+                Spacer(Modifier.height(Margin.Medium.value))
+                // "•" separator. We should only show it if likes *and* comments text is not empty.
+                if (postNumberOfLikesText.isNotBlank() && postNumberOfCommentsText.isNotBlank()) {
+                    Text(
+                        modifier = Modifier.padding(
+                            horizontal = Margin.Small.value
+                        ),
+                        text = "•",
+                        style = interactionTextStyle,
+                        color = secondaryElementColor,
+                    )
+                }
+                // Number of comments
+                Text(
+                    text = postNumberOfCommentsText,
+                    style = interactionTextStyle,
+                    color = secondaryElementColor,
+                    maxLines = 1,
+                )
+            }
+        }
+
+        // Actions row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(24.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             // Like action
             TextButton(
@@ -263,8 +268,7 @@ fun PostImage(
 ) {
     AsyncImage(
         modifier = modifier
-            .fillMaxWidth()
-            .height(150.dp)
+            .size(ReaderTagsFeedComposeUtils.POST_ITEM_IMAGE_SIZE)
             .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
             .clickable { onClick() },
         model = ImageRequest.Builder(LocalContext.current)
@@ -276,6 +280,77 @@ fun PostImage(
     )
 }
 
+// Post title and excerpt Column
+@Composable
+fun PostTextContent(
+    title: String,
+    excerpt: String,
+    titleColor: Color,
+    excerptColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BoxWithConstraints(
+        modifier = modifier,
+    ) {
+        val density = LocalDensity.current
+        val maxWidthPx = with(density) {
+            maxWidth.toPx().toInt()
+        }
+
+        val textMeasurer = rememberTextMeasurer()
+        val titleStyle = MaterialTheme.typography.titleMedium
+
+        val excerptMaxLines = remember(title, titleStyle, maxWidthPx) {
+            val titleLayoutResult = textMeasurer.measure(
+                text = title,
+                style = titleStyle,
+                maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
+                overflow = TextOverflow.Ellipsis,
+                constraints = Constraints(maxWidth = maxWidthPx),
+            )
+
+            val titleLines = titleLayoutResult.lineCount
+            CONTENT_TOTAL_LINES - titleLines
+        }
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
+        ) {
+            // Post title
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick,
+                    ),
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = titleColor,
+                maxLines = ReaderTagsFeedComposeUtils.POST_ITEM_TITLE_MAX_LINES,
+                overflow = TextOverflow.Ellipsis,
+            )
+
+            // Post excerpt
+            Text(
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onClick,
+                    ),
+                text = excerpt,
+                style = MaterialTheme.typography.bodySmall,
+                color = excerptColor,
+                maxLines = excerptMaxLines,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -285,12 +360,12 @@ fun ReaderTagsFeedPostListItemPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 16.dp, bottom = 16.dp)
         ) {
             LazyRow(
                 modifier = Modifier
                     .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 24.dp),
+                contentPadding = PaddingValues(24.dp),
+                horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
             ) {
                 item {
                     ReaderTagsFeedPostListItem(
@@ -327,7 +402,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -362,7 +438,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -383,7 +460,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -404,7 +482,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -426,7 +505,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer" +
@@ -448,7 +528,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
@@ -482,7 +563,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                             onPostMoreMenuClick = {},
                         )
                     )
-                    Spacer(Modifier.width(24.dp))
+                }
+                item {
                     ReaderTagsFeedPostListItem(
                         item = TagsFeedPostItem(
                             siteName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer pellentesque" +
