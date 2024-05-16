@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -373,13 +375,14 @@ private fun PostListError(
 ) {
     Column(
         modifier = Modifier
-            .height(250.dp)
+            .heightIn(min = ReaderTagsFeedComposeUtils.PostItemHeight)
             .fillMaxWidth()
             .semantics(mergeDescendants = true) {}
             .padding(start = 60.dp, end = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+        Spacer(modifier = Modifier.height(Margin.Medium.value))
         Icon(
             modifier = Modifier
                 .drawBehind {
@@ -392,7 +395,7 @@ private fun PostListError(
             tint = MaterialTheme.colors.onSurface,
             contentDescription = null
         )
-        Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
+        Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
         val tagName = tagChip.tag.tagDisplayName
         Text(
             text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
@@ -400,7 +403,7 @@ private fun PostListError(
             color = MaterialTheme.colors.onSurface,
             textAlign = TextAlign.Center,
         )
-        Spacer(modifier = Modifier.height(Margin.Medium.value))
+        Spacer(modifier = Modifier.height(Margin.Small.value))
         val errorMessage = when (postList.type) {
             is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
             is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
@@ -415,12 +418,12 @@ private fun PostListError(
             },
             textAlign = TextAlign.Center,
         )
-        Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
+        Spacer(modifier = Modifier.height(Margin.Large.value))
         Button(
             onClick = { postList.onRetryClick(tagChip.tag) },
             modifier = Modifier
                 .height(36.dp)
-                .width(114.dp),
+                .widthIn(min = 114.dp),
             elevation = ButtonDefaults.elevation(
                 defaultElevation = 0.dp,
                 pressedElevation = 0.dp,
