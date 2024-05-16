@@ -1531,7 +1531,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mInAppUpdateManager.onUserAcceptedAppUpdate(updateType);
         } else if (resultCode == RESULT_CANCELED) {
             // The user denied the update
-            mInAppUpdateManager.cancelAppUpdate();
+            mInAppUpdateManager.cancelAppUpdate(updateType);
         }
     }
 

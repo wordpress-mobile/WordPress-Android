@@ -5,7 +5,7 @@ import android.app.Activity
 interface IInAppUpdateManager {
     fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener)
     fun completeAppUpdate()
-    fun cancelAppUpdate()
+    fun cancelAppUpdate(updateType: Int)
     fun onUserAcceptedAppUpdate(updateType: Int)
 
     companion object {

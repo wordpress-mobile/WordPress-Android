@@ -57,10 +57,10 @@ class InAppUpdateManagerImpl(
         appUpdateManager.completeUpdate()
     }
 
-    override fun cancelAppUpdate() {
+    override fun cancelAppUpdate(updateType: Int) {
         Log.d(TAG, "cancelAppUpdate(): entered")
         appUpdateManager.unregisterListener(installStateListener)
-        inAppUpdateAnalyticsTracker.trackUpdateDismissed()
+        inAppUpdateAnalyticsTracker.trackUpdateDismissed(updateType)
     }
 
     override fun onUserAcceptedAppUpdate(updateType: Int) {

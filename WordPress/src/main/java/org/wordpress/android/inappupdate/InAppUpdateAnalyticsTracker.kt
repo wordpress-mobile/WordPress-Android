@@ -16,8 +16,8 @@ class InAppUpdateAnalyticsTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_ACCEPTED, createPropertyMap(updateType))
     }
 
-    fun trackUpdateDismissed() {
-        tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_DISMISSED)
+    fun trackUpdateDismissed(updateType: Int) {
+        tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_DISMISSED, createPropertyMap(updateType))
     }
 
     private fun createPropertyMap(updateType: Int): Map<String, String> {
