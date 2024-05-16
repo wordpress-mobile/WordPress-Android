@@ -1,4 +1,4 @@
-* [*] [Jetpack-only] Removed Social section from the detail screen of Total Followers card [https://github.com/wordpress-mobile/WordPress-Android/pull/20763]
-* [***] [Jetpack-only] Reorganized Stats to include updated Traffic and Insights tabs, along with a newly added Subscribers tab to improve subscriber metrics analysis [https://github.com/wordpress-mobile/WordPress-Android/pull/20756]
-* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
-
+- We reorganized the Stats screen to show data about traffic and insights.
+- We added a Subscribers tab to show data about site subscribers.
+- We removed social subscribers from the Total Followers card.
+- Site names and URLs are properly positioned for right-to-left language users.

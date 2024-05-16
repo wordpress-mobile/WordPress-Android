@@ -1,2 +1,1 @@
-* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
-
+Site names and URLs are now properly positioned for right-to-left language users. Right on.
