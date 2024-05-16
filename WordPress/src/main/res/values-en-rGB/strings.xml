@@ -549,8 +549,8 @@ Language: en_GB
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Check your network connection and try again.</string>
-    <string name="blogging_prompts_list_error_network_title">Unable to load this content right now</string>
+    <string name="no_connection_error_description">Check your network connection and try again.</string>
+    <string name="no_connection_error_title">Unable to load this content right now</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
