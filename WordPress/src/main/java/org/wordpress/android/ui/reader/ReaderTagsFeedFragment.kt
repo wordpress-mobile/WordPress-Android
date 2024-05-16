@@ -101,6 +101,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeErrorMessageEvents()
         observeSnackbarEvents()
         observeOpenMoreMenuEvents()
+        viewModel.onViewCreated()
     }
 
     override fun onDestroy() {
