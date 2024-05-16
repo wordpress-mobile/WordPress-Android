@@ -4,6 +4,7 @@
 -----
 * [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
 * [*] Fixed a rare crash on the Login screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20821]
+* [*] Fix a crash that occurs when remove a user [https://github.com/wordpress-mobile/WordPress-Android/pull/20837]
 
 24.9
 -----
