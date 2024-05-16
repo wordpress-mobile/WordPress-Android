@@ -417,7 +417,7 @@ private fun PostListError(
         )
         Spacer(modifier = Modifier.height(Margin.ExtraLarge.value))
         Button(
-            onClick = { postList.onRetryClick() },
+            onClick = { postList.onRetryClick(tagChip.tag) },
             modifier = Modifier
                 .height(36.dp)
                 .width(114.dp),
