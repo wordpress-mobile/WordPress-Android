@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,6 +41,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,7 +82,8 @@ fun ReaderTagsFeedPostListItem(
     Column(
         modifier = Modifier
             .width(ReaderTagsFeedComposeUtils.PostItemWidth)
-            .height(ReaderTagsFeedComposeUtils.PostItemHeight),
+            .height(ReaderTagsFeedComposeUtils.PostItemHeight)
+            .itemSemanticsModifier(item),
         verticalArrangement = Arrangement.spacedBy(Margin.Small.value),
     ) {
         Row(
@@ -257,6 +264,43 @@ fun ReaderTagsFeedPostListItem(
                 }
             )
         }
+    }
+}
+
+private fun Modifier.itemSemanticsModifier(item: TagsFeedPostItem): Modifier = composed {
+    val openPostActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_post)
+    val openBlogActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_blog)
+
+    val likeStateDescription = if (item.isPostLiked) stringResource(R.string.mnu_comment_liked) else null
+    val likeActionLabel = if (item.isPostLiked) {
+        stringResource(R.string.reader_tags_feed_action_label_unlike_post)
+    } else {
+        stringResource(R.string.reader_tags_feed_action_label_like_post)
+    }
+
+    val openMenuActionLabel = stringResource(R.string.reader_tags_feed_action_label_open_menu)
+
+    clearAndSetSemantics {
+        contentDescription = "${item.siteName}, ${item.postDateLine}, ${item.postTitle}"
+        customActions = listOf(
+            CustomAccessibilityAction(openPostActionLabel) {
+                item.onPostCardClick(item)
+                true
+            },
+            CustomAccessibilityAction(openBlogActionLabel) {
+                item.onSiteClick(item)
+                true
+            },
+            CustomAccessibilityAction(likeActionLabel) {
+                item.onPostLikeClick(item)
+                true
+            },
+            CustomAccessibilityAction(openMenuActionLabel) {
+                item.onPostMoreMenuClick(item)
+                true
+            },
+        )
+        likeStateDescription?.let { stateDescription = it }
     }
 }
 
