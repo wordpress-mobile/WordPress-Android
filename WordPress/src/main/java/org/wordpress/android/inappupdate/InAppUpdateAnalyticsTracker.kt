@@ -29,8 +29,8 @@ class InAppUpdateAnalyticsTracker @Inject constructor(
     }
 
     companion object {
-        private const val PROPERTY_UPDATE_TYPE = "type"
-        private const val UPDATE_TYPE_FLEXIBLE = "flexible"
-        private const val UPDATE_TYPE_BLOCKING = "blocking"
+        const val PROPERTY_UPDATE_TYPE = "type"
+        const val UPDATE_TYPE_FLEXIBLE = "flexible"
+        const val UPDATE_TYPE_BLOCKING = "blocking"
     }
 }

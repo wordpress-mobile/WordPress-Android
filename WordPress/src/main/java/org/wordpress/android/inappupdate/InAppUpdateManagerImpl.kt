@@ -253,8 +253,10 @@ class InAppUpdateManagerImpl(
 
     private fun shouldRequestImmediateUpdate(): Boolean {
         Log.d(TAG, "shouldRequestImmediateUpdate(): entered")
-        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS
-        Log.d(TAG, "shouldRequestFlexibleUpdate(): result = $result")
+        val currentTime = currentTimeProvider.invoke()
+        val diff = currentTime - getLastUpdateRequestedTime()
+        val result = diff >= IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS
+        Log.d(TAG, "shouldRequestImmediateUpdate(): result = $result")
         return result
     }
 
@@ -284,10 +286,11 @@ class InAppUpdateManagerImpl(
     }
 
     companion object {
+        const val IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS = 1000 * 60 * 5 // 5 minutes
+        const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
+
         private const val TAG = "AppUpdateChecker"
-        private const val IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS = 1000 * 60 * 5 // 5 minutes
         private const val PREF_NAME = "in_app_update_prefs"
         private const val KEY_LAST_APP_UPDATE_CHECK_VERSION = "last_app_update_check_version"
-        private const val KEY_LAST_APP_UPDATE_CHECK_TIME = "last_app_update_check_time"
     }
 }
