@@ -62,8 +62,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-
-
+    
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
