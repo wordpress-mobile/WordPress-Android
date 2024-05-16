@@ -52,7 +52,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
                 assertThat(userAvatarUrl).isEqualTo(userProfile.userAvatarUrl)
                 assertThat(blavatarUrl).isEqualTo(userProfile.blavatarUrl)
                 assertThat(userName).isEqualTo(userProfile.userName)
-                assertThat(userLogin).isEqualTo(userProfile.userLogin)
+                assertThat(userLogin).isEqualTo("@${userProfile.userLogin}")
                 assertThat(userBio).isEqualTo(userProfile.userBio)
                 assertThat(siteTitle).isEqualTo(userProfile.siteTitle)
                 assertThat(siteUrl).isEqualTo(userProfile.siteUrl)
