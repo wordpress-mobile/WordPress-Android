@@ -35,7 +35,7 @@ class UserProfileViewModel @Inject constructor(
                 userAvatarUrl = userAvatarUrl,
                 blavatarUrl = blavatarUrl,
                 userName = userName,
-                userLogin = userLogin,
+                userLogin = if (userLogin.isNotEmpty()) "@$userLogin" else userLogin,
                 userBio = userBio,
                 siteTitle = if (siteTitle.isBlank()) {
                     resourceProvider.getString(R.string.user_profile_untitled_site)

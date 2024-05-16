@@ -151,7 +151,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         )
         userName.text = state.userName
         userLogin.text = if (state.userLogin.isNotBlank()) {
-            getString(R.string.at_username, state.userLogin)
+            state.userLogin
         } else {
             ""
         }

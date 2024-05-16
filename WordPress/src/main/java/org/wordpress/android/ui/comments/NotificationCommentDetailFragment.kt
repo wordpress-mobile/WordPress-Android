@@ -39,7 +39,7 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             userAvatarUrl = mNote!!.iconURL,
             blavatarUrl = "",
             userName = user?.text ?: getString(R.string.anonymous),
-            userLogin =  "",
+            userLogin = mComment?.authorEmail ?: "",
             userBio = user?.meta?.titles?.tagline ?: "",
             siteTitle = user?.meta?.titles?.home ?: getString(R.string.user_profile_untitled_site),
             siteUrl = user?.ranges?.firstOrNull()?.url ?: "",

@@ -31,21 +31,23 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
         }
     }
 
-    override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState =
-        BottomSheetUiState.UserProfileUiState(
+    override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {
+        return BottomSheetUiState.UserProfileUiState(
             userAvatarUrl = CommentExtension.getAvatarUrl(
                 mComment!!,
                 resources.getDimensionPixelSize(R.dimen.avatar_sz_large)
             ),
-            blavatarUrl = mSite!!.iconUrl,
+            blavatarUrl = "",
             userName = mComment!!.authorName ?: getString(R.string.anonymous),
-            userLogin = mSite!!.displayName,
-            userBio = mSite!!.description,
-            siteTitle = mSite!!.displayName,
-            siteUrl = mSite!!.url,
-            siteId = mSite!!.siteId,
+            userLogin = mComment!!.authorEmail ?: "",
+            // keep them empty because there's no data for displaying on UI
+            userBio = "",
+            siteTitle = "",
+            siteUrl = "",
+            siteId = 0L,
             blogPreviewSource = ReaderTracker.SOURCE_SITE_COMMENTS_USER_PROFILE
         )
+    }
 
     override fun getCommentIdentifier(): CommentIdentifier =
         CommentIdentifier.SiteCommentIdentifier(mComment!!.id, mComment!!.remoteCommentId)
