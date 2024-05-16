@@ -33,10 +33,12 @@
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
             android:text="@string/comment_action_share"
+            android:textAlignment="viewStart"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
             app:drawableStartCompat="@drawable/ic_share_white_24dp"
             app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_user_info" />
 
@@ -52,10 +54,12 @@
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
             android:text="@string/comment_action_edit_comment"
+            android:textAlignment="viewStart"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
             app:drawableStartCompat="@drawable/edit"
             app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
@@ -69,6 +73,7 @@
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
             android:text="@string/comment_action_change_status"
+            android:textAlignment="viewStart"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
             app:layout_constraintEnd_toEndOf="parent"
@@ -86,22 +91,15 @@
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
             android:text="@string/comment_action_user_info"
+            android:textAlignment="viewStart"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
             app:drawableStartCompat="@drawable/comment_author_avatar"
             app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="0dp"
-            android:layout_height="1px"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:background="@color/grey_300"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_edit_comment" />
 
         <View
             android:id="@+id/divider1"
@@ -112,6 +110,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_share" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@color/grey_300"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_edit_comment" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
 

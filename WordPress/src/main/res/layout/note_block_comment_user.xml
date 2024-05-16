@@ -71,6 +71,7 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:background="?android:selectableItemBackground"
         android:textAppearance="?attr/textAppearanceBody2"
+        android:textAlignment="viewStart"
         app:layout_constraintTop_toBottomOf="@+id/user_avatar"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />
 </androidx.constraintlayout.widget.ConstraintLayout>
