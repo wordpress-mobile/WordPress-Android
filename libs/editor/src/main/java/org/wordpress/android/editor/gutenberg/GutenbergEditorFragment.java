@@ -900,6 +900,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @UiThread
     public void showFeaturedImageConfirmationDialog(final int mediaId) {
+        if (isStateSaved()) {
+            return;
+        }
+
         GutenbergDialogFragment dialog = new GutenbergDialogFragment();
         dialog.initialize(
                 TAG_REPLACE_FEATURED_DIALOG,
