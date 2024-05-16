@@ -19,6 +19,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.getOrAwaitValue
 import org.wordpress.android.models.ReaderPost
@@ -34,6 +35,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
@@ -69,6 +71,9 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     @Mock
+    lateinit var readerTracker: ReaderTracker
+
+    @Mock
     lateinit var navigationEvents: MediatorLiveData<Event<ReaderNavigationEvents>>
 
     @Mock
@@ -101,6 +106,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostMoreButtonUiStateBuilder = readerPostMoreButtonUiStateBuilder,
             readerPostUiStateBuilder = readerPostUiStateBuilder,
             displayUtilsWrapper = displayUtilsWrapper,
+            readerTracker = readerTracker,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
@@ -261,6 +267,15 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Should track READER_TAGS_FEED_HEADER_TAPPED when onTagChipClick is called`() {
+        // When
+        viewModel.onTagChipClick(tag)
+
+        // Then
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAGS_FEED_HEADER_TAPPED)
+    }
+
+    @Test
     fun `Should emit OpenTagPostList when onMoreFromTagClick is called`() {
         // When
         viewModel.onMoreFromTagClick(tag)
@@ -268,6 +283,16 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         // Then
         assertIs<ActionEvent.OpenTagPostList>(actionEvents.first())
     }
+
+    @Test
+    fun `Should track READER_TAGS_FEED_MORE_FROM_TAG_TAPPED when onMoreFromTagClick is called`() {
+        // When
+        viewModel.onMoreFromTagClick(tag)
+
+        // Then
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_TAGS_FEED_MORE_FROM_TAG_TAPPED)
+    }
+
 
     @Test
     fun `Should emit ShowTagsList when onOpenTagsListClick is called`() {
@@ -583,6 +608,49 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         // Then
         assertIs<ActionEvent.RefreshTags>(actionEvents.first())
+    }
+
+    @Test
+    fun `Should track READER_POST_CARD_TAPPED when onPostCardClick is called`() = testCollectingUiStates {
+        // Given
+        val blogId = 123L
+        val feedId = 456L
+        val isFollowedByCurrentUser = true
+        whenever(readerPostTableWrapper.getBlogPost(any(), any(), any()))
+            .thenReturn(ReaderPost().apply {
+                this.blogId = blogId
+                this.feedId = feedId
+                this.isFollowedByCurrentUser = isFollowedByCurrentUser
+            })
+        // When
+        viewModel.onPostCardClick(
+            postItem = TagsFeedPostItem(
+                siteName = "",
+                postDateLine = "",
+                postTitle = "",
+                postExcerpt = "",
+                postImageUrl = "",
+                postNumberOfLikesText = "",
+                postNumberOfCommentsText = "",
+                isPostLiked = true,
+                isLikeButtonEnabled = true,
+                postId = 123L,
+                blogId = 123L,
+                onSiteClick = {},
+                onPostCardClick = {},
+                onPostLikeClick = {},
+                onPostMoreMenuClick = {}
+            )
+        )
+
+        // Then
+        verify(readerTracker).trackBlog(
+            stat = AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+            blogId = blogId,
+            feedId = feedId,
+            isFollowed = isFollowedByCurrentUser,
+            source = ReaderTracker.SOURCE_TAGS_FEED,
+        )
     }
 
     private fun mockMapInitialTagFeedItems() {
