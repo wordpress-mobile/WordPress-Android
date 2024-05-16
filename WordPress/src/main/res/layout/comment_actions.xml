@@ -11,23 +11,16 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/margin_medium">
 
-        <TextView
-            android:id="@+id/text_user_info"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:drawablePadding="@dimen/notifications_item_action_padding"
-            android:minWidth="@dimen/comment_action_popup_width"
-            android:paddingEnd="@dimen/notifications_item_action_padding_end"
-            android:paddingStart="@dimen/notifications_item_action_padding"
-            android:paddingVertical="@dimen/notifications_item_action_padding"
-            android:text="@string/comment_action_user_info"
-            android:textColor="?wpColorOnSurfaceHigh"
-            android:textSize="@dimen/text_sz_large"
-            app:drawableStartCompat="@drawable/comment_author_avatar"
-            app:drawableTint="?wpColorOnSurfaceHigh"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginEnd="@dimen/margin_large"
+            android:importantForAccessibility="no"
+            android:src="@drawable/arrow_down"
+            app:layout_constraintBottom_toBottomOf="@+id/text_change_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_change_status"
+            app:tint="?wpColorOnSurfaceHigh" />
 
         <TextView
             android:id="@+id/text_share"
@@ -51,13 +44,13 @@
             android:id="@+id/text_edit_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="?attr/selectableItemBackground"
             android:drawablePadding="@dimen/notifications_item_action_padding"
             android:minWidth="@dimen/comment_action_popup_width"
             android:paddingEnd="@dimen/notifications_item_action_padding_end"
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
-            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/comment_action_edit_comment"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
@@ -70,11 +63,11 @@
             android:id="@+id/text_change_status"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
             android:background="?attr/selectableItemBackground"
             android:paddingEnd="@dimen/notifications_item_action_padding_end"
             android:paddingStart="@dimen/notifications_item_action_padding"
             android:paddingVertical="@dimen/notifications_item_action_padding"
-            android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/comment_action_change_status"
             android:textColor="?wpColorOnSurfaceHigh"
             android:textSize="@dimen/text_sz_large"
@@ -82,15 +75,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
-        <ImageView
+        <TextView
+            android:id="@+id/text_user_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/arrow_down"
-            app:layout_constraintTop_toTopOf="@+id/text_change_status"
-            app:layout_constraintBottom_toBottomOf="@+id/text_change_status"
-            android:layout_marginEnd="@dimen/margin_large"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:importantForAccessibility="no" />
+            android:background="?attr/selectableItemBackground"
+            android:drawablePadding="@dimen/notifications_item_action_padding"
+            android:minWidth="@dimen/comment_action_popup_width"
+            android:paddingEnd="@dimen/notifications_item_action_padding_end"
+            android:paddingStart="@dimen/notifications_item_action_padding"
+            android:paddingVertical="@dimen/notifications_item_action_padding"
+            android:text="@string/comment_action_user_info"
+            android:textColor="?wpColorOnSurfaceHigh"
+            android:textSize="@dimen/text_sz_large"
+            app:drawableStartCompat="@drawable/comment_author_avatar"
+            app:drawableTint="?wpColorOnSurfaceHigh"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/divider2"

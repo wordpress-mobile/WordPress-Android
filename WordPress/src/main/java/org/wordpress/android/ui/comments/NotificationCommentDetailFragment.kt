@@ -40,7 +40,7 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             blavatarUrl = "",
             userName = user?.text ?: getString(R.string.anonymous),
             userLogin = mComment?.authorEmail ?: "",
-            userBio = user?.meta?.titles?.tagline ?: "",
+            userBio = "",
             siteTitle = user?.meta?.titles?.home ?: getString(R.string.user_profile_untitled_site),
             siteUrl = user?.ranges?.firstOrNull()?.url ?: "",
             siteId = user?.meta?.ids?.site ?: 0L,

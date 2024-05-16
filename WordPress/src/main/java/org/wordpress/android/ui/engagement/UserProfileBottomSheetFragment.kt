@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -150,9 +151,8 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
             WPAvatarUtils.rewriteAvatarUrl(state.userAvatarUrl, avatarSz)
         )
         userName.text = state.userName
-        userLogin.text = if (state.userLogin.isNotBlank()) {
-            state.userLogin
-        } else {
+        userLogin.text = state.userLogin.ifBlank {
+            userLogin.isGone = true
             ""
         }
         if (state.userBio.isNotBlank()) {
