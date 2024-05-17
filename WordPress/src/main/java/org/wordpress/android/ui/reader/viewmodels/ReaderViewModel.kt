@@ -52,6 +52,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderAnnouncementCardFeatureConfig
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
@@ -82,6 +83,7 @@ class ReaderViewModel @Inject constructor(
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
     // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    private val readerAnnouncementCardFeatureConfig: ReaderAnnouncementCardFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -94,8 +96,8 @@ class ReaderViewModel @Inject constructor(
     private val _topBarUiState = MutableLiveData<TopBarUiState>()
     val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
 
-    private val _announcementCardState = MutableLiveData<ReaderAnnouncementCardItemData>()
-    val announcementCardState: LiveData<ReaderAnnouncementCardItemData> = _announcementCardState
+    private val _announcementCardState = MutableLiveData<AnnouncementCardUiState>()
+    val announcementCardState: LiveData<AnnouncementCardUiState> = _announcementCardState
 
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
@@ -129,6 +131,7 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs(savedInstanceState)
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
+        loadAnnouncementCard()
     }
 
     fun onSaveInstanceState(out: Bundle) {
@@ -140,6 +143,25 @@ class ReaderViewModel @Inject constructor(
 
     private fun showJetpackPoweredBottomSheet() {
 //        _showJetpackPoweredBottomSheet.value = Event(true)
+    }
+
+    private fun loadAnnouncementCard() {
+        _announcementCardState.value = AnnouncementCardUiState(
+            shouldShow = readerAnnouncementCardFeatureConfig.isEnabled() &&
+                    appPrefsWrapper.shouldShowReaderAnnouncementCard(),
+            items = listOf(
+                ReaderAnnouncementCardItemData(
+                    iconRes = R.drawable.ic_reader_tag,
+                    titleRes = R.string.reader_announcement_card_tags_stream_title,
+                    descriptionRes = R.string.reader_announcement_card_tags_stream_description,
+                ),
+                ReaderAnnouncementCardItemData(
+                    iconRes = R.drawable.ic_reader_preferences,
+                    titleRes = R.string.reader_announcement_card_reading_preferences_title,
+                    descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
+                ),
+            ),
+        )
     }
 
     @JvmOverloads
@@ -565,6 +587,11 @@ class ReaderViewModel @Inject constructor(
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int,
         val duration: Int = QUICK_START_PROMPT_DURATION
+    )
+
+    data class AnnouncementCardUiState(
+        val shouldShow: Boolean,
+        val items: List<ReaderAnnouncementCardItemData>,
     )
 
     companion object {

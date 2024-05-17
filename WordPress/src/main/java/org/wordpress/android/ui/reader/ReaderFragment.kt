@@ -187,11 +187,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         readerAnnouncementCardComposeView.apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val announcementCardState by viewModel.announcementCardState.observeAsState()
-                val state = announcementCardState ?: return@setContent
-
-                AppTheme {
-                    ReaderAnnouncementCard(items = listOf())
+                val announcementCardUiState by viewModel.announcementCardState.observeAsState()
+                val state = announcementCardUiState ?: return@setContent
+                if (state.shouldShow) {
+                    AppTheme {
+                        ReaderAnnouncementCard(items = state.items)
+                    }
                 }
             }
         }

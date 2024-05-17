@@ -121,7 +121,7 @@ private fun ReaderAnnouncementCardItem(data: ReaderAnnouncementCardItemData) {
                 modifier = Modifier.padding(
                     start = Margin.Large.value,
                 ),
-                text = stringResource(data.titleRes),
+                text = stringResource(data.descriptionRes),
                 style = MaterialTheme.typography.footnote,
                 color = secondaryElementColor,
             )
