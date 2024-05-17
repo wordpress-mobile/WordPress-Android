@@ -18,6 +18,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -165,6 +166,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onAnnouncementCardDoneClick() {
+        readerTracker.track(AnalyticsTracker.Stat.READER_ANNOUNCEMENT_CARD_DISMISSED)
         appPrefsWrapper.setShouldShowReaderAnnouncementCard(false)
         loadAnnouncementCard()
     }
