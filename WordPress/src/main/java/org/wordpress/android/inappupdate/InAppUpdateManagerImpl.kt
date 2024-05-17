@@ -42,9 +42,7 @@ class InAppUpdateManagerImpl(
     private var updateListener: IInAppUpdateListener? = null
 
     override fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
-        Log.d(TAG, "Checking for app update")
         updateListener = listener
-
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             handleUpdateInfoSuccess(appUpdateInfo, activity)
         }.addOnFailureListener { exception ->
@@ -53,25 +51,22 @@ class InAppUpdateManagerImpl(
     }
 
     override fun completeAppUpdate() {
-        Log.d(TAG, "completeAppUpdate(): entered")
         appUpdateManager.completeUpdate()
     }
 
     override fun cancelAppUpdate(updateType: Int) {
-        Log.d(TAG, "cancelAppUpdate(): entered")
         appUpdateManager.unregisterListener(installStateListener)
         inAppUpdateAnalyticsTracker.trackUpdateDismissed(updateType)
     }
 
     override fun onUserAcceptedAppUpdate(updateType: Int) {
-        Log.d(TAG, "onUserAcceptedAppUpdate(): entered")
         inAppUpdateAnalyticsTracker.trackUpdateAccepted(updateType)
     }
 
     private fun handleUpdateInfoSuccess(appUpdateInfo: AppUpdateInfo, activity: Activity) {
         when (appUpdateInfo.updateAvailability()) {
             UPDATE_NOT_AVAILABLE -> {
-                Log.d(TAG, "No update available")
+               /* do nothing */
             }
             UPDATE_AVAILABLE -> {
                 handleUpdateAvailable(appUpdateInfo, activity)
@@ -79,15 +74,12 @@ class InAppUpdateManagerImpl(
             DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
                 handleUpdateInProgress(appUpdateInfo, activity)
             }
-            else -> {
-                Log.w(TAG, "Unknown update availability")
-            }
+            else -> { /* do nothing */ }
         }
     }
 
     private fun handleUpdateAvailable(appUpdateInfo: AppUpdateInfo, activity: Activity) {
         if (appUpdateInfo.installStatus() == DOWNLOADED) {
-            Log.d(TAG, "Update downloaded, notifying listener")
             updateListener?.onAppUpdateDownloaded()
             return
         }
@@ -115,13 +107,11 @@ class InAppUpdateManagerImpl(
     }
 
     private fun requestImmediateUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        Log.d(TAG, "requestImmediateUpdate(): entered")
         updateListener?.onAppUpdateStarted(AppUpdateType.IMMEDIATE)
         requestUpdate(AppUpdateType.IMMEDIATE, appUpdateInfo, activity)
     }
 
     private fun requestFlexibleUpdate(appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        Log.d(TAG, "requestFlexibleUpdate(): entered")
         appUpdateManager.registerListener(installStateListener)
         updateListener?.onAppUpdateStarted(AppUpdateType.FLEXIBLE)
         requestUpdate(AppUpdateType.FLEXIBLE, appUpdateInfo, activity)
@@ -129,7 +119,6 @@ class InAppUpdateManagerImpl(
 
     @Suppress("TooGenericExceptionCaught")
     private fun requestUpdate(updateType: Int, appUpdateInfo: AppUpdateInfo, activity: Activity) {
-        Log.d(TAG, "requestUpdate(): entered with updateType = $updateType")
         saveLastUpdateRequestInfo(appUpdateInfo)
         val requestCode = if (updateType == AppUpdateType.IMMEDIATE) {
             APP_UPDATE_IMMEDIATE_REQUEST_CODE
@@ -156,70 +145,45 @@ class InAppUpdateManagerImpl(
         override fun onStateUpdate(state: InstallState) {
             when (state.installStatus()) {
                 DOWNLOADED -> {
-                    Log.d(TAG, "installStateListener DOWNLOADED")
                     updateListener?.onAppUpdateDownloaded()
                 }
                 INSTALLED -> {
-                    Log.d(TAG, "installStateListener INSTALLED")
                     updateListener?.onAppUpdateInstalled()
                     appUpdateManager.unregisterListener(this) // 'this' refers to the listener object
                 }
                 CANCELED -> {
-                    Log.d(TAG, "installStateListener CANCELED")
                     updateListener?.onAppUpdateCancelled()
                     appUpdateManager.unregisterListener(this)
                 }
                 FAILED -> {
-                    Log.d(TAG, "installStateListener FAILED")
                     updateListener?.onAppUpdateFailed()
                     appUpdateManager.unregisterListener(this)
                 }
                 PENDING -> {
-                    Log.d(TAG, "installStateListener PENDING")
                     updateListener?.onAppUpdatePending()
                 }
-                DOWNLOADING -> {
-                    Log.d(TAG, "installStateListener DOWNLOADING")
-                }
-                INSTALLING -> {
-                    Log.d(TAG, "installStateListener INSTALLING")
-                }
-                InstallStatus.UNKNOWN -> {
-                    Log.d(TAG, "installStateListener UNKNOWN")
+                DOWNLOADING, INSTALLING, InstallStatus.UNKNOWN -> {
+                   /* do nothing */
                 }
             }
         }
     }
 
-    private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo): Boolean {
-        Log.d(TAG, "isImmediateUpdateInProgress(): entered, " +
-                "appUpdateInfo.updateAvailability() = ${appUpdateInfo.updateAvailability()}," +
-                "appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) " +
-                "= ${appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)}" +
-                "isImmediateUpdateNecessary = ${isImmediateUpdateNecessary()}")
-        val result = appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+    private fun isImmediateUpdateInProgress(appUpdateInfo: AppUpdateInfo) =
+        appUpdateInfo.updateAvailability() == DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
                 && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 && isImmediateUpdateNecessary()
 
-        Log.d(TAG, "isImmediateUpdateInProgress(): result = $result")
-
-        return result
-    }
-
     private fun saveLastUpdateRequestInfo(appUpdateInfo: AppUpdateInfo) {
-        Log.d(TAG, "setLastUpdateRequestedTime(): entered")
-        val currentTime = currentTimeProvider.invoke()
-        Log.d(TAG, "setLastUpdateRequestedTime(): currentTime = $currentTime")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
             putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, getAvailableUpdateAppVersion(appUpdateInfo))
-            putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTime)
+            putLong(KEY_LAST_APP_UPDATE_CHECK_TIME, currentTimeProvider.invoke())
             apply()
         }
     }
 
     private fun resetLastUpdateRequestInfo() {
-        Log.d(TAG, "resetLastUpdateRequestedTime(): entered")
         val sharedPref = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         sharedPref.edit().apply {
             putInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, -1)
@@ -228,45 +192,23 @@ class InAppUpdateManagerImpl(
         }
     }
 
-    private fun getLastUpdateRequestedVersion(): Int {
-        val defaultValue = -1
-        val result = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-            .getInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, defaultValue)
-        Log.d(TAG, "getLastUpdateRequestedVersion(): result = $result")
-        return result
-    }
+    private fun getLastUpdateRequestedVersion() =
+        applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            .getInt(KEY_LAST_APP_UPDATE_CHECK_VERSION, -1)
 
-    private fun getLastUpdateRequestedTime(): Long {
-        val defaultValue = -1L
-        val result = applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-            .getLong(KEY_LAST_APP_UPDATE_CHECK_TIME, defaultValue)
-        Log.d(TAG, "getLastUpdateRequestedTime(): result = $result")
-        return result
-    }
+    private fun getLastUpdateRequestedTime() =
+        applicationContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            .getLong(KEY_LAST_APP_UPDATE_CHECK_TIME, -1L)
 
-    private fun shouldRequestFlexibleUpdate(): Boolean {
-        Log.d(TAG, "shouldRequestFlexibleUpdate(): entered")
-        val result = currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= getFlexibleUpdateIntervalInMillis()
-        Log.d(TAG, "shouldRequestFlexibleUpdate(): result = $result")
-        return result
-    }
+    private fun shouldRequestFlexibleUpdate() =
+        currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= getFlexibleUpdateIntervalInMillis()
 
-    private fun shouldRequestImmediateUpdate(): Boolean {
-        Log.d(TAG, "shouldRequestImmediateUpdate(): entered")
-        val currentTime = currentTimeProvider.invoke()
-        val diff = currentTime - getLastUpdateRequestedTime()
-        val result = diff >= IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS
-        Log.d(TAG, "shouldRequestImmediateUpdate(): result = $result")
-        return result
-    }
+    private fun shouldRequestImmediateUpdate() =
+        currentTimeProvider.invoke() - getLastUpdateRequestedTime() >= IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS
 
     @Suppress("MagicNumber")
-    private fun getFlexibleUpdateIntervalInMillis(): Long {
-        Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): entered")
-        val result = 1000 * 60 * 60 * 24 * remoteConfigWrapper.getInAppUpdateFlexibleIntervalInDays()
-        Log.d(TAG, "getFlexibleUpdateIntervalInMillis(): result = $result")
-        return result.toLong()
-    }
+    private fun getFlexibleUpdateIntervalInMillis(): Long =
+        1000 * 60 * 60 * 24 * remoteConfigWrapper.getInAppUpdateFlexibleIntervalInDays().toLong()
 
     private fun getCurrentAppVersion() = buildConfigWrapper.getAppVersionCode()
 
@@ -274,16 +216,7 @@ class InAppUpdateManagerImpl(
 
     private fun getAvailableUpdateAppVersion(appUpdateInfo: AppUpdateInfo) = appUpdateInfo.availableVersionCode()
 
-    private fun isImmediateUpdateNecessary(): Boolean {
-        Log.d(TAG, "isImmediateUpdateNecessary(): entered")
-        val currentVersion = getCurrentAppVersion()
-        val getLastBlockingAppVersion = getLastBlockingAppVersion()
-        Log.d(TAG, "isImmediateUpdateNecessary() called")
-        Log.d(TAG, "currentVersion = $currentVersion, lastBlockingVersion = $getLastBlockingAppVersion")
-        val result = getCurrentAppVersion() < getLastBlockingAppVersion()
-        Log.d(TAG, "isImmediateUpdateNecessary(): result = $result")
-        return result
-    }
+    private fun isImmediateUpdateNecessary() = getCurrentAppVersion() < getLastBlockingAppVersion()
 
     companion object {
         const val IMMEDIATE_UPDATE_INTERVAL_IN_MILLIS = 1000 * 60 * 5 // 5 minutes
