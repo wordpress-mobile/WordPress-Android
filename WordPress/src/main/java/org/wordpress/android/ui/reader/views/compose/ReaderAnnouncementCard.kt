@@ -37,7 +37,9 @@ fun ReaderAnnouncementCard(
     items: List<ReaderAnnouncementCardItemData>
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Margin.ExtraLarge.value),
         verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
     ) {
         // Title
@@ -61,9 +63,6 @@ fun ReaderAnnouncementCard(
         // Done button
         Button(
             modifier = Modifier
-                .padding(
-                    horizontal = Margin.Large.value,
-                )
                 .fillMaxWidth(),
             onClick = { },
             elevation = ButtonDefaults.elevation(0.dp),
@@ -145,7 +144,6 @@ fun ReaderTagsFeedPostListItemPreview() {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
             ReaderAnnouncementCard(
                 items = listOf(
