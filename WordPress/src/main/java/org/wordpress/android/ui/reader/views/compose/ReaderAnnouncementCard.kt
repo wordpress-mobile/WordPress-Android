@@ -3,6 +3,9 @@ package org.wordpress.android.ui.reader.views.compose
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,47 +37,57 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderAnnouncementCard(
-    items: List<ReaderAnnouncementCardItemData>
+    shouldShow: Boolean,
+    items: List<ReaderAnnouncementCardItemData>,
+    onAnnouncementCardDoneClick: () -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(Margin.ExtraLarge.value),
-        verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
+    AnimatedVisibility(
+        visible = shouldShow,
+        enter = expandIn(),
+        exit = shrinkOut(
+            shrinkTowards = Alignment.TopCenter,
+        ),
     ) {
-        // Title
-        Text(
-            text = stringResource(R.string.reader_announcement_card_title),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-        // Items
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value)
+                .fillMaxWidth()
+                .padding(Margin.ExtraLarge.value),
+            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
         ) {
-            items(
-                items = items,
-            ) {
-                ReaderAnnouncementCardItem(it)
-            }
-        }
-        // Done button
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(),
-            onClick = { },
-            elevation = ButtonDefaults.elevation(0.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colorScheme.onSurface,
-            ),
-        ) {
+            // Title
             Text(
-                text = stringResource(id = R.string.reader_btn_done),
-                color = MaterialTheme.colorScheme.surface,
+                text = stringResource(R.string.reader_announcement_card_title),
                 style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurface,
             )
+            // Items
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value)
+            ) {
+                items(
+                    items = items,
+                ) {
+                    ReaderAnnouncementCardItem(it)
+                }
+            }
+            // Done button
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = { onAnnouncementCardDoneClick() },
+                elevation = ButtonDefaults.elevation(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colorScheme.onSurface,
+                ),
+            ) {
+                Text(
+                    text = stringResource(id = R.string.reader_btn_done),
+                    color = MaterialTheme.colorScheme.surface,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
         }
     }
 }
@@ -146,6 +159,7 @@ fun ReaderTagsFeedPostListItemPreview() {
                 .fillMaxWidth()
         ) {
             ReaderAnnouncementCard(
+                shouldShow = false,
                 items = listOf(
                     ReaderAnnouncementCardItemData(
                         iconRes = R.drawable.ic_wifi_off_24px,
@@ -162,7 +176,8 @@ fun ReaderTagsFeedPostListItemPreview() {
                         titleRes = R.string.reader_tags_display_name,
                         descriptionRes = R.string.reader_tags_feed_loading_error_description,
                     ),
-                )
+                ),
+                onAnnouncementCardDoneClick = {},
             )
         }
     }

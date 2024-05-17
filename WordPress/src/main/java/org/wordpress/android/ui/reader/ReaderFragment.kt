@@ -189,10 +189,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             setContent {
                 val announcementCardUiState by viewModel.announcementCardState.observeAsState()
                 val state = announcementCardUiState ?: return@setContent
-                if (state.shouldShow) {
-                    AppTheme {
-                        ReaderAnnouncementCard(items = state.items)
-                    }
+                AppTheme {
+                    ReaderAnnouncementCard(
+                        shouldShow = state.shouldShow,
+                        items = state.items,
+                        onAnnouncementCardDoneClick = { viewModel.onAnnouncementCardDoneClick() }
+                    )
                 }
             }
         }

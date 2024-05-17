@@ -164,6 +164,11 @@ class ReaderViewModel @Inject constructor(
         )
     }
 
+    fun onAnnouncementCardDoneClick() {
+        appPrefsWrapper.setShouldShowReaderAnnouncementCard(false)
+        loadAnnouncementCard()
+    }
+
     @JvmOverloads
     fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
