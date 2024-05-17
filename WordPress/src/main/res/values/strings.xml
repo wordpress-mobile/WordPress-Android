@@ -1709,6 +1709,7 @@
     <string name="reader_filter_chip_tag_zero">0 Tags</string>
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
+    <string name="reader_announcement_card_title">New in Reader</string>
 
     <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
     <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
