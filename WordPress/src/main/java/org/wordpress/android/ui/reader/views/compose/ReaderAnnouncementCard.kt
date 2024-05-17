@@ -63,7 +63,6 @@ fun ReaderAnnouncementCard(
         Button(
             modifier = Modifier
                 .padding(
-//                    vertical = Margin.Small.value,
                     horizontal = Margin.Large.value,
                 )
                 .fillMaxWidth(),
@@ -76,6 +75,7 @@ fun ReaderAnnouncementCard(
             Text(
                 text = stringResource(id = R.string.reader_btn_done),
                 color = MaterialTheme.colorScheme.surface,
+                style = MaterialTheme.typography.labelLarge,
             )
         }
     }
