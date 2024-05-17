@@ -36,7 +36,6 @@ import org.wordpress.android.ui.compose.unit.Margin
 fun ReaderAnnouncementCard(
     items: List<ReaderAnnouncementCardItemData>
 ) {
-    val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
