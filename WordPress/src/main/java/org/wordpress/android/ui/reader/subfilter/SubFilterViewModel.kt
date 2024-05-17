@@ -38,7 +38,6 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Comparator
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
@@ -69,6 +68,9 @@ class SubFilterViewModel @Inject constructor(
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
+
+    private val _onCleared = MutableLiveData<Event<Unit>>()
+    val onCleared: LiveData<Event<Unit>> = _onCleared
 
     private val _isTitleContainerVisible = MutableLiveData<Boolean>(true)
     val isTitleContainerVisible: LiveData<Boolean> = _isTitleContainerVisible
@@ -139,12 +141,12 @@ class SubFilterViewModel @Inject constructor(
                             blog.organizationId == organization.orgId
                         } ?: false
                     }
-                }.sortedWith(Comparator { blog1, blog2 ->
+                }.sortedWith { blog1, blog2 ->
                     // sort followed blogs by name/domain to match display
                     val blogOneName = getBlogNameForComparison(blog1)
                     val blogTwoName = getBlogNameForComparison(blog2)
                     blogOneName.compareTo(blogTwoName, true)
-                })
+                }
 
                 filterList.addAll(
                     followedBlogs.map { blog ->
@@ -414,7 +416,7 @@ class SubFilterViewModel @Inject constructor(
         loadSubFilters()
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsFetched) {
         if(event.didChange()) {
@@ -426,6 +428,7 @@ class SubFilterViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         eventBusWrapper.unregister(this)
+        _onCleared.value = Event(Unit)
     }
 
     companion object {
