@@ -325,8 +325,8 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        // We should not track subfilter selected if we're clearing a filter that is currently applied.
-        if (!subfilterListItem.isClearingFilter) {
+        // We should only track the selection of a subfilter if it's a tracked item (meaning it's a valid tag or site)
+        if (subfilterListItem.isTrackedItem) {
             val filterItemType = FilterItemType.fromSubfilterListItem(subfilterListItem)
             if (filterItemType != null) {
                 readerTracker.track(
@@ -334,7 +334,7 @@ class SubFilterViewModel @Inject constructor(
                     mutableMapOf(FilterItemType.trackingEntry(filterItemType))
                 )
             } else {
-                readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED,)
+                readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
             }
         }
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)

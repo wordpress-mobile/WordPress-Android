@@ -430,9 +430,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should NOT track READER_FILTER_SHEET_ITEM_SELECTED if clearing filter when onSubfilterSelected is called`() {
+    fun `Should NOT track READER_FILTER_SHEET_ITEM_SELECTED if SiteAll when onSubfilterSelected is called`() {
         val filter = SiteAll(
-            isClearingFilter = true,
             onClickAction = {},
         )
         viewModel.onSubfilterSelected(filter)
@@ -440,13 +439,17 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should track READER_FILTER_SHEET_ITEM_SELECTED if NOT clearing filter when onSubfilterSelected is called`() {
-        val filter = SiteAll(
-            isClearingFilter = false,
-            onClickAction = {},
-        )
+    fun `Should NOT track READER_FILTER_SHEET_ITEM_SELECTED if Divider when onSubfilterSelected is called`() {
+        val filter = SubfilterListItem.Divider
         viewModel.onSubfilterSelected(filter)
-        verify(readerTracker).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+        verify(readerTracker, times(0)).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+    }
+
+    @Test
+    fun `Should NOT track READER_FILTER_SHEET_ITEM_SELECTED if SectionTitle when onSubfilterSelected is called`() {
+        val filter = SubfilterListItem.SectionTitle(UiStringText("test"))
+        viewModel.onSubfilterSelected(filter)
+        verify(readerTracker, times(0)).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
     }
 
     @Test
