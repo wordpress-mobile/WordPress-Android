@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.views;
 import android.content.Context;
 import android.icu.text.CompactDecimalFormat;
 import android.icu.text.NumberFormat;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,9 @@ import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import javax.inject.Inject;
 
 /**
@@ -55,6 +60,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
     private OnBlogInfoLoadedListener mBlogInfoListener;
     private OnFollowListener mFollowListener;
 
+    private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
+    private final Handler mMainHandler = new Handler(Looper.getMainLooper());
+    
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
@@ -103,7 +111,6 @@ public class ReaderSiteHeaderView extends LinearLayout {
         mBlogId = blogId;
         mFeedId = feedId;
 
-        final ReaderBlog localBlogInfo;
         if (blogId == 0 && feedId == 0) {
             ToastUtils.showToast(getContext(), R.string.reader_toast_err_show_blog);
             return;
@@ -111,33 +118,35 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
         mIsFeed = ReaderUtils.isExternalFeed(mBlogId, mFeedId);
 
-        if (mIsFeed) {
-            localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
-        } else {
-            localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
-        }
+        // run in background to avoid ANR
+        mExecutorService.execute(() -> {
+            final ReaderBlog localBlogInfo;
+            if (mIsFeed) {
+                localBlogInfo = ReaderBlogTable.getFeedInfo(mFeedId);
+            } else {
+                localBlogInfo = ReaderBlogTable.getBlogInfo(mBlogId);
+            }
 
-        if (localBlogInfo != null) {
-            showBlogInfo(localBlogInfo, source);
-        }
+            mMainHandler.post(() -> {
+                if (localBlogInfo != null) {
+                    showBlogInfo(localBlogInfo, source);
+                }
+                // then get from server if doesn't exist locally or is time to update it
+                if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
+                    ReaderActions.UpdateBlogInfoListener listener = serverBlogInfo -> {
+                        if (isAttachedToWindow()) {
+                            showBlogInfo(serverBlogInfo, source);
+                        }
+                    };
 
-        // then get from server if doesn't exist locally or is time to update it
-        if (localBlogInfo == null || ReaderBlogTable.isTimeToUpdateBlogInfo(localBlogInfo)) {
-            ReaderActions.UpdateBlogInfoListener listener = new ReaderActions.UpdateBlogInfoListener() {
-                @Override
-                public void onResult(ReaderBlog serverBlogInfo) {
-                    if (isAttachedToWindow()) {
-                        showBlogInfo(serverBlogInfo, source);
+                    if (mIsFeed) {
+                        ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
+                    } else {
+                        ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
                     }
                 }
-            };
-
-            if (mIsFeed) {
-                ReaderBlogActions.updateFeedInfo(mFeedId, null, listener);
-            } else {
-                ReaderBlogActions.updateBlogInfo(mBlogId, null, listener);
-            }
-        }
+            });
+        });
     }
 
     private void showBlogInfo(ReaderBlog blogInfo, String source) {
