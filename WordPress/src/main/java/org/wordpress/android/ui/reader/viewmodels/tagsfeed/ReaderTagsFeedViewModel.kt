@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -48,6 +49,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val readerTracker: ReaderTracker,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -235,11 +237,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     @VisibleForTesting
     fun onTagChipClick(readerTag: ReaderTag) {
+        readerTracker.track(AnalyticsTracker.Stat.READER_TAGS_FEED_HEADER_TAPPED)
         _actionEvents.value = ActionEvent.FilterTagPostsFeed(readerTag)
     }
 
     @VisibleForTesting
     fun onMoreFromTagClick(readerTag: ReaderTag) {
+        readerTracker.track(AnalyticsTracker.Stat.READER_TAGS_FEED_MORE_FROM_TAG_TAPPED)
         _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
@@ -258,9 +262,14 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onPostCardClick(postItem: TagsFeedPostItem) {
+    @VisibleForTesting
+    fun onPostCardClick(postItem: TagsFeedPostItem) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
+                readerTracker.trackBlog(
+                    AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
+                    it.blogId, it.feedId, it.isFollowedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED,
+                )
                 readerPostCardActionsHandler.handleOnItemClicked(
                     it,
                     ReaderTracker.SOURCE_TAGS_FEED
@@ -430,7 +439,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     it,
                     type,
                     isBookmarkList = false,
-                    source = ReaderTracker.SOURCE_DISCOVER
+                    source = ReaderTracker.SOURCE_TAGS_FEED,
                 )
             }
         }

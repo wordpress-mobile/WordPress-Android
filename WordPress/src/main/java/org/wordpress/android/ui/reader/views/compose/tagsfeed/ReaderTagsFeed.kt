@@ -41,6 +41,9 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -60,8 +63,6 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
-
-private const val LOADING_POSTS_COUNT = 5
 
 @Composable
 fun ReaderTagsFeed(uiState: UiState) {
@@ -147,8 +148,14 @@ private fun Loaded(uiState: UiState.Loaded) {
 
 @Composable
 private fun Loading() {
+    val fetchingPostsLabel = stringResource(id = R.string.posts_fetching)
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clearAndSetSemantics {
+                contentDescription = fetchingPostsLabel
+            },
         userScrollEnabled = false,
     ) {
         val numberOfLoadingRows = 3
@@ -177,7 +184,7 @@ private fun Loading() {
                     horizontalArrangement = Arrangement.spacedBy(Margin.Large.value),
                     contentPadding = PaddingValues(horizontal = Margin.Large.value),
                 ) {
-                    items(LOADING_POSTS_COUNT) {
+                    items(ReaderTagsFeedComposeUtils.LOADING_POSTS_COUNT) {
                         ReaderTagsFeedPostListItemLoading()
                     }
                 }
@@ -259,9 +266,13 @@ private fun Empty(uiState: UiState.Empty) {
 
 @Composable
 private fun PostListLoading() {
+    val loadingLabel = stringResource(id = R.string.loading)
     LazyRow(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clearAndSetSemantics {
+                contentDescription = loadingLabel
+            },
         userScrollEnabled = false,
         horizontalArrangement = Arrangement.spacedBy(Margin.ExtraMediumLarge.value),
         contentPadding = PaddingValues(
@@ -269,7 +280,7 @@ private fun PostListLoading() {
             end = Margin.Large.value
         ),
     ) {
-        items(LOADING_POSTS_COUNT) {
+        items(ReaderTagsFeedComposeUtils.LOADING_POSTS_COUNT) {
             ReaderTagsFeedPostListItemLoading()
         }
     }
@@ -304,7 +315,7 @@ private fun PostListLoaded(
             )
             Box(
                 modifier = Modifier
-                    .height(340.dp)
+                    .height(ReaderTagsFeedComposeUtils.PostItemHeight)
                     .padding(
                         start = Margin.ExtraLarge.value,
                         end = Margin.ExtraLarge.value,
@@ -364,6 +375,7 @@ private fun PostListError(
         modifier = Modifier
             .height(250.dp)
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) {}
             .padding(start = 60.dp, end = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

@@ -20,8 +20,10 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.getOrAwaitValue
+import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
+import org.wordpress.android.models.ReaderTagType.TAGS
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -445,6 +447,34 @@ class SubFilterViewModelTest : BaseUnitTest() {
         )
         viewModel.onSubfilterSelected(filter)
         verify(readerTracker).track(AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+    }
+
+    @Test
+    fun `Should track READER_FILTER_SHEET_ITEM_SELECTED with parameters if type is SITE`() {
+        val siteFilter = Site(
+            blog = ReaderBlog(),
+            onClickAction = {},
+        )
+        viewModel.onSubfilterSelected(siteFilter)
+        verify(readerTracker).track(
+            stat = AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED,
+            properties = mutableMapOf("type" to "site"),
+        )
+    }
+
+    @Test
+    fun `Should track READER_FILTER_SHEET_ITEM_SELECTED with parameters if type is TAG`() {
+        val tagFilter = Tag(
+            tag = ReaderTag(
+                "", "", "", "", TAGS
+            ),
+            onClickAction = {},
+        )
+        viewModel.onSubfilterSelected(tagFilter)
+        verify(readerTracker).track(
+            stat = AnalyticsTracker.Stat.READER_FILTER_SHEET_ITEM_SELECTED,
+            properties = mutableMapOf("type" to "topic"),
+        )
     }
 
     @Test
