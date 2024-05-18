@@ -39,7 +39,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartRead
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.TopBarUiState
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -524,8 +523,12 @@ class ReaderViewModelTest : BaseUnitTest() {
 
         val readerPreferencesItem = announcementCardUiState.items[1]
         assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
-        assertThat(readerPreferencesItem.titleRes).isEqualTo(R.string.reader_announcement_card_reading_preferences_title)
-        assertThat(readerPreferencesItem.descriptionRes).isEqualTo(R.string.reader_announcement_card_reading_preferences_description)
+        assertThat(readerPreferencesItem.titleRes).isEqualTo(
+            R.string.reader_announcement_card_reading_preferences_title
+        )
+        assertThat(readerPreferencesItem.descriptionRes).isEqualTo(
+            R.string.reader_announcement_card_reading_preferences_description
+        )
     }
 
     @Test
