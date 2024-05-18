@@ -39,12 +39,16 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartRead
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.TopBarUiState
+import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderAnnouncementCardFeatureConfig
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
 
@@ -89,6 +93,9 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
 
+    @Mock
+    lateinit var readerAnnouncementCardFeatureConfig: ReaderAnnouncementCardFeatureConfig
+
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
 
@@ -112,6 +119,7 @@ class ReaderViewModelTest : BaseUnitTest() {
             ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
             urlUtilsWrapper,
             readerTagsFeedFeatureConfig,
+            readerAnnouncementCardFeatureConfig,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -502,6 +510,57 @@ class ReaderViewModelTest : BaseUnitTest() {
         assertThat(showJetpackOverlayEvent.last().peekContent()).isTrue
     }
 
+    @Test
+    fun `Should load announcement card correctly`() = testWithNonEmptyTags {
+        triggerContentDisplay()
+        val observers = initObservers()
+
+        val announcementCardUiState = observers.announcementCardStateEvents.first()
+
+        val tagsFeedItem = announcementCardUiState.items[0]
+        assertThat(tagsFeedItem.iconRes).isEqualTo(R.drawable.ic_reader_tag)
+        assertThat(tagsFeedItem.titleRes).isEqualTo(R.string.reader_announcement_card_tags_stream_title)
+        assertThat(tagsFeedItem.descriptionRes).isEqualTo(R.string.reader_announcement_card_tags_stream_description)
+
+        val readerPreferencesItem = announcementCardUiState.items[1]
+        assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
+        assertThat(readerPreferencesItem.titleRes).isEqualTo(R.string.reader_announcement_card_reading_preferences_title)
+        assertThat(readerPreferencesItem.descriptionRes).isEqualTo(R.string.reader_announcement_card_reading_preferences_description)
+    }
+
+    @Test
+    fun `Should show announcement card if feature flag is enabled and app preference returns true`() =
+        testWithNonEmptyTags {
+        whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderAnnouncementCard()).thenReturn(true)
+        triggerContentDisplay()
+        val observers = initObservers()
+
+        val announcementCardUiState = observers.announcementCardStateEvents.first()
+        assertTrue(announcementCardUiState.shouldShow)
+    }
+
+    @Test
+    fun `Should NOT show announcement card if feature flag is disabled`() = testWithNonEmptyTags {
+            whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(false)
+            triggerContentDisplay()
+            val observers = initObservers()
+
+            val announcementCardUiState = observers.announcementCardStateEvents.first()
+            assertFalse(announcementCardUiState.shouldShow)
+        }
+
+    @Test
+    fun `Should NOT show announcement card if app preference returns false`() = testWithNonEmptyTags {
+        whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(appPrefsWrapper.shouldShowReaderAnnouncementCard()).thenReturn(false)
+        triggerContentDisplay()
+        val observers = initObservers()
+
+        val announcementCardUiState = observers.announcementCardStateEvents.first()
+        assertFalse(announcementCardUiState.shouldShow)
+    }
+
     private fun assertQsFollowSiteTaskStarted(
         observers: Observers,
         isSettingsSupported: Boolean = true
@@ -546,13 +605,19 @@ class ReaderViewModelTest : BaseUnitTest() {
 //            tabNavigationEvents.add(it.peekContent())
 //        }
 
-        return Observers(uiStates, quickStartReaderPrompts, tabNavigationEvents)
+        val announcementCardStateEvents = mutableListOf<ReaderViewModel.AnnouncementCardUiState>()
+        viewModel.announcementCardState.observeForever {
+            announcementCardStateEvents.add(it)
+        }
+
+        return Observers(uiStates, quickStartReaderPrompts, tabNavigationEvents, announcementCardStateEvents)
     }
 
     private data class Observers(
         val uiStates: List<ReaderUiState>,
         val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>,
-        val tabNavigationEvents: List<TabNavigation>
+        val tabNavigationEvents: List<TabNavigation>,
+        val announcementCardStateEvents: List<ReaderViewModel.AnnouncementCardUiState>,
     )
 
     private fun triggerContentDisplay(
