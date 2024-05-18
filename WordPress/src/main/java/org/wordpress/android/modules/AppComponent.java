@@ -12,6 +12,7 @@ import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailFragment;
 import org.wordpress.android.ui.activitylog.list.ActivityLogListFragment;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment;
+import org.wordpress.android.ui.audiorecorder.AudioRecorderBottomSheetDialogFragment;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingDialogFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderBottomSheetFragment;
 import org.wordpress.android.ui.bloggingreminders.BloggingReminderTimePicker;
@@ -561,4 +562,6 @@ public interface AppComponent {
     void inject(WPMainNavigationView object);
 
     void inject(PostResolutionOverlayFragment object);
+
+    void inject(AudioRecorderBottomSheetDialogFragment object);
 }

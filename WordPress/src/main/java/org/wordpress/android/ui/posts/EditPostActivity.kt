@@ -13,6 +13,7 @@ import android.os.Looper
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextUtils
+import android.util.Log
 import android.view.DragEvent
 import android.view.Menu
 import android.view.MenuItem
@@ -130,6 +131,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCo
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.Shortcut
 import org.wordpress.android.ui.WPWebViewActivity
+import org.wordpress.android.ui.audiorecorder.AudioRecorderBottomSheetDialogFragment
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION
 import org.wordpress.android.ui.history.HistoryListItem.Revision
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
@@ -320,6 +322,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var showPrepublishingBottomSheetRunnable: Runnable? = null
     private var htmlModeMenuStateOn: Boolean = false
     private var updatingPostArea: FrameLayout? = null
+
+    private var showAudioRecorderBottomSheetHandler: Handler? = null
+    private var showAudioRecorderBottomSheetRunnable: Runnable? = null
 
     @Inject lateinit var dispatcher: Dispatcher
 
@@ -587,6 +592,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR)
         setupPrepublishingBottomSheetRunnable()
+        setupAudioRecorderBottomSheetRunnable()
 
         // The check on savedInstanceState should allow to show the dialog only on first start
         // (even in cases when the VM could be re-created like when activity is destroyed in the background)
@@ -1149,6 +1155,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         hideUpdatingPostAreaRunnable?.let {
             hideUpdatingPostAreaHandler.removeCallbacks(it)
         }
+
+        showAudioRecorderBottomSheetRunnable?.let {
+            showAudioRecorderBottomSheetHandler?.removeCallbacks(it)
+        }
     }
 
     override fun onDestroy() {
@@ -1688,7 +1698,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             SecondaryEditorAction.PUBLISH_NOW -> {
                 analyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED)
                 publishPostImmediatelyUseCase.updatePostToPublishImmediately((editPostRepository), isNewPost)
-                showPrepublishingNudgeBottomSheet()
+                // todo: annmarie
+                showAudioRecorderBottomSheet()
+                // showPrepublishingNudgeBottomSheet()
                 return true
             }
 
@@ -1788,11 +1800,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         )
     }
 
+    // todo: annmarie show the audio recorder instead for the time being
     private fun performPrimaryAction() {
         when (primaryAction) {
             PrimaryEditorAction.PUBLISH_NOW -> {
                 analyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED)
-                showPrepublishingNudgeBottomSheet()
+                showAudioRecorderBottomSheet()
+                // showPrepublishingNudgeBottomSheet()
                 return
             }
 
@@ -1800,7 +1814,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             PrimaryEditorAction.CONTINUE,
             PrimaryEditorAction.SCHEDULE,
             PrimaryEditorAction.SUBMIT_FOR_REVIEW -> {
-                showPrepublishingNudgeBottomSheet()
+                showAudioRecorderBottomSheet()
+                // showPrepublishingNudgeBottomSheet()
                 return
             }
 
@@ -2143,6 +2158,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         setResult(RESULT_OK, i)
     }
 
+    // todo: annmarie - do the same for this audio recorder bottom sheet fragment
     private fun setupPrepublishingBottomSheetRunnable() {
         showPrepublishingBottomSheetHandler = Handler()
         showPrepublishingBottomSheetRunnable = Runnable {
@@ -2163,6 +2179,29 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val delayMs = PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY
         showPrepublishingBottomSheetRunnable?.let {
             showPrepublishingBottomSheetHandler?.postDelayed(it, delayMs)
+        }
+    }
+
+    private fun setupAudioRecorderBottomSheetRunnable() {
+        showAudioRecorderBottomSheetHandler = Handler()
+        showAudioRecorderBottomSheetRunnable = Runnable {
+            val fragment = supportFragmentManager.findFragmentByTag(
+                AudioRecorderBottomSheetDialogFragment.TAG
+            )
+            if (fragment == null) {
+                val frag = AudioRecorderBottomSheetDialogFragment.newInstance(site, isPage)
+                frag.show(supportFragmentManager, AudioRecorderBottomSheetDialogFragment.TAG)
+            }
+        }
+    }
+
+    private fun showAudioRecorderBottomSheet() {
+        Log.i(javaClass.simpleName, "***=> showAudioRecorderBottomSheet ")
+        viewPager?.currentItem = PAGE_CONTENT
+        ActivityUtils.hideKeyboard(this)
+        val delayMs = GENERAL_BOTTOM_SHEET_DELAY
+        showAudioRecorderBottomSheetRunnable?.let {
+            showAudioRecorderBottomSheetHandler?.postDelayed(it, delayMs)
         }
     }
 
@@ -3988,6 +4027,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         private const val MIN_UPDATING_POST_DISPLAY_TIME: Long = 2000L // Minimum display time in milliseconds
         private const val OFFSCREEN_PAGE_LIMIT = 4
         private const val PREPUBLISHING_NUDGE_BOTTOM_SHEET_DELAY = 100L
+        private const val GENERAL_BOTTOM_SHEET_DELAY = 100L
         private const val SNACKBAR_DURATION = 4000
 
         @JvmStatic fun checkToRestart(data: Intent): Boolean {

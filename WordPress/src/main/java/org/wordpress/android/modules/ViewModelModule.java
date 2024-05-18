@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.accounts.LoginEpilogueViewModel;
 import org.wordpress.android.ui.accounts.LoginViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
+import org.wordpress.android.ui.audiorecorder.AudioRecorderViewModel;
 import org.wordpress.android.ui.bloggingprompts.onboarding.BloggingPromptsOnboardingViewModel;
 import org.wordpress.android.ui.bloggingreminders.BloggingRemindersViewModel;
 import org.wordpress.android.ui.comments.unified.UnifiedCommentActivityViewModel;
@@ -545,4 +546,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostResolutionOverlayViewModel.class)
     abstract ViewModel postResolutionOverlayViewModel(PostResolutionOverlayViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AudioRecorderViewModel.class)
+    abstract ViewModel audioRecorderViewModel(AudioRecorderViewModel viewModel);
 }
