@@ -234,6 +234,9 @@ public class ReaderActivityLauncher {
      */
     public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
+        if (context == null) {
+            return;
+        }
         Intent intent = buildShowReaderCommentsIntent(
                 context,
                 blogId,
@@ -257,6 +260,9 @@ public class ReaderActivityLauncher {
 
     public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
+        if (fragment.getContext() == null) {
+            return;
+        }
         Intent intent = buildShowReaderCommentsIntent(
                 fragment.getContext(),
                 blogId,
