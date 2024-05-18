@@ -41,6 +41,8 @@ fun ReaderAnnouncementCard(
     items: List<ReaderAnnouncementCardItemData>,
     onAnnouncementCardDoneClick: () -> Unit,
 ) {
+    val primaryColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+    val secondaryColor = if (isSystemInDarkTheme()) AppColor.Black else AppColor.White
     AnimatedVisibility(
         visible = shouldShow,
         enter = expandIn(),
@@ -58,7 +60,7 @@ fun ReaderAnnouncementCard(
             Text(
                 text = stringResource(R.string.reader_announcement_card_title),
                 style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = primaryColor,
             )
             // Items
             LazyColumn(
@@ -79,12 +81,12 @@ fun ReaderAnnouncementCard(
                 onClick = { onAnnouncementCardDoneClick() },
                 elevation = ButtonDefaults.elevation(0.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colorScheme.onSurface,
+                    backgroundColor = primaryColor,
                 ),
             ) {
                 Text(
                     text = stringResource(id = R.string.reader_btn_done),
-                    color = MaterialTheme.colorScheme.surface,
+                    color = secondaryColor,
                     style = MaterialTheme.typography.labelLarge,
                 )
             }
@@ -94,14 +96,15 @@ fun ReaderAnnouncementCard(
 
 @Composable
 private fun ReaderAnnouncementCardItem(data: ReaderAnnouncementCardItemData) {
-    val baseColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+    val primaryColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
+    val secondaryColor = if (isSystemInDarkTheme()) AppColor.Black else AppColor.White
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minWidth = 54.dp, minHeight = 54.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val iconBackgroundColor = MaterialTheme.colorScheme.onSurface
+        val iconBackgroundColor = primaryColor
         Icon(
             modifier = Modifier
                 .padding(
@@ -115,7 +118,7 @@ private fun ReaderAnnouncementCardItem(data: ReaderAnnouncementCardItemData) {
                     )
                 },
             painter = painterResource(data.iconRes),
-            tint = MaterialTheme.colorScheme.surface,
+            tint = secondaryColor,
             contentDescription = null
         )
         Column(verticalArrangement = Arrangement.Center) {
@@ -125,9 +128,9 @@ private fun ReaderAnnouncementCardItem(data: ReaderAnnouncementCardItemData) {
                 ),
                 text = stringResource(data.titleRes),
                 style = MaterialTheme.typography.labelLarge,
-                color = baseColor,
+                color = primaryColor,
             )
-            val secondaryElementColor = baseColor.copy(
+            val secondaryElementColor = primaryColor.copy(
                 alpha = 0.6F
             )
             Text(
