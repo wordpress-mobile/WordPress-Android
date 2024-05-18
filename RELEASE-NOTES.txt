@@ -4,6 +4,7 @@
 -----
 * [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
 * [*] Fixed a rare crash on the Login screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20821]
+* [*] Fixed a rare crash on the featured image confirmation dialog [https://github.com/wordpress-mobile/WordPress-Android/pull/20836]
 * [*] Fixed an ANR issue on the Post List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20833]
 
 24.9
