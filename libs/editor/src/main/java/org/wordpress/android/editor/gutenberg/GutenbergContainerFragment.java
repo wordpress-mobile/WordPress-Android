@@ -311,6 +311,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onRedoPressed();
     }
 
+    public void onVoiceToContent(String content) {
+        mWPAndroidGlueCode.onVoiceToContent(content);
+    }
+
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         // We want to make sure that activity isn't null
         // as it can make this crash to happen: https://github.com/wordpress-mobile/WordPress-Android/issues/13248
