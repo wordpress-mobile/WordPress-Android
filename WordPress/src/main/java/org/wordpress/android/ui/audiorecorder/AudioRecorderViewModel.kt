@@ -11,7 +11,7 @@ import android.media.MediaRecorder
 import android.util.Log
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.VoiceToContentResult
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -110,8 +110,8 @@ class AudioRecorderViewModel @Inject constructor(
             launch(bgDispatcher) {
                 Log.i(javaClass.simpleName, "***=> Right before making the BE call")
                 when (val response = jetpackAIStore.fetchVoiceToContent(site = it, audioFile = audioFile)) {
-                    is JetpackAIRestClient.VoiceToContentResponse.Success -> Log.i(javaClass.simpleName, "***=> Success Results = ${response.content}")
-                    is JetpackAIRestClient.VoiceToContentResponse.Error -> Log.i(javaClass.simpleName, "***=> Error Results = ${response.message}")
+                    is VoiceToContentResult.Success -> Log.i(javaClass.simpleName, "***=> Success Results = ${response.content}")
+                    is VoiceToContentResult.Error -> Log.i(javaClass.simpleName, "***=> Error Results = ${response.message}")
                 }
 
             }
