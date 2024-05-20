@@ -34,15 +34,14 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
         val user = mContentMapper.mapToFormattableContentList(mNote!!.body.toString())
             .find { FormattableRangeType.fromString(it.type) == FormattableRangeType.USER }
 
-
         return BottomSheetUiState.UserProfileUiState(
             userAvatarUrl = mNote!!.iconURL,
             blavatarUrl = "",
             userName = user?.text ?: getString(R.string.anonymous),
-            userLogin = mComment?.authorEmail ?: "",
+            userLogin = mComment?.authorEmail.orEmpty(),
             userBio = "",
             siteTitle = user?.meta?.titles?.home ?: getString(R.string.user_profile_untitled_site),
-            siteUrl = user?.ranges?.firstOrNull()?.url ?: "",
+            siteUrl = user?.ranges?.firstOrNull()?.url.orEmpty(),
             siteId = user?.meta?.ids?.site ?: 0L,
             blogPreviewSource = SOURCE_NOTIF_COMMENT_USER_PROFILE
         )

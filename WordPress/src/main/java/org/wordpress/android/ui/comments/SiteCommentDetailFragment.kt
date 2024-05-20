@@ -39,7 +39,7 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
             ),
             blavatarUrl = "",
             userName = mComment!!.authorName ?: getString(R.string.anonymous),
-            userLogin = mComment!!.authorEmail ?: "",
+            userLogin = mComment!!.authorEmail.orEmpty(),
             // keep them empty because there's no data for displaying on UI
             userBio = "",
             siteTitle = "",
