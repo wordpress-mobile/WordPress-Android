@@ -38,7 +38,6 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Comparator
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
@@ -125,6 +124,7 @@ class SubFilterViewModel @Inject constructor(
             ""
         }
     }
+
     fun loadSubFilters() {
         launch {
             val filterList = ArrayList<SubfilterListItem>()
@@ -139,12 +139,12 @@ class SubFilterViewModel @Inject constructor(
                             blog.organizationId == organization.orgId
                         } ?: false
                     }
-                }.sortedWith(Comparator { blog1, blog2 ->
+                }.sortedWith { blog1, blog2 ->
                     // sort followed blogs by name/domain to match display
                     val blogOneName = getBlogNameForComparison(blog1)
                     val blogTwoName = getBlogNameForComparison(blog2)
                     blogOneName.compareTo(blogTwoName, true)
-                })
+                }
 
                 filterList.addAll(
                     followedBlogs.map { blog ->
@@ -239,13 +239,14 @@ class SubFilterViewModel @Inject constructor(
         category: SubfilterCategory,
     ) {
         updateTagsAndSites()
+        loadSubFilters()
         _bottomSheetUiState.value = Event(
             BottomSheetVisible(
                 UiStringRes(category.titleRes),
                 category
             )
         )
-        val source = when(category) {
+        val source = when (category) {
             SubfilterCategory.SITES -> "blogs"
             SubfilterCategory.TAGS -> "tags"
         }
@@ -353,6 +354,7 @@ class SubFilterViewModel @Inject constructor(
         } else {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
+        onSubfilterSelected(filter)
         _currentSubFilter.value = filter
     }
 
@@ -414,10 +416,10 @@ class SubFilterViewModel @Inject constructor(
         loadSubFilters()
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedBlogsFetched) {
-        if(event.didChange()) {
+        if (event.didChange()) {
             AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
             loadSubFilters()
         }
@@ -449,7 +451,7 @@ class SubFilterViewModel @Inject constructor(
 
         companion object {
             fun fromSubfilterListItem(subfilterListItem: SubfilterListItem): FilterItemType? =
-                when(subfilterListItem.type) {
+                when (subfilterListItem.type) {
                     SubfilterListItem.ItemType.SITE -> Blog
                     SubfilterListItem.ItemType.TAG -> Tag
                     else -> null
