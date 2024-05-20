@@ -202,7 +202,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     updatedLoadedData[existingIndex] = updatedItem
                 }
 
-            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(updatedLoadedData)
+            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(
+                updatedLoadedData
+            )
         }
     }
 
@@ -247,8 +249,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
-    private fun onRetryClick() {
-        // TODO
+    @VisibleForTesting
+    fun onRetryClick(readerTag: ReaderTag) {
+        launch {
+            fetchTag(readerTag)
+        }
     }
 
     @VisibleForTesting
@@ -256,7 +261,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
                 _navigationEvents.postValue(
-                    Event(ReaderNavigationEvents.ShowBlogPreview(it.blogId, it.feedId, it.isFollowedByCurrentUser))
+                    Event(
+                        ReaderNavigationEvents.ShowBlogPreview(
+                            it.blogId,
+                            it.feedId,
+                            it.isFollowedByCurrentUser
+                        )
+                    )
                 )
             }
         }
@@ -268,7 +279,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
             findPost(postItem.postId, postItem.blogId)?.let {
                 readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
-                    it.blogId, it.feedId, it.isFollowedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED,
+                    it.blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser,
+                    ReaderTracker.SOURCE_TAGS_FEED,
                 )
                 readerPostCardActionsHandler.handleOnItemClicked(
                     it,
@@ -349,7 +363,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
             }
         }
 
-    private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
+    private fun findTagFeedItemToUpdate(
+        uiState: UiState.Loaded,
+        postItemToUpdate: TagsFeedPostItem
+    ) =
         uiState.data.firstOrNull { tagFeedItem ->
             tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
                 it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
@@ -359,7 +376,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
-                postLikeUseCase.perform(post, !post.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+                postLikeUseCase.perform(
+                    post,
+                    !post.isLikedByCurrentUser,
+                    ReaderTracker.SOURCE_TAGS_FEED
+                ).collect {
                     when (it) {
                         is PostLikeUseCase.PostLikeState.Success -> {
                             // Re-enable like button without changing the current post item UI.
@@ -407,7 +428,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                val photonWidth = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+                val photonWidth =
+                    (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
                 val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
                 _openMoreMenuEvents.postValue(
                     MoreMenuUiState(
@@ -432,7 +454,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onMoreMenuButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+    private fun onMoreMenuButtonClicked(
+        postId: Long,
+        blogId: Long,
+        type: ReaderPostCardActionType
+    ) {
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.onAction(
@@ -502,7 +528,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class Error(
             val type: ErrorType,
-            val onRetryClick: () -> Unit
+            val onRetryClick: (ReaderTag) -> Unit
         ) : PostList()
     }
 

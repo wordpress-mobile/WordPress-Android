@@ -67,7 +67,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
         errorType: ReaderTagsFeedViewModel.ErrorType,
         onTagChipClick: (ReaderTag) -> Unit,
         onMoreFromTagClick: (ReaderTag) -> Unit,
-        onRetryClick: () -> Unit,
+        onRetryClick: (ReaderTag) -> Unit,
         onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
     ): ReaderTagsFeedViewModel.TagFeedItem =
         ReaderTagsFeedViewModel.TagFeedItem(

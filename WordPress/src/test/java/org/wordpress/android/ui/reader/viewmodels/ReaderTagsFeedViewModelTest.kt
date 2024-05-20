@@ -653,6 +653,52 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `should fetch again when onRetryClick is called`() = testCollectingUiStates {
+        // Given
+        val tag = ReaderTestUtils.createTag("tag")
+        val posts = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val error = ReaderPostFetchException("error")
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
+            delay(100)
+            throw error
+        }.doSuspendableAnswer {
+            delay(100)
+            posts
+        }
+
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+        mockMapErrorTagFeedItems()
+
+        viewModel.onTagsChanged(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
+        advanceUntilIdle()
+
+        assertThat(collectedUiStates.last()).isEqualTo(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(getErrorTagFeedItem(tag))
+            )
+        )
+
+        // When
+        viewModel.onRetryClick(tag)
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
+        advanceUntilIdle()
+
+        // Then
+        assertThat(collectedUiStates).contains(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(getLoadedTagFeedItem(tag))
+            )
+        )
+    }
+
     private fun mockMapInitialTagFeedItems() {
         whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any(), any()))
             .thenAnswer {
@@ -704,9 +750,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     private fun getErrorTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
         ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
-        ReaderTagsFeedViewModel.PostList.Error(
-            ReaderTagsFeedViewModel.ErrorType.Default, {}
-        ),
+        ReaderTagsFeedViewModel.PostList.Error(ReaderTagsFeedViewModel.ErrorType.Default, {}),
     )
 
     private fun testCollectingUiStates(block: suspend TestScope.() -> Unit) = test {
