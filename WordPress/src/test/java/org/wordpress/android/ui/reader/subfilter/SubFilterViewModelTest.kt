@@ -302,6 +302,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `view model updates the tags and sites and asks to show the bottom sheet when filters button is tapped`() {
+        mockReaderTableEmpty()
+
         var updateTasks: EnumSet<UpdateTask>? = null
 
         viewModel.updateTagsAndSites.observeForever { updateTasks = it.peekContent() }
@@ -318,6 +320,8 @@ class SubFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `view model asks to show the bottom sheet when filters button is tapped`() {
+        mockReaderTableEmpty()
+
         var uiState: BottomSheetUiState? = null
 
         viewModel.bottomSheetUiState.observeForever { uiState = it.peekContent() }
@@ -538,5 +542,12 @@ class SubFilterViewModelTest : BaseUnitTest() {
             viewModel.setTitleContainerVisibility(isTitleContainerVisible)
             assertThat(viewModel.isTitleContainerVisible.getOrAwaitValue()).isEqualTo(isTitleContainerVisible)
         }
+    }
+
+    private fun mockReaderTableEmpty() {
+        whenever(initialTag.organization).thenReturn(Organization.NO_ORGANIZATION)
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        whenever(readerTagTableWrapper.getFollowedTags()).thenReturn(ReaderTagList())
+        whenever(readerBlogTableWrapper.getFollowedBlogs()).thenReturn(emptyList())
     }
 }
