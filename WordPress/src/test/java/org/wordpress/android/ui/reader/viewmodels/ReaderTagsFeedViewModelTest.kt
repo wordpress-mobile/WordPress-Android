@@ -15,10 +15,12 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doSuspendableAnswer
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.getOrAwaitValue
@@ -41,9 +43,11 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import kotlin.test.assertIs
 
+@Suppress("LargeClass")
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     @Mock
@@ -79,12 +83,16 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var snackbarEvents: MediatorLiveData<Event<SnackbarMessageHolder>>
 
+    @Mock
+    lateinit var networkUtilsWrapper: NetworkUtilsWrapper
+
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
     private val collectedUiStates: MutableList<ReaderTagsFeedViewModel.UiState> = mutableListOf()
 
     private val actionEvents = mutableListOf<ActionEvent>()
     private val readerNavigationEvents = mutableListOf<Event<ReaderNavigationEvents>>()
+    private val errorMessageEvents = mutableListOf<Event<Int>>()
 
     val tag = ReaderTag(
         "tag",
@@ -107,6 +115,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             readerPostUiStateBuilder = readerPostUiStateBuilder,
             displayUtilsWrapper = displayUtilsWrapper,
             readerTracker = readerTracker,
+            networkUtilsWrapper = networkUtilsWrapper,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
@@ -114,6 +123,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             .thenReturn(snackbarEvents)
         observeActionEvents()
         observeNavigationEvents()
+        observeErrorMessageEvents()
     }
 
     @Test
@@ -386,6 +396,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val posts2 = ReaderPostList().apply {
             add(ReaderPost())
         }
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
             delay(100)
             posts1
@@ -448,6 +459,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val posts2 = ReaderPostList().apply {
             add(ReaderPost())
         }
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
             delay(100)
             posts1
@@ -487,6 +499,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val posts2 = ReaderPostList().apply {
             add(ReaderPost())
         }
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
             delay(100)
             posts1
@@ -512,6 +525,46 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
         val action = viewModel.actionEvents.getOrAwaitValue()
         assertThat(action).isEqualTo(ActionEvent.RefreshTags)
+    }
+
+    @Suppress("LongMethod")
+    @Test
+    fun `given tags fetched and no connection, when refreshing, then show error message`() = testCollectingUiStates {
+        // Given
+        val tag1 = ReaderTestUtils.createTag("tag1")
+        val tag2 = ReaderTestUtils.createTag("tag2")
+        val posts1 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val posts2 = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag1)).doSuspendableAnswer {
+            delay(100)
+            posts1
+        }
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag2)).doSuspendableAnswer {
+            delay(200)
+            posts2
+        }
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+
+        // When
+        viewModel.onTagsChanged(listOf(tag1, tag2))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag1))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag2))
+        advanceUntilIdle()
+
+        // Then
+        viewModel.onRefresh()
+
+        val messageRes = errorMessageEvents.last().peekContent()
+        assertThat(messageRes).isEqualTo(R.string.no_network_message)
     }
 
     @Test
@@ -603,11 +656,24 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     @Test
     fun `Should emit RefreshTags when onBackFromTagDetails is called`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
         // When
         viewModel.onBackFromTagDetails()
 
         // Then
         assertIs<ActionEvent.RefreshTags>(actionEvents.first())
+    }
+
+    @Test
+    fun `Should not emit RefreshTags when onBackFromTagDetails is called with no connection`() {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        // When
+        viewModel.onBackFromTagDetails()
+
+        // Then
+        actionEvents.isEmpty()
     }
 
     @Test
@@ -652,6 +718,126 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             source = ReaderTracker.SOURCE_TAGS_FEED,
         )
     }
+
+    @Test
+    fun `should fetch again when onRetryClick is called`() = testCollectingUiStates {
+        // Given
+        val tag = ReaderTestUtils.createTag("tag")
+        val posts = ReaderPostList().apply {
+            add(ReaderPost())
+        }
+        val error = ReaderPostFetchException("error")
+        whenever(readerPostRepository.fetchNewerPostsForTag(tag)).doSuspendableAnswer {
+            delay(100)
+            throw error
+        }.doSuspendableAnswer {
+            delay(100)
+            posts
+        }
+
+        mockMapInitialTagFeedItems()
+        mockMapLoadingTagFeedItems()
+        mockMapLoadedTagFeedItems()
+        mockMapErrorTagFeedItems()
+
+        viewModel.onTagsChanged(listOf(tag))
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
+        advanceUntilIdle()
+
+        assertThat(collectedUiStates.last()).isEqualTo(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(getErrorTagFeedItem(tag))
+            )
+        )
+
+        // When
+        viewModel.onRetryClick(tag)
+        advanceUntilIdle()
+        viewModel.onItemEnteredView(getInitialTagFeedItem(tag))
+        advanceUntilIdle()
+
+        // Then
+        assertThat(collectedUiStates).contains(
+            ReaderTagsFeedViewModel.UiState.Loaded(
+                data = listOf(getLoadedTagFeedItem(tag))
+            )
+        )
+    }
+
+    @Test
+    fun `when calling onViewCreated multiple times, then initialize handler once`() = test {
+        // When
+        viewModel.onViewCreated()
+        viewModel.onViewCreated()
+
+        // Then
+        verify(readerPostCardActionsHandler, times(1)).initScope(any())
+    }
+
+    @Test
+    fun `given connection on, when onViewCreated, then init UI state with Loading`() = testCollectingUiStates {
+        // Given
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        // When
+        viewModel.onViewCreated()
+
+        // Then
+        assertThat(collectedUiStates.last()).isEqualTo(ReaderTagsFeedViewModel.UiState.Loading)
+    }
+
+    @Test
+    fun `given connection off, when onViewCreated, then init UI state with NoConnection`() = testCollectingUiStates {
+        // Given
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        // When
+        viewModel.onViewCreated()
+
+        // Then
+        assertThat(collectedUiStates.last()).isInstanceOf(ReaderTagsFeedViewModel.UiState.NoConnection::class.java)
+    }
+
+    @Test
+    fun `given NoConnectionState and connection off, when onRetryClick, then UI state is NoConnection`() =
+        testCollectingUiStates {
+            // Given
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+            viewModel.onViewCreated()
+            val noConnectionState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.NoConnection
+
+            // When
+            noConnectionState.onRetryClick()
+            advanceUntilIdle()
+
+            // Then
+            val lastStates = collectedUiStates.takeLast(2)
+            assertThat(lastStates[0]).isEqualTo(ReaderTagsFeedViewModel.UiState.Loading)
+            assertThat(lastStates[1]).isInstanceOf(ReaderTagsFeedViewModel.UiState.NoConnection::class.java)
+        }
+
+    @Test
+    fun `given NoConnectionState and connection on, when onRetryClick, then refresh is requested`() =
+        testCollectingUiStates {
+            // Given
+            whenever(networkUtilsWrapper.isNetworkAvailable())
+                .thenReturn(false)
+                .thenReturn(true)
+            viewModel.onViewCreated()
+            val noConnectionState = collectedUiStates.last() as ReaderTagsFeedViewModel.UiState.NoConnection
+
+            // When
+            noConnectionState.onRetryClick()
+            advanceUntilIdle()
+
+            // Then
+            val lastState = collectedUiStates.last()
+            assertThat(lastState).isEqualTo(ReaderTagsFeedViewModel.UiState.Loading)
+            viewModel.actionEvents.getOrAwaitValue().let {
+                assertThat(it).isEqualTo(ActionEvent.RefreshTags)
+            }
+        }
 
     private fun mockMapInitialTagFeedItems() {
         whenever(readerTagsFeedUiStateMapper.mapInitialPostsUiState(any(), any(), any(), any(), any(), any()))
@@ -704,9 +890,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
 
     private fun getErrorTagFeedItem(tag: ReaderTag) = ReaderTagsFeedViewModel.TagFeedItem(
         ReaderTagsFeedViewModel.TagChip(tag, {}, {}),
-        ReaderTagsFeedViewModel.PostList.Error(
-            ReaderTagsFeedViewModel.ErrorType.Default, {}
-        ),
+        ReaderTagsFeedViewModel.PostList.Error(ReaderTagsFeedViewModel.ErrorType.Default, {}),
     )
 
     private fun testCollectingUiStates(block: suspend TestScope.() -> Unit) = test {
@@ -727,6 +911,12 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     private fun observeNavigationEvents() {
         viewModel.navigationEvents.observeForever {
             it?.let { readerNavigationEvents.add(it) }
+        }
+    }
+
+    private fun observeErrorMessageEvents() {
+        viewModel.errorMessageEvents.observeForever {
+            it?.let { errorMessageEvents.add(it) }
         }
     }
 }

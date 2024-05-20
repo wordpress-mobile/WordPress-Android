@@ -101,6 +101,7 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
         observeErrorMessageEvents()
         observeSnackbarEvents()
         observeOpenMoreMenuEvents()
+        viewModel.onViewCreated()
     }
 
     override fun onDestroy() {
@@ -282,8 +283,8 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
 
     private fun observeErrorMessageEvents() {
         viewModel.errorMessageEvents.observeEvent(viewLifecycleOwner) { stringRes ->
-            activity?.findViewById<View?>(android.R.id.content)?.let { view ->
-                WPSnackbar.make(view, getString(stringRes), Snackbar.LENGTH_LONG).show()
+            if (isAdded) {
+                WPSnackbar.make(binding.root, getString(stringRes), Snackbar.LENGTH_LONG).show()
             }
         }
     }
@@ -291,20 +292,18 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
     private fun observeSnackbarEvents() {
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner) { snackbarMessageHolder ->
             if (isAdded) {
-                activity?.findViewById<View>(R.id.coordinator)?.let { coordinator ->
-                    with(snackbarMessageHolder) {
-                        val snackbar = WPSnackbar.make(
-                            coordinator,
-                            uiHelpers.getTextOfUiString(requireContext(), message),
-                            Snackbar.LENGTH_LONG
-                        )
-                        if (buttonTitle != null) {
-                            snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
-                                buttonAction.invoke()
-                            }
+                with(snackbarMessageHolder) {
+                    val snackbar = WPSnackbar.make(
+                        binding.root,
+                        uiHelpers.getTextOfUiString(requireContext(), message),
+                        Snackbar.LENGTH_LONG
+                    )
+                    if (buttonTitle != null) {
+                        snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), buttonTitle)) {
+                            buttonAction.invoke()
                         }
-                        snackbar.show()
                     }
+                    snackbar.show()
                 }
             }
         }

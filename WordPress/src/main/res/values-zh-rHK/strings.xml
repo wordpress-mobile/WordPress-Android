@@ -542,8 +542,8 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">「閱讀器」將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">你的統計資料將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切換至全新 Jetpack 應用程式</string>
-    <string name="blogging_prompts_list_error_network_subtitle">請檢查你的網路連線並再試一次。</string>
-    <string name="blogging_prompts_list_error_network_title">目前無法載入此內容</string>
+    <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
+    <string name="no_connection_error_title">目前無法載入此內容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">載入提示時發生錯誤。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚無提示</string>

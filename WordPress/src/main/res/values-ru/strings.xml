@@ -547,8 +547,8 @@ Language: ru
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Проверьте ваше подключение к сети и попробуйте снова.</string>
-    <string name="blogging_prompts_list_error_network_title">Сейчас невозможно загрузить это содержимое</string>
+    <string name="no_connection_error_description">Проверьте ваше подключение к сети и попробуйте снова.</string>
+    <string name="no_connection_error_title">Сейчас невозможно загрузить это содержимое</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
     <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>

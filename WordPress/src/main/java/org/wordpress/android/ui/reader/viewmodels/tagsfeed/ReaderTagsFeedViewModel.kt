@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -50,6 +52,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val readerPostUiStateBuilder: ReaderPostUiStateBuilder,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -75,6 +78,16 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
     private var hasInitialized = false
 
+    fun onViewCreated() {
+        if (!hasInitialized) {
+            hasInitialized = true
+            readerPostCardActionsHandler.initScope(viewModelScope)
+            initNavigationEvents()
+            initSnackbarEvents()
+            initUiState()
+        }
+    }
+
     /**
      * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
      * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
@@ -91,13 +104,6 @@ class ReaderTagsFeedViewModel @Inject constructor(
         if (tags.isEmpty()) {
             _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
             return
-        }
-
-        if (!hasInitialized) {
-            hasInitialized = true
-            readerPostCardActionsHandler.initScope(viewModelScope)
-            initNavigationEvents()
-            initSnackbarEvents()
         }
 
         // Add tags to the list with the posts loading UI
@@ -122,6 +128,27 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private fun initSnackbarEvents() {
         _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
+        }
+    }
+
+    private fun initUiState() {
+        _uiStateFlow.value = if (networkUtilsWrapper.isNetworkAvailable()) {
+            UiState.Loading
+        } else {
+            UiState.NoConnection(::onNoConnectionRetryClick)
+        }
+    }
+
+    private fun onNoConnectionRetryClick() {
+        _uiStateFlow.value = UiState.Loading
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            _actionEvents.value = ActionEvent.RefreshTags
+        } else {
+            // delay a bit before returning to NoConnection for a better feedback to the user
+            launch {
+                delay(NO_CONNECTION_DELAY)
+                _uiStateFlow.value = UiState.NoConnection(::onNoConnectionRetryClick)
+            }
         }
     }
 
@@ -202,12 +229,19 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     updatedLoadedData[existingIndex] = updatedItem
                 }
 
-            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(updatedLoadedData)
+            (uiState as? UiState.Loaded)?.copy(data = updatedLoadedData) ?: UiState.Loaded(
+                updatedLoadedData
+            )
         }
     }
 
     @VisibleForTesting
     fun onRefresh() {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _errorMessageEvents.postValue(Event(R.string.no_network_message))
+            return
+        }
+
         _uiStateFlow.update {
             (it as? UiState.Loaded)?.copy(isRefreshing = true) ?: it
         }
@@ -215,6 +249,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     fun onBackFromTagDetails() {
+        if (!networkUtilsWrapper.isNetworkAvailable()) return
+
         _actionEvents.value = ActionEvent.RefreshTags
     }
 
@@ -247,8 +283,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         _actionEvents.value = ActionEvent.OpenTagPostList(readerTag)
     }
 
-    private fun onRetryClick() {
-        // TODO
+    @VisibleForTesting
+    fun onRetryClick(readerTag: ReaderTag) {
+        launch {
+            fetchTag(readerTag)
+        }
     }
 
     @VisibleForTesting
@@ -256,7 +295,13 @@ class ReaderTagsFeedViewModel @Inject constructor(
         launch {
             findPost(postItem.postId, postItem.blogId)?.let {
                 _navigationEvents.postValue(
-                    Event(ReaderNavigationEvents.ShowBlogPreview(it.blogId, it.feedId, it.isFollowedByCurrentUser))
+                    Event(
+                        ReaderNavigationEvents.ShowBlogPreview(
+                            it.blogId,
+                            it.feedId,
+                            it.isFollowedByCurrentUser
+                        )
+                    )
                 )
             }
         }
@@ -268,7 +313,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
             findPost(postItem.postId, postItem.blogId)?.let {
                 readerTracker.trackBlog(
                     AnalyticsTracker.Stat.READER_POST_CARD_TAPPED,
-                    it.blogId, it.feedId, it.isFollowedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED,
+                    it.blogId,
+                    it.feedId,
+                    it.isFollowedByCurrentUser,
+                    ReaderTracker.SOURCE_TAGS_FEED,
                 )
                 readerPostCardActionsHandler.handleOnItemClicked(
                     it,
@@ -349,7 +397,10 @@ class ReaderTagsFeedViewModel @Inject constructor(
             }
         }
 
-    private fun findTagFeedItemToUpdate(uiState: UiState.Loaded, postItemToUpdate: TagsFeedPostItem) =
+    private fun findTagFeedItemToUpdate(
+        uiState: UiState.Loaded,
+        postItemToUpdate: TagsFeedPostItem
+    ) =
         uiState.data.firstOrNull { tagFeedItem ->
             tagFeedItem.postList is PostList.Loaded && tagFeedItem.postList.items.firstOrNull {
                 it.postId == postItemToUpdate.postId && it.blogId == postItemToUpdate.blogId
@@ -359,7 +410,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private fun likePostRemote(postItem: TagsFeedPostItem, isPostLikedUpdated: Boolean) {
         launch {
             findPost(postItem.postId, postItem.blogId)?.let { post ->
-                postLikeUseCase.perform(post, !post.isLikedByCurrentUser, ReaderTracker.SOURCE_TAGS_FEED).collect {
+                postLikeUseCase.perform(
+                    post,
+                    !post.isLikedByCurrentUser,
+                    ReaderTracker.SOURCE_TAGS_FEED
+                ).collect {
                     when (it) {
                         is PostLikeUseCase.PostLikeState.Success -> {
                             // Re-enable like button without changing the current post item UI.
@@ -407,7 +462,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
                     includeBookmark = true,
                     onButtonClicked = ::onMoreMenuButtonClicked,
                 )
-                val photonWidth = (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
+                val photonWidth =
+                    (displayUtilsWrapper.getDisplayPixelWidth() * PHOTON_WIDTH_QUALITY_RATION).toInt()
                 val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
                 _openMoreMenuEvents.postValue(
                     MoreMenuUiState(
@@ -432,7 +488,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    private fun onMoreMenuButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+    private fun onMoreMenuButtonClicked(
+        postId: Long,
+        blogId: Long,
+        type: ReaderPostCardActionType
+    ) {
         launch {
             findPost(postId, blogId)?.let {
                 readerPostCardActionsHandler.onAction(
@@ -475,6 +535,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         data object Loading : UiState()
 
         data class Empty(val onOpenTagsListClick: () -> Unit) : UiState()
+
+        data class NoConnection(val onRetryClick: () -> Unit) : UiState()
     }
 
     data class TagFeedItem(
@@ -502,7 +564,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class Error(
             val type: ErrorType,
-            val onRetryClick: () -> Unit
+            val onRetryClick: (ReaderTag) -> Unit
         ) : PostList()
     }
 
@@ -516,4 +578,8 @@ class ReaderTagsFeedViewModel @Inject constructor(
         val readerCardUiState: ReaderCardUiState.ReaderPostNewUiState,
         val readerPostCardActions: List<ReaderPostCardAction>,
     )
+
+    companion object {
+        private const val NO_CONNECTION_DELAY = 500L
+    }
 }

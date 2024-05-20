@@ -227,7 +227,7 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
         val errorType = ReaderTagsFeedViewModel.ErrorType.Default
         val onTagChipClick: (ReaderTag) -> Unit = {}
         val onMoreFromTagClick: (ReaderTag) -> Unit = {}
-        val onRetryClick = {}
+        val onRetryClick: (ReaderTag) -> Unit = {}
         val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
         // When
         val actual = classToTest.mapErrorTagFeedItem(
