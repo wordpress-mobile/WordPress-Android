@@ -166,6 +166,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
         buildConfigField "boolean", "SYNC_PUBLISHING", "false"
+        buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -390,6 +391,9 @@ dependencies {
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
+
+    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
