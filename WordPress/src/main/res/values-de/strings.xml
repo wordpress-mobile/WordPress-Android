@@ -549,8 +549,8 @@ Language: de
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Der Reader wird in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Deine Statistiken werden in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Zur neuen Jetpack-App wechseln</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
-    <string name="blogging_prompts_list_error_network_title">Dieser Inhalt kann gerade nicht geladen werden</string>
+    <string name="no_connection_error_description">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
+    <string name="no_connection_error_title">Dieser Inhalt kann gerade nicht geladen werden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Beim Laden der Schreibanregungen ist ein Fehler aufgetreten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ups</string>
     <string name="blogging_prompts_list_no_prompts">Noch keine Schreibanregungen</string>

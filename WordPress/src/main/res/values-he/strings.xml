@@ -542,8 +542,8 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">הכלי Reader עובר לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">הנתונים הסטטיסטיים שלך עוברים לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">לעבור לאפליקציה החדשה של Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
-    <string name="blogging_prompts_list_error_network_title">אין אפשרות לטעון את התוכן כרגע</string>
+    <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">אירעה שגיאה בטעינת ההצעות.</string>
     <string name="blogging_prompts_list_error_fetch_title">אופס</string>
     <string name="blogging_prompts_list_no_prompts">עדיין אין הצעות</string>

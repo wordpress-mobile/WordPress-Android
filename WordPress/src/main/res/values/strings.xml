@@ -122,6 +122,9 @@
 
     <string name="experimental_badge">&lt;Experimental&gt;</string>
 
+    <string name="no_connection_error_title">Unable to load this content right now</string>
+    <string name="no_connection_error_description">Check your network connection and try again.</string>
+
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
@@ -4310,8 +4313,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
-    <string name="blogging_prompts_list_error_network_title">Unable to load this content right now</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Check your network connection and try again.</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>

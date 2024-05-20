@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -78,6 +79,7 @@ fun ReaderTagsFeed(uiState: UiState) {
             is UiState.Loading -> Loading()
             is UiState.Loaded -> Loaded(uiState)
             is UiState.Empty -> Empty(uiState)
+            is UiState.NoConnection -> NoConnection(uiState)
             is UiState.Initial -> {
                 // no-op
             }
@@ -134,7 +136,7 @@ private fun Loaded(uiState: UiState.Loaded) {
                 when (postList) {
                     is PostList.Initial, is PostList.Loading -> PostListLoading()
                     is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
-                    is PostList.Error -> PostListError(backgroundColor, tagChip, postList)
+                    is PostList.Error -> PostListError(postList, tagChip, backgroundColor)
                 }
                 Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
             }
@@ -267,6 +269,28 @@ private fun Empty(uiState: UiState.Empty) {
 }
 
 @Composable
+fun NoConnection(uiState: UiState.NoConnection) {
+    val backgroundColor = if (isSystemInDarkTheme()) {
+        AppColor.White.copy(alpha = 0.12F)
+    } else {
+        AppColor.Black.copy(alpha = 0.08F)
+    }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        ErrorMessage(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth(),
+            backgroundColor = backgroundColor,
+            titleText = stringResource(R.string.no_connection_error_title),
+            descriptionText = stringResource(R.string.no_connection_error_description),
+            actionText = stringResource(R.string.reader_tags_feed_error_retry),
+            onActionClick = uiState.onRetryClick,
+        )
+    }
+}
+
+@Composable
 private fun PostListLoading() {
     val loadingLabel = stringResource(id = R.string.loading)
     LazyRow(
@@ -369,47 +393,65 @@ private fun PostListLoaded(
 
 @Composable
 private fun PostListError(
-    backgroundColor: Color,
-    tagChip: TagChip,
     postList: PostList.Error,
+    tagChip: TagChip,
+    backgroundColor: Color,
 ) {
-    Column(
+    val tagName = tagChip.tag.tagDisplayName
+    val errorMessage = when (postList.type) {
+        is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
+        is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
+    }
+
+    ErrorMessage(
         modifier = Modifier
             .heightIn(min = ReaderTagsFeedComposeUtils.PostItemHeight)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        backgroundColor = backgroundColor,
+        titleText = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
+        descriptionText = errorMessage,
+        actionText = stringResource(R.string.reader_tags_feed_error_retry),
+        onActionClick = { postList.onRetryClick(tagChip.tag) }
+    )
+}
+
+@Composable
+private fun ErrorMessage(
+    backgroundColor: Color,
+    titleText: String,
+    descriptionText: String,
+    actionText: String,
+    modifier: Modifier = Modifier,
+    onActionClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier
             .semantics(mergeDescendants = true) {}
             .padding(start = 60.dp, end = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.height(Margin.Medium.value))
         Icon(
             modifier = Modifier
-                .drawBehind {
-                    drawCircle(
-                        color = backgroundColor,
-                        radius = this.size.maxDimension
-                    )
-                },
+                .background(
+                    color = backgroundColor,
+                    shape = CircleShape
+                )
+                .padding(Margin.Medium.value),
             painter = painterResource(R.drawable.ic_wifi_off_24px),
             tint = MaterialTheme.colors.onSurface,
             contentDescription = null
         )
         Spacer(modifier = Modifier.height(Margin.ExtraMediumLarge.value))
-        val tagName = tagChip.tag.tagDisplayName
         Text(
-            text = stringResource(id = R.string.reader_tags_feed_error_title, tagName),
+            text = titleText,
             style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colors.onSurface,
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(Margin.Small.value))
-        val errorMessage = when (postList.type) {
-            is ErrorType.Default -> stringResource(R.string.reader_tags_feed_loading_error_description)
-            is ErrorType.NoContent -> stringResource(R.string.reader_tags_feed_no_content_error_description, tagName)
-        }
         Text(
-            text = errorMessage,
+            text = descriptionText,
             style = androidx.compose.material3.MaterialTheme.typography.bodySmall,
             color = if (isSystemInDarkTheme()) {
                 AppColor.White.copy(alpha = 0.4F)
@@ -420,7 +462,7 @@ private fun PostListError(
         )
         Spacer(modifier = Modifier.height(Margin.Large.value))
         Button(
-            onClick = { postList.onRetryClick(tagChip.tag) },
+            onClick = onActionClick,
             modifier = Modifier
                 .height(36.dp)
                 .widthIn(min = 114.dp),
@@ -440,7 +482,7 @@ private fun PostListError(
                 style = androidx.compose.material3.MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colors.surface,
-                text = stringResource(R.string.reader_tags_feed_error_retry),
+                text = actionText,
             )
         }
     }
