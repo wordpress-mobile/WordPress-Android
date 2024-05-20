@@ -51,6 +51,7 @@ class InAppUpdateManagerImpl(
     }
 
     override fun completeAppUpdate() {
+        inAppUpdateAnalyticsTracker.trackAppRestartToCompleteUpdate()
         appUpdateManager.completeUpdate()
     }
 

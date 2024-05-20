@@ -20,6 +20,10 @@ class InAppUpdateAnalyticsTracker @Inject constructor(
         tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_DISMISSED, createPropertyMap(updateType))
     }
 
+    fun trackAppRestartToCompleteUpdate() {
+        tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART)
+    }
+
     private fun createPropertyMap(updateType: Int): Map<String, String> {
         return when (updateType) {
             AppUpdateType.FLEXIBLE -> mapOf(PROPERTY_UPDATE_TYPE to UPDATE_TYPE_FLEXIBLE)
