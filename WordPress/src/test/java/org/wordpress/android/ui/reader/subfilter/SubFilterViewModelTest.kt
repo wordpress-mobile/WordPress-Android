@@ -328,7 +328,7 @@ class SubFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `view model updates subfilters when filters button is tapped`() = test {
+    fun `view model updates subfilters when filters button is tapped`() {
         whenever(initialTag.organization).thenReturn(Organization.NO_ORGANIZATION)
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(readerTagTableWrapper.getFollowedTags()).thenReturn(
@@ -350,7 +350,6 @@ class SubFilterViewModelTest : BaseUnitTest() {
         viewModel.subFilters.observeForever { subFilters = it }
 
         viewModel.onSubFiltersListButtonClicked(SubfilterCategory.SITES)
-        advanceUntilIdle()
 
         assertThat(subFilters).hasSize(5)
     }
