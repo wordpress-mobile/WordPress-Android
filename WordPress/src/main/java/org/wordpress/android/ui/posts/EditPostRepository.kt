@@ -75,7 +75,7 @@ class EditPostRepository
     val status: PostStatus
         get() = fromPost(getPost())
     val isPage: Boolean
-        get() = post!!.isPage
+        get() = post?.isPage == true
     val isLocalDraft: Boolean
         get() = post!!.isLocalDraft
     val isLocallyChanged: Boolean
