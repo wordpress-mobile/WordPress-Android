@@ -7,6 +7,7 @@
 * [*] Fix a crash that occurs when remove a user [https://github.com/wordpress-mobile/WordPress-Android/pull/20837]
 * [*] Fixed a rare crash on the featured image confirmation dialog [https://github.com/wordpress-mobile/WordPress-Android/pull/20836]
 * [*] Fixed an ANR issue on the Post List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20833]
+* [*] [internal] Block Editor: Upgrade target sdk version to Android API 34 [https://github.com/wordpress-mobile/WordPress-Android/pull/20841]
 
 24.9
 -----
