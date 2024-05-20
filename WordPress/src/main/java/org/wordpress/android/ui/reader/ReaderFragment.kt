@@ -13,6 +13,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -95,6 +96,86 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private var readerSearchResultLauncher: ActivityResultLauncher<Intent>? = null
 
     private var readerSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
+
+    private val wpMainActivityViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[WPMainActivityViewModel::class.java]
+    }
+
+    // region SubgroupFilterViewModel Observers
+    // we need a reference to the observers so they are properly handled by the lifecycle and ViewModel owners, avoiding
+    // duplication, and ensuring they are properly removed when the Fragment is destroyed
+    private val currentSubfilterObserver = Observer<SubfilterListItem> { subfilterListItem ->
+        viewModel.onSubFilterItemSelected(subfilterListItem)
+    }
+
+    private val updateTagsAndSitesObserver = Observer<Event<EnumSet<UpdateTask>>> { event ->
+        event.applyIfNotHandled {
+            if (NetworkUtils.isNetworkAvailable(activity)) {
+                ReaderUpdateServiceStarter.startService(activity, this)
+            }
+        }
+    }
+
+    private val subFiltersObserver = Observer<List<SubfilterListItem>> { subFilters ->
+        val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag ?: return@Observer
+        viewModel.showTopBarFilterGroup(
+            selectedTag,
+            subFilters
+        )
+    }
+
+    private val bottomSheetUiStateObserver = Observer<Event<BottomSheetUiState>> { event ->
+        event.applyIfNotHandled {
+            val selectedTag = (viewModel.uiState.value as? ContentUiState)?.selectedReaderTag
+                ?: return@applyIfNotHandled
+            val viewModelKey = SubFilterViewModel.getViewModelKeyForTag(selectedTag)
+
+            val fm = childFragmentManager
+            var bottomSheet = fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG) as SubfilterBottomSheetFragment?
+            if (isVisible && bottomSheet == null) {
+                val (title, category) = this as BottomSheetVisible
+                bottomSheet = newInstance(
+                    viewModelKey,
+                    category,
+                    uiHelpers.getTextOfUiString(requireContext(), title)
+                )
+                bottomSheet.show(childFragmentManager, SUBFILTER_BOTTOM_SHEET_TAG)
+            } else if (!isVisible && bottomSheet != null) {
+                bottomSheet.dismiss()
+            }
+        }
+    }
+
+    private val bottomSheetActionObserver = Observer<Event<ActionType>> { event ->
+        event.applyIfNotHandled {
+            when (this) {
+                is OpenSubsAtPage -> {
+                    readerSubsActivityResultLauncher?.launch(
+                        ReaderActivityLauncher.createIntentShowReaderSubs(
+                            requireActivity(),
+                            tabIndex
+                        )
+                    )
+                }
+
+                is OpenLoginPage -> {
+                    wpMainActivityViewModel.onOpenLoginPage()
+                }
+
+                is OpenSearchPage -> {
+                    ReaderActivityLauncher.showReaderSearch(requireActivity())
+                }
+
+                is OpenSuggestedTagsPage -> {
+                    ReaderActivityLauncher.showReaderInterests(requireActivity())
+                }
+            }
+        }
+    }
+    // endregion
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
@@ -453,102 +534,39 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     private fun SubFilterViewModel.initSubFilterViewModel(startedTag: ReaderTag, savedInstanceState: Bundle?) {
-        setupSubFilterBottomSheetObservers(startedTag)
+        bottomSheetUiState.observe(
+            viewLifecycleOwner,
+            bottomSheetUiStateObserver
+        )
+
+        bottomSheetAction.observe(
+            viewLifecycleOwner,
+            bottomSheetActionObserver
+        )
 
         currentSubFilter.observe(
-            viewLifecycleOwner
-        ) { subfilterListItem: SubfilterListItem ->
-            onSubfilterSelected(subfilterListItem)
-            viewModel.onSubFilterItemSelected(subfilterListItem)
-        }
+            viewLifecycleOwner,
+            currentSubfilterObserver
+        )
 
 
         updateTagsAndSites.observe(
-            viewLifecycleOwner
-        ) { event: Event<EnumSet<UpdateTask>> ->
-            event.applyIfNotHandled {
-                if (NetworkUtils.isNetworkAvailable(activity)) {
-                    ReaderUpdateServiceStarter.startService(activity, this)
-                }
-            }
-        }
+            viewLifecycleOwner,
+            updateTagsAndSitesObserver
+        )
 
         if (startedTag.isFilterable) {
             subFilters.observe(
-                viewLifecycleOwner
-            ) { subFilters: List<SubfilterListItem> ->
-                viewModel.showTopBarFilterGroup(
-                    startedTag,
-                    subFilters
-                )
-            }
+                viewLifecycleOwner,
+                subFiltersObserver
+            )
 
             updateTagsAndSites()
         } else {
             viewModel.hideTopBarFilterGroup(startedTag)
         }
 
-        // thomashortadev: not sure if always passing the same tags can cause problems
         start(startedTag, startedTag, savedInstanceState)
-    }
-
-    private fun SubFilterViewModel.setupSubFilterBottomSheetObservers(startedTag: ReaderTag) {
-        val wpMainActivityViewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory
-        )[WPMainActivityViewModel::class.java]
-
-        val viewModelKey = SubFilterViewModel.getViewModelKeyForTag(startedTag)
-
-        bottomSheetUiState.observe(
-            viewLifecycleOwner
-        ) { event: Event<BottomSheetUiState> ->
-            event.applyIfNotHandled {
-                val fm = childFragmentManager
-                var bottomSheet = fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG) as SubfilterBottomSheetFragment?
-                if (isVisible && bottomSheet == null) {
-                    loadSubFilters()
-                    val (title, category) = this as BottomSheetVisible
-                    bottomSheet = newInstance(
-                        viewModelKey,
-                        category,
-                        uiHelpers.getTextOfUiString(requireContext(), title)
-                    )
-                    bottomSheet.show(childFragmentManager, SUBFILTER_BOTTOM_SHEET_TAG)
-                } else if (!isVisible && bottomSheet != null) {
-                    bottomSheet.dismiss()
-                }
-            }
-        }
-
-        bottomSheetAction.observe(
-            viewLifecycleOwner
-        ) { event: Event<ActionType> ->
-            event.applyIfNotHandled {
-                when (this) {
-                    is OpenSubsAtPage -> {
-                        readerSubsActivityResultLauncher?.launch(
-                            ReaderActivityLauncher.createIntentShowReaderSubs(
-                                requireActivity(),
-                                tabIndex
-                            )
-                        )
-                    }
-
-                    is OpenLoginPage -> {
-                        wpMainActivityViewModel.onOpenLoginPage()
-                    }
-
-                    is OpenSearchPage -> {
-                        ReaderActivityLauncher.showReaderSearch(requireActivity())
-                    }
-
-                    is OpenSuggestedTagsPage -> {
-                        ReaderActivityLauncher.showReaderInterests(requireActivity())
-                    }
-                }
-            }
-        }
     }
 
     companion object {
