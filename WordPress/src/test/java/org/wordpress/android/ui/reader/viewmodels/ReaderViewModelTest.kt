@@ -510,11 +510,15 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should load announcement card correctly`() = testWithNonEmptyTags {
+    fun `Should load announcement card correctly with tags item`() = testWithNonEmptyTags {
+        whenever(readerTagsFeedFeatureConfig.isEnabled()).thenReturn(true)
+
         triggerContentDisplay()
         val observers = initObservers()
 
         val announcementCardUiState = observers.announcementCardStateEvents.first()
+
+        assertThat(announcementCardUiState.items).hasSize(2)
 
         val tagsFeedItem = announcementCardUiState.items[0]
         assertThat(tagsFeedItem.iconRes).isEqualTo(R.drawable.ic_reader_tag)
@@ -522,6 +526,27 @@ class ReaderViewModelTest : BaseUnitTest() {
         assertThat(tagsFeedItem.descriptionRes).isEqualTo(R.string.reader_announcement_card_tags_stream_description)
 
         val readerPreferencesItem = announcementCardUiState.items[1]
+        assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
+        assertThat(readerPreferencesItem.titleRes).isEqualTo(
+            R.string.reader_announcement_card_reading_preferences_title
+        )
+        assertThat(readerPreferencesItem.descriptionRes).isEqualTo(
+            R.string.reader_announcement_card_reading_preferences_description
+        )
+    }
+
+    @Test
+    fun `Should load announcement card correctly without tags item`() = testWithNonEmptyTags {
+        whenever(readerTagsFeedFeatureConfig.isEnabled()).thenReturn(false)
+
+        triggerContentDisplay()
+        val observers = initObservers()
+
+        val announcementCardUiState = observers.announcementCardStateEvents.first()
+
+        assertThat(announcementCardUiState.items).hasSize(1)
+
+        val readerPreferencesItem = announcementCardUiState.items[0]
         assertThat(readerPreferencesItem.iconRes).isEqualTo(R.drawable.ic_reader_preferences)
         assertThat(readerPreferencesItem.titleRes).isEqualTo(
             R.string.reader_announcement_card_reading_preferences_title

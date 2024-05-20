@@ -147,21 +147,30 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun loadAnnouncementCard() {
-        _announcementCardState.value = AnnouncementCardUiState(
-            shouldShow = readerAnnouncementCardFeatureConfig.isEnabled() &&
-                    appPrefsWrapper.shouldShowReaderAnnouncementCard(),
-            items = listOf(
+        val items = mutableListOf<ReaderAnnouncementCardItemData>()
+
+        if (readerTagsFeedFeatureConfig.isEnabled()) {
+            items.add(
                 ReaderAnnouncementCardItemData(
                     iconRes = R.drawable.ic_reader_tag,
                     titleRes = R.string.reader_announcement_card_tags_stream_title,
                     descriptionRes = R.string.reader_announcement_card_tags_stream_description,
-                ),
-                ReaderAnnouncementCardItemData(
-                    iconRes = R.drawable.ic_reader_preferences,
-                    titleRes = R.string.reader_announcement_card_reading_preferences_title,
-                    descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
-                ),
-            ),
+                )
+            )
+        }
+
+        items.add(
+            ReaderAnnouncementCardItemData(
+                iconRes = R.drawable.ic_reader_preferences,
+                titleRes = R.string.reader_announcement_card_reading_preferences_title,
+                descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
+            )
+        )
+
+        _announcementCardState.value = AnnouncementCardUiState(
+            shouldShow = readerAnnouncementCardFeatureConfig.isEnabled() &&
+                    appPrefsWrapper.shouldShowReaderAnnouncementCard(),
+            items = items,
         )
     }
 
