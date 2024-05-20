@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.datasets.ReaderBlogTable
-import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
+import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
@@ -49,7 +49,9 @@ class SubFilterViewModel @Inject constructor(
     private val subfilterListItemMapper: SubfilterListItemMapper,
     private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore,
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val readerTagTableWrapper: ReaderTagTableWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _subFilters = MutableLiveData<List<SubfilterListItem>>()
     val subFilters: LiveData<List<SubfilterListItem>> = _subFilters
@@ -132,7 +134,7 @@ class SubFilterViewModel @Inject constructor(
             if (accountStore.hasAccessToken()) {
                 val organization = mTagFragmentStartedWith?.organization
 
-                val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
+                val followedBlogs = readerBlogTableWrapper.getFollowedBlogs().let { blogList ->
                     // Filtering out all blogs not belonging to this VM organization if valid
                     blogList.filter { blog ->
                         organization?.let {
@@ -157,7 +159,7 @@ class SubFilterViewModel @Inject constructor(
                 )
             }
 
-            val tags = ReaderTagTable.getFollowedTags()
+            val tags = readerTagTableWrapper.getFollowedTags()
 
             for (tag in tags) {
                 filterList.add(
@@ -354,8 +356,8 @@ class SubFilterViewModel @Inject constructor(
         } else {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
-        onSubfilterSelected(filter)
         _currentSubFilter.value = filter
+        onSubfilterSelected(filter)
     }
 
     fun onUserComesToReader() {
