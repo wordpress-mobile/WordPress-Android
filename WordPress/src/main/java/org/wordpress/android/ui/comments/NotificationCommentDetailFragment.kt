@@ -7,6 +7,7 @@ import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.tools.FormattableRangeType
+import org.wordpress.android.models.Note
 import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
 import org.wordpress.android.ui.engagement.BottomSheetUiState
@@ -20,6 +21,9 @@ import org.wordpress.android.util.ToastUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class NotificationCommentDetailFragment : CommentDetailFragment() {
+    private val note: Note // note will be non-null after onCreate
+        get() = mNote!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +39,7 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             .find { FormattableRangeType.fromString(it.type) == FormattableRangeType.USER }
 
         return BottomSheetUiState.UserProfileUiState(
-            userAvatarUrl = mNote!!.iconURL,
+            userAvatarUrl = note.iconURL,
             blavatarUrl = "",
             userName = user?.text ?: getString(R.string.anonymous),
             userLogin = mComment?.authorEmail.orEmpty(),
@@ -66,10 +70,10 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             mSite = mSiteStore.getSiteBySiteId(note.siteId.toLong())
             if (mSite == null) {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
-                mSite = createDummyWordPressComSite(mNote!!.siteId.toLong())
+                mSite = createDummyWordPressComSite(note.siteId.toLong())
             }
             if (mBinding != null && mReplyBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, mNote)
+                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, note)
             }
         }
     }
