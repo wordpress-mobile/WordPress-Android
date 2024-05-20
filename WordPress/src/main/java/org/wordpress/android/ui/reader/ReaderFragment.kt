@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -96,14 +95,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     private var readerSearchResultLauncher: ActivityResultLauncher<Intent>? = null
 
     private var readerSubsActivityResultLauncher: ActivityResultLauncher<Intent>? = null
-
-    /**
-     * Stores the keys for [SubFilterViewModel] that have already been initialized (observers) and started.
-     * It is only cleared when:
-     *   - the [ReaderFragment] is destroyed, to allow proper initialization in cases like screen rotation
-     *   - the [SubFilterViewModel] is cleared, to allow proper initialization when the ViewModel is created again
-     */
-    private val initializedSubFilterViewModelKeys: MutableList<String> = mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
@@ -453,21 +444,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     override fun getSubFilterViewModelForTag(tag: ReaderTag, savedInstanceState: Bundle?): SubFilterViewModel {
-        val keyForTag = SubFilterViewModel.getViewModelKeyForTag(tag)
         return ViewModelProvider(getSubFilterViewModelOwner(), viewModelFactory)[
-            keyForTag,
+            SubFilterViewModel.getViewModelKeyForTag(tag),
             SubFilterViewModel::class.java
         ].also {
-            // only initialize if it hasn't been initialized yet
-            if (keyForTag !in initializedSubFilterViewModelKeys) {
-                it.initSubFilterViewModel(tag, savedInstanceState)
-
-                // setup mechanism for proper one-time initialization and clearing
-                initializedSubFilterViewModelKeys.add(keyForTag)
-                it.onCleared.observeEvent(viewLifecycleOwner) {
-                    initializedSubFilterViewModelKeys.remove(keyForTag)
-                }
-            }
+            it.initSubFilterViewModel(tag, savedInstanceState)
         }
     }
 
@@ -477,7 +458,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         currentSubFilter.observe(
             viewLifecycleOwner
         ) { subfilterListItem: SubfilterListItem ->
-            Log.d("ReaderFragment", "currentSubFilter.observe")
             onSubfilterSelected(subfilterListItem)
             viewModel.onSubFilterItemSelected(subfilterListItem)
         }
@@ -486,7 +466,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         updateTagsAndSites.observe(
             viewLifecycleOwner
         ) { event: Event<EnumSet<UpdateTask>> ->
-            Log.d("ReaderFragment", "updateTagsAndSites.observe")
             event.applyIfNotHandled {
                 if (NetworkUtils.isNetworkAvailable(activity)) {
                     ReaderUpdateServiceStarter.startService(activity, this)
@@ -524,7 +503,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         bottomSheetUiState.observe(
             viewLifecycleOwner
         ) { event: Event<BottomSheetUiState> ->
-            Log.d("ReaderFragment", "bottomSheetUiState.observe")
             event.applyIfNotHandled {
                 val fm = childFragmentManager
                 var bottomSheet = fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG) as SubfilterBottomSheetFragment?
@@ -546,7 +524,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
         bottomSheetAction.observe(
             viewLifecycleOwner
         ) { event: Event<ActionType> ->
-            Log.d("ReaderFragment", "bottomSheetAction.observe")
             event.applyIfNotHandled {
                 when (this) {
                     is OpenSubsAtPage -> {
