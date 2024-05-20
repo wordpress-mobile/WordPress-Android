@@ -39,9 +39,9 @@ class InAppUpdateManagerImpl(
     private val inAppUpdateAnalyticsTracker: InAppUpdateAnalyticsTracker,
     private val currentTimeProvider: () -> Long = {System.currentTimeMillis()}
 ): IInAppUpdateManager {
-    private var updateListener: IInAppUpdateListener? = null
+    private var updateListener: InAppUpdateListener? = null
 
-    override fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
+    override fun checkForAppUpdate(activity: Activity, listener: InAppUpdateListener) {
         updateListener = listener
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             handleUpdateInfoSuccess(appUpdateInfo, activity)

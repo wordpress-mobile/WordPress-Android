@@ -51,7 +51,7 @@ class InAppUpdateManagerImplTest {
     lateinit var inAppUpdateAnalyticsTracker: InAppUpdateAnalyticsTracker
 
     @Mock
-    lateinit var updateListener: IInAppUpdateListener
+    lateinit var updateListener: InAppUpdateListener
 
     @Mock
     lateinit var activity: Activity

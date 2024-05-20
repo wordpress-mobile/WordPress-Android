@@ -3,7 +3,7 @@ package org.wordpress.android.inappupdate
 import android.app.Activity
 
 interface IInAppUpdateManager {
-    fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener)
+    fun checkForAppUpdate(activity: Activity, listener: InAppUpdateListener)
     fun completeAppUpdate()
     fun cancelAppUpdate(updateType: Int)
     fun onUserAcceptedAppUpdate(updateType: Int)

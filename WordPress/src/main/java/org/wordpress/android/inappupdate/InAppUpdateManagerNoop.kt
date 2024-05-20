@@ -3,7 +3,7 @@ package org.wordpress.android.inappupdate
 import android.app.Activity
 
 class InAppUpdateManagerNoop: IInAppUpdateManager {
-    override fun checkForAppUpdate(activity: Activity, listener: IInAppUpdateListener) {
+    override fun checkForAppUpdate(activity: Activity, listener: InAppUpdateListener) {
         /* Empty implementation */
     }
 

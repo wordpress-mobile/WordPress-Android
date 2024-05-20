@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.inappupdate.IInAppUpdateListener;
+import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -1213,29 +1213,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mInAppUpdateManager.checkForAppUpdate(this, mInAppUpdateListener);
     }
 
-    @NonNull final IInAppUpdateListener mInAppUpdateListener = new IInAppUpdateListener() {
-        @Override public void onAppUpdatePending() {
-            /* do nothing */
-        }
-
+    @NonNull final InAppUpdateListener mInAppUpdateListener = new InAppUpdateListener() {
         @Override public void onAppUpdateDownloaded() {
             popupSnackbarForCompleteUpdate();
-        }
-        @Override public void onAppUpdateStarted(int type) {
-            /* do nothing */
-        }
-
-        @Override public void onAppUpdateInstalled() {
-            /* do nothing */
-        }
-
-        @Override public void onAppUpdateFailed() {
-            /* do nothing */
-        }
-
-        @Override public void onAppUpdateCancelled() {
-            // Todo do I need to handle this?
-            /* do nothing */
         }
     };
 
