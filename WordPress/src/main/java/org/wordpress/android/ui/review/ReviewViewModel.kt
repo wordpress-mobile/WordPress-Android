@@ -8,12 +8,15 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
+/**
+ * Manages the logic for the flow of in-app reviews prompt.
+ */
 class ReviewViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) : ViewModel() {
     private val _launchReview = MutableLiveData<Event<Unit>>()
     val launchReview = _launchReview as LiveData<Event<Unit>>
 
-    fun onPublishingPost(isFirstTimePublishing: Boolean) {
-        if (!appPrefsWrapper.isInAppReviewsShown() && isFirstTimePublishing) {
+    fun onPublishingPost() {
+        if (!appPrefsWrapper.isInAppReviewsShown()) {
             if (appPrefsWrapper.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
                 appPrefsWrapper.incrementPublishedPostCount()
             }

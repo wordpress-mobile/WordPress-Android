@@ -40,8 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.inappupdate.InAppUpdateListener;
-import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -71,6 +69,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageHandler;
@@ -1412,7 +1412,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             v -> UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher),
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
-                                mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                                if (isFirstTimePublishing) {
+                                    mReviewViewModel.onPublishingPost();
+                                }
                             }
                     );
                 }
@@ -1820,7 +1822,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         targetSite,
                         isFirstTimePublishing -> {
                             mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
-                            mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                            if (isFirstTimePublishing) {
+                                mReviewViewModel.onPublishingPost();
+                            }
                         }
                 );
             }

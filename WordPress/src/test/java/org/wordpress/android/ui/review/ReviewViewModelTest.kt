@@ -37,7 +37,7 @@ class ReviewViewModelTest {
         whenever(appPrefsWrapper.isInAppReviewsShown()).thenReturn(false)
         whenever(appPrefsWrapper.getPublishedPostCount()).thenReturn(ReviewViewModel.TARGET_COUNT_POST_PUBLISHED - 1)
 
-        viewModel.onPublishingPost(true)
+        viewModel.onPublishingPost()
 
         assertEquals(events.size, 0)
     }
@@ -46,7 +46,7 @@ class ReviewViewModelTest {
     fun onPublishingPost_whenInAppReviewsAlreadyShown_doNotLaunchInAppReviews() {
         whenever(appPrefsWrapper.isInAppReviewsShown()).thenReturn(true)
 
-        viewModel.onPublishingPost(true)
+        viewModel.onPublishingPost()
 
         assertEquals(events.size, 0)
     }
@@ -56,7 +56,7 @@ class ReviewViewModelTest {
         whenever(appPrefsWrapper.isInAppReviewsShown()).thenReturn(false)
         whenever(appPrefsWrapper.getPublishedPostCount()).thenReturn(ReviewViewModel.TARGET_COUNT_POST_PUBLISHED)
 
-        viewModel.onPublishingPost(true)
+        viewModel.onPublishingPost()
 
         // Verify `launchReview` is triggered.
         assertEquals(Unit, events.last())

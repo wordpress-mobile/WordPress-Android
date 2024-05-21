@@ -381,7 +381,9 @@ class PostsListActivity : LocaleAwareActivity(),
                 ) { isFirstTimePublishing ->
                     changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
-                    reviewViewModel.onPublishingPost(isFirstTimePublishing)
+                    if (isFirstTimePublishing) {
+                        reviewViewModel.onPublishingPost()
+                    }
                 }
             }
         }
