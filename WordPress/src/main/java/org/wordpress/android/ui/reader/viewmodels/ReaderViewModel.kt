@@ -132,7 +132,7 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs(savedInstanceState)
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-        loadAnnouncementCard()
+        updateAnnouncementCard()
     }
 
     fun onSaveInstanceState(out: Bundle) {
@@ -146,7 +146,7 @@ class ReaderViewModel @Inject constructor(
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
 
-    private fun loadAnnouncementCard() {
+    private fun updateAnnouncementCard() {
         val items = mutableListOf<ReaderAnnouncementCardItemData>()
 
         if (readerTagsFeedFeatureConfig.isEnabled()) {
@@ -177,7 +177,7 @@ class ReaderViewModel @Inject constructor(
     fun onAnnouncementCardDoneClick() {
         readerTracker.track(AnalyticsTracker.Stat.READER_ANNOUNCEMENT_CARD_DISMISSED)
         appPrefsWrapper.setShouldShowReaderAnnouncementCard(false)
-        loadAnnouncementCard()
+        updateAnnouncementCard()
     }
 
     @JvmOverloads
