@@ -88,34 +88,41 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Fetch multiple tag posts in parallel. Each tag load causes a new state to be emitted, so multiple emissions of
-     * [uiStateFlow] are expected when calling this method for each tag, since each can go through the following
-     * [UiState]s: [UiState.Initial], [UiState.Loaded], [UiState.Loading], [UiState.Empty].
-     */
-    fun onTagsChanged(tags: List<ReaderTag>) {
-        // don't fetch tags again if the tags match, unless the user requested a refresh
-        (_uiStateFlow.value as? UiState.Loaded)?.let { loadedState ->
-            if (!loadedState.isRefreshing && tags == loadedState.data.map { it.tagChip.tag }) {
-                return
+    fun onTagsChanged(tags: List<ReaderTag>) = _uiStateFlow.update { currentState ->
+        when {
+            tags.isEmpty() -> {
+                UiState.Empty(::onOpenTagsListClick)
             }
-        }
 
-        if (tags.isEmpty()) {
-            _uiStateFlow.value = UiState.Empty(::onOpenTagsListClick)
-            return
-        }
+            currentState is UiState.Loaded -> {
+                val currentTags = currentState.data.map { it.tagChip.tag }
+                if (currentState.isRefreshing) {
+                    readerTagsFeedUiStateMapper.mapInitialPostsUiState(
+                        tags,
+                        false,
+                        ::onTagChipClick,
+                        ::onMoreFromTagClick,
+                        ::onItemEnteredView,
+                        ::onRefresh
+                    )
+                } else if (currentTags != tags) {
+                    updateLoadedStateWithTags(currentState, tags)
+                } else {
+                    currentState
+                }
+            }
 
-        // Add tags to the list with the posts loading UI
-        _uiStateFlow.update {
-            readerTagsFeedUiStateMapper.mapInitialPostsUiState(
-                tags,
-                false,
-                ::onTagChipClick,
-                ::onMoreFromTagClick,
-                ::onItemEnteredView,
-                ::onRefresh
-            )
+            else -> {
+                // Add tags to the list with the posts initial/loading UI
+                readerTagsFeedUiStateMapper.mapInitialPostsUiState(
+                    tags,
+                    false,
+                    ::onTagChipClick,
+                    ::onMoreFromTagClick,
+                    ::onItemEnteredView,
+                    ::onRefresh
+                )
+            }
         }
     }
 
@@ -137,6 +144,19 @@ class ReaderTagsFeedViewModel @Inject constructor(
         } else {
             UiState.NoConnection(::onNoConnectionRetryClick)
         }
+    }
+
+    private fun updateLoadedStateWithTags(state: UiState.Loaded, tags: List<ReaderTag>): UiState.Loaded {
+        val currentTagsMap = state.data.associateBy { it.tagChip.tag.tagSlug }
+        val updatedData = tags.map { tag ->
+            currentTagsMap[tag.tagSlug] ?: readerTagsFeedUiStateMapper.mapInitialTagFeedItem(
+                tag = tag,
+                onTagChipClick = ::onTagChipClick,
+                onMoreFromTagClick = ::onMoreFromTagClick,
+                onItemEnteredView = ::onItemEnteredView,
+            )
+        }
+        return state.copy(data = updatedData)
     }
 
     private fun onNoConnectionRetryClick() {

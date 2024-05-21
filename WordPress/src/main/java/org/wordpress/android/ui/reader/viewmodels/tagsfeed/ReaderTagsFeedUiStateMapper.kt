@@ -94,18 +94,31 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     ): ReaderTagsFeedViewModel.UiState.Loaded =
         ReaderTagsFeedViewModel.UiState.Loaded(
             data = tags.map { tag ->
-                ReaderTagsFeedViewModel.TagFeedItem(
-                    tagChip = ReaderTagsFeedViewModel.TagChip(
-                        tag = tag,
-                        onTagChipClick = onTagChipClick,
-                        onMoreFromTagClick = onMoreFromTagClick,
-                    ),
-                    postList = ReaderTagsFeedViewModel.PostList.Initial,
+                mapInitialTagFeedItem(
+                    tag = tag,
+                    onTagChipClick = onTagChipClick,
+                    onMoreFromTagClick = onMoreFromTagClick,
                     onItemEnteredView = onItemEnteredView,
                 )
             },
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
+        )
+
+    fun mapInitialTagFeedItem(
+        tag: ReaderTag,
+        onTagChipClick: (ReaderTag) -> Unit,
+        onMoreFromTagClick: (ReaderTag) -> Unit,
+        onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit,
+    ): ReaderTagsFeedViewModel.TagFeedItem =
+        ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = tag,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Initial,
+            onItemEnteredView = onItemEnteredView,
         )
 
     fun mapLoadingTagFeedItem(
