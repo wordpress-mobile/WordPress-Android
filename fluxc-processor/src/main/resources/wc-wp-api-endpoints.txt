@@ -49,6 +49,8 @@
 
 /reports/giftcards/used/stats/
 
+/reports/stock/
+
 /settings/general/
 /settings/products/
 /settings/<group_id>#String/<id>#String
