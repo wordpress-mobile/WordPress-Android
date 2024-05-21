@@ -256,7 +256,75 @@ class ReaderTagsFeedUiStateMapperTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should map loading posts UI state correctly`() {
+    fun `Should map loading TagFeedItem correctly`() {
+        // Given
+        val readerTag = ReaderTag(
+            "tag",
+            "tag",
+            "tag",
+            "endpoint",
+            ReaderTagType.FOLLOWED,
+        )
+        val onTagChipClick: (ReaderTag) -> Unit = {}
+        val onMoreFromTagClick: (ReaderTag) -> Unit = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+        // When
+        val actual = classToTest.mapLoadingTagFeedItem(
+            tag = readerTag,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
+            onItemEnteredView = onItemEnteredView,
+        )
+
+        // Then
+        val expected = ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = readerTag,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Loading,
+            onItemEnteredView = onItemEnteredView,
+        )
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should map initial TagFeedItem correctly`() {
+        // Given
+        val readerTag = ReaderTag(
+            "tag",
+            "tag",
+            "tag",
+            "endpoint",
+            ReaderTagType.FOLLOWED,
+        )
+        val onTagChipClick: (ReaderTag) -> Unit = {}
+        val onMoreFromTagClick: (ReaderTag) -> Unit = {}
+        val onItemEnteredView: (ReaderTagsFeedViewModel.TagFeedItem) -> Unit = {}
+        // When
+        val actual = classToTest.mapInitialTagFeedItem(
+            tag = readerTag,
+            onTagChipClick = onTagChipClick,
+            onMoreFromTagClick = onMoreFromTagClick,
+            onItemEnteredView = onItemEnteredView,
+        )
+
+        // Then
+        val expected = ReaderTagsFeedViewModel.TagFeedItem(
+            tagChip = ReaderTagsFeedViewModel.TagChip(
+                tag = readerTag,
+                onTagChipClick = onTagChipClick,
+                onMoreFromTagClick = onMoreFromTagClick,
+            ),
+            postList = ReaderTagsFeedViewModel.PostList.Initial,
+            onItemEnteredView = onItemEnteredView,
+        )
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Should map initial posts UI state correctly`() {
         // Given
         val onTagChipClick: (ReaderTag) -> Unit = {}
         val onMoreFromTagClick: (ReaderTag) -> Unit = {}
