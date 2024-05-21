@@ -8,11 +8,17 @@ import android.hardware.SensorManager;
 import androidx.lifecycle.LiveData;
 import androidx.preference.PreferenceManager;
 
+import com.google.android.play.core.appupdate.AppUpdateManager;
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
 import com.tenor.android.core.network.ApiClient;
 import com.tenor.android.core.network.ApiService;
 import com.tenor.android.core.network.IApiClient;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateAnalyticsTracker;
+import org.wordpress.android.inappupdate.InAppUpdateManagerImpl;
+import org.wordpress.android.inappupdate.InAppUpdateManagerNoop;
 import org.wordpress.android.ui.ActivityNavigator;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
@@ -21,6 +27,9 @@ import org.wordpress.android.ui.jetpack.restore.RestoreStepsProvider;
 import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
+import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
+import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
@@ -74,6 +83,33 @@ public abstract class ApplicationModule {
     public static WizardManager<RestoreStep> provideRestoreWizardManager(
             RestoreStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
+    }
+
+    @Provides
+    public static AppUpdateManager provideAppUpdateManager(@ApplicationContext Context context) {
+        return AppUpdateManagerFactory.create(context);
+    }
+
+    @Provides
+    public static IInAppUpdateManager provideInAppUpdateManager(
+            @ApplicationContext Context context,
+            AppUpdateManager appUpdateManager,
+            RemoteConfigWrapper remoteConfigWrapper,
+            BuildConfigWrapper buildConfigWrapper,
+            InAppUpdatesFeatureConfig inAppUpdatesFeatureConfig,
+            InAppUpdateAnalyticsTracker inAppUpdateAnalyticsTracker
+    ) {
+        // Check if in-app updates feature is enabled
+        return inAppUpdatesFeatureConfig.isEnabled()
+                ? new InAppUpdateManagerImpl(
+                context,
+                appUpdateManager,
+                remoteConfigWrapper,
+                buildConfigWrapper,
+                inAppUpdateAnalyticsTracker,
+                System::currentTimeMillis
+        )
+                : new InAppUpdateManagerNoop();
     }
 
     @Provides

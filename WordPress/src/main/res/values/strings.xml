@@ -4817,6 +4817,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
 
+    <string name="in_app_update_available">Update downloaded. Restart to apply.</string>
+    <string name="in_app_update_restart">Restart</string>
+
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
