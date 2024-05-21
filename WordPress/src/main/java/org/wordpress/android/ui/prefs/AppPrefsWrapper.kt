@@ -196,6 +196,9 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun incrementPublishedPostCount() {
         AppPrefs.incrementPublishedPostCount()
     }
+    fun resetPublishedPostCount() {
+        AppPrefs.resetPublishedPostCount()
+    }
 
     fun getPublishedPostCount(): Int {
         return AppPrefs.getPublishedPostCount()

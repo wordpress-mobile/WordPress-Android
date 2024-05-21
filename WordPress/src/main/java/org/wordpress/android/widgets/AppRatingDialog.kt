@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.util.Date
@@ -147,8 +148,11 @@ object AppRatingDialog {
                         )
                     }
 
-                    setOptOut(true)
+                    setOptOut()
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
+
+                    // Reset the published post counter of in-app reviews prompt flow.
+                    AppPrefs.resetPublishedPostCount()
                 }
                 .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
                     clearSharedPreferences()
@@ -156,7 +160,7 @@ object AppRatingDialog {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
                 }
                 .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
-                    setOptOut(true)
+                    setOptOut()
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
                 }
             return builder.create()
@@ -178,11 +182,11 @@ object AppRatingDialog {
     }
 
     /**
-     * Set opt out flag - when true, the rate dialog will never be shown unless app data is cleared.
+     * Set opt out flag - the rate dialog will never be shown unless app data is cleared.
      */
-    private fun setOptOut(optOut: Boolean) {
+    private fun setOptOut() {
         preferences.edit().putBoolean(KEY_OPT_OUT, optOut)?.apply()
-        this.optOut = optOut
+        this.optOut = true
     }
 
     /**
