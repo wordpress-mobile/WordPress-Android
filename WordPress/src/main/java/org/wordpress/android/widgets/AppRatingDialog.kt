@@ -114,6 +114,9 @@ object AppRatingDialog {
             dialog = AppRatingDialog()
             dialog.show(fragmentManger, AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_SAW_PROMPT)
+
+            // Reset the published post counter of in-app reviews prompt flow.
+            AppPrefs.resetPublishedPostCount()
         }
     }
 
