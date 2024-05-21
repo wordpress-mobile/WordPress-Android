@@ -453,6 +453,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
 
+    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
+
+    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
+        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
+    
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun setString(prefKey: PrefKey, value: String) {
