@@ -510,10 +510,10 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should load announcement card correctly with tags item`() = testWithNonEmptyTags {
+    fun `Should update announcement card UI correctly with tags item`() = testWithNonEmptyTags {
         whenever(readerTagsFeedFeatureConfig.isEnabled()).thenReturn(true)
 
-        triggerContentDisplay()
+        viewModel.onFeedContentLoaded()
         val observers = initObservers()
 
         val announcementCardUiState = observers.announcementCardStateEvents.first()
@@ -536,10 +536,10 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should load announcement card correctly without tags item`() = testWithNonEmptyTags {
+    fun `Should update announcement card UI correctly without tags item onFeedContentLoaded`() = testWithNonEmptyTags {
         whenever(readerTagsFeedFeatureConfig.isEnabled()).thenReturn(false)
 
-        triggerContentDisplay()
+        viewModel.onFeedContentLoaded()
         val observers = initObservers()
 
         val announcementCardUiState = observers.announcementCardStateEvents.first()
@@ -557,32 +557,41 @@ class ReaderViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Should show announcement card if feature flag is enabled and app preference returns true`() =
+    fun `Should show announcement card if feature flag is enabled, app preference returns true and feed is Discover`() =
         testWithNonEmptyTags {
-        whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(appPrefsWrapper.shouldShowReaderAnnouncementCard()).thenReturn(true)
-        triggerContentDisplay()
-        val observers = initObservers()
-
-        val announcementCardUiState = observers.announcementCardStateEvents.first()
-        assertTrue(announcementCardUiState.shouldShow)
-    }
-
-    @Test
-    fun `Should NOT show announcement card if feature flag is disabled`() = testWithNonEmptyTags {
-            whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(false)
-            triggerContentDisplay()
+            val readerTag = ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT)
+            whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(true)
+            whenever(appPrefsWrapper.shouldShowReaderAnnouncementCard()).thenReturn(true)
             val observers = initObservers()
+            triggerContentDisplay()
+            viewModel.updateSelectedContent(readerTag)
+            viewModel.onFeedContentLoaded()
 
             val announcementCardUiState = observers.announcementCardStateEvents.first()
-            assertFalse(announcementCardUiState.shouldShow)
+            assertTrue(announcementCardUiState.shouldShow)
         }
 
     @Test
+    fun `Should NOT show announcement card if feature flag is disabled`() = testWithNonEmptyTags {
+        val readerTag = ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT)
+        whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(false)
+        val observers = initObservers()
+        triggerContentDisplay()
+        viewModel.updateSelectedContent(readerTag)
+        viewModel.onFeedContentLoaded()
+
+        val announcementCardUiState = observers.announcementCardStateEvents.first()
+        assertFalse(announcementCardUiState.shouldShow)
+    }
+
+    @Test
     fun `Should NOT show announcement card if app preference returns false`() = testWithNonEmptyTags {
+        val readerTag = ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT)
         whenever(readerAnnouncementCardFeatureConfig.isEnabled()).thenReturn(true)
         whenever(appPrefsWrapper.shouldShowReaderAnnouncementCard()).thenReturn(false)
         triggerContentDisplay()
+        viewModel.updateSelectedContent(readerTag)
+        viewModel.onFeedContentLoaded()
         val observers = initObservers()
 
         val announcementCardUiState = observers.announcementCardStateEvents.first()

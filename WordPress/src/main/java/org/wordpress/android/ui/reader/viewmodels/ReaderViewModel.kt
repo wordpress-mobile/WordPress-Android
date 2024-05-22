@@ -132,7 +132,6 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs(savedInstanceState)
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-        updateAnnouncementCard()
     }
 
     fun onSaveInstanceState(out: Bundle) {
@@ -140,6 +139,20 @@ class ReaderViewModel @Inject constructor(
             out.putString(KEY_TOP_BAR_UI_STATE_SELECTED_ITEM_ID, it.selectedItem.id)
             out.putParcelable(KEY_TOP_BAR_UI_STATE_FILTER_UI_STATE, it.filterUiState)
         }
+    }
+
+    fun onFeedEmptyStateLoaded() {
+        hideAnnouncementCard()
+    }
+
+    fun onFeedContentLoaded() {
+        updateAnnouncementCard()
+    }
+    
+    private fun hideAnnouncementCard() {
+        _announcementCardState.value = _announcementCardState.value?.copy(
+            shouldShow = false,
+        )
     }
 
     private fun showJetpackPoweredBottomSheet() {
@@ -166,9 +179,9 @@ class ReaderViewModel @Inject constructor(
                 descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
             )
         )
-
+        val isDiscoverSelected = selectedReaderTag()?.isDiscover == true
         _announcementCardState.value = AnnouncementCardUiState(
-            shouldShow = readerAnnouncementCardFeatureConfig.isEnabled() &&
+            shouldShow = isDiscoverSelected && readerAnnouncementCardFeatureConfig.isEnabled() &&
                     appPrefsWrapper.shouldShowReaderAnnouncementCard(),
             items = items,
         )
@@ -199,6 +212,9 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
+        if (selectedTag?.isDiscover == false) {
+            hideAnnouncementCard()
+        }
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
         }
