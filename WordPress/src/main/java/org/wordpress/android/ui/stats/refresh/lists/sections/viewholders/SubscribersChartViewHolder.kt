@@ -82,7 +82,7 @@ class SubscribersChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
     }
 
     private fun getData(item: SubscribersChartItem): List<ILineDataSet> {
-        val data = if (item.entries.isEmpty() || item.entries.all { it.value == 0 }) {
+        val data = if (item.entries.isEmpty()) {
             buildEmptyDataSet(item.entries.size)
         } else {
             val mappedEntries = item.entries.mapIndexed { index, pair -> toLineEntry(pair, index) }

@@ -33,7 +33,8 @@ class SubscribersChartMarkerView @Inject constructor(
     @Inject
     lateinit var statsDateFormatter: StatsDateFormatter
     private val countView = findViewById<TextView>(R.id.marker_text1)
-    private val dateView = findViewById<TextView>(R.id.marker_text2)
+    private val labelView = findViewById<TextView>(R.id.marker_text2)
+    private val dateView = findViewById<TextView>(R.id.marker_text3)
 
     override fun refreshContent(e: Entry?, highlight: Highlight?) {
         val lineChart = chartView as? LineChart ?: return
@@ -46,6 +47,12 @@ class SubscribersChartMarkerView @Inject constructor(
 
         val count = yValue.toLong()
         countView.text = count.toString()
+        val label = if (count > 1) {
+            R.string.stats_subscribers_marker_view_plural
+        } else {
+            R.string.stats_subscribers_marker_view_singular
+        }
+        labelView.setText(label)
         val date = statsDateFormatter.getStatsDateFromPeriodDay(e.data.toString())
         dateView.text = date
 
