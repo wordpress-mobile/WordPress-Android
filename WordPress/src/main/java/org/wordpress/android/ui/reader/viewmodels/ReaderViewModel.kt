@@ -132,7 +132,6 @@ class ReaderViewModel @Inject constructor(
         if (initialized) return
         loadTabs(savedInstanceState)
         if (jetpackBrandingUtils.shouldShowJetpackPoweredBottomSheet()) showJetpackPoweredBottomSheet()
-        updateAnnouncementCard()
     }
 
     fun onSaveInstanceState(out: Bundle) {
@@ -213,7 +212,9 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
-        updateAnnouncementCard()
+        if (selectedTag?.isDiscover == false) {
+            hideAnnouncementCard()
+        }
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
         }
