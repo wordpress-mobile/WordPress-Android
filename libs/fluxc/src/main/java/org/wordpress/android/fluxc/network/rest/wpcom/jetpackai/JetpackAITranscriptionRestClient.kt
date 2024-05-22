@@ -32,7 +32,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
     private val jetpackAIUtils: JetpackAITranscriptionUtils
 ) {
     companion object {
-        private const val DEFAULT_AUDIO_FILE_SIZE_LIMIT: Long = 25 * 1024 * 1024 //25 MB
+        private const val DEFAULT_AUDIO_FILE_SIZE_LIMIT: Long = 25 * 1024 * 1024 // 25 MB
     }
 
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
@@ -43,13 +43,17 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         audioFileSizeLimit: Long = DEFAULT_AUDIO_FILE_SIZE_LIMIT
     ) : JetpackAITranscriptionResponse {
         if (!jetpackAIUtils.isFileEligibleForTranscription(audioFile, audioFileSizeLimit)) {
-            JetpackAITranscriptionResponse.Error(JetpackAITranscriptionErrorType.INELIGIBLE_AUDIO_FILE)
+            JetpackAITranscriptionResponse.Error(
+                JetpackAITranscriptionErrorType.INELIGIBLE_AUDIO_FILE)
         }
 
         val url = WPCOMV2.jetpack_ai_transcription.url
         val requestBody = MultipartBody.Builder().apply {
             setType(MultipartBody.FORM)
-            addFormDataPart("audio_file", audioFile.name, audioFile.asRequestBody("audio/mp4".toMediaType()))
+            addFormDataPart(
+                "audio_file",
+                audioFile.name,
+                audioFile.asRequestBody("audio/mp4".toMediaType()))
             feature?.let { addFormDataPart("feature", it) }
         }.build()
 
@@ -65,7 +69,8 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         val result = runCatching {
             okHttpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    return@use JetpackAITranscriptionResponse.Error(fromHttpStatusCode(response.code),
+                    return@use JetpackAITranscriptionResponse.Error(
+                        fromHttpStatusCode(response.code),
                         response.message
                     )
                 } else {
@@ -97,7 +102,8 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         }
 
         return result.getOrElse {
-            JetpackAITranscriptionResponse.Error(fromThrowable(it),it.message ?: "Unknown network error")
+            JetpackAITranscriptionResponse.Error(
+                fromThrowable(it),it.message ?: "Unknown network error")
         }
     }
 
@@ -112,17 +118,19 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         val status: Int
     )
 
-    private fun JetpackAITranscriptionDto?.toJetpackAITranscriptionResponse(): JetpackAITranscriptionResponse {
-        return when(this) {
+    private fun JetpackAITranscriptionDto?.toJetpackAITranscriptionResponse():
+        JetpackAITranscriptionResponse {
+        return when (this) {
             null -> {
                 JetpackAITranscriptionResponse.Error(
                     JetpackAITranscriptionErrorType.PARSE_ERROR,
                     "Unable to parse transcription response"
                 )
             }
+
             else -> this.toResponse()
-            }
         }
+    }
 
     private fun JetpackAITranscriptionDto.toResponse(): JetpackAITranscriptionResponse {
         return when {
@@ -138,7 +146,8 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         }
     }
 
-    internal class JetpackAITranscriptionDeserializer : JsonDeserializer<JetpackAITranscriptionDto> {
+    internal class JetpackAITranscriptionDeserializer : JsonDeserializer<JetpackAITranscriptionDto>
+    {
         override fun deserialize(
             json: JsonElement?,
             typeOfT: Type?,
@@ -148,9 +157,13 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
 
             return if (jsonObject.has("text")) {
                 JetpackAITranscriptionDto(text = jsonObject.get("text").asString)
-            } else if (jsonObject.has("code") && jsonObject.has("message") && jsonObject.has("data")) {
+            } else if (jsonObject.has("code") &&
+                jsonObject.has("message") && jsonObject.has("data")) {
                 val data: JetpackAITranscriptionErrorDto? =
-                    context?.deserialize(jsonObject.get("data"), JetpackAITranscriptionErrorDto::class.java)
+                    context?.deserialize(
+                        jsonObject.get("data"),
+                        JetpackAITranscriptionErrorDto::class.java
+                    )
                 JetpackAITranscriptionDto(
                     code = jsonObject.get("code").asString,
                     message = jsonObject.get("message").asString,
@@ -206,7 +219,8 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         return if (e is IOException) {
             when (e) {
                 is SocketTimeoutException -> JetpackAITranscriptionErrorType.TIMEOUT
-                is ConnectException, is UnknownHostException -> JetpackAITranscriptionErrorType.CONNECTION_ERROR
+                is ConnectException,
+                is UnknownHostException -> JetpackAITranscriptionErrorType.CONNECTION_ERROR
                 else -> JetpackAITranscriptionErrorType.GENERIC_ERROR
             }
         } else {

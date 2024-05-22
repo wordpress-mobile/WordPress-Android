@@ -1,11 +1,11 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
-import static org.wordpress.android.fluxc.utils.WPComRestClientUtils.getLocaleParamName;
-
 import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+
+import static org.wordpress.android.fluxc.utils.WPComRestClientUtils.getLocaleParamName;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
