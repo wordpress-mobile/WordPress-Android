@@ -114,7 +114,6 @@ Language: el_GR
     <string name="stats_insights_path">Διαδρομή</string>
     <string name="stats_insights_tags_and_categories">Ετικέτες και Κατηγορίες</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Ακόλουθοι</string>
     <string name="stats_publicize_service_label">Υπηρεσία</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Προβολές</string>
@@ -125,8 +124,6 @@ Language: el_GR
     <string name="stats_comments_title_label">Τίτλος</string>
     <string name="stats_comments_posts_and_pages">Άρθρα και σελίδες</string>
     <string name="stats_follower_since_label">Από</string>
-    <string name="stats_follower_label">Ακόλουθος</string>
-    <string name="stats_followers_count_message">Σύνολο %1$s Ακολούθων: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_comments_author_label">Συγγραφέας</string>
@@ -196,10 +193,8 @@ Language: el_GR
     <string name="site_settings_tags_empty_title">Δεν έχετε κάποια ετικέτα</string>
     <string name="site_settings_tags_empty_button">Δημιουργήστε μια ετικέτα</string>
     <string name="themes_empty_list">Δεν υπάρχουν θέματα που να ταιριάζουν στην αναζήτηση σας</string>
-    <string name="people_empty_list_filtered_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
     <string name="people_empty_list_filtered_users">Δεν υπάρχουν χρήστες ακόμη</string>
     <string name="notifications_empty_likes">Κανένα Like ακόμα</string>
-    <string name="notifications_empty_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
     <string name="activity_log_empty_title">Δεν υπάρχει δραστηριότητα ακόμη</string>
     <string name="posts_empty_list_button">Δημιουργήστε ένα άρθρο</string>
     <string name="pages_empty_list_button">Δημιουργήστε μία σελίδα</string>
@@ -607,13 +602,11 @@ Language: el_GR
     <string name="preference_open_device_settings">Άνοιγμα ρυθμίσεων συσκευής</string>
     <string name="invite_invalid_email">%s: Μη έγκυρο email</string>
     <string name="invite_user_blocked_invites">%s: Ο χρήστης δεν δέχεται προσκλήσεις</string>
-    <string name="invite_already_following">%s: Τον/ην ακολουθείτε ήδη</string>
     <string name="invite_already_a_member">%s: Είναι ήδη μέλος</string>
     <string name="invite_username_not_found">%s: Ο χρήστης δεν βρέθηκε</string>
     <string name="comment_moderated_approved">Το σχόλιο εγκρίθηκε!</string>
     <string name="like">Μου αρέσει</string>
     <string name="timespan_now">τώρα</string>
-    <string name="role_follower">Ακόλουθος</string>
     <string name="role_viewer">Αναγνώστης</string>
     <string name="error_post_my_profile_no_connection">Χωρίς σύνδεση, αδυναμία αποθήκευσης προφίλ</string>
     <string name="alignment_none">Καμμία</string>
@@ -622,20 +615,12 @@ Language: el_GR
     <string name="site_settings_list_editor_action_mode_title">Επιλέχθηκαν %1$d</string>
     <string name="error_fetch_users_list">Αδυναμία ανάκτησης χρηστών ιστοτόπου</string>
     <string name="people_fetching">Λήψη χρηστών…</string>
-    <string name="title_follower">Ακόλουθος</string>
-    <string name="title_email_follower">Ακόλουθος μέσω e-mail</string>
-    <string name="people_dropdown_item_email_followers">Ακόλουθοι μέσω e-mail</string>
     <string name="people_dropdown_item_viewers">Αναγνώστες</string>
-    <string name="people_dropdown_item_followers">Ακόλουθοι</string>
     <string name="people_dropdown_item_team">Ομάδα</string>
     <string name="invite_message_usernames_limit">Προσκαλέστε μέχρι 10 ηλ. διευθύνσεις και/ή ονόματα χρηστών του WordPress.com. Σε όσους χρειάζεται όνομα χρήστη θα αποσταλούν οδηγίες πως να το δημιουργήσουν.</string>
     <string name="viewer_remove_confirmation_message">Αν αφαιρέσετε αυτόν τον αναγνώστη, αυτός ή αυτή δεν θα μπορεί να επισκεφθεί αυτό τον ιστότοπο.\n\nΘέλετε ακόμη να αφαιρέσετε αυτόν τον αναγνώστη;</string>
-    <string name="follower_remove_confirmation_message">Αν αφαιρεθεί, αυτός ο ακόλουθος θα σταματήσει να λαμβάνει ειδοποιήσεις για αυτόν τον ιστότοπο, εκτός και αν τον ακολουθήσει ξανά.\n\nΘέλετε ακόμα να αφαιρέσετε αυτόν τον ακόλουθο;</string>
     <string name="follower_subscribed_since">Από %1$s</string>
-    <string name="error_remove_follower">Αδυναμία αφαίρεσης ακόλουθου</string>
     <string name="error_remove_viewer">Αδυναμία αφαίρεσης αναγνώστη</string>
-    <string name="error_fetch_email_followers_list">Αδυναμία ανάκτησης ακολούθων μέσω e-mail</string>
-    <string name="error_fetch_followers_list">Αδυναμία ανάκτησης ακολούθων ιστοτόπου</string>
     <string name="editor_failed_uploads_switch_html">Μερικές μεταφορτώσεις πολυμέσων απέτυχαν. Δεν μπορείτε να μεταβείτε σε λειτουργία HTML \n        σε αυτή την κατάσταση. Αφαίρεση όλων των αποτυχημένων μεταφορτώσεων και συνέχεια;</string>
     <string name="visual_editor">Κειμενογράφος</string>
     <string name="image_thumbnail">Μικρογραφία εικόνας</string>
@@ -741,7 +726,6 @@ Language: el_GR
     <string name="site_achievements">Επιτεύγματα του ιστότοπου</string>
     <string name="username_mentions">Αναφορές του ονόματος χρήστη</string>
     <string name="likes_on_my_posts">\"Μου αρέσει\" στα άρθρα μου</string>
-    <string name="site_follows">Ακόλουθοι ιστότοπου</string>
     <string name="likes_on_my_comments">\"Μου αρέσει\" στα σχόλιά μου</string>
     <string name="comments_on_my_site">Σχόλια στον ιστότοπό μου</string>
     <string name="site_settings_list_editor_summary_other">%d αντικείμενα</string>
@@ -1014,7 +998,6 @@ Language: el_GR
     <string name="stats_followers_a_minute_ago">πριν από ένα λεπτό</string>
     <string name="stats_view_top_posts_and_pages">Άρθρα &amp; Σελίδες</string>
     <string name="themes_fetching">Λήψη θεμάτων…</string>
-    <string name="stats_view_followers">Ακόλουθοι</string>
     <string name="stats_view_countries">Χώρες</string>
     <string name="stats_followers_seconds_ago">δευτερόλεπτα πρίν</string>
     <string name="ssl_certificate_details">Λεπτομέρειες</string>
@@ -1165,7 +1148,6 @@ Language: el_GR
     <string name="note_reply_successful">Η απάντηση δημοσιεύτηκε</string>
     <string name="new_notifications">%d νέες ενημερώσεις</string>
     <string name="more_notifications">και %d ακόμη.</string>
-    <string name="follows">Ακόλουθοι</string>
     <string name="loading">Φορτώνει…</string>
     <string name="httpuser">Όνομα χρήστη HTTP</string>
     <string name="httppassword">Κωδικός χρήστη HTTP</string>

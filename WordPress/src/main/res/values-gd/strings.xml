@@ -7,20 +7,12 @@ Language: gd_GB
 -->
 <resources>
     <string name="error_fetch_users_list">Cha b’ urrainn dhuinn cleachdaichean na làraich fhaighinn</string>
-    <string name="title_follower">Neach-leantainn</string>
-    <string name="title_email_follower">Neach-leantainn puist-d</string>
-    <string name="people_dropdown_item_email_followers">Luchd-leantainn puist-d</string>
     <string name="people_dropdown_item_viewers">Luchd-coimhid</string>
-    <string name="people_dropdown_item_followers">Luchd-leantainn</string>
     <string name="people_dropdown_item_team">Sgioba</string>
     <string name="invite_message_usernames_limit">Thoir cuireadh do suas ri 10 puist-d agus/no ainmean-cleachdaichean WordPress.com. Mur eile ainm-cleachdaiche aig cuideigin, innsidh sinn dhaibh mar a gheibh iad fear.</string>
     <string name="viewer_remove_confirmation_message">Ma bheir thu air falbh an neach-coimhid seo, chan urrainn dhaibh tuilleadh tadhal air an làrach.\n\nA bheil thu airson a thoirt air falbh fhathast?</string>
-    <string name="follower_remove_confirmation_message">Ma bheir thu an cleachdaiche seo air falbh, chan fhaigh iad brathan mun làrach seo tuilleadh ach ma nì iad leantainn às ùr.\n\nA bheil thu cinnteach gu bheil thu airson an neach-leantainn seo a thoirt air falbh?</string>
     <string name="follower_subscribed_since">A-mach o %1$s</string>
-    <string name="error_remove_follower">Cha b’ urrainn dhuinn an neach-leantainn a thoirt air falbh</string>
     <string name="error_remove_viewer">Cha b’ urrainn dhuinn an neach-coimhid a thoirt air falbh</string>
-    <string name="error_fetch_email_followers_list">Cha b’ urrainn dhuinn na daoine a leanas an làrach slighe puist-d fhaighinn</string>
-    <string name="error_fetch_followers_list">Cha b’ urrainn dhuinn luchd-leantainn na làraich fhaighinn</string>
     <string name="editor_failed_uploads_switch_html">Cha deach gach meadhan a luchdadh suas. Chan urrainn dhut leum gun mhodh\n        HTML is cùisean mar seo. A bheil thu airson na dh’fhàillig a thoirt air falbh is leantainn air adhart?</string>
     <string name="visual_editor">An deasaiche lèirsinneach</string>
     <string name="image_thumbnail">Dealbhagan deilbh</string>
@@ -92,7 +84,6 @@ Language: gd_GB
     <string name="stats_followers_seconds_ago">diog(an) air ais</string>
     <string name="stats_view_top_posts_and_pages">Puist ⁊ duilleagan</string>
     <string name="stats_view_videos">Videothan</string>
-    <string name="stats_view_followers">Luchd-leantainn</string>
     <string name="stats_view_countries">Dùthchannan</string>
     <string name="stats_likes">Daoine as toil leotha</string>
     <string name="stats_timeframe_years">Bliadhna</string>
@@ -235,7 +226,6 @@ Language: gd_GB
     <string name="note_reply_successful">Chaidh an fhreagairt fhoillseachadh</string>
     <string name="new_notifications">%d brath(an) ùra</string>
     <string name="more_notifications">agus %d a bharrachd.</string>
-    <string name="follows">Daoine a lean</string>
     <string name="loading">\'Ga luchdadh…</string>
     <string name="httpuser">Ainm-cleachdaiche HTTP</string>
     <string name="httppassword">Facal-faire HTTP</string>

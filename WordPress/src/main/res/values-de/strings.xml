@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-30 07:31:08+0000
+Translation-Revision-Date: 2024-05-22 02:46:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="role_subscriber">Abonnent</string>
+    <string name="title_email_subscriber">E-Mail-Abonnent</string>
+    <string name="people_empty_list_filtered_email_subscribers">Noch keine E-Mail-Abonnenten</string>
+    <string name="people_empty_list_filtered_subscribers">Noch keine Abonnenten</string>
+    <string name="people_dropdown_item_email_subscribers">E-Mail-Abonnenten</string>
+    <string name="people_dropdown_item_subscribers">Abonnenten</string>
+    <string name="invite_already_subscribed">%s: Bereits abonniert</string>
+    <string name="error_no_camera_available">Es ist keine Kamera-App verfügbar.</string>
+    <string name="error_remove_subscriber">Abonnent konnte nicht entfernt werden</string>
+    <string name="error_fetch_email_subscribers_list">E-Mail-Abonnenten der Website konnten nicht abgerufen werden</string>
+    <string name="error_fetch_subscribers_list">Website-Abonnenten konnten nicht abgerufen werden</string>
+    <string name="post_settings_add_to_calendar_error">Konnte nicht zum Kalender hinzugefügt werden</string>
+    <string name="post_settings_no_calendar_app_exists">Es wurde keine App gefunden, um die Anfrage zum Hinzufügen zum Kalender zu bearbeiten</string>
+    <string name="site_subscriptions">Website-Abonnements</string>
+    <string name="notifications_tab_title_subscribers">Abonnenten</string>
+    <string name="subscribers">Abonnenten</string>
+    <string name="notifications_empty_subscribers">Noch keine Abonnenten</string>
+    <string name="stats_view_emails">E-Mails</string>
+    <string name="stats_view_subscribers">Abonnenten</string>
+    <string name="stats_view_subscribers_chart">Abonnenten</string>
+    <string name="stats_view_total_subscribers">Gesamtzahl der Abonnenten</string>
+    <string name="stats_view_subscriber_totals">Abonnenten insgesamt</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Klicks</string>
+    <string name="stats_emails_opens_label">Anzahl der E-Mail-Aufrufe</string>
+    <string name="stats_emails_latest_emails_label">Neueste E-Mails</string>
+    <string name="stats_subscriber_since_label">Abonnent seit</string>
+    <string name="stats_name_label">Name</string>
+    <string name="stats_publicize_subscribers_label">Abonnenten</string>
+    <string name="stats_subscriber_label">Abonnent</string>
+    <string name="stats_subscribers_count_message">Gesamtzahl der Abonnenten (%1$s): %2$s</string>
     <string name="page_upload_conflict_error">Es existiert eine neuere Revision dieser Seite</string>
     <string name="editor_updating_content">Inhalt wird aktualisiert</string>
     <string name="stats_subscribers">Abonnenten</string>
-    <string name="stats_subscribers_subscribers">Abonnenten</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Letzte Woche hattest du %1$s Aufrufe und 1 Kommentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Letzte Woche hattest du %1$s Aufrufe und 1 Like</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Letzte Woche hattest du %1$s Aufrufe, 1 Like und 1 Kommentar.</string>
@@ -677,7 +707,7 @@ Language: de
     <string name="qrcode_auth_flow_validated_subtitle">Scanne nur QR-Codes, die direkt von deinem Webbrowser kommen. Scanne niemals einen Code, der dir von jemand anderem geschickt wurde.</string>
     <string name="qrcode_auth_flow_validated_default_title">Versuchst du dich in der Nähe von %1$s in deinem Webbrowser anzumelden?</string>
     <string name="qrcode_auth_flow_validated_title">Versuchst du dich in der Nähe von %2$s in %1$s anzumelden?</string>
-    <string name="stats_insights_followers_guide_card">💡Andere Blogs zu kommentieren ist ein guter Weg, Aufmerksamkeit zu erregen und Follower für deine neue Website zu gewinnen.</string>
+    <string name="stats_insights_subscribers_guide_card">💡 Andere Blogs zu kommentieren, ist ein guter Weg, Aufmerksamkeit zu erregen und Abonnenten für deine neue Website zu gewinnen.</string>
     <string name="stats_insights_comments_guide_card">💡Tippe auf „MEHR ANZEIGEN“, um dir deine Top-Kommentatoren anzeigen zu lassen.</string>
     <string name="stats_insights_latest_post_empty">Schau nochmal vorbei, wenn du deinen ersten Beitrag veröffentlicht hast!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Schau dir unsere Top-Tipps für mehr Aufrufe und höheren Traffic an %1$s</string>
@@ -715,7 +745,7 @@ Language: de
     <string name="me_btn_scan_login_code">Anmeldecode scannen</string>
     <string name="stats_insights_likes_guide_card">⭐️Dein neuster Beitrag %1$s hat %2$s Likes.</string>
     <string name="stats_most_popular_percent_views_empty">Nicht genug Aktivität. Schau später nochmal vorbei, wenn mehr Besucher auf deiner Website waren!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% aller Follower</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s %% der Abonnenten insgesamt</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Link kopieren</string>
     <string name="quick_start_completed_tour_title">Gratulation! Du kennst dich aus&lt;br/&gt;</string>
@@ -742,7 +772,6 @@ Language: de
     <string name="stats_published_minutes_ago">Vor %1$d Minuten veröffentlicht</string>
     <string name="stats_published_a_minute_ago">Vor einer Minute veröffentlicht</string>
     <string name="stats_published_seconds_ago">Vor wenigen Sekunden veröffentlicht</string>
-    <string name="stats_view_total_followers">Followers gesamt</string>
     <string name="stats_view_total_comments">Kommentare gesamt</string>
     <string name="stats_view_total_likes">Likes gesamt</string>
     <string name="blogging_prompts_notification_dismiss">Ausblenden</string>
@@ -1841,7 +1870,6 @@ Language: de
     <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung findet keine Seiten. Jetpack Social kann keine Verbindung zu Facebook-Profilen herstellen, nur zu öffentlichen Seiten.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nicht verbunden</string>
     <string name="notifications_tab_title_likes">Likes</string>
-    <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_comments">Kommentare</string>
     <string name="notifications_tab_title_unread_notifications">Ungelesen</string>
     <string name="dlg_cancel_action_dont_trash">Nicht löschen</string>
@@ -2166,9 +2194,7 @@ Language: de
     <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
     <string name="backdated_for">Zurückdatiert auf: %s</string>
     <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>
-    <string name="stats_insights_social">Social Media</string>
     <string name="stats_insights_annual_site_stats">Jährliche Website-Statistiken</string>
-    <string name="stats_view_follower_totals">Follower insgesamt</string>
     <string name="domain_suggestions_fetch_error">Domain-Vorschläge konnten nicht geladen werden</string>
     <string name="domain_suggestions_search_hint">Gib ein Stichwort ein, um weitere Ideen zu erhalten</string>
     <string name="domains_suggestions_empty_list">Keine Vorschläge gefunden</string>
@@ -2332,7 +2358,6 @@ Language: de
     <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_insights_all_time_stats">Gesamte Zeit</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Follower</string>
     <string name="stats_publicize_service_label">Dienst</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Aufrufe</string>
@@ -2345,8 +2370,6 @@ Language: de
     <string name="stats_comments_posts_and_pages">Beiträge und Seiten</string>
     <string name="stats_comments_authors">Autoren</string>
     <string name="stats_follower_since_label">Seit</string>
-    <string name="stats_follower_label">Follower</string>
-    <string name="stats_followers_count_message">%1$s-Follower insgesamt: %2$s</string>
     <string name="stats_followers_email">E-Mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Einsichten verwalten</string>
@@ -2448,14 +2471,11 @@ Language: de
     <string name="sign_out_wpcom_confirm_with_no_changes">Von WordPress abmelden?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Es wurden Änderungen an Beiträgen vorgenommen, die nicht auf deine Website hochgeladen wurden. Diese Änderungen gehen verloren, wenn du dich jetzt von deinem Gerät abmeldest. Möchtest du dich trotzdem abmelden?</string>
     <string name="people_empty_list_filtered_viewers">Noch keine Besucher</string>
-    <string name="people_empty_list_filtered_email_followers">Noch keine E-Mail-Follower</string>
-    <string name="people_empty_list_filtered_followers">Noch keine Follower</string>
     <string name="people_empty_list_filtered_users">Noch keine Benutzer</string>
     <string name="reader_empty_posts_liked_description">Beiträge, die dir gefallen, werden hier angezeigt</string>
     <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
     <string name="reader_no_followed_blogs_button_discover">Blogs entdecken</string>
     <string name="notifications_empty_likes">Noch keine Likes</string>
-    <string name="notifications_empty_followers">Noch keine Follower</string>
     <string name="activity_log_limited_content_on_free_plan">Da du einen kostenlosen Tarif hast, siehst du nur begrenzte Ereignisse in deiner Aktivität.</string>
     <string name="activity_log_empty_subtitle">Wenn du Änderungen an deiner Website vornimmst, kann du hier deinen Aktivitätsverlauf sehen</string>
     <string name="activity_log_empty_title">Noch keine Aktivität</string>
@@ -3086,6 +3106,7 @@ Language: de
     <string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
     <string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
     <string name="submit_for_review">Abschicken</string>
+    <string name="title_subscriber">Abonnent</string>
     <string name="duplicate_site_detected">Es wurde eine doppelte Website entdeckt.</string>
     <string name="cannot_add_duplicate_site">Diese Website existiert bereits in der App, du kannst sie nicht hinzufügen.</string>
     <string name="already_logged_in_wpcom">Du bist bereits in einem WordPress.com-Konto angemeldet, du kannst keine WordPress.com-Website hinzufügen, die an ein anderes Konto gebunden ist.</string>
@@ -3134,35 +3155,26 @@ Language: de
     <string name="preference_open_device_settings">Geräte-Einstellungen öffnen</string>
     <string name="invite_invalid_email">%s: Ungültige E-Mail</string>
     <string name="invite_user_blocked_invites">%s: Benutzer blockiert Einladungen</string>
-    <string name="invite_already_following">%s: Folge ich bereits</string>
     <string name="invite_already_a_member">%s: Bereits ein Mitglied</string>
     <string name="invite_username_not_found">%s: Benutzer nicht gefunden</string>
     <string name="comment_moderated_approved">Kommentar freigegeben!</string>
     <string name="like">Like</string>
     <string name="timespan_now">Jetzt</string>
     <string name="role_viewer">Besucher</string>
-    <string name="role_follower">Follower</string>
     <string name="error_post_my_profile_no_connection">Keine Verbindung, dein Profil konnte nicht gespeichert werden</string>
     <string name="alignment_right">Rechts</string>
     <string name="alignment_left">Links</string>
     <string name="alignment_none">Keine</string>
     <string name="site_settings_list_editor_action_mode_title">Ausgewählt %1$d</string>
     <string name="error_fetch_users_list">Website-Benutzer konnten nicht abgerufen werden</string>
-    <string name="title_email_follower">E-Mail-Follower</string>
-    <string name="title_follower">Follower</string>
     <string name="people_fetching">Benutzer werden abgerufen …</string>
     <string name="people_dropdown_item_viewers">Besucher</string>
-    <string name="people_dropdown_item_email_followers">E-Mail-Follower</string>
-    <string name="people_dropdown_item_followers">Follower</string>
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Lade bis zu 10 E-Mail-Adressen und/oder WordPress.com Benutzernamen ein. Diejenigen, welche einen Benutzernamen benötigen, werden eine Anleitung gesendet bekommen, wie sie einen erstellen.</string>
     <string name="viewer_remove_confirmation_message">Falls du diesen Besucher entfernst, kann er oder sie die Website nicht mehr ansehen.\n\nMöchtest du diesen Besucher noch immer entfernen?</string>
-    <string name="follower_remove_confirmation_message">Nach dem Entfernen bekommt der Follower keine Mitteilungen über dieser Website mehr, bis er wieder folgt.\n\nMöchtest du diesen Follower noch immer entfernen?</string>
+    <string name="subscriber_remove_confirmation_message">Wenn du diesen Abonnenten entfernst, erhält er zu dieser Website keine Benachrichtigungen mehr, außer er abonniert sie aufs Neue.\n\nMöchtest du diesen Abonnenten trotzdem entfernen?</string>
     <string name="follower_subscribed_since">Seit %1$s</string>
     <string name="error_remove_viewer">Konnte Besucher nicht entfernen</string>
-    <string name="error_remove_follower">Konnte Follower nicht entfernen</string>
-    <string name="error_fetch_email_followers_list">Konnte E-Mail-Follower der Website nicht abrufen</string>
-    <string name="error_fetch_followers_list">Konnte Follower der Website nicht abrufen</string>
     <string name="editor_failed_uploads_switch_html">Einige Medien konnten nicht hochgeladen werden. Du kannst daher derzeit nicht in den HTML-Modus umschalten. Möchtest du alle fehlgeschlagenen Uploads entfernen und fortfahren?</string>
     <string name="image_thumbnail">Vorschaubild</string>
     <string name="visual_editor">Visueller Editor</string>
@@ -3268,7 +3280,6 @@ Language: de
     <string name="replies_to_my_comments">Antworten auf meine Kommentare</string>
     <string name="username_mentions">Benutzernamen-Erwähnungen</string>
     <string name="site_achievements">Website-Auszeichnungen</string>
-    <string name="site_follows">Website-Follows</string>
     <string name="likes_on_my_posts">Likes für meine Beiträge</string>
     <string name="likes_on_my_comments">Likes für meine Kommentare</string>
     <string name="comments_on_my_site">Kommentare auf meiner Website</string>
@@ -3539,7 +3550,6 @@ Language: de
     <string name="stats_followers_minutes">%1$d Minuten</string>
     <string name="stats_followers_a_minute_ago">Vor einer Minute</string>
     <string name="stats_followers_seconds_ago">Vor Sekunden</string>
-    <string name="stats_view_followers">Follower</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_top_posts_and_pages">Beiträge &amp; Seiten</string>
     <string name="stats_view_countries">Länder</string>
@@ -3699,7 +3709,6 @@ Language: de
     <string name="manage">Verwalten</string>
     <string name="more_notifications">und %d weitere.</string>
     <string name="new_notifications">%d neue Benachrichtigungen</string>
-    <string name="follows">Folgt</string>
     <string name="note_reply_successful">Antwort veröffentlicht</string>
     <string name="sign_in">Anmelden</string>
     <string name="loading">Wird geladen …</string>
