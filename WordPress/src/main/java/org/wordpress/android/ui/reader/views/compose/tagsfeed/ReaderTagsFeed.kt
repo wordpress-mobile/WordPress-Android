@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.views.compose.tagsfeed
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -87,7 +88,7 @@ fun ReaderTagsFeed(uiState: UiState) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
 private fun Loaded(uiState: UiState.Loaded) {
     val pullRefreshState = rememberPullRefreshState(
@@ -108,6 +109,7 @@ private fun Loaded(uiState: UiState.Loaded) {
         ) {
             items(
                 items = uiState.data,
+                key = { it.tagChip.tag.tagSlug }
             ) { item ->
                 val tagChip = item.tagChip
                 val postList = item.postList
@@ -121,24 +123,33 @@ private fun Loaded(uiState: UiState.Loaded) {
                 } else {
                     AppColor.Black.copy(alpha = 0.08F)
                 }
-                Spacer(modifier = Modifier.height(Margin.Large.value))
-                // Tag chip UI
-                ReaderFilterChip(
-                    modifier = Modifier.padding(
-                        start = Margin.Large.value,
-                    ),
-                    text = UiString.UiStringText(tagChip.tag.tagTitle),
-                    onClick = { tagChip.onTagChipClick(tagChip.tag) },
-                    height = 36.dp,
-                )
-                Spacer(modifier = Modifier.height(Margin.Large.value))
-                // Posts list UI
-                when (postList) {
-                    is PostList.Initial, is PostList.Loading -> PostListLoading()
-                    is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
-                    is PostList.Error -> PostListError(postList, tagChip, backgroundColor)
+
+                Column(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .fillMaxWidth()
+                        .padding(
+                            top = Margin.Large.value,
+                            bottom = Margin.ExtraExtraMediumLarge.value,
+                        )
+                ) {
+                    // Tag chip UI
+                    ReaderFilterChip(
+                        modifier = Modifier.padding(
+                            start = Margin.Large.value,
+                        ),
+                        text = UiString.UiStringText(tagChip.tag.tagTitle),
+                        onClick = { tagChip.onTagChipClick(tagChip.tag) },
+                        height = 36.dp,
+                    )
+                    Spacer(modifier = Modifier.height(Margin.Large.value))
+                    // Posts list UI
+                    when (postList) {
+                        is PostList.Initial, is PostList.Loading -> PostListLoading()
+                        is PostList.Loaded -> PostListLoaded(postList, tagChip, backgroundColor)
+                        is PostList.Error -> PostListError(postList, tagChip, backgroundColor)
+                    }
                 }
-                Spacer(modifier = Modifier.height(Margin.ExtraExtraMediumLarge.value))
             }
         }
 
