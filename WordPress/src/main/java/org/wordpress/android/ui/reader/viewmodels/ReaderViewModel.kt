@@ -142,6 +142,20 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    fun onFeedEmptyStateLoaded() {
+        hideAnnouncementCard()
+    }
+
+    fun onFeedContentLoaded() {
+        updateAnnouncementCard()
+    }
+    
+    private fun hideAnnouncementCard() {
+        _announcementCardState.value = _announcementCardState.value?.copy(
+            shouldShow = false,
+        )
+    }
+
     private fun showJetpackPoweredBottomSheet() {
 //        _showJetpackPoweredBottomSheet.value = Event(true)
     }
