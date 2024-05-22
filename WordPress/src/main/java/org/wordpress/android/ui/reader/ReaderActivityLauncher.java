@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -193,7 +194,7 @@ public class ReaderActivityLauncher {
     /*
      * show comments for the passed Ids
      */
-    public static void showReaderComments(Context context,
+    public static void showReaderComments(@NonNull Context context,
                                           long blogId,
                                           long postId,
                                           String source) {
@@ -205,7 +206,7 @@ public class ReaderActivityLauncher {
      * show specific comment for the passed Ids
      */
     public static void showReaderComments(
-        Context context,
+        @NonNull Context context,
         long blogId,
         long postId,
         long commentId,
@@ -232,11 +233,8 @@ public class ReaderActivityLauncher {
      * @param commentId       specific comment id to perform an action on
      * @param interceptedUri  URI to fall back into (i.e. to be able to open in external browser)
      */
-    public static void showReaderComments(Context context, long blogId, long postId, DirectOperation
+    public static void showReaderComments(@NonNull Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
-        if (context == null) {
-            return;
-        }
         Intent intent = buildShowReaderCommentsIntent(
                 context,
                 blogId,
@@ -258,7 +256,7 @@ public class ReaderActivityLauncher {
         showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source);
     }
 
-    public static void showReaderCommentsForResult(Fragment fragment, long blogId, long postId, DirectOperation
+    public static void showReaderCommentsForResult(@NotNull Fragment fragment, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
         if (fragment.getContext() == null) {
             return;
@@ -275,7 +273,7 @@ public class ReaderActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
     }
 
-    private static Intent buildShowReaderCommentsIntent(Context context, long blogId, long postId, DirectOperation
+    private static Intent buildShowReaderCommentsIntent(@NonNull Context context, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
         Intent intent = new Intent(
                 context,
