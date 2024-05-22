@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.utils.JetpackAITranscriptionUtils
-import org.wordpress.android.fluxc.utils.WPComRestClientUtils.Companion.getHttpUrlWithLocale
+import org.wordpress.android.fluxc.utils.WPComRestClientUtils.getHttpUrlWithLocale
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Type
@@ -35,6 +35,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         private const val DEFAULT_AUDIO_FILE_SIZE_LIMIT: Long = 25 * 1024 * 1024 //25 MB
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     suspend fun fetchJetpackAITranscription(
         jwtToken: JWTToken,
         feature: String?,
@@ -188,6 +189,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         ) : JetpackAITranscriptionResponse()
     }
 
+    @Suppress("MagicNumber")
     private fun fromHttpStatusCode(code: Int): JetpackAITranscriptionErrorType {
         return when (code) {
             400 -> JetpackAITranscriptionErrorType.BAD_REQUEST
