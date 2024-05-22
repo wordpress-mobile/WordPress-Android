@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-30 01:37:13+0000
+Translation-Revision-Date: 2024-05-18 13:51:21+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="role_subscriber">구독자</string>
+    <string name="title_email_subscriber">이메일 구독자</string>
+    <string name="people_empty_list_filtered_email_subscribers">아직 이메일 구독자 없음</string>
+    <string name="people_empty_list_filtered_subscribers">아직 구독자 없음</string>
+    <string name="people_dropdown_item_email_subscribers">이메일 구독자</string>
+    <string name="people_dropdown_item_subscribers">구독자</string>
+    <string name="invite_already_subscribed">%s: 이미 구독하셨습니다.</string>
+    <string name="error_no_camera_available">카메라 앱을 사용할 수 없습니다.</string>
+    <string name="error_remove_subscriber">구독자를 제거할 수 없습니다.</string>
+    <string name="error_fetch_email_subscribers_list">사이트 이메일 구독자를 가져올 수 없습니다.</string>
+    <string name="error_fetch_subscribers_list">사이트 구독자를 가져올 수 없습니다.</string>
+    <string name="post_settings_add_to_calendar_error">달력에 추가할 수 없음</string>
+    <string name="post_settings_no_calendar_app_exists">\'달력에 추가\' 요청을 처리할 앱이 없습니다.</string>
+    <string name="site_subscriptions">사이트 구독</string>
+    <string name="notifications_tab_title_subscribers">구독자</string>
+    <string name="subscribers">구독자</string>
+    <string name="notifications_empty_subscribers">아직 구독자 없음</string>
+    <string name="stats_view_emails">이메일</string>
+    <string name="stats_view_subscribers">구독자</string>
+    <string name="stats_view_subscribers_chart">구독자</string>
+    <string name="stats_view_total_subscribers">총 구독자 수</string>
+    <string name="stats_view_subscriber_totals">구독자 합계</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">클릭 수</string>
+    <string name="stats_emails_opens_label">열린 횟수</string>
+    <string name="stats_emails_latest_emails_label">최근 이메일 수</string>
+    <string name="stats_subscriber_since_label">구독한 날짜:</string>
+    <string name="stats_name_label">이름</string>
+    <string name="stats_publicize_subscribers_label">구독자</string>
+    <string name="stats_subscriber_label">구독자</string>
+    <string name="stats_subscribers_count_message">%1$s 구독자 합계: %2$s</string>
     <string name="page_upload_conflict_error">이 페이지의 최신 개정판은 다음과 같습니다.</string>
     <string name="editor_updating_content">콘텐츠 업데이트</string>
     <string name="stats_subscribers">구독자</string>
-    <string name="stats_subscribers_subscribers">구독자</string>
     <string name="weekly_roundup_notification_text_views_and_comment">지난주에는 조회수 %1$s회, 댓글 1개를 기록했습니다.</string>
     <string name="weekly_roundup_notification_text_views_and_like">지난주에는 조회수 %1$s회, 좋아요 1개를 기록했습니다.</string>
     <string name="weekly_roundup_notification_text_views_like_comment">지난주에는 조회수 %1$s회, 좋아요 1개, 댓글 1개를 기록했습니다.</string>
@@ -677,7 +707,7 @@ Language: ko_KR
     <string name="qrcode_auth_flow_validated_subtitle">웹 브라우저에서 직접 가져온 QR 코드만 스캔하세요. 다른 사람이 보낸 코드는 스캔하지 마세요.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s 근처에서 웹 브라우저 로그인을 시도하는 중이신가요?</string>
     <string name="qrcode_auth_flow_validated_title">%2$s 근처에서 %1$s 로그인을 시도하는 중이신가요?</string>
-    <string name="stats_insights_followers_guide_card">💡다른 블로그에서 댓글을 다는 것은 새 사이트에 대한 관심과 팔로워를 형성하는 훌륭한 방법입니다.</string>
+    <string name="stats_insights_subscribers_guide_card">💡다른 블로그에서 댓글을 다는 것은 새 사이트에 대한 관심과 구독자를 형성하는 훌륭한 방법입니다.</string>
     <string name="stats_insights_comments_guide_card">💡\"더 보기\"를 눌러 상위 댓글 작성자를 참조하세요.</string>
     <string name="stats_insights_latest_post_empty">언제 첫 번째 글을 발행했는지 다시 확인하세요!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">조회수와 트래픽 %1$s을(를) 늘리는 상위 팁을 확인하세요.</string>
@@ -715,7 +745,7 @@ Language: ko_KR
     <string name="me_btn_scan_login_code">로그인 코드 검사</string>
     <string name="stats_insights_likes_guide_card">⭐️ 최신 글 %1$s에 %2$s 좋아요가 있습니다.</string>
     <string name="stats_most_popular_percent_views_empty">활동이 충분하지 않습니다. 나중에 사이트의 방문자가 증가하면 다시 확인하세요!</string>
-    <string name="stats_total_followers_content_description">%1$s, 총 팔로워 중 %2$s%%</string>
+    <string name="stats_total_subscribers_content_description">%1$s, 총 구독자 중 %2$s%%</string>
     <string name="stats_value_percent">%1$s(%2$s%%)</string>
     <string name="pages_copy_link">링크 복사</string>
     <string name="quick_start_completed_tour_title">축하합니다! 척척박사&lt;br/&gt;</string>
@@ -742,7 +772,6 @@ Language: ko_KR
     <string name="stats_published_minutes_ago">%1$d분 전에 발행됨</string>
     <string name="stats_published_a_minute_ago">1분 전에 발행됨</string>
     <string name="stats_published_seconds_ago">몇 초 전에 발행됨</string>
-    <string name="stats_view_total_followers">총 팔로워 수</string>
     <string name="stats_view_total_comments">총 댓글 수</string>
     <string name="stats_view_total_likes">총 좋아요 횟수</string>
     <string name="blogging_prompts_notification_dismiss">해제</string>
@@ -1841,7 +1870,6 @@ Language: ko_KR
     <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 젯팩 소셜은 페이스북 프로필에 연결할 수 없으며 발행한 페이지에만 연결할 수 있습니다.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">연결되지 않음</string>
     <string name="notifications_tab_title_likes">좋아요</string>
-    <string name="notifications_tab_title_follows">팔로우</string>
     <string name="notifications_tab_title_comments">댓글</string>
     <string name="notifications_tab_title_unread_notifications">읽지 않음</string>
     <string name="dlg_cancel_action_dont_trash">휴지통에 버리지 마세요.</string>
@@ -2166,9 +2194,7 @@ Language: ko_KR
     <string name="error_restoring_post">글을 복원하는 중 오류 발생</string>
     <string name="backdated_for">소급 적용: %s</string>
     <string name="stats_insights_management_title">가장 관련성 높은 통계만 확인하세요. 아래 인사이트를 추가 및 구성하세요.</string>
-    <string name="stats_insights_social">소셜</string>
     <string name="stats_insights_annual_site_stats">연간 사이트 통계</string>
-    <string name="stats_view_follower_totals">총 팔로워 수</string>
     <string name="domain_suggestions_fetch_error">도메인 제안을 로드할 수 없음</string>
     <string name="domain_suggestions_search_hint">추가 아이디어에 대한 키워드 입력</string>
     <string name="domains_suggestions_empty_list">제안을 찾을 수 없음</string>
@@ -2332,7 +2358,6 @@ Language: ko_KR
     <string name="stats_insights_tags_and_categories">태그 및 카테고리</string>
     <string name="stats_insights_all_time_stats">모든-기간</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">팔로워</string>
     <string name="stats_publicize_service_label">서비스</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">조회수</string>
@@ -2345,10 +2370,8 @@ Language: ko_KR
     <string name="stats_comments_posts_and_pages">게시글 및 페이지</string>
     <string name="stats_comments_authors">글쓴이</string>
     <string name="stats_follower_since_label">이후</string>
-    <string name="stats_follower_label">팔로워</string>
-    <string name="stats_followers_count_message">총 %1$s 팔로워 수: %2$s</string>
     <string name="stats_followers_email">이메일</string>
-    <string name="stats_followers_wordpress_com">워드프레스닷컴</string>
+    <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">인사이트 관리</string>
     <string name="stats_empty_insights_title">아직 추가된 인사이트가 없음</string>
     <string name="stats_no_data_yet">아직 데이터 없음</string>
@@ -2448,14 +2471,11 @@ Language: ko_KR
     <string name="sign_out_wpcom_confirm_with_no_changes">워드프레스에서 로그아웃하시겠습니까?</string>
     <string name="sign_out_wpcom_confirm_with_changes">게시글에 대한 변경 사항이 아직 사이트에 업로드되지 않았습니다. 지금 로그아웃하면 장치에서 변경한 내용이 삭제됩니다. 그래도 로그아웃하시겠습니까?</string>
     <string name="people_empty_list_filtered_viewers">아직 방문자 없음</string>
-    <string name="people_empty_list_filtered_email_followers">아직 이메일 팔로워 없음</string>
-    <string name="people_empty_list_filtered_followers">아직 팔로워 없음</string>
     <string name="people_empty_list_filtered_users">아직 사용자 없음</string>
     <string name="reader_empty_posts_liked_description">좋아요를 누른 글이 여기에 표시됩니다.</string>
     <string name="reader_empty_posts_liked_title">좋아요 없음</string>
     <string name="reader_no_followed_blogs_button_discover">블로그 발견</string>
     <string name="notifications_empty_likes">아직 좋아요가 없음</string>
-    <string name="notifications_empty_followers">아직 팔로워 없음</string>
     <string name="activity_log_limited_content_on_free_plan">무료 요금제 사용자이므로 활동에 제한된 이벤트가 표시됩니다.</string>
     <string name="activity_log_empty_subtitle">사이트를 변경하면 여기서 활동 내역을 볼 수 있습니다.</string>
     <string name="activity_log_empty_title">아직 활동이 없음</string>
@@ -3086,6 +3106,7 @@ Language: ko_KR
     <string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
     <string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
     <string name="submit_for_review">제출하기</string>
+    <string name="title_subscriber">구독자</string>
     <string name="duplicate_site_detected">중복 사이트가 감지되었습니다.</string>
     <string name="cannot_add_duplicate_site">이 사이트가 이미 앱에 있으므로, 추가할 수 없습니다.</string>
     <string name="already_logged_in_wpcom">이미 워드프레스닷컴 계정에 로그인되어 있으므로 다른 계정에 연결된 워드프레스닷컴 사이트를 추가할 수 없습니다.</string>
@@ -3134,35 +3155,26 @@ Language: ko_KR
     <string name="preference_open_device_settings">기기 설정 열기</string>
     <string name="invite_invalid_email">%s: 잘못된 이메일주소</string>
     <string name="invite_user_blocked_invites">%s : 사용자가 초대를 막았음</string>
-    <string name="invite_already_following">%s: 이미 팔로중임</string>
     <string name="invite_already_a_member">%s: 이미 회원임</string>
     <string name="invite_username_not_found">%s: 사용자가 없습니다.</string>
     <string name="comment_moderated_approved">댓글이 수락됨</string>
     <string name="like">좋아함.</string>
     <string name="timespan_now">지금</string>
     <string name="role_viewer">독자</string>
-    <string name="role_follower">팔로워</string>
     <string name="error_post_my_profile_no_connection">인터넷에 연결되어 있지 않아 프로필을 저장할 수 없습니다.</string>
     <string name="alignment_right">오른쪽</string>
     <string name="alignment_left">왼쪽</string>
     <string name="alignment_none">없음</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d 선택</string>
     <string name="error_fetch_users_list">사이트 사용자를 가져올 수 없습니다.</string>
-    <string name="title_email_follower">이메일 팔로워</string>
-    <string name="title_follower">팔로워</string>
     <string name="people_fetching">사용자를 가져오는 중…</string>
     <string name="people_dropdown_item_viewers">방문자</string>
-    <string name="people_dropdown_item_email_followers">이메일 팔로워</string>
-    <string name="people_dropdown_item_followers">팔로워</string>
     <string name="people_dropdown_item_team">팀</string>
     <string name="invite_message_usernames_limit">최대 10개의 이메일 주소 및/또는 워드프레스닷컴 사용자명을 초대하세요. 사용자명이 필요한 사람들은 사용자명 생성 방법에 관한 지침을 받게 됩니다.</string>
     <string name="viewer_remove_confirmation_message">이 방문자를 제거하면 해당 방문자가 이 사이트에 방문할 수 없게 됩니다.\n\n이 방문자를 제거하시겠습니까?</string>
-    <string name="follower_remove_confirmation_message">이 팔로워가 제거된 경우 해당 팔로워는 다시 팔로우하지 않는 한 이 사이트에 대한 알림을 수신할 수 없게 됩니다.\n\n이 팔로워를 제거하시겠습니까?</string>
+    <string name="subscriber_remove_confirmation_message">이 구독자가 제거된 경우 해당 구독자는 다시 구독하지 않는 한 이 사이트에 대한 알림을 수신할 수 없게 됩니다.\n\n그래도 이 구독자를 제거할까요?</string>
     <string name="follower_subscribed_since">%1$s 이후</string>
     <string name="error_remove_viewer">방문자를 제거할 수 없습니다.</string>
-    <string name="error_remove_follower">팔로워를 제거할 수 없습니다.</string>
-    <string name="error_fetch_email_followers_list">사이트 이메일 팔로워를 가져올 수 없습니다.</string>
-    <string name="error_fetch_followers_list">사이트 팔로워를 가져올 수 없습니다.</string>
     <string name="editor_failed_uploads_switch_html">일부 미디어 업로드에 실패했습니다. 이 상태에서는 HTML 모드로 전환할 수\n 없습니다. 실패한 업로드를 모두 제거하고 계속할까요?</string>
     <string name="image_thumbnail">이미지 썸네일</string>
     <string name="visual_editor">비주얼 편집기</string>
@@ -3229,7 +3241,7 @@ Language: ko_KR
     <string name="delete_site_progress">사이트를 삭제하는 중…</string>
     <string name="delete_site_hint">사이트 삭제</string>
     <string name="export_site_hint">사이트를 XML 파일로 내보내기</string>
-    <string name="primary_domain">주 도메인</string>
+    <string name="primary_domain">기본 도메인</string>
     <string name="error_deleting_site_summary">사이트를 삭제하는 동안 오류가 발생했습니다. 도움이 필요하면 사용자지원에 요청하세요.</string>
     <string name="error_deleting_site">사이트 삭제 오류</string>
     <string name="site_settings_export_content_title">내용 내보내기</string>
@@ -3268,7 +3280,6 @@ Language: ko_KR
     <string name="replies_to_my_comments">내 댓글에 대한 답글</string>
     <string name="username_mentions">사용자명 멘션</string>
     <string name="site_achievements">사이트 작성 글</string>
-    <string name="site_follows">사이트 팔로우</string>
     <string name="likes_on_my_posts">내 글의 좋아요</string>
     <string name="likes_on_my_comments">내 댓글의 좋아요</string>
     <string name="comments_on_my_site">내 사이트의 댓글</string>
@@ -3539,7 +3550,6 @@ Language: ko_KR
     <string name="stats_followers_minutes">%1$d분</string>
     <string name="stats_followers_a_minute_ago">1분 전</string>
     <string name="stats_followers_seconds_ago">몇 초 전</string>
-    <string name="stats_view_followers">팔로워</string>
     <string name="stats_view_videos">비디오</string>
     <string name="stats_view_top_posts_and_pages">게시물 또는 페이지</string>
     <string name="stats_view_countries">국가</string>
@@ -3699,7 +3709,6 @@ Language: ko_KR
     <string name="manage">관리</string>
     <string name="more_notifications">%d개.</string>
     <string name="new_notifications">%d개의 새로운 알림</string>
-    <string name="follows">팔로우</string>
     <string name="note_reply_successful">답장을 공개했습니다</string>
     <string name="sign_in">로그인</string>
     <string name="loading">로드 중입니다…</string>
@@ -3710,7 +3719,7 @@ Language: ko_KR
     <string name="log_in">로그인</string>
     <string name="username">사용자 이름</string>
     <string name="password">암호</string>
-    <string name="reader">가입 블로그</string>
+    <string name="reader">리더</string>
     <string name="featured_in_post">게시물 본문에 이미지를 포함</string>
     <string name="featured">같은 기능을 갖춘 이미지를 사용</string>
     <string name="width">가로</string>
