@@ -9,14 +9,19 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.ResponseFormat
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class JetpackAIStore @Inject constructor(
     private val jetpackAIRestClient: JetpackAIRestClient,
+    private val jetpackAITranscriptionRestClient: JetpackAITranscriptionRestClient,
     private val coroutineEngine: CoroutineEngine
 ) {
     private var token: JWTToken? = null
@@ -127,4 +132,69 @@ class JetpackAIStore @Inject constructor(
 
     private fun JWTToken.validateBlogId(blogId: Long): JWTToken? =
         if (getPayloadItem("blog_id")?.toLong() == blogId) this else null
+
+    /**
+     * Fetches Jetpack AI Transcription for the specified audio file.
+     *
+     * @param site      The site used to create the JWT token
+     * @param feature   Used by backend to track AI-generation usage and measure costs. Optional.
+     * @param audioFile The audio File to be transcribed.
+     * @param retryCount The number of times the JWTToken request was called
+     * @param maxRetries The max number of times JWTToken can be requested
+     */
+    suspend fun fetchJetpackAITranscription(
+        site: SiteModel,
+        feature: String?,
+        audioFile: File,
+        retryCount: Int = 0,
+        maxRetries: Int = 1
+    ): JetpackAITranscriptionResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI Transcription"
+    ) {
+        val token = token?.validateExpiryDate()?.validateBlogId(site.siteId)
+            ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+                when (tokenResponse) {
+                    is Error -> {
+                        return@withDefaultContext JetpackAITranscriptionResponse.Error(
+                            type = JetpackAITranscriptionErrorType.AUTH_ERROR,
+                            message = tokenResponse.message,
+                        )
+                    }
+
+                    is Success -> {
+                        token = tokenResponse.token
+                        tokenResponse.token
+                    }
+                }
+            }
+
+        val result = jetpackAITranscriptionRestClient.fetchJetpackAITranscription(
+            jwtToken = token,
+            feature = feature,
+            audioFile = audioFile
+        )
+
+        return@withDefaultContext when {
+            // Fetch token anew if using existing token returns AUTH_ERROR
+            result is JetpackAITranscriptionResponse.Error &&
+                result.type == JetpackAITranscriptionErrorType.AUTH_ERROR -> {
+                // Remove cached token and retry getting the token another time
+                this@JetpackAIStore.token = null
+                if (retryCount <= maxRetries) {
+                    fetchJetpackAITranscription(
+                        site,
+                        feature,
+                        audioFile,
+                        retryCount + 1,
+                        maxRetries
+                    )
+                } else {
+                    result // Return the error after max retries
+                }
+            }
+            else -> result
+        }
+    }
 }
