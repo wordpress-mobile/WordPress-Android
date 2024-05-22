@@ -69,8 +69,7 @@ class SitePreviewViewModel @Inject constructor(
     private var siteDesign: String? = null
     private var isFree: Boolean = true
 
-    private lateinit var result: Created
-    private lateinit var domainName: String
+    private var result: Created? = null
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -78,8 +77,8 @@ class SitePreviewViewModel @Inject constructor(
     private val _preloadPreview: MutableLiveData<String> = MutableLiveData()
     val preloadPreview: LiveData<String> = _preloadPreview
 
-    private val _onOkButtonClicked = SingleLiveEvent<Created>()
-    val onOkButtonClicked: LiveData<Created> = _onOkButtonClicked
+    private val _onOkButtonClicked = SingleLiveEvent<Created?>()
+    val onOkButtonClicked: LiveData<Created?> = _onOkButtonClicked
 
     fun start(siteCreationState: SiteCreationState) {
         if (isStarted) return else isStarted = true
@@ -90,12 +89,13 @@ class SitePreviewViewModel @Inject constructor(
         siteDesign = siteCreationState.siteDesign
         result = siteCreationState.result
         isFree = requireNotNull(siteCreationState.domain).isFree
-        domainName = getCleanUrl(result.site.url) ?: ""
         startPreLoadingWebView()
-        if (result is CreatedButNotFetched) {
-            launch {
-                fetchNewlyCreatedSiteModel(result.site.siteId)?.let {
-                    result = Completed(it)
+        result?.let {
+            if (it is CreatedButNotFetched) {
+                launch {
+                    fetchNewlyCreatedSiteModel(it.site.siteId)?.let {
+                        result = Completed(it)
+                    }
                 }
             }
         }
@@ -121,7 +121,7 @@ class SitePreviewViewModel @Inject constructor(
             }
         }
         // Load the newly created site in the webview
-        result.site.url?.let { url ->
+        result?.site?.url?.let { url ->
             val urlToLoad = urlUtils.addUrlSchemeIfNeeded(
                 url = url,
                 addHttps = isWordPressComSubDomain(url)
@@ -172,7 +172,7 @@ class SitePreviewViewModel @Inject constructor(
     private fun getCleanUrl(url: String) = StringUtils.removeTrailingSlash(urlUtils.removeScheme(url))
 
     private fun createSitePreviewData(): UrlData {
-        val url = domainName
+        val url = result?.let { getCleanUrl(it.site.url) ?: "" } ?: ""
         val subDomain = urlUtils.extractSubDomain(url)
         val fullUrl = urlUtils.addUrlSchemeIfNeeded(url, true)
         val subDomainIndices = 0 to subDomain.length
