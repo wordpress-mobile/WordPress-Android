@@ -180,9 +180,9 @@ class ReaderViewModel @Inject constructor(
                 descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
             )
         )
-
+        val isDiscoverSelected = selectedReaderTag()?.isDiscover == true
         _announcementCardState.value = AnnouncementCardUiState(
-            shouldShow = readerAnnouncementCardFeatureConfig.isEnabled() &&
+            shouldShow = isDiscoverSelected && readerAnnouncementCardFeatureConfig.isEnabled() &&
                     appPrefsWrapper.shouldShowReaderAnnouncementCard(),
             items = items,
         )
@@ -213,6 +213,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
+        updateAnnouncementCard()
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
         }
