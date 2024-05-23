@@ -571,8 +571,8 @@ class CommentsRestClientTest {
                         eq(kclass),
                         any(),
                         any(),
-                        any()
-
+                        any(),
+                        customGsonBuilder = anyOrNull()
                 )
         ).thenReturn(response)
         return response

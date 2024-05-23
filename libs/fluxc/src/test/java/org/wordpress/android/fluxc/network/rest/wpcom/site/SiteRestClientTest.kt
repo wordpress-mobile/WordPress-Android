@@ -666,7 +666,8 @@ class SiteRestClientTest {
                         eq(clazz),
                         any(),
                         any(),
-                        any()
+                        any(),
+                        customGsonBuilder = anyOrNull()
 
                 )
         ).thenReturn(response)

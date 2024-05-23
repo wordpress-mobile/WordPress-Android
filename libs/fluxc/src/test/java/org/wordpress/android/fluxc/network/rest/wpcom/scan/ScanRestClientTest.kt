@@ -422,7 +422,8 @@ class ScanRestClientTest {
                         eq(ScanStateResponse::class.java),
                         eq(false),
                         any(),
-                        eq(false)
+                        eq(false),
+                        customGsonBuilder = anyOrNull()
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
@@ -506,7 +507,8 @@ class ScanRestClientTest {
                         eq(FixThreatsStatusResponse::class.java),
                         eq(false),
                         any(),
-                        eq(false)
+                        eq(false),
+                        customGsonBuilder = anyOrNull()
                 )
         ).thenReturn(response)
         return response
