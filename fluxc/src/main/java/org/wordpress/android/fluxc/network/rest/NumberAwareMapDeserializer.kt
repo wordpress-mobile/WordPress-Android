@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import com.google.gson.internal.LazilyParsedNumber
 import java.lang.reflect.Type
 
 /**
@@ -12,7 +13,7 @@ import java.lang.reflect.Type
  * type (e.g., integer, long, double) based on their value.
  */
 class NumberAwareMapDeserializer : JsonDeserializer<Map<*, *>> {
-    @Suppress("TooGenericExceptionCaught","NestedBlockDepth")
+    @Suppress("TooGenericExceptionCaught", "NestedBlockDepth")
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Map<*, *> {
         val map: MutableMap<Any, Any?> = HashMap()
         try {
@@ -33,7 +34,13 @@ class NumberAwareMapDeserializer : JsonDeserializer<Map<*, *>> {
                 } else if (value.isJsonObject) {
                     map[key] = context.deserialize<Map<*, *>>(value, Map::class.java)
                 } else if (value.isJsonArray) {
-                    map[key] = context.deserialize<List<*>>(value, List::class.java)
+                    map[key] = value.asJsonArray.map {
+                        if (it.isJsonPrimitive && it.asJsonPrimitive.isNumber) {
+                            convertNumber(it.asJsonPrimitive.asNumber)
+                        } else {
+                            context.deserialize<Any>(it, Any::class.java)
+                        }
+                    }
                 } else {
                     map[key] = null
                 }
@@ -46,8 +53,26 @@ class NumberAwareMapDeserializer : JsonDeserializer<Map<*, *>> {
 
     private fun convertNumber(numberValue: Number): Number {
         return when {
+            numberValue is LazilyParsedNumber -> {
+                val numberAsString = numberValue.toString()
+                if (numberAsString.contains('.')) {
+                    val doubleValue = numberAsString.toDouble()
+                    if (doubleValue % 1 == 0.0) {
+                        doubleValue.toLong()
+                    } else {
+                        doubleValue
+                    }
+                } else {
+                    val longValue = numberAsString.toLong()
+                    if (longValue in Integer.MIN_VALUE..Integer.MAX_VALUE) {
+                        longValue.toInt()
+                    } else {
+                        longValue
+                    }
+                }
+            }
             numberValue is Long && numberValue in Integer.MIN_VALUE..Integer.MAX_VALUE -> numberValue.toInt()
-            numberValue is Double && numberValue.toDouble() % 1 == 0.0 -> numberValue.toLong()
+            numberValue is Double && numberValue % 1 == 0.0 -> numberValue.toLong()
             else -> numberValue
         }
     }
