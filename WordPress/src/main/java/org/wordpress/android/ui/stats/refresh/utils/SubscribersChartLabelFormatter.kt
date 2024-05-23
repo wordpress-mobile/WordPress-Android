@@ -10,7 +10,7 @@ class SubscribersChartLabelFormatter @Inject constructor(
 ) : ValueFormatter() {
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
         val index = value.toInt()
-        return if (entries.isNotEmpty() && index in 0..entries.size) {
+        return if (entries.isNotEmpty() && index in entries.indices) {
             entries[index].label
         } else {
             ""

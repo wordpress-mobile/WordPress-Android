@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-29 20:04:11+0000
+Translation-Revision-Date: 2024-05-13 22:05:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="role_subscriber">Abonnee</string>
+    <string name="title_email_subscriber">E-mailabonnee</string>
+    <string name="people_empty_list_filtered_email_subscribers">Nog geen e-mailabonnees</string>
+    <string name="people_empty_list_filtered_subscribers">Nog geen abonnees</string>
+    <string name="people_dropdown_item_email_subscribers">E-mailabonnees</string>
+    <string name="people_dropdown_item_subscribers">Abonnees</string>
+    <string name="invite_already_subscribed">%s: al geabonneerd</string>
+    <string name="error_no_camera_available">Geen camera app beschikbaar.</string>
+    <string name="error_remove_subscriber">Kon abonnee niet verwijderen</string>
+    <string name="error_fetch_email_subscribers_list">Kon site e-mail abonnees niet ophalen</string>
+    <string name="error_fetch_subscribers_list">Kon site abonnees niet ophalen</string>
+    <string name="post_settings_add_to_calendar_error">Kan niet worden toegevoegd aan kalender</string>
+    <string name="post_settings_no_calendar_app_exists">Geen app gevonden om het verzoek voor toevoeging aan de kalender te behandelen</string>
+    <string name="site_subscriptions">Site abonnementen</string>
+    <string name="notifications_tab_title_subscribers">Abonnees</string>
+    <string name="subscribers">Abonnees</string>
+    <string name="notifications_empty_subscribers">Nog geen abonnees</string>
+    <string name="stats_view_emails">E-mails</string>
+    <string name="stats_view_subscribers">Abonnees</string>
+    <string name="stats_view_subscribers_chart">Abonnees</string>
+    <string name="stats_view_total_subscribers">Totaal aantal abonnees</string>
+    <string name="stats_view_subscriber_totals">Abonnee totalen</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Klikken</string>
+    <string name="stats_emails_opens_label">Openingen</string>
+    <string name="stats_emails_latest_emails_label">Nieuwste e-mails</string>
+    <string name="stats_subscriber_since_label">Abonnee sinds</string>
+    <string name="stats_name_label">Naam</string>
+    <string name="stats_publicize_subscribers_label">Abonnees</string>
+    <string name="stats_subscriber_label">Abonnee</string>
+    <string name="stats_subscribers_count_message">Totaal %1$s abonnees: %2$s</string>
     <string name="page_upload_conflict_error">Er is een recentere revisie van deze pagina</string>
     <string name="editor_updating_content">Inhoud aan het updaten</string>
     <string name="stats_subscribers">Abonnees</string>
-    <string name="stats_subscribers_subscribers">Abonnees</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Afgelopen week had je %1$s weergaven en 1 reactie</string>
     <string name="weekly_roundup_notification_text_views_and_like">Afgelopen week had je %1$s weergaven en 1 vind-ik-leuk</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Afgelopen week had je %1$s weergaven, 1 vind-ik-leuk en 1 reactie.</string>
@@ -677,7 +707,7 @@ Language: nl
     <string name="qrcode_auth_flow_validated_subtitle">Scan alleen QR-codes die rechtstreeks uit je webbrowser komen. Scan nooit een code die je door iemand anders is toegestuurd.</string>
     <string name="qrcode_auth_flow_validated_default_title">Probeer je in te loggen bij je webbrowser in de buurt van %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Probeer je in te loggen bij %1$s in de buurt van %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Door reacties op andere blogs achter te laten, val je op en trek je volgers naar je nieuwe site.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Reageren op andere blogs is een geweldige manier om aandacht te trekken en abonnees te werven voor je nieuwe site.</string>
     <string name="stats_insights_comments_guide_card">💡Tik op \'MEER INFORMATIE\' om je topreageerders te bekijken.</string>
     <string name="stats_insights_latest_post_empty">Publiceer je eerste bericht en kijk dan nog eens hier!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Bekijk onze beste tips voor meer weergaven en bezoekers %1$s</string>
@@ -715,7 +745,7 @@ Language: nl
     <string name="me_btn_scan_login_code">Inlogcode scannen</string>
     <string name="stats_insights_likes_guide_card">⭐️ Je nieuwste bericht %1$s heeft %2$s likes gekregen.</string>
     <string name="stats_most_popular_percent_views_empty">Niet genoeg activiteit. Keer nog eens terug wanneer je site meer bezoekers heeft gehad!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% van het totale aantal volgers</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% van het totale aantal abonnees</string>
     <string name="stats_value_percent">%1$s %2$s%%()</string>
     <string name="pages_copy_link">Link kopiëren</string>
     <string name="quick_start_completed_tour_title">Gefeliciteerd! Je weet hoe alles werkt&lt;br/&gt;</string>
@@ -742,7 +772,6 @@ Language: nl
     <string name="stats_published_minutes_ago">%1$d minuten geleden gepubliceerd</string>
     <string name="stats_published_a_minute_ago">Een minuut geleden gepubliceerd</string>
     <string name="stats_published_seconds_ago">Seconden geleden gepubliceerd</string>
-    <string name="stats_view_total_followers">Totaal aantal e-mailvolgers</string>
     <string name="stats_view_total_comments">Totaal aantal reacties</string>
     <string name="stats_view_total_likes">Totaal aantal vind-ik-leuks</string>
     <string name="blogging_prompts_notification_dismiss">Negeren</string>
@@ -1841,7 +1870,6 @@ Language: nl
     <string name="sharing_facebook_account_must_have_pages">De Facebook-verbinding kan geen pagina\'s vinden. Jetpack Social kan geen verbinding maken met Facebook-profielen, alleen met gepubliceerde pagina\'s.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Niet verbonden</string>
     <string name="notifications_tab_title_likes">Vind-ik-leuks</string>
-    <string name="notifications_tab_title_follows">Volgt</string>
     <string name="notifications_tab_title_comments">Reacties</string>
     <string name="notifications_tab_title_unread_notifications">Ongelezen</string>
     <string name="dlg_cancel_action_dont_trash">Niet naar de prullenbak verplaatsen</string>
@@ -2166,9 +2194,7 @@ Language: nl
     <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
     <string name="backdated_for">Van datum voorzien voor: %s</string>
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
-    <string name="stats_view_follower_totals">Aantal volgers</string>
     <string name="domain_suggestions_fetch_error">Domein suggesties konden niet geladen worden</string>
     <string name="domain_suggestions_search_hint">Type een trefwoord voor meer ideeën</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
@@ -2332,7 +2358,6 @@ Language: nl
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Volgers</string>
     <string name="stats_publicize_service_label">Dienst</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Keer bekeken</string>
@@ -2345,8 +2370,6 @@ Language: nl
     <string name="stats_comments_posts_and_pages">Berichten en pagina\'s</string>
     <string name="stats_comments_authors">Auteurs</string>
     <string name="stats_follower_since_label">Sinds</string>
-    <string name="stats_follower_label">Volger</string>
-    <string name="stats_followers_count_message">Totaal %1$s volgers: %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Beheer inzichten</string>
@@ -2448,14 +2471,11 @@ Language: nl
     <string name="sign_out_wpcom_confirm_with_no_changes">Uitloggen bij WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Je hebt wijzigingen aangebracht aan berichten die nog niet naar je site zijn geüpload. Door uit te loggen worden deze wijzigingen van je apparaat verwijderd. Toch uitloggen?</string>
     <string name="people_empty_list_filtered_viewers">Nog geen viewers</string>
-    <string name="people_empty_list_filtered_email_followers">Nog geen e-mailvolgers</string>
-    <string name="people_empty_list_filtered_followers">Nog geen volgers</string>
     <string name="people_empty_list_filtered_users">Nog geen gebruikers</string>
     <string name="reader_empty_posts_liked_description">Berichten die je liked, verschijnen hier</string>
     <string name="reader_empty_posts_liked_title">Nog niets leuk gevonden</string>
     <string name="reader_no_followed_blogs_button_discover">Ontdek blogs</string>
     <string name="notifications_empty_likes">Nog geen vind-ik-leuks</string>
-    <string name="notifications_empty_followers">Nog geen volgers</string>
     <string name="activity_log_limited_content_on_free_plan">Aangezien je een gratis abonnement gebruikt, zie je een beperkt aantal gebeurtenissen in je activiteit.</string>
     <string name="activity_log_empty_subtitle">Wanneer je wijzigingen aan je site aanbrengt, kun je hier je activiteitengeschiedenis bekijken.</string>
     <string name="activity_log_empty_title">Nog geen activiteit</string>
@@ -3086,6 +3106,7 @@ Language: nl
     <string name="error_all_media_upload_canceled">Alle media-uploads zijn vanwege een onverwachte fout geannuleerd. Probeer ze opnieuw te uploaden</string>
     <string name="error_unknown_post_type">Onbekende berichtindeling</string>
     <string name="submit_for_review">Verzenden</string>
+    <string name="title_subscriber">Abonnee</string>
     <string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
     <string name="cannot_add_duplicate_site">De site komt al voor in de app. Je kunt deze dus niet toevoegen.</string>
     <string name="already_logged_in_wpcom">Je bent al aangemeld bij een WordPress.com-account. Je kunt geen WordPress.com-site toevoegen die is gekoppeld aan een ander account.</string>
@@ -3134,35 +3155,26 @@ Language: nl
     <string name="preference_open_device_settings">Open apparaat instellingen</string>
     <string name="invite_invalid_email">%s: Ongeldige e-mail</string>
     <string name="invite_user_blocked_invites">%s: Gebruiker blokkeert uitnodigingen</string>
-    <string name="invite_already_following">%s: Volg je al</string>
     <string name="invite_already_a_member">%s: Is al lid</string>
     <string name="invite_username_not_found">%s: Gebruiker niet gevonden</string>
     <string name="comment_moderated_approved">Reactie goedgekeurd!</string>
     <string name="like">Vind ik leuk</string>
     <string name="timespan_now">nu</string>
     <string name="role_viewer">Lezer</string>
-    <string name="role_follower">Volger</string>
     <string name="error_post_my_profile_no_connection">Geen verbinding, profiel opslaan is niet mogelijk</string>
     <string name="alignment_right">Rechts</string>
     <string name="alignment_left">Link</string>
     <string name="alignment_none">Geen</string>
     <string name="site_settings_list_editor_action_mode_title">Geselecteerd %1$d</string>
     <string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
-    <string name="title_email_follower">E-mailvolger</string>
-    <string name="title_follower">Volger</string>
     <string name="people_fetching">Gebruikers ophalen…</string>
     <string name="people_dropdown_item_viewers">Lezers</string>
-    <string name="people_dropdown_item_email_followers">E-mailvolgers</string>
-    <string name="people_dropdown_item_followers">Volgers</string>
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Nodig tot wel 10 e-mailadressen en/of WordPress.com-gebruikersnamen uit. Naar degenen die een gebruikersnaam nodig hebben, worden instructies gestuurd over hoe ze er een aanmaken.</string>
     <string name="viewer_remove_confirmation_message">Als je deze lezer verwijdert, kan hij of zij deze site niet bezoeken.\n\nWil je deze lezer toch verwijderen?</string>
-    <string name="follower_remove_confirmation_message">Als deze volger wordt verwijderd, kan hij of zij geen meldingen meer ontvangen over deze site tot hij of zij opnieuw gaat volgen.\n\nWil je deze volger toch verwijderen?</string>
+    <string name="subscriber_remove_confirmation_message">Als deze wordt verwijderd, ontvangt deze abonnee geen meldingen meer over deze site, tenzij ze zich opnieuw abonneren.\n\nWil je deze abonnee nog steeds verwijderen?</string>
     <string name="follower_subscribed_since">Sinds %1$s</string>
     <string name="error_remove_viewer">Lezer verwijderen mislukt</string>
-    <string name="error_remove_follower">Volger verwijderen mislukt</string>
-    <string name="error_fetch_email_followers_list">E-mailvolgers site ophalen mislukt</string>
-    <string name="error_fetch_followers_list">Sitevolgers ophalen mislukt</string>
     <string name="editor_failed_uploads_switch_html">Enkele media konden niet worden geüpload. Je kunt niet overschakelen naar HTML.\n in deze staat. Alle mislukte uploads verwijderen en doorgaan?</string>
     <string name="image_thumbnail">Miniatuurweergave afbeelding</string>
     <string name="visual_editor">Visual Editor</string>
@@ -3268,7 +3280,6 @@ Language: nl
     <string name="replies_to_my_comments">Antwoorden op mijn reacties</string>
     <string name="username_mentions">Vermeldingen van gebruikersnaam</string>
     <string name="site_achievements">Prestaties voor de site</string>
-    <string name="site_follows">Volgers van site</string>
     <string name="likes_on_my_posts">Vind-ik-leuks voor mijn berichten</string>
     <string name="likes_on_my_comments">Vind-ik-leuks voor mijn reacties</string>
     <string name="comments_on_my_site">Reacties op mijn site</string>
@@ -3539,7 +3550,6 @@ Language: nl
     <string name="stats_followers_minutes">%1$d minuten</string>
     <string name="stats_followers_a_minute_ago">een minuut geleden</string>
     <string name="stats_followers_seconds_ago">seconden geleden</string>
-    <string name="stats_view_followers">Volgers</string>
     <string name="stats_view_videos">Video\'s</string>
     <string name="stats_view_top_posts_and_pages">Berichten &amp; pagina\'s</string>
     <string name="stats_view_countries">Landen</string>
@@ -3699,7 +3709,6 @@ Language: nl
     <string name="manage">Beheer</string>
     <string name="more_notifications">en nog %d meer.</string>
     <string name="new_notifications">%d nieuwe meldingen</string>
-    <string name="follows">Volgt</string>
     <string name="note_reply_successful">Reactie gepubliceerd</string>
     <string name="sign_in">Inloggen</string>
     <string name="loading">Aan het laden…</string>
