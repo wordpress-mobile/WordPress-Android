@@ -165,6 +165,8 @@ object AppRatingDialog {
                 .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
                     setOptOut()
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
+
+                    AppPrefs.setInAppReviewsShown()
                 }
             return builder.create()
         }
