@@ -45,7 +45,7 @@ class RemoteConfigRestClient @Inject constructor(
             Map::class.java,
             customGsonBuilder = customGsonBuilder
         )
-        Log.d("myTest", "fetchRemoteConfig(): response = $response")
+
         return when (response) {
             is Response.Success -> buildRemoteConfigFetchedPayload(response.data)
             is Response.Error -> RemoteConfigFetchedPayload(response.error.toRemoteConfigError())
@@ -54,9 +54,6 @@ class RemoteConfigRestClient @Inject constructor(
 
     private fun buildRemoteConfigFetchedPayload(featureFlags: Map<*, *>?)
         : RemoteConfigFetchedPayload {
-        featureFlags?.forEach {
-            Log.d("myTest", "buildRemoteConfigFetchedPayload(): key: " + it.key + " value: " + it.value )
-        }
         return RemoteConfigFetchedPayload(featureFlags?.map { e ->
                 e.key.toString() to e.value.toString()
         }?.toMap())
