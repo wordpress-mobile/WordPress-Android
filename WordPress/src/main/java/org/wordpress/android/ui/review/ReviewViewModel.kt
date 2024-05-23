@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.widgets.AppRatingDialog
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -16,7 +18,8 @@ class ReviewViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsW
     val launchReview = _launchReview as LiveData<Event<Unit>>
 
     fun onPublishingPost() {
-        if (!appPrefsWrapper.isInAppReviewsShown()) {
+        val shouldWaitAskLaterTime = Date().time - AppRatingDialog.askLaterDate.time < AppRatingDialog.criteriaInstallMs
+        if (!appPrefsWrapper.isInAppReviewsShown() && !shouldWaitAskLaterTime) {
             if (appPrefsWrapper.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
                 appPrefsWrapper.incrementPublishedPostCount()
             }

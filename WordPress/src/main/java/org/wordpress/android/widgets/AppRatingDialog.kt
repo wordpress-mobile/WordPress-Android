@@ -30,6 +30,7 @@ object AppRatingDialog {
 
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
+    val criteriaInstallMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
 
     // app must have been launched this many times before the rating dialog will appear
     private const val CRITERIA_LAUNCH_TIMES: Int = 10
@@ -38,7 +39,7 @@ object AppRatingDialog {
     private const val CRITERIA_INTERACTIONS: Int = 10
 
     private var installDate = Date()
-    private var askLaterDate = Date()
+    var askLaterDate = Date()
     private var launchTimes = 0
     private var interactions = 0
     private var optOut = false
@@ -103,8 +104,7 @@ object AppRatingDialog {
         return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
             false
         } else {
-            val thresholdMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
-            Date().time - installDate.time >= thresholdMs && Date().time - askLaterDate.time >= thresholdMs
+            Date().time - installDate.time >= criteriaInstallMs && Date().time - askLaterDate.time >= criteriaInstallMs
         }
     }
 
