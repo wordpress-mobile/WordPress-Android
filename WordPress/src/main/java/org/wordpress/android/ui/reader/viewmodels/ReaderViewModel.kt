@@ -570,7 +570,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable && readerTag.isFollowedSites
+        return readerTag.isFilterable && !readerTag.isTags
     }
 
     private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
