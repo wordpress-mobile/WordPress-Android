@@ -38,6 +38,14 @@ class ReaderAnnouncementCardView @JvmOverloads constructor(
         this.onDoneClickListener.value = listener
     }
 
+    fun setOnDoneClickListener(block: () -> Unit) {
+        this.onDoneClickListener.value = object : OnDoneClickListener {
+            override fun onDoneClick() {
+                block()
+            }
+        }
+    }
+
     interface OnDoneClickListener {
         fun onDoneClick()
     }

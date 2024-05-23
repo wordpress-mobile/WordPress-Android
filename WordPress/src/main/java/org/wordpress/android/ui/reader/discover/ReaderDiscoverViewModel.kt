@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -62,6 +63,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
+    private val readerAnnouncementRepository: ReaderAnnouncementRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -161,8 +163,20 @@ class ReaderDiscoverViewModel @Inject constructor(
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
                         parentViewModel.onFeedContentLoaded()
+
+                        val announcement = if (readerAnnouncementRepository.hasReaderAnnouncement()) {
+                            listOf(
+                                ReaderCardUiState.ReaderAnnouncementCardUiState(
+                                    readerAnnouncementRepository.getReaderAnnouncementItems(),
+                                    ::dismissAnnouncementCard
+                                )
+                            )
+                        } else {
+                            emptyList()
+                        }
+
                         _uiState.value = DiscoverUiState.ContentUiState(
-                            convertCardsToUiStates(posts),
+                            announcement + convertCardsToUiStates(posts),
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false,
                         )
@@ -178,6 +192,15 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun dismissAnnouncementCard() {
+        readerAnnouncementRepository.dismissReaderAnnouncement()
+        _uiState.value = (_uiState.value as? DiscoverUiState.ContentUiState)?.let { contentUiState ->
+            contentUiState.copy(
+                cards = contentUiState.cards.filterNot { it is ReaderCardUiState.ReaderAnnouncementCardUiState }
+            )
         }
     }
 
