@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
@@ -255,11 +256,14 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
 
             requireNotNull(notification).let { note ->
-                ReaderActivityLauncher.showReaderComments(
-                    activity, note.siteId.toLong(), note.postId.toLong(),
-                    note.commentId,
-                    COMMENT_NOTIFICATION.sourceDescription
-                )
+                val maybeActivity: FragmentActivity? = activity
+                maybeActivity?.let { fragmentActivity ->
+                    ReaderActivityLauncher.showReaderComments(
+                        fragmentActivity, note.siteId.toLong(), note.postId.toLong(),
+                        note.commentId,
+                        COMMENT_NOTIFICATION.sourceDescription
+                    )
+                }
             }
         }
 

@@ -172,12 +172,14 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, event.post.blogId, event.post.postId)
         is SharePost -> ReaderActivityLauncher.sharePost(context, event.post)
         is OpenPost -> ReaderActivityLauncher.openPost(context, event.post)
-        is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(
-            context,
-            event.blogId,
-            event.postId,
-            READER_POST_CARD.sourceDescription
-        )
+        is ShowReaderComments -> context?.let {
+            ReaderActivityLauncher.showReaderComments(
+                it,
+                event.blogId,
+                event.postId,
+                READER_POST_CARD.sourceDescription
+            )
+        }
         is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
         is ShowSitePickerForResult -> ActivityLauncher.showSitePickerForResult(
             this@ReaderDiscoverFragment,

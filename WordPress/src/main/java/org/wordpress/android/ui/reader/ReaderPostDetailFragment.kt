@@ -40,6 +40,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -1580,11 +1581,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
-                ReaderActivityLauncher.showReaderComments(
-                    activity, it.blogId, it.postId,
-                    directOperation, commentId.toLong(), viewModel.interceptedUri,
-                    DIRECT_OPERATION.sourceDescription
-                )
+                val maybeActivity: FragmentActivity? = activity
+                maybeActivity?.let { fragmentActivity ->
+                    ReaderActivityLauncher.showReaderComments(
+                        fragmentActivity, it.blogId, it.postId,
+                        directOperation, commentId.toLong(), viewModel.interceptedUri,
+                        DIRECT_OPERATION.sourceDescription
+                    )
+                }
             }
 
             activity?.finish()
