@@ -136,7 +136,8 @@ class RemoteConfigRestClientTest {
                 eq(Map::class.java),
                 eq(false),
                 any(),
-                eq(false)
+                eq(false),
+                any()
             )
         ).thenReturn(response)
     }
