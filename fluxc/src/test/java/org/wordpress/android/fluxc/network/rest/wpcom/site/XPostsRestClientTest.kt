@@ -33,7 +33,7 @@ internal class XPostsRestClientTest {
                         mapOf("decode_html" to "true"),
                         Array<XPostSiteModel>::class.java,
                         true,
-                        60000
+                        60000,
                 )
         )
                 .thenReturn(expected)

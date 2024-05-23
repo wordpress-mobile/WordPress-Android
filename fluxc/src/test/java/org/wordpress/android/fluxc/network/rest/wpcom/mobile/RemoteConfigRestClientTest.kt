@@ -11,6 +11,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -137,7 +138,7 @@ class RemoteConfigRestClientTest {
                 eq(false),
                 any(),
                 eq(false),
-                any()
+                customGsonBuilder = anyOrNull()
             )
         ).thenReturn(response)
     }
