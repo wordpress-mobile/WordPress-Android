@@ -9,7 +9,6 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class NumberAwareMapDeserializerTest {
-
     private val gson: Gson = GsonBuilder()
         .registerTypeAdapter(Map::class.java, NumberAwareMapDeserializer())
         .create()

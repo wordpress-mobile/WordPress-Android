@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.mobile
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
