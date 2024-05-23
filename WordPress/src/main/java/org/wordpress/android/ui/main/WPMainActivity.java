@@ -171,6 +171,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfig;
 import org.wordpress.android.util.config.QRCodeAuthFlowFeatureConfig;
+import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -308,6 +309,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject ActivityNavigator mActivityNavigator;
 
     @Inject SnackbarSequencer mSnackbarSequencer;
+
+    @Inject RemoteConfigWrapper mRemoteConfigWrapper;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -527,6 +530,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         if (savedInstanceState != null) {
             mIsChangingConfiguration = savedInstanceState.getBoolean(ARG_IS_CHANGING_CONFIGURATION, false);
         }
+
+        Log.d("RemoteConfigTest", "getPhaseFourOverlayFrequencyConfig value = "
+                        + mRemoteConfigWrapper.getPhaseFourOverlayFrequencyConfig());
     }
 
     private void initBackPressHandler() {
