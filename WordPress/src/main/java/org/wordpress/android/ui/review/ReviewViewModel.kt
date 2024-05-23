@@ -18,14 +18,18 @@ class ReviewViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsW
     val launchReview = _launchReview as LiveData<Event<Unit>>
 
     fun onPublishingPost() {
+        val shouldWaitForLastShownTime =
+            Date().time - AppRatingDialog.inAppReviewsShownDate.time < AppRatingDialog.criteriaInstallMs
         val shouldWaitAskLaterTime = Date().time - AppRatingDialog.askLaterDate.time < AppRatingDialog.criteriaInstallMs
-        if (!appPrefsWrapper.isInAppReviewsShown() && !shouldWaitAskLaterTime) {
+        if (!AppRatingDialog.doNotShowInAppReviewsPrompt && !shouldWaitAskLaterTime && !shouldWaitForLastShownTime) {
             if (appPrefsWrapper.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
                 appPrefsWrapper.incrementPublishedPostCount()
             }
             if (appPrefsWrapper.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED) {
                 _launchReview.value = Event(Unit)
-                appPrefsWrapper.setInAppReviewsShown()
+
+                AppRatingDialog.storeInAppReviewsShownDate()
+                appPrefsWrapper.resetPublishedPostCount()
             }
         }
     }

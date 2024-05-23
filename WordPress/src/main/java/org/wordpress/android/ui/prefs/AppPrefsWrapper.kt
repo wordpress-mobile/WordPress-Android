@@ -204,14 +204,6 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
         return AppPrefs.getPublishedPostCount()
     }
 
-    fun setInAppReviewsShown() {
-        AppPrefs.setInAppReviewsShown()
-    }
-
-    fun isInAppReviewsShown(): Boolean {
-        return AppPrefs.isInAppReviewsShown()
-    }
-
     fun setBloggingRemindersShown(siteId: Int) {
         AppPrefs.setBloggingRemindersShown(siteId)
     }

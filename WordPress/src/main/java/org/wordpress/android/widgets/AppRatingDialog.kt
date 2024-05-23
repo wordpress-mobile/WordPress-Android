@@ -27,6 +27,8 @@ object AppRatingDialog {
     private const val KEY_OPT_OUT = "rate_opt_out"
     private const val KEY_ASK_LATER_DATE = "rate_ask_later_date"
     private const val KEY_INTERACTIONS = "rate_interactions"
+    private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
+    private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
 
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
@@ -43,6 +45,8 @@ object AppRatingDialog {
     private var launchTimes = 0
     private var interactions = 0
     private var optOut = false
+    var inAppReviewsShownDate = Date(0)
+    var doNotShowInAppReviewsPrompt = false
 
     private lateinit var preferences: SharedPreferences
 
@@ -68,6 +72,9 @@ object AppRatingDialog {
         optOut = preferences.getBoolean(KEY_OPT_OUT, false)
         installDate = Date(preferences.getLong(KEY_INSTALL_DATE, 0))
         askLaterDate = Date(preferences.getLong(KEY_ASK_LATER_DATE, 0))
+
+        inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))
+        doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
     }
 
     /**
@@ -166,7 +173,7 @@ object AppRatingDialog {
                     setOptOut()
                     AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
 
-                    AppPrefs.setInAppReviewsShown()
+                    doNotShowInAppReviewsPromptAgain()
                 }
             return builder.create()
         }
@@ -195,6 +202,13 @@ object AppRatingDialog {
     }
 
     /**
+     * Set do not show in-app reviews prompt flag - the in-app reviews prompt will never be shown unless app data is
+     * cleared.
+     */
+    private fun doNotShowInAppReviewsPromptAgain() =
+        preferences.edit().putBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, optOut)?.apply()
+
+    /**
      * Store install date - retrieved from package manager if possible.
      */
     private fun storeInstallDate(context: Context) {
@@ -216,4 +230,10 @@ object AppRatingDialog {
         val nextAskDate = System.currentTimeMillis()
         preferences.edit().putLong(KEY_ASK_LATER_DATE, nextAskDate)?.apply()
     }
+
+    /**
+     * Store the date the in-app reviews prompt is attempted to launch.
+     */
+    fun storeInAppReviewsShownDate() =
+        preferences.edit().putLong(IN_APP_REVIEWS_SHOWN_DATE, System.currentTimeMillis())?.apply()
 }
