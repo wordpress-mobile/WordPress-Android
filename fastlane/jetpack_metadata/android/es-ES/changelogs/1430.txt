@@ -1,0 +1,3 @@
+24.8:
+En la pantalla Estadísticas, los porcentajes aparecen ahora en su posición correcta para los usuarios de idiomas con escritura de derecha a izquierda. Muy bien.
+

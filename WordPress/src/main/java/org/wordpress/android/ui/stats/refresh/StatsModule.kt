@@ -67,7 +67,7 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecase
 import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase.TotalSubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -467,7 +467,7 @@ class StatsModule {
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
         @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
-        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
         return if (trafficSubscribersTabFeatureConfig.isEnabled()) {
             mapOf(

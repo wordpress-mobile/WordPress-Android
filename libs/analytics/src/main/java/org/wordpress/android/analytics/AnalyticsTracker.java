@@ -1122,7 +1122,12 @@ public final class AnalyticsTracker {
         RESOLVE_AUTOSAVE_CONFLICT_CONFIRM_TAPPED,
         RESOLVE_AUTOSAVE_CONFLICT_CANCEL_TAPPED,
         RESOLVE_AUTOSAVE_CONFLICT_CLOSE_TAPPED,
-        RESOLVE_AUTOSAVE_CONFLICT_DISMISSED;
+        RESOLVE_AUTOSAVE_CONFLICT_DISMISSED,
+        IN_APP_UPDATE_SHOWN,
+        IN_APP_UPDATE_DISMISSED,
+        IN_APP_UPDATE_ACCEPTED,
+        IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART;
+
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.

@@ -1,1 +1,1 @@
-April showers bring May flowers, but they unfortunately don’t bring release notes. Stay Juned for the next update.
+Site names and URLs are now properly positioned for right-to-left language users. Right on.

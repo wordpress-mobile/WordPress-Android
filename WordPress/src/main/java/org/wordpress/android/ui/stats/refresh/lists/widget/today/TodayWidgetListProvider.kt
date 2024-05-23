@@ -13,7 +13,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Inject
 
 class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
@@ -24,7 +24,7 @@ class TodayWidgetListProvider(val context: Context, intent: Intent) : RemoteView
     lateinit var widgetUpdater: TodayWidgetUpdater
 
     @Inject
-    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)

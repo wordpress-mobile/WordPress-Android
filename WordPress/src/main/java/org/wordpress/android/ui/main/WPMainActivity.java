@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
@@ -38,6 +40,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.inappupdate.InAppUpdateListener;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -174,6 +178,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
 import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
 
@@ -295,6 +300,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject JetpackFeatureRemovalPhaseHelper mJetpackFeatureRemovalPhaseHelper;
 
     @Inject BuildConfigWrapper mBuildConfigWrapper;
+
+    @Inject IInAppUpdateManager mInAppUpdateManager;
 
     @Inject GCMRegistrationScheduler mGCMRegistrationScheduler;
 
@@ -1196,7 +1203,28 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
+
+        checkForInAppUpdate();
+
         mIsChangingConfiguration = false;
+    }
+
+    private void checkForInAppUpdate() {
+        mInAppUpdateManager.checkForAppUpdate(this, mInAppUpdateListener);
+    }
+
+    @NonNull final InAppUpdateListener mInAppUpdateListener = new InAppUpdateListener() {
+        @Override public void onAppUpdateDownloaded() {
+            popupSnackbarForCompleteUpdate();
+        }
+    };
+
+    private void popupSnackbarForCompleteUpdate() {
+        WPSnackbar.make(findViewById(R.id.coordinator), R.string.in_app_update_available, Snackbar.LENGTH_INDEFINITE)
+                  .setAction(R.string.in_app_update_restart, v -> {
+                      mInAppUpdateManager.completeAppUpdate();
+                  })
+                  .show();
     }
 
     private void checkQuickStartNotificationStatus() {
@@ -1350,6 +1378,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     @SuppressWarnings("deprecation")
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("WPMainActivity", "onActivityResult: " + requestCode + " " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
         if (!mSelectedSiteRepository.hasSelectedSite()) {
             initSelectedSite();
@@ -1463,6 +1492,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;
+            case IInAppUpdateManager.APP_UPDATE_FLEXIBLE_REQUEST_CODE:
+                handleUpdateResult(resultCode, AppUpdateType.FLEXIBLE);
+                break;
+            case IInAppUpdateManager.APP_UPDATE_IMMEDIATE_REQUEST_CODE:
+                handleUpdateResult(resultCode, AppUpdateType.IMMEDIATE);
+                break;
+        }
+    }
+
+    // Handles the result of the app update request
+    private void handleUpdateResult(int resultCode, int updateType) {
+        if (resultCode == RESULT_OK) {
+            // The user accepted the update
+            mInAppUpdateManager.onUserAcceptedAppUpdate(updateType);
+        } else if (resultCode == RESULT_CANCELED) {
+            // The user denied the update
+            mInAppUpdateManager.cancelAppUpdate(updateType);
         }
     }
 
@@ -1883,6 +1929,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override public void onUpdateSelectedSiteResult(int resultCode, @Nullable Intent data) {
         onActivityResult(RequestCodes.SITE_PICKER, resultCode, data);
     }
+
 
     // We dismiss the QuickStart SnackBar every time activity is paused because
     // SnackBar sometimes do not appear when another SnackBar is still visible, even in other activities (weird)
