@@ -18,7 +18,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -44,7 +43,6 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState.TabUiState
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterSelectedItem
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiString
@@ -53,7 +51,6 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
-import org.wordpress.android.util.config.ReaderAnnouncementCardFeatureConfig
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
@@ -83,8 +80,6 @@ class ReaderViewModel @Inject constructor(
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
-    // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
-    private val readerAnnouncementCardFeatureConfig: ReaderAnnouncementCardFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -96,9 +91,6 @@ class ReaderViewModel @Inject constructor(
 
     private val _topBarUiState = MutableLiveData<TopBarUiState>()
     val topBarUiState: LiveData<TopBarUiState> = _topBarUiState.distinct()
-
-    private val _announcementCardState = MutableLiveData<AnnouncementCardUiState>()
-    val announcementCardState: LiveData<AnnouncementCardUiState> = _announcementCardState
 
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
@@ -141,56 +133,8 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    fun onFeedEmptyStateLoaded() {
-        hideAnnouncementCard()
-    }
-
-    fun onFeedContentLoaded() {
-        updateAnnouncementCard()
-    }
-    
-    private fun hideAnnouncementCard() {
-        _announcementCardState.value = _announcementCardState.value?.copy(
-            shouldShow = false,
-        )
-    }
-
     private fun showJetpackPoweredBottomSheet() {
 //        _showJetpackPoweredBottomSheet.value = Event(true)
-    }
-
-    private fun updateAnnouncementCard() {
-        val items = mutableListOf<ReaderAnnouncementCardItemData>()
-
-        if (readerTagsFeedFeatureConfig.isEnabled()) {
-            items.add(
-                ReaderAnnouncementCardItemData(
-                    iconRes = R.drawable.ic_reader_tag,
-                    titleRes = R.string.reader_announcement_card_tags_stream_title,
-                    descriptionRes = R.string.reader_announcement_card_tags_stream_description,
-                )
-            )
-        }
-
-        items.add(
-            ReaderAnnouncementCardItemData(
-                iconRes = R.drawable.ic_reader_preferences,
-                titleRes = R.string.reader_announcement_card_reading_preferences_title,
-                descriptionRes = R.string.reader_announcement_card_reading_preferences_description,
-            )
-        )
-        val isDiscoverSelected = selectedReaderTag()?.isDiscover == true
-        _announcementCardState.value = AnnouncementCardUiState(
-            shouldShow = isDiscoverSelected && readerAnnouncementCardFeatureConfig.isEnabled() &&
-                    appPrefsWrapper.shouldShowReaderAnnouncementCard(),
-            items = items,
-        )
-    }
-
-    fun onAnnouncementCardDoneClick() {
-        readerTracker.track(AnalyticsTracker.Stat.READER_ANNOUNCEMENT_CARD_DISMISSED)
-        appPrefsWrapper.setShouldShowReaderAnnouncementCard(false)
-        updateAnnouncementCard()
     }
 
     @JvmOverloads
@@ -212,9 +156,6 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onTagChanged(selectedTag: ReaderTag?) {
-        if (selectedTag?.isDiscover == false) {
-            hideAnnouncementCard()
-        }
         selectedTag?.let {
             trackReaderTabShownIfNecessary(it)
         }
@@ -284,7 +225,7 @@ class ReaderViewModel @Inject constructor(
         // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
         val shouldBumpAnalytics = event.didChange()
-                || ( now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
+                || (now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
 
         if (shouldBumpAnalytics) {
             readerTracker.trackFollowedTagsCount(event.totalTags)
@@ -481,7 +422,9 @@ class ReaderViewModel @Inject constructor(
         when (item) {
             is SubfilterListItem.SiteAll -> clearTopBarFilter()
             is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name
-                .ifEmpty { urlUtilsWrapper.removeScheme(item.blog.url.ifEmpty { "" }) }, ReaderFilterType.BLOG)
+                .ifEmpty { urlUtilsWrapper.removeScheme(item.blog.url.ifEmpty { "" }) }, ReaderFilterType.BLOG
+            )
+
             is SubfilterListItem.Tag -> updateTopBarFilter(item.tag.tagDisplayName, ReaderFilterType.TAG)
             else -> Unit // do nothing
         }
@@ -619,11 +562,6 @@ class ReaderViewModel @Inject constructor(
         @StringRes val shortMessagePrompt: Int,
         @DrawableRes val iconId: Int,
         val duration: Int = QUICK_START_PROMPT_DURATION
-    )
-
-    data class AnnouncementCardUiState(
-        val shouldShow: Boolean,
-        val items: List<ReaderAnnouncementCardItemData>,
     )
 
     companion object {
