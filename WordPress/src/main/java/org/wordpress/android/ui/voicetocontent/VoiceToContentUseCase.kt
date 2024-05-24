@@ -21,6 +21,7 @@ class VoiceToContentUseCase @Inject constructor(
         const val FEATURE = "voice_to_content"
         const val ROLE = "jetpack-ai"
         const val TYPE = "voice-to-content-simple-draft"
+        const val JETPACK_AI_ERROR = "__JETPACK_AI_ERROR__"
     }
 
     suspend fun execute(
@@ -55,7 +56,14 @@ class VoiceToContentUseCase @Inject constructor(
 
                 when(response) {
                     is JetpackAIRestClient.JetpackAIQueryResponse.Success -> {
-                        return@withContext VoiceToContentResult(content = response.choices[0].message.content)
+                        val finalContent: String = response.choices[0].message.content
+                        // __JETPACK_AI_ERROR__ is a special marker we ask GPT to add to the request when it can’t
+                        // understand the request for any reason, so maybe something confused GPT on some requests.
+                        if (finalContent == JETPACK_AI_ERROR) {
+                            return@withContext VoiceToContentResult(isError = true)
+                        } else {
+                            return@withContext VoiceToContentResult(content = response.choices[0].message.content)
+                        }
                     }
 
                     is JetpackAIRestClient.JetpackAIQueryResponse.Error -> {
