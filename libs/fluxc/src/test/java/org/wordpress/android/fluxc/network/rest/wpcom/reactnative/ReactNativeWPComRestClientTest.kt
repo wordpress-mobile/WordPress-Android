@@ -125,7 +125,8 @@ class ReactNativeWPComRestClientTest {
                 url,
                 params,
                 JsonElement::class.java,
-                true)
+                true,
+        )
         ).thenReturn(expectedRestCallResponse)
 
         val actual = subject.getRequest(url, params, successHandler, errorHandler)

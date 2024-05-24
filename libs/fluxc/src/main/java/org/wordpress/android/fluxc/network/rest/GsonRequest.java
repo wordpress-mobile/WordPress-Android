@@ -33,6 +33,8 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
     private final Map<String, String> mParams;
     private final Map<String, Object> mBody;
 
+    private final GsonBuilder mCustomGsonBuilder;
+
     protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
                        Type type, Listener<T> listener, BaseErrorListener errorListener) {
         super(method, url, errorListener);
@@ -46,7 +48,25 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         mClass = clazz;
         mType = type;
         mListener = listener;
-        mGson = setupGsonBuilder().create();
+        mCustomGsonBuilder = null;
+        mGson = getDefaultGsonBuilder().create();
+        mParams = params;
+        mBody = body;
+    }
+
+    protected GsonRequest(int method, Map<String, String> params, Map<String, Object> body, String url, Class<T> clazz,
+                          Type type, Listener<T> listener, BaseErrorListener errorListener,
+                          GsonBuilder customGsonBuilder) {
+        super(method, url, errorListener);
+        if (method == Method.POST && body == null && (params == null || params.size() == 0)) {
+            body = new HashMap<>();
+        }
+
+        mClass = clazz;
+        mType = type;
+        mListener = listener;
+        mCustomGsonBuilder = customGsonBuilder;
+        mGson = (customGsonBuilder != null ? customGsonBuilder : getDefaultGsonBuilder()).create();
         mParams = params;
         mBody = body;
     }
@@ -101,7 +121,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
         }
     }
 
-    private GsonBuilder setupGsonBuilder() {
+    public static GsonBuilder getDefaultGsonBuilder() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setLenient();
         gsonBuilder.registerTypeHierarchyAdapter(JsonObjectOrFalse.class, new JsonObjectOrFalseDeserializer());

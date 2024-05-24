@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.KArgumentCaptor
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
@@ -90,7 +91,8 @@ class ProductsRestClientTest {
                         eq(ProductsResponse::class.java),
                         eq(false),
                         any(),
-                        eq(false)
+                        eq(false),
+                        customGsonBuilder = anyOrNull()
                 )
         ).thenReturn(response)
     }
