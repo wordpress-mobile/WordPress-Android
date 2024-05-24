@@ -36,6 +36,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
@@ -68,6 +69,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
+    private val voiceToContentFeatureUtils: VoiceToContentFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -203,6 +205,16 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = ::onCreateActionClicked
             )
         )
+        if (voiceToContentFeatureUtils.isVoiceToContentEnabled() && hasFullAccessToContent(site)) {
+            actionsList.add(
+                CreateAction(
+                    actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO_AI,
+                    iconRes = R.drawable.ic_mic_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_post_from_audio,
+                    onClickAction = ::onCreateActionClicked
+                )
+            )
+        }
         if (hasFullAccessToContent(site)) {
             actionsList.add(
                 CreateAction(
