@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.utils;
 
+import androidx.annotation.NonNull;
+
 import com.android.volley.VolleyError;
 
 import org.json.JSONException;
@@ -43,6 +45,16 @@ public class WPUrlUtils {
             return false;
         }
         return uri.getHost().endsWith(".wordpress.com") || uri.getHost().equals("wordpress.com");
+    }
+
+    public static boolean tldAndSldAreEqual(@NonNull String domain1, @NonNull String domain2) {
+        String[] parts1 = domain1.split("\\.");
+        String[] parts2 = domain2.split("\\.");
+        if (parts1.length < 2 || parts2.length < 2) {
+            return false;
+        }
+        return parts1[parts1.length - 1].equals(parts2[parts2.length - 1])
+               && parts1[parts1.length - 2].equals(parts2[parts2.length - 2]);
     }
 
     public static boolean isGravatar(URL url) {
