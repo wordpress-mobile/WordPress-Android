@@ -232,7 +232,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // header logic
-        if (position == getHeaderPosition()){
+        if (position == getHeaderPosition()) {
             if (hasSiteHeader()) {
                 return VIEW_TYPE_SITE_HEADER;
             } else if (hasTagHeader()) {
