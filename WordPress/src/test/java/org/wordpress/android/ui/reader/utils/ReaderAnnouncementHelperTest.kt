@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository
+package org.wordpress.android.ui.reader.utils
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -16,7 +16,7 @@ import org.wordpress.android.util.config.ReaderAnnouncementCardFeatureConfig
 import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
-class ReaderAnnouncementRepositoryTest {
+class ReaderAnnouncementHelperTest {
     @Mock
     private lateinit var readerAnnouncementCardFeatureConfig: ReaderAnnouncementCardFeatureConfig
 
@@ -29,11 +29,11 @@ class ReaderAnnouncementRepositoryTest {
     @Mock
     private lateinit var readerTracker: ReaderTracker
 
-    private lateinit var repository: ReaderAnnouncementRepository
+    private lateinit var repository: ReaderAnnouncementHelper
 
     @Before
     fun setUp() {
-        repository = ReaderAnnouncementRepository(
+        repository = ReaderAnnouncementHelper(
             readerAnnouncementCardFeatureConfig,
             readerTagsFeedFeatureConfig,
             appPrefsWrapper,

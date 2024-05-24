@@ -54,7 +54,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -139,7 +139,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     @Mock
-    private lateinit var readerAnnouncementRepository: ReaderAnnouncementRepository
+    private lateinit var mReaderAnnouncementHelper: ReaderAnnouncementHelper
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
@@ -164,7 +164,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             displayUtilsWrapper,
             getFollowedTagsUseCase,
             readerImprovementsFeatureConfig,
-            readerAnnouncementRepository,
+            mReaderAnnouncementHelper,
             testDispatcher(),
             testDispatcher()
         )
@@ -408,7 +408,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Test
     fun `if Announcement does not exist then ReaderAnnouncementCardUiState will not be present`() = test {
         // Arrange
-        whenever(readerAnnouncementRepository.hasReaderAnnouncement()).thenReturn(false)
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(false)
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
@@ -421,8 +421,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Test
     fun `if Announcement exists then ReaderAnnouncementCardUiState will be present`() = test {
         // Arrange
-        whenever(readerAnnouncementRepository.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementRepository.getReaderAnnouncementItems()).thenReturn(mock())
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(mReaderAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(mock())
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
@@ -435,8 +435,8 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Test
     fun `clicking done on ReaderAnnouncementCardUiState dismisses and updates the ContentUiState`() = test {
         // Arrange
-        whenever(readerAnnouncementRepository.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementRepository.getReaderAnnouncementItems()).thenReturn(mock())
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(mReaderAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(mock())
         val uiStates = init(autoUpdateFeed = false).uiStates
 
         fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
@@ -447,7 +447,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         announcementCard.onDoneClick()
 
         // Assert
-        verify(readerAnnouncementRepository).dismissReaderAnnouncement()
+        verify(mReaderAnnouncementHelper).dismissReaderAnnouncement()
 
         val newContentUiState = uiStates.last() as ContentUiState
         assertThat(newContentUiState.cards.first())

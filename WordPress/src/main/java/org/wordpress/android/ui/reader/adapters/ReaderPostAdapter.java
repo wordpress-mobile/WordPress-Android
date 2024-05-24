@@ -46,7 +46,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository;
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
@@ -135,7 +135,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
     @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
-    @Inject ReaderAnnouncementRepository mReaderAnnouncementRepository;
+    @Inject ReaderAnnouncementHelper mReaderAnnouncementHelper;
 
     public String getSource() {
         return mSource;
@@ -329,9 +329,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof ReaderAnnouncementCardViewHolder) {
             ReaderAnnouncementCardViewHolder announcementViewHolder = (ReaderAnnouncementCardViewHolder) holder;
             announcementViewHolder.mAnnouncementCardView
-                    .setItems(mReaderAnnouncementRepository.getReaderAnnouncementItems());
+                    .setItems(mReaderAnnouncementHelper.getReaderAnnouncementItems());
             announcementViewHolder.mAnnouncementCardView.setOnDoneClickListener(() -> {
-                mReaderAnnouncementRepository.dismissReaderAnnouncement();
+                mReaderAnnouncementHelper.dismissReaderAnnouncement();
                 notifyItemRemoved(getAnnouncementPosition());
             });
         }
@@ -717,7 +717,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasAnnouncement() {
-        return mIsMainReader && mReaderAnnouncementRepository.hasReaderAnnouncement() && !isEmpty()
+        return mIsMainReader && mReaderAnnouncementHelper.hasReaderAnnouncement() && !isEmpty()
                && (getPostListType() != ReaderPostListType.BLOG_PREVIEW)
                && (mCurrentTag != null && !mCurrentTag.isTagTopic());
     }
