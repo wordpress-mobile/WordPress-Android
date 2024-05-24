@@ -37,10 +37,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
-import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedUiStateMapper
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.ActionEvent
@@ -91,7 +91,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
     lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     @Mock
-    lateinit var readerAnnouncementRepository: ReaderAnnouncementRepository
+    lateinit var readerAnnouncementHelper: ReaderAnnouncementHelper
 
     private lateinit var viewModel: ReaderTagsFeedViewModel
 
@@ -123,7 +123,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
             displayUtilsWrapper = displayUtilsWrapper,
             readerTracker = readerTracker,
             networkUtilsWrapper = networkUtilsWrapper,
-            readerAnnouncementRepository = readerAnnouncementRepository,
+            readerAnnouncementHelper = readerAnnouncementHelper,
         )
         whenever(readerPostCardActionsHandler.navigationEvents)
             .thenReturn(navigationEvents)
@@ -158,8 +158,8 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val tag = ReaderTestUtils.createTag("tag")
         val announcementItems = listOf<ReaderAnnouncementCardItemData>(mock(), mock())
         mockMapInitialTagFeedItems()
-        whenever(readerAnnouncementRepository.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementRepository.getReaderAnnouncementItems()).thenReturn(announcementItems)
+        whenever(readerAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(readerAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(announcementItems)
 
         // When
         viewModel.onTagsChanged(listOf(tag))
@@ -177,8 +177,8 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         val tag = ReaderTestUtils.createTag("tag")
         val announcementItems = listOf<ReaderAnnouncementCardItemData>(mock(), mock())
         mockMapInitialTagFeedItems()
-        whenever(readerAnnouncementRepository.hasReaderAnnouncement()).thenReturn(true)
-        whenever(readerAnnouncementRepository.getReaderAnnouncementItems()).thenReturn(announcementItems)
+        whenever(readerAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(readerAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(announcementItems)
 
         viewModel.onTagsChanged(listOf(tag))
         advanceUntilIdle()
@@ -189,7 +189,7 @@ class ReaderTagsFeedViewModelTest : BaseUnitTest() {
         advanceUntilIdle()
 
         // Then
-        verify(readerAnnouncementRepository).dismissReaderAnnouncement()
+        verify(readerAnnouncementHelper).dismissReaderAnnouncement()
         assertThat(collectedUiStates.last()).isEqualTo(
             ReaderTagsFeedViewModel.UiState.Loaded(
                 data = listOf(getInitialTagFeedItem(tag)),

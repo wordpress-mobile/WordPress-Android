@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository
+package org.wordpress.android.ui.reader.utils
 
 import dagger.Reusable
 import org.wordpress.android.R
@@ -11,7 +11,7 @@ import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import javax.inject.Inject
 
 @Reusable
-class ReaderAnnouncementRepository @Inject constructor(
+class ReaderAnnouncementHelper @Inject constructor(
     private val readerAnnouncementCardFeatureConfig: ReaderAnnouncementCardFeatureConfig,
     private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,

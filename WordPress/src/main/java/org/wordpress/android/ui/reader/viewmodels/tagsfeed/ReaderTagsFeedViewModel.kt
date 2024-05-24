@@ -28,10 +28,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
-import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -55,7 +55,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val readerAnnouncementRepository: ReaderAnnouncementRepository,
+    private val readerAnnouncementHelper: ReaderAnnouncementHelper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -154,9 +154,9 @@ class ReaderTagsFeedViewModel @Inject constructor(
     }
 
     private fun getAnnouncementItem(): ReaderAnnouncementItem? =
-        if (readerAnnouncementRepository.hasReaderAnnouncement()) {
+        if (readerAnnouncementHelper.hasReaderAnnouncement()) {
             ReaderAnnouncementItem(
-                items = readerAnnouncementRepository.getReaderAnnouncementItems(),
+                items = readerAnnouncementHelper.getReaderAnnouncementItems(),
                 onDoneClicked = ::dismissAnnouncementItem,
             )
         } else {
@@ -164,7 +164,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
 
     private fun dismissAnnouncementItem() {
-        readerAnnouncementRepository.dismissReaderAnnouncement()
+        readerAnnouncementHelper.dismissReaderAnnouncement()
         _uiStateFlow.update {
             (it as? UiState.Loaded)?.copy(announcementItem = null) ?: it
         }
