@@ -1,0 +1,2 @@
+24.9:
+Websitenamen und URLs sind für Benutzer von Rechts-nach-Links-Sprachen nun richtig positioniert. Genau richtig.
