@@ -82,8 +82,9 @@ public class ReleaseNetworkModule {
     @Singleton
     @Named("custom-ssl-custom-redirects")
     @Provides
-    public RequestQueue provideRequestQueueCustomSSLWithRedirects(@Named("custom-ssl-custom-redirects") OkHttpClient okHttpClient,
-                                                                  Context appContext) {
+    public RequestQueue provideRequestQueueCustomSSLWithRedirects(
+            @Named("custom-ssl-custom-redirects") OkHttpClient okHttpClient,
+            Context appContext) {
         return newRequestQueue(okHttpClient, appContext);
     }
 
