@@ -25,7 +25,6 @@ Language: zh_CN
     <string name="notifications_empty_subscribers">尚无订阅者</string>
     <string name="stats_view_emails">电子邮件</string>
     <string name="stats_view_subscribers">订阅者</string>
-    <string name="stats_view_subscribers_chart">订阅者</string>
     <string name="stats_view_total_subscribers">订阅者总数</string>
     <string name="stats_view_subscriber_totals">订阅者总数</string>
     <string name="stats_list_item_with_two_values_description">%1$s：%2$s，%3$s：%4$s，%5$s：%6$s</string>
