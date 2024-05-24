@@ -28,9 +28,11 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.exceptions.ReaderPostFetchException
+import org.wordpress.android.ui.reader.repository.ReaderAnnouncementRepository
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
 import org.wordpress.android.ui.reader.views.compose.tagsfeed.TagsFeedPostItem
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -53,6 +55,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val readerAnnouncementRepository: ReaderAnnouncementRepository,
 ) : ScopedViewModel(bgDispatcher) {
     private val _uiStateFlow: MutableStateFlow<UiState> = MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState> = _uiStateFlow
@@ -88,40 +91,44 @@ class ReaderTagsFeedViewModel @Inject constructor(
         }
     }
 
-    fun onTagsChanged(tags: List<ReaderTag>) = _uiStateFlow.update { currentState ->
-        when {
-            tags.isEmpty() -> {
-                UiState.Empty(::onOpenTagsListClick)
-            }
+    fun onTagsChanged(tags: List<ReaderTag>) {
+        return _uiStateFlow.update { currentState ->
+            when {
+                tags.isEmpty() -> {
+                    UiState.Empty(::onOpenTagsListClick)
+                }
 
-            currentState is UiState.Loaded -> {
-                val currentTags = currentState.data.map { it.tagChip.tag }
-                if (currentState.isRefreshing) {
+                currentState is UiState.Loaded -> {
+                    val currentTags = currentState.data.map { it.tagChip.tag }
+                    if (currentState.isRefreshing) {
+                        readerTagsFeedUiStateMapper.mapInitialPostsUiState(
+                            tags,
+                            getAnnouncementItem(),
+                            false,
+                            ::onTagChipClick,
+                            ::onMoreFromTagClick,
+                            ::onItemEnteredView,
+                            ::onRefresh
+                        )
+                    } else if (currentTags != tags) {
+                        updateLoadedStateWithTags(currentState, tags)
+                    } else {
+                        currentState
+                    }
+                }
+
+                else -> {
+                    // Add tags to the list with the posts initial/loading UI
                     readerTagsFeedUiStateMapper.mapInitialPostsUiState(
                         tags,
+                        getAnnouncementItem(),
                         false,
                         ::onTagChipClick,
                         ::onMoreFromTagClick,
                         ::onItemEnteredView,
                         ::onRefresh
                     )
-                } else if (currentTags != tags) {
-                    updateLoadedStateWithTags(currentState, tags)
-                } else {
-                    currentState
                 }
-            }
-
-            else -> {
-                // Add tags to the list with the posts initial/loading UI
-                readerTagsFeedUiStateMapper.mapInitialPostsUiState(
-                    tags,
-                    false,
-                    ::onTagChipClick,
-                    ::onMoreFromTagClick,
-                    ::onItemEnteredView,
-                    ::onRefresh
-                )
             }
         }
     }
@@ -143,6 +150,23 @@ class ReaderTagsFeedViewModel @Inject constructor(
             UiState.Loading
         } else {
             UiState.NoConnection(::onNoConnectionRetryClick)
+        }
+    }
+
+    private fun getAnnouncementItem(): ReaderAnnouncementItem? =
+        if (readerAnnouncementRepository.hasReaderAnnouncement()) {
+            ReaderAnnouncementItem(
+                items = readerAnnouncementRepository.getReaderAnnouncementItems(),
+                onDoneClicked = ::dismissAnnouncementItem,
+            )
+        } else {
+            null
+        }
+
+    private fun dismissAnnouncementItem() {
+        readerAnnouncementRepository.dismissReaderAnnouncement()
+        _uiStateFlow.update {
+            (it as? UiState.Loaded)?.copy(announcementItem = null) ?: it
         }
     }
 
@@ -548,6 +572,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class Loaded(
             val data: List<TagFeedItem>,
+            val announcementItem: ReaderAnnouncementItem? = null,
             val isRefreshing: Boolean = false,
             val onRefresh: () -> Unit = {},
         ) : UiState()
@@ -558,6 +583,11 @@ class ReaderTagsFeedViewModel @Inject constructor(
 
         data class NoConnection(val onRetryClick: () -> Unit) : UiState()
     }
+
+    data class ReaderAnnouncementItem(
+        val items: List<ReaderAnnouncementCardItemData>,
+        val onDoneClicked: () -> Unit,
+    )
 
     data class TagFeedItem(
         val tagChip: TagChip,
