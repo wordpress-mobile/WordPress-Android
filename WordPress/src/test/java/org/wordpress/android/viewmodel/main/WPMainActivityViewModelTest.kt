@@ -49,6 +49,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.quickstart.QuickStartType
+import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
@@ -109,6 +110,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var shouldAskPrivacyConsent: ShouldAskPrivacyConsent
 
+    @Mock
+    private lateinit var voiceToContentFeatureUtils: VoiceToContentFeatureUtils
+
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
         2,
@@ -156,6 +160,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(bloggingPromptsSettingsHelper.shouldShowPromptsFeature()).thenReturn(false)
         whenever(bloggingPromptsStore.getPromptForDate(any(), any())).thenReturn(flowOf(bloggingPrompt))
         whenever(shouldAskPrivacyConsent()).thenReturn(false)
+        whenever(voiceToContentFeatureUtils.isVoiceToContentEnabled()).thenReturn(false)
         viewModel = WPMainActivityViewModel(
             featureAnnouncementProvider,
             buildConfigWrapper,
@@ -169,6 +174,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             bloggingPromptsStore,
             NoDelayCoroutineDispatcher(),
             shouldAskPrivacyConsent,
+            voiceToContentFeatureUtils
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver

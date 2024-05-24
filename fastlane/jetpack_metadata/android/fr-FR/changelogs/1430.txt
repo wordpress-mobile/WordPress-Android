@@ -1,3 +1,0 @@
-24.8 :
-Sur l’écran Statistiques, les pourcentages apparaissent désormais au bon endroit pour les locuteurs de langues qui se lisent de droite à gauche. À gauche toute !
-

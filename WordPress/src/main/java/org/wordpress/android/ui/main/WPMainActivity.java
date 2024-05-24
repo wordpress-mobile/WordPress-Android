@@ -148,6 +148,7 @@ import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.ui.utils.JetpackAppMigrationFlowUtils;
 import org.wordpress.android.ui.utils.UiString.UiStringRes;
+import org.wordpress.android.ui.voicetocontent.VoiceToContentDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -719,6 +720,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
+                case CREATE_NEW_POST_FROM_AUDIO_AI:
+                    launchVoiceToContent();
+                    break;
                 case CREATE_NEW_POST:
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE, -1, null);
                     break;
@@ -1323,6 +1327,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source, promptId, entryPoint);
+    }
+
+    private void launchVoiceToContent() {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+        VoiceToContentDialogFragment.newInstance().show(getSupportFragmentManager(), VoiceToContentDialogFragment.TAG);
     }
 
     private void trackLastVisiblePage(@NonNull final PageType pageType) {

@@ -1333,9 +1333,11 @@
     <string name="stats_view_total_likes">Total Likes</string>
     <string name="stats_view_total_comments">Total Comments</string>
     <string name="stats_view_total_subscribers">Total Subscribers</string>
-    <string name="stats_view_subscribers_chart">Subscribers</string>
+    <string name="stats_view_subscriber_growth">Subscriber Growth</string>
     <string name="stats_view_subscribers">Subscribers</string>
     <string name="stats_view_emails">Emails</string>
+    <string name="stats_subscribers_marker_view_singular">Subscriber</string>
+    <string name="stats_subscribers_marker_view_plural">Subscribers</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
@@ -2449,6 +2451,7 @@
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
     <string name="jetpack_feature_card_more_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
