@@ -35,7 +35,7 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
     }
 
     override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {
-        val user = mContentMapper.mapToFormattableContentList(mNote!!.body.toString())
+        val user = mContentMapper.mapToFormattableContentList(note.body.toString())
             .find { FormattableRangeType.fromString(it.type) == FormattableRangeType.USER }
 
         return BottomSheetUiState.UserProfileUiState(
@@ -52,7 +52,7 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
     }
 
     override fun getCommentIdentifier(): CommentIdentifier =
-        CommentIdentifier.NotificationCommentIdentifier(mNote!!.id, mNote!!.commentId);
+        CommentIdentifier.NotificationCommentIdentifier(note.id, note.commentId);
 
     override fun handleHeaderVisibility() {
         mBinding?.headerView?.isGone = true
