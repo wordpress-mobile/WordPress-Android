@@ -12,6 +12,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIQueryResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIQueryErrorType
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import java.io.File
@@ -189,6 +191,84 @@ class JetpackAIStore @Inject constructor(
                         audioFile,
                         retryCount + 1,
                         maxRetries
+                    )
+                } else {
+                    result // Return the error after max retries
+                }
+            }
+            else -> result
+        }
+    }
+
+    /**
+     * Fetches Jetpack AI Query for the specified audio file.
+     *
+     * @param site      The site used to create the JWT token
+     * @param feature   Used by backend to track AI-generation usage and measure costs. Optional.
+     * @param role      A special marker to indicate that the message needs to be expanded by the Jetpack AI BE.
+     * @param message   The message to be expanded by the Jetpack AI BE.
+     * @param type      An indication of which kind of post-processing action will be executed over the content.
+     * @param stream    When true, the response is a set of EventSource events, otherwise a single response
+     * @param retryCount The number of times the JWTToken request was called
+     * @param maxRetries The max number of times JWTToken can be requested
+     */
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAIQuery(
+        site: SiteModel,
+        feature: String?,
+        role: String,
+        message: String,
+        type: String,
+        stream: Boolean,
+        retryCount: Int = 0,
+        maxRetries: Int = 1
+    ): JetpackAIQueryResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI Query"
+    ) {
+        val token = token?.validateExpiryDate()?.validateBlogId(site.siteId)
+            ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+                when (tokenResponse) {
+                    is Error -> {
+                        return@withDefaultContext JetpackAIQueryResponse.Error(
+                            type = JetpackAIQueryErrorType.AUTH_ERROR,
+                            message = tokenResponse.message,
+                        )
+                    }
+
+                    is Success -> {
+                        token = tokenResponse.token
+                        tokenResponse.token
+                    }
+                }
+            }
+
+        val result = jetpackAIRestClient.fetchJetpackAiQuery(
+            jwtToken = token,
+            message = message,
+            feature = feature,
+            role = role,
+            type = type,
+            stream = stream
+        )
+
+        return@withDefaultContext when {
+            // Fetch token anew if using existing token returns AUTH_ERROR
+            result is JetpackAIQueryResponse.Error &&
+                    result.type == JetpackAIQueryErrorType.AUTH_ERROR -> {
+                // Remove cached token and retry getting the token another time
+                this@JetpackAIStore.token = null
+                if (retryCount <= maxRetries) {
+                    fetchJetpackAIQuery(
+                        site = site,
+                        feature = feature,
+                        role = role,
+                        message = message,
+                        type = type,
+                        stream = stream,
+                        retryCount = retryCount + 1,
+                        maxRetries = maxRetries
                     )
                 } else {
                     result // Return the error after max retries
