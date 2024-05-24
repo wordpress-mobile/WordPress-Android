@@ -26,12 +26,21 @@ class GlideRequestFactory @Inject constructor(
         priority: Priority,
         headers: Map<String, String>
     ): Request<ByteArray>? {
-        val httpsUrl: String = convertWPcomUrlToHttps(url)
+        val httpsUrl: String = transformWPComFileUrl(convertWPcomUrlToHttps(url))
         return VolleyStreamFetcher.GlideRequest(httpsUrl, callback, priority, addAuthHeaders(url, headers))
     }
 
     private fun convertWPcomUrlToHttps(url: String): String {
         return if (WPUrlUtils.isWordPressCom(url) && !UrlUtils.isHttps(url)) UrlUtils.makeHttps(url) else url
+    }
+
+    private fun transformWPComFileUrl(url: String): String {
+        return if (url.contains(".files.wordpress.com/")
+            && !url.contains(".wordpress.com/wp-content/uploads/")) {
+            url.replace(".files.wordpress.com/", ".wordpress.com/wp-content/uploads/")
+        } else {
+            url
+        }
     }
 
     private fun addAuthHeaders(url: String, currentHeaders: Map<String, String>): MutableMap<String, String> {
