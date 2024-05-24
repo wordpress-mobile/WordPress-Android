@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.debug.preferences.DebugPrefs
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
@@ -67,6 +69,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
+    private val voiceToContentFeatureUtils: VoiceToContentFeatureUtils
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -202,6 +205,16 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = ::onCreateActionClicked
             )
         )
+        if (voiceToContentFeatureUtils.isVoiceToContentEnabled() && hasFullAccessToContent(site)) {
+            actionsList.add(
+                CreateAction(
+                    actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO_AI,
+                    iconRes = R.drawable.ic_mic_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_post_from_audio,
+                    onClickAction = ::onCreateActionClicked
+                )
+            )
+        }
         if (hasFullAccessToContent(site)) {
             actionsList.add(
                 CreateAction(
@@ -297,9 +310,12 @@ class WPMainActivityViewModel @Inject constructor(
             launch {
                 val currentVersionCode = buildConfigWrapper.getAppVersionCode()
                 val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+                val alwaysShowAnnouncement = appPrefsWrapper.getDebugBooleanPref(
+                    DebugPrefs.ALWAYS_SHOW_ANNOUNCEMENT.key
+                )
 
                 // only proceed to feature announcement logic if we are upgrading the app
-                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                if (alwaysShowAnnouncement || previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
                     if (canShowFeatureAnnouncement()) {
                         analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                         _onFeatureAnnouncementRequested.call()
@@ -337,9 +353,11 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
+        val alwaysShowAnnouncement = appPrefsWrapper.getDebugBooleanPref(DebugPrefs.ALWAYS_SHOW_ANNOUNCEMENT.key)
         return cachedAnnouncement != null &&
-                cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
-                appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
+                (alwaysShowAnnouncement ||
+                        cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
+                        appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion)
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {

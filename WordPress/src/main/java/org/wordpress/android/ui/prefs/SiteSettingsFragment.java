@@ -1301,7 +1301,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setupBloggingRemindersBottomSheet() {
-        if (mBloggingRemindersPref == null || !isAdded()) {
+        if (mBloggingRemindersPref == null || !isAdded() || mSite == null || mBloggingRemindersViewModel == null) {
             return;
         }
         mBloggingRemindersViewModel.onBlogSettingsItemClicked(mSite.getId());
