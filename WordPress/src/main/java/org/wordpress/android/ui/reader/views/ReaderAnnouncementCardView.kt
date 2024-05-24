@@ -23,7 +23,6 @@ class ReaderAnnouncementCardView @JvmOverloads constructor(
     override fun Content() {
         AppTheme {
             ReaderAnnouncementCard(
-                shouldShow = true,
                 items = items.value,
                 onAnnouncementCardDoneClick = { onDoneClickListener.value?.onDoneClick() }
             )

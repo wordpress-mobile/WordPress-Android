@@ -111,7 +111,6 @@ private fun Loaded(uiState: UiState.Loaded) {
             uiState.announcementItem?.let { announcementItem ->
                 item(key = "reader-announcement-card") {
                     ReaderAnnouncementCard(
-                        shouldShow = true,
                         items = announcementItem.items,
                         onAnnouncementCardDoneClick = announcementItem.onDoneClicked,
                     )
