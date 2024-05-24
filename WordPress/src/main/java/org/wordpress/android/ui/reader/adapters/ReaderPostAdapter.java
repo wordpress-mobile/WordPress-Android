@@ -46,9 +46,11 @@ import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
+import org.wordpress.android.ui.reader.views.ReaderAnnouncementCardView;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
@@ -117,9 +119,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final int VIEW_TYPE_TAG_HEADER = 3;
     private static final int VIEW_TYPE_GAP_MARKER = 4;
     private static final int VIEW_TYPE_REMOVED_POST = 5;
+    private static final int VIEW_TYPE_READER_ANNOUNCEMENT = 6;
 
     private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
+    private static final long ITEM_ID_READER_ANNOUNCEMENT = -3L;
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
@@ -131,6 +135,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
     @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
+    @Inject ReaderAnnouncementHelper mReaderAnnouncementHelper;
 
     public String getSource() {
         return mSource;
@@ -179,6 +184,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    private static class ReaderAnnouncementCardViewHolder extends RecyclerView.ViewHolder {
+        private final ReaderAnnouncementCardView mAnnouncementCardView;
+
+        ReaderAnnouncementCardViewHolder(View itemView) {
+            super(itemView);
+            mAnnouncementCardView = (ReaderAnnouncementCardView) itemView;
+        }
+    }
+
     private static class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
 
@@ -212,23 +226,33 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 && hasSiteHeader()) {
-            // first item is a ReaderSiteHeaderView
-            return VIEW_TYPE_SITE_HEADER;
-        } else if (position == 0 && hasTagHeader()) {
-            // first item is a ReaderTagHeaderView
-            return VIEW_TYPE_TAG_HEADER;
-        } else if (position == mGapMarkerPosition) {
-            return VIEW_TYPE_GAP_MARKER;
-        } else {
-            ReaderPost post = getItem(position);
-            if (post != null && post.isXpost()) {
-                return VIEW_TYPE_XPOST;
-            } else if (post != null && isBookmarksList() && !post.isBookmarked) {
-                return VIEW_TYPE_REMOVED_POST;
-            } else {
-                return VIEW_TYPE_POST;
+        // announcement logic
+        if (getAnnouncementPosition() == position) {
+            return VIEW_TYPE_READER_ANNOUNCEMENT;
+        }
+
+        // header logic
+        if (position == getHeaderPosition()) {
+            if (hasSiteHeader()) {
+                return VIEW_TYPE_SITE_HEADER;
+            } else if (hasTagHeader()) {
+                return VIEW_TYPE_TAG_HEADER;
             }
+        }
+
+        // gap marker logic
+        if (position == mGapMarkerPosition) {
+            return VIEW_TYPE_GAP_MARKER;
+        }
+
+        // post logic
+        ReaderPost post = getItem(position);
+        if (post != null && post.isXpost()) {
+            return VIEW_TYPE_XPOST;
+        } else if (post != null && isBookmarksList() && !post.isBookmarked) {
+            return VIEW_TYPE_REMOVED_POST;
+        } else {
+            return VIEW_TYPE_POST;
         }
     }
 
@@ -237,6 +261,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Context context = parent.getContext();
         View postView;
         switch (viewType) {
+            case VIEW_TYPE_READER_ANNOUNCEMENT:
+                ReaderAnnouncementCardView readerAnnouncementCardView = new ReaderAnnouncementCardView(context);
+                return new ReaderAnnouncementCardViewHolder(readerAnnouncementCardView);
+
             case VIEW_TYPE_SITE_HEADER:
                 ReaderSiteHeaderView readerSiteHeaderView = new ReaderSiteHeaderView(context);
                 readerSiteHeaderView.setOnFollowListener(mFollowListener);
@@ -298,6 +326,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
+        } else if (holder instanceof ReaderAnnouncementCardViewHolder) {
+            ReaderAnnouncementCardViewHolder announcementViewHolder = (ReaderAnnouncementCardViewHolder) holder;
+            announcementViewHolder.mAnnouncementCardView
+                    .setItems(mReaderAnnouncementHelper.getReaderAnnouncementItems());
+            announcementViewHolder.mAnnouncementCardView.setOnDoneClickListener(() -> {
+                mReaderAnnouncementHelper.dismissReaderAnnouncement();
+                notifyItemRemoved(getAnnouncementPosition());
+            });
         }
     }
 
@@ -680,6 +716,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return (getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty();
     }
 
+    private boolean hasAnnouncement() {
+        return mIsMainReader && mReaderAnnouncementHelper.hasReaderAnnouncement() && !isEmpty()
+               && (getPostListType() != ReaderPostListType.BLOG_PREVIEW)
+               && (mCurrentTag != null && !mCurrentTag.isTagTopic());
+    }
+
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
     }
@@ -766,6 +808,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private ReaderPost getItem(int position) {
+        if (position == getAnnouncementPosition() && hasAnnouncement()) {
+            return null;
+        }
         if (position == getHeaderPosition() && hasHeader()) {
             return null;
         }
@@ -788,22 +833,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private int getItemPositionOffset() {
-        return hasHeader() ? 1 : 0;
+        int offset = 0;
+        if (hasAnnouncement()) offset++;
+        if (hasHeader()) offset++;
+        return offset;
     }
 
     private int getHeaderPosition() {
-        return hasHeader() ? 0 : -1;
+        int headerPosition = hasAnnouncement() ? 1 : 0;
+        return hasHeader() ? headerPosition : -1;
+    }
+
+    private int getAnnouncementPosition() {
+        return hasAnnouncement() ? 0 : -1;
     }
 
     @Override
     public int getItemCount() {
         int size = mPosts.size();
-        if (mGapMarkerPosition != -1) {
-            size++;
-        }
-        if (hasHeader()) {
-            size++;
-        }
+        if (mGapMarkerPosition != -1) size++;
+        if (hasHeader()) size++;
+        if (hasAnnouncement()) size++;
         return size;
     }
 
@@ -824,6 +874,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return ITEM_ID_HEADER;
             case VIEW_TYPE_GAP_MARKER:
                 return ITEM_ID_GAP_MARKER;
+            case VIEW_TYPE_READER_ANNOUNCEMENT:
+                return ITEM_ID_READER_ANNOUNCEMENT;
             default:
                 ReaderPost post = getItem(position);
                 return post != null ? post.getStableId() : 0;
@@ -892,7 +944,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            int numExisting;
+            int numExisting = 0;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
@@ -909,7 +961,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
                     break;
-                default:
+                case TAGS_FEED:
                     return false;
             }
 

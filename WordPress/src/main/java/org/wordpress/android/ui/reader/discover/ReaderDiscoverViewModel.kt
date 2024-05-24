@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -62,6 +63,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
+    private val readerAnnouncementHelper: ReaderAnnouncementHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -154,15 +156,24 @@ class ReaderDiscoverViewModel @Inject constructor(
                 // since new users have the dailyprompt tag followed by default, we need to ignore them when
                 // checking if the user has any tags followed, so we show the onboarding state (ShowNoFollowedTags)
                 if (userTags.filterNot { it.tagSlug == BLOGGING_PROMPT_TAG }.isEmpty()) {
-                    parentViewModel.onFeedEmptyStateLoaded()
                     _uiState.value = DiscoverUiState.EmptyUiState.ShowNoFollowedTagsUiState {
                         parentViewModel.onShowReaderInterests()
                     }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
-                        parentViewModel.onFeedContentLoaded()
+                        val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
+                            listOf(
+                                ReaderCardUiState.ReaderAnnouncementCardUiState(
+                                    readerAnnouncementHelper.getReaderAnnouncementItems(),
+                                    ::dismissAnnouncementCard
+                                )
+                            )
+                        } else {
+                            emptyList()
+                        }
+
                         _uiState.value = DiscoverUiState.ContentUiState(
-                            convertCardsToUiStates(posts),
+                            announcement + convertCardsToUiStates(posts),
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false,
                         )
@@ -171,13 +182,21 @@ class ReaderDiscoverViewModel @Inject constructor(
                             swipeToRefreshTriggered = false
                         }
                     } else {
-                        parentViewModel.onFeedEmptyStateLoaded()
                         _uiState.value = DiscoverUiState.EmptyUiState.ShowNoPostsUiState {
                             _navigationEvents.value = Event(ShowReaderSubs)
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun dismissAnnouncementCard() {
+        readerAnnouncementHelper.dismissReaderAnnouncement()
+        _uiState.value = (_uiState.value as? DiscoverUiState.ContentUiState)?.let { contentUiState ->
+            contentUiState.copy(
+                cards = contentUiState.cards.filterNot { it is ReaderCardUiState.ReaderAnnouncementCardUiState }
+            )
         }
     }
 

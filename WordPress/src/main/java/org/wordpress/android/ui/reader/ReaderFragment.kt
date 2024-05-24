@@ -54,7 +54,6 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
-import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCard
 import org.wordpress.android.ui.reader.views.compose.ReaderTopAppBar
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterType
 import org.wordpress.android.ui.utils.UiHelpers
@@ -181,7 +180,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = ReaderFragmentLayoutBinding.bind(view).apply {
             initTopAppBar()
-            initAnnouncementCard()
             initViewModel(savedInstanceState)
         }
     }
@@ -258,23 +256,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                         onClearFilterClick = ::clearFilter,
                         isSearchVisible = state.isSearchActionVisible,
                         onSearchClick = viewModel::onSearchActionClicked,
-                    )
-                }
-            }
-        }
-    }
-
-    private fun ReaderFragmentLayoutBinding.initAnnouncementCard() {
-        readerAnnouncementCardComposeView.apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                val announcementCardUiState by viewModel.announcementCardState.observeAsState()
-                val state = announcementCardUiState ?: return@setContent
-                AppTheme {
-                    ReaderAnnouncementCard(
-                        shouldShow = state.shouldShow,
-                        items = state.items,
-                        onAnnouncementCardDoneClick = { viewModel.onAnnouncementCardDoneClick() }
                     )
                 }
             }
