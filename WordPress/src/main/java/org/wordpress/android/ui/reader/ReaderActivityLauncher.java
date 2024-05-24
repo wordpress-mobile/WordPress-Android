@@ -13,7 +13,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -256,7 +255,7 @@ public class ReaderActivityLauncher {
         showReaderCommentsForResult(fragment, blogId, postId, null, 0, null, source);
     }
 
-    public static void showReaderCommentsForResult(@NotNull Fragment fragment, long blogId, long postId, DirectOperation
+    public static void showReaderCommentsForResult(@NonNull Fragment fragment, long blogId, long postId, DirectOperation
             directOperation, long commentId, String interceptedUri, String source) {
         if (fragment.getContext() == null) {
             return;
