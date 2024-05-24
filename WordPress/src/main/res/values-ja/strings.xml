@@ -25,7 +25,6 @@ Language: ja_JP
     <string name="notifications_empty_subscribers">まだ購読者はいません</string>
     <string name="stats_view_emails">メール</string>
     <string name="stats_view_subscribers">購読者</string>
-    <string name="stats_view_subscribers_chart">購読者</string>
     <string name="stats_view_total_subscribers">購読者総数</string>
     <string name="stats_view_subscriber_totals">購読者の総数</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s、%3$s: %4$s、%5$s: %6$s</string>
