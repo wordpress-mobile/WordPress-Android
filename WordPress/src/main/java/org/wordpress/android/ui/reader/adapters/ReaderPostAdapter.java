@@ -717,7 +717,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasAnnouncement() {
-        return mIsMainReader && mReaderAnnouncementRepository.hasReaderAnnouncement() && !isEmpty();
+        return mIsMainReader && mReaderAnnouncementRepository.hasReaderAnnouncement() && !isEmpty()
+               && (getPostListType() != ReaderPostListType.BLOG_PREVIEW)
+               && (mCurrentTag != null && !mCurrentTag.isTagTopic());
     }
 
     private boolean isDiscover() {
