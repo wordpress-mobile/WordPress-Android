@@ -273,8 +273,8 @@ public class ReaderActivityLauncher {
         fragment.startActivityForResult(intent, RequestCodes.READER_FOLLOW_CONVERSATION);
     }
 
-    private static Intent buildShowReaderCommentsIntent(@NonNull Context context, long blogId, long postId, DirectOperation
-            directOperation, long commentId, String interceptedUri, String source) {
+    private static Intent buildShowReaderCommentsIntent(@NonNull Context context, long blogId, long postId,
+            DirectOperation directOperation, long commentId, String interceptedUri, String source) {
         Intent intent = new Intent(
                 context,
                 ReaderCommentListActivity.class
