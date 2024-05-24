@@ -131,6 +131,55 @@ class JetpackAIRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Fetches Jetpack AI Query for a given message.
+     *
+     * @param jwtToken  The jwt authorization token.
+     * @param message   The message to be expanded by the Jetpack AI BE.
+     * @param role      A special marker to indicate that the message needs to be expanded by the Jetpack AI BE.
+     * @param type      An indication of which kind of post-processing action will be executed over the content.
+     * @param feature   Used by backend to track AI-generation usage and measure costs. Optional.
+     * @param stream    When true, the response is a set of EventSource events, otherwise a single response
+     */
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAiQuery(
+        jwtToken: JWTToken,
+        message: String,
+        role: String,
+        type: String,
+        feature: String?,
+        stream: Boolean
+    ): JetpackAIQueryResponse {
+        val url = WPCOMV2.jetpack_ai_query.url
+
+        val body = mutableMapOf<String, Any>().apply {
+            put("messages", createJetpackAIQueryMessage(text = message, role=role, type = type))
+            put("stream", stream)
+            putIfNotNull("feature" to feature)
+        }
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = mapOf("token" to jwtToken.value),
+            body = body,
+            clazz = JetpackAIQueryDto::class.java,
+        )
+
+        return when (response) {
+            is Response.Success -> {
+                (response.data as? JetpackAIQueryDto)?.toJetpackAIQueryResponse()
+                    ?: JetpackAIQueryResponse.Error(JetpackAIQueryErrorType.INVALID_DATA, "Can not get the object")
+            }
+            is Response.Error -> {
+                JetpackAIQueryResponse.Error(
+                    response.error.toJetpackAIQueryError(),
+                    response.error.message
+                )
+            }
+        }
+    }
+
     internal  data class JetpackAIJWTTokenDto(
         @SerializedName ("success") val success: Boolean,
         @SerializedName("token") val token: String
@@ -140,6 +189,11 @@ class JetpackAIRestClient @Inject constructor(
         @SerializedName ("completion") val completion: String
     )
 
+    internal data class JetpackAIQueryDto(val model: String, val choices: List<Choice>) {
+        data class Choice(val index: Int, val message: Message) {
+            data class Message(val role: String, val content: String)
+        }
+    }
     sealed class JetpackAIJWTTokenResponse {
         data class Success(val token: JWTToken) : JetpackAIJWTTokenResponse()
         data class Error(
@@ -165,6 +219,44 @@ class JetpackAIRestClient @Inject constructor(
         NETWORK_ERROR
     }
 
+    sealed class JetpackAIQueryResponse {
+        data class Success(val model: String, val choices: List<Choice>) : JetpackAIQueryResponse() {
+            data class Choice(val index: Int, val message: Message) {
+                data class Message(val role: String, val content: String)
+            }
+        }
+
+        data class Error(
+            val type: JetpackAIQueryErrorType,
+            val message: String? = null
+        ) : JetpackAIQueryResponse()
+    }
+
+    private fun JetpackAIQueryDto.toJetpackAIQueryResponse(): JetpackAIQueryResponse {
+        return JetpackAIQueryResponse.Success(model, choices.map { choice ->
+            JetpackAIQueryResponse.Success.Choice(
+                choice.index,
+                JetpackAIQueryResponse.Success.Choice.Message(
+                    choice.message.role,
+                    choice.message.content
+                )
+            )
+        })
+    }
+
+    enum class JetpackAIQueryErrorType {
+        API_ERROR,
+        AUTH_ERROR,
+        GENERIC_ERROR,
+        INVALID_RESPONSE,
+        TIMEOUT,
+        NETWORK_ERROR,
+        INVALID_DATA
+    }
+
+    private fun createJetpackAIQueryMessage(text: String, type: String, role: String) =
+        listOf(mapOf("context" to mapOf("type" to type,"content" to text),"role" to role))
+
     enum class ResponseFormat(val value: String) {
         JSON("json_object"),
         TEXT("text")
@@ -187,5 +279,21 @@ class JetpackAIRestClient @Inject constructor(
             GenericErrorType.UNKNOWN -> JetpackAICompletionsErrorType.GENERIC_ERROR
             null -> JetpackAICompletionsErrorType.GENERIC_ERROR
         }
+    private fun WPComGsonNetworkError.toJetpackAIQueryError() =
+        when (type) {
+            GenericErrorType.TIMEOUT -> JetpackAIQueryErrorType.TIMEOUT
+            GenericErrorType.NO_CONNECTION,
+            GenericErrorType.INVALID_SSL_CERTIFICATE,
+            GenericErrorType.NETWORK_ERROR -> JetpackAIQueryErrorType.NETWORK_ERROR
+            GenericErrorType.SERVER_ERROR -> JetpackAIQueryErrorType.API_ERROR
+            GenericErrorType.PARSE_ERROR,
+            GenericErrorType.NOT_FOUND,
+            GenericErrorType.CENSORED,
+            GenericErrorType.INVALID_RESPONSE -> JetpackAIQueryErrorType.INVALID_RESPONSE
+            GenericErrorType.HTTP_AUTH_ERROR,
+            GenericErrorType.AUTHORIZATION_REQUIRED,
+            GenericErrorType.NOT_AUTHENTICATED -> JetpackAIQueryErrorType.AUTH_ERROR
+            GenericErrorType.UNKNOWN -> JetpackAIQueryErrorType.GENERIC_ERROR
+            null -> JetpackAIQueryErrorType.GENERIC_ERROR
+        }
 }
-
