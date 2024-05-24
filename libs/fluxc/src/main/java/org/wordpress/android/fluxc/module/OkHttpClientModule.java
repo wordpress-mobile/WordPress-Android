@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.module;
 
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
+import org.wordpress.android.fluxc.utils.WPUrlUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -21,8 +22,11 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.Multibinds;
 import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.internal.tls.OkHostnameVerifier;
 
 @Module
@@ -44,6 +48,36 @@ public abstract class OkHttpClientModule {
         return okHttpRegularClient.newBuilder()
                                   .followRedirects(false)
                                   .build();
+    }
+
+    @Provides
+    @Named("custom-ssl-custom-redirects")
+    public static OkHttpClient provideCustomRedirectsOkHttpClientBuilder(
+            @Named("custom-ssl") final OkHttpClient okHttpRegularClient) {
+        OkHttpClient.Builder builder = okHttpRegularClient.newBuilder().followRedirects(false);
+        builder.addInterceptor(chain -> {
+            Request originalRequest = chain.request();
+            Response response = chain.proceed(originalRequest);
+            if (response.isRedirect()) {
+                String location = response.header("Location");
+                if (location != null && !location.isEmpty()) {
+                    Request.Builder newBuilder = originalRequest.newBuilder().url(location);
+
+                    // Remove the authorization header if the hosts' TLD and SLD are not the same
+                    String originalHost = originalRequest.url().host();
+                    HttpUrl redirectHttpUrl = HttpUrl.parse(location);
+                    String redirectHost = (redirectHttpUrl != null) ? redirectHttpUrl.host() : "";
+                    if (!WPUrlUtils.tldAndSldAreEqual(originalHost, redirectHost)) {
+                        newBuilder.removeHeader("Authorization");
+                    }
+
+                    Request newRequest = newBuilder.build();
+                    return chain.proceed(newRequest);
+                }
+            }
+            return response;
+        });
+        return builder.build();
     }
 
     @Singleton
