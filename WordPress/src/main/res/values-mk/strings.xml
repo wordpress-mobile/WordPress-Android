@@ -12,7 +12,6 @@ Language: mk
     <string name="themes_fetching">Примање теми…</string>
     <string name="stats_followers_a_year">Година</string>
     <string name="stats_followers_seconds_ago">пред секунди</string>
-    <string name="stats_view_followers">Следбеници</string>
     <string name="stats_view_countries">Земји</string>
     <string name="stats_followers_years">%1$d години</string>
     <string name="stats_followers_an_hour_ago">пред еден час</string>
