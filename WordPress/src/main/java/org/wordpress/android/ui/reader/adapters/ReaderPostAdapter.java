@@ -226,28 +226,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        // first item logic
-        if (position == 0) {
-            // should check for announcement and headers
-            if (hasAnnouncement()) {
-                // first item is a ReaderAnnouncementView
-                return VIEW_TYPE_READER_ANNOUNCEMENT;
-            } else if (hasSiteHeader()) {
-                // first item is a ReaderSiteHeaderView
-                return VIEW_TYPE_SITE_HEADER;
-            } else if (hasTagHeader()) {
-                // first item is a ReaderTagHeaderView
-                return VIEW_TYPE_TAG_HEADER;
-            }
+        // announcement logic
+        if (getAnnouncementPosition() == position) {
+            return VIEW_TYPE_READER_ANNOUNCEMENT;
         }
 
-        // second item logic if we have a Reader Announcement
-        if (hasAnnouncement() && position == 1) {
+        // header logic
+        if (position == getHeaderPosition()){
             if (hasSiteHeader()) {
-                // first item is a ReaderSiteHeaderView
                 return VIEW_TYPE_SITE_HEADER;
             } else if (hasTagHeader()) {
-                // first item is a ReaderTagHeaderView
                 return VIEW_TYPE_TAG_HEADER;
             }
         }
