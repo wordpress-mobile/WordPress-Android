@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 private const val READER_TAGS_FEED_REMOTE_FIELD = "reader_tags_feed"
 
-@Feature(remoteField = READER_TAGS_FEED_REMOTE_FIELD, defaultValue = false)
+@Feature(remoteField = READER_TAGS_FEED_REMOTE_FIELD, defaultValue = true)
 class ReaderTagsFeedFeatureConfig @Inject constructor(
     appConfig: AppConfig
 ) : FeatureConfig(
