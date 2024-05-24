@@ -42,7 +42,7 @@ class ListScenarioUtils @Inject constructor(
             imageManager,
             notificationsUtilsWrapper
         )
-        headerNoteBlock.setIsComment(note.isCommentType)
+        headerNoteBlock.setReplyToComment(note.isCommentReplyType)
 
         val spannable: Spannable = notificationsUtilsWrapper.getSpannableContentForRanges(headerNoteBlock.getHeader(0))
         val spans = spannable.getSpans(

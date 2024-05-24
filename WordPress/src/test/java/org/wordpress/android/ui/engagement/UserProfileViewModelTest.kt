@@ -6,7 +6,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
-import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.wordpress.android.BaseUnitTest
@@ -45,7 +44,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
     @Test
     fun `bottom sheet ui state is updated when user clicks on a liker`() {
         val userProfile = getDefaultUserProfile()
-        viewModel.onBottomSheetOpen(userProfile, mock(), LIKE_NOTIFICATION_LIST)
+        viewModel.onBottomSheetOpen(userProfile, LIKE_NOTIFICATION_LIST)
 
         requireNotNull(sheetUiState).let {
             assertThat(it is UserProfileUiState).isTrue
@@ -53,7 +52,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
                 assertThat(userAvatarUrl).isEqualTo(userProfile.userAvatarUrl)
                 assertThat(blavatarUrl).isEqualTo(userProfile.blavatarUrl)
                 assertThat(userName).isEqualTo(userProfile.userName)
-                assertThat(userLogin).isEqualTo(userProfile.userLogin)
+                assertThat(userLogin).isEqualTo("@${userProfile.userLogin}")
                 assertThat(userBio).isEqualTo(userProfile.userBio)
                 assertThat(siteTitle).isEqualTo(userProfile.siteTitle)
                 assertThat(siteUrl).isEqualTo(userProfile.siteUrl)
@@ -66,7 +65,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
     @Test
     fun `bottom sheet is opened when user clicks on a liker`() {
         val userProfile = getDefaultUserProfile()
-        viewModel.onBottomSheetOpen(userProfile, mock(), LIKE_NOTIFICATION_LIST)
+        viewModel.onBottomSheetOpen(userProfile, LIKE_NOTIFICATION_LIST)
 
         requireNotNull(sheetAction).let {
             assertThat(it is ShowBottomSheet).isTrue
@@ -76,7 +75,7 @@ class UserProfileViewModelTest : BaseUnitTest() {
     @Test
     fun `bottom sheet opening is tracked`() {
         val userProfile = getDefaultUserProfile()
-        viewModel.onBottomSheetOpen(userProfile, mock(), LIKE_NOTIFICATION_LIST)
+        viewModel.onBottomSheetOpen(userProfile, LIKE_NOTIFICATION_LIST)
 
         verify(analyticsUtilsWrapper, times(1)).trackUserProfileShown(anyString())
     }

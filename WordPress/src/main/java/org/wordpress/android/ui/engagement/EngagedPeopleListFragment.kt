@@ -111,14 +111,14 @@ class EngagedPeopleListFragment : Fragment() {
         recycler.layoutManager = layoutManager
 
         userProfileViewModel.onBottomSheetAction.observeEvent(viewLifecycleOwner) { state ->
-            var bottomSheet = childFragmentManager.findFragmentByTag(USER_PROFILE_BOTTOM_SHEET_TAG)
+            var bottomSheet = childFragmentManager.findFragmentByTag(UserProfileBottomSheetFragment.TAG)
                     as? UserProfileBottomSheetFragment
 
             when (state) {
                 ShowBottomSheet -> {
                     if (bottomSheet == null) {
                         bottomSheet = UserProfileBottomSheetFragment.newInstance(USER_PROFILE_VM_KEY)
-                        bottomSheet.show(childFragmentManager, USER_PROFILE_BOTTOM_SHEET_TAG)
+                        bottomSheet.show(childFragmentManager, UserProfileBottomSheetFragment.TAG)
                     }
                 }
 
@@ -192,7 +192,7 @@ class EngagedPeopleListFragment : Fragment() {
                 }
 
                 is OpenUserProfileBottomSheet -> {
-                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.onClick, event.source)
+                    userProfileViewModel.onBottomSheetOpen(event.userProfile, event.source)
                 }
             }
 
@@ -303,8 +303,6 @@ class EngagedPeopleListFragment : Fragment() {
     companion object {
         private const val KEY_LIST_SCENARIO = "list_scenario"
         private const val KEY_LIST_STATE = "list_state"
-
-        private const val USER_PROFILE_BOTTOM_SHEET_TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
         @JvmStatic
         fun newInstance(listScenario: ListScenario): EngagedPeopleListFragment {

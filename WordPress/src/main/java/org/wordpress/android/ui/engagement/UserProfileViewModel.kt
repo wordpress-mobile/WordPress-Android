@@ -28,7 +28,6 @@ class UserProfileViewModel @Inject constructor(
 
     fun onBottomSheetOpen(
         userProfile: UserProfile,
-        onClick: ((siteId: Long, siteUrl: String, source: String) -> Unit)?,
         source: EngagementNavigationSource?
     ) {
         _bottomSheetUiState.value = with(userProfile) {
@@ -36,7 +35,7 @@ class UserProfileViewModel @Inject constructor(
                 userAvatarUrl = userAvatarUrl,
                 blavatarUrl = blavatarUrl,
                 userName = userName,
-                userLogin = userLogin,
+                userLogin = if (userLogin.isNotEmpty()) "@$userLogin" else userLogin,
                 userBio = userBio,
                 siteTitle = if (siteTitle.isBlank()) {
                     resourceProvider.getString(R.string.user_profile_untitled_site)
@@ -45,7 +44,6 @@ class UserProfileViewModel @Inject constructor(
                 },
                 siteUrl = siteUrl,
                 siteId = siteId,
-                onSiteClickListener = onClick,
                 blogPreviewSource = source?.let {
                     when (it) {
                         LIKE_NOTIFICATION_LIST -> ReaderTracker.SOURCE_NOTIF_LIKE_LIST_USER_PROFILE

@@ -6,7 +6,12 @@ import android.os.Bundle
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
+import org.wordpress.android.fluxc.tools.FormattableRangeType
+import org.wordpress.android.models.Note
+import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
+import org.wordpress.android.ui.engagement.BottomSheetUiState
+import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_NOTIF_COMMENT_USER_PROFILE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
 
@@ -16,6 +21,9 @@ import org.wordpress.android.util.ToastUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class NotificationCommentDetailFragment : CommentDetailFragment() {
+    private val note: Note // note will be non-null after onCreate
+        get() = mNote!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -25,6 +33,26 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
     }
+
+    override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {
+        val user = mContentMapper.mapToFormattableContentList(note.body.toString())
+            .find { FormattableRangeType.fromString(it.type) == FormattableRangeType.USER }
+
+        return BottomSheetUiState.UserProfileUiState(
+            userAvatarUrl = note.iconURL,
+            blavatarUrl = "",
+            userName = user?.text ?: getString(R.string.anonymous),
+            userLogin = mComment?.authorEmail.orEmpty(),
+            userBio = "",
+            siteTitle = user?.meta?.titles?.home ?: getString(R.string.user_profile_untitled_site),
+            siteUrl = user?.ranges?.firstOrNull()?.url.orEmpty(),
+            siteId = user?.meta?.ids?.site ?: 0L,
+            blogPreviewSource = SOURCE_NOTIF_COMMENT_USER_PROFILE
+        )
+    }
+
+    override fun getCommentIdentifier(): CommentIdentifier =
+        CommentIdentifier.NotificationCommentIdentifier(note.id, note.commentId);
 
     override fun handleHeaderVisibility() {
         mBinding?.headerView?.isGone = true
@@ -42,10 +70,10 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
             mSite = mSiteStore.getSiteBySiteId(note.siteId.toLong())
             if (mSite == null) {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
-                mSite = createDummyWordPressComSite(mNote!!.siteId.toLong())
+                mSite = createDummyWordPressComSite(note.siteId.toLong())
             }
-            if (mBinding != null && mReplyBinding != null && mActionBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mActionBinding!!, mSite!!, mComment, mNote)
+            if (mBinding != null && mReplyBinding != null) {
+                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, note)
             }
         }
     }

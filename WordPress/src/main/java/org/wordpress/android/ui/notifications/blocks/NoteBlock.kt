@@ -50,6 +50,7 @@ open class NoteBlock(
         fun showDetailForNoteIds()
         fun showReaderPostComments()
         fun showSitePreview(siteId: Long, siteUrl: String?)
+        fun showActionPopup(view: View)
     }
 
     open val layoutResourceId: Int

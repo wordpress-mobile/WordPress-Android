@@ -10,6 +10,7 @@ import android.view.View.OnTouchListener
 import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarClickedListener
@@ -39,7 +40,7 @@ class HeaderNoteBlock(
     notificationsUtilsWrapper,
     onNoteBlockTextClickListener
 ) {
-    private var mIsComment = false
+    private var replyToComment = false
     private var mAvatarSize = 0
     override val blockType: BlockType
         get() = BlockType.USER_HEADER
@@ -94,6 +95,7 @@ class HeaderNoteBlock(
             noteBlockHolder.mAvatarImageView.setOnClickListener(null)
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null)
         }
+        noteBlockHolder.mAvatarImageView.isVisible = replyToComment
         noteBlockHolder.mSnippetTextView.text = snippet
         return view
     }
@@ -102,8 +104,11 @@ class HeaderNoteBlock(
 
     fun getHeader(headerIndex: Int): FormattableContent? = mHeadersList?.getOrNull(headerIndex)
 
-    fun setIsComment(isComment: Boolean) {
-        mIsComment = isComment
+    /**
+     * Set whether this is a reply to a comment
+     */
+    fun setReplyToComment(isReplyToComment: Boolean) {
+        replyToComment = isReplyToComment
     }
 
     private inner class NoteHeaderBlockHolder internal constructor(view: View) {

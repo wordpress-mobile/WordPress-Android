@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.engagement
 
+import java.io.Serializable
+
 sealed class BottomSheetUiState {
+    @Suppress("SerialVersionUIDInSerializableClass")
     data class UserProfileUiState(
         val userAvatarUrl: String,
         val blavatarUrl: String,
@@ -10,9 +13,8 @@ sealed class BottomSheetUiState {
         val siteTitle: String,
         val siteUrl: String,
         val siteId: Long,
-        val onSiteClickListener: ((siteId: Long, siteUrl: String, source: String) -> Unit)? = null,
         val blogPreviewSource: String
-    ) : BottomSheetUiState() {
+    ) : BottomSheetUiState(), Serializable {
         val hasSiteUrl: Boolean = siteUrl.isNotBlank()
     }
 }

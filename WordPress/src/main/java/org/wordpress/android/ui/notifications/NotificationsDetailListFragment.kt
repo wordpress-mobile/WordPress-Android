@@ -43,6 +43,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
+import org.wordpress.android.ui.comments.CommentDetailFragment
+import org.wordpress.android.ui.comments.unified.CommentActionPopupHandler
 import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
@@ -73,6 +75,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
+    private var onActionClickListener: CommentDetailFragment.OnActionClickListener? = null
     private var restoredListPosition = 0
     private var notification: Note? = null
     private var rootLayout: LinearLayout? = null
@@ -271,6 +274,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
         }
 
+        override fun showActionPopup(view: View) {
+            CommentActionPopupHandler.show(view, onActionClickListener)
+        }
+
         fun handleNoteBlockSpanClick(
             activity: NotificationsDetailActivity,
             clickedSpan: NoteBlockClickableSpan
@@ -349,7 +356,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 imageManager,
                 notificationsUtilsWrapper
             )
-            headerNoteBlock.setIsComment(note.isCommentType)
+            headerNoteBlock.setReplyToComment(note.isCommentReplyType)
             noteList.add(headerNoteBlock)
         }
 
@@ -457,7 +464,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     if (isPingback) {
                         noteBlock.setIsPingback()
                     }
-                    noteList.add(noteBlock)
+                    if (isRepliedFooter(noteObject).not()) {
+                        // we don't handle replied footer at the moment
+                        // it'd be better if we can display the replied comment
+                        noteList.add(noteBlock)
+                    }
                 } catch (e: JSONException) {
                     AppLog.e(NOTIFS, "Invalid note data, could not parse.")
                 }
@@ -560,15 +571,31 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
 
         return requireNotNull(notification).let { note ->
+            if (isRepliedFooter(blockObject)) {
+                true
+            } else if (note.isFollowType || note.isLikeType) {
+                // User list notifications have a footer if they have 10 or more users in the body
+                // The last block will not have a type, so we can use that to determine if it is the footer
+                blockObject.type == null
+            } else {
+                false
+            }
+        }
+    }
+
+    /**
+     * Check if the block is a footer for a comment notification that has been replied to
+     */
+    private fun isRepliedFooter(blockObject: FormattableContent?): Boolean {
+        if (notification == null || blockObject == null) {
+            return false
+        }
+        return requireNotNull(notification).let { note ->
             if (note.isCommentType) {
                 val commentReplyId = blockObject.getRangeIdOrZero(1)
                 // Check if this is a comment notification that has been replied to
                 // The block will not have a type, and its id will match the comment reply id in the Note.
                 (blockObject.type == null && note.commentReplyId == commentReplyId)
-            } else if (note.isFollowType || note.isLikeType) {
-                // User list notifications have a footer if they have 10 or more users in the body
-                // The last block will not have a type, so we can use that to determine if it is the footer
-                blockObject.type == null
             } else {
                 false
             }
@@ -633,6 +660,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 note.commentId
             )
         }
+    }
+
+    fun setOnEditCommentListener(listener: CommentDetailFragment.OnActionClickListener){
+        onActionClickListener = listener
     }
 
     companion object {
