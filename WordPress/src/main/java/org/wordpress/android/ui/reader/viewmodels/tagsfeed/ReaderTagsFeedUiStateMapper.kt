@@ -86,6 +86,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
     @Suppress("LongParameterList")
     fun mapInitialPostsUiState(
         tags: List<ReaderTag>,
+        announcementItem: ReaderTagsFeedViewModel.ReaderAnnouncementItem?,
         isRefreshing: Boolean,
         onTagChipClick: (ReaderTag) -> Unit,
         onMoreFromTagClick: (ReaderTag) -> Unit,
@@ -101,6 +102,7 @@ class ReaderTagsFeedUiStateMapper @Inject constructor(
                     onItemEnteredView = onItemEnteredView,
                 )
             },
+            announcementItem = announcementItem,
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
         )

@@ -3,9 +3,6 @@ package org.wordpress.android.ui.reader.views.compose
 import android.content.res.Configuration
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,57 +32,48 @@ import org.wordpress.android.ui.compose.unit.Margin
 
 @Composable
 fun ReaderAnnouncementCard(
-    shouldShow: Boolean,
     items: List<ReaderAnnouncementCardItemData>,
     onAnnouncementCardDoneClick: () -> Unit,
 ) {
     val primaryColor = if (isSystemInDarkTheme()) AppColor.White else AppColor.Black
     val secondaryColor = if (isSystemInDarkTheme()) AppColor.Black else AppColor.White
-    AnimatedVisibility(
-        visible = shouldShow,
-        enter = expandIn(),
-        exit = shrinkOut(
-            shrinkTowards = Alignment.TopCenter,
-        ),
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(Margin.ExtraLarge.value),
+        verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
     ) {
+        // Title
+        Text(
+            text = stringResource(R.string.reader_announcement_card_title),
+            style = MaterialTheme.typography.labelLarge,
+            color = primaryColor,
+        )
+        // Items
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(Margin.ExtraLarge.value),
-            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value),
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value)
         ) {
-            // Title
+            items.forEach {
+                ReaderAnnouncementCardItem(it)
+            }
+        }
+        // Done button
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = { onAnnouncementCardDoneClick() },
+            elevation = ButtonDefaults.elevation(0.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = primaryColor,
+            ),
+        ) {
             Text(
-                text = stringResource(R.string.reader_announcement_card_title),
+                text = stringResource(id = R.string.reader_btn_done),
+                color = secondaryColor,
                 style = MaterialTheme.typography.labelLarge,
-                color = primaryColor,
             )
-            // Items
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(Margin.ExtraLarge.value)
-            ) {
-                items.forEach {
-                    ReaderAnnouncementCardItem(it)
-                }
-            }
-            // Done button
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                onClick = { onAnnouncementCardDoneClick() },
-                elevation = ButtonDefaults.elevation(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = primaryColor,
-                ),
-            ) {
-                Text(
-                    text = stringResource(id = R.string.reader_btn_done),
-                    color = secondaryColor,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
         }
     }
 }
@@ -158,7 +146,6 @@ fun ReaderTagsFeedPostListItemPreview() {
                 .fillMaxWidth()
         ) {
             ReaderAnnouncementCard(
-                shouldShow = false,
                 items = listOf(
                     ReaderAnnouncementCardItemData(
                         iconRes = R.drawable.ic_wifi_off_24px,

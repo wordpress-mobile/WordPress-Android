@@ -65,6 +65,7 @@ import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewMod
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagChip
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.TagFeedItem
 import org.wordpress.android.ui.reader.viewmodels.tagsfeed.ReaderTagsFeedViewModel.UiState
+import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCard
 import org.wordpress.android.ui.reader.views.compose.filter.ReaderFilterChip
 import org.wordpress.android.ui.utils.UiString
 
@@ -107,6 +108,15 @@ private fun Loaded(uiState: UiState.Loaded) {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
+            uiState.announcementItem?.let { announcementItem ->
+                item(key = "reader-announcement-card") {
+                    ReaderAnnouncementCard(
+                        items = announcementItem.items,
+                        onAnnouncementCardDoneClick = announcementItem.onDoneClicked,
+                    )
+                }
+            }
+
             items(
                 items = uiState.data,
                 key = { it.tagChip.tag.tagSlug }
@@ -611,33 +621,25 @@ fun ReaderTagsFeedLoaded() {
                 ),
             )
         )
-        val readerTag = ReaderTag(
-            "Tag 1",
-            "Tag 1",
-            "Tag 1",
-            "Tag 1",
-            ReaderTagType.TAGS,
-        )
         ReaderTagsFeed(
             uiState = UiState.Loaded(
-                data = listOf(
+                data = List(4) {
+                    val tagName = "Tag ${it + 1}"
                     TagFeedItem(
-                        tagChip = TagChip(readerTag, {}, {}),
+                        tagChip = TagChip(
+                            tag = ReaderTag(
+                                tagName,
+                                tagName,
+                                tagName,
+                                tagName,
+                                ReaderTagType.TAGS,
+                            ),
+                            onTagChipClick = {},
+                            onMoreFromTagClick = {},
+                        ),
                         postList = postListLoaded
-                    ),
-                    TagFeedItem(
-                        tagChip = TagChip(readerTag, {}, {}),
-                        postList = PostList.Initial,
-                    ),
-                    TagFeedItem(
-                        tagChip = TagChip(readerTag, {}, {}),
-                        postList = PostList.Error(ErrorType.Default, {}),
-                    ),
-                    TagFeedItem(
-                        tagChip = TagChip(readerTag, {}, {}),
-                        postList = PostList.Error(ErrorType.NoContent, {}),
-                    ),
-                )
+                    )
+                }
             )
         )
     }
