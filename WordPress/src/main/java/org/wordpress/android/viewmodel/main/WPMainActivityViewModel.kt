@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.debug.preferences.DebugPrefs
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
@@ -297,9 +298,12 @@ class WPMainActivityViewModel @Inject constructor(
             launch {
                 val currentVersionCode = buildConfigWrapper.getAppVersionCode()
                 val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+                val alwaysShowAnnouncement = appPrefsWrapper.getDebugBooleanPref(
+                    DebugPrefs.ALWAYS_SHOW_ANNOUNCEMENT.key
+                )
 
                 // only proceed to feature announcement logic if we are upgrading the app
-                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                if (alwaysShowAnnouncement || previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
                     if (canShowFeatureAnnouncement()) {
                         analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                         _onFeatureAnnouncementRequested.call()
@@ -337,9 +341,11 @@ class WPMainActivityViewModel @Inject constructor(
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
         val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
+        val alwaysShowAnnouncement = appPrefsWrapper.getDebugBooleanPref(DebugPrefs.ALWAYS_SHOW_ANNOUNCEMENT.key)
         return cachedAnnouncement != null &&
-                cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
-                appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
+                (alwaysShowAnnouncement ||
+                        cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
+                        appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion)
     }
 
     private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {

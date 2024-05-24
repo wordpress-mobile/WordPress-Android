@@ -122,7 +122,7 @@ class FollowersUseCase(
         }
     }
 
-    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_followers))
+    override fun buildLoadingItem(): List<BlockListItem> = listOf(Title(R.string.stats_view_subscribers))
 
     override fun buildEmptyItem(): List<BlockListItem> {
         return listOf(buildTitle(), Empty())
@@ -180,9 +180,9 @@ class FollowersUseCase(
     }
 
     private fun buildTitle() = if (BuildConfig.IS_JETPACK_APP) {
-        Title(R.string.stats_view_followers)
+        Title(R.string.stats_view_subscribers)
     } else {
-        Title(R.string.stats_view_followers, menuAction = this::onMenuClick)
+        Title(R.string.stats_view_subscribers, menuAction = this::onMenuClick)
     }
 
     private fun loadMore() {
@@ -198,13 +198,13 @@ class FollowersUseCase(
             mutableItems.add(
                 Information(
                     resourceProvider.getString(
-                        R.string.stats_followers_count_message,
+                        R.string.stats_subscribers_count_message,
                         resourceProvider.getString(label),
                         model.totalCount
                     )
                 )
             )
-            val header = Header(R.string.stats_follower_label, R.string.stats_follower_since_label)
+            val header = Header(R.string.stats_subscriber_label, R.string.stats_follower_since_label)
             mutableItems.add(header)
             model.followers.toUserItems(header)
                 .let { mutableItems.addAll(it) }

@@ -18,7 +18,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetBloc
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.lists.widget.weeks.WeekWidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Inject
 
 class WidgetBlockListProvider(
@@ -27,7 +27,7 @@ class WidgetBlockListProvider(
     intent: Intent
 ) : RemoteViewsFactory {
     @Inject
-    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, -1)

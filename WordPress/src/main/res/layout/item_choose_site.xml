@@ -69,6 +69,7 @@
             style="@style/Widget.LoginFlow.TextView.List.Line1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:maxLines="1"
@@ -77,6 +78,7 @@
             app:layout_constraintEnd_toStartOf="@+id/pin"
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toTopOf="@+id/avatar_container"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="Around the World with Pam" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -85,6 +87,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="15sp"
@@ -93,6 +96,7 @@
             app:layout_constraintStart_toEndOf="@+id/avatar_container"
             app:layout_constraintTop_toBottomOf="@+id/text_title"
             app:layout_constraintVertical_chainStyle="packed"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
             tools:text="pamelanguyen.com" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -290,14 +290,16 @@ public class ReaderPostActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                ReaderPost post = ReaderPost.fromJson(jsonObject);
                 new Thread(() -> {
+                    ReaderPost post = ReaderPost.fromJson(jsonObject);
+
                     ReaderPostTable.addPost(post);
                     handlePostLikes(post, jsonObject);
+
+                    if (requestListener != null) {
+                        requestListener.onSuccess(post.getBlogUrl());
+                    }
                 }).start();
-                if (requestListener != null) {
-                    requestListener.onSuccess(post.getBlogUrl());
-                }
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {

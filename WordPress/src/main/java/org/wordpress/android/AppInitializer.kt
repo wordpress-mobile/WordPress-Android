@@ -283,9 +283,9 @@ class AppInitializer @Inject constructor(
     }
 
     fun init() {
+        crashLogging.initialize()
         dispatcher.register(this)
         appConfig.init(appScope)
-
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
 
@@ -431,17 +431,6 @@ class AppInitializer @Inject constructor(
         } catch (e: Exception) {
             AppLog.enableRecording(false)
             AppLog.e(T.UTILS, "Error enabling log file persistence", e)
-        }
-        AppLog.addListener { tag, logLevel, message ->
-            val sb = StringBuffer()
-            sb.append(logLevel.toString())
-                .append("/")
-                .append(AppLog.TAG)
-                .append("-")
-                .append(tag.toString())
-                .append(": ")
-                .append(message)
-            crashLogging.recordEvent(sb.toString(), null)
         }
     }
 

@@ -1,0 +1,3 @@
+24.8:
+Di layar Statistik, persentase kini muncul di posisi yang benar untuk pengguna bahasa yang ditulis dari kanan ke kiri. Benar.
+

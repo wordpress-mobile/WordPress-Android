@@ -9,7 +9,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
+import org.wordpress.android.util.extensions.enforceWesternArabicNumerals
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 import java.text.ParseException
@@ -34,7 +35,7 @@ class StatsDateFormatter
 @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     val resourceProvider: ResourceProvider,
-    val statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) {
     private val inputFormat: SimpleDateFormat
         get() {
@@ -115,7 +116,7 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return printWeek(startCalendar, endCalendar, statsTrafficSubscribersTabFeatureConfig.isEnabled())
+                return printWeek(startCalendar, endCalendar, statsTrafficSubscribersTabsFeatureConfig.isEnabled())
             }
             MONTHS -> outputMonthFormat.format(date)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -314,6 +315,13 @@ class StatsDateFormatter
                 timeZoneResource,
                 utcTime
             )
-        } else null
+        } else {
+            null
+        }
+    }
+
+    fun getStatsDateFromPeriodDay(period: String): String {
+        val date = parseStatsDate(DAYS, period)
+        return printDayWithoutYear(date).enforceWesternArabicNumerals() as String
     }
 }

@@ -1,4 +1,0 @@
-24.6:
-- Hemos solucionado algunos problemas relacionados con el formato de texto resaltado.
-- La aplicación ahora es compatible con sugerencias de texto más extensas que el espacio visible en el editor.
-- Hemos cambiado el símbolo de infinito por el de "100 %" en la pantalla Estadísticas. Y en ese momento, te prometo que estábamos al 100 %.

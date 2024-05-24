@@ -448,7 +448,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         } else {
             val title = intent.getStringExtra(Intent.EXTRA_SUBJECT)
             val text = intent.getStringExtra(Intent.EXTRA_TEXT)
-            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text))
+            val content = migrateToGutenbergEditor(AutolinkUtils.autoCreateLinks(text?:""))
             newPostSetup(title, content)
         }
     }
@@ -746,14 +746,14 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 initializePostObject()
             }
 
-            (fragmentManager.getFragment(
-                    state,
-                    EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
-                ) as EditorFragmentAbstract?)?.let { frag ->
-                        editorFragment = frag
-                    if (frag is EditorMediaUploadListener) {
-                        editorMediaUploadListener = frag
-                    }
+            (supportFragmentManager.getFragment(
+                state,
+                EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT
+            ) as EditorFragmentAbstract?)?.let { frag ->
+                editorFragment = frag
+                if (frag is EditorMediaUploadListener) {
+                    editorMediaUploadListener = frag
+                }
             }
         }
     }
@@ -1200,6 +1200,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         outState.putParcelableArrayList(
             EditPostActivityConstants.STATE_KEY_DROPPED_MEDIA_URIS, editorMedia.droppedMediaUris
         )
+
         editorFragment?.let {
             supportFragmentManager.putFragment(outState, EditPostActivityConstants.STATE_KEY_EDITOR_FRAGMENT, it)
         }
@@ -2647,9 +2648,23 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun launchCamera() {
-        WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath ->
-            this.mediaCapturePath = mediaCapturePath
-        }
+        WPMediaUtils.launchCamera(
+            this,
+            BuildConfig.APPLICATION_ID,
+            object : WPMediaUtils.LaunchCameraCallback {
+                override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+                  this@EditPostActivity.mediaCapturePath = mediaCapturePath
+                }
+
+                override fun onCameraError(errorMessage: String?) {
+                    ToastUtils.showToast(
+                        this@EditPostActivity,
+                        errorMessage,
+                        ToastUtils.Duration.SHORT
+                    )
+                }
+            }
+        )
     }
 
     private fun setPostContentFromShareAction() {

@@ -47,6 +47,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -316,7 +317,23 @@ class MediaPickerActivity : LocaleAwareActivity(), MediaPickerListener {
                 startActivityForResult(buildIntent(this, action.mediaPickerSetup, site, localPostId), PHOTO_PICKER)
             }
             OpenCameraForPhotos -> {
-                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID) { mediaCapturePath = it }
+                WPMediaUtils.launchCamera(
+                    this,
+                    BuildConfig.APPLICATION_ID,
+                    object : WPMediaUtils.LaunchCameraCallback {
+                        override fun onMediaCapturePathReady(mediaCapturePath: String?) {
+                            this@MediaPickerActivity.mediaCapturePath = mediaCapturePath
+                        }
+
+                        override fun onCameraError(errorMessage: String?) {
+                            ToastUtils.showToast(
+                                this@MediaPickerActivity,
+                                errorMessage,
+                                ToastUtils.Duration.SHORT
+                            )
+                        }
+                    }
+                )
             }
         }
     }

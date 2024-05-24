@@ -53,7 +53,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLi
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Comment
-import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Follow
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Subscribers
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Like
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
 import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
@@ -364,8 +364,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 descriptionResId = R.string.notifications_empty_action_comments
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            Follow.ordinal -> {
-                titleResId = R.string.notifications_empty_followers
+            Subscribers.ordinal -> {
+                titleResId = R.string.notifications_empty_subscribers
                 descriptionResId = R.string.notifications_empty_action_followers_likes
                 buttonResId = R.string.notifications_empty_view_reader
             }

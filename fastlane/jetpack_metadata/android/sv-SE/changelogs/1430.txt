@@ -1,0 +1,3 @@
+24.8:
+På statistikskärmen visas nu procentsatserna i rätt position för användare som läser från höger till vänster. Precis.
+

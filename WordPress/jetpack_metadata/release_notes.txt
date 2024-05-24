@@ -1,2 +1,4 @@
-We redesigned the site picker screen. You can now pin your favorite sites, see recently accessed sites, and more. We also removed the ability to show and hide sites.
-(Did we say the word “sites” enough? We think so.)
+- We reorganized the Stats screen to show data about traffic and insights.
+- We added a Subscribers tab to show data about site subscribers.
+- We removed social subscribers from the Total Followers card.
+- Site names and URLs are properly positioned for right-to-left language users.

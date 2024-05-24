@@ -551,6 +551,8 @@
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
+    <dimen name="stats_line_chart_tick_width">2dp</dimen>
+    <dimen name="stats_line_chart_tick_height">4dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_pie_chart_slice_width">16dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
