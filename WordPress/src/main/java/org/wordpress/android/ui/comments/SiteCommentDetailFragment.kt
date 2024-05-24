@@ -22,6 +22,9 @@ import org.wordpress.android.util.WPAvatarUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class SiteCommentDetailFragment : CommentDetailFragment() {
+    private val comment: CommentModel
+        get() = mComment!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
@@ -34,12 +37,12 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
     override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {
         return BottomSheetUiState.UserProfileUiState(
             userAvatarUrl = CommentExtension.getAvatarUrl(
-                mComment!!,
+                comment,
                 resources.getDimensionPixelSize(R.dimen.avatar_sz_large)
             ),
             blavatarUrl = "",
-            userName = mComment!!.authorName ?: getString(R.string.anonymous),
-            userLogin = mComment!!.authorEmail.orEmpty(),
+            userName = comment.authorName ?: getString(R.string.anonymous),
+            userLogin = comment.authorEmail.orEmpty(),
             // keep them empty because there's no data for displaying on UI
             userBio = "",
             siteTitle = "",
@@ -50,7 +53,7 @@ class SiteCommentDetailFragment : CommentDetailFragment() {
     }
 
     override fun getCommentIdentifier(): CommentIdentifier =
-        CommentIdentifier.SiteCommentIdentifier(mComment!!.id, mComment!!.remoteCommentId)
+        CommentIdentifier.SiteCommentIdentifier(comment.id, comment.remoteCommentId)
 
 
     override fun handleHeaderVisibility() {
