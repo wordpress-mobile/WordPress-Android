@@ -44,7 +44,6 @@ class VoiceToContentFeatureUtilsTest {
     fun `when buildConfigWrapper is disabled then returns false `() {
         // Arrange
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
-        whenever(voiceToContentFeatureConfig.isEnabled()).thenReturn(true)
 
         // Act
         val result = utils.isVoiceToContentEnabled()
