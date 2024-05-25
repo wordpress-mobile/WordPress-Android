@@ -70,7 +70,6 @@ class VoiceToContentUseCase @Inject constructor(
                         return@withContext VoiceToContentResult(isError = true)
                     }
                 }
-
             } ?:return@withContext VoiceToContentResult(isError = true)
         }
 }
