@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploade
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.InvalidRequest
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.MissingFile
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.NoConnection
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.OutOfMemoryException
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.UnsatisfiedLinkException
@@ -162,6 +163,8 @@ class EncryptedLogStore @Inject constructor(
             }
         } catch (e: UnsatisfiedLinkError) {
             handleFailedUpload(encryptedLog, UnsatisfiedLinkException)
+        } catch (e: OutOfMemoryError) {
+            handleFailedUpload(encryptedLog, OutOfMemoryException)
         }
     }
 
@@ -221,30 +224,12 @@ class EncryptedLogStore @Inject constructor(
 
     private fun mapUploadEncryptedLogError(error: UploadEncryptedLogError): EncryptedLogUploadFailureType {
         return when (error) {
-            is NoConnection -> {
+            NoConnection, TooManyRequests -> CONNECTION_FAILURE
+            InvalidRequest, MissingFile, UnsatisfiedLinkException, OutOfMemoryException -> IRRECOVERABLE_FAILURE
+            is Unknown -> if ((HTTP_STATUS_CODE_500..HTTP_STATUS_CODE_599).contains(error.statusCode)) {
                 CONNECTION_FAILURE
-            }
-            is TooManyRequests -> {
-                CONNECTION_FAILURE
-            }
-            is InvalidRequest -> {
-                IRRECOVERABLE_FAILURE
-            }
-            is MissingFile -> {
-                IRRECOVERABLE_FAILURE
-            }
-            is UnsatisfiedLinkException -> {
-                IRRECOVERABLE_FAILURE
-            }
-            is Unknown -> {
-                when {
-                    (HTTP_STATUS_CODE_500..HTTP_STATUS_CODE_599).contains(error.statusCode) -> {
-                        CONNECTION_FAILURE
-                    }
-                    else -> {
-                        CLIENT_FAILURE
-                    }
-                }
+            } else {
+                CLIENT_FAILURE
             }
         }
     }
@@ -312,6 +297,7 @@ class EncryptedLogStore @Inject constructor(
         object NoConnection : UploadEncryptedLogError()
         object MissingFile : UploadEncryptedLogError()
         object UnsatisfiedLinkException : UploadEncryptedLogError()
+        object OutOfMemoryException : UploadEncryptedLogError()
     }
 
     /**
