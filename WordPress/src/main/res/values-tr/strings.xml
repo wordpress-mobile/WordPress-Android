@@ -576,8 +576,8 @@ Language: tr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Okuyucu, Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">İstatistikleriniz Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Yeni Jetpack uygulamasına geçiş yapın</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
-    <string name="blogging_prompts_list_error_network_title">Bu içerik şu an yüklenemiyor</string>
+    <string name="no_connection_error_description">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
+    <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">İstemler yüklenirken bir sorun çıktı.</string>
     <string name="blogging_prompts_list_error_fetch_title">Eyvah</string>
     <string name="blogging_prompts_list_no_prompts">Henüz bir istem yok</string>

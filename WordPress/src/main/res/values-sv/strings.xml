@@ -582,8 +582,8 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Läsaren flyttar till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Din statistik flyttas till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Byt till den nya Jetpack-appen</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Kontrollera din nätverksanslutning och försök igen.</string>
-    <string name="blogging_prompts_list_error_network_title">Det går inte att ladda detta innehåll just nu</string>
+    <string name="no_connection_error_description">Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="no_connection_error_title">Det går inte att ladda detta innehåll just nu</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Det var ett problem att ladda in förslag.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hoppsan</string>
     <string name="blogging_prompts_list_no_prompts">Inga förslag än</string>

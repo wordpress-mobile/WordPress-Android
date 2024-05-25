@@ -582,8 +582,8 @@ Language: nl
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader zal naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Je statistieken zullen naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Schakel over naar de nieuwe Jetpack-app</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Controleer je netwerkverbinding en probeer het nogmaals.</string>
-    <string name="blogging_prompts_list_error_network_title">Deze inhoud kan momenteel niet geladen worden</string>
+    <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
+    <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Er is een fout opgetreden bij het laden van opdrachten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oeps</string>
     <string name="blogging_prompts_list_no_prompts">Er zijn nog geen opdrachten</string>
