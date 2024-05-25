@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.designsystem.footnote
 import org.wordpress.android.ui.compose.theme.AppColor
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.ui.compose.unit.Margin
@@ -122,7 +121,7 @@ private fun ReaderAnnouncementCardItem(data: ReaderAnnouncementCardItemData) {
                     start = Margin.Large.value,
                 ),
                 text = stringResource(data.descriptionRes),
-                style = MaterialTheme.typography.footnote,
+                style = MaterialTheme.typography.bodySmall,
                 color = secondaryElementColor,
             )
         }
