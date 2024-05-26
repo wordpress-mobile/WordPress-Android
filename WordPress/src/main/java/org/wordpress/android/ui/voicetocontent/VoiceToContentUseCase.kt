@@ -4,7 +4,7 @@ import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.viewmodel.ContextProvider
@@ -55,7 +55,7 @@ class VoiceToContentUseCase @Inject constructor(
                 )
 
                 when(response) {
-                    is JetpackAIRestClient.JetpackAIQueryResponse.Success -> {
+                    is JetpackAIQueryResponse.Success -> {
                         val finalContent: String = response.choices[0].message.content
                         // __JETPACK_AI_ERROR__ is a special marker we ask GPT to add to the request when it can’t
                         // understand the request for any reason, so maybe something confused GPT on some requests.
@@ -66,7 +66,7 @@ class VoiceToContentUseCase @Inject constructor(
                         }
                     }
 
-                    is JetpackAIRestClient.JetpackAIQueryResponse.Error -> {
+                    is JetpackAIQueryResponse.Error -> {
                         return@withContext VoiceToContentResult(isError = true)
                     }
                 }
