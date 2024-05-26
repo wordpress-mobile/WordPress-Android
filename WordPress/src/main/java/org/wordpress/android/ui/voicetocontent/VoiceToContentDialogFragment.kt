@@ -87,6 +87,5 @@ fun VoiceToContentScreen(viewModel: VoiceToContentViewModel) {
                 )
             }
         }
-
     }
 }
