@@ -219,19 +219,6 @@ class JetpackAIRestClient @Inject constructor(
         NETWORK_ERROR
     }
 
-    sealed class JetpackAIQueryResponse {
-        data class Success(val model: String, val choices: List<Choice>) : JetpackAIQueryResponse() {
-            data class Choice(val index: Int, val message: Message) {
-                data class Message(val role: String, val content: String)
-            }
-        }
-
-        data class Error(
-            val type: JetpackAIQueryErrorType,
-            val message: String? = null
-        ) : JetpackAIQueryResponse()
-    }
-
     private fun JetpackAIQueryDto.toJetpackAIQueryResponse(): JetpackAIQueryResponse {
         return JetpackAIQueryResponse.Success(model, choices.map { choice ->
             JetpackAIQueryResponse.Success.Choice(
@@ -242,16 +229,6 @@ class JetpackAIRestClient @Inject constructor(
                 )
             )
         })
-    }
-
-    enum class JetpackAIQueryErrorType {
-        API_ERROR,
-        AUTH_ERROR,
-        GENERIC_ERROR,
-        INVALID_RESPONSE,
-        TIMEOUT,
-        NETWORK_ERROR,
-        INVALID_DATA
     }
 
     private fun createJetpackAIQueryMessage(text: String, type: String, role: String) =
