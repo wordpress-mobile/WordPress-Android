@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.viewmodel.ContextProvider
 import java.io.File
@@ -36,10 +36,10 @@ class VoiceToContentUseCase @Inject constructor(
             )
 
             val transcribedText: String? = when(transcriptionResponse) {
-                is JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse.Success -> {
+                is JetpackAITranscriptionResponse.Success -> {
                     transcriptionResponse.model
                 }
-                is JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse.Error -> {
+                is JetpackAITranscriptionResponse.Error -> {
                     null
                 }
             }
