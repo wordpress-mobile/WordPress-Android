@@ -11,10 +11,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.ResponseFormat
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionErrorType
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIQueryResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIQueryErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryErrorType
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import java.io.File
