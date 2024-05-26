@@ -63,7 +63,6 @@ data class FeaturedPostImageDto(
             image = image
         )
     }
-
 }
 
 data class CostsDto(
