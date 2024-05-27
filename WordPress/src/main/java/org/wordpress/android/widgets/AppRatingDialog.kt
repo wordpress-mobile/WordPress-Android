@@ -29,10 +29,11 @@ object AppRatingDialog {
     private const val KEY_INTERACTIONS = "rate_interactions"
     private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
     private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
+    private const val TARGET_COUNT_POST_PUBLISHED = 2
 
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
-    val criteriaInstallMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
+    private val criteriaInstallMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
 
     // app must have been launched this many times before the rating dialog will appear
     private const val CRITERIA_LAUNCH_TIMES: Int = 10
@@ -41,12 +42,12 @@ object AppRatingDialog {
     private const val CRITERIA_INTERACTIONS: Int = 10
 
     private var installDate = Date()
-    var askLaterDate = Date()
+    private var askLaterDate = Date()
     private var launchTimes = 0
     private var interactions = 0
     private var optOut = false
-    var inAppReviewsShownDate = Date(0)
-    var doNotShowInAppReviewsPrompt = false
+    private var inAppReviewsShownDate = Date(0)
+    private var doNotShowInAppReviewsPrompt = false
 
     private lateinit var preferences: SharedPreferences
 
@@ -81,7 +82,6 @@ object AppRatingDialog {
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
      */
-
     fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
             showRateDialog(fragmentManger)
@@ -101,6 +101,34 @@ object AppRatingDialog {
             preferences.edit().putInt(KEY_INTERACTIONS, interactions)?.apply()
             AnalyticsTracker.track(incrementInteractionTracker)
         }
+    }
+
+    /**
+     * Called when a post is published. We use this to determine which users will see the in-app review prompt.
+     */
+    fun onPostPublished() {
+        if (shouldShowInAppReviewsPrompt()) return
+        if (AppPrefs.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
+            AppPrefs.incrementPublishedPostCount()
+        }
+    }
+
+    /**
+     * Check whether the in-app reviews prompt should be shown or not.
+     * @return true if the prompt should be shown
+     */
+    fun shouldShowInAppReviewsPrompt(): Boolean {
+        val shouldWaitAfterLastShown = Date().time - inAppReviewsShownDate.time < criteriaInstallMs
+        val shouldWaitAfterAskLaterTapped = Date().time - askLaterDate.time < criteriaInstallMs
+        val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
+        val notificationsGoal = notificationCount == TARGET_COUNT_NOTIFICATIONS
+        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown && !shouldWaitAfterAskLaterTapped &&
+            (publishedPostsGoal || notificationsGoal)
+    }
+
+    fun onInAppReviewsPromptShown() {
+        storeInAppReviewsShownDate()
+        AppPrefs.resetPublishedPostCount()
     }
 
     /**
@@ -152,7 +180,7 @@ object AppRatingDialog {
                                 Intent.ACTION_VIEW,
                                 Uri.parse(
                                     "http://play.google.com/store/apps/details?id=" +
-                                            requireActivity().packageName
+                                        requireActivity().packageName
                                 )
                             )
                         )
@@ -234,6 +262,6 @@ object AppRatingDialog {
     /**
      * Store the date the in-app reviews prompt is attempted to launch.
      */
-    fun storeInAppReviewsShownDate() =
+    private fun storeInAppReviewsShownDate() =
         preferences.edit().putLong(IN_APP_REVIEWS_SHOWN_DATE, System.currentTimeMillis())?.apply()
 }

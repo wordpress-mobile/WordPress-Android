@@ -52,7 +52,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
-import org.wordpress.android.ui.review.ReviewViewModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -121,9 +120,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
-
-    @Inject
-    internal lateinit var reviewViewModel: ReviewViewModel
 
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
@@ -211,7 +207,6 @@ class PostsListActivity : LocaleAwareActivity(),
             initViewModel(initPreviewState, currentBottomSheetPostId)
             initSearchFragment()
             initBloggingReminders()
-            initInAppReviews()
             initTabLayout(tabIndex)
             loadIntentData(intent)
         }
@@ -337,11 +332,6 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun initInAppReviews() {
-        reviewViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[ReviewViewModel::class.java]
-        reviewViewModel.launchReview.observeEvent(this) { launchInAppReviews() }
-    }
-
     private fun launchInAppReviews() {
         val manager = ReviewManagerFactory.create(this)
         val request = manager.requestReviewFlow()
@@ -382,7 +372,6 @@ class PostsListActivity : LocaleAwareActivity(),
                     changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                     if (isFirstTimePublishing) {
-                        reviewViewModel.onPublishingPost()
                     }
                 }
             }

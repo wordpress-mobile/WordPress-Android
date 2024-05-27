@@ -139,7 +139,6 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
@@ -260,7 +259,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
-    @NonNull private ReviewViewModel mReviewViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private NotificationsListViewModel mNotificationsViewModel;
     private FloatingActionButton mFloatingActionButton;
@@ -690,7 +688,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
-        mReviewViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReviewViewModel.class);
         mBloggingRemindersViewModel =
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
@@ -1413,7 +1410,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
                                 if (isFirstTimePublishing) {
-                                    mReviewViewModel.onPublishingPost();
                                 }
                             }
                     );
@@ -1823,7 +1819,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         isFirstTimePublishing -> {
                             mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
                             if (isFirstTimePublishing) {
-                                mReviewViewModel.onPublishingPost();
                             }
                         }
                 );
