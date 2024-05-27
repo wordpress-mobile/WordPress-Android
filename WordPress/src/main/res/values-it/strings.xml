@@ -574,8 +574,8 @@ Language: it
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le notifiche si stanno spostando sull\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Le tue statistiche si stanno spostando sull\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passa alla nuova app Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Controlla la connessione di rete e riprova.</string>
-    <string name="blogging_prompts_list_error_network_title">Impossibile caricare questo contenuto al momento</string>
+    <string name="no_connection_error_description">Controlla la connessione di rete e riprova.</string>
+    <string name="no_connection_error_title">Impossibile caricare questo contenuto al momento</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Si è verificato un errore durante il caricamento delle richieste.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ops</string>
     <string name="blogging_prompts_list_no_prompts">Ancora nessuna richiesta</string>

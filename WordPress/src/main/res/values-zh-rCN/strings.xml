@@ -570,8 +570,8 @@ Language: zh_CN
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">阅读器即将移至 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">统计信息即将移至 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切换到新版 Jetpack 应用</string>
-    <string name="blogging_prompts_list_error_network_subtitle">请检查您的网络连接，然后重试。</string>
-    <string name="blogging_prompts_list_error_network_title">现在无法加载此内容</string>
+    <string name="no_connection_error_description">请检查您的网络连接，然后重试。</string>
+    <string name="no_connection_error_title">现在无法加载此内容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">加载提示时出错。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚无提示</string>

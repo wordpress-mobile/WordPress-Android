@@ -582,8 +582,8 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Verifică conexiunea rețelei și încearcă din nou.</string>
-    <string name="blogging_prompts_list_error_network_title">Nu pot să încarc acest conținut chiar acum</string>
+    <string name="no_connection_error_description">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
     <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>

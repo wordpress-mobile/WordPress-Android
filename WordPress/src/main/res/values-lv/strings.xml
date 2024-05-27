@@ -283,8 +283,8 @@ Language: lv
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lasītājs pāriet uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Jūsu statistika tiek pārvietota uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Pārslēdzieties uz jauno Jetpack lietotni</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
-    <string name="blogging_prompts_list_error_network_title">Pašlaik nevar ielādēt šo saturu</string>
+    <string name="no_connection_error_description">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
+    <string name="no_connection_error_title">Pašlaik nevar ielādēt šo saturu</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Ielādējot uzvednes, radās kļūda.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hmm…</string>
     <string name="blogging_prompts_list_no_prompts">Vēl nav uzvedņu</string>

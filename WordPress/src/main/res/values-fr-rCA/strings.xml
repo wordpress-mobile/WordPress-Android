@@ -572,8 +572,8 @@ Language: fr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le lecteur va être déplacé dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Les statistiques vont être déplacées dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passer à la nouvelle application Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Vérifiez votre connexion réseau et réessayez.</string>
-    <string name="blogging_prompts_list_error_network_title">Impossible de charger ce contenu pour le moment</string>
+    <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
+    <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Un problème est survenu lors du chargement des incitations.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oups</string>
     <string name="blogging_prompts_list_no_prompts">Pas encore d’incitation</string>
