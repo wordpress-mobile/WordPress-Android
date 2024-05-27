@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
 import com.android.volley.RetryPolicy
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
@@ -27,9 +28,10 @@ class WPComGsonRequestBuilder
         params: Map<String, String>,
         clazz: Class<T>,
         listener: (T) -> Unit,
-        errorListener: (WPComGsonNetworkError) -> Unit
+        errorListener: (WPComGsonNetworkError) -> Unit,
+        customGsonBuilder: GsonBuilder? = null
     ): WPComGsonRequest<T> {
-        return WPComGsonRequest.buildGetRequest(url, params, clazz, listener, errorListener)
+        return WPComGsonRequest.buildGetRequest(url, params, clazz, listener, errorListener, customGsonBuilder)
     }
 
     /**
@@ -46,13 +48,14 @@ class WPComGsonRequestBuilder
         clazz: Class<T>,
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
-        forced: Boolean = false
+        forced: Boolean = false,
+        customGsonBuilder: GsonBuilder? = null
     ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildGetRequest(url, params, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
-        })
+        }, customGsonBuilder)
         cont.invokeOnCancellation { request.cancel() }
         if (enableCaching) {
             request.enableCaching(cacheTimeToLive)
@@ -76,9 +79,10 @@ class WPComGsonRequestBuilder
         params: Map<String, String>,
         type: Type,
         listener: (T) -> Unit,
-        errorListener: (WPComGsonNetworkError) -> Unit
+        errorListener: (WPComGsonNetworkError) -> Unit,
+        customGsonBuilder: GsonBuilder? = null
     ): WPComGsonRequest<T> {
-        return WPComGsonRequest.buildGetRequest(url, params, type, listener, errorListener)
+        return WPComGsonRequest.buildGetRequest(url, params, type, listener, errorListener, customGsonBuilder)
     }
 
     /**

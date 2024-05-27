@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.UserAgent
+import org.wordpress.android.fluxc.network.rest.GsonRequest.getDefaultGsonBuilder
+import org.wordpress.android.fluxc.network.rest.NumberAwareMapDeserializer
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -30,12 +32,19 @@ class RemoteConfigRestClient @Inject constructor(
     suspend fun fetchRemoteConfig(): RemoteConfigFetchedPayload {
         // https://public-api.wordpress.com/wpcom/v2/mobile/remote_config
         val url = WPCOMV2.mobile.remote_config.url
+
+        // use custom GsonBuilder to support proper number serialisation from Maps
+        val customGsonBuilder = getDefaultGsonBuilder()
+            .registerTypeAdapter(Map::class.java, NumberAwareMapDeserializer())
+
         val response = wpComGsonRequestBuilder.syncGetRequest(
             this,
             url,
             mapOf(),
-            Map::class.java
+            Map::class.java,
+            customGsonBuilder = customGsonBuilder
         )
+
         return when (response) {
             is Response.Success -> buildRemoteConfigFetchedPayload(response.data)
             is Response.Error -> RemoteConfigFetchedPayload(response.error.toRemoteConfigError())
@@ -46,7 +55,7 @@ class RemoteConfigRestClient @Inject constructor(
         : RemoteConfigFetchedPayload {
         return RemoteConfigFetchedPayload(featureFlags?.map { e ->
                 e.key.toString() to e.value.toString()
-            }?.toMap())
+        }?.toMap())
     }
 }
 
