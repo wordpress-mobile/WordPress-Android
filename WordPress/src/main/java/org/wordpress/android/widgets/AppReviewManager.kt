@@ -1,5 +1,6 @@
 package org.wordpress.android.widgets
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -12,12 +13,14 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.review.ReviewManagerFactory
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.logException
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
@@ -80,6 +83,24 @@ object AppReviewManager {
         doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
     }
 
+    fun launchInAppReviews(activity: Activity) {
+        val manager = ReviewManagerFactory.create(activity)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val reviewInfo = task.result
+                val flow = manager.launchReviewFlow(activity, reviewInfo)
+                flow.addOnFailureListener { e ->
+                    AppLog.e(T.UTILS, "Error launching google review API flow.", e)
+                }
+            } else {
+                task.logException()
+            }
+        }
+
+        resetInAppReviewsCounters()
+    }
+
     /**
      * Show the rate dialog if the criteria is satisfied.
      * @return true if shown, false otherwise.
@@ -137,10 +158,6 @@ object AppReviewManager {
         val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
         return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown && !shouldWaitAfterAskLaterTapped &&
             (publishedPostsGoal || notificationsGoal)
-    }
-
-    fun onInAppReviewsPromptShown() {
-        resetInAppReviewsCounters()
     }
 
     /**

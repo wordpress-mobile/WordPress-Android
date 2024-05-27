@@ -28,13 +28,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -194,7 +190,6 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
-import static org.wordpress.android.util.extensions.InAppReviewExtensionsKt.logException;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
@@ -506,12 +501,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (canShowAppRatingPrompt) {
-            if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
-                launchInAppReviews();
-                AppReviewManager.INSTANCE.onInAppReviewsPromptShown();
-            } else {
-                AppReviewManager.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
-            }
+            AppReviewManager.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
         }
 
         scheduleLocalNotifications();
@@ -855,20 +845,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void launchInAppReviews() {
-        ReviewManager manager = ReviewManagerFactory.create(this);
-        Task<ReviewInfo> request = manager.requestReviewFlow();
-        request.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                ReviewInfo reviewInfo = task.getResult();
-                Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
-                flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
-            } else {
-                logException(task);
-            }
-        });
-    }
-
     private CreatePageDashboardSource getCreatePageDashboardSourceFromActionType(ActionType actionType) {
         if (actionType == ActionType.CREATE_NEW_PAGE_FROM_PAGES_CARD) {
             return CreatePageDashboardSource.PAGES_CARD;
@@ -1201,6 +1177,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
+        if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
+            AppReviewManager.INSTANCE.launchInAppReviews(this);
+        }
         checkForInAppUpdate();
 
         mIsChangingConfiguration = false;

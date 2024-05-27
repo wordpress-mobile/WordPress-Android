@@ -21,7 +21,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewManagerFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
@@ -60,7 +59,6 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
-import org.wordpress.android.util.extensions.logException
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
@@ -333,22 +331,6 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun launchInAppReviews() {
-        val manager = ReviewManagerFactory.create(this)
-        val request = manager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val reviewInfo = task.result
-                val flow = manager.launchReviewFlow(this, reviewInfo)
-                flow.addOnFailureListener { e ->
-                    AppLog.e(AppLog.T.POSTS, "Error launching google review API flow.", e)
-                }
-            } else {
-                task.logException()
-            }
-        }
-    }
-
     private fun PostListActivityBinding.setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
@@ -446,8 +428,7 @@ class PostsListActivity : LocaleAwareActivity(),
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
         if (AppReviewManager.shouldShowInAppReviewsPrompt()) {
-            launchInAppReviews()
-            AppReviewManager.onInAppReviewsPromptShown()
+            AppReviewManager.launchInAppReviews(this)
         }
     }
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
