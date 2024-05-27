@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.models.Note
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -30,6 +31,7 @@ object AppRatingDialog {
     private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
     private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
     private const val TARGET_COUNT_POST_PUBLISHED = 2
+    private const val TARGET_COUNT_NOTIFICATIONS = 10
 
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
@@ -114,6 +116,17 @@ object AppRatingDialog {
     }
 
     /**
+     * Called when a notification is received. We use this to determine which users will see the in-app review prompt.
+     */
+    fun onNotificationReceived(note: Note) {
+        if (shouldShowInAppReviewsPrompt()) return
+        val shouldTrack = note.isUnread && (note.isLikeType || note.isCommentType || note.isFollowType)
+        if (shouldTrack && AppPrefs.getInAppReviewsNotificationCount() < TARGET_COUNT_NOTIFICATIONS) {
+            AppPrefs.incrementInAppReviewsNotificationCount()
+        }
+    }
+
+    /**
      * Check whether the in-app reviews prompt should be shown or not.
      * @return true if the prompt should be shown
      */
@@ -121,14 +134,13 @@ object AppRatingDialog {
         val shouldWaitAfterLastShown = Date().time - inAppReviewsShownDate.time < criteriaInstallMs
         val shouldWaitAfterAskLaterTapped = Date().time - askLaterDate.time < criteriaInstallMs
         val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
-        val notificationsGoal = notificationCount == TARGET_COUNT_NOTIFICATIONS
+        val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
         return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown && !shouldWaitAfterAskLaterTapped &&
             (publishedPostsGoal || notificationsGoal)
     }
 
     fun onInAppReviewsPromptShown() {
-        storeInAppReviewsShownDate()
-        AppPrefs.resetPublishedPostCount()
+        resetInAppReviewsCounters()
     }
 
     /**
@@ -150,8 +162,7 @@ object AppRatingDialog {
             dialog.show(fragmentManger, AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
             AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_SAW_PROMPT)
 
-            // Reset the published post counter of in-app reviews prompt flow.
-            AppPrefs.resetPublishedPostCount()
+            resetInAppReviewsCounters()
         }
     }
 
@@ -262,6 +273,14 @@ object AppRatingDialog {
     /**
      * Store the date the in-app reviews prompt is attempted to launch.
      */
-    private fun storeInAppReviewsShownDate() =
-        preferences.edit().putLong(IN_APP_REVIEWS_SHOWN_DATE, System.currentTimeMillis())?.apply()
+    private fun storeInAppReviewsShownDate() {
+        inAppReviewsShownDate = Date(System.currentTimeMillis())
+        preferences.edit().putLong(IN_APP_REVIEWS_SHOWN_DATE, inAppReviewsShownDate.time)?.apply()
+    }
+
+    private fun resetInAppReviewsCounters() {
+        storeInAppReviewsShownDate()
+        AppPrefs.resetPublishedPostCount()
+        AppPrefs.resetInAppReviewsNotificationCount()
+    }
 }

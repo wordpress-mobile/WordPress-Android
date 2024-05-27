@@ -506,7 +506,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (canShowAppRatingPrompt) {
-            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
+            if (AppRatingDialog.INSTANCE.shouldShowInAppReviewsPrompt()) {
+                launchInAppReviews();
+                AppRatingDialog.INSTANCE.onInAppReviewsPromptShown();
+            } else {
+                AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
+            }
         }
 
         scheduleLocalNotifications();
@@ -782,11 +787,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 return null;
             });
         });
-
-        mReviewViewModel.getLaunchReview().observe(this, event -> event.applyIfNotHandled(unit -> {
-            launchInAppReviews();
-            return null;
-        }));
 
         BloggingReminderUtils.observeBottomSheet(
                 mBloggingRemindersViewModel.isBottomSheetShowing(),
@@ -1410,6 +1410,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
                                 if (isFirstTimePublishing) {
+                                    AppRatingDialog.INSTANCE.onPostPublished();
                                 }
                             }
                     );
@@ -1819,6 +1820,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         isFirstTimePublishing -> {
                             mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
                             if (isFirstTimePublishing) {
+                                AppRatingDialog.INSTANCE.onPostPublished();
                             }
                         }
                 );
