@@ -2012,6 +2012,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD MIN_ALLOWED_QUANTITY INTEGER")
                     db.execSQL("ALTER TABLE WCProductModel ADD MAX_ALLOWED_QUANTITY INTEGER")
                     db.execSQL("ALTER TABLE WCProductModel ADD GROUP_OF_QUANTITY INTEGER")
+
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD MIN_ALLOWED_QUANTITY INTEGER")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD MAX_ALLOWED_QUANTITY INTEGER")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD GROUP_OF_QUANTITY INTEGER")
                 }
             }
         }
