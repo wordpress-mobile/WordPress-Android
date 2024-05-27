@@ -64,7 +64,7 @@ import org.wordpress.android.util.extensions.logException
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
-import org.wordpress.android.widgets.AppRatingDialog
+import org.wordpress.android.widgets.AppReviewManager
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -373,7 +373,7 @@ class PostsListActivity : LocaleAwareActivity(),
                     changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
                     if (isFirstTimePublishing) {
-                        AppRatingDialog.onPostPublished()
+                        AppReviewManager.onPostPublished()
                     }
                 }
             }
@@ -445,9 +445,9 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
-        if (AppRatingDialog.shouldShowInAppReviewsPrompt()) {
+        if (AppReviewManager.shouldShowInAppReviewsPrompt()) {
             launchInAppReviews()
-            AppRatingDialog.onInAppReviewsPromptShown()
+            AppReviewManager.onInAppReviewsPromptShown()
         }
     }
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")

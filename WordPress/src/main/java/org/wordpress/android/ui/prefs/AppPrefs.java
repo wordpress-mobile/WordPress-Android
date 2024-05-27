@@ -162,9 +162,9 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        // PUBLISHED_POST_COUNT will increase until it reaches AppRatingDialog.TARGET_COUNT_POST_PUBLISHED
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_POST_PUBLISHED
         PUBLISHED_POST_COUNT,
-        // PUBLISHED_POST_COUNT will increase until it reaches AppRatingDialog.TARGET_COUNT_NOTIFICATIONS
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_NOTIFICATIONS
         IN_APP_REVIEWS_NOTIFICATION_COUNT,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,

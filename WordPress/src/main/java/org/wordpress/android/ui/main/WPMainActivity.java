@@ -176,7 +176,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
@@ -506,11 +506,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (canShowAppRatingPrompt) {
-            if (AppRatingDialog.INSTANCE.shouldShowInAppReviewsPrompt()) {
+            if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
                 launchInAppReviews();
-                AppRatingDialog.INSTANCE.onInAppReviewsPromptShown();
+                AppReviewManager.INSTANCE.onInAppReviewsPromptShown();
             } else {
-                AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
+                AppReviewManager.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
             }
         }
 
@@ -1410,7 +1410,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
                                 if (isFirstTimePublishing) {
-                                    AppRatingDialog.INSTANCE.onPostPublished();
+                                    AppReviewManager.INSTANCE.onPostPublished();
                                 }
                             }
                     );
@@ -1820,7 +1820,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         isFirstTimePublishing -> {
                             mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
                             if (isFirstTimePublishing) {
-                                AppRatingDialog.INSTANCE.onPostPublished();
+                                AppReviewManager.INSTANCE.onPostPublished();
                             }
                         }
                 );

@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog.T
 import java.util.Date
 import java.util.concurrent.TimeUnit
 
-object AppRatingDialog {
+object AppReviewManager {
     private const val PREF_NAME = "rate_wpandroid"
     private const val KEY_INSTALL_DATE = "rate_install_date"
     private const val KEY_LAUNCH_TIMES = "rate_launch_times"

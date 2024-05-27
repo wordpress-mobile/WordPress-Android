@@ -91,7 +91,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.QuickStartFocusPoint;
 
 import java.util.ArrayList;
@@ -1097,7 +1097,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
 
         UploadService.uploadMedia(this, mediaModels, "MediaBrowserActivity#addMediaToUploadService");
-        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
+        AppReviewManager.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {

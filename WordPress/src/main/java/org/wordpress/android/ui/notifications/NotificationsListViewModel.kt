@@ -35,7 +35,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.widgets.AppRatingDialog
+import org.wordpress.android.widgets.AppReviewManager
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -142,7 +142,7 @@ class NotificationsListViewModel @Inject constructor(
         openDetailView: () -> Unit
     ) {
         val note = noteId?.let { notificationsUtilsWrapper.getNoteById(noteId) }
-        note?.let { AppRatingDialog.onNotificationReceived(it) }
+        note?.let { AppReviewManager.onNotificationReceived(it) }
         if (note != null && note.isCommentType && !note.canModerate()) {
             val readerPost = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
             if (readerPost != null) {
