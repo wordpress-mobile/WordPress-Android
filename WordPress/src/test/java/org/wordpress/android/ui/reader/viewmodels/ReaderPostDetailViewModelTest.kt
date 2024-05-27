@@ -27,6 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
@@ -1098,6 +1099,18 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             anyOrNull(),
             anyOrNull()
         )
+    }
+
+    @Test
+    fun `onArticleTextCopied tracks the reader_article_text_copied event`() {
+        viewModel.onArticleTextCopied()
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_ARTICLE_TEXT_COPIED)
+    }
+
+    @Test
+    fun `onArticleTextHighlighted tracks the reader_article_text_highlighted event`() {
+        viewModel.onArticleTextHighlighted()
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_ARTICLE_TEXT_HIGHLIGHTED)
     }
 
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {
