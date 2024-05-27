@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.module;
 
 import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.CustomRedirectInterceptor;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +45,16 @@ public abstract class OkHttpClientModule {
         return okHttpRegularClient.newBuilder()
                                   .followRedirects(false)
                                   .build();
+    }
+
+    @Provides
+    @Named("custom-ssl-custom-redirects")
+    public static OkHttpClient provideCustomRedirectsOkHttpClientBuilder(
+            @Named("custom-ssl") final OkHttpClient okHttpRegularClient) {
+        OkHttpClient.Builder builder = okHttpRegularClient.newBuilder().followRedirects(false);
+        CustomRedirectInterceptor customRedirectInterceptor = new CustomRedirectInterceptor();
+        builder.addInterceptor(customRedirectInterceptor);
+        return builder.build();
     }
 
     @Singleton
