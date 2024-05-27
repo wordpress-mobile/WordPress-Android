@@ -450,6 +450,15 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun getShouldHideDynamicCard(id: String, ): Boolean =
         AppPrefs.getShouldHideDynamicCard(id)
 
+    fun shouldUpdateBookmarkPostsPseudoIds(tag: ReaderTag?): Boolean = AppPrefs.shouldUpdateBookmarkPostsPseudoIds(tag)
+
+    fun setBookmarkPostsPseudoIdsUpdated() = AppPrefs.setBookmarkPostsPseudoIdsUpdated()
+
+    fun shouldShowReaderAnnouncementCard(): Boolean = AppPrefs.getShouldShowReaderAnnouncementCard()
+
+    fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
+        AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
+    
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun getDebugBooleanPref(key: String, default: Boolean = false) =

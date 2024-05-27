@@ -151,6 +151,8 @@ android {
         buildConfigField "boolean", "READER_DISCOVER_NEW_ENDPOINT", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
+        buildConfigField "boolean", "READER_TAGS_FEED", "false"
+        buildConfigField "boolean", "READER_ANNOUNCEMENT_CARD", "false"
         buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features

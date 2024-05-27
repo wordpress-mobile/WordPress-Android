@@ -10,7 +10,7 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.reader.services.post.ReaderPostLogic
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import kotlin.test.assertEquals
 
@@ -47,7 +47,7 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
             BLOGGING_PROMPT_ID_TAG,
             BLOGGING_PROMPT_ID_TAG,
             BLOGGING_PROMPT_ID_TAG,
-            ReaderPostLogic.formatFullEndpointForTag(BLOGGING_PROMPT_ID_TAG),
+            ReaderPostRepository.formatFullEndpointForTag(BLOGGING_PROMPT_ID_TAG),
             ReaderTagType.FOLLOWED,
         )
         val actual = tagProvider.promptSearchReaderTag("valid-url")
@@ -61,7 +61,7 @@ class BloggingPromptsPostTagProviderTest : BaseUnitTest() {
             BLOGGING_PROMPT_TAG,
             BLOGGING_PROMPT_TAG,
             BLOGGING_PROMPT_TAG,
-            ReaderPostLogic.formatFullEndpointForTag(BLOGGING_PROMPT_TAG),
+            ReaderPostRepository.formatFullEndpointForTag(BLOGGING_PROMPT_TAG),
             ReaderTagType.FOLLOWED,
         )
         val actual = tagProvider.promptSearchReaderTag("invalid-url")

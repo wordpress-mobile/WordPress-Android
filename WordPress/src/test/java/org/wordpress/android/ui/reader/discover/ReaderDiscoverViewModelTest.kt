@@ -54,6 +54,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -137,6 +138,9 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
+    @Mock
+    private lateinit var mReaderAnnouncementHelper: ReaderAnnouncementHelper
+
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
@@ -160,6 +164,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             displayUtilsWrapper,
             getFollowedTagsUseCase,
             readerImprovementsFeatureConfig,
+            mReaderAnnouncementHelper,
             testDispatcher(),
             testDispatcher()
         )
@@ -398,6 +403,55 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
         assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostNewUiState::class.java)
+    }
+
+    @Test
+    fun `if Announcement does not exist then ReaderAnnouncementCardUiState will not be present`() = test {
+        // Arrange
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(false)
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
+        // Assert
+        val contentUiState = uiStates.last() as ContentUiState
+        assertThat(contentUiState.cards.first())
+            .isNotInstanceOf(ReaderCardUiState.ReaderAnnouncementCardUiState::class.java)
+    }
+
+    @Test
+    fun `if Announcement exists then ReaderAnnouncementCardUiState will be present`() = test {
+        // Arrange
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(mReaderAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(mock())
+        val uiStates = init(autoUpdateFeed = false).uiStates
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
+        // Assert
+        val contentUiState = uiStates.last() as ContentUiState
+        assertThat(contentUiState.cards.first())
+            .isInstanceOf(ReaderCardUiState.ReaderAnnouncementCardUiState::class.java)
+    }
+
+    @Test
+    fun `clicking done on ReaderAnnouncementCardUiState dismisses and updates the ContentUiState`() = test {
+        // Arrange
+        whenever(mReaderAnnouncementHelper.hasReaderAnnouncement()).thenReturn(true)
+        whenever(mReaderAnnouncementHelper.getReaderAnnouncementItems()).thenReturn(mock())
+        val uiStates = init(autoUpdateFeed = false).uiStates
+
+        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
+        val contentUiState = uiStates.last() as ContentUiState
+        val announcementCard = contentUiState.cards.first() as ReaderCardUiState.ReaderAnnouncementCardUiState
+
+        // Act
+        announcementCard.onDoneClick()
+
+        // Assert
+        verify(mReaderAnnouncementHelper).dismissReaderAnnouncement()
+
+        val newContentUiState = uiStates.last() as ContentUiState
+        assertThat(newContentUiState.cards.first())
+            .isNotInstanceOf(ReaderCardUiState.ReaderAnnouncementCardUiState::class.java)
     }
 
     @Test

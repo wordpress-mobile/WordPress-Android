@@ -1,3 +1,0 @@
-24.8:
-Auf dem Stats-Bildschirm werden die Prozentwerte für Benutzer von Rechts-nach-Links-Sprachen nun in ihrer korrekten Position angezeigt. Genau richtig.
-

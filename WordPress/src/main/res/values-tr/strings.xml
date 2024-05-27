@@ -25,7 +25,6 @@ Language: tr
     <string name="notifications_empty_subscribers">Henüz abone yok</string>
     <string name="stats_view_emails">E-posta Adresleri</string>
     <string name="stats_view_subscribers">Aboneler</string>
-    <string name="stats_view_subscribers_chart">Aboneler</string>
     <string name="stats_view_total_subscribers">Toplam Abone</string>
     <string name="stats_view_subscriber_totals">Abone Toplamları</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -577,8 +576,8 @@ Language: tr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Okuyucu, Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">İstatistikleriniz Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Yeni Jetpack uygulamasına geçiş yapın</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
-    <string name="blogging_prompts_list_error_network_title">Bu içerik şu an yüklenemiyor</string>
+    <string name="no_connection_error_description">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
+    <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">İstemler yüklenirken bir sorun çıktı.</string>
     <string name="blogging_prompts_list_error_fetch_title">Eyvah</string>
     <string name="blogging_prompts_list_no_prompts">Henüz bir istem yok</string>

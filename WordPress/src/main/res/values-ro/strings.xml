@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-13 20:24:52+0000
+Translation-Revision-Date: 2024-05-23 13:24:24+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Abonați</string>
+    <string name="stats_subscribers_marker_view_singular">Abonat</string>
+    <string name="stats_view_subscriber_growth">Creștere număr de abonați</string>
     <string name="role_subscriber">Abonat</string>
     <string name="title_email_subscriber">Abonat prin email</string>
     <string name="people_empty_list_filtered_email_subscribers">Nu ai niciun abonat prin email până acum</string>
@@ -25,7 +28,6 @@ Language: ro
     <string name="notifications_empty_subscribers">Nu ai niciun abonat până acum</string>
     <string name="stats_view_emails">Emailuri</string>
     <string name="stats_view_subscribers">Abonați</string>
-    <string name="stats_view_subscribers_chart">Abonați</string>
     <string name="stats_view_total_subscribers">Total abonați</string>
     <string name="stats_view_subscriber_totals">Total abonați</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Verifică conexiunea rețelei și încearcă din nou.</string>
-    <string name="blogging_prompts_list_error_network_title">Nu pot să încarc acest conținut chiar acum</string>
+    <string name="no_connection_error_description">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
     <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>

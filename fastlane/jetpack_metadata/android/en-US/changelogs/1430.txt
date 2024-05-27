@@ -1,2 +1,0 @@
-On the Stats screen, percentages now appear in their correct position for right-to-left language users. Right on.
-

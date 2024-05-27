@@ -25,7 +25,6 @@ Language: zh_TW
     <string name="notifications_empty_subscribers">目前沒有訂閱者</string>
     <string name="stats_view_emails">電子郵件</string>
     <string name="stats_view_subscribers">訂閱者</string>
-    <string name="stats_view_subscribers_chart">訂閱者</string>
     <string name="stats_view_total_subscribers">訂閱者總人數</string>
     <string name="stats_view_subscriber_totals">訂閱者總數</string>
     <string name="stats_list_item_with_two_values_description">%1$s：%2$s，%3$s：%4$s，%5$s：%6$s</string>
@@ -573,8 +572,8 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">「閱讀器」將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">你的統計資料將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切換至全新 Jetpack 應用程式</string>
-    <string name="blogging_prompts_list_error_network_subtitle">請檢查你的網路連線並再試一次。</string>
-    <string name="blogging_prompts_list_error_network_title">目前無法載入此內容</string>
+    <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
+    <string name="no_connection_error_title">目前無法載入此內容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">載入提示時發生錯誤。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚無提示</string>
