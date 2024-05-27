@@ -312,7 +312,8 @@ class ReferrersRestClientTest {
                         eq(kclass),
                         eq(cachingEnabled),
                         any(),
-                        eq(false)
+                        eq(false),
+                        customGsonBuilder = anyOrNull()
                 )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)

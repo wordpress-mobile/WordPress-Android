@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
+import org.wordpress.android.fluxc.utils.WPComRestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -204,7 +205,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .build();
 
         // Try to add locale query param
-        HttpUrl httpUrl = getHttpUrlWithLocale(url);
+        HttpUrl httpUrl = WPComRestClientUtils.getHttpUrlWithLocale(mAppContext, url);
 
         if (null != httpUrl) {
             request = request.newBuilder()

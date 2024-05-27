@@ -590,7 +590,9 @@ class ActivityLogRestClientTest {
                 eq(ActivitiesResponse::class.java),
                 eq(false),
                 any(),
-                eq(false))
+                eq(false),
+                customGsonBuilder = anyOrNull()
+        )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
@@ -609,7 +611,9 @@ class ActivityLogRestClientTest {
                 eq(RewindStatusResponse::class.java),
                 eq(false),
                 any(),
-                eq(false))).thenReturn(response)
+                eq(false),
+                customGsonBuilder = anyOrNull()
+        )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
     }
@@ -693,7 +697,9 @@ class ActivityLogRestClientTest {
                 eq(Array<BackupDownloadStatusResponse>::class.java),
                 eq(false),
                 any(),
-                eq(false))).thenReturn(response)
+                eq(false),
+                customGsonBuilder = anyOrNull()
+        )).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
         return response
     }
@@ -710,7 +716,9 @@ class ActivityLogRestClientTest {
                 eq(ActivityTypesResponse::class.java),
                 eq(false),
                 any(),
-                eq(false))
+                eq(false),
+                customGsonBuilder = anyOrNull()
+        )
         ).thenReturn(response)
         return response
     }
