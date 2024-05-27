@@ -1,9 +1,13 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +31,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import org.wordpress.android.R
+import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
 
 @AndroidEntryPoint
 class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
@@ -38,9 +44,44 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
-                VoiceToContentScreen(viewModel)
+                VoiceToContentScreen(
+                    viewModel = viewModel,
+                    onRequestPermission = { requestAllPermissionsForRecording() },
+                    hasPermission = { hasAllPermissionsForRecording() }
+                )
             }
         }
+    }
+
+    private val requestMultiplePermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val areAllPermissionsGranted = permissions.entries.all { it.value }
+        if (areAllPermissionsGranted) {
+            viewModel.startRecording()
+        } else {
+            // Handle permissions denied case
+            // todo pantelis handle permissions denied case
+            Toast.makeText(context, "Permissions needed for recording", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun hasAllPermissionsForRecording(): Boolean {
+        return REQUIRED_RECORDING_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun requestAllPermissionsForRecording() {
+        requestMultiplePermissionsLauncher.launch(
+            arrayOf(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        )
     }
 
     companion object {
@@ -52,7 +93,11 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
 }
 
 @Composable
-fun VoiceToContentScreen(viewModel: VoiceToContentViewModel) {
+fun VoiceToContentScreen(
+    viewModel: VoiceToContentViewModel,
+    onRequestPermission: () -> Unit,
+    hasPermission: () -> Boolean
+) {
     val result by viewModel.uiState.observeAsState()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +122,24 @@ fun VoiceToContentScreen(viewModel: VoiceToContentViewModel) {
                     contentDescription = "Microphone",
                     modifier = Modifier
                         .size(64.dp)
-                        .clickable { viewModel.execute() }
+                        .clickable {
+                            if (hasPermission()) {
+                                viewModel.startRecording()
+                            } else {
+                                onRequestPermission()
+                            }
+                        }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Icon(
+                    painterResource(id = com.google.android.exoplayer2.ui.R.drawable.exo_icon_stop),
+                    contentDescription = "Stop",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clickable {
+                            viewModel.stopRecording()
+                        }
                 )
             }
         }
