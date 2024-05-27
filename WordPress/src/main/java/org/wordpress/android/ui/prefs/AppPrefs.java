@@ -1302,7 +1302,7 @@ public class AppPrefs {
     }
 
     public static void resetPublishedPostCount() {
-        putInt(DeletablePrefKey.PUBLISHED_POST_COUNT, 0);
+        remove(DeletablePrefKey.PUBLISHED_POST_COUNT);
     }
 
     public static int getPublishedPostCount() {
