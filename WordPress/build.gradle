@@ -147,10 +147,13 @@ android {
         buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
-        buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TAB", "false"
+        buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TABS", "false"
         buildConfigField "boolean", "READER_DISCOVER_NEW_ENDPOINT", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
         buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
+        buildConfigField "boolean", "READER_TAGS_FEED", "false"
+        buildConfigField "boolean", "READER_ANNOUNCEMENT_CARD", "false"
+        buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -166,6 +169,7 @@ android {
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
         buildConfigField "boolean", "SYNC_PUBLISHING", "false"
+        buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -390,6 +394,9 @@ dependencies {
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
+
+    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"

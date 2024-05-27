@@ -604,7 +604,7 @@ public class PeopleManagementActivity extends LocaleAwareActivity
 
     private boolean navigateBackToPeopleListFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() > 0) {
+        if (!fragmentManager.isStateSaved() && fragmentManager.getBackStackEntryCount() > 0) {
             fragmentManager.popBackStack();
 
             ActionBar actionBar = getSupportActionBar();

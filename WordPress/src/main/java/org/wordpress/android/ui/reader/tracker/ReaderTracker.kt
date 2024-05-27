@@ -88,6 +88,7 @@ class ReaderTracker @Inject constructor(
                 ReaderTab.A8C -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_A8C_SHOWN)
                 ReaderTab.P2 -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_P2_SHOWN)
                 ReaderTab.CUSTOM -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN)
+                ReaderTab.TAGS_FEED -> analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_TAGS_FEED_SHOWN)
             }
             appPrefsWrapper.setReaderActiveTab(readerTab)
         }
@@ -404,6 +405,7 @@ class ReaderTracker @Inject constructor(
             readerTag.isA8C -> "a8c"
             readerTag.isListTopic -> "list"
             readerTag.isP2 -> "p2"
+            readerTag.isTags -> "tags"
             else -> null
         }?.let { trackingId ->
             analyticsTrackerWrapper.track(
@@ -467,6 +469,7 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_SEARCH = "search"
         const val SOURCE_SITE_PREVIEW = "site_preview"
         const val SOURCE_TAG_PREVIEW = "tag_preview"
+        const val SOURCE_TAGS_FEED = "tags_feed"
         const val SOURCE_POST_DETAIL = "post_detail"
         const val SOURCE_POST_DETAIL_TOOLBAR = "post_detail_toolbar"
         const val SOURCE_POST_DETAIL_COMMENT_SNIPPET = "post_detail_comment_snippet"
@@ -477,6 +480,8 @@ class ReaderTracker @Inject constructor(
         const val SOURCE_READER_LIKE_LIST = "reader_like_list"
         const val SOURCE_READER_LIKE_LIST_USER_PROFILE = "reader_like_list_user_profile"
         const val SOURCE_NOTIF_LIKE_LIST_USER_PROFILE = "notif_like_list_user_profile"
+        const val SOURCE_SITE_COMMENTS_USER_PROFILE = "site_comments_user_profile"
+        const val SOURCE_NOTIF_COMMENT_USER_PROFILE = "notif_comment_user_profile"
         const val SOURCE_USER_PROFILE_UNKNOWN = "user_profile_source_unknown"
         const val SOURCE_ACTIVITY_LOG_DETAIL = "activity_log_detail"
         const val SOURCE_BLOGGING_PROMPTS_VIEW_ANSWERS = "blogging_prompts_my_site_card_view_answers"
@@ -496,11 +501,14 @@ class ReaderTracker @Inject constructor(
             AnalyticsTracker.track(stat, properties)
         }
 
-        fun isUserProfileSource(source: String): Boolean {
-            return (source == SOURCE_READER_LIKE_LIST_USER_PROFILE ||
-                    source == SOURCE_NOTIF_LIKE_LIST_USER_PROFILE ||
-                    source == SOURCE_USER_PROFILE_UNKNOWN)
-        }
+        fun isUserProfileSource(source: String): Boolean =
+            listOf(
+                SOURCE_READER_LIKE_LIST_USER_PROFILE,
+                SOURCE_NOTIF_LIKE_LIST_USER_PROFILE,
+                SOURCE_SITE_COMMENTS_USER_PROFILE,
+                SOURCE_NOTIF_COMMENT_USER_PROFILE,
+                SOURCE_USER_PROFILE_UNKNOWN
+            ).contains(source)
     }
 }
 
@@ -514,7 +522,8 @@ enum class ReaderTab(
     SAVED(4, ReaderTracker.SOURCE_SAVED),
     CUSTOM(5, ReaderTracker.SOURCE_CUSTOM),
     A8C(6, ReaderTracker.SOURCE_A8C),
-    P2(7, ReaderTracker.SOURCE_P2);
+    P2(7, ReaderTracker.SOURCE_P2),
+    TAGS_FEED(8, ReaderTracker.SOURCE_TAGS_FEED);
 
     companion object {
         fun fromId(id: Int): ReaderTab {
@@ -526,6 +535,7 @@ enum class ReaderTab(
                 A8C.id -> A8C
                 P2.id -> P2
                 CUSTOM.id -> CUSTOM
+                TAGS_FEED.id -> TAGS_FEED
                 else -> throw RuntimeException("Unexpected ReaderTab id")
             }
         }
@@ -539,6 +549,7 @@ enum class ReaderTab(
                 readerTag.isDiscover -> DISCOVER
                 readerTag.isA8C -> A8C
                 readerTag.isP2 -> P2
+                readerTag.isTags -> TAGS_FEED
                 else -> CUSTOM
             }
         }

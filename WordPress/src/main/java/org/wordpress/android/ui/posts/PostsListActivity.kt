@@ -209,6 +209,7 @@ class PostsListActivity : LocaleAwareActivity(),
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
+            initSearchFragment()
             initBloggingReminders()
             initInAppReviews()
             initTabLayout(tabIndex)
@@ -492,7 +493,6 @@ class PostsListActivity : LocaleAwareActivity(),
         authorFilterMenuItem = menu.findItem(R.id.author_filter_menu_item)
         searchActionButton = menu.findItem(R.id.toggle_search)
 
-        initSearchFragment()
         binding.initSearchView()
         initAuthorFilter(authorFilterMenuItem)
         return true

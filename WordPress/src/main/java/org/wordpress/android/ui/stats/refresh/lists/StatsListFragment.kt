@@ -34,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.toNameResource
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -58,7 +58,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     lateinit var navigator: StatsNavigator
 
     @Inject
-    lateinit var statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    lateinit var statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     @Inject
     lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
@@ -155,7 +155,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
-        if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) {
+        if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) {
             dateSelector.granularitySpinner.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.filter_spinner_item,

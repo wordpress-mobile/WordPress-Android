@@ -50,6 +50,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:paddingVertical="@dimen/page_list_row_vertical_padding"
+                android:textAlignment="viewStart"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="@dimen/text_sz_medium"
                 app:layout_constraintBottom_toBottomOf="parent"

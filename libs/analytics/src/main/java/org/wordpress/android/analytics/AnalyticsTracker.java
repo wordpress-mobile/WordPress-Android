@@ -88,6 +88,9 @@ public final class AnalyticsTracker {
         READER_READING_PREFERENCES_FEEDBACK_TAPPED,
         READER_READING_PREFERENCES_ITEM_TAPPED,
         READER_READING_PREFERENCES_SAVED,
+        READER_ANNOUNCEMENT_CARD_DISMISSED,
+        READER_TAGS_FEED_HEADER_TAPPED,
+        READER_TAGS_FEED_MORE_FROM_TAG_TAPPED,
         STATS_ACCESSED,
         STATS_ACCESS_ERROR,
         STATS_PERIOD_ACCESSED,
@@ -774,6 +777,7 @@ public final class AnalyticsTracker {
         READER_LIKED_SHOWN,
         READER_SAVED_LIST_SHOWN,
         READER_CUSTOM_TAB_SHOWN,
+        READER_TAGS_FEED_SHOWN,
         READER_DISCOVER_SHOWN,
         READER_DISCOVER_PAGINATED,
         READER_DISCOVER_TOPIC_TAPPED,
@@ -1122,7 +1126,12 @@ public final class AnalyticsTracker {
         RESOLVE_AUTOSAVE_CONFLICT_CONFIRM_TAPPED,
         RESOLVE_AUTOSAVE_CONFLICT_CANCEL_TAPPED,
         RESOLVE_AUTOSAVE_CONFLICT_CLOSE_TAPPED,
-        RESOLVE_AUTOSAVE_CONFLICT_DISMISSED;
+        RESOLVE_AUTOSAVE_CONFLICT_DISMISSED,
+        IN_APP_UPDATE_SHOWN,
+        IN_APP_UPDATE_DISMISSED,
+        IN_APP_UPDATE_ACCEPTED,
+        IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART;
+
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.
          * In that case you also need to add the event in the `AnalyticsTrackerNosaraTest.specialNames` map.

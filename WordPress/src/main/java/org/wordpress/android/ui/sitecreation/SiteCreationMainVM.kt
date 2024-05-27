@@ -347,9 +347,10 @@ class SiteCreationMainVM @Inject constructor(
         _onCompleted.value = NotCreated to isSiteTitleTaskCompleted()
     }
 
-    fun onWizardFinished(result: Created) {
-        siteCreationState = siteCreationState.copy(result = result)
-        _onCompleted.value = result to isSiteTitleTaskCompleted()
+    fun onWizardFinished(result: Created?) {
+        val nullCheckedResult = result ?: NotCreated
+        siteCreationState = siteCreationState.copy(result = nullCheckedResult)
+        _onCompleted.value = nullCheckedResult to isSiteTitleTaskCompleted()
     }
 
     private fun isSiteTitleTaskCompleted() = !siteCreationState.siteName.isNullOrBlank()

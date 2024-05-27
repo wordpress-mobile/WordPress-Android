@@ -31,10 +31,10 @@ import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartType
-import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
+import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.QuickStartReaderPrompt
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
@@ -42,6 +42,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.TopBarUiState
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -59,7 +60,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     lateinit var dateProvider: DateProvider
 
     @Mock
-    lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+    lateinit var loadReaderItemsUseCase: LoadReaderItemsUseCase
 
     @Mock
     lateinit var readerTracker: ReaderTracker
@@ -85,8 +86,8 @@ class ReaderViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
-    private val readerTopBarMenuHelper: ReaderTopBarMenuHelper = ReaderTopBarMenuHelper()
-
+    @Mock
+    lateinit var readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = createNonMockedNonEmptyReaderTagList()
@@ -100,7 +101,7 @@ class ReaderViewModelTest : BaseUnitTest() {
             testDispatcher(),
             appPrefsWrapper,
             dateProvider,
-            loadReaderTabsUseCase,
+            loadReaderItemsUseCase,
             readerTracker,
             accountStore,
             quickStartRepository,
@@ -108,8 +109,9 @@ class ReaderViewModelTest : BaseUnitTest() {
             jetpackBrandingUtils,
             snackbarSequencer,
             jetpackFeatureRemovalOverlayUtil,
-            readerTopBarMenuHelper,
-            urlUtilsWrapper
+            ReaderTopBarMenuHelper(readerTagsFeedFeatureConfig),
+            urlUtilsWrapper,
+            readerTagsFeedFeatureConfig,
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -156,7 +158,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             state = it
         }
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
+        whenever(loadReaderItemsUseCase.load()).thenReturn(ReaderTagList())
         // Act
         triggerContentDisplay()
         // Assert
@@ -550,7 +552,7 @@ class ReaderViewModelTest : BaseUnitTest() {
     private data class Observers(
         val uiStates: List<ReaderUiState>,
         val quickStartReaderPrompts: List<Event<QuickStartReaderPrompt>>,
-        val tabNavigationEvents: List<TabNavigation>
+        val tabNavigationEvents: List<TabNavigation>,
     )
 
     private fun triggerContentDisplay(
@@ -562,14 +564,14 @@ class ReaderViewModelTest : BaseUnitTest() {
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(emptyReaderTagList)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(emptyReaderTagList)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(nonEmptyReaderTagList)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(nonEmptyReaderTagList)
             block()
         }
     }
@@ -579,7 +581,7 @@ class ReaderViewModelTest : BaseUnitTest() {
         block: suspend CoroutineScope.() -> T
     ) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(readerTags)
+            whenever(loadReaderItemsUseCase.load()).thenReturn(readerTags)
             block()
         }
     }

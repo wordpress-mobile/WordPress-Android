@@ -119,6 +119,9 @@
     <color name="background_like_header">@color/white_translucent_10</color>
     <color name="background_dropdown_menu">#282728</color>
 
+    <!-- Comments -->
+    <color name="menu_more">#F2F2F7</color>
+
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#1C1C1E</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>

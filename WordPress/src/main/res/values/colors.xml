@@ -157,6 +157,9 @@
     <color name="background_dropdown_menu">@color/white</color>
     <color name="divider_likes">#3C3C43</color>
 
+    <!-- Comments -->
+    <color name="menu_more">#993C3C43</color>
+
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#F2F2F7</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>

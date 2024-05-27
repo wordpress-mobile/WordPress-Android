@@ -1,15 +1,17 @@
+@file:Suppress("DEPRECATION")
+
 package org.wordpress.android.ui.engagement
 
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.ViewCompat
+import androidx.core.view.isGone
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,15 +19,19 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.UserProfileBottomSheetBinding
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.PhotonUtils
-import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPAvatarUtils
+import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
-import org.wordpress.android.util.image.ImageType.BLAVATAR
+import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import com.google.android.material.R as MaterialR
@@ -43,41 +49,71 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject
     lateinit var resourceProvider: ResourceProvider
 
-    private lateinit var viewModel: UserProfileViewModel
+    @Inject
+    lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+
+    @Inject
+    lateinit var readerTracker: ReaderTracker
+
+    private var viewModel: UserProfileViewModel? = null
+    private var binding: UserProfileBottomSheetBinding? = null
+    private val state by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getSerializable(USER_PROFILE_STATE, UserProfileUiState::class.java)
+        } else {
+            requireArguments().getSerializable(USER_PROFILE_STATE) as? UserProfileUiState
+        }
+    }
 
     companion object {
-        const val USER_PROFILE_VIEW_MODEL_KEY = "user_profile_view_model_key"
+        private const val USER_PROFILE_VIEW_MODEL_KEY = "user_profile_view_model_key"
+        private const val USER_PROFILE_STATE = "user_profile_state"
 
-        fun newInstance(viewModelKey: String): UserProfileBottomSheetFragment {
-            val fragment = UserProfileBottomSheetFragment()
-            val bundle = Bundle()
+        const val TAG = "USER_PROFILE_BOTTOM_SHEET_TAG"
 
-            bundle.putString(USER_PROFILE_VIEW_MODEL_KEY, viewModelKey)
+        /**
+         * For displaying the user profile when users are from Likes
+         */
+        fun newInstance(viewModelKey: String) = UserProfileBottomSheetFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putString(USER_PROFILE_VIEW_MODEL_KEY, viewModelKey)
+                }
+            }
 
-            fragment.arguments = bundle
-
-            return fragment
-        }
+        /**
+         * For displaying the user profile when users are from Comments or Notifications
+         */
+        @JvmStatic
+        fun newInstance(state: UserProfileUiState) = UserProfileBottomSheetFragment()
+            .apply {
+                arguments = Bundle().apply {
+                    putSerializable(USER_PROFILE_STATE, state)
+                }
+            }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.user_profile_bottom_sheet, container)
-    }
+    ): View = UserProfileBottomSheetBinding.inflate(inflater, container, false)
+        .apply { binding = this }
+        .root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val vmKey = requireArguments().getString(USER_PROFILE_VIEW_MODEL_KEY)!!
+        val vmKey = requireArguments().getString(USER_PROFILE_VIEW_MODEL_KEY)
 
         ViewCompat.setAccessibilityPaneTitle(view, getString(R.string.user_profile_bottom_sheet_description))
 
-        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-            .get(vmKey, UserProfileViewModel::class.java)
+        vmKey?.let {
+            viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
+                .get(vmKey, UserProfileViewModel::class.java)
+            initObservers()
+        }
 
-        initObservers(view)
+        state?.let { binding?.setup(it) }
 
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
@@ -94,68 +130,81 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun initObservers(view: View) {
-        val userAvatar = view.findViewById<ImageView>(R.id.user_avatar)
-        val blavatar = view.findViewById<ImageView>(R.id.user_site_blavatar)
-        val userName = view.findViewById<TextView>(R.id.user_name)
-        val userLogin = view.findViewById<TextView>(R.id.user_login)
-        val userBio = view.findViewById<TextView>(R.id.user_bio)
-        val siteTitle = view.findViewById<TextView>(R.id.site_title)
-        val siteUrl = view.findViewById<TextView>(R.id.site_url)
-        val siteSectionHeader = view.findViewById<TextView>(R.id.site_section_header)
-        val siteData = view.findViewById<View>(R.id.site_data)
-
-        viewModel.bottomSheetUiState.observe(viewLifecycleOwner, { state ->
+    private fun initObservers() {
+        viewModel?.bottomSheetUiState?.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is UserProfileUiState -> {
-                    val avatarSz = resourceProvider.getDimensionPixelSize(R.dimen.user_profile_bottom_sheet_avatar_sz)
-                    val blavatarSz = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
-
-                    imageManager.loadIntoCircle(
-                        userAvatar,
-                        AVATAR_WITH_BACKGROUND,
-                        WPAvatarUtils.rewriteAvatarUrl(state.userAvatarUrl, avatarSz)
-                    )
-                    userName.text = state.userName
-                    userLogin.text = if (state.userLogin.isNotBlank()) {
-                        getString(R.string.at_username, state.userLogin)
-                    } else {
-                        ""
-                    }
-                    if (state.userBio.isNotBlank()) {
-                        userBio.text = state.userBio
-                        userBio.visibility = View.VISIBLE
-                    } else {
-                        userBio.visibility = View.GONE
-                    }
-
-                    imageManager.load(
-                        blavatar,
-                        BLAVATAR,
-                        PhotonUtils.getPhotonImageUrl(state.blavatarUrl, blavatarSz, blavatarSz, HIGH)
-                    )
-
-                    if (state.hasSiteUrl) {
-                        siteTitle.text = state.siteTitle
-                        siteUrl.text = UrlUtils.getHost(state.siteUrl)
-                        siteData.setOnClickListener {
-                            state.onSiteClickListener?.invoke(
-                                state.siteId,
-                                state.siteUrl,
-                                state.blogPreviewSource
-                            )
-                        }
-                        siteSectionHeader.visibility = View.VISIBLE
-                        blavatar.visibility = View.VISIBLE
-                        siteData.visibility = View.VISIBLE
-                    } else {
-                        siteSectionHeader.visibility = View.GONE
-                        blavatar.visibility = View.GONE
-                        siteData.visibility = View.GONE
-                    }
+                    binding?.setup(state)
                 }
             }
-        })
+        }
+    }
+
+    private fun UserProfileBottomSheetBinding.setup(state: UserProfileUiState) {
+        val avatarSz =
+            resourceProvider.getDimensionPixelSize(R.dimen.user_profile_bottom_sheet_avatar_sz)
+        val blavatarSz = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
+
+        imageManager.loadIntoCircle(
+            userAvatar,
+            ImageType.AVATAR_WITH_BACKGROUND,
+            WPAvatarUtils.rewriteAvatarUrl(state.userAvatarUrl, avatarSz)
+        )
+        userName.text = state.userName
+        userLogin.text = state.userLogin.ifBlank {
+            userLogin.isGone = true
+            ""
+        }
+        if (state.userBio.isNotBlank()) {
+            userBio.text = state.userBio
+            userBio.visibility = View.VISIBLE
+        } else {
+            userBio.visibility = View.GONE
+        }
+
+        imageManager.load(
+            userSiteBlavatar,
+            ImageType.BLAVATAR,
+            PhotonUtils.getPhotonImageUrl(state.blavatarUrl, blavatarSz, blavatarSz, PhotonUtils.Quality.HIGH)
+        )
+
+        if (state.hasSiteUrl) {
+            siteTitle.text = state.siteTitle
+            siteUrl.text = UrlUtils.getHost(state.siteUrl)
+            siteData.setOnClickListener {
+                if (state.siteId <= 0L && state.siteUrl.isNotEmpty()) {
+                    openSiteUrl(state.siteUrl, state.blogPreviewSource)
+                } else {
+                    openSiteId(state.siteId, state.blogPreviewSource)
+                }
+            }
+            siteSectionHeader.visibility = View.VISIBLE
+            userSiteBlavatar.visibility = View.VISIBLE
+            siteData.visibility = View.VISIBLE
+        } else {
+            siteSectionHeader.visibility = View.GONE
+            userSiteBlavatar.visibility = View.GONE
+            siteData.visibility = View.GONE
+        }
+    }
+
+    private fun openSiteId(siteId: Long, source: String) {
+        ReaderActivityLauncher.showReaderBlogPreview(
+            context,
+            siteId,
+            false,
+            source,
+            readerTracker
+        )
+    }
+
+    private fun openSiteUrl(url: String, source: String) {
+        analyticsUtilsWrapper.trackBlogPreviewedByUrl(source)
+        if (WPUrlUtils.isWordPressCom(url)) {
+            WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+        } else {
+            WPWebViewActivity.openURL(context, url)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -165,6 +214,11 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        viewModel.onBottomSheetCancelled()
+        viewModel?.onBottomSheetCancelled()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }

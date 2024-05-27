@@ -1,4 +1,3 @@
 package org.wordpress.android.ui.notifications
 
-class MilestoneDetailFragment: NotificationsDetailListFragment() {
-}
+class MilestoneDetailFragment: NotificationsDetailListFragment()
