@@ -25,7 +25,6 @@ Language: id
     <string name="notifications_empty_subscribers">Belum ada pelanggan</string>
     <string name="stats_view_emails">Email</string>
     <string name="stats_view_subscribers">Pelanggan</string>
-    <string name="stats_view_subscribers_chart">Pelanggan</string>
     <string name="stats_view_total_subscribers">Total Pelanggan</string>
     <string name="stats_view_subscriber_totals">Total Pelanggan</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +579,8 @@ Language: id
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader akan berpindah ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistik Anda akan berpindah ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Beralih ke aplikasi Jetpack baru</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Periksa koneksi internet Anda dan coba lagi.</string>
-    <string name="blogging_prompts_list_error_network_title">Tidak dapat memuat konten ini sekarang</string>
+    <string name="no_connection_error_description">Periksa koneksi internet Anda dan coba lagi.</string>
+    <string name="no_connection_error_title">Tidak dapat memuat konten ini sekarang</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Terjadi eror saat memuat prompt.</string>
     <string name="blogging_prompts_list_error_fetch_title">Waduh</string>
     <string name="blogging_prompts_list_no_prompts">Belum ada prompt</string>

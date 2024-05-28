@@ -184,6 +184,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return tagType == ReaderTagType.BOOKMARKED;
     }
 
+    public boolean isTags() {
+        return tagType == ReaderTagType.TAGS;
+    }
+
     public boolean isDiscover() {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(DISCOVER_PATH);
     }
@@ -204,7 +208,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     public boolean isFilterable() {
-        return this.isFollowedSites() || this.isA8C() || this.isP2();
+        return this.isFollowedSites() || this.isA8C() || this.isP2() || this.isTags();
     }
 
     public boolean isListTopic() {

@@ -25,7 +25,6 @@ Language: ja_JP
     <string name="notifications_empty_subscribers">まだ購読者はいません</string>
     <string name="stats_view_emails">メール</string>
     <string name="stats_view_subscribers">購読者</string>
-    <string name="stats_view_subscribers_chart">購読者</string>
     <string name="stats_view_total_subscribers">購読者総数</string>
     <string name="stats_view_subscriber_totals">購読者の総数</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s、%3$s: %4$s、%5$s: %6$s</string>
@@ -568,8 +567,8 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">統計は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">新しい Jetpack アプリに切り替える</string>
-    <string name="blogging_prompts_list_error_network_subtitle">ネットワーク接続を確認して、もう一度お試しください。</string>
-    <string name="blogging_prompts_list_error_network_title">現在このページを読み込めません</string>
+    <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="no_connection_error_title">現在このページを読み込めません</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">プロンプトの読み込みでエラーが発生しました。</string>
     <string name="blogging_prompts_list_error_fetch_title">エラーです</string>
     <string name="blogging_prompts_list_no_prompts">プロンプトはまだありません</string>

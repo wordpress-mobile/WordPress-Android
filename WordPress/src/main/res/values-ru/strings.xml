@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 09:54:09+0000
+Translation-Revision-Date: 2024-05-23 18:06:53+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Подписчики</string>
+    <string name="stats_subscribers_marker_view_singular">Подписчик</string>
+    <string name="stats_view_subscriber_growth">Рост числа подписчиков</string>
     <string name="role_subscriber">Подписчик</string>
     <string name="title_email_subscriber">Подписчик на рассылку по эл. почте</string>
     <string name="people_empty_list_filtered_email_subscribers">Подписчиков на рассылку по эл. почте пока нет</string>
@@ -25,7 +28,6 @@ Language: ru
     <string name="notifications_empty_subscribers">Подписчиков ещё нет</string>
     <string name="stats_view_emails">Адреса эл. почты</string>
     <string name="stats_view_subscribers">Подписчики</string>
-    <string name="stats_view_subscribers_chart">Подписчики</string>
     <string name="stats_view_total_subscribers">Всего подписчиков</string>
     <string name="stats_view_subscriber_totals">Всего подписчиков</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: ru
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Проверьте ваше подключение к сети и попробуйте снова.</string>
-    <string name="blogging_prompts_list_error_network_title">Сейчас невозможно загрузить это содержимое</string>
+    <string name="no_connection_error_description">Проверьте ваше подключение к сети и попробуйте снова.</string>
+    <string name="no_connection_error_title">Сейчас невозможно загрузить это содержимое</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
     <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>

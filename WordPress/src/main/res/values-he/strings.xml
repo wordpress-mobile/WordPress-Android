@@ -25,7 +25,6 @@ Language: he_IL
     <string name="notifications_empty_subscribers">אין עדיין מנויים</string>
     <string name="stats_view_emails">הודעות אימייל</string>
     <string name="stats_view_subscribers">מנויים</string>
-    <string name="stats_view_subscribers_chart">מנויים</string>
     <string name="stats_view_total_subscribers">סך כל המנויים</string>
     <string name="stats_view_subscriber_totals">המספר הכולל של המנויים</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -573,8 +572,8 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">הכלי Reader עובר לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">הנתונים הסטטיסטיים שלך עוברים לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">לעבור לאפליקציה החדשה של Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
-    <string name="blogging_prompts_list_error_network_title">אין אפשרות לטעון את התוכן כרגע</string>
+    <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">אירעה שגיאה בטעינת ההצעות.</string>
     <string name="blogging_prompts_list_error_fetch_title">אופס</string>
     <string name="blogging_prompts_list_no_prompts">עדיין אין הצעות</string>

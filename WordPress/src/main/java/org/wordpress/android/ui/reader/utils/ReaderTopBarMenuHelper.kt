@@ -10,10 +10,13 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.extensions.indexOrNull
 import javax.inject.Inject
 
-class ReaderTopBarMenuHelper @Inject constructor() {
+class ReaderTopBarMenuHelper @Inject constructor(
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig
+) {
     fun createMenu(readerTagsList: ReaderTagList): List<MenuElementData> {
         return mutableListOf<MenuElementData>().apply {
             readerTagsList.indexOrNull { it.isDiscover }?.let { discoverIndex ->
@@ -36,6 +39,11 @@ class ReaderTopBarMenuHelper @Inject constructor() {
                     id = getMenuItemIdFromReaderTagIndex(followedP2sIndex),
                     text = readerTagsList[followedP2sIndex].tagTitle,
                 ))
+            }
+            if (readerTagsFeedFeatureConfig.isEnabled()) {
+                readerTagsList.indexOrNull { it.isTags }?.let { tagsIndex ->
+                    add(createTagsItem(getMenuItemIdFromReaderTagIndex(tagsIndex)))
+                }
             }
             readerTagsList
                 .foldIndexed(SparseArrayCompat<ReaderTag>()) { index, sparseArray, readerTag ->
@@ -95,6 +103,14 @@ class ReaderTopBarMenuHelper @Inject constructor() {
         return MenuElementData.Item.Single(
             id = id,
             text = UiString.UiStringText(text),
+        )
+    }
+
+    private fun createTagsItem(id: String): MenuElementData.Item.Single {
+        return MenuElementData.Item.Single(
+            id = id,
+            text = UiString.UiStringRes(R.string.reader_dropdown_menu_tags),
+            leadingIcon = R.drawable.ic_reader_tags_24dp,
         )
     }
 

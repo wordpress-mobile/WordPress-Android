@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-14 18:42:38+0000
+Translation-Revision-Date: 2024-05-23 18:26:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es_CO
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Suscriptores</string>
+    <string name="stats_subscribers_marker_view_singular">Suscriptor</string>
+    <string name="stats_view_subscriber_growth">Incremento de suscriptores</string>
     <string name="role_subscriber">SuscriptorSuscriptor</string>
     <string name="title_email_subscriber">Suscriptor por correo electrónico</string>
     <string name="people_empty_list_filtered_email_subscribers">Aún no tienes suscriptores por correo electrónico</string>
@@ -25,7 +28,6 @@ Language: es_CO
     <string name="notifications_empty_subscribers">Aún no hay suscriptores</string>
     <string name="stats_view_emails">Correos electrónicos</string>
     <string name="stats_view_subscribers">Suscriptores</string>
-    <string name="stats_view_subscribers_chart">Suscriptores</string>
     <string name="stats_view_total_subscribers">Suscriptores totales</string>
     <string name="stats_view_subscriber_totals">Totales de suscriptores</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: es_CO
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">El lector se está trasladando a la aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">La estadísticas se están trasladado a la aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Cambiar a la nueva aplicación de Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
-    <string name="blogging_prompts_list_error_network_title">En este momento no se ha podido cargar este contenido</string>
+    <string name="no_connection_error_description">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
+    <string name="no_connection_error_title">En este momento no se ha podido cargar este contenido</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Se ha producido un error al cargar las indicaciones.</string>
     <string name="blogging_prompts_list_error_fetch_title">¡Vaya!</string>
     <string name="blogging_prompts_list_no_prompts">Todavía no hay sugerencias</string>

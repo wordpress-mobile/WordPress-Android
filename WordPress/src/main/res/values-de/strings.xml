@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-22 02:46:19+0000
+Translation-Revision-Date: 2024-05-23 13:07:40+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Abonnenten</string>
+    <string name="stats_subscribers_marker_view_singular">Abonnent</string>
+    <string name="stats_view_subscriber_growth">Abonnentenwachstum</string>
     <string name="role_subscriber">Abonnent</string>
     <string name="title_email_subscriber">E-Mail-Abonnent</string>
     <string name="people_empty_list_filtered_email_subscribers">Noch keine E-Mail-Abonnenten</string>
@@ -25,7 +28,6 @@ Language: de
     <string name="notifications_empty_subscribers">Noch keine Abonnenten</string>
     <string name="stats_view_emails">E-Mails</string>
     <string name="stats_view_subscribers">Abonnenten</string>
-    <string name="stats_view_subscribers_chart">Abonnenten</string>
     <string name="stats_view_total_subscribers">Gesamtzahl der Abonnenten</string>
     <string name="stats_view_subscriber_totals">Abonnenten insgesamt</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: de
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Der Reader wird in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Deine Statistiken werden in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Zur neuen Jetpack-App wechseln</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
-    <string name="blogging_prompts_list_error_network_title">Dieser Inhalt kann gerade nicht geladen werden</string>
+    <string name="no_connection_error_description">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
+    <string name="no_connection_error_title">Dieser Inhalt kann gerade nicht geladen werden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Beim Laden der Schreibanregungen ist ein Fehler aufgetreten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ups</string>
     <string name="blogging_prompts_list_no_prompts">Noch keine Schreibanregungen</string>
