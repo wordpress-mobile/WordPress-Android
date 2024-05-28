@@ -15,19 +15,17 @@ class VoiceToContentFeatureUtils @Inject constructor(
         !jetpackFeatureAIAssistantFeature.siteRequireUpgrade
 
     fun getRequestLimit(jetpackFeatureAIAssistantFeature: JetpackAIAssistantFeature): Int {
-        with (jetpackFeatureAIAssistantFeature) {
-            if (currentTier?.slug == JETPACK_AI_FREE) {
-                return maxOf(0, requestsLimit - requestsCount)
+        return with(jetpackFeatureAIAssistantFeature) {
+            val calculatedLimit = if (currentTier?.slug == JETPACK_AI_FREE) {
+                maxOf(0, requestsLimit - requestsCount)
+            } else if (currentTier?.value == 1) {
+                Int.MAX_VALUE
+            } else {
+                val requestsLimit = currentTier?.limit ?: requestsLimit
+                val requestsCount = usagePeriod?.requestsCount ?: requestsCount
+                maxOf(0, requestsLimit - requestsCount)
             }
-            // The backend uses `1` as an indicator of unlimited requests.
-            if (currentTier?.value == 1) {
-                return Int.MAX_VALUE
-            }
-            // The `usage-period.requests-count` is only valid for paid plans with
-            // a limited number of requests.
-            val requestsLimit = currentTier?.limit ?: requestsLimit
-            val requestsCount = usagePeriod?.requestsCount ?: requestsCount
-            return maxOf(0, requestsLimit - requestsCount)
+            calculatedLimit
         }
     }
 
