@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.tools.FormattableRangeType
-import org.wordpress.android.models.Note
 import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
 import org.wordpress.android.ui.engagement.BottomSheetUiState
@@ -19,9 +19,8 @@ import org.wordpress.android.util.ToastUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState?.getString(KEY_NOTE_ID) != null) {
             handleNote(savedInstanceState.getString(KEY_NOTE_ID)!!)
         } else {

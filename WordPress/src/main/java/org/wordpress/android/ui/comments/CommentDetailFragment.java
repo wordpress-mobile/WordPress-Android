@@ -28,7 +28,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.databinding.CommentDetailFragmentBinding;
-import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -39,7 +38,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
-import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentsStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -50,8 +48,6 @@ import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
@@ -72,11 +68,9 @@ import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -88,7 +82,6 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -243,7 +236,11 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         if (mBinding != null) {
             showComment(mBinding, mSite, mComment, mNote);
         }
+
+        updateModerationStatus();
     }
+
+    abstract void updateModerationStatus();
 
     public void enableShouldFocusReplyField() {
         mShouldFocusReplyField = true;

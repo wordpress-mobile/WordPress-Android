@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:fontFamily="sans-serif-medium"
+        android:text="Choose status"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/text_sz_large" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.ModerationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:text="Approved"
+        app:icon="@drawable/ic_check_24px"
+        app:iconTint="@color/primary" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.ModerationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="Pending"
+        app:icon="@drawable/watch_later_24"
+        app:iconTint="@color/menu_more" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.ModerationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="Trash"
+        app:icon="@drawable/delete_24"
+        app:iconTint="@null"/>
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.ModerationButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_extra_small_large"
+        android:text="Spam"
+        app:icon="@drawable/error_outline_24"
+        app:iconTint="@null" />
+</LinearLayout>

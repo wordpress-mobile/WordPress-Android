@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import com.gravatar.AvatarQueryOptions
 import com.gravatar.AvatarUrl
@@ -20,8 +21,8 @@ import org.wordpress.android.util.WPAvatarUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class SiteCommentDetailFragment : SharedCommentDetailFragment() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState != null) {
             handleComment(savedInstanceState.getLong(KEY_COMMENT_ID), savedInstanceState.getInt(KEY_SITE_LOCAL_ID))
         } else {

@@ -7,34 +7,45 @@ import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.models.Note
 
-
 /**
  * Used when we want to write Kotlin in [CommentDetailFragment]
  * Move converted code to this class
  */
 abstract class SharedCommentDetailFragment:CommentDetailFragment() {
-    protected val note: Note // it will be non-null when users from a notification
+    // it will be non-null after view created when users from a notification
+    // it will be null when users from comment list
+    protected val note: Note
         get() = mNote!!
 
+    // it will be non-null after view created when users from comment list
+    // it will be non-null in a different time point when users from a notification
     protected val comment: CommentModel
         get() = mComment!!
 
-    protected fun updateModerationStatus() {
+    override fun updateModerationStatus() {
         val commentStatus = CommentStatus.fromString(comment.status)
         when(commentStatus){
-            CommentStatus.APPROVED -> TODO()
+            CommentStatus.APPROVED -> {}
             CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.handlePendingView()
-            CommentStatus.SPAM -> TODO()
-            CommentStatus.TRASH -> TODO()
-            CommentStatus.DELETED -> TODO()
-            CommentStatus.ALL -> TODO()
-            CommentStatus.UNREPLIED -> TODO()
-            CommentStatus.UNSPAM -> TODO()
-            CommentStatus.UNTRASH -> TODO()
+            CommentStatus.SPAM -> {}
+            CommentStatus.TRASH -> {}
+            CommentStatus.DELETED -> {}
+            CommentStatus.ALL -> {}
+            CommentStatus.UNREPLIED -> {}
+            CommentStatus.UNSPAM -> {}
+            CommentStatus.UNTRASH -> {}
         }
+
+        mBinding?.layoutCommentPending?.handlePendingView() // todo: remove this line after PR review
     }
 
     private fun CommentPendingBinding.handlePendingView() {
         layoutRoot.isVisible = true
+        textMoreOptions.setOnClickListener { showModerationBottomSheet() }
+    }
+
+    private fun showModerationBottomSheet() {
+        ModerationBottomSheetDialogFragment.newInstance()
+            .show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }
