@@ -770,7 +770,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
 
-            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite());
+            PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
+            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite(), currentPage);
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
