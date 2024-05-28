@@ -151,7 +151,7 @@ object AppReviewManager {
     }
 
     /**
-     * Check whether the in-app reviews prompt should be shown or not.
+     * Check whether the in-app reviews prompt should be shown or not.it after its last sh
      * @return true if the prompt should be shown
      */
     fun shouldShowInAppReviewsPrompt(): Boolean {
