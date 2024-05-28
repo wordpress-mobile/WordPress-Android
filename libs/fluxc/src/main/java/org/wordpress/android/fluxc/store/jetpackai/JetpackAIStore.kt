@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store.jetpackai
 
 import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsErrorType.AUTH_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsResponse
@@ -276,5 +277,16 @@ class JetpackAIStore @Inject constructor(
             }
             else -> result
         }
+    }
+
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAIAssistantFeature(
+        site: SiteModel,
+    ): JetpackAIAssistantFeatureResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI Assistant Feature"
+    ) {
+        jetpackAIRestClient.fetchJetpackAiAssistantFeature(site)
     }
 }
