@@ -18,10 +18,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent">
 
-
         <include
-            android:id="@+id/layout_comment_box"
-            layout="@layout/reader_include_comment_box"
+            android:id="@+id/layout_comment_pending"
+            layout="@layout/comment_pending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </FrameLayout>

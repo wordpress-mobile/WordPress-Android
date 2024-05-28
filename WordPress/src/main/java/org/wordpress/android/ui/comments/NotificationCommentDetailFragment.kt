@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
@@ -20,10 +18,7 @@ import org.wordpress.android.util.ToastUtils
  * [CommentDetailFragment] is too big to be reused
  * It'd be better to have multiple fragments for different sources for different purposes
  */
-class NotificationCommentDetailFragment : CommentDetailFragment() {
-    private val note: Note // note will be non-null after onCreate
-        get() = mNote!!
-
+class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,8 +67,8 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
                 mSite = createDummyWordPressComSite(note.siteId.toLong())
             }
-            if (mBinding != null && mReplyBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, note)
+            if (mBinding != null) {
+                showComment(mBinding!!, mSite!!, mComment, note)
             }
         }
     }

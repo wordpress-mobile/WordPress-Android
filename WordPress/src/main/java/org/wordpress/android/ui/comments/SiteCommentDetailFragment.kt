@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
@@ -21,10 +19,7 @@ import org.wordpress.android.util.WPAvatarUtils
  * [CommentDetailFragment] is too big to be reused
  * It'd be better to have multiple fragments for different sources for different purposes
  */
-class SiteCommentDetailFragment : CommentDetailFragment() {
-    private val comment: CommentModel
-        get() = mComment!!
-
+class SiteCommentDetailFragment : SharedCommentDetailFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState != null) {
