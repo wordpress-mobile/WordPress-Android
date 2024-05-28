@@ -180,6 +180,39 @@ class JetpackAIRestClient @Inject constructor(
         }
     }
 
+    /**
+     * Fetches Jetpack AI Assistant feature for site
+     *
+     * @param site  The SiteModel for which the Jetpack AI Assistant feature is fetched
+     */
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAiAssistantFeature(
+        site: SiteModel
+    ): JetpackAIAssistantFeatureResponse {
+        val url = WPCOMV2.sites.site(site.siteId).jetpack_ai.ai_assistant_feature.url
+
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+            restClient = this,
+            url = url,
+            params = emptyMap(),
+            clazz = JetpackAIAssistantFeatureDto::class.java,
+        )
+
+        return when (response) {
+            is Response.Success -> {
+                JetpackAIAssistantFeatureResponse.Success(
+                    response.data.toJetpackAIAssistantFeature()
+                )
+            }
+            is Response.Error -> {
+                JetpackAIAssistantFeatureResponse.Error(
+                    response.error.toJetpackAIAssistantFeatureError(),
+                    response.error.message
+                )
+            }
+        }
+    }
+
     internal  data class JetpackAIJWTTokenDto(
         @SerializedName ("success") val success: Boolean,
         @SerializedName("token") val token: String
@@ -272,5 +305,22 @@ class JetpackAIRestClient @Inject constructor(
             GenericErrorType.NOT_AUTHENTICATED -> JetpackAIQueryErrorType.AUTH_ERROR
             GenericErrorType.UNKNOWN -> JetpackAIQueryErrorType.GENERIC_ERROR
             null -> JetpackAIQueryErrorType.GENERIC_ERROR
+        }
+    private fun WPComGsonNetworkError.toJetpackAIAssistantFeatureError() =
+        when (type) {
+            GenericErrorType.TIMEOUT -> JetpackAIAssistantFeatureErrorType.TIMEOUT
+            GenericErrorType.NO_CONNECTION,
+            GenericErrorType.INVALID_SSL_CERTIFICATE,
+            GenericErrorType.NETWORK_ERROR -> JetpackAIAssistantFeatureErrorType.NETWORK_ERROR
+            GenericErrorType.SERVER_ERROR -> JetpackAIAssistantFeatureErrorType.API_ERROR
+            GenericErrorType.PARSE_ERROR,
+            GenericErrorType.NOT_FOUND,
+            GenericErrorType.CENSORED,
+            GenericErrorType.INVALID_RESPONSE -> JetpackAIAssistantFeatureErrorType.INVALID_RESPONSE
+            GenericErrorType.HTTP_AUTH_ERROR,
+            GenericErrorType.AUTHORIZATION_REQUIRED,
+            GenericErrorType.NOT_AUTHENTICATED -> JetpackAIAssistantFeatureErrorType.AUTH_ERROR
+            GenericErrorType.UNKNOWN -> JetpackAIAssistantFeatureErrorType.GENERIC_ERROR
+            null -> JetpackAIAssistantFeatureErrorType.GENERIC_ERROR
         }
 }
