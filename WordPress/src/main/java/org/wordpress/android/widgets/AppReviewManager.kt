@@ -84,6 +84,7 @@ object AppReviewManager {
     }
 
     fun launchInAppReviews(activity: Activity) {
+        AppLog.d(T.UTILS, "Launching in-app reviews prompt")
         val manager = ReviewManagerFactory.create(activity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
@@ -133,6 +134,7 @@ object AppReviewManager {
         if (shouldShowInAppReviewsPrompt()) return
         if (AppPrefs.getPublishedPostCount() < TARGET_COUNT_POST_PUBLISHED) {
             AppPrefs.incrementPublishedPostCount()
+            AppLog.d(T.UTILS, "In-app reviews counter for published posts: ${AppPrefs.getPublishedPostCount()}")
         }
     }
 
@@ -144,6 +146,7 @@ object AppReviewManager {
         val shouldTrack = note.isUnread && (note.isLikeType || note.isCommentType || note.isFollowType)
         if (shouldTrack && AppPrefs.getInAppReviewsNotificationCount() < TARGET_COUNT_NOTIFICATIONS) {
             AppPrefs.incrementInAppReviewsNotificationCount()
+            AppLog.d(T.UTILS, "In-app reviews counter for notification: ${AppPrefs.getInAppReviewsNotificationCount()}")
         }
     }
 
@@ -156,7 +159,7 @@ object AppReviewManager {
         val shouldWaitAfterAskLaterTapped = Date().time - askLaterDate.time < criteriaInstallMs
         val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
         val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
-        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown && !shouldWaitAfterAskLaterTapped &&
+        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterAskLaterTapped && !shouldWaitAfterLastShown &&
             (publishedPostsGoal || notificationsGoal)
     }
 
