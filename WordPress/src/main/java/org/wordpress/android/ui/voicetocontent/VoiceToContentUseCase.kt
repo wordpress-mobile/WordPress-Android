@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
+import org.wordpress.android.viewmodel.ContextProvider
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -28,7 +29,7 @@ class VoiceToContentUseCase @Inject constructor(
         file: File
     ): VoiceToContentResult =
         withContext(Dispatchers.IO) {
-           // val file = fileHelperWrapper.getAudioFile() ?: return@withContext VoiceToContentResult(isError = true)
+            // val file = fileHelperWrapper.getAudioFile() ?: return@withContext VoiceToContentResult(isError = true)
             val transcriptionResponse = jetpackAIStore.fetchJetpackAITranscription(
                 siteModel,
                 FEATURE,

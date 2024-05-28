@@ -8,6 +8,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
@@ -79,7 +80,7 @@ class VoiceToContentViewModel @Inject constructor(
                 when (result) {
                     is JetpackAIAssistantFeatureResponse.Success -> {
                         _aiAssistantFeatureState.postValue(result.model)
-                        startVoiceToContentFlow(file)
+                        startVoiceToContentFlow(site, file)
                     }
                     is JetpackAIAssistantFeatureResponse.Error -> {
                         _uiState.postValue(VoiceToContentResult(isError = true))
@@ -89,12 +90,7 @@ class VoiceToContentViewModel @Inject constructor(
         }
     }
 
-    private fun startVoiceToContentFlow(file: File) {
-        val site = selectedSiteRepository.getSelectedSite() ?: run {
-            _uiState.postValue(VoiceToContentResult(isError = true))
-            return
-        }
-
+    private fun startVoiceToContentFlow(site: SiteModel, file: File) {
         if (isVoiceToContentEnabled()) {
             viewModelScope.launch {
                 val result = voiceToContentUseCase.execute(site, file)
@@ -103,3 +99,4 @@ class VoiceToContentViewModel @Inject constructor(
         }
     }
 }
+
