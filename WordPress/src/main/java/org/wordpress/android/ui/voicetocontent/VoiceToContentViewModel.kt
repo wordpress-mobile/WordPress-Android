@@ -54,18 +54,26 @@ class VoiceToContentViewModel @Inject constructor(
     }
 
     fun startRecording() {
-        recordingUseCase.startRecording()
-    }
-
-    fun stopRecording() {
-        viewModelScope.launch {
-            val file = recordingUseCase.stopRecording()
+        recordingUseCase.startRecording { recordingPath ->
+            val file = getRecordingFile(recordingPath)
             file?.let {
                 executeVoiceToContent(it)
             } ?: run {
                 _uiState.postValue(VoiceToContentResult(isError = true))
             }
         }
+    }
+
+    private fun getRecordingFile(recordingPath: String): File? {
+        if (recordingPath.isEmpty()) return null
+        val recordingFile = File(recordingPath)
+        // Return null if the file does not exist, is not a file, or is empty
+        if (!recordingFile.exists() || !recordingFile.isFile || recordingFile.length() == 0L) return null
+        return recordingFile
+    }
+
+    fun stopRecording() {
+      recordingUseCase.stopRecording()
     }
 
     fun executeVoiceToContent(file: File) {

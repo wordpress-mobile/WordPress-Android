@@ -9,10 +9,14 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.audio.RecordingUpdate
@@ -40,6 +44,21 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 
     private lateinit var uiState: MutableList<VoiceToContentResult>
 
+    private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
+        hasFeature = true,
+        isOverLimit = false,
+        requestsCount = 0,
+        requestsLimit = 0,
+        usagePeriod = null,
+        siteRequireUpgrade = true,
+        upgradeType = "upgradeType",
+        currentTier = null,
+        nextTier = null,
+        tierPlans = emptyList(),
+        tierPlansEnabled = false,
+        costs = null
+    )
+
     @Before
     fun setup() {
         // Mock the recording updates to return a non-null flow before ViewModel instantiation
@@ -65,14 +84,13 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     // Helper function to create a consistent flow
     private fun createRecordingUpdateFlow() = flow {
         emit(RecordingUpdate(0, 0, false))
-        // You can add more emits to simulate different recording states if needed
     }
 
     @Test
     fun `when site is null, then execute posts error state `() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-
-        viewModel.execute()
+        val dummyFile = File("dummy_path")
+        viewModel.executeVoiceToContent(dummyFile)
 
         val expectedState = VoiceToContentResult(isError = true)
         assertThat(uiState.first()).isEqualTo(expectedState)
@@ -80,18 +98,21 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 
 
     // todo add these tests back when VoiceToContentViewModel's functionality is more complete
-      /*  @Test
+        @Test
         fun `when voice to content is enabled, then execute invokes use case `() = test {
             val site = SiteModel().apply { id = 1 }
+            val dummyFile = File("dummy_path")
+
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
             whenever(voiceToContentFeatureUtils.isVoiceToContentEnabled()).thenReturn(true)
             whenever(jetpackAIStore.fetchJetpackAIAssistantFeature(site))
-                .thenReturn(JetpackAIAssistantFeatureResponse.Success(any()))
+                .thenReturn(JetpackAIAssistantFeatureResponse.Success(jetpackAIAssistantFeature))
 
-            viewModel.execute()
 
-            verify(voiceToContentUseCase).execute(site)
-        }*/
+            viewModel.executeVoiceToContent(dummyFile)
+
+            verify(voiceToContentUseCase).execute(site, dummyFile)
+        }
 
     @Test
     fun `when voice to content is disabled, then executeVoiceToContent does not invoke use case`() = runTest {

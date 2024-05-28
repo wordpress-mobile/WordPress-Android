@@ -126,6 +126,6 @@ public abstract class ApplicationModule {
 
     @Provides
     public static IAudioRecorder provideAudioRecorder(@ApplicationContext Context context) {
-        return new AudioRecorder(1000000L * 25, context);
+        return new AudioRecorder(context);
     }
 }

@@ -19,9 +19,17 @@ import java.io.File
 import java.io.IOException
 
 class AudioRecorder(
-    private val fileSizeLimit: Long,
     private val applicationContext: Context
 ) : IAudioRecorder {
+    // default recording params
+    private var recordingParams: RecordingParams = RecordingParams(
+        maxDuration = 5, // 5 minutes
+        maxFileSize = 1000000L * 25 // 25MB
+    )
+
+    private var onRecordingFinished: (String) -> Unit = {}
+
+    // todo: check place of the recording file
     private val storeInMemory = true
     private val filePath by lazy {
         if (storeInMemory) {
@@ -47,7 +55,8 @@ class AudioRecorder(
     val isPaused: StateFlow<Boolean> = _isPaused
 
     @Suppress("DEPRECATION")
-    override fun startRecording() {
+    override fun startRecording(onRecordingFinished: (String) -> Unit) {
+        this.onRecordingFinished = onRecordingFinished
         if (applicationContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             == PackageManager.PERMISSION_GRANTED) {
             recorder = MediaRecorder().apply {
@@ -73,7 +82,7 @@ class AudioRecorder(
         }
     }
 
-    override fun stopRecording(): String {
+    override fun stopRecording() {
         try {
             recorder?.apply {
                 stop()
@@ -87,7 +96,8 @@ class AudioRecorder(
             _isPaused.value = false
             _isRecording.value = false
         }
-        return filePath
+        // return filePath
+        onRecordingFinished(filePath)
     }
 
     override fun pauseRecording() {
@@ -122,6 +132,10 @@ class AudioRecorder(
 
     override fun recordingUpdates(): Flow<RecordingUpdate> = recordingUpdates
 
+    override fun setRecordingParams(params: RecordingParams) {
+        recordingParams = params
+    }
+
     private fun startRecordingUpdates() {
         recordingJob = coroutineScope.launch {
             var elapsedTime = 0
@@ -132,10 +146,11 @@ class AudioRecorder(
                 _recordingUpdates.value = RecordingUpdate(
                     elapsedTime = elapsedTime,
                     fileSize = fileSize,
-                    fileSizeLimitExceeded = fileSize >= fileSizeLimit
+                    fileSizeLimitExceeded = fileSize >= recordingParams.maxFileSize,
                 )
 
-                if (fileSize >= fileSizeLimit) {
+                if (fileSize >= recordingParams.maxFileSize
+                    || elapsedTime >= recordingParams.maxDuration) {
                     stopRecording()
                 }
             }
