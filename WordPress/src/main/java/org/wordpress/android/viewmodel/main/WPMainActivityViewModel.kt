@@ -291,8 +291,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onPageChanged(site: SiteModel?, hasValidSite: Boolean, page: PageType) {
-        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
-                page in listOf(PageType.MY_SITE, PageType.READER)
+        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite && showFabForPage(page)
         setMainFabUiState(showFab, site, page)
     }
 
@@ -301,8 +300,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onResume(site: SiteModel?, hasValidSite: Boolean, page: PageType?) {
-        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
-                page in listOf(PageType.MY_SITE, PageType.READER)
+        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite && showFabForPage(page)
         setMainFabUiState(showFab, site, page)
 
         checkAndShowFeatureAnnouncement()
@@ -397,6 +395,8 @@ class WPMainActivityViewModel @Inject constructor(
     private fun canCreatePage(site: SiteModel?, page: PageType?): Boolean {
         return hasFullAccessToContent(site) && page == PageType.MY_SITE
     }
+
+    private fun showFabForPage(page: PageType?) = page in listOf(PageType.MY_SITE, PageType.READER)
 
     data class FocusPointInfo(
         val task: QuickStartTask,
