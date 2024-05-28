@@ -175,11 +175,19 @@ public class ReaderActivityLauncher {
                 tag.getTagSlug(),
                 source
         );
-        Intent intent = new Intent(context, ReaderPostListActivity.class);
+        final Intent intent = createReaderTagPreviewIntent(context, tag, source);
+        context.startActivity(intent);
+    }
+
+    @NonNull
+    public static Intent createReaderTagPreviewIntent(@NonNull final Context context,
+                                                      @NonNull final ReaderTag tag,
+                                                      @NonNull final String source) {
+        final Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_SOURCE, source);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
         intent.putExtra(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.TAG_PREVIEW);
-        context.startActivity(intent);
+        return intent;
     }
 
     public static void showReaderSearch(Context context) {

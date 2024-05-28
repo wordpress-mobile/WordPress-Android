@@ -516,8 +516,8 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lexuesi po kalohet te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistikat tuaja po kalojnë te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Kaloni në aplikacionin e ri Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
-    <string name="blogging_prompts_list_error_network_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>
+    <string name="no_connection_error_description">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
+    <string name="no_connection_error_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Pati një gabim në ngarkim cytjesh.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hëm</string>
     <string name="blogging_prompts_list_no_prompts">Ende pa cytje</string>

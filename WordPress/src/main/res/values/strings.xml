@@ -122,6 +122,9 @@
 
     <string name="experimental_badge">&lt;Experimental&gt;</string>
 
+    <string name="no_connection_error_title">Unable to load this content right now</string>
+    <string name="no_connection_error_description">Check your network connection and try again.</string>
+
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
@@ -1710,6 +1713,7 @@
     <string name="reader_dropdown_menu_saved">Saved</string>
     <string name="reader_dropdown_menu_liked">Liked</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_tags">Your Tags</string>
     <string name="reader_dropdown_menu_lists">Lists</string>
     <string name="reader_filter_chip_blog_zero">0 Blogs</string>
     <string name="reader_filter_chip_blog_one">1 Blog</string>
@@ -1717,6 +1721,11 @@
     <string name="reader_filter_chip_tag_zero">0 Tags</string>
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
+    <string name="reader_announcement_card_title">New in Reader</string>
+    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
+    <string name="reader_announcement_card_tags_stream_description">Tap the dropdown at the top and select Tags to access streams from your followed tags.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Reading Preferences</string>
+    <string name="reader_announcement_card_reading_preferences_description">Choose colors and fonts that suit you. When you’re reading a post tap the AA icon at the top of the screen.</string>
 
     <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
     <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
@@ -2139,6 +2148,7 @@
     <string name="reader_discover_display_name">Discover</string>
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="reader_subscribed_display_name">Subscribed</string>
+    <string name="reader_tags_display_name">Tags</string>
 
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now" tools:ignore="UnusedResources">now</string>
@@ -2336,6 +2346,18 @@
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
     <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
 
+    <!-- Reader tags feed -->
+    <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
+    <string name="reader_tags_feed_error_title">No posts found for %s</string>
+    <string name="reader_tags_feed_loading_error_description">We couldn\'t load posts from this tag right now</string>
+    <string name="reader_tags_feed_no_content_error_description">We couldn\'t find any posts tagged %s right now</string>
+    <string name="reader_tags_feed_error_retry">Retry</string>
+    <string name="reader_tags_feed_action_label_open_post">open post</string>
+    <string name="reader_tags_feed_action_label_open_blog">open blog</string>
+    <string name="reader_tags_feed_action_label_like_post">like post</string>
+    <string name="reader_tags_feed_action_label_unlike_post">remove post like</string>
+    <string name="reader_tags_feed_action_label_open_menu">open menu</string>
+
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
 
@@ -2443,6 +2465,7 @@
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
     <string name="jetpack_feature_card_more_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
@@ -4308,8 +4331,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
-    <string name="blogging_prompts_list_error_network_title">Unable to load this content right now</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Check your network connection and try again.</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>

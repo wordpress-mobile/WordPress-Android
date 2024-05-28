@@ -1,4 +1,10 @@
-- We reorganized the Stats screen to show data about traffic and insights.
-- We added a Subscribers tab to show data about site subscribers.
-- We removed social subscribers from the Total Followers card.
-- Site names and URLs are properly positioned for right-to-left language users.
+* [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
+* [*] Fixed a rare crash on the Login screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20821]
+* [*] Fix a crash that occurs when remove a user [https://github.com/wordpress-mobile/WordPress-Android/pull/20837]
+* [*] Fixed a rare crash on the featured image confirmation dialog [https://github.com/wordpress-mobile/WordPress-Android/pull/20836]
+* [*] Fixed an ANR issue on the Post List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20833]
+* [*] Fixed a crash that occurs with Blogging Reminders [https://github.com/wordpress-mobile/WordPress-Android/pull/20845]
+* [*] [internal] Block Editor: Upgrade target sdk version to Android API 34 [https://github.com/wordpress-mobile/WordPress-Android/pull/20841]
+* [*] [internal] In-app updates feature [https://github.com/wordpress-mobile/WordPress-Android/pull/20822]
+* [**] [Jetpack-only] Reader: Add a new feed dedicated to tags [https://github.com/wordpress-mobile/WordPress-Android/pull/20812]
+

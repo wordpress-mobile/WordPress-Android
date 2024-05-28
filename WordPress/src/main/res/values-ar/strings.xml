@@ -25,7 +25,6 @@ Language: ar
     <string name="notifications_empty_subscribers">لا يوجد مشتركون حتى الآن</string>
     <string name="stats_view_emails">رسائل البريد الإلكتروني</string>
     <string name="stats_view_subscribers">المشتركون</string>
-    <string name="stats_view_subscribers_chart">المشتركون</string>
     <string name="stats_view_total_subscribers">إجمالي المشتركين</string>
     <string name="stats_view_subscriber_totals">إجمالي المشتركين</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s، %3$s: %4$s، %5$s: %6$s</string>
@@ -579,14 +578,14 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">ستنتقل ميزة القارئ إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">التبديل إلى تطبيق Jetpack الجديد</string>
-    <string name="blogging_prompts_list_error_network_title">يتعذر تحميل هذا المحتوى حاليًا.</string>
+    <string name="no_connection_error_title">يتعذر تحميل هذا المحتوى حاليًا.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">حدث خطأ في أثناء تحميل المطالبات.</string>
     <string name="blogging_prompts_list_error_fetch_title">عذرًا</string>
     <string name="blogging_prompts_list_no_prompts">لا توجد مطالبات بعد</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d من الإجابات</string>
     <string name="blogging_prompts_list_number_of_answers_one">إجابة واحدة</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">ستنتقل ميزة الإحصاءات لديك إلى تطبيق Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
+    <string name="no_connection_error_description">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 من الإجابات</string>
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>

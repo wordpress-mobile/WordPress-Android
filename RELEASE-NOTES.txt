@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+25.1
+-----
+
+
 25.0
 -----
 * [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
@@ -10,6 +14,7 @@
 * [*] Fixed a crash that occurs with Blogging Reminders [https://github.com/wordpress-mobile/WordPress-Android/pull/20845]
 * [*] [internal] Block Editor: Upgrade target sdk version to Android API 34 [https://github.com/wordpress-mobile/WordPress-Android/pull/20841]
 * [*] [internal] In-app updates feature [https://github.com/wordpress-mobile/WordPress-Android/pull/20822]
+* [**] [Jetpack-only] Reader: Add a new feed dedicated to tags [https://github.com/wordpress-mobile/WordPress-Android/pull/20812]
 
 24.9
 -----
