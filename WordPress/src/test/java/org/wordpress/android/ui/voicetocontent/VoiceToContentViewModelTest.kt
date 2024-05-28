@@ -7,10 +7,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
@@ -32,6 +35,21 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: VoiceToContentViewModel
 
     private lateinit var uiState: MutableList<VoiceToContentResult>
+
+    private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
+        hasFeature = true,
+        isOverLimit = false,
+        requestsCount = 0,
+        requestsLimit = 0,
+        usagePeriod = null,
+        siteRequireUpgrade = true,
+        upgradeType = "upgradeType",
+        currentTier = null,
+        nextTier = null,
+        tierPlans = emptyList(),
+        tierPlansEnabled = false,
+        costs = null
+    )
     @Before
     fun setup() {
         viewModel = VoiceToContentViewModel(
@@ -60,20 +78,18 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
         assertThat(uiState.first()).isEqualTo(expectedState)
     }
 
-
-    // todo add these tests back when VoiceToContentViewModel's functionality is more complete
-      /*  @Test
+    @Test
         fun `when voice to content is enabled, then execute invokes use case `() = test {
             val site = SiteModel().apply { id = 1 }
             whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
             whenever(voiceToContentFeatureUtils.isVoiceToContentEnabled()).thenReturn(true)
             whenever(jetpackAIStore.fetchJetpackAIAssistantFeature(site))
-                .thenReturn(JetpackAIAssistantFeatureResponse.Success(any()))
+                .thenReturn(JetpackAIAssistantFeatureResponse.Success(jetpackAIAssistantFeature))
 
             viewModel.execute()
 
             verify(voiceToContentUseCase).execute(site)
-        }*/
+    }
 
     @Test
     fun `when voice to content is disabled, then execute does not invoke use case `() = test {
