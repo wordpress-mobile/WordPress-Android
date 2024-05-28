@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
+        android:textAlignment="viewStart"
         android:text="@string/comment_moderation_status_approved"
         app:icon="@drawable/ic_check_24px"
         app:iconTint="@color/primary" />
@@ -34,6 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:textAlignment="viewStart"
         android:text="@string/comment_moderation_status_pending"
         app:icon="@drawable/watch_later_24"
         app:iconTint="@color/menu_more" />
@@ -43,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:textAlignment="viewStart"
         android:text="@string/comment_moderation_status_trash"
         app:icon="@drawable/delete_24"
         app:iconTint="@null"/>
@@ -53,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_extra_small_large"
+        android:textAlignment="viewStart"
         android:text="@string/comment_moderation_status_spam"
         app:icon="@drawable/error_outline_24"
         app:iconTint="@null" />
