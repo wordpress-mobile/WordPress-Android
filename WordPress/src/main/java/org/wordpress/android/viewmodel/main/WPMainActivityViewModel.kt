@@ -30,6 +30,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -42,8 +43,8 @@ import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.mapNullable
+import org.wordpress.android.util.mapSafe
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -149,7 +150,7 @@ class WPMainActivityViewModel @Inject constructor(
     val isSignedInWPComOrHasWPOrgSite: Boolean
         get() = FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)
 
-    fun start(site: SiteModel?) {
+    fun start(site: SiteModel?, page: PageType) {
         if (isStarted) return
         isStarted = true
 
@@ -161,13 +162,13 @@ class WPMainActivityViewModel @Inject constructor(
 
         setMainFabUiState(false, site)
 
-        launch { loadMainActions(site) }
+        launch { loadMainActions(site, page) }
 
         updateFeatureAnnouncements()
     }
 
     @Suppress("LongMethod")
-    private suspend fun loadMainActions(site: SiteModel?, onFabClicked: Boolean = false) {
+    private suspend fun loadMainActions(site: SiteModel?, page: PageType?, onFabClicked: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
         if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
             val prompt = site?.let {
@@ -215,7 +216,7 @@ class WPMainActivityViewModel @Inject constructor(
                 )
             )
         }
-        if (hasFullAccessToContent(site)) {
+        if (hasFullAccessToContent(site) && page == PageType.MY_SITE) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_PAGE,
@@ -247,7 +248,7 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution) {
         analyticsTracker.track(
             Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED,
-            mapOf("attribution" to attribution.value).filterValues { !it.isNullOrBlank() }
+            mapOf("attribution" to attribution.value).filterValues { it.isNotBlank() }
         )
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
@@ -264,7 +265,7 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(site: SiteModel?) {
+    fun onFabClicked(site: SiteModel?, page: PageType?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
@@ -278,7 +279,7 @@ class WPMainActivityViewModel @Inject constructor(
 
                 // Reload main actions, since the first time this is initialized the SiteModel may not contain the
                 // latest info.
-                loadMainActions(site, onFabClicked = true)
+                loadMainActions(site, page, onFabClicked = true)
 
                 analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
                 _isBottomSheetShowing.postValue(Event(true))
@@ -289,8 +290,9 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onPageChanged(isOnMySitePageWithValidSite: Boolean, site: SiteModel?) {
-        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
+    fun onPageChanged(site: SiteModel?, hasValidSite: Boolean, page: PageType) {
+        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
+                page in listOf(PageType.MY_SITE, PageType.READER)
         setMainFabUiState(showFab, site)
     }
 
@@ -298,8 +300,9 @@ class WPMainActivityViewModel @Inject constructor(
         _switchToMeTab.value = Event(Unit)
     }
 
-    fun onResume(site: SiteModel?, isOnMySitePageWithValidSite: Boolean) {
-        val showFab = if (buildConfigWrapper.isCreateFabEnabled) isOnMySitePageWithValidSite else false
+    fun onResume(site: SiteModel?, hasValidSite: Boolean, page: PageType?) {
+        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
+                page in listOf(PageType.MY_SITE, PageType.READER)
         setMainFabUiState(showFab, site)
 
         checkAndShowFeatureAnnouncement()
@@ -328,6 +331,10 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?) {
+        // TODO thomashortadev, improve hasFullAccessToContent logic to actually return which content types are
+        //  available to properly adjust the CreateContentMessageId. Or at least rename it to something more meaningful,
+        //  since it currently basically checks if the "Create Page" option is available. Though the VoiceToContent item
+        //  is also using this check for some reason (need to check why with AnnMarie).
         val newState = MainFabUiState(
             isFabVisible = isFabVisible,
             isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
@@ -375,7 +382,7 @@ class WPMainActivityViewModel @Inject constructor(
         selectedSiteRepository.removeSite()
     }
 
-    fun triggerCreatePageFlow(){
+    fun triggerCreatePageFlow() {
         _createAction.postValue(CREATE_NEW_PAGE_FROM_PAGES_CARD)
     }
 

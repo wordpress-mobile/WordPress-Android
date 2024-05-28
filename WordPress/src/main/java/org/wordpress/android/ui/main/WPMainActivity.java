@@ -760,7 +760,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     .show(getSupportFragmentManager(), FeatureAnnouncementDialogFragment.TAG);
         });
 
-        mFloatingActionButton.setOnClickListener(v -> mViewModel.onFabClicked(getSelectedSite()));
+        mFloatingActionButton.setOnClickListener(v -> {
+            PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
+            mViewModel.onFabClicked(getSelectedSite(), currentPage);
+        });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
@@ -844,7 +847,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
-        mViewModel.start(getSelectedSite());
+        mViewModel.start(getSelectedSite(), mBottomNav.getCurrentSelectedPage());
     }
 
     private void triggerCreatePageFlow(ActionType actionType) {
@@ -1202,10 +1205,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
+        PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
+
         mViewModel.onResume(
                 getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
-                && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+                mSelectedSiteRepository.hasSelectedSite(),
+                currentPage
         );
 
         checkForInAppUpdate();
@@ -1291,8 +1296,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         mViewModel.onPageChanged(
-                mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                getSelectedSite()
+                getSelectedSite(),
+                mSiteStore.hasSite(),
+                pageType
         );
     }
 
