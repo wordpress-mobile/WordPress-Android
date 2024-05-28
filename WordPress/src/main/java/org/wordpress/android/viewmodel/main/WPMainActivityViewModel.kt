@@ -160,7 +160,7 @@ class WPMainActivityViewModel @Inject constructor(
             }
         }
 
-        setMainFabUiState(false, site)
+        setMainFabUiState(false, site, page)
 
         launch { loadMainActions(site, page) }
 
@@ -216,7 +216,7 @@ class WPMainActivityViewModel @Inject constructor(
                 )
             )
         }
-        if (hasFullAccessToContent(site) && page == PageType.MY_SITE) {
+        if (canCreatePage(site, page)) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_PAGE,
@@ -267,7 +267,7 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun onFabClicked(site: SiteModel?, page: PageType?) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
-        setMainFabUiState(true, site)
+        setMainFabUiState(true, site, page)
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
@@ -293,7 +293,7 @@ class WPMainActivityViewModel @Inject constructor(
     fun onPageChanged(site: SiteModel?, hasValidSite: Boolean, page: PageType) {
         val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
                 page in listOf(PageType.MY_SITE, PageType.READER)
-        setMainFabUiState(showFab, site)
+        setMainFabUiState(showFab, site, page)
     }
 
     fun onOpenLoginPage() = launch {
@@ -303,7 +303,7 @@ class WPMainActivityViewModel @Inject constructor(
     fun onResume(site: SiteModel?, hasValidSite: Boolean, page: PageType?) {
         val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite &&
                 page in listOf(PageType.MY_SITE, PageType.READER)
-        setMainFabUiState(showFab, site)
+        setMainFabUiState(showFab, site, page)
 
         checkAndShowFeatureAnnouncement()
     }
@@ -330,22 +330,18 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?) {
-        // TODO thomashortadev, improve hasFullAccessToContent logic to actually return which content types are
-        //  available to properly adjust the CreateContentMessageId. Or at least rename it to something more meaningful,
-        //  since it currently basically checks if the "Create Page" option is available. Though the VoiceToContent item
-        //  is also using this check for some reason (need to check why with AnnMarie).
+    private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?, page: PageType?) {
         val newState = MainFabUiState(
             isFabVisible = isFabVisible,
             isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
-            CreateContentMessageId = getCreateContentMessageId(site)
+            CreateContentMessageId = getCreateContentMessageId(site, page)
         )
 
         _fabUiState.value = newState
     }
 
-    fun getCreateContentMessageId(site: SiteModel?): Int =
-        if (hasFullAccessToContent(site)) {
+    fun getCreateContentMessageId(site: SiteModel?, page: PageType?): Int =
+        if (canCreatePage(site, page)) {
             R.string.create_post_page_fab_tooltip
         } else {
             R.string.create_post_page_fab_tooltip_contributors
@@ -396,6 +392,10 @@ class WPMainActivityViewModel @Inject constructor(
 
     fun requestMySiteDashboardRefresh() {
         this._mySiteDashboardRefreshRequested.value = Event(Unit)
+    }
+
+    private fun canCreatePage(site: SiteModel?, page: PageType?): Boolean {
+        return hasFullAccessToContent(site) && page == PageType.MY_SITE
     }
 
     data class FocusPointInfo(
