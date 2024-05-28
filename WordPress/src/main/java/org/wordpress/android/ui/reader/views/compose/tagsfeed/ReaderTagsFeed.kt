@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -100,16 +101,17 @@ private fun Loaded(uiState: UiState.Loaded) {
             uiState.onRefresh()
         }
     )
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .pullRefresh(state = pullRefreshState),
     ) {
+        val listState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(rememberNestedScrollInteropConnection()),
+            state = listState,
         ) {
             uiState.announcementItem?.let { announcementItem ->
                 item(key = "reader-announcement-card") {

@@ -374,7 +374,6 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         }
     }
 
-
     override fun onScrollToTop() {
         // TODO scroll current content to top
     }
