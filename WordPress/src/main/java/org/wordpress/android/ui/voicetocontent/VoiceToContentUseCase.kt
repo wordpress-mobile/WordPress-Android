@@ -13,6 +13,7 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import javax.inject.Inject
 
+@Suppress("UnusedPrivateProperty")
 class VoiceToContentUseCase @Inject constructor(
     private val jetpackAIStore: JetpackAIStore,
     private val fileHelperWrapper: VoiceToContentTempFileHelperWrapper
@@ -29,7 +30,6 @@ class VoiceToContentUseCase @Inject constructor(
         file: File
     ): VoiceToContentResult =
         withContext(Dispatchers.IO) {
-            // val file = fileHelperWrapper.getAudioFile() ?: return@withContext VoiceToContentResult(isError = true)
             val transcriptionResponse = jetpackAIStore.fetchJetpackAITranscription(
                 siteModel,
                 FEATURE,

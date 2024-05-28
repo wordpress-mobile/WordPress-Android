@@ -15,7 +15,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.audio.RecordingUpdate
@@ -43,7 +42,7 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 
     private lateinit var uiState: MutableList<VoiceToContentResult>
 
-    private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
+   /* private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
         hasFeature = true,
         isOverLimit = false,
         requestsCount = 0,
@@ -56,7 +55,7 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
         tierPlans = emptyList(),
         tierPlansEnabled = false,
         costs = null
-    )
+    )*/
 
     @Before
     fun setup() {
@@ -128,6 +127,6 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 
         verify(recordingUseCase).startRecording(any())
     }
-
 }
+
 

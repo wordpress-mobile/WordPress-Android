@@ -46,7 +46,7 @@ class VoiceToContentViewModel @Inject constructor(
                 if (update.fileSizeLimitExceeded) {
                     stopRecording()
                 } else {
-                    // Handle other updates if needed, e.g., elapsed time and file size
+                    // todo: Handle other updates if needed when UI is ready, e.g., elapsed time and file size
                     Log.d("AudioRecorder", "Recording update: $update")
                 }
             }
@@ -64,6 +64,7 @@ class VoiceToContentViewModel @Inject constructor(
         }
     }
 
+    @Suppress("ReturnCount")
     private fun getRecordingFile(recordingPath: String): File? {
         if (recordingPath.isEmpty()) return null
         val recordingFile = File(recordingPath)

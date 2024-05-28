@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.voicetocontent
 
-import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -76,12 +75,7 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun requestAllPermissionsForRecording() {
-        requestMultiplePermissionsLauncher.launch(
-            arrayOf(
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        )
+        requestMultiplePermissionsLauncher.launch(REQUIRED_RECORDING_PERMISSIONS)
     }
 
     companion object {
