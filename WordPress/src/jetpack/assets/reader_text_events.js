@@ -1,6 +1,6 @@
 /*
  * wvHandler is the name of the message handler in the webview, added via createJsObject inside
- * ReaderPostRenderer. It handler the `postMessage` calls from the WebView.
+ * ReaderPostRenderer. It handles the `postMessage` calls from the WebView.
  */
 
 function debounce(fn, timeout) {
