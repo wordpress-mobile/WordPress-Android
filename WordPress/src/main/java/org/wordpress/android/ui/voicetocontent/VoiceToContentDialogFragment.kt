@@ -99,6 +99,7 @@ fun VoiceToContentScreen(
     hasPermission: () -> Boolean
 ) {
     val result by viewModel.uiState.observeAsState()
+    val assistantFeature by viewModel.aiAssistantFeatureState.observeAsState()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -112,6 +113,11 @@ fun VoiceToContentScreen(
 
             result?.content != null -> {
                 Text(text = result?.content!!, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
+
+            assistantFeature != null -> {
+                Text(text = "Assistant Feature Returned Successfully", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             else -> {
