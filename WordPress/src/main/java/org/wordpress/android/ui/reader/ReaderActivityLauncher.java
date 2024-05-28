@@ -247,7 +247,7 @@ public class ReaderActivityLauncher {
     }
 
     public static void showReaderCommentsForResult(
-            Fragment fragment,
+            @NonNull Fragment fragment,
             long blogId,
             long postId,
             String source
