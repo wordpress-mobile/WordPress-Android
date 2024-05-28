@@ -16,7 +16,7 @@
         android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:fontFamily="sans-serif-medium"
-        android:text="Choose status"
+        android:text="@string/comment_moderation_status_title"
         android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_sz_large" />
 
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:text="Approved"
+        android:text="@string/comment_moderation_status_approved"
         app:icon="@drawable/ic_check_24px"
         app:iconTint="@color/primary" />
 
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        android:text="Pending"
+        android:text="@string/comment_moderation_status_pending"
         app:icon="@drawable/watch_later_24"
         app:iconTint="@color/menu_more" />
 
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
-        android:text="Trash"
+        android:text="@string/comment_moderation_status_trash"
         app:icon="@drawable/delete_24"
         app:iconTint="@null"/>
 
@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_extra_small_large"
-        android:text="Spam"
+        android:text="@string/comment_moderation_status_spam"
         app:icon="@drawable/error_outline_24"
         app:iconTint="@null" />
 </LinearLayout>

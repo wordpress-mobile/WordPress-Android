@@ -19,7 +19,7 @@
         android:drawablePadding="@dimen/margin_small"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
-        android:text="Comment pending moderation"
+        android:text="@string/comment_moderation_pending"
         android:textColor="@color/menu_more"
         android:textSize="@dimen/text_sz_small"
         app:drawableStartCompat="@drawable/ic_time_16dp"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_extra_large"
         android:layout_marginVertical="@dimen/margin_medium"
-        android:text="Approve comment"
+        android:text="@string/comment_moderation_approve"
         app:icon="@drawable/ic_check_24px"
         app:iconGravity="textStart"
         app:iconTint="?attr/colorSurface" />
@@ -46,6 +46,6 @@
         android:layout_gravity="center_horizontal"
         android:padding="@dimen/margin_medium_large"
         android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
-        android:text="More options"
+        android:text="@string/comment_moderation_more"
         android:textColor="?attr/colorOnSurface" />
 </LinearLayout>
