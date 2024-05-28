@@ -23,7 +23,7 @@ class AudioRecorder(
 ) : IAudioRecorder {
     // default recording params
     private var recordingParams: RecordingParams = RecordingParams(
-        maxDuration = 5, // 5 minutes
+        maxDuration = 60 * 5, // 5 minutes
         maxFileSize = 1000000L * 25 // 25MB
     )
 
