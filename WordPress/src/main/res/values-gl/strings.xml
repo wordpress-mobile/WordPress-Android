@@ -26,7 +26,6 @@ Language: gl_ES
     <string name="stats_view_emails">Correos electrónicos</string>
     <string name="stats_emails_clicks_label">Clics</string>
     <string name="stats_view_subscribers">Subscritores</string>
-    <string name="stats_view_subscribers_chart">Subscritores</string>
     <string name="stats_view_total_subscribers">Subscritores totais</string>
     <string name="stats_view_subscriber_totals">Totais de subscritores</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -585,9 +584,9 @@ Language: gl_ES
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Os avisos estanse trasladando á aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O lector estase trasladando á aplicación de Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Produciuse un erro ao cargar as indicacións.</string>
-    <string name="blogging_prompts_list_error_network_title">Neste momento non se puido cargar este contido</string>
+    <string name="no_connection_error_title">Neste momento non se puido cargar este contido</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">A estatísticas estanse trasladado á aplicación de Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Comproba a túa conexión á rede e inténtao de novo.</string>
+    <string name="no_connection_error_description">Comproba a túa conexión á rede e inténtao de novo.</string>
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="close_desc">pechar</string>

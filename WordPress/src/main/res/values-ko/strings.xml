@@ -25,7 +25,6 @@ Language: ko_KR
     <string name="notifications_empty_subscribers">아직 구독자 없음</string>
     <string name="stats_view_emails">이메일</string>
     <string name="stats_view_subscribers">구독자</string>
-    <string name="stats_view_subscribers_chart">구독자</string>
     <string name="stats_view_total_subscribers">총 구독자 수</string>
     <string name="stats_view_subscriber_totals">구독자 합계</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +579,8 @@ Language: ko_KR
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">젯팩 앱으로 리더 이동 중</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">젯팩 앱으로 통계 이동 중</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">새 젯팩 앱으로 전환</string>
-    <string name="blogging_prompts_list_error_network_subtitle">네트워크 연결을 확인하고 다시 시도하세요.</string>
-    <string name="blogging_prompts_list_error_network_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
+    <string name="no_connection_error_description">네트워크 연결을 확인하고 다시 시도하세요.</string>
+    <string name="no_connection_error_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">프롬프트 로드 중 오류가 발생했습니다.</string>
     <string name="blogging_prompts_list_error_fetch_title">죄송합니다.</string>
     <string name="blogging_prompts_list_no_prompts">아직 프롬프트 없음</string>

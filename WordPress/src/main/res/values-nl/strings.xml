@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-13 22:05:24+0000
+Translation-Revision-Date: 2024-05-23 14:45:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Abonnees</string>
+    <string name="stats_subscribers_marker_view_singular">Abonnee</string>
+    <string name="stats_view_subscriber_growth">Groei van abonnees</string>
     <string name="role_subscriber">Abonnee</string>
     <string name="title_email_subscriber">E-mailabonnee</string>
     <string name="people_empty_list_filtered_email_subscribers">Nog geen e-mailabonnees</string>
@@ -25,7 +28,6 @@ Language: nl
     <string name="notifications_empty_subscribers">Nog geen abonnees</string>
     <string name="stats_view_emails">E-mails</string>
     <string name="stats_view_subscribers">Abonnees</string>
-    <string name="stats_view_subscribers_chart">Abonnees</string>
     <string name="stats_view_total_subscribers">Totaal aantal abonnees</string>
     <string name="stats_view_subscriber_totals">Abonnee totalen</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: nl
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader zal naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Je statistieken zullen naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Schakel over naar de nieuwe Jetpack-app</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Controleer je netwerkverbinding en probeer het nogmaals.</string>
-    <string name="blogging_prompts_list_error_network_title">Deze inhoud kan momenteel niet geladen worden</string>
+    <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
+    <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Er is een fout opgetreden bij het laden van opdrachten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oeps</string>
     <string name="blogging_prompts_list_no_prompts">Er zijn nog geen opdrachten</string>

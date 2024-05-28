@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.compose.components.menu.dropdown.MenuElementData
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.JetpackOverlayConnectedFeature.READER
@@ -39,7 +38,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTab
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
-import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
+import org.wordpress.android.ui.reader.usecases.LoadReaderItemsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.utils.ReaderTopBarMenuHelper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
@@ -52,6 +51,7 @@ import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.config.ReaderTagsFeedFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -69,7 +69,7 @@ class ReaderViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateProvider: DateProvider,
-    private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
+    private val loadReaderItemsUseCase: LoadReaderItemsUseCase,
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore,
     private val quickStartRepository: QuickStartRepository,
@@ -79,7 +79,7 @@ class ReaderViewModel @Inject constructor(
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
     private val readerTopBarMenuHelper: ReaderTopBarMenuHelper,
     private val urlUtilsWrapper: UrlUtilsWrapper,
-    // todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase
+    private val readerTagsFeedFeatureConfig: ReaderTagsFeedFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var wasPaused: Boolean = false
@@ -140,7 +140,7 @@ class ReaderViewModel @Inject constructor(
     @JvmOverloads
     fun loadTabs(savedInstanceState: Bundle? = null) {
         launch {
-            val tagList = loadReaderTabsUseCase.loadTabs()
+            val tagList = loadReaderItemsUseCase.load()
             if (tagList.isNotEmpty() && readerTagsList != tagList) {
                 updateReaderTagsList(tagList)
                 updateTopBarUiState(savedInstanceState)
@@ -225,7 +225,7 @@ class ReaderViewModel @Inject constructor(
         // Determine if analytics should be bumped either due to tags changed or time elapsed since last bump
         val now = DateProvider().getCurrentDate().time
         val shouldBumpAnalytics = event.didChange()
-                || ( now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
+                || (now - appPrefsWrapper.readerAnalyticsCountTagsTimestamp > ONE_HOUR_MILLIS)
 
         if (shouldBumpAnalytics) {
             readerTracker.trackFollowedTagsCount(event.totalTags)
@@ -422,7 +422,9 @@ class ReaderViewModel @Inject constructor(
         when (item) {
             is SubfilterListItem.SiteAll -> clearTopBarFilter()
             is SubfilterListItem.Site -> updateTopBarFilter(item.blog.name
-                .ifEmpty { urlUtilsWrapper.removeScheme(item.blog.url.ifEmpty { "" }) }, ReaderFilterType.BLOG)
+                .ifEmpty { urlUtilsWrapper.removeScheme(item.blog.url.ifEmpty { "" }) }, ReaderFilterType.BLOG
+            )
+
             is SubfilterListItem.Tag -> updateTopBarFilter(item.tag.tagDisplayName, ReaderFilterType.TAG)
             else -> Unit // do nothing
         }
@@ -511,11 +513,14 @@ class ReaderViewModel @Inject constructor(
     }
 
     private fun shouldShowBlogsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable
+        return readerTag.isFilterable && !readerTag.isTags
     }
 
     private fun shouldShowTagsFilter(readerTag: ReaderTag): Boolean {
-        return readerTag.isFilterable && readerTag.organization == Organization.NO_ORGANIZATION
+        val showForFollowedSites = readerTag.isFollowedSites && !readerTagsFeedFeatureConfig.isEnabled()
+        val showForTags = readerTag.isTags
+
+        return readerTag.isFilterable && (showForFollowedSites || showForTags)
     }
 
     data class TopBarUiState(

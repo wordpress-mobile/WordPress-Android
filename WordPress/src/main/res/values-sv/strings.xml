@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-17 09:54:08+0000
+Translation-Revision-Date: 2024-05-24 10:21:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="stats_subscribers_marker_view_plural">Prenumeranter</string>
+    <string name="stats_subscribers_marker_view_singular">Prenumerant</string>
+    <string name="stats_view_subscriber_growth">Prenumeranttillväxt</string>
     <string name="role_subscriber">Prenumerant</string>
     <string name="title_email_subscriber">E-postprenumerant</string>
     <string name="people_empty_list_filtered_email_subscribers">Inga e-postprenumeranter ännu</string>
@@ -25,7 +28,6 @@ Language: sv_SE
     <string name="notifications_empty_subscribers">Inga prenumeranter ännu</string>
     <string name="stats_view_emails">E-post</string>
     <string name="stats_view_subscribers">Prenumeranter</string>
-    <string name="stats_view_subscribers_chart">Prenumeranter</string>
     <string name="stats_view_total_subscribers">Totalt antal prenumeranter</string>
     <string name="stats_view_subscriber_totals">Totalt antal prenumeranter</string>
     <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
@@ -580,8 +582,8 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Läsaren flyttar till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Din statistik flyttas till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Byt till den nya Jetpack-appen</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Kontrollera din nätverksanslutning och försök igen.</string>
-    <string name="blogging_prompts_list_error_network_title">Det går inte att ladda detta innehåll just nu</string>
+    <string name="no_connection_error_description">Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="no_connection_error_title">Det går inte att ladda detta innehåll just nu</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Det var ett problem att ladda in förslag.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hoppsan</string>
     <string name="blogging_prompts_list_no_prompts">Inga förslag än</string>
