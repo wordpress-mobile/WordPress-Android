@@ -59,7 +59,6 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
         if (areAllPermissionsGranted) {
             viewModel.startRecording()
         } else {
-            // Handle permissions denied case
             // todo pantelis handle permissions denied case
             Toast.makeText(context, "Permissions needed for recording", Toast.LENGTH_SHORT).show()
         }

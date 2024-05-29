@@ -13,9 +13,7 @@ interface IAudioRecorder {
 
     companion object {
         val REQUIRED_RECORDING_PERMISSIONS = arrayOf(
-            Manifest.permission.RECORD_AUDIO,
-            // todo pantelis: do we need this?
-            // Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.RECORD_AUDIO
         )
     }
 }
