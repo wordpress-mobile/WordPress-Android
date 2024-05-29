@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_root"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_likes" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:drawablePadding="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/comment_moderation_pending"
+        android:textColor="@color/menu_more"
+        android:textSize="@dimen/text_sz_small"
+        app:drawableStartCompat="@drawable/ic_time_16dp"
+        app:drawableTint="@color/menu_more" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_approve_comment"
+        style="@style/Widget.ShareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginVertical="@dimen/margin_medium"
+        android:text="@string/comment_moderation_approve"
+        app:icon="@drawable/ic_check_24px"
+        app:iconGravity="textStart"
+        app:iconTint="?attr/colorSurface" />
+
+    <TextView
+        android:id="@+id/text_more_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:fontFamily="sans-serif-medium"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/margin_medium_large"
+        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+        android:text="@string/comment_moderation_more"
+        android:textColor="?attr/colorOnSurface" />
+</LinearLayout>
