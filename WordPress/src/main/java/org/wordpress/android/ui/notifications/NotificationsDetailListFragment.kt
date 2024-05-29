@@ -254,11 +254,13 @@ open class NotificationsDetailListFragment : ListFragment(), NotificationFragmen
             }
 
             requireNotNull(notification).let { note ->
-                ReaderActivityLauncher.showReaderComments(
-                    activity, note.siteId.toLong(), note.postId.toLong(),
-                    note.commentId,
-                    COMMENT_NOTIFICATION.sourceDescription
-                )
+                context?.let { nonNullContext ->
+                    ReaderActivityLauncher.showReaderComments(
+                        nonNullContext, note.siteId.toLong(), note.postId.toLong(),
+                        note.commentId,
+                        COMMENT_NOTIFICATION.sourceDescription
+                    )
+                }
             }
         }
 

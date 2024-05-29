@@ -1,13 +1,11 @@
-@file:Suppress("DEPRECATION")
-
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isGone
 import org.wordpress.android.R
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.tools.FormattableRangeType
-import org.wordpress.android.models.Note
 import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
 import org.wordpress.android.ui.engagement.BottomSheetUiState
@@ -20,13 +18,9 @@ import org.wordpress.android.util.ToastUtils
  * [CommentDetailFragment] is too big to be reused
  * It'd be better to have multiple fragments for different sources for different purposes
  */
-class NotificationCommentDetailFragment : CommentDetailFragment() {
-    private val note: Note // note will be non-null after onCreate
-        get() = mNote!!
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState?.getString(KEY_NOTE_ID) != null) {
             handleNote(savedInstanceState.getString(KEY_NOTE_ID)!!)
         } else {
@@ -72,8 +66,8 @@ class NotificationCommentDetailFragment : CommentDetailFragment() {
                 // This should not exist, we should clean that screen so a note without a site/comment can be displayed
                 mSite = createDummyWordPressComSite(note.siteId.toLong())
             }
-            if (mBinding != null && mReplyBinding != null) {
-                showComment(mBinding!!, mReplyBinding!!, mSite!!, mComment, note)
+            if (mBinding != null) {
+                showComment(mBinding!!, mSite!!, mComment, note)
             }
         }
     }

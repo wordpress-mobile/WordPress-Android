@@ -208,7 +208,7 @@ class WPMainActivityViewModel @Inject constructor(
         if (voiceToContentFeatureUtils.isVoiceToContentEnabled() && hasFullAccessToContent(site)) {
             actionsList.add(
                 CreateAction(
-                    actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO_AI,
+                    actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO,
                     iconRes = R.drawable.ic_mic_white_24dp,
                     labelRes = R.string.my_site_bottom_sheet_add_post_from_audio,
                     onClickAction = ::onCreateActionClicked

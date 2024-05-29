@@ -720,7 +720,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
-                case CREATE_NEW_POST_FROM_AUDIO_AI:
+                case CREATE_NEW_POST_FROM_AUDIO:
                     launchVoiceToContent();
                     break;
                 case CREATE_NEW_POST:

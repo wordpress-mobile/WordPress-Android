@@ -4,7 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.viewmodel.ContextProvider
 import java.io.File
@@ -14,36 +15,76 @@ import javax.inject.Inject
 
 class VoiceToContentUseCase @Inject constructor(
     private val jetpackAIStore: JetpackAIStore,
-    private val contextProvider: ContextProvider
+    private val fileHelperWrapper: VoiceToContentTempFileHelperWrapper
 ) {
     companion object {
         const val FEATURE = "voice_to_content"
-        private const val KILO_BYTE = 1024
+        const val ROLE = "jetpack-ai"
+        const val TYPE = "voice-to-content-simple-draft"
+        const val JETPACK_AI_ERROR = "__JETPACK_AI_ERROR__"
     }
 
     suspend fun execute(
         siteModel: SiteModel,
     ): VoiceToContentResult =
         withContext(Dispatchers.IO) {
-            val file = getAudioFile() ?: return@withContext VoiceToContentResult(isError = true)
-            val response = jetpackAIStore.fetchJetpackAITranscription(
+            val file = fileHelperWrapper.getAudioFile() ?: return@withContext VoiceToContentResult(isError = true)
+            val transcriptionResponse = jetpackAIStore.fetchJetpackAITranscription(
                 siteModel,
                 FEATURE,
                 file
             )
 
-            when(response) {
-                is JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse.Success -> {
-                    return@withContext VoiceToContentResult(content = response.model)
+            val transcribedText: String? = when(transcriptionResponse) {
+                is JetpackAITranscriptionResponse.Success -> {
+                    transcriptionResponse.model
                 }
-                is JetpackAITranscriptionRestClient.JetpackAITranscriptionResponse.Error -> {
-                    return@withContext VoiceToContentResult(isError = true)
+                is JetpackAITranscriptionResponse.Error -> {
+                    null
                 }
             }
-        }
 
-    // todo: The next three methods are temporary to support development - remove when the real impl is in place
-    private fun getAudioFile(): File? {
+            transcribedText?.let {
+                val response = jetpackAIStore.fetchJetpackAIQuery(
+                    site = siteModel,
+                    feature = FEATURE,
+                    role = ROLE,
+                    message = it,
+                    stream = false,
+                    type = TYPE
+                )
+
+                when(response) {
+                    is JetpackAIQueryResponse.Success -> {
+                        val finalContent: String = response.choices[0].message.content
+                        // __JETPACK_AI_ERROR__ is a special marker we ask GPT to add to the request when it can’t
+                        // understand the request for any reason, so maybe something confused GPT on some requests.
+                        if (finalContent == JETPACK_AI_ERROR) {
+                            return@withContext VoiceToContentResult(isError = true)
+                        } else {
+                            return@withContext VoiceToContentResult(content = response.choices[0].message.content)
+                        }
+                    }
+
+                    is JetpackAIQueryResponse.Error -> {
+                        return@withContext VoiceToContentResult(isError = true)
+                    }
+                }
+            } ?:return@withContext VoiceToContentResult(isError = true)
+        }
+}
+
+// todo: build out the result object
+data class VoiceToContentResult(
+    val content: String? = null,
+    val isError: Boolean = false
+)
+
+// todo: Remove this class when real impl is in place - it's here so I can start unit tests
+class VoiceToContentTempFileHelperWrapper @Inject constructor(
+    private val contextProvider: ContextProvider
+) {
+    fun getAudioFile(): File? {
         val result = runCatching {
             getFileFromAssets(contextProvider.getContext())
         }
@@ -53,7 +94,7 @@ class VoiceToContentUseCase @Inject constructor(
         }
     }
 
-    // todo: Do not forget to delete the test file from the asset directory - when the real impl is in place
+    // todo: Do not forget to delete the test file from the asset directory
     private fun getFileFromAssets(context: Context): File {
         val fileName = "jetpack-ai-transcription-test-audio-file.m4a"
         val file = File(context.filesDir, fileName)
@@ -74,10 +115,7 @@ class VoiceToContentUseCase @Inject constructor(
         }
         inputStream.close()
     }
+    companion object {
+        const val KILO_BYTE = 1024
+    }
 }
-
-// todo: build out the result object
-data class VoiceToContentResult(
-    val content: String? = null,
-    val isError: Boolean = false
-)

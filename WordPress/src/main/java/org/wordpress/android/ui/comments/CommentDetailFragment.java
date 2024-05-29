@@ -3,15 +3,10 @@ package org.wordpress.android.ui.comments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +15,6 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.gravatar.AvatarQueryOptions;
 import com.gravatar.AvatarUrl;
 import com.gravatar.types.Email;
@@ -34,7 +28,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.databinding.CommentDetailFragmentBinding;
-import org.wordpress.android.databinding.ReaderIncludeCommentBoxBinding;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.action.CommentAction;
@@ -45,7 +38,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
-import org.wordpress.android.fluxc.store.CommentStore.RemoteCreateCommentPayload;
 import org.wordpress.android.fluxc.store.CommentsStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
@@ -56,10 +48,6 @@ import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
-import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
@@ -80,25 +68,20 @@ import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
-import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.util.extensions.ViewExtensionsKt;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -119,8 +102,7 @@ import kotlinx.coroutines.GlobalScope;
  */
 @Deprecated
 @SuppressWarnings("DeprecatedIsStillUsed")
-public abstract class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment,
-        OnConfirmListener, OnCollapseListener {
+public abstract class CommentDetailFragment extends ViewPagerFragment implements NotificationFragment {
     protected static final String KEY_MODE = "KEY_MODE";
     protected static final String KEY_SITE_LOCAL_ID = "KEY_SITE_LOCAL_ID";
     protected static final String KEY_COMMENT_ID = "KEY_COMMENT_ID";
@@ -164,7 +146,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @NonNull private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
 
     @Nullable protected CommentDetailFragmentBinding mBinding = null;
-    @Nullable protected ReaderIncludeCommentBoxBinding mReplyBinding = null;
 
     private final OnActionClickListener mOnActionClickListener = new OnActionClickListener() {
         @Override public void onEditCommentClicked() {
@@ -212,81 +193,10 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             @Nullable Bundle savedInstanceState
     ) {
         mBinding = CommentDetailFragmentBinding.inflate(inflater, container, false);
-        mReplyBinding = mBinding.layoutCommentBox;
-
         mMediumOpacity = ResourcesCompat.getFloat(
                 getResources(),
                 com.google.android.material.R.dimen.material_emphasis_medium
         );
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(
-                mBinding.getRoot().getContext()
-        );
-        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
-        int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
-
-        mReplyBinding.layoutContainer.setBackgroundColor(elevatedColor);
-
-        mReplyBinding.btnSubmitReply.setEnabled(false);
-        mReplyBinding.btnSubmitReply.setOnLongClickListener(view1 -> {
-            if (view1.isHapticFeedbackEnabled()) {
-                view1.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-
-            Toast.makeText(view1.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
-            return true;
-        });
-        ViewExtensionsKt.redirectContextClickToLongPressListener(mReplyBinding.btnSubmitReply);
-
-        mReplyBinding.editComment.initializeWithPrefix('@');
-        mReplyBinding.editComment.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(@NonNull Editable s) {
-                mReplyBinding.btnSubmitReply.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
-            }
-        });
-
-        mReplyBinding.buttonExpand.setOnClickListener(
-                v -> {
-                    if (mSite != null && mComment != null) {
-                        Bundle bundle = CommentFullScreenDialogFragment.Companion.newBundle(
-                                mReplyBinding.editComment.getText().toString(),
-                                mReplyBinding.editComment.getSelectionStart(),
-                                mReplyBinding.editComment.getSelectionEnd(),
-                                mSite.getSiteId()
-                        );
-
-                        new Builder(requireContext())
-                                .setTitle(R.string.comment)
-                                .setOnCollapseListener(this)
-                                .setOnConfirmListener(this)
-                                .setContent(CommentFullScreenDialogFragment.class, bundle)
-                                .setAction(R.string.send)
-                                .setHideActivityBar(true)
-                                .build()
-                                .show(requireActivity().getSupportFragmentManager(),
-                                        getCommentSpecificFragmentTagSuffix(mComment));
-                    }
-                }
-        );
-        mReplyBinding.buttonExpand.setOnLongClickListener(v -> {
-            if (v.isHapticFeedbackEnabled()) {
-                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-            }
-
-            Toast.makeText(v.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-            return true;
-        });
-        ViewExtensionsKt.redirectContextClickToLongPressListener(mReplyBinding.buttonExpand);
-        setReplyUniqueId(mReplyBinding, mSite, mComment, mNote);
 
         // this is necessary in order for anchor tags in the comment text to be clickable
         mBinding.textContent.setLinksClickable(true);
@@ -295,30 +205,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         mBinding.imageMore.setOnClickListener(v ->
                 CommentActionPopupHandler.show(mBinding.imageMore, mOnActionClickListener)
         );
-
-        mReplyBinding.editComment.setHint(R.string.reader_hint_comment_on_comment);
-        mReplyBinding.editComment.setOnEditorActionListener((v, actionId, event) -> {
-            if (mSite != null && mComment != null
-                && (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)) {
-                submitReply(mReplyBinding, mSite, mComment);
-            }
-            return false;
-        });
-
-        if (!TextUtils.isEmpty(mRestoredReplyText)) {
-            mReplyBinding.editComment.setText(mRestoredReplyText);
-            mRestoredReplyText = null;
-        }
-
-        mReplyBinding.btnSubmitReply.setOnClickListener(v -> {
-            if (mSite != null && mComment != null) {
-                submitReply(mReplyBinding, mSite, mComment);
-            }
-        });
-
-        if (mSite != null) {
-            setupSuggestionServiceAndAdapter(mReplyBinding, mSite);
-        }
 
         return mBinding.getRoot();
     }
@@ -331,77 +217,9 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     }
 
     @Override
-    public void onConfirm(@Nullable Bundle result) {
-        if (mReplyBinding != null && result != null && mSite != null && mComment != null) {
-            mReplyBinding.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
-            submitReply(mReplyBinding, mSite, mComment);
-        }
-    }
-
-    @Override
-    public void onCollapse(@Nullable Bundle result) {
-        if (mReplyBinding != null && result != null) {
-            mReplyBinding.editComment.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
-            mReplyBinding.editComment.setSelection(result.getInt(
-                            CommentFullScreenDialogFragment.RESULT_SELECTION_START),
-                    result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END));
-            mReplyBinding.editComment.requestFocus();
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         ActivityId.trackLastActivity(ActivityId.COMMENT_DETAIL);
-
-        CollapseFullScreenDialogFragment fragment = null;
-        if (mComment != null) {
-            // reattach listeners to collapsible reply dialog
-            // we need to to it in onResume to make sure mComment is already initialized
-            fragment = (CollapseFullScreenDialogFragment) requireActivity()
-                    .getSupportFragmentManager().findFragmentByTag(getCommentSpecificFragmentTagSuffix(mComment));
-        }
-
-        if (fragment != null && fragment.isAdded()) {
-            fragment.setOnCollapseListener(this);
-            fragment.setOnConfirmListener(this);
-        }
-    }
-
-    private void setupSuggestionServiceAndAdapter(
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @NonNull SiteModel site
-    ) {
-        if (!isAdded() || !SiteUtils.isAccessedViaWPComRest(site)) {
-            return;
-        }
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), site.getSiteId());
-        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(
-                site,
-                requireActivity(),
-                mSuggestionServiceConnectionManager
-        );
-        replyBinding.editComment.setAdapter(mSuggestionAdapter);
-    }
-
-    private void setReplyUniqueId(
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @Nullable SiteModel site,
-            @Nullable CommentModel comment,
-            @Nullable Note note
-    ) {
-        if (isAdded()) {
-            String sId = null;
-            if (site != null && comment != null) {
-                sId = String.format(Locale.US, "%d-%d", site.getSiteId(), comment.getRemoteCommentId());
-            } else if (note != null) {
-                sId = String.format(Locale.US, "%d-%d", note.getSiteId(), note.getCommentId());
-            }
-            if (sId != null) {
-                replyBinding.editComment.getAutoSaveTextHelper().setUniqueId(sId);
-                replyBinding.editComment.getAutoSaveTextHelper().loadString(replyBinding.editComment);
-            }
-        }
     }
 
     protected void setComment(
@@ -415,17 +233,14 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         // notification about a reply to a comment this user posted on someone else's blog
         mIsUsersBlog = (comment != null);
 
-        if (mBinding != null && mReplyBinding != null) {
-            showComment(mBinding, mReplyBinding, mSite, mComment, mNote);
+        if (mBinding != null) {
+            showComment(mBinding, mSite, mComment, mNote);
         }
 
-        // Reset the reply unique id since mComment just changed.
-        if (mReplyBinding != null) setReplyUniqueId(mReplyBinding, mSite, mComment, mNote);
+        updateModerationStatus();
     }
 
-    private void disableShouldFocusReplyField() {
-        mShouldFocusReplyField = false;
-    }
+    abstract void updateModerationStatus();
 
     public void enableShouldFocusReplyField() {
         mShouldFocusReplyField = true;
@@ -463,8 +278,8 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         super.onStart();
         EventBus.getDefault().register(this);
         mCommentsStoreAdapter.register(this);
-        if (mBinding != null && mReplyBinding != null && mSite != null) {
-            showComment(mBinding, mReplyBinding, mSite, mComment, mNote);
+        if (mBinding != null && mSite != null) {
+            showComment(mBinding, mSite, mComment, mNote);
         }
     }
 
@@ -561,7 +376,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
      */
     protected void showComment(
             @NonNull CommentDetailFragmentBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull SiteModel site,
             @Nullable CommentModel comment,
             @Nullable Note note
@@ -572,15 +386,14 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
         if (comment == null) {
             // Hide container views when comment is null (will happen when opened from a notification).
-            showCommentWhenNull(binding, replyBinding, note);
+            showCommentWhenNull(binding, note);
         } else {
-            showCommentWhenNonNull(binding, replyBinding, site, comment);
+            showCommentWhenNonNull(binding, site, comment);
         }
     }
 
     private void showCommentWhenNull(
             @NonNull CommentDetailFragmentBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @Nullable Note note
     ) {
         // These two views contain all the other views except the progress bar.
@@ -599,7 +412,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
             CommentModel comment = mCommentsStoreAdapter.getCommentBySiteAndRemoteId(site, note.getCommentId());
             if (comment != null) {
                 // It exists, then show it as a "Notification"
-                showCommentAsNotification(binding, replyBinding, site, comment, note);
+                showCommentAsNotification(binding, site, comment, note);
             } else {
                 // It's not in our store yet, request it.
                 RemoteCommentPayload payload = new RemoteCommentPayload(site, note.getCommentId());
@@ -608,14 +421,13 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
                 // Show a "temporary" comment built from the note data, the view will be refreshed once the
                 // comment has been fetched.
-                showCommentAsNotification(binding, replyBinding, site, null, note);
+                showCommentAsNotification(binding, site, null, note);
             }
         }
     }
 
     private void showCommentWhenNonNull(
             @NonNull CommentDetailFragmentBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull SiteModel site,
             @NonNull CommentModel comment
     ) {
@@ -657,15 +469,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         showPostTitle(binding, comment, site);
         binding.textSite.setText(DateTimeUtils.javaDateToTimeSpan(
                 DateTimeUtils.dateFromIso8601(comment.getDatePublished()), WordPress.getContext()));
-
-        // make sure reply box is showing
-        if (replyBinding.layoutContainer.getVisibility() != View.VISIBLE && canReply()) {
-            AniUtils.animateBottomBar(replyBinding.layoutContainer, true);
-            if (mShouldFocusReplyField) {
-                replyBinding.editComment.performClick();
-                disableShouldFocusReplyField();
-            }
-        }
 
         requireActivity().invalidateOptionsMenu();
     }
@@ -909,63 +712,10 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     }
 
     /*
-     * post comment box text as a reply to the current comment
-     */
-    @SuppressWarnings("deprecation")
-    private void submitReply(
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
-            @NonNull SiteModel site,
-            @NonNull CommentModel comment
-    ) {
-        if (!isAdded() || mIsSubmittingReply) {
-            return;
-        }
-
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            return;
-        }
-
-        final String replyText = EditTextUtils.getText(replyBinding.editComment);
-        if (TextUtils.isEmpty(replyText)) {
-            return;
-        }
-
-        // disable editor, hide soft keyboard, hide submit icon, and show progress spinner while submitting
-        replyBinding.editComment.setEnabled(false);
-        EditTextUtils.hideSoftInput(replyBinding.editComment);
-        replyBinding.btnSubmitReply.setVisibility(View.GONE);
-        replyBinding.progressSubmitComment.setVisibility(View.VISIBLE);
-
-        mIsSubmittingReply = true;
-
-        if (mCommentSource != null) {
-            AnalyticsUtils.trackCommentReplyWithDetails(
-                    false,
-                    site,
-                    comment,
-                    mCommentSource.toAnalyticsCommentActionSource()
-            );
-        }
-
-        // Pseudo comment reply
-        CommentModel reply = new CommentModel();
-        reply.setContent(replyText);
-
-        mCommentsStoreAdapter.dispatch(
-                CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(site, comment, reply))
-        );
-    }
-
-    private boolean canReply() {
-        return mEnabledActions.contains(EnabledActions.ACTION_REPLY);
-    }
-
-    /*
      * display the comment associated with the passed notification
      */
     private void showCommentAsNotification(
             @NonNull CommentDetailFragmentBinding binding,
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull SiteModel site,
             @Nullable CommentModel comment,
             @Nullable Note note
@@ -982,15 +732,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
          */
         if (note != null) {
             mEnabledActions = note.getEnabledCommentActions();
-        }
-
-        // Set 'Reply to (Name)' in comment reply EditText if it's a reasonable size
-        if (note != null
-            && !TextUtils.isEmpty(note.getCommentAuthorName())
-            && note.getCommentAuthorName().length() < 28) {
-            replyBinding.editComment.setHint(
-                    String.format(getString(R.string.comment_reply_to_user), note.getCommentAuthorName())
-            );
         }
 
         if (comment != null) {
@@ -1053,23 +794,17 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
     @SuppressWarnings("deprecation")
     private void onCommentCreated(
-            @NonNull ReaderIncludeCommentBoxBinding replyBinding,
             @NonNull SiteModel site,
             @NonNull CommentModel comment,
             @Nullable Note note,
             OnCommentChanged event
     ) {
         mIsSubmittingReply = false;
-        replyBinding.editComment.setEnabled(true);
-        replyBinding.btnSubmitReply.setVisibility(View.VISIBLE);
-        replyBinding.progressSubmitComment.setVisibility(View.GONE);
 
         if (event.isError()) {
             if (isAdded()) {
                 String strUnEscapeHTML = StringEscapeUtils.unescapeHtml4(event.error.message);
                 ToastUtils.showToast(getActivity(), strUnEscapeHTML, ToastUtils.Duration.LONG);
-                // refocus editor on failure and show soft keyboard
-                EditTextUtils.showSoftInput(replyBinding.editComment);
             }
             return;
         }
@@ -1078,8 +813,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
         if (isAdded()) {
             ToastUtils.showToast(getActivity(), getString(R.string.note_reply_successful));
-            replyBinding.editComment.setText(null);
-            replyBinding.editComment.getAutoSaveTextHelper().clearSavedText(replyBinding.editComment);
         }
 
         // Self Hosted site does not return a newly created comment, so we need to fetch it manually.
@@ -1112,7 +845,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
                 (coroutineScope, continuation) -> mLocalCommentCacheUpdateHandler.requestCommentsUpdate(continuation)
         );
 
-        if (mBinding != null && mReplyBinding != null) {
+        if (mBinding != null) {
             setProgressVisible(mBinding, false);
 
             if (mSite != null && mComment != null) {
@@ -1125,7 +858,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
                 // New comment (reply)
                 if (event.causeOfChange == CommentAction.CREATE_NEW_COMMENT) {
-                    onCommentCreated(mReplyBinding, mSite, mComment, mNote, event);
+                    onCommentCreated(mSite, mComment, mNote, event);
                     return;
                 }
             }
@@ -1153,7 +886,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
-        mReplyBinding = null;
     }
 
     @Override
