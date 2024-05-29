@@ -37,6 +37,7 @@ class VoiceToContentFeatureUtilsTest {
         // Arrange
         whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
         whenever(voiceToContentFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(buildConfigWrapper.isDebug()).thenReturn(true)
 
         // Act
         val result = utils.isVoiceToContentEnabled()
