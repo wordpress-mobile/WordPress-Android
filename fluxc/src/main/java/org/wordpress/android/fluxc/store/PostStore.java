@@ -53,7 +53,6 @@ import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
 import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -436,7 +435,6 @@ public class PostStore extends Store {
 
         public static PostErrorType fromString(String string) {
             if (string != null) {
-                AppLog.e(T.API, "Post Error Type Conversion From: " + string);
                 for (PostErrorType v : PostErrorType.values()) {
                     if (string.equalsIgnoreCase(v.toString())) {
                         return v;

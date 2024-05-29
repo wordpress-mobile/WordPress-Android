@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaA
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -529,7 +528,6 @@ public class MediaStore extends Store {
         @NonNull
         public static MediaErrorType fromString(@Nullable String string) {
             if (string != null) {
-                AppLog.e(T.API, "Media Error Type Conversion From: " + string);
                 for (MediaErrorType v : MediaErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
