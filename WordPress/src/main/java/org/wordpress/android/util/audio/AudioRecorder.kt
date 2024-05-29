@@ -29,13 +29,12 @@ class AudioRecorder(
 
     private var onRecordingFinished: (String) -> Unit = {}
 
-    // todo: check place of the recording file
     private val storeInMemory = true
     private val filePath by lazy {
         if (storeInMemory) {
-            applicationContext.cacheDir.absolutePath + "/recording.3gp"
+            applicationContext.cacheDir.absolutePath + "/recording.mp4"
         } else {
-            applicationContext.getExternalFilesDir(null)?.absolutePath + "/recording.3gp"
+            applicationContext.getExternalFilesDir(null)?.absolutePath + "/recording.mp4"
         }
     }
 
@@ -61,8 +60,8 @@ class AudioRecorder(
             == PackageManager.PERMISSION_GRANTED) {
             recorder = MediaRecorder().apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-                setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+                setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+                setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
                 setOutputFile(filePath)
 
                 try {
