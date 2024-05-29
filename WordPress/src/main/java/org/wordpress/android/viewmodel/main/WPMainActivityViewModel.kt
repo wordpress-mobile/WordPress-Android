@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
 import org.wordpress.android.ui.debug.preferences.DebugPrefs
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -31,13 +30,13 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.utils.CreateContentFloatingButtonHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.privacy.banner.domain.ShouldAskPrivacyConsent
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.FluxCUtils
@@ -66,11 +65,10 @@ class WPMainActivityViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
-    private val voiceToContentFeatureUtils: VoiceToContentFeatureUtils
+    private val createContentFloatingButtonHelper: CreateContentFloatingButtonHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -170,7 +168,7 @@ class WPMainActivityViewModel @Inject constructor(
     @Suppress("LongMethod")
     private suspend fun loadMainActions(site: SiteModel?, page: PageType?, onFabClicked: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
-        if (bloggingPromptsSettingsHelper.shouldShowPromptsFeature()) {
+        if (createContentFloatingButtonHelper.canCreatePromptAnswer()) {
             val prompt = site?.let {
                 bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
             }
@@ -184,7 +182,7 @@ class WPMainActivityViewModel @Inject constructor(
                         promptId = prompt.id,
                         attribution = BloggingPromptAttribution.fromPrompt(prompt),
                         onClickAction = ::onAnswerPromptActionClicked,
-                        onHelpAction = ::onHelpPrompActionClicked
+                        onHelpAction = ::onHelpPromptActionClicked
                     )
                 )
             }
@@ -198,15 +196,19 @@ class WPMainActivityViewModel @Inject constructor(
                 onClickAction = null
             )
         )
-        actionsList.add(
-            CreateAction(
-                actionType = CREATE_NEW_POST,
-                iconRes = R.drawable.ic_posts_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_post,
-                onClickAction = ::onCreateActionClicked
+
+        if (createContentFloatingButtonHelper.canCreatePost()) {
+            actionsList.add(
+                CreateAction(
+                    actionType = CREATE_NEW_POST,
+                    iconRes = R.drawable.ic_posts_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_post,
+                    onClickAction = ::onCreateActionClicked
+                )
             )
-        )
-        if (voiceToContentFeatureUtils.isVoiceToContentEnabled() && hasFullAccessToContent(site)) {
+        }
+
+        if (createContentFloatingButtonHelper.canCreatePostFromAudio(site)) {
             actionsList.add(
                 CreateAction(
                     actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO,
@@ -216,7 +218,8 @@ class WPMainActivityViewModel @Inject constructor(
                 )
             )
         }
-        if (canCreatePage(site, page)) {
+
+        if (createContentFloatingButtonHelper.canCreatePage(site, page)) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_PAGE,
@@ -254,7 +257,7 @@ class WPMainActivityViewModel @Inject constructor(
         _createPostWithBloggingPrompt.postValue(promptId)
     }
 
-    private fun onHelpPrompActionClicked() {
+    private fun onHelpPromptActionClicked() {
         analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
         _openBloggingPromptsOnboarding.call()
     }
@@ -291,7 +294,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onPageChanged(site: SiteModel?, hasValidSite: Boolean, page: PageType) {
-        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite && showFabForPage(page)
+        val showFab = hasValidSite && createContentFloatingButtonHelper.shouldShowFabForPage(page)
         setMainFabUiState(showFab, site, page)
     }
 
@@ -300,7 +303,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onResume(site: SiteModel?, hasValidSite: Boolean, page: PageType?) {
-        val showFab = buildConfigWrapper.isCreateFabEnabled && hasValidSite && showFabForPage(page)
+        val showFab = hasValidSite && createContentFloatingButtonHelper.shouldShowFabForPage(page)
         setMainFabUiState(showFab, site, page)
 
         checkAndShowFeatureAnnouncement()
@@ -339,7 +342,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?, page: PageType?): Int =
-        if (canCreatePage(site, page)) {
+        if (createContentFloatingButtonHelper.canCreatePage(site, page)) {
             R.string.create_post_page_fab_tooltip
         } else {
             R.string.create_post_page_fab_tooltip_contributors
@@ -391,12 +394,6 @@ class WPMainActivityViewModel @Inject constructor(
     fun requestMySiteDashboardRefresh() {
         this._mySiteDashboardRefreshRequested.value = Event(Unit)
     }
-
-    private fun canCreatePage(site: SiteModel?, page: PageType?): Boolean {
-        return hasFullAccessToContent(site) && page == PageType.MY_SITE
-    }
-
-    private fun showFabForPage(page: PageType?) = page in listOf(PageType.MY_SITE, PageType.READER)
 
     data class FocusPointInfo(
         val task: QuickStartTask,
