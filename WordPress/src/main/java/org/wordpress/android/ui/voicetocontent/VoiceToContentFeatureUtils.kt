@@ -14,8 +14,6 @@ class VoiceToContentFeatureUtils @Inject constructor(
             && voiceToContentFeatureConfig.isEnabled()
             && buildConfigWrapper.isDebug()
 
-    fun isVoiceToContentEnabled() = buildConfigWrapper.isJetpackApp && voiceToContentFeatureConfig.isEnabled()
-
     fun isEligibleForVoiceToContent(jetpackFeatureAIAssistantFeature: JetpackAIAssistantFeature) =
         !jetpackFeatureAIAssistantFeature.siteRequireUpgrade
 
