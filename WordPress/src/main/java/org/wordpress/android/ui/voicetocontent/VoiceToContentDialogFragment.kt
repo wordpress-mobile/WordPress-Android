@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
+import android.provider.Settings
 
 @AndroidEntryPoint
 class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
@@ -59,8 +62,10 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
         if (areAllPermissionsGranted) {
             viewModel.startRecording()
         } else {
-            // todo pantelis handle permissions denied case
-            Toast.makeText(context, "Permissions needed for recording", Toast.LENGTH_SHORT).show()
+            // Check if any permissions were denied permanently
+            if (permissions.entries.any { !it.value }) {
+                showPermissionDeniedDialog()
+            }
         }
     }
 
@@ -75,6 +80,21 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
 
     private fun requestAllPermissionsForRecording() {
         requestMultiplePermissionsLauncher.launch(REQUIRED_RECORDING_PERMISSIONS)
+    }
+
+    private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.voice_to_content_permissions_required_title)
+            .setMessage(R.string.voice_to_content_permissions_required_msg)
+            .setPositiveButton("Settings") { _, _ ->
+                // Open the app's settings
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = Uri.fromParts("package", requireContext().packageName, null)
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
     companion object {
