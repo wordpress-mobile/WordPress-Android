@@ -35,6 +35,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.widgets.AppReviewsManagerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -48,6 +49,7 @@ class NotificationsListViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val notificationsUtilsWrapper: NotificationsUtilsWrapper,
+    private val appReviewsManagerWrapper: AppReviewsManagerWrapper,
     private val appLogWrapper: AppLogWrapper,
     private val siteStore: SiteStore,
     private val commentStore: CommentsStore,
@@ -141,6 +143,7 @@ class NotificationsListViewModel @Inject constructor(
         openDetailView: () -> Unit
     ) {
         val note = noteId?.let { notificationsUtilsWrapper.getNoteById(noteId) }
+        note?.let { appReviewsManagerWrapper.onNotificationReceived(it) }
         if (note != null && note.isCommentType && !note.canModerate()) {
             val readerPost = readerPostTableWrapper.getBlogPost(note.siteId.toLong(), note.postId.toLong(), false)
             if (readerPost != null) {
@@ -158,7 +161,8 @@ class NotificationsListViewModel @Inject constructor(
                             appLogWrapper.w(AppLog.T.NOTIFS, "Failed to fetch post for comment: $statusCode")
                             openDetailView()
                         }
-                    })
+                    }
+                )
             }
         } else {
             openDetailView()

@@ -244,7 +244,7 @@ import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.storage.StorageUtilsViewModel
-import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
+import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import org.wordpress.android.widgets.WPViewPager
 import org.wordpress.aztec.AztecExceptionHandler

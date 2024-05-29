@@ -110,7 +110,7 @@ import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfi
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.experiments.ExPlat
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.widgets.AppRatingDialog
+import org.wordpress.android.widgets.AppReviewManager
 import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
@@ -303,7 +303,7 @@ class AppInitializer @Inject constructor(
         initWpDb()
         context?.let { enableHttpResponseCache(it) }
 
-        AppRatingDialog.init(application)
+        AppReviewManager.init(application)
 
         if (!initialized) {
             // EventBus setup

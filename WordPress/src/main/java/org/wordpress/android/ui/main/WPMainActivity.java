@@ -28,20 +28,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.inappupdate.InAppUpdateListener;
-import org.wordpress.android.inappupdate.IInAppUpdateManager;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -71,6 +65,8 @@ import org.wordpress.android.fluxc.store.SiteStore.OnQuickStartCompleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteEditorsChanged;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
+import org.wordpress.android.inappupdate.IInAppUpdateManager;
+import org.wordpress.android.inappupdate.InAppUpdateListener;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.push.GCMMessageHandler;
@@ -139,7 +135,6 @@ import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
-import org.wordpress.android.ui.review.ReviewViewModel;
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationSource;
 import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
@@ -178,7 +173,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.CreatePageDashboardSource;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.workers.notification.createsite.CreateSiteNotificationScheduler;
 import org.wordpress.android.workers.weeklyroundup.WeeklyRoundupScheduler;
@@ -196,7 +191,6 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
-import static org.wordpress.android.util.extensions.InAppReviewExtensionsKt.logException;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
@@ -261,7 +255,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private WPMainActivityViewModel mViewModel;
     private ModalLayoutPickerViewModel mMLPViewModel;
-    @NonNull private ReviewViewModel mReviewViewModel;
     private BloggingRemindersViewModel mBloggingRemindersViewModel;
     private NotificationsListViewModel mNotificationsViewModel;
     private FloatingActionButton mFloatingActionButton;
@@ -509,7 +502,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         if (canShowAppRatingPrompt) {
-            AppRatingDialog.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
+            AppReviewManager.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
         }
 
         scheduleLocalNotifications();
@@ -691,7 +684,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
         mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
-        mReviewViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReviewViewModel.class);
         mBloggingRemindersViewModel =
                 new ViewModelProvider(this, mViewModelFactory).get(BloggingRemindersViewModel.class);
 
@@ -790,11 +782,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
-        mReviewViewModel.getLaunchReview().observe(this, event -> event.applyIfNotHandled(unit -> {
-            launchInAppReviews();
-            return null;
-        }));
-
         BloggingReminderUtils.observeBottomSheet(
                 mBloggingRemindersViewModel.isBottomSheetShowing(),
                 this,
@@ -860,20 +847,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
             }
         }
-    }
-
-    private void launchInAppReviews() {
-        ReviewManager manager = ReviewManagerFactory.create(this);
-        Task<ReviewInfo> request = manager.requestReviewFlow();
-        request.addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                ReviewInfo reviewInfo = task.getResult();
-                Task<Void> flow = manager.launchReviewFlow(this, reviewInfo);
-                flow.addOnFailureListener(e -> AppLog.e(T.MAIN, "Error launching google review API flow.", e));
-            } else {
-                logException(task);
-            }
-        });
     }
 
     private CreatePageDashboardSource getCreatePageDashboardSourceFromActionType(ActionType actionType) {
@@ -1208,6 +1181,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
         );
 
+        if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
+            AppReviewManager.INSTANCE.launchInAppReviews(this);
+        }
         checkForInAppUpdate();
 
         mIsChangingConfiguration = false;
@@ -1425,7 +1401,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                             v -> UploadUtils.publishPost(WPMainActivity.this, post, site, mDispatcher),
                             isFirstTimePublishing -> {
                                 mBloggingRemindersViewModel.onPublishingPost(site.getId(), isFirstTimePublishing);
-                                mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                                if (isFirstTimePublishing) {
+                                    AppReviewManager.INSTANCE.onPostPublished();
+                                }
                             }
                     );
                 }
@@ -1833,7 +1811,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         targetSite,
                         isFirstTimePublishing -> {
                             mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
-                            mReviewViewModel.onPublishingPost(isFirstTimePublishing);
+                            if (isFirstTimePublishing) {
+                                AppReviewManager.INSTANCE.onPostPublished();
+                            }
                         }
                 );
             }

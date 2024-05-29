@@ -72,7 +72,7 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
+import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
 @AndroidEntryPoint
