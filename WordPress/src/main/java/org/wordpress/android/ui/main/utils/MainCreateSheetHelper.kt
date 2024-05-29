@@ -8,7 +8,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.util.BuildConfigWrapper
-import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ReaderFloatingButtonFeatureConfig
 import java.util.Locale
@@ -18,24 +18,25 @@ class MainCreateSheetHelper @Inject constructor(
     private val voiceToContentFeatureUtils: VoiceToContentFeatureUtils,
     private val readerFloatingButtonFeatureConfig: ReaderFloatingButtonFeatureConfig,
     private val bloggingPromptsSettingsHelper: BloggingPromptsSettingsHelper,
-    private val buildConfigWrapper: BuildConfigWrapper,
+    private val buildConfig: BuildConfigWrapper,
+    private val siteUtils: SiteUtilsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
 ) {
     fun shouldShowFabForPage(page: PageType?): Boolean {
         val enabledForPage = page == PageType.MY_SITE ||
                 (page == PageType.READER && readerFloatingButtonFeatureConfig.isEnabled())
-        return buildConfigWrapper.isCreateFabEnabled && enabledForPage
+        return buildConfig.isCreateFabEnabled && enabledForPage
     }
 
     @Suppress("FunctionOnlyReturningConstant")
     fun canCreatePost(): Boolean = true // for completeness
 
     fun canCreatePage(site: SiteModel?, page: PageType?): Boolean {
-        return SiteUtils.hasFullAccessToContent(site) && page == PageType.MY_SITE
+        return siteUtils.hasFullAccessToContent(site) && page == PageType.MY_SITE
     }
 
     fun canCreatePostFromAudio(site: SiteModel?): Boolean {
-        return voiceToContentFeatureUtils.isVoiceToContentEnabled() && SiteUtils.hasFullAccessToContent(site)
+        return voiceToContentFeatureUtils.isVoiceToContentEnabled() && siteUtils.hasFullAccessToContent(site)
     }
 
     suspend fun canCreatePromptAnswer(): Boolean = bloggingPromptsSettingsHelper.shouldShowPromptsFeature()
