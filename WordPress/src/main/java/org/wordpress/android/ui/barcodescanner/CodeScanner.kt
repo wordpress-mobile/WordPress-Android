@@ -2,11 +2,14 @@ package org.wordpress.android.ui.barcodescanner
 
 import android.os.Parcelable
 import androidx.camera.core.ImageProxy
-import kotlinx.coroutines.flow.Flow
 import kotlinx.parcelize.Parcelize
 
 interface CodeScanner {
-    fun startScan(imageProxy: ImageProxy): Flow<CodeScannerStatus>
+    fun startScan(imageProxy: ImageProxy, callback: CodeScannerCallback)
+}
+
+interface CodeScannerCallback {
+    fun run(status: CodeScannerStatus?)
 }
 
 sealed class CodeScannerStatus : Parcelable {
