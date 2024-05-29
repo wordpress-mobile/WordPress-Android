@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.ViewCompat.animate
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +27,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.ReaderTagFeedFragmentLayoutBinding
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.compose.theme.AppThemeWithoutBackground
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
@@ -55,7 +55,7 @@ import javax.inject.Inject
  * main content of the ReaderFragment (e.g.: initializing the SubFilterViewModel), so a few changes might be needed.
  */
 @AndroidEntryPoint
-class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragment_layout),
+class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout),
     WPMainActivity.OnScrollToTopListener {
     private val tagsFeedTag by lazy {
         // TODO maybe we can just create a static function somewhere that returns the Tags Feed ReaderTag, since it's
@@ -372,10 +372,6 @@ class ReaderTagsFeedFragment : ViewPagerFragment(R.layout.reader_tag_feed_fragme
                 }
             }
         }
-    }
-
-    override fun getScrollableViewForUniqueIdProvision(): View {
-        return binding.composeView
     }
 
     override fun onScrollToTop() {
