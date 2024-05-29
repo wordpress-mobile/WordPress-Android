@@ -13,7 +13,7 @@
     {
       "enabled": true,
       "matchDepPatterns": [
-        "automattic"
+        "automattic|wpmreleasetoolkit"
       ],
       "separateMajorMinor": false
     },
