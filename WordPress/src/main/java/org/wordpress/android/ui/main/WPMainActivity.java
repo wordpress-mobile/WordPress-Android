@@ -762,7 +762,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mFloatingActionButton.setOnClickListener(v -> {
             PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
-            mViewModel.onFabClicked(getSelectedSite(), currentPage);
+            if (currentPage != null) mViewModel.onFabClicked(getSelectedSite(), currentPage);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
