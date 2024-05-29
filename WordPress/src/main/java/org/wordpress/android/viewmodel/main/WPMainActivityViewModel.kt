@@ -30,7 +30,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.main.utils.CreateContentFloatingButtonHelper
+import org.wordpress.android.ui.main.utils.MainCreateSheetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.mysite.cards.quickstart.QuickStartRepository
@@ -50,7 +50,6 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.io.Serializable
 import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -68,7 +67,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val bloggingPromptsStore: BloggingPromptsStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
-    private val createContentFloatingButtonHelper: CreateContentFloatingButtonHelper,
+    private val mainCreateSheetHelper: MainCreateSheetHelper,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -166,9 +165,9 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     @Suppress("LongMethod")
-    private suspend fun loadMainActions(site: SiteModel?, page: PageType?, onFabClicked: Boolean = false) {
+    private suspend fun loadMainActions(site: SiteModel?, page: PageType, onFabClicked: Boolean = false) {
         val actionsList = ArrayList<MainActionListItem>()
-        if (createContentFloatingButtonHelper.canCreatePromptAnswer()) {
+        if (mainCreateSheetHelper.canCreatePromptAnswer()) {
             val prompt = site?.let {
                 bloggingPromptsStore.getPromptForDate(it, Date()).firstOrNull()?.model
             }
@@ -181,8 +180,14 @@ class WPMainActivityViewModel @Inject constructor(
                         isAnswered = prompt.isAnswered,
                         promptId = prompt.id,
                         attribution = BloggingPromptAttribution.fromPrompt(prompt),
-                        onClickAction = ::onAnswerPromptActionClicked,
-                        onHelpAction = ::onHelpPromptActionClicked
+                        onClickAction = { prompt, attribution ->
+                            onAnswerPromptActionClicked(
+                                prompt,
+                                attribution,
+                                page
+                            )
+                        },
+                        onHelpAction = { onHelpPromptActionClicked(page) }
                     )
                 )
             }
@@ -197,35 +202,35 @@ class WPMainActivityViewModel @Inject constructor(
             )
         )
 
-        if (createContentFloatingButtonHelper.canCreatePost()) {
+        if (mainCreateSheetHelper.canCreatePost()) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_POST,
                     iconRes = R.drawable.ic_posts_white_24dp,
                     labelRes = R.string.my_site_bottom_sheet_add_post,
-                    onClickAction = ::onCreateActionClicked
+                    onClickAction = { onCreateActionClicked(it, page) }
                 )
             )
         }
 
-        if (createContentFloatingButtonHelper.canCreatePostFromAudio(site)) {
+        if (mainCreateSheetHelper.canCreatePostFromAudio(site)) {
             actionsList.add(
                 CreateAction(
                     actionType = ActionType.CREATE_NEW_POST_FROM_AUDIO,
                     iconRes = R.drawable.ic_mic_white_24dp,
                     labelRes = R.string.my_site_bottom_sheet_add_post_from_audio,
-                    onClickAction = ::onCreateActionClicked
+                    onClickAction = { onCreateActionClicked(it, page) }
                 )
             )
         }
 
-        if (createContentFloatingButtonHelper.canCreatePage(site, page)) {
+        if (mainCreateSheetHelper.canCreatePage(site, page)) {
             actionsList.add(
                 CreateAction(
                     actionType = CREATE_NEW_PAGE,
                     iconRes = R.drawable.ic_pages_white_24dp,
                     labelRes = R.string.my_site_bottom_sheet_add_page,
-                    onClickAction = ::onCreateActionClicked
+                    onClickAction = { onCreateActionClicked(it, page) }
                 )
             )
         }
@@ -234,9 +239,8 @@ class WPMainActivityViewModel @Inject constructor(
         if (onFabClicked) trackCreateActionsSheetCard(actionsList)
     }
 
-    private fun onCreateActionClicked(actionType: ActionType) {
-        val properties = mapOf("action" to actionType.name.lowercase(Locale.ROOT))
-        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED, properties)
+    private fun onCreateActionClicked(actionType: ActionType, page: PageType) {
+        mainCreateSheetHelper.trackActionTapped(page, actionType)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
 
@@ -248,17 +252,14 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution) {
-        analyticsTracker.track(
-            Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED,
-            mapOf("attribution" to attribution.value).filterValues { it.isNotBlank() }
-        )
+    private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution, page: PageType) {
+        mainCreateSheetHelper.trackAnswerPromptActionTapped(page, attribution)
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }
 
-    private fun onHelpPromptActionClicked() {
-        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED)
+    private fun onHelpPromptActionClicked(page: PageType) {
+        mainCreateSheetHelper.trackHelpPromptActionTapped(page)
         _openBloggingPromptsOnboarding.call()
     }
 
@@ -268,9 +269,8 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(site: SiteModel?, page: PageType?) {
+    fun onFabClicked(site: SiteModel?, page: PageType) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
-        setMainFabUiState(true, site, page)
 
         _showQuickStarInBottomSheet.postValue(quickStartRepository.activeTask.value == PUBLISH_POST)
 
@@ -284,7 +284,7 @@ class WPMainActivityViewModel @Inject constructor(
                 // latest info.
                 loadMainActions(site, page, onFabClicked = true)
 
-                analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
+                mainCreateSheetHelper.trackSheetShown(page)
                 _isBottomSheetShowing.postValue(Event(true))
             }
         } else {
@@ -294,7 +294,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onPageChanged(site: SiteModel?, hasValidSite: Boolean, page: PageType) {
-        val showFab = hasValidSite && createContentFloatingButtonHelper.shouldShowFabForPage(page)
+        val showFab = hasValidSite && mainCreateSheetHelper.shouldShowFabForPage(page)
         setMainFabUiState(showFab, site, page)
     }
 
@@ -303,7 +303,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun onResume(site: SiteModel?, hasValidSite: Boolean, page: PageType?) {
-        val showFab = hasValidSite && createContentFloatingButtonHelper.shouldShowFabForPage(page)
+        val showFab = hasValidSite && mainCreateSheetHelper.shouldShowFabForPage(page)
         setMainFabUiState(showFab, site, page)
 
         checkAndShowFeatureAnnouncement()
@@ -332,6 +332,8 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?, page: PageType?) {
+        if (isFabVisible && page != null) mainCreateSheetHelper.trackFabShown(page)
+
         val newState = MainFabUiState(
             isFabVisible = isFabVisible,
             isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
@@ -342,7 +344,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?, page: PageType?): Int =
-        if (createContentFloatingButtonHelper.canCreatePage(site, page)) {
+        if (mainCreateSheetHelper.canCreatePage(site, page)) {
             R.string.create_post_page_fab_tooltip
         } else {
             R.string.create_post_page_fab_tooltip_contributors
