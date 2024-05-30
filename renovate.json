@@ -13,7 +13,7 @@
     {
       "enabled": true,
       "matchDepPatterns": [
-        "/automattic|wpmreleasetoolkit/i"
+        "automattic|wpmreleasetoolkit/i"
       ],
       "separateMajorMinor": false
     },
@@ -23,7 +23,7 @@
         "gradle"
       ],
       "matchDepPatterns": [
-        "/automattic|wordpress|gravatar/i"
+        "automattic|wordpress|gravatar/i"
       ],
       "separateMajorMinor": false,
       "versioning": "semver-coerced"
