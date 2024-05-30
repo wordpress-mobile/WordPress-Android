@@ -9,8 +9,8 @@
         android:id="@+id/image"
         android:layout_width="@dimen/notifications_milestone_image_size"
         android:layout_height="@dimen/notifications_milestone_image_size"
-        android:layout_marginTop="@dimen/notifications_milestone_image_top"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/notifications_milestone_image_top"
         android:contentDescription="@null" />
 
     <LinearLayout
@@ -48,9 +48,9 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_text"
+            style="@style/NotificationMilestoneText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
             app:fixWidowWords="true" />
     </LinearLayout>
 
