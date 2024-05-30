@@ -4902,5 +4902,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Voice to Content -->
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
-
+    <string name="voice_to_content_initializing">Initializing</string>
+    <string name="voice_to_content_preparing">Preparing</string>
+    <string name="voice_to_content_ready_to_record">Ready to Record</string>
+    <string name="voice_to_content_ready_to_record_label">Ready to Record</string>
+    <string name="voice_to_content_tap_to_start">Tap to start</string>
+    <string name="voice_to_content_recording">Recording</string>
+    <string name="voice_to_content_elapsed_time">Elapsed Time</string>
+    <string name="voice_to_content_tap_to_stop">Tap to stop</string>
+    <string name="voice_to_content_processing">Processing</string>
+    <string name="voice_to_content_processing_label">Processing</string>
 </resources>
