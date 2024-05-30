@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -134,8 +133,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (notification == null) {
             showErrorToastAndFinish()
         }
-
-        view?.findViewById<LottieAnimationView>(R.id.confetti)?.visibility = View.GONE
     }
 
     override fun onPause() {

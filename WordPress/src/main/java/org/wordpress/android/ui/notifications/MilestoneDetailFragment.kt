@@ -2,14 +2,12 @@ package org.wordpress.android.ui.notifications
 
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -109,11 +107,6 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         }
         if (notification == null) {
             showErrorToastAndFinish()
-        }
-
-        view?.findViewById<LottieAnimationView>(R.id.confetti)?.let {
-            it.visibility = View.VISIBLE
-            it.playAnimation()
         }
     }
 
