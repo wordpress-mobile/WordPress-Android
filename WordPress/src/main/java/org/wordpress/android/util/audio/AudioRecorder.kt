@@ -54,6 +54,7 @@ class AudioRecorder(
     private val _isPaused = MutableStateFlow(false)
     val isPaused: StateFlow<Boolean> = _isPaused
 
+    @Suppress("DEPRECATION")
     override fun startRecording(onRecordingFinished: (String) -> Unit) {
         this.onRecordingFinished = onRecordingFinished
         if (applicationContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
