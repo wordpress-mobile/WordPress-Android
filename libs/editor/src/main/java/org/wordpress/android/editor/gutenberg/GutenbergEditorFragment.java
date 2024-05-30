@@ -408,8 +408,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             public void run() {
                                 setEditorProgressBarVisibility(!mEditorDidMount);
 
-                                getGutenbergContainerFragment().onVoiceToContent(
-                                        "# Sample Document\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n## Overview\n- Lorem ipsum dolor sit amet\n- Consectetur adipiscing elit\n- Integer nec odio\n## Details\n1. Sed cursus ante dapibus diam\n2. Nulla quis sem at nibh elementum imperdiet\n3. Duis sagittis ipsum\n## Mixed Lists\n- Key Points:\n  1. Lorem ipsum dolor sit amet\n  2. Consectetur adipiscing elit\n  3. Integer nec odio\n- Additional Info:\n  - Sed cursus ante dapibus diam\n  - Nulla quis sem at nibh elementum imperdiet\n  - Duis sagittis ipsum\n## Conclusion\n- Praesent libero\n- Sed cursus ante dapibus diam\n- Suspendisse malesuada lacus ex");
+                                getGutenbergContainerFragment().onContentUpdate("# Sample Document\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n## Overview\n- Lorem ipsum dolor sit amet\n- Consectetur adipiscing elit\n- Integer nec odio\n## Details\n1. Sed cursus ante dapibus diam\n2. Nulla quis sem at nibh elementum imperdiet\n3. Duis sagittis ipsum\n## Mixed Lists\n- Key Points:\n  1. Lorem ipsum dolor sit amet\n  2. Consectetur adipiscing elit\n  3. Integer nec odio\n- Additional Info:\n  - Sed cursus ante dapibus diam\n  - Nulla quis sem at nibh elementum imperdiet\n  - Duis sagittis ipsum\n## Conclusion\n- Praesent libero\n- Sed cursus ante dapibus diam\n- Suspendisse malesuada lacus ex");
                             }
                         });
                     }
