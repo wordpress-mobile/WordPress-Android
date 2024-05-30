@@ -23,7 +23,7 @@
         "gradle"
       ],
       "matchDepPatterns": [
-        "automattic|wordpress"
+        "automattic|wordpress|gravatar"
       ],
       "separateMajorMinor": false,
       "versioning": "semver-coerced"
