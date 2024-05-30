@@ -2,31 +2,41 @@
 
 package org.wordpress.android.ui.comments
 
+import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import com.gravatar.AvatarQueryOptions
 import com.gravatar.AvatarUrl
 import com.gravatar.types.Email
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.databinding.CommentApprovedBinding
 import org.wordpress.android.databinding.CommentPendingBinding
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.Note
 import org.wordpress.android.models.Note.EnabledActions
-import org.wordpress.android.ui.comments.CommentExtension.canLike
 import org.wordpress.android.ui.comments.CommentExtension.canMarkAsSpam
 import org.wordpress.android.ui.comments.CommentExtension.canModerate
-import org.wordpress.android.ui.comments.CommentExtension.canReply
 import org.wordpress.android.ui.comments.CommentExtension.canTrash
-import org.wordpress.android.ui.comments.CommentExtension.liked
+import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.WPAvatarUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.image.ImageType
 import java.util.EnumSet
+import javax.inject.Inject
 
 
 /**
  * Used when we want to write Kotlin in [CommentDetailFragment]
  * Move converted code to this class
  */
+@AndroidEntryPoint
 abstract class SharedCommentDetailFragment : CommentDetailFragment() {
     // it will be non-null after view created when users from a notification
     // it will be null when users from comment list
@@ -38,12 +48,35 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
     protected val comment: CommentModel
         get() = mComment!!
 
+    protected val site: SiteModel
+        get() = mSite!!
+
+    protected val viewModel: CommentDetailViewModel by viewModels()
+
+    @Inject
+    lateinit var accountStore: AccountStore
+
+    @Inject
+    lateinit var meGravatarLoader: MeGravatarLoader
+
     abstract val enabledActions: EnumSet<EnabledActions>
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.updatedComment.observe(viewLifecycleOwner) {
+            mComment = it
+            updateModerationStatus()
+        }
+    }
+
     override fun updateModerationStatus() {
+        // reset visibilities
+        mBinding?.layoutCommentPending?.root?.isVisible = false
+        mBinding?.layoutCommentApproved?.root?.isVisible = false
+
         val commentStatus = CommentStatus.fromString(comment.status)
         when (commentStatus) {
-            CommentStatus.APPROVED -> {}
+            CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.handleApprovedView()
             CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.handlePendingView()
             CommentStatus.SPAM -> {}
             CommentStatus.TRASH -> {}
@@ -56,8 +89,39 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
     }
 
     private fun CommentPendingBinding.handlePendingView() {
-        layoutRoot.isVisible = true
+        root.isVisible = true
         textMoreOptions.setOnClickListener { showModerationBottomSheet() }
+    }
+
+    private fun CommentApprovedBinding.handleApprovedView() {
+        root.isVisible = true
+        meGravatarLoader.load(
+            newAvatarUploaded = false,
+            avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl),
+            imageView = imageAvatar,
+            imageType = ImageType.USER,
+            injectFilePath = null,
+        )
+
+        textLikeComment.text = if (comment.iLike) {
+            getString(R.string.comment_liked)
+        } else {
+            getString(R.string.like_comment)
+        }
+        textLikeComment.setOnClickListener {
+            viewModel.likeComment(comment, site)
+            sendLikeCommentEvent(comment.iLike.not())
+        }
+        cardReply.setOnClickListener { }
+        textReply.text = getString(R.string.comment_reply_to_user, comment.authorName)
+    }
+
+    protected open fun sendLikeCommentEvent(liked: Boolean) {
+        AnalyticsUtils.trackCommentActionWithSiteDetails(
+            if (liked) AnalyticsTracker.Stat.COMMENT_LIKED else AnalyticsTracker.Stat.COMMENT_UNLIKED,
+            mCommentSource.toAnalyticsCommentActionSource(),
+            site
+        )
     }
 
     private fun showModerationBottomSheet() {

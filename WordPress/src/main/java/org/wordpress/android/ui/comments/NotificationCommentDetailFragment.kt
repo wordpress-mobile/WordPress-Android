@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.tools.FormattableRangeType
 import org.wordpress.android.models.Note
@@ -31,6 +33,14 @@ class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
         } else {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
+    }
+
+    override fun sendLikeCommentEvent(liked: Boolean) {
+        super.sendLikeCommentEvent(liked)
+        // it should also track the notification liked/unliked event
+        AnalyticsTracker.track(
+            if (liked) Stat.NOTIFICATION_LIKED else Stat.NOTIFICATION_UNLIKED
+        )
     }
 
     override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {

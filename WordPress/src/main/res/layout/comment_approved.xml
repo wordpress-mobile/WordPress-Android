@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_likes" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:drawablePadding="@dimen/margin_small"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/comment_moderation_approved"
+        android:textColor="@color/menu_more"
+        android:textSize="@dimen/text_sz_small"
+        app:drawableStartCompat="@drawable/baseline_check_16"
+        app:drawableTint="@color/menu_more" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_reply"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_large"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/divider"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_extra_large"
+            android:layout_marginVertical="@dimen/margin_medium">
+
+            <ImageView
+                android:id="@+id/image_avatar"
+                android:layout_width="@dimen/avatar_sz_extra_small"
+                android:layout_height="@dimen/avatar_sz_extra_small"
+                android:importantForAccessibility="no"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_reply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:textColor="@color/menu_more"
+                android:lines="1"
+                android:textSize="@dimen/text_sz_medium"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Reply to Adam" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/text_like_comment"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:gravity="center"
+        android:paddingVertical="@dimen/margin_medium_large"
+        android:textSize="@dimen/text_sz_medium"
+        android:drawablePadding="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_extra_medium_large"
+        tools:text="Like Edna’s comment"
+        android:layout_height="wrap_content"
+        app:drawableStartCompat="@drawable/star_empty" />
+</LinearLayout>

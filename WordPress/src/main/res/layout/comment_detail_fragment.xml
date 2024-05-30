@@ -23,6 +23,12 @@
             layout="@layout/comment_pending"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/layout_comment_approved"
+            layout="@layout/comment_approved"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </FrameLayout>
 
     <ProgressBar
