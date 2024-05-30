@@ -33,7 +33,6 @@ import org.wordpress.android.util.image.ImageType
 import java.util.EnumSet
 import javax.inject.Inject
 
-
 /**
  * Used when we want to write Kotlin in [CommentDetailFragment]
  * Move converted code to this class

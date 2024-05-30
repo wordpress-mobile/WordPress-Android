@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -24,14 +23,12 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-
 @HiltViewModel
 class CommentDetailViewModel @Inject constructor(
     @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
     private val commentsStore: CommentsStore,
     private val commentsStoreAdapter: CommentsStoreAdapter,
     private val eventBusWrapper: EventBusWrapper,
-    private val notificationsTableWrapper: NotificationsTableWrapper,
     private val commentsMapper: CommentsMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _updatedComment = MutableLiveData<CommentModel>()

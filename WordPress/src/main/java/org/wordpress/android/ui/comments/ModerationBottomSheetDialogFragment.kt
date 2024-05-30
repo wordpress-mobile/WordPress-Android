@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.comments
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +11,14 @@ import com.google.android.material.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.databinding.CommentModerationBinding
-import org.wordpress.android.util.extensions.getSerializableCompat
-import java.io.Serializable
+import org.wordpress.android.util.extensions.getParcelableCompat
 
 class ModerationBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var binding: CommentModerationBinding? = null
     private val state by lazy {
-        arguments?.getSerializableCompat<CommentState>(KEY_STATE)
+        arguments?.getParcelableCompat<CommentState>(KEY_STATE)
             ?: throw IllegalArgumentException("CommentState not provided")
     }
 
@@ -88,16 +89,17 @@ class ModerationBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private const val KEY_STATE = "state"
         fun newInstance(state: CommentState) = ModerationBottomSheetDialogFragment()
             .apply {
-                arguments = Bundle().apply { putSerializable(KEY_STATE, state) }
+                arguments = Bundle().apply { putParcelable(KEY_STATE, state) }
             }
     }
 
     /**
      * For handling the UI state of the comment moderation bottom sheet
      */
+    @Parcelize
     data class CommentState(
         val canModerate: Boolean,
         val canTrash: Boolean,
         val canMarkAsSpam: Boolean,
-    ) : Serializable
+    ) : Parcelable
 }
