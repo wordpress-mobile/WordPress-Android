@@ -4,6 +4,8 @@ package org.wordpress.android.ui.comments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.gravatar.AvatarQueryOptions
@@ -76,8 +78,8 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
 
         val commentStatus = CommentStatus.fromString(comment.status)
         when (commentStatus) {
-            CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.handleApprovedView()
-            CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.handlePendingView()
+            CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.bindApprovedView()
+            CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.bindPendingView()
             CommentStatus.SPAM -> {}
             CommentStatus.TRASH -> {}
             CommentStatus.DELETED -> {}
@@ -88,12 +90,12 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         }
     }
 
-    private fun CommentPendingBinding.handlePendingView() {
+    private fun CommentPendingBinding.bindPendingView() {
         root.isVisible = true
         textMoreOptions.setOnClickListener { showModerationBottomSheet() }
     }
 
-    private fun CommentApprovedBinding.handleApprovedView() {
+    private fun CommentApprovedBinding.bindApprovedView() {
         root.isVisible = true
         meGravatarLoader.load(
             newAvatarUploaded = false,
@@ -103,17 +105,40 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
             injectFilePath = null,
         )
 
-        textLikeComment.text = if (comment.iLike) {
-            getString(R.string.comment_liked)
+        if (comment.iLike) {
+            handleLikeCommentView(
+                textLikeComment,
+                R.color.inline_action_filled,
+                R.drawable.star_filled,
+                R.string.comment_liked
+            )
         } else {
-            getString(R.string.like_comment)
+            handleLikeCommentView(
+                textLikeComment,
+                R.color.menu_more,
+                R.drawable.star_empty,
+                R.string.like_comment
+            )
         }
+
         textLikeComment.setOnClickListener {
             viewModel.likeComment(comment, site)
             sendLikeCommentEvent(comment.iLike.not())
         }
         cardReply.setOnClickListener { }
         textReply.text = getString(R.string.comment_reply_to_user, comment.authorName)
+    }
+
+    /**
+     * Handle like comment text based on the liked status
+     */
+    private fun handleLikeCommentView(textView: TextView, colorId: Int, drawableId: Int, stringId: Int) {
+        textView.text = getString(stringId)
+        val color = ContextCompat.getColor(textView.context, colorId)
+        textView.setTextColor(color)
+        ContextCompat.getDrawable(textView.context, drawableId)
+            ?.apply { setTint(color) }
+            ?.let { textView.setCompoundDrawablesWithIntrinsicBounds(it, null, null, null) }
     }
 
     protected open fun sendLikeCommentEvent(liked: Boolean) {
