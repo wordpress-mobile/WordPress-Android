@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_extra_small_large"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
         app:strokeColor="@color/divider"
@@ -56,7 +56,6 @@
                 android:id="@+id/text_reply"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
                 android:layout_marginStart="@dimen/margin_medium"
                 android:textColor="@color/menu_more"
                 android:lines="1"
@@ -80,7 +79,7 @@
         android:textSize="@dimen/text_sz_medium"
         android:drawablePadding="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_extra_medium_large"
-        tools:text="Like Edna’s comment"
+        tools:text="Like comment"
         android:layout_height="wrap_content"
         app:drawableStartCompat="@drawable/star_empty" />
 </LinearLayout>

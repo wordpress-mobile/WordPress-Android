@@ -56,13 +56,12 @@ class CommentDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Dispatch a moderation action to the server, it does not include [CommentStatus.DELETED] status
+     */
     fun dispatchModerationAction(site: SiteModel, comment: CommentModel, status: CommentStatus) {
         commentsStoreAdapter.dispatch(
-            if (status == CommentStatus.DELETED) {
-                CommentActionBuilder.newDeleteCommentAction(CommentStore.RemoteCommentPayload(site, comment))
-            } else {
-                CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
-            }
+            CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
         )
 
         comment.apply { this.status = status.toString() }
