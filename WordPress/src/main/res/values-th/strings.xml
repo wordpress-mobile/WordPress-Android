@@ -7,7 +7,6 @@ Language: th
 -->
 <resources>
     <string name="timespan_now">ตอนนี้</string>
-    <string name="role_follower">ผู้ติดตาม</string>
     <string name="role_viewer">ผู้ชม</string>
     <string name="error_post_my_profile_no_connection">ไม่มีการเชื่อมต่อ ไม่สามารถบันทึกประวัติส่วนตัวของคุณได้</string>
     <string name="alignment_none">ไม่มี</string>
@@ -15,8 +14,6 @@ Language: th
     <string name="alignment_right">ขวา</string>
     <string name="site_settings_list_editor_action_mode_title">เลือก %1$d แล้ว</string>
     <string name="error_fetch_users_list">ไม่สามารถดึงข้อมูลผู้ใช้งานเว็บไซต์</string>
-    <string name="title_email_follower">อีเมลผู้ติดตาม</string>
-    <string name="title_follower">ผู้ติดตาม</string>
     <string name="people_dropdown_item_viewers">ผู้ชม</string>
     <string name="image_thumbnail">รูปย่อ</string>
     <string name="remove">ลบออก</string>
@@ -183,7 +180,6 @@ Language: th
     <string name="logs_copied_to_clipboard">ปูมแอพพลิเคชั่นถูกคัดลอกลงคลิปบอร์ด</string>
     <string name="stats_view_top_posts_and_pages">เรื่องและหน้า</string>
     <string name="stats_view_videos">วีดีโอ</string>
-    <string name="stats_view_followers">ผู้ติดตาม</string>
     <string name="stats_view_countries">ประเทศ</string>
     <string name="stats_likes">ชื่นชอบ</string>
     <string name="stats_timeframe_years">ปี</string>
@@ -338,7 +334,6 @@ Language: th
     <string name="note_reply_successful">เผยแพร่การตอบกลับแล้ว</string>
     <string name="new_notifications">%d คำเตือนใหม่</string>
     <string name="more_notifications">และ %d เพิ่มเติม</string>
-    <string name="follows">ติดตาม</string>
     <string name="sign_in">เข้าสู่ระบบ</string>
     <string name="loading">กำลังโหลดข้อมูล…</string>
     <string name="httpuser">ชื่อผู้ใช้ HTTP</string>

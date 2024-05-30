@@ -28,6 +28,8 @@ import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.sitecreation.SiteCreationStep;
 import org.wordpress.android.ui.sitecreation.SiteCreationStepsProvider;
 import org.wordpress.android.util.BuildConfigWrapper;
+import org.wordpress.android.util.audio.AudioRecorder;
+import org.wordpress.android.util.audio.IAudioRecorder;
 import org.wordpress.android.util.config.InAppUpdatesFeatureConfig;
 import org.wordpress.android.util.config.RemoteConfigWrapper;
 import org.wordpress.android.util.wizard.WizardManager;
@@ -120,5 +122,10 @@ public abstract class ApplicationModule {
     @Provides
     public static SensorManager provideSensorManager(@ApplicationContext Context context) {
         return (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    }
+
+    @Provides
+    public static IAudioRecorder provideAudioRecorder(@ApplicationContext Context context) {
+        return new AudioRecorder(context);
     }
 }

@@ -12,11 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.WPPermissionUtils
 import javax.inject.Inject
@@ -52,12 +48,10 @@ class BarcodeScanningFragment : Fragment() {
                                 shouldShowRequestPermissionRationale(KEY_CAMERA_PERMISSION)
                             )
                         },
-                        onScannedResult = { codeScannerStatus ->
-                            viewLifecycleOwner.lifecycleScope.launch {
-                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                                    codeScannerStatus.collect { status ->
-                                        setResultAndPopStack(status)
-                                    }
+                        onScannedResult = object : CodeScannerCallback {
+                            override fun run(status: CodeScannerStatus?) {
+                                if (status != null) {
+                                    setResultAndPopStack(status)
                                 }
                             }
                         },

@@ -94,6 +94,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.reader.ReaderPostRenderer.ReaderPostMessageListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
@@ -1580,11 +1581,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
-                ReaderActivityLauncher.showReaderComments(
-                    activity, it.blogId, it.postId,
-                    directOperation, commentId.toLong(), viewModel.interceptedUri,
-                    DIRECT_OPERATION.sourceDescription
-                )
+                context?.let { nonNullContext ->
+                    ReaderActivityLauncher.showReaderComments(
+                        nonNullContext, it.blogId, it.postId,
+                        directOperation, commentId.toLong(), viewModel.interceptedUri,
+                        DIRECT_OPERATION.sourceDescription
+                    )
+                }
             }
 
             activity?.finish()
@@ -1605,7 +1608,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             viewModel.post,
             readerCssProvider,
             getReadingPreferences()
-        )
+        ).also {
+            it.setPostMessageListener(object : ReaderPostMessageListener {
+                override fun onArticleTextCopied() {
+                    viewModel.onArticleTextCopied()
+                }
+
+                override fun onArticleTextHighlighted() {
+                    viewModel.onArticleTextHighlighted()
+                }
+            })
+        }
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {

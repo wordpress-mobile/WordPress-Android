@@ -72,7 +72,7 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
+import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -225,13 +225,15 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         viewModel.openNote(
             noteId,
             { siteId, postId, commentId ->
-                ReaderActivityLauncher.showReaderComments(
-                    activity,
-                    siteId,
-                    postId,
-                    commentId,
-                    ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
-                )
+                activity?.let {
+                    ReaderActivityLauncher.showReaderComments(
+                        it,
+                        siteId,
+                        postId,
+                        commentId,
+                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                    )
+                }
             },
             {
                 // Open the latest version of this note in case it has changed, which can happen if the note was

@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtilsWrapper
+import org.wordpress.android.widgets.AppReviewsManagerWrapper
 
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
@@ -73,6 +74,9 @@ class NotificationsListViewModelTest : BaseUnitTest() {
     private lateinit var appLogWrapper: AppLogWrapper
 
     @Mock
+    private lateinit var appReviewsManagerWrapper: AppReviewsManagerWrapper
+
+    @Mock
     private lateinit var siteStore: SiteStore
 
     @Mock
@@ -103,6 +107,7 @@ class NotificationsListViewModelTest : BaseUnitTest() {
             networkUtilsWrapper,
             toastUtilsWrapper,
             notificationsUtilsWrapper,
+            appReviewsManagerWrapper,
             appLogWrapper,
             siteStore,
             commentStore,
