@@ -28,15 +28,6 @@ import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.FOLLOW
-import org.wordpress.android.fluxc.tools.FormattableRangeType.LIKE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
-import org.wordpress.android.fluxc.tools.FormattableRangeType.REWIND_DOWNLOAD_READY
-import org.wordpress.android.fluxc.tools.FormattableRangeType.SCAN
-import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.models.Note
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -44,7 +35,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
 import org.wordpress.android.ui.comments.CommentDetailFragment
-import org.wordpress.android.ui.comments.unified.CommentActionPopupHandler
 import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
@@ -55,15 +45,11 @@ import org.wordpress.android.ui.notifications.blocks.GeneratedNoteBlock
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock
 import org.wordpress.android.ui.notifications.blocks.NoteBlock
 import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener
-import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarClickedListener
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
-import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_NOTIFICATION
 import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.ToastUtils
@@ -74,7 +60,7 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
 import javax.inject.Named
 
-open class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
+class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var onActionClickListener: CommentDetailFragment.OnActionClickListener? = null
     private var restoredListPosition = 0
     private var notification: Note? = null
@@ -115,7 +101,7 @@ open class NotificationsDetailListFragment : ListFragment(), NotificationFragmen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false)
-        rootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
+        rootLayout = view.findViewById(R.id.notifications_list_root)!!
         return view
     }
 
@@ -149,13 +135,7 @@ open class NotificationsDetailListFragment : ListFragment(), NotificationFragmen
             showErrorToastAndFinish()
         }
 
-        val animation = view?.findViewById<LottieAnimationView>(R.id.confetti)
-        if (notification?.isViewMilestoneType == true) {
-            animation?.visibility = View.VISIBLE
-            animation?.playAnimation()
-        } else {
-            animation?.visibility = View.GONE
-        }
+        view?.findViewById<LottieAnimationView>(R.id.confetti)?.visibility = View.GONE
     }
 
     override fun onPause() {
@@ -349,9 +329,6 @@ open class NotificationsDetailListFragment : ListFragment(), NotificationFragmen
                     }
                     if (mIsBadgeView) {
                         noteBlock.setIsBadge()
-                    }
-                    if (note.isViewMilestoneType) {
-                        noteBlock.setIsViewMilestone()
                     }
                     if (isPingback) {
                         noteBlock.setIsPingback()
