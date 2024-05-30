@@ -92,6 +92,13 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
 
     private fun CommentPendingBinding.bindPendingView() {
         root.isVisible = true
+        buttonApproveComment.setOnClickListener {
+            viewModel.dispatchModerationAction(
+                site,
+                comment,
+                CommentStatus.APPROVED
+            )
+        }
         textMoreOptions.setOnClickListener { showModerationBottomSheet() }
     }
 
@@ -100,7 +107,7 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         meGravatarLoader.load(
             newAvatarUploaded = false,
             avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl),
-            imageView = imageAvatar,
+            imageView = replyAvatar,
             imageType = ImageType.USER,
             injectFilePath = null,
         )
@@ -156,7 +163,9 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
                 canMarkAsSpam = enabledActions.canMarkAsSpam(),
                 canTrash = enabledActions.canTrash(),
             )
-        ).show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
+        ).apply {
+            onApprovedClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.APPROVED) }
+        }.show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }
 

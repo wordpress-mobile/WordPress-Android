@@ -60,10 +60,22 @@ class ModerationBottomSheetDialogFragment : BottomSheetDialogFragment() {
         buttonTrash.isVisible = state.canTrash
 
         // handle clicks
-        buttonApprove.setOnClickListener { onApprovedClicked() }
-        buttonPending.setOnClickListener { onPendingClicked }
-        buttonSpam.setOnClickListener { onSpamClicked() }
-        buttonTrash.setOnClickListener { onTrashClicked }
+        buttonApprove.setOnClickListener {
+            onApprovedClicked()
+            dismiss()
+        }
+        buttonPending.setOnClickListener {
+            onPendingClicked()
+            dismiss()
+        }
+        buttonSpam.setOnClickListener {
+            onSpamClicked()
+            dismiss()
+        }
+        buttonTrash.setOnClickListener {
+            onTrashClicked()
+            dismiss()
+        }
     }
 
     override fun onDestroyView() {

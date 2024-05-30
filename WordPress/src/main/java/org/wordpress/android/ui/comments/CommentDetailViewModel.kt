@@ -9,7 +9,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.datasets.wrappers.NotificationsTableWrapper
 import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
+import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.comments.CommentsMapper
+import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentStore.RemoteLikeCommentPayload
 import org.wordpress.android.fluxc.store.CommentsStore
 import org.wordpress.android.models.Note
@@ -25,10 +28,11 @@ import javax.inject.Named
 @HiltViewModel
 class CommentDetailViewModel @Inject constructor(
     @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
-    private val commentStore: CommentsStore,
+    private val commentsStore: CommentsStore,
     private val commentsStoreAdapter: CommentsStoreAdapter,
     private val eventBusWrapper: EventBusWrapper,
     private val notificationsTableWrapper: NotificationsTableWrapper,
+    private val commentsMapper: CommentsMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _updatedComment = MutableLiveData<CommentModel>()
     val updatedComment: LiveData<CommentModel> = _updatedComment
@@ -52,6 +56,31 @@ class CommentDetailViewModel @Inject constructor(
 
         note?.let {
             eventBusWrapper.postSticky(OnNoteCommentLikeChanged(note, liked))
+        }
+    }
+
+    fun dispatchModerationAction(site: SiteModel, comment: CommentModel, status: CommentStatus) {
+        commentsStoreAdapter.dispatch(
+            if (status == CommentStatus.DELETED) {
+                CommentActionBuilder.newDeleteCommentAction(CommentStore.RemoteCommentPayload(site, comment))
+            } else {
+                CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
+            }
+        )
+
+        comment.apply { this.status = status.toString() }
+            .let { _updatedComment.postValue(it) }
+    }
+
+    /**
+     * Fetch the latest comment from the server
+     * @param site the site the comment belongs to
+     * @param remoteCommentId the remote ID of the comment to fetch
+     */
+    fun fetchComment(site: SiteModel, remoteCommentId: Long) = launch {
+        val result = commentsStore.fetchComment(site, remoteCommentId, null)
+        result.data?.comments?.firstOrNull()?.let {
+            _updatedComment.postValue(commentsMapper.commentEntityToLegacyModel(it))
         }
     }
 }

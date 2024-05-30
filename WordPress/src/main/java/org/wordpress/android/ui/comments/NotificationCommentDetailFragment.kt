@@ -33,6 +33,8 @@ class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
         } else {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
+
+        viewModel.fetchComment(site, note.commentId)
     }
 
     override fun sendLikeCommentEvent(liked: Boolean) {

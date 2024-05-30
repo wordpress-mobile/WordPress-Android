@@ -44,7 +44,7 @@
             android:layout_marginVertical="@dimen/margin_medium">
 
             <ImageView
-                android:id="@+id/image_avatar"
+                android:id="@+id/reply_avatar"
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
                 android:importantForAccessibility="no"
@@ -63,7 +63,7 @@
                 android:textSize="@dimen/text_sz_medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/image_avatar"
+                app:layout_constraintStart_toEndOf="@+id/reply_avatar"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Reply to Adam" />
         </androidx.constraintlayout.widget.ConstraintLayout>

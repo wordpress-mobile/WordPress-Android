@@ -30,6 +30,7 @@ class SiteCommentDetailFragment : SharedCommentDetailFragment() {
         } else {
             handleComment(requireArguments().getLong(KEY_COMMENT_ID), requireArguments().getInt(KEY_SITE_LOCAL_ID))
         }
+        viewModel.fetchComment(site, comment.remoteCommentId)
     }
 
     override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState =
