@@ -25,7 +25,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
-import org.wordpress.android.ui.notifications.blocks.NoteBlock
+import org.wordpress.android.ui.notifications.blocks.MilestoneNoteBlock
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
@@ -59,11 +59,23 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
-            // The note will be set in onResume()
-            // See WordPress.deferredInit()
             restoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
             restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        notification?.let {
+            outState.putString(KEY_NOTE_ID, it.id)
+            outState.putInt(KEY_LIST_POSITION, listView.firstVisiblePosition)
+        } ?: run {
+            // This is done so the fragments pre-loaded by the view pager can store the already rescued restoredNoteId
+            if (!TextUtils.isEmpty(restoredNoteId)) {
+                outState.putString(KEY_NOTE_ID, restoredNoteId)
+            }
+        }
+
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -131,20 +143,6 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        notification?.let {
-            outState.putString(KEY_NOTE_ID, it.id)
-            outState.putInt(KEY_LIST_POSITION, listView.firstVisiblePosition)
-        } ?: run {
-            // This is done so the fragments pre-loaded by the view pager can store the already rescued restoredNoteId
-            if (!TextUtils.isEmpty(restoredNoteId)) {
-                outState.putString(KEY_NOTE_ID, restoredNoteId)
-            }
-        }
-
-        super.onSaveInstanceState(outState)
-    }
-
     private fun reloadNoteBlocks() {
         lifecycleScope.launch(ioDispatcher) {
             notification?.let { note ->
@@ -160,30 +158,18 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
 
     // Loop through the 'body' items in this note, and create blocks for each.
     private val noteBlocksLoader = object {
-        private var mIsBadgeView = false
-
-        private fun addNotesBlock(noteList: MutableList<NoteBlock>, bodyArray: JSONArray) {
+        private fun addNotesBlock(noteList: MutableList<MilestoneNoteBlock>, bodyArray: JSONArray) {
             var i = 0
             while (i < bodyArray.length()) {
                 try {
                     val noteObject = notificationsUtilsWrapper
                         .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
 
-                    val noteBlock = NoteBlock(
+                    val noteBlock = MilestoneNoteBlock(
                         noteObject, imageManager, notificationsUtilsWrapper,
                         mOnNoteBlockTextClickListener
                     )
                     preloadImage(noteBlock)
-
-
-                    // Badge notifications apply different colors and formatting
-                    if (isAdded && noteBlock.containsBadgeMediaType()) {
-                        mIsBadgeView = true
-                    }
-                    if (mIsBadgeView) {
-                        noteBlock.setIsBadge()
-                    }
-                    noteBlock.setIsViewMilestone()
                     noteList.add(noteBlock)
                 } catch (e: JSONException) {
                     AppLog.e(NOTIFS, "Error parsing milestone note data.")
@@ -192,7 +178,7 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
             }
         }
 
-        private fun preloadImage(noteBlock: NoteBlock) {
+        private fun preloadImage(noteBlock: MilestoneNoteBlock) {
             if (noteBlock.hasImageMediaItem()) {
                 noteBlock.noteMediaItem?.url?.let {
                     imageManager.preload(requireContext(), it)
@@ -200,9 +186,9 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
             }
         }
 
-        fun loadNoteBlocks(note: Note): List<NoteBlock> {
+        fun loadNoteBlocks(note: Note): List<MilestoneNoteBlock> {
             val bodyArray = note.body
-            val noteList: MutableList<NoteBlock> = ArrayList()
+            val noteList: MutableList<MilestoneNoteBlock> = ArrayList()
 
             if (bodyArray.length() > 0) {
                 addNotesBlock(noteList, bodyArray)
@@ -210,12 +196,9 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
             return noteList
         }
 
-        fun handleNoteBlocks(noteList: List<NoteBlock>?) {
+        fun handleNoteBlocks(noteList: List<MilestoneNoteBlock>?) {
             if (!isAdded || noteList == null) {
                 return
-            }
-            if (mIsBadgeView) {
-                rootLayout?.gravity = Gravity.CENTER_VERTICAL
             }
             if (noteBlockAdapter == null) {
                 noteBlockAdapter = NoteBlockAdapter(requireContext(), noteList)
