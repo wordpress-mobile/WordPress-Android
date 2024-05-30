@@ -1,19 +1,28 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.util.audio.IAudioRecorder
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.File
 import javax.inject.Inject
@@ -26,7 +35,8 @@ class VoiceToContentViewModel @Inject constructor(
     private val voiceToContentUseCase: VoiceToContentUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val jetpackAIStore: JetpackAIStore,
-    private val recordingUseCase: RecordingUseCase
+    private val recordingUseCase: RecordingUseCase,
+    private val contextProvider: ContextProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _uiState = MutableLiveData<VoiceToContentResult>()
     val uiState = _uiState as LiveData<VoiceToContentResult>
@@ -34,10 +44,70 @@ class VoiceToContentViewModel @Inject constructor(
     private val _aiAssistantFeatureState = MutableLiveData<JetpackAIAssistantFeature>()
     val aiAssistantFeatureState = _aiAssistantFeatureState as LiveData<JetpackAIAssistantFeature>
 
+    private val _requestPermission = MutableLiveData<Unit>()
+    val requestPermission = _requestPermission as LiveData<Unit>
+
+    private val _state = MutableStateFlow<VoiceToContentUiState>(VoiceToContentUiState.Initializing(
+        headerText = R.string.voice_to_content_initializing,
+        labelText = R.string.voice_to_content_preparing,
+        onCloseAction = ::onClose
+    ))
+    val state: StateFlow<VoiceToContentUiState> = _state.asStateFlow()
+
     private fun isVoiceToContentEnabled() = voiceToContentFeatureUtils.isVoiceToContentEnabled()
 
     init {
         observeRecordingUpdates()
+        // Simulate initialization delay
+        viewModelScope.launch {
+            delay(2000)
+            _state.value = VoiceToContentUiState.ReadyToRecord(
+                headerText = R.string.voice_to_content_ready_to_record,
+                labelText = R.string.voice_to_content_ready_to_record_label,
+                subLabelText = R.string.voice_to_content_tap_to_start,
+                onMicTap = ::onMicTap,
+                onCloseAction = ::onClose,
+                onRequestPermission = ::onRequestPermission,
+                hasPermission = hasAllPermissionsForRecording()
+            )
+        }
+    }
+
+    private fun onClose() {
+        // Handle close
+    }
+
+    private fun onRequestPermission() {
+        _requestPermission.postValue(Unit)
+    }
+
+    private fun onMicTap() {
+        _state.value = VoiceToContentUiState.Recording(
+            headerText = R.string.voice_to_content_recording,
+            elapsedTime = "0 sec",
+            onStopTap = ::onStopTap,
+            onCloseAction = ::onClose
+        )
+        // Simulate recording time
+        viewModelScope.launch {
+            for (i in 1..60) {
+                delay(1000)
+                _state.value = (state.value as? VoiceToContentUiState.Recording)?.copy(
+                    elapsedTime = "$i sec"
+                ) ?: return@launch
+            }
+            _state.value = VoiceToContentUiState.Processing(
+                headerText = R.string.voice_to_content_processing,
+                onCloseAction = ::onClose
+            )
+            // Simulate processing delay
+            delay(2000)
+            // Handle recording complete
+        }
+    }
+
+    private fun onStopTap() {
+        // Handle stop recording
     }
 
     private fun observeRecordingUpdates() {
@@ -51,6 +121,10 @@ class VoiceToContentViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun showStartRecordingView() {
+        onMicTap()
     }
 
     fun startRecording() {
@@ -105,6 +179,15 @@ class VoiceToContentViewModel @Inject constructor(
                 val result = voiceToContentUseCase.execute(site, file)
                 _uiState.postValue(result)
             }
+        }
+    }
+
+    private fun hasAllPermissionsForRecording(): Boolean {
+        return IAudioRecorder.REQUIRED_RECORDING_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                contextProvider.getContext(),
+                it
+            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 }
