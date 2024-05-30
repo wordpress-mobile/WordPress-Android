@@ -20,14 +20,9 @@ import java.io.File
 import java.io.IOException
 
 class AudioRecorder(
-    private val applicationContext: Context
+    private val applicationContext: Context,
+    private val recordingStrategy: RecordingStrategy
 ) : IAudioRecorder {
-    // default recording params
-    private var recordingParams: RecordingParams = RecordingParams(
-        maxDuration = 60 * 5, // 5 minutes
-        maxFileSize = 1000000L * 25 // 25MB
-    )
-
     private var onRecordingFinished: (String) -> Unit = {}
 
     private val storeInMemory = true
@@ -140,10 +135,6 @@ class AudioRecorder(
 
     override fun recordingUpdates(): Flow<RecordingUpdate> = recordingUpdates
 
-    override fun setRecordingParams(params: RecordingParams) {
-        recordingParams = params
-    }
-
     @Suppress("MagicNumber")
     private fun startRecordingUpdates() {
         recordingJob = coroutineScope.launch {
@@ -155,7 +146,7 @@ class AudioRecorder(
                 _recordingUpdates.value = RecordingUpdate(
                     elapsedTime = elapsedTimeInSeconds,
                     fileSize = fileSize,
-                    fileSizeLimitExceeded = fileSize >= recordingParams.maxFileSize,
+                    fileSizeLimitExceeded = fileSize >= recordingStrategy.maxFileSize,
                 )
 
                 if ( maxFileSizeExceeded(fileSize) || maxDurationExceeded(elapsedTimeInSeconds) ) {
@@ -175,8 +166,8 @@ class AudioRecorder(
      *         no limit.
      */
     private fun maxFileSizeExceeded(fileSize: Long): Boolean = when {
-        recordingParams.maxFileSize == -1L -> false
-        else -> fileSize >= recordingParams.maxFileSize - FILE_SIZE_THRESHOLD
+        recordingStrategy.maxFileSize == -1L -> false
+        else -> fileSize >= recordingStrategy.maxFileSize - FILE_SIZE_THRESHOLD
     }
 
     /**
@@ -188,8 +179,8 @@ class AudioRecorder(
      *         no limit.
      */
     private fun maxDurationExceeded(elapsedTimeInSeconds: Int): Boolean = when {
-        recordingParams.maxDuration == -1 -> false
-        else -> elapsedTimeInSeconds >= recordingParams.maxDuration - DURATION_THRESHOLD
+        recordingStrategy.maxDuration == -1 -> false
+        else -> elapsedTimeInSeconds >= recordingStrategy.maxDuration - DURATION_THRESHOLD
     }
 
     private fun stopRecordingUpdates() {

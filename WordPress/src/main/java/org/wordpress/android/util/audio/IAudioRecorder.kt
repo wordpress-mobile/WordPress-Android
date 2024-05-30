@@ -9,7 +9,6 @@ interface IAudioRecorder {
     fun pauseRecording()
     fun resumeRecording()
     fun recordingUpdates(): Flow<RecordingUpdate>
-    fun setRecordingParams(params: RecordingParams)
 
     companion object {
         val REQUIRED_RECORDING_PERMISSIONS = arrayOf(
