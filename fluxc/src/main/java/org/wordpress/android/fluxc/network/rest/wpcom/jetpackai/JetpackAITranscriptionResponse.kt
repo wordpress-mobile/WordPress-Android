@@ -25,5 +25,6 @@ enum class JetpackAITranscriptionErrorType {
     NOT_FOUND,
     NOT_AUTHENTICATED,
     REQUEST_TOO_LARGE,
-    SERVER_ERROR
+    SERVER_ERROR,
+    TOO_MANY_REQUESTS
 }
