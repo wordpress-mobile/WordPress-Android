@@ -95,7 +95,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
                         // - IllegalStateException: Thrown when an operation is not called at an appropriate time.
                         // All exceptions are logged for debugging purposes, but
                         // return null to ensure the app continues to run smoothly.
-                        AppLog.d(AppLog.T.API, "Failed to parse transcription response: $e")
+                        AppLog.e(AppLog.T.API, "Failed to parse transcription response: $e")
                         null
                     }
                     return@use dto.toJetpackAITranscriptionResponse()
@@ -181,7 +181,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
 
     @Suppress("MagicNumber")
     private fun fromHttpStatusCode(code: Int): JetpackAITranscriptionErrorType {
-        AppLog.d(AppLog.T.API, "Failed transcription http status: $code")
+        AppLog.e(AppLog.T.API, "Failed transcription http status: $code")
         return when (code) {
             400 -> JetpackAITranscriptionErrorType.BAD_REQUEST
             401 -> JetpackAITranscriptionErrorType.AUTH_ERROR
@@ -194,7 +194,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
     }
 
     private fun fromThrowable(e: Throwable): JetpackAITranscriptionErrorType {
-        AppLog.d(AppLog.T.API, "Failed transcription network response: $e")
+        AppLog.e(AppLog.T.API, "Failed transcription network response: $e")
         return if (e is IOException) {
             when (e) {
                 is SocketTimeoutException -> JetpackAITranscriptionErrorType.TIMEOUT
