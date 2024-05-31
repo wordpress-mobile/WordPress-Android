@@ -61,7 +61,9 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
             restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
         } else {
             arguments?.let {
-                setNote(it.getString(KEY_NOTE_ID))
+                setNote(it.getString(KEY_NOTE_ID)) {
+                    reloadNoteBlocks()
+                }
             }
         }
     }
@@ -92,7 +94,6 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         listView.divider = null
         listView.dividerHeight = 0
         listView.setHeaderDividersEnabled(false)
-        reloadNoteBlocks()
     }
 
     override fun onResume() {
@@ -104,12 +105,10 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
 
         // Set the note if we retrieved the noteId from savedInstanceState
         if (!TextUtils.isEmpty(restoredNoteId)) {
-            setNote(restoredNoteId)
-            reloadNoteBlocks()
-            restoredNoteId = null
-        }
-        if (notification == null) {
-            showErrorToastAndFinish()
+            setNote(restoredNoteId) {
+                reloadNoteBlocks()
+                restoredNoteId = null
+            }
         }
     }
 
@@ -118,17 +117,22 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         super.onPause()
     }
 
-    private fun setNote(noteId: String?) {
+    private fun setNote(noteId: String?, onNoteSet: (() -> Unit)? = null) {
         if (noteId == null) {
             showErrorToastAndFinish()
             return
         }
-        val note: Note? = NotificationsTable.getNoteById(noteId)
-        if (note == null) {
-            showErrorToastAndFinish()
-            return
+        lifecycleScope.launch(ioDispatcher) {
+            val note: Note? = NotificationsTable.getNoteById(noteId)
+            withContext(mainDispatcher) {
+                if (note == null) {
+                    showErrorToastAndFinish()
+                } else {
+                    notification = note
+                    onNoteSet?.invoke()
+                }
+            }
         }
-        notification = note
     }
 
     private fun showErrorToastAndFinish() {
