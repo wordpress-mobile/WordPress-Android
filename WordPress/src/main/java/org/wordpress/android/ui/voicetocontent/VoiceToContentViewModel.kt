@@ -8,17 +8,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
-import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.audio.IAudioRecorder
@@ -36,18 +31,15 @@ class VoiceToContentViewModel @Inject constructor(
     private val voiceToContentFeatureUtils: VoiceToContentFeatureUtils,
     private val voiceToContentUseCase: VoiceToContentUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val jetpackAIStore: JetpackAIStore,
     private val recordingUseCase: RecordingUseCase,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MutableLiveData<VoiceToContentResult>()
-    val uiState = _uiState as LiveData<VoiceToContentResult>
-
-    private val _aiAssistantFeatureState = MutableLiveData<JetpackAIAssistantFeature>()
-    val aiAssistantFeatureState = _aiAssistantFeatureState as LiveData<JetpackAIAssistantFeature>
-
     private val _requestPermission = MutableLiveData<Unit>()
     val requestPermission = _requestPermission as LiveData<Unit>
+
+    private val _dismiss = MutableLiveData<Unit>()
+    val dismiss = _dismiss as LiveData<Unit>
 
     private val _state = MutableStateFlow<VoiceToContentUiState>(VoiceToContentUiState.Initializing(
         headerText = R.string.voice_to_content_initializing,
@@ -60,58 +52,29 @@ class VoiceToContentViewModel @Inject constructor(
 
     init {
         observeRecordingUpdates()
-        // Simulate initialization delay
-        viewModelScope.launch {
-            delay(2000)
-            _state.value = VoiceToContentUiState.ReadyToRecord(
-                headerText = R.string.voice_to_content_ready_to_record,
-                labelText = R.string.voice_to_content_ready_to_record_label,
-                subLabelText = R.string.voice_to_content_tap_to_start,
-                onMicTap = ::onMicTap,
-                onCloseAction = ::onClose,
-                onRequestPermission = ::onRequestPermission,
-                hasPermission = hasAllPermissionsForRecording()
-            )
+    }
+
+    fun start() {
+        val site = selectedSiteRepository.getSelectedSite() ?: run {
+            transitionToError()
+            return
         }
-    }
+        if (isVoiceToContentEnabled()) {
+            viewModelScope.launch {
+                when (val result = prepareVoiceToContentUseCase.execute(site)) {
+                    is PrepareVoiceToContentResult.Success -> {
+                        transitionToReadyToRecord(result.model)
+                    }
 
-    private fun onClose() {
-        // Handle close
-    }
-
-    private fun onRequestPermission() {
-        _requestPermission.postValue(Unit)
-    }
-
-    private fun onMicTap() {
-        _state.value = VoiceToContentUiState.Recording(
-            headerText = R.string.voice_to_content_recording,
-            elapsedTime = "0 sec",
-            onStopTap = ::onStopTap,
-            onCloseAction = ::onClose
-        )
-        // Simulate recording time
-        viewModelScope.launch {
-            for (i in 1..60) {
-                delay(1000)
-                _state.value = (state.value as? VoiceToContentUiState.Recording)?.copy(
-                    elapsedTime = "$i sec"
-                ) ?: return@launch
+                    is PrepareVoiceToContentResult.Error -> {
+                        transitionToError()
+                    }
+                }
             }
-            _state.value = VoiceToContentUiState.Processing(
-                headerText = R.string.voice_to_content_processing,
-                onCloseAction = ::onClose
-            )
-            // Simulate processing delay
-            delay(2000)
-            // Handle recording complete
         }
     }
 
-    private fun onStopTap() {
-        // Handle stop recording
-    }
-
+    // Recording
     private fun observeRecordingUpdates() {
         viewModelScope.launch {
             recordingUseCase.recordingUpdates().collect { update ->
@@ -125,11 +88,8 @@ class VoiceToContentViewModel @Inject constructor(
         }
     }
 
-    fun showStartRecordingView() {
-        onMicTap()
-    }
-
-    fun startRecording() {
+    private fun startRecording() {
+        transitionToRecording()
         recordingUseCase.startRecording { audioRecorderResult ->
             when (audioRecorderResult) {
                 is Success -> {
@@ -137,11 +97,11 @@ class VoiceToContentViewModel @Inject constructor(
                     file?.let {
                         executeVoiceToContent(it)
                     } ?: run {
-                        _uiState.postValue(VoiceToContentResult(isError = true))
+                        transitionToError()
                     }
                 }
                 is Error -> {
-                    _uiState.postValue(VoiceToContentResult(isError = true))
+                    transitionToError()
                 }
             }
         }
@@ -156,39 +116,27 @@ class VoiceToContentViewModel @Inject constructor(
         return recordingFile
     }
 
-    fun stopRecording() {
-      recordingUseCase.stopRecording()
+    private fun stopRecording() {
+        transitionToProcessing()
+        recordingUseCase.stopRecording()
     }
 
-    fun executeVoiceToContent(file: File) {
+    // Workflow
+    private fun executeVoiceToContent(file: File) {
         val site = selectedSiteRepository.getSelectedSite() ?: run {
-            _uiState.postValue(VoiceToContentResult(isError = true))
+            transitionToError()
             return
         }
 
-        if (isVoiceToContentEnabled()) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val result = jetpackAIStore.fetchJetpackAIAssistantFeature(site)
-                when (result) {
-                    is JetpackAIAssistantFeatureResponse.Success -> {
-                        _aiAssistantFeatureState.postValue(result.model)
-                        startVoiceToContentFlow(site, file)
-                    }
-                    is JetpackAIAssistantFeatureResponse.Error -> {
-                        _uiState.postValue(VoiceToContentResult(isError = true))
-                    }
-                }
-            }
+        viewModelScope.launch {
+            val result = voiceToContentUseCase.execute(site, file)
+            transitionToFinished(result.content)
         }
     }
 
-    private fun startVoiceToContentFlow(site: SiteModel, file: File) {
-        if (isVoiceToContentEnabled()) {
-            viewModelScope.launch {
-                val result = voiceToContentUseCase.execute(site, file)
-                _uiState.postValue(result)
-            }
-        }
+    // Permissions
+    private fun onRequestPermission() {
+        _requestPermission.postValue(Unit)
     }
 
     private fun hasAllPermissionsForRecording(): Boolean {
@@ -198,6 +146,73 @@ class VoiceToContentViewModel @Inject constructor(
                 it
             ) == PackageManager.PERMISSION_GRANTED
         }
+    }
+
+    fun onPermissionGranted() {
+        startRecording()
+    }
+
+    // user actions
+    private fun onMicTap() {
+        startRecording()
+    }
+
+    private fun onStopTap() {
+        stopRecording()
+    }
+
+    private fun onClose() {
+        _dismiss.postValue(Unit)
+    }
+
+    // transitions
+    private fun transitionToReadyToRecord(model: JetpackAIAssistantFeature) {
+        // todo: annmarie- put together the proper labels; especially the requests available count
+        _state.value = VoiceToContentUiState.ReadyToRecord(
+            headerText = R.string.voice_to_content_ready_to_record,
+            labelText = R.string.voice_to_content_ready_to_record_label,
+            subLabelText = R.string.voice_to_content_tap_to_start,
+            requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model),
+            isEligibleForFeature = voiceToContentFeatureUtils.isEligibleForVoiceToContent(model),
+            onMicTap = ::onMicTap,
+            onCloseAction = ::onClose,
+            onRequestPermission = ::onRequestPermission,
+            hasPermission = hasAllPermissionsForRecording()
+        )
+    }
+
+    private fun transitionToRecording() {
+        _state.value = VoiceToContentUiState.Recording(
+            headerText = R.string.voice_to_content_recording,
+            elapsedTime = "0 sec",
+            onStopTap = ::onStopTap,
+            onCloseAction = ::onClose
+        )
+    }
+
+    private fun transitionToProcessing() {
+        _state.value = VoiceToContentUiState.Processing(
+            headerText = R.string.voice_to_content_processing,
+            onCloseAction = ::onClose
+        )
+    }
+
+    // todo: annmarie - transition to error hasn't been fully fleshed out ... some errors will be shown on top of
+    // the existing screen
+    private fun transitionToError() {
+        _state.value = VoiceToContentUiState.Error(
+            headerText = R.string.voice_to_content_ready_to_record,
+            message = "Something bad happened and we can't continue",
+            onCloseAction = ::onClose
+        )
+    }
+    // todo: annmarie - transition to finished MUST be removed, as we are pushing the user to editPostActivity
+    private fun transitionToFinished(content: String?) {
+        _state.value = VoiceToContentUiState.Finished(
+            headerText = R.string.voice_to_content_finished_label,
+            content = content ?: "",
+            onCloseAction = ::onClose
+        )
     }
 }
 
