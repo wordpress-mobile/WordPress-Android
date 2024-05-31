@@ -38,11 +38,16 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
+        viewModel.start()
     }
 
     private fun observeViewModel() {
         viewModel.requestPermission.observe(viewLifecycleOwner) {
             requestAllPermissionsForRecording()
+        }
+
+        viewModel.dismiss.observe(viewLifecycleOwner) {
+            dismiss()
         }
     }
 
@@ -51,8 +56,7 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     ) { permissions ->
         val areAllPermissionsGranted = permissions.entries.all { it.value }
         if (areAllPermissionsGranted) {
-            // todo: annmarie - this is something else we want to do
-            viewModel.showStartRecordingView()
+            viewModel.onPermissionGranted()
         } else {
             // Check if any permissions were denied permanently
             if (permissions.entries.any { !it.value }) {
