@@ -75,7 +75,6 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
                     return@use JetpackAITranscriptionResponse.Error(
                         fromHttpStatusCode(response.code),
                         errorMessage
-                            // response.message
                     )
                 } else {
                     val body = response.body?.use {
