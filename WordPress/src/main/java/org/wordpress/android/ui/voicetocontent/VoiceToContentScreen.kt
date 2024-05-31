@@ -45,6 +45,8 @@ fun VoiceToContentScreen(
             is VoiceToContentUiState.ReadyToRecord -> ReadyToRecordView(currentState)
             is VoiceToContentUiState.Recording -> RecordingView(currentState)
             is VoiceToContentUiState.Processing -> ProcessingView(currentState)
+            is VoiceToContentUiState.Error -> ErrorView(currentState)
+            is VoiceToContentUiState.Finished -> FinishedView(currentState)
         }
     }
 }
@@ -106,6 +108,23 @@ fun ProcessingView(state: VoiceToContentUiState.Processing) {
     }
 }
 
+@Composable
+fun ErrorView(state: VoiceToContentUiState.Error) {
+    Column {
+        Header(state.headerText, state.onClose)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(state.message)
+    }
+}
+
+@Composable
+fun FinishedView(state: VoiceToContentUiState.Finished) {
+    Column {
+        Header(state.headerText, state.onClose)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(state.content)
+    }
+}
 
 @Composable
 fun Header(@StringRes headerText: Int, onClose: () -> Unit) {
@@ -141,6 +160,8 @@ fun PreviewReadyToRecordView() {
             headerText = R.string.voice_to_content_ready_to_record,
             labelText = R.string.voice_to_content_ready_to_record_label,
             subLabelText = R.string.voice_to_content_tap_to_start,
+            requestsAvailable = 0,
+            isEligibleForFeature = true,
             onMicTap = {},
             onCloseAction = {},
             hasPermission = true,
@@ -168,6 +189,30 @@ fun PreviewProcessingView() {
     AppTheme {
         ProcessingView(VoiceToContentUiState.Processing(
             headerText = R.string.voice_to_content_processing,
+            onCloseAction = {}
+        ))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewErrorView() {
+    AppTheme {
+        ErrorView(VoiceToContentUiState.Error(
+            headerText = R.string.voice_to_content_error_label,
+            message = "Something bad happened and we can't continue",
+            onCloseAction = {}
+        ))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewFinishedView() {
+    AppTheme {
+        FinishedView(VoiceToContentUiState.Finished(
+            headerText = R.string.voice_to_content_finished_label,
+            content = "This is the transcribed text",
             onCloseAction = {}
         ))
     }
