@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.utils.JetpackAITranscriptionUtils
 import org.wordpress.android.fluxc.utils.WPComRestClientUtils.getHttpUrlWithLocale
+import org.wordpress.android.util.AppLog
 import java.io.File
 import java.io.IOException
 import java.lang.reflect.Type
@@ -69,9 +70,11 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         val result = runCatching {
             okHttpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
+                    val errorMessage = response.message.takeIf { msg -> msg.isNotBlank() }
+                            ?: "Unknown okHttpClient error ${response.code}"
                     return@use JetpackAITranscriptionResponse.Error(
                         fromHttpStatusCode(response.code),
-                        response.message
+                        errorMessage
                     )
                 } else {
                     val body = response.body?.use {
@@ -94,6 +97,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
                         // - IllegalStateException: Thrown when an operation is not called at an appropriate time.
                         // All exceptions are logged for debugging purposes, but
                         // return null to ensure the app continues to run smoothly.
+                        AppLog.e(AppLog.T.API, "Failed to parse transcription response: $e")
                         null
                     }
                     return@use dto.toJetpackAITranscriptionResponse()
@@ -102,8 +106,10 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         }
 
         return result.getOrElse {
+            val errorMessage = it.message?.takeIf { msg -> msg.isNotBlank() }
+                ?: "Unknown error of type ${it::class.java.simpleName}"
             JetpackAITranscriptionResponse.Error(
-                fromThrowable(it),it.message ?: "Unknown network error")
+                fromThrowable(it), errorMessage)
         }
     }
 
@@ -177,18 +183,22 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
 
     @Suppress("MagicNumber")
     private fun fromHttpStatusCode(code: Int): JetpackAITranscriptionErrorType {
+        AppLog.e(AppLog.T.API, "Failed transcription http status: $code")
         return when (code) {
             400 -> JetpackAITranscriptionErrorType.BAD_REQUEST
             401 -> JetpackAITranscriptionErrorType.AUTH_ERROR
             404 -> JetpackAITranscriptionErrorType.NOT_FOUND
             403 -> JetpackAITranscriptionErrorType.NOT_AUTHENTICATED
             413 -> JetpackAITranscriptionErrorType.REQUEST_TOO_LARGE
+            429 -> JetpackAITranscriptionErrorType.TOO_MANY_REQUESTS
             500 -> JetpackAITranscriptionErrorType.SERVER_ERROR
+            503 -> JetpackAITranscriptionErrorType.JETPACK_AI_SERVICE_UNAVAILABLE
             else -> JetpackAITranscriptionErrorType.GENERIC_ERROR
         }
     }
 
     private fun fromThrowable(e: Throwable): JetpackAITranscriptionErrorType {
+        AppLog.e(AppLog.T.API, "Failed transcription network response: $e")
         return if (e is IOException) {
             when (e) {
                 is SocketTimeoutException -> JetpackAITranscriptionErrorType.TIMEOUT
