@@ -781,7 +781,10 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
-    private RevisionsModel revisionsResponseToRevisionsModel(RevisionsResponse response) {
+    private RevisionsModel revisionsResponseToRevisionsModel(@Nullable RevisionsResponse response) {
+        if (response == null) {
+            return new RevisionsModel(new ArrayList<>());
+        }
         ArrayList<RevisionModel> revisions = new ArrayList<>();
         for (DiffResponse diffResponse : response.getDiffs()) {
             RevisionResponse revision = response.getRevisions().get(Integer.toString(diffResponse.getTo()));
