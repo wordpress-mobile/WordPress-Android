@@ -36,7 +36,11 @@ class VoiceToContentUseCase @Inject constructor(
                     transcriptionResponse.model
                 }
                 is JetpackAITranscriptionResponse.Error -> {
-                    Log.i(javaClass.simpleName, "Error transcribing audio file: ${transcriptionResponse.type} ${transcriptionResponse.message}")
+                    val message = "${transcriptionResponse.type} ${transcriptionResponse.message}"
+                    Log.i(
+                        javaClass.simpleName,
+                        "Error transcribing audio file: $message"
+                    )
                     null
                 }
             }
