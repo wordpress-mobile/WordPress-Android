@@ -431,6 +431,8 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
                     note.getSiteId(),
                     note.getPostId()
             );
+        } else if (NoteExtensions.isAchievement(note)) {
+            fragment = MilestoneDetailFragment.newInstance(note.getId());
         } else {
             if (mLikesEnhancementsFeatureConfig.isEnabled() && note.isLikeType()) {
                 fragment = EngagedPeopleListFragment.newInstance(

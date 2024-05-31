@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
 import androidx.lifecycle.lifecycleScope
-import com.airbnb.lottie.LottieAnimationView
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,15 +27,6 @@ import org.wordpress.android.datasets.ReaderCommentTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.fluxc.tools.FormattableRangeType.COMMENT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.FOLLOW
-import org.wordpress.android.fluxc.tools.FormattableRangeType.LIKE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
-import org.wordpress.android.fluxc.tools.FormattableRangeType.REWIND_DOWNLOAD_READY
-import org.wordpress.android.fluxc.tools.FormattableRangeType.SCAN
-import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
-import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
-import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.models.Note
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -44,7 +34,6 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
 import org.wordpress.android.ui.comments.CommentDetailFragment
-import org.wordpress.android.ui.comments.unified.CommentActionPopupHandler
 import org.wordpress.android.ui.engagement.ListScenarioUtils
 import org.wordpress.android.ui.notifications.adapters.NoteBlockAdapter
 import org.wordpress.android.ui.notifications.blocks.BlockType
@@ -55,15 +44,11 @@ import org.wordpress.android.ui.notifications.blocks.GeneratedNoteBlock
 import org.wordpress.android.ui.notifications.blocks.HeaderNoteBlock
 import org.wordpress.android.ui.notifications.blocks.NoteBlock
 import org.wordpress.android.ui.notifications.blocks.NoteBlock.OnNoteBlockTextClickListener
-import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock
 import org.wordpress.android.ui.notifications.blocks.UserNoteBlock.OnGravatarClickedListener
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
-import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource.COMMENT_NOTIFICATION
 import org.wordpress.android.ui.reader.services.comment.ReaderCommentService
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.ToastUtils
@@ -110,18 +95,21 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             // See WordPress.deferredInit()
             restoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
             restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
+        } else {
+            arguments?.let {
+                setNote(it.getString(KEY_NOTE_ID))
+            }
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false)
-        rootLayout = view.findViewById(R.id.notifications_list_root) as LinearLayout
+        rootLayout = view.findViewById(R.id.notifications_list_root)!!
         return view
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(bundle: Bundle?) {
-        super.onActivityCreated(bundle)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val listView = listView
         listView.divider = null
         listView.dividerHeight = 0
@@ -147,14 +135,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
         if (notification == null) {
             showErrorToastAndFinish()
-        }
-
-        val animation = view?.findViewById<LottieAnimationView>(R.id.confetti)
-        if (notification?.isViewMilestoneType == true) {
-            animation?.visibility = View.VISIBLE
-            animation?.playAnimation()
-        } else {
-            animation?.visibility = View.GONE
         }
     }
 
@@ -215,117 +195,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         this.footerView = footerView
     }
 
-    private val mOnNoteBlockTextClickListener: OnNoteBlockTextClickListener = object : OnNoteBlockTextClickListener {
-        override fun onNoteBlockTextClicked(clickedSpan: NoteBlockClickableSpan?) {
-            if (!isAdded || activity !is NotificationsDetailActivity) {
-                return
-            }
-            clickedSpan?.let { handleNoteBlockSpanClick(activity as NotificationsDetailActivity, it) }
-        }
-
-        override fun showDetailForNoteIds() {
-            if (!isAdded || notification == null || activity !is NotificationsDetailActivity) {
-                return
-            }
-            val detailActivity = activity as NotificationsDetailActivity
-
-            requireNotNull(notification).let { note ->
-                if (note.isCommentReplyType || !note.isCommentType && note.commentId > 0) {
-                    val commentId = if (note.isCommentReplyType) note.parentCommentId else note.commentId
-
-                    // show comments list if it exists in the reader
-                    if (ReaderUtils.postAndCommentExists(note.siteId.toLong(), note.postId.toLong(), commentId)) {
-                        detailActivity.showReaderCommentsList(note.siteId.toLong(), note.postId.toLong(), commentId)
-                    } else {
-                        detailActivity.showWebViewActivityForUrl(note.url)
-                    }
-                } else if (note.isFollowType) {
-                    detailActivity.showBlogPreviewActivity(note.siteId.toLong(), note.isFollowType)
-                } else {
-                    // otherwise, load the post in the Reader
-                    detailActivity.showPostActivity(note.siteId.toLong(), note.postId.toLong())
-                }
-            }
-        }
-
-        override fun showReaderPostComments() {
-            if (!isAdded || notification == null || notification!!.commentId == 0L) {
-                return
-            }
-
-            requireNotNull(notification).let { note ->
-                context?.let { nonNullContext ->
-                    ReaderActivityLauncher.showReaderComments(
-                        nonNullContext, note.siteId.toLong(), note.postId.toLong(),
-                        note.commentId,
-                        COMMENT_NOTIFICATION.sourceDescription
-                    )
-                }
-            }
-        }
-
-        override fun showSitePreview(siteId: Long, siteUrl: String?) {
-            if (!isAdded || notification == null || activity !is NotificationsDetailActivity) {
-                return
-            }
-            val detailActivity = activity as NotificationsDetailActivity
-            if (siteId != 0L) {
-                detailActivity.showBlogPreviewActivity(siteId, notification?.isFollowType)
-            } else if (!TextUtils.isEmpty(siteUrl)) {
-                detailActivity.showWebViewActivityForUrl(siteUrl)
-            }
-        }
-
-        override fun showActionPopup(view: View) {
-            CommentActionPopupHandler.show(view, onActionClickListener)
-        }
-
-        fun handleNoteBlockSpanClick(
-            activity: NotificationsDetailActivity,
-            clickedSpan: NoteBlockClickableSpan
-        ) {
-            when (clickedSpan.rangeType) {
-                SITE ->
-                    // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.id, notification?.isFollowType)
-                USER ->
-                    // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.siteId, notification?.isFollowType)
-                POST ->
-                    // Show post detail
-                    activity.showPostActivity(clickedSpan.siteId, clickedSpan.id)
-                COMMENT ->
-                    // Load the comment in the reader list if it exists, otherwise show a webview
-                    if (ReaderUtils.postAndCommentExists(
-                            clickedSpan.siteId, clickedSpan.postId,
-                            clickedSpan.id
-                        )
-                    ) {
-                        activity.showReaderCommentsList(
-                            clickedSpan.siteId, clickedSpan.postId,
-                            clickedSpan.id
-                        )
-                    } else {
-                        activity.showWebViewActivityForUrl(clickedSpan.url)
-                    }
-                SCAN -> activity.showScanActivityForSite(clickedSpan.siteId)
-                STAT, FOLLOW ->
-                    // We can open native stats if the site is a wpcom or Jetpack sites
-                    activity.showStatsActivityForSite(clickedSpan.siteId, clickedSpan.rangeType)
-                LIKE -> if (ReaderPostTable.postExists(clickedSpan.siteId, clickedSpan.id)) {
-                    activity.showReaderPostLikeUsers(clickedSpan.siteId, clickedSpan.id)
-                } else {
-                    activity.showPostActivity(clickedSpan.siteId, clickedSpan.id)
-                }
-                REWIND_DOWNLOAD_READY -> activity.showBackupForSite(clickedSpan.siteId)
-                else ->
-                    // We don't know what type of id this is, let's see if it has a URL and push a webview
-                    if (!TextUtils.isEmpty(clickedSpan.url)) {
-                        activity.showWebViewActivityForUrl(clickedSpan.url)
-                    }
-            }
-        }
-    }
+    private val mOnNoteBlockTextClickListener = NoteBlockTextClickListener(this, notification, onActionClickListener)
 
     private val mOnGravatarClickedListener = object : OnGravatarClickedListener {
         override fun onGravatarClicked(siteId: Long, userId: Long, siteUrl: String?) {
@@ -459,9 +329,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                     }
                     if (mIsBadgeView) {
                         noteBlock.setIsBadge()
-                    }
-                    if (note.isViewMilestoneType) {
-                        noteBlock.setIsViewMilestone()
                     }
                     if (isPingback) {
                         noteBlock.setIsPingback()
@@ -675,7 +542,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         @JvmStatic
         fun newInstance(noteId: String?): NotificationsDetailListFragment {
             val fragment = NotificationsDetailListFragment()
-            fragment.setNote(noteId)
+            val bundle = Bundle().apply { putString(KEY_NOTE_ID, noteId) }
+            fragment.arguments = bundle
             return fragment
         }
     }

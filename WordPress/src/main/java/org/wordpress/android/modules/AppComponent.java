@@ -58,6 +58,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.MySiteFragment;
 import org.wordpress.android.ui.notifications.DismissNotificationReceiver;
+import org.wordpress.android.ui.notifications.MilestoneDetailFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragmentPage;
@@ -302,6 +303,8 @@ public interface AppComponent {
     void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(NotificationsDetailListFragment object);
+
+    void inject(MilestoneDetailFragment object);
 
     void inject(ReaderSubsActivity object);
 

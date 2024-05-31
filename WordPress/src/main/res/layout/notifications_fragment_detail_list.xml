@@ -1,37 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notifications_list_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/confetti"
+    <ListView
+        android:id="@id/android:list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        app:lottie_autoPlay="false"
-        app:lottie_loop="false"
-        app:lottie_rawRes="@raw/confetti" />
+        android:layout_height="wrap_content"
+        android:listSelector="@android:color/transparent"
+        android:nestedScrollingEnabled="true" />
 
-    <!-- this container is needed in order to center the content of 'badge' notification types. -->
-    <LinearLayout
-        android:id="@+id/notifications_list_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-
-        <ListView
-            android:nestedScrollingEnabled="true"
-            android:id="@id/android:list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:listSelector="@android:color/transparent"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

@@ -728,6 +728,13 @@
         <item name="android:layout_height">@dimen/avatar_sz_extra_medium_with_padding</item>
     </style>
 
+    <style name="NotificationMilestoneText">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+    </style>
+
     <style name="MyProfileRow">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>

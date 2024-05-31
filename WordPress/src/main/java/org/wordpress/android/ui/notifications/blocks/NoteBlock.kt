@@ -41,9 +41,9 @@ open class NoteBlock(
     @JvmField protected val mNotificationsUtilsWrapper: NotificationsUtilsWrapper,
     private val mOnNoteBlockTextClickListener: OnNoteBlockTextClickListener?
 ) {
-    private var mIsBadge = false
+    protected open var mIsBadge = false
     private var isPingBack = false
-    private var mIsViewMilestone = false
+    protected open var mIsViewMilestone = false
 
     interface OnNoteBlockTextClickListener {
         fun onNoteBlockTextClicked(clickedSpan: NoteBlockClickableSpan?)
