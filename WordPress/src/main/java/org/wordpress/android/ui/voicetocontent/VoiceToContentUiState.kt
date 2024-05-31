@@ -15,6 +15,8 @@ sealed class VoiceToContentUiState {
         override val headerText: Int,
         val labelText: Int,
         val subLabelText: Int,
+        val requestsAvailable: Int,
+        val isEligibleForFeature: Boolean,
         val onMicTap: () -> Unit,
         val onCloseAction: () -> Unit,
         val hasPermission: Boolean,
@@ -32,6 +34,20 @@ sealed class VoiceToContentUiState {
 
     data class Processing(
         override val headerText: Int,
+        val onCloseAction: () -> Unit,
+        override val onClose: () -> Unit = onCloseAction
+    ) : VoiceToContentUiState()
+
+    data class Finished(
+        override val headerText: Int,
+        val content: String, // todo: this is wrong
+        val onCloseAction: () -> Unit,
+        override val onClose: () -> Unit = onCloseAction
+    ) : VoiceToContentUiState()
+
+    data class Error(
+        override val headerText: Int,
+        val message: String, // todo: this is wrong
         val onCloseAction: () -> Unit,
         override val onClose: () -> Unit = onCloseAction
     ) : VoiceToContentUiState()
