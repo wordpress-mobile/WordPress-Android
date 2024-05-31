@@ -18,12 +18,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
 
 class AudioRecorder(
     private val applicationContext: Context,
     private val recordingStrategy: RecordingStrategy
 ) : IAudioRecorder {
-    private var onRecordingFinished: (String) -> Unit = {}
+    private var onRecordingFinished: (AudioRecorderResult) -> Unit = {}
 
     private val storeInMemory = true
     private val filePath by lazy {
@@ -50,7 +53,7 @@ class AudioRecorder(
     val isPaused: StateFlow<Boolean> = _isPaused
 
     @Suppress("DEPRECATION")
-    override fun startRecording(onRecordingFinished: (String) -> Unit) {
+    override fun startRecording(onRecordingFinished: (AudioRecorderResult) -> Unit) {
         this.onRecordingFinished = onRecordingFinished
         if (applicationContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
             == PackageManager.PERMISSION_GRANTED) {
@@ -72,18 +75,22 @@ class AudioRecorder(
                     _isPaused.value = false
                 }
             } catch (e: IOException) {
-                Log.e(TAG, "Error starting recording: ${e.message}")
-                onRecordingFinished("")
+                val errorMessage = "Error preparing MediaRecorder: ${e.message}"
+                Log.e(TAG, errorMessage)
+                onRecordingFinished(Error(errorMessage))
             } catch (e: IllegalStateException) {
-                Log.e(TAG, "Illegal state when starting recording: ${e.message}")
-                onRecordingFinished("")
+                val errorMessage = "Illegal state when starting recording: ${e.message}"
+                Log.e(TAG, errorMessage)
+                onRecordingFinished(Error(errorMessage))
             } catch (e: SecurityException) {
-                Log.e(TAG, "Security exception: ${e.message}")
-                onRecordingFinished("")
+                val errorMessage = "Security exception when starting recording: ${e.message}"
+                Log.e(TAG, errorMessage)
+                onRecordingFinished(Error(errorMessage))
             }
         } else {
-            Log.e(TAG, "Permission to record audio not granted")
-            onRecordingFinished("")
+            val errorMessage = "Permission to record audio not granted"
+            Log.e(TAG, errorMessage)
+            onRecordingFinished(Error(errorMessage))
         }
     }
 
@@ -102,7 +109,7 @@ class AudioRecorder(
             _isRecording.value = false
         }
         // return filePath
-        onRecordingFinished(filePath)
+        onRecordingFinished(Success(filePath))
     }
 
     override fun pauseRecording() {
