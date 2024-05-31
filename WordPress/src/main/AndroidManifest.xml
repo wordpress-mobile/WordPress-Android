@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "enabled": false,
+      "packagePatterns": [
+        "*"
+      ]
+    },
+    {
+      "enabled": true,
+      "matchDepPatterns": [
+        "automattic|wpmreleasetoolkit|dangermattic"
+      ],
+      "separateMajorMinor": false
+    },
+    {
+      "enabled": true,
+      "enabledManagers": [
+        "gradle"
+      ],
+      "matchDepPatterns": [
+        "automattic|wordpress|gravatar"
+      ],
+      "separateMajorMinor": false,
+      "versioning": "semver-coerced"
+    }
+  ]
+}

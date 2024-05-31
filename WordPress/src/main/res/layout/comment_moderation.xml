@@ -21,6 +21,7 @@
         android:textSize="@dimen/text_sz_large" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_approve"
         style="@style/Widget.ModerationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
         app:iconTint="@color/primary" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pending"
         style="@style/Widget.ModerationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,6 +43,7 @@
         app:iconTint="@color/menu_more" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_trash"
         style="@style/Widget.ModerationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,6 +54,7 @@
         app:iconTint="@null"/>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_spam"
         style="@style/Widget.ModerationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/layout_root"
     android:orientation="vertical">
 
     <View
@@ -19,6 +18,7 @@
         android:drawablePadding="@dimen/margin_small"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
+        android:fontFamily="sans-serif-medium"
         android:text="@string/comment_moderation_pending"
         android:textColor="@color/menu_more"
         android:textSize="@dimen/text_sz_small"
