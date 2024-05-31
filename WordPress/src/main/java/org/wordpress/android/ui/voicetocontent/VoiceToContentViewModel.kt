@@ -18,6 +18,8 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
 
 @HiltViewModel
 class VoiceToContentViewModel @Inject constructor(
@@ -54,12 +56,19 @@ class VoiceToContentViewModel @Inject constructor(
     }
 
     fun startRecording() {
-        recordingUseCase.startRecording { recordingPath ->
-            val file = getRecordingFile(recordingPath)
-            file?.let {
-                executeVoiceToContent(it)
-            } ?: run {
-                _uiState.postValue(VoiceToContentResult(isError = true))
+        recordingUseCase.startRecording { audioRecorderResult ->
+            when (audioRecorderResult) {
+                is Success -> {
+                    val file = getRecordingFile(audioRecorderResult.recordingPath)
+                    file?.let {
+                        executeVoiceToContent(it)
+                    } ?: run {
+                        _uiState.postValue(VoiceToContentResult(isError = true))
+                    }
+                }
+                is Error -> {
+                    _uiState.postValue(VoiceToContentResult(isError = true))
+                }
             }
         }
     }
