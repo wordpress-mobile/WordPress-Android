@@ -136,7 +136,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @Nullable private OnPostClickListener mOnPostClickListener;
     @Nullable private OnCommentActionListener mOnCommentActionListener;
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
-    protected CommentSource mCommentSource; // this will be non-null when onCreate()
+    @NonNull protected CommentSource mCommentSource; // this will be non-null when onCreate()
 
     /*
      * these determine which actions (moderation, replying, marking as spam) to enable
