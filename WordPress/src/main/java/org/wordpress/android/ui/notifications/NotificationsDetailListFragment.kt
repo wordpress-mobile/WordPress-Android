@@ -108,9 +108,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         return view
     }
 
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(bundle: Bundle?) {
-        super.onActivityCreated(bundle)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val listView = listView
         listView.divider = null
         listView.dividerHeight = 0
