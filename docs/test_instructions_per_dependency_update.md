@@ -426,7 +426,7 @@ Step.3:
     <summary>1. In app reviews</summary>
 
 - Perform a clean install.
-- Publish three (`ReviewViewModel.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
+- Publish three (`AppReviewManager.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
 - Verify that there are no crashes.
 
 </details>

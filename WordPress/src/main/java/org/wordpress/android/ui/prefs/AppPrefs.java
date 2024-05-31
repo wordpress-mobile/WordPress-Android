@@ -162,9 +162,10 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        // PUBLISHED_POST_COUNT will increase until it reaches ReviewViewModel.TARGET_COUNT_POST_PUBLISHED
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_POST_PUBLISHED
         PUBLISHED_POST_COUNT,
-        IN_APP_REVIEW_SHOWN,
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_NOTIFICATIONS
+        IN_APP_REVIEWS_NOTIFICATION_COUNT,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
@@ -1303,16 +1304,24 @@ public class AppPrefs {
         putInt(DeletablePrefKey.PUBLISHED_POST_COUNT, getPublishedPostCount() + 1);
     }
 
+    public static void resetPublishedPostCount() {
+        remove(DeletablePrefKey.PUBLISHED_POST_COUNT);
+    }
+
     public static int getPublishedPostCount() {
         return prefs().getInt(DeletablePrefKey.PUBLISHED_POST_COUNT.name(), 0);
     }
 
-    public static void setInAppReviewsShown() {
-        putBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN, true);
+    public static void incrementInAppReviewsNotificationCount() {
+        putInt(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT, getInAppReviewsNotificationCount() + 1);
     }
 
-    public static boolean isInAppReviewsShown() {
-        return prefs().getBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN.name(), false);
+    public static int getInAppReviewsNotificationCount() {
+        return prefs().getInt(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT.name(), 0);
+    }
+
+    public static void resetInAppReviewsNotificationCount() {
+        remove(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT);
     }
 
     public static void setBloggingRemindersShown(int siteId) {
