@@ -70,9 +70,12 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
         val result = runCatching {
             okHttpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
+                    val errorMessage = response.message.takeIf { msg -> msg.isNotBlank() }
+                            ?: "Unknown okHttpClient error ${response.code}"
                     return@use JetpackAITranscriptionResponse.Error(
                         fromHttpStatusCode(response.code),
-                        response.message
+                        errorMessage
+                            // response.message
                     )
                 } else {
                     val body = response.body?.use {
@@ -188,6 +191,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
             404 -> JetpackAITranscriptionErrorType.NOT_FOUND
             403 -> JetpackAITranscriptionErrorType.NOT_AUTHENTICATED
             413 -> JetpackAITranscriptionErrorType.REQUEST_TOO_LARGE
+            429 -> JetpackAITranscriptionErrorType.TOO_MANY_REQUESTS
             500 -> JetpackAITranscriptionErrorType.SERVER_ERROR
             else -> JetpackAITranscriptionErrorType.GENERIC_ERROR
         }
