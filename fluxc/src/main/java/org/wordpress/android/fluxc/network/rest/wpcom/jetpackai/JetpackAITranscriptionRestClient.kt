@@ -192,6 +192,7 @@ class JetpackAITranscriptionRestClient  @Inject constructor(
             413 -> JetpackAITranscriptionErrorType.REQUEST_TOO_LARGE
             429 -> JetpackAITranscriptionErrorType.TOO_MANY_REQUESTS
             500 -> JetpackAITranscriptionErrorType.SERVER_ERROR
+            503 -> JetpackAITranscriptionErrorType.JETPACK_AI_SERVICE_UNAVAILABLE
             else -> JetpackAITranscriptionErrorType.GENERIC_ERROR
         }
     }
