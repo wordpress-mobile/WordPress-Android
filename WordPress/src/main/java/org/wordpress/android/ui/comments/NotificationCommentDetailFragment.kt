@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.tools.FormattableRangeType
+import org.wordpress.android.models.Note
 import org.wordpress.android.ui.comments.unified.CommentIdentifier
 import org.wordpress.android.ui.comments.unified.CommentSource
 import org.wordpress.android.ui.engagement.BottomSheetUiState
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_NOTIF_COMMENT_USER_PROFILE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.ToastUtils
+import java.util.EnumSet
 
 /**
  * Used when called from notification list for a comment notification
@@ -19,6 +23,9 @@ import org.wordpress.android.util.ToastUtils
  * It'd be better to have multiple fragments for different sources for different purposes
  */
 class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
+    override val enabledActions: EnumSet<Note.EnabledActions>
+        get() = note.enabledCommentActions
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (savedInstanceState?.getString(KEY_NOTE_ID) != null) {
@@ -26,6 +33,16 @@ class NotificationCommentDetailFragment : SharedCommentDetailFragment() {
         } else {
             handleNote(requireArguments().getString(KEY_NOTE_ID)!!)
         }
+
+        viewModel.fetchComment(site, note.commentId)
+    }
+
+    override fun sendLikeCommentEvent(liked: Boolean) {
+        super.sendLikeCommentEvent(liked)
+        // it should also track the notification liked/unliked event
+        AnalyticsTracker.track(
+            if (liked) Stat.NOTIFICATION_LIKED else Stat.NOTIFICATION_UNLIKED
+        )
     }
 
     override fun getUserProfileUiState(): BottomSheetUiState.UserProfileUiState {

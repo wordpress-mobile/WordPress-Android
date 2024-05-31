@@ -1820,6 +1820,7 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:backgroundTint">@color/transparent</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingEnd">@dimen/margin_extra_medium_large</item>
         <item name="cornerRadius">0dp</item>
