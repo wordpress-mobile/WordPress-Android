@@ -59,6 +59,10 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_NOTE_ID)) {
             restoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
             restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
+        } else {
+            arguments?.let {
+                setNote(it.getString(KEY_NOTE_ID))
+            }
         }
     }
 
@@ -213,7 +217,8 @@ class MilestoneDetailFragment : ListFragment(), NotificationFragment {
         @JvmStatic
         fun newInstance(noteId: String?): MilestoneDetailFragment {
             val fragment = MilestoneDetailFragment()
-            fragment.setNote(noteId)
+            val bundle = Bundle().apply { putString(KEY_NOTE_ID, noteId) }
+            fragment.arguments = bundle
             return fragment
         }
     }

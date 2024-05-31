@@ -95,6 +95,10 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             // See WordPress.deferredInit()
             restoredNoteId = savedInstanceState.getString(KEY_NOTE_ID)
             restoredListPosition = savedInstanceState.getInt(KEY_LIST_POSITION, 0)
+        } else {
+            arguments?.let {
+                setNote(it.getString(KEY_NOTE_ID))
+            }
         }
     }
 
@@ -539,7 +543,8 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         @JvmStatic
         fun newInstance(noteId: String?): NotificationsDetailListFragment {
             val fragment = NotificationsDetailListFragment()
-            fragment.setNote(noteId)
+            val bundle = Bundle().apply { putString(KEY_NOTE_ID, noteId) }
+            fragment.arguments = bundle
             return fragment
         }
     }
