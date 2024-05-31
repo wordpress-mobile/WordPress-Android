@@ -4911,5 +4911,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_elapsed_time">Elapsed Time</string>
     <string name="voice_to_content_tap_to_stop">Tap to stop</string>
     <string name="voice_to_content_processing">Processing</string>
+    <string name="voice_to_content_error_label">Error</string>
     <string name="voice_to_content_processing_label">Processing</string>
+    <string name="voice_to_content_finished_label">Finished</string>
 </resources>
