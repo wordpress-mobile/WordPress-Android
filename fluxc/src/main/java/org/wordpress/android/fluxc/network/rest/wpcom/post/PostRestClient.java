@@ -31,6 +31,8 @@ import org.wordpress.android.fluxc.model.revisions.Diff;
 import org.wordpress.android.fluxc.model.revisions.DiffOperations;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
@@ -476,8 +478,17 @@ public class PostRestClient extends BaseWPComRestClient {
                 new Listener<RevisionsResponse>() {
                     @Override
                     public void onResponse(RevisionsResponse response) {
-                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(
-                                new FetchRevisionsResponsePayload(post, revisionsResponseToRevisionsModel(response))));
+                        FetchRevisionsResponsePayload payload;
+                        if (response == null) {
+                            payload = new FetchRevisionsResponsePayload(post, null);
+                            payload.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                        } else {
+                            payload = new FetchRevisionsResponsePayload(
+                                post,
+                                revisionsResponseToRevisionsModel(response)
+                            );
+                        }
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedRevisionsAction(payload));
                     }
                 },
                 new WPComErrorListener() {
@@ -781,10 +792,7 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
-    private RevisionsModel revisionsResponseToRevisionsModel(@Nullable RevisionsResponse response) {
-        if (response == null) {
-            return new RevisionsModel(new ArrayList<>());
-        }
+    private RevisionsModel revisionsResponseToRevisionsModel(RevisionsResponse response) {
         ArrayList<RevisionModel> revisions = new ArrayList<>();
         for (DiffResponse diffResponse : response.getDiffs()) {
             RevisionResponse revision = response.getRevisions().get(Integer.toString(diffResponse.getTo()));
