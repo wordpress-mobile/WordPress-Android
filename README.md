@@ -33,6 +33,8 @@ To build, install, and test the project from the command line:
 You can use your own WordPress site for developing and testing the app. If you don't have one, you can create a temporary test site for free at https://jurassic.ninja/.
 On the app start up screen, choose "Enter your existing site address" and enter the URL of your site and your credentials.
 
+Note: Access to WordPress.com features is temporarily disabled in the development environment.
+
 ## Directory structure ##
     .
     ├── libs                    # dependencies used to build debug variants
