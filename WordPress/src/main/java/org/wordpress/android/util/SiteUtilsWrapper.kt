@@ -27,4 +27,5 @@ class SiteUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getSiteIconUrlOfResourceSize(site: SiteModel, @DimenRes sizeRes: Int): String {
         return SiteUtils.getSiteIconUrl(site, appContext.resources.getDimensionPixelSize(sizeRes))
     }
+    fun hasFullAccessToContent(site: SiteModel?): Boolean = SiteUtils.hasFullAccessToContent(site)
 }
