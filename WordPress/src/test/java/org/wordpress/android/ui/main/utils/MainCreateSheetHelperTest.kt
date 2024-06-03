@@ -4,22 +4,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.mockito.Mock
-import org.mockito.kotlin.argThat
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
-import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
-import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
 import org.wordpress.android.ui.voicetocontent.VoiceToContentFeatureUtils
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ReaderFloatingButtonFeatureConfig
 import kotlin.test.Test
 
@@ -40,9 +32,6 @@ class MainCreateSheetHelperTest : BaseUnitTest() {
     @Mock
     private lateinit var siteUtils: SiteUtilsWrapper
 
-    @Mock
-    private lateinit var analyticsTracker: AnalyticsTrackerWrapper
-
     private lateinit var helper: MainCreateSheetHelper
 
     @Before
@@ -53,7 +42,6 @@ class MainCreateSheetHelperTest : BaseUnitTest() {
             bloggingPromptsSettingsHelper,
             buildConfig,
             siteUtils,
-            analyticsTracker,
         )
     }
 
@@ -124,6 +112,22 @@ class MainCreateSheetHelperTest : BaseUnitTest() {
 
         // Assert
         assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `shouldShowFabForPage returns false for other pages`() {
+        PageType.entries
+            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
+            .forEach { page ->
+                // Arrange
+                whenever(buildConfig.isCreateFabEnabled).thenReturn(true)
+
+                // Act
+                val result = helper.shouldShowFabForPage(page)
+
+                // Assert
+                assertThat(result).isFalse()
+            }
     }
     // endregion
 
@@ -251,229 +255,6 @@ class MainCreateSheetHelperTest : BaseUnitTest() {
 
         // Assert
         assertThat(result).isFalse()
-    }
-    // endregion
-
-    // region trackActionTapped
-    @Test
-    fun `trackActionTapped tracks action tapped for my site page`() {
-        // Arrange
-        val page = PageType.MY_SITE
-        val actionType = MainActionListItem.ActionType.CREATE_NEW_POST
-        val expectedStat = Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED
-
-        // Act
-        helper.trackActionTapped(page, actionType)
-
-        // Assert
-        verify(analyticsTracker).track(eq(expectedStat), argThat<Map<String, Any>> {
-            this["action"] == "create_new_post"
-        })
-    }
-
-    @Test
-    fun `trackActionTapped tracks action tapped for reader page`() {
-        // Arrange
-        val page = PageType.READER
-        val actionType = MainActionListItem.ActionType.CREATE_NEW_POST
-        val expectedStat = Stat.READER_CREATE_SHEET_ACTION_TAPPED
-
-        // Act
-        helper.trackActionTapped(page, actionType)
-
-        // Assert
-        verify(analyticsTracker).track(eq(expectedStat), argThat<Map<String, Any>> {
-            this["action"] == "create_new_post"
-        })
-    }
-
-    @Test
-    fun `trackActionTapped does not track action tapped for other pages`() {
-        PageType.entries
-            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
-            .forEach { page ->
-                // Arrange
-                val actionType = MainActionListItem.ActionType.CREATE_NEW_POST
-
-                // Act
-                helper.trackActionTapped(page, actionType)
-
-                // Assert
-                verifyNoInteractions(analyticsTracker)
-            }
-    }
-    // endregion
-
-    // region trackAnswerPromptActionTapped
-    @Test
-    fun `trackAnswerPromptActionTapped tracks answer prompt action tapped for my site page`() {
-        // Arrange
-        val page = PageType.MY_SITE
-        val attribution = BloggingPromptAttribution.DAY_ONE
-        val expectedStat = Stat.MY_SITE_CREATE_SHEET_ANSWER_PROMPT_TAPPED
-
-        // Act
-        helper.trackAnswerPromptActionTapped(page, attribution)
-
-        // Assert
-        verify(analyticsTracker).track(eq(expectedStat), argThat<Map<String, Any>> {
-            this["attribution"] == attribution.value
-        })
-    }
-
-    @Test
-    fun `trackAnswerPromptActionTapped tracks answer prompt action tapped for reader page`() {
-        // Arrange
-        val page = PageType.READER
-        val attribution = BloggingPromptAttribution.DAY_ONE
-        val expectedStat = Stat.READER_CREATE_SHEET_ANSWER_PROMPT_TAPPED
-
-        // Act
-        helper.trackAnswerPromptActionTapped(page, attribution)
-
-        // Assert
-        verify(analyticsTracker).track(eq(expectedStat), argThat<Map<String, Any>> {
-            this["attribution"] == attribution.value
-        })
-    }
-
-    @Test
-    fun `trackAnswerPromptActionTapped does not track answer prompt action tapped for other pages`() {
-        PageType.entries
-            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
-            .forEach { page ->
-                // Arrange
-                val attribution = BloggingPromptAttribution.DAY_ONE
-
-                // Act
-                helper.trackAnswerPromptActionTapped(page, attribution)
-
-                // Assert
-                verifyNoInteractions(analyticsTracker)
-            }
-    }
-    // endregion
-
-    // region trackHelpPromptActionTapped
-    @Test
-    fun `trackHelpPromptActionTapped tracks help prompt action tapped for my site page`() {
-        // Arrange
-        val page = PageType.MY_SITE
-        val expectedStat = Stat.MY_SITE_CREATE_SHEET_PROMPT_HELP_TAPPED
-
-        // Act
-        helper.trackHelpPromptActionTapped(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackHelpPromptActionTapped tracks help prompt action tapped for reader page`() {
-        // Arrange
-        val page = PageType.READER
-        val expectedStat = Stat.READER_CREATE_SHEET_PROMPT_HELP_TAPPED
-
-        // Act
-        helper.trackHelpPromptActionTapped(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackHelpPromptActionTapped does not track help prompt action tapped for other pages`() {
-        PageType.entries
-            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
-            .forEach { page ->
-                // Act
-                helper.trackHelpPromptActionTapped(page)
-
-                // Assert
-                verifyNoInteractions(analyticsTracker)
-            }
-    }
-    // endregion
-
-    // region trackSheetShown
-    @Test
-    fun `trackSheetShown tracks sheet shown for my site page`() {
-        // Arrange
-        val page = PageType.MY_SITE
-        val expectedStat = Stat.MY_SITE_CREATE_SHEET_SHOWN
-
-        // Act
-        helper.trackSheetShown(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackSheetShown tracks sheet shown for reader page`() {
-        // Arrange
-        val page = PageType.READER
-        val expectedStat = Stat.READER_CREATE_SHEET_SHOWN
-
-        // Act
-        helper.trackSheetShown(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackSheetShown does not track sheet shown for other pages`() {
-        PageType.entries
-            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
-            .forEach { page ->
-                // Act
-                helper.trackSheetShown(page)
-
-                // Assert
-                verifyNoInteractions(analyticsTracker)
-            }
-    }
-    // endregion
-
-    // region trackFabShown
-    @Test
-    fun `trackFabShown tracks fab shown for my site page`() {
-        // Arrange
-        val page = PageType.MY_SITE
-        val expectedStat = Stat.MY_SITE_CREATE_FAB_SHOWN
-
-        // Act
-        helper.trackFabShown(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackFabShown tracks fab shown for reader page`() {
-        // Arrange
-        val page = PageType.READER
-        val expectedStat = Stat.READER_CREATE_FAB_SHOWN
-
-        // Act
-        helper.trackFabShown(page)
-
-        // Assert
-        verify(analyticsTracker).track(expectedStat)
-    }
-
-    @Test
-    fun `trackFabShown does not track fab shown for other pages`() {
-        PageType.entries
-            .filterNot { it == PageType.MY_SITE || it == PageType.READER }
-            .forEach { page ->
-                // Act
-                helper.trackFabShown(page)
-
-                // Assert
-                verifyNoInteractions(analyticsTracker)
-            }
     }
     // endregion
 }

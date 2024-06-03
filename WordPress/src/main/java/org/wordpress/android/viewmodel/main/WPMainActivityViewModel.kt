@@ -30,6 +30,7 @@ import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptActi
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.analytics.MainCreateSheetTracker
 import org.wordpress.android.ui.main.utils.MainCreateSheetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
@@ -65,9 +66,10 @@ class WPMainActivityViewModel @Inject constructor(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val bloggingPromptsStore: BloggingPromptsStore,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
     private val mainCreateSheetHelper: MainCreateSheetHelper,
+    private val mainCreateSheetTracker: MainCreateSheetTracker,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -236,11 +238,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
 
         _mainActions.postValue(actionsList)
-        if (onFabClicked) trackCreateActionsSheetCard(actionsList)
+        if (onFabClicked) mainCreateSheetTracker.trackCreateActionsSheetCard(actionsList)
     }
 
     private fun onCreateActionClicked(actionType: ActionType, page: PageType) {
-        mainCreateSheetHelper.trackActionTapped(page, actionType)
+        mainCreateSheetTracker.trackActionTapped(page, actionType)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
 
@@ -253,20 +255,14 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onAnswerPromptActionClicked(promptId: Int, attribution: BloggingPromptAttribution, page: PageType) {
-        mainCreateSheetHelper.trackAnswerPromptActionTapped(page, attribution)
+        mainCreateSheetTracker.trackAnswerPromptActionTapped(page, attribution)
         _isBottomSheetShowing.postValue(Event(false))
         _createPostWithBloggingPrompt.postValue(promptId)
     }
 
     private fun onHelpPromptActionClicked(page: PageType) {
-        mainCreateSheetHelper.trackHelpPromptActionTapped(page)
+        mainCreateSheetTracker.trackHelpPromptActionTapped(page)
         _openBloggingPromptsOnboarding.call()
-    }
-
-    private fun trackCreateActionsSheetCard(actions: List<MainActionListItem>) {
-        if (actions.any { it is AnswerBloggingPromptAction }) {
-            analyticsTracker.track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
-        }
     }
 
     fun onFabClicked(site: SiteModel?, page: PageType) {
@@ -284,7 +280,7 @@ class WPMainActivityViewModel @Inject constructor(
                 // latest info.
                 loadMainActions(site, page, onFabClicked = true)
 
-                mainCreateSheetHelper.trackSheetShown(page)
+                mainCreateSheetTracker.trackSheetShown(page)
                 _isBottomSheetShowing.postValue(Event(true))
             }
         } else {
@@ -332,7 +328,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean, site: SiteModel?, page: PageType?) {
-        if (isFabVisible && page != null) mainCreateSheetHelper.trackFabShown(page)
+        if (isFabVisible && page != null) mainCreateSheetTracker.trackFabShown(page)
 
         val newState = MainFabUiState(
             isFabVisible = isFabVisible,

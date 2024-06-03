@@ -20,7 +20,6 @@ import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -38,12 +37,13 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.Bl
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST_FROM_AUDIO
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST_FROM_AUDIO_AI
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
+import org.wordpress.android.ui.main.analytics.MainCreateSheetTracker
 import org.wordpress.android.ui.main.utils.MainCreateSheetHelper
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingPromptAttribution
@@ -111,6 +111,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var mainCreateSheetHelper: MainCreateSheetHelper
 
+    @Mock
+    private lateinit var mainCreateSheetTracker: MainCreateSheetTracker
+
     private val featureAnnouncement = FeatureAnnouncement(
         "14.7",
         2,
@@ -169,9 +172,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             accountStore,
             siteStore,
             bloggingPromptsStore,
-            NoDelayCoroutineDispatcher(),
             shouldAskPrivacyConsent,
             mainCreateSheetHelper,
+            mainCreateSheetTracker,
+            NoDelayCoroutineDispatcher(),
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
             onFeatureAnnouncementRequestedObserver
@@ -643,7 +647,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 ANSWER_BLOGGING_PROMPT,
                 NO_ACTION,
                 CREATE_NEW_POST,
-                CREATE_NEW_POST_FROM_AUDIO,
+                CREATE_NEW_POST_FROM_AUDIO_AI,
                 CREATE_NEW_PAGE
             )
 
@@ -694,7 +698,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             it.actionType == ANSWER_BLOGGING_PROMPT
         } as AnswerBloggingPromptAction
         action.onHelpAction?.invoke()
-        verify(mainCreateSheetHelper).trackHelpPromptActionTapped(any())
+        verify(mainCreateSheetTracker).trackHelpPromptActionTapped(any())
     }
 
     @Test
@@ -709,14 +713,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    @Suppress("MaxLineLength")
-    fun `Should track BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED when onFabClicked is called and actions contains AnswerBloggingPromptAction`() =
-        test {
-            whenever(mainCreateSheetHelper.canCreatePromptAnswer()).thenReturn(true)
-            startViewModelWithDefaultParameters()
-            viewModel.onFabClicked(initSite(), page = PageType.MY_SITE)
-            verify(analyticsTrackerWrapper).track(Stat.BLOGGING_PROMPTS_CREATE_SHEET_CARD_VIEWED)
-        }
+    fun `Should track card actions when onFabClicker is called`() {
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(initSite(), page = PageType.MY_SITE)
+        verify(mainCreateSheetTracker).trackCreateActionsSheetCard(any())
+    }
 
     @Test
     fun `it asks for privacy consent at the start when it should`() = test {
