@@ -54,7 +54,7 @@ fun VoiceToContentScreen(
 @Composable
 fun InitializingView(state: VoiceToContentUiState.Initializing) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         Text(stringResource(id = state.labelText))
         CircularProgressIndicator()
@@ -66,7 +66,7 @@ fun ReadyToRecordView(
     state: VoiceToContentUiState.ReadyToRecord
 ) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         Text(stringResource(id = state.labelText))
         Text(stringResource(id = state.subLabelText))
@@ -81,13 +81,15 @@ fun ReadyToRecordView(
         ) {
             Icon(imageVector = Icons.Default.CheckCircle, contentDescription = null)
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        MicToStopIcon(state)
     }
 }
 
 @Composable
 fun RecordingView(state: VoiceToContentUiState.Recording) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         Text(state.elapsedTime)
         Spacer(modifier = Modifier.height(16.dp))
@@ -102,7 +104,7 @@ fun RecordingView(state: VoiceToContentUiState.Recording) {
 @Composable
 fun ProcessingView(state: VoiceToContentUiState.Processing) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         CircularProgressIndicator()
     }
@@ -111,7 +113,7 @@ fun ProcessingView(state: VoiceToContentUiState.Processing) {
 @Composable
 fun ErrorView(state: VoiceToContentUiState.Error) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         Text(state.message)
     }
@@ -120,7 +122,7 @@ fun ErrorView(state: VoiceToContentUiState.Error) {
 @Composable
 fun FinishedView(state: VoiceToContentUiState.Finished) {
     Column {
-        Header(state.headerText, state.onClose)
+        Header(state.header, state.onClose)
         Spacer(modifier = Modifier.height(16.dp))
         Text(state.content)
     }
@@ -145,7 +147,7 @@ fun Header(@StringRes headerText: Int, onClose: () -> Unit) {
 fun PreviewInitializingView() {
     AppTheme {
         InitializingView(VoiceToContentUiState.Initializing(
-            headerText = R.string.voice_to_content_initializing,
+            header = R.string.voice_to_content_initializing,
             labelText = R.string.voice_to_content_preparing,
             onCloseAction = {}
         ))
@@ -157,7 +159,7 @@ fun PreviewInitializingView() {
 fun PreviewReadyToRecordView() {
     AppTheme {
         ReadyToRecordView(VoiceToContentUiState.ReadyToRecord(
-            headerText = R.string.voice_to_content_ready_to_record,
+            header = R.string.voice_to_content_ready_to_record,
             labelText = R.string.voice_to_content_ready_to_record_label,
             subLabelText = R.string.voice_to_content_tap_to_start,
             requestsAvailable = 0,
@@ -175,7 +177,7 @@ fun PreviewReadyToRecordView() {
 fun PreviewRecordingView() {
     AppTheme {
         RecordingView(VoiceToContentUiState.Recording(
-            headerText = R.string.voice_to_content_recording,
+            header = R.string.voice_to_content_recording,
             elapsedTime = "0 sec",
             onStopTap = {},
             onCloseAction = {}
@@ -188,7 +190,7 @@ fun PreviewRecordingView() {
 fun PreviewProcessingView() {
     AppTheme {
         ProcessingView(VoiceToContentUiState.Processing(
-            headerText = R.string.voice_to_content_processing,
+            header = R.string.voice_to_content_processing,
             onCloseAction = {}
         ))
     }
@@ -199,7 +201,7 @@ fun PreviewProcessingView() {
 fun PreviewErrorView() {
     AppTheme {
         ErrorView(VoiceToContentUiState.Error(
-            headerText = R.string.voice_to_content_error_label,
+            header = R.string.voice_to_content_error_label,
             message = "Something bad happened and we can't continue",
             onCloseAction = {}
         ))
@@ -211,7 +213,7 @@ fun PreviewErrorView() {
 fun PreviewFinishedView() {
     AppTheme {
         FinishedView(VoiceToContentUiState.Finished(
-            headerText = R.string.voice_to_content_finished_label,
+            header = R.string.voice_to_content_finished_label,
             content = "This is the transcribed text",
             onCloseAction = {}
         ))

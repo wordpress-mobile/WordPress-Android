@@ -42,7 +42,7 @@ class VoiceToContentViewModel @Inject constructor(
     val dismiss = _dismiss as LiveData<Unit>
 
     private val _state = MutableStateFlow<VoiceToContentUiState>(VoiceToContentUiState.Initializing(
-        headerText = R.string.voice_to_content_initializing,
+        header = R.string.voice_to_content_initializing,
         labelText = R.string.voice_to_content_preparing,
         onCloseAction = ::onClose
     ))
@@ -169,7 +169,7 @@ class VoiceToContentViewModel @Inject constructor(
     private fun transitionToReadyToRecord(model: JetpackAIAssistantFeature) {
         // todo: annmarie- put together the proper labels; especially the requests available count
         _state.value = VoiceToContentUiState.ReadyToRecord(
-            headerText = R.string.voice_to_content_ready_to_record,
+            header = R.string.voice_to_content_ready_to_record,
             labelText = R.string.voice_to_content_ready_to_record_label,
             subLabelText = R.string.voice_to_content_tap_to_start,
             requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model),
@@ -183,7 +183,7 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun transitionToRecording() {
         _state.value = VoiceToContentUiState.Recording(
-            headerText = R.string.voice_to_content_recording,
+            header = R.string.voice_to_content_recording,
             elapsedTime = "0 sec",
             onStopTap = ::onStopTap,
             onCloseAction = ::onClose
@@ -192,7 +192,7 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun transitionToProcessing() {
         _state.value = VoiceToContentUiState.Processing(
-            headerText = R.string.voice_to_content_processing,
+            header = R.string.voice_to_content_processing,
             onCloseAction = ::onClose
         )
     }
@@ -201,7 +201,7 @@ class VoiceToContentViewModel @Inject constructor(
     // the existing screen
     private fun transitionToError() {
         _state.value = VoiceToContentUiState.Error(
-            headerText = R.string.voice_to_content_ready_to_record,
+            header = R.string.voice_to_content_ready_to_record,
             message = "Something bad happened and we can't continue",
             onCloseAction = ::onClose
         )
@@ -209,7 +209,7 @@ class VoiceToContentViewModel @Inject constructor(
     // todo: annmarie - transition to finished MUST be removed, as we are pushing the user to editPostActivity
     private fun transitionToFinished(content: String?) {
         _state.value = VoiceToContentUiState.Finished(
-            headerText = R.string.voice_to_content_finished_label,
+            header = R.string.voice_to_content_finished_label,
             content = content ?: "",
             onCloseAction = ::onClose
         )
