@@ -761,8 +761,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
-            if (currentPage != null) mViewModel.onFabClicked(getSelectedSite(), currentPage);
+            PageType selectedPage = getSelectedPage();
+            if (selectedPage != null) mViewModel.onFabClicked(getSelectedSite(), selectedPage);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
@@ -770,8 +770,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
 
-            PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
-            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite(), currentPage);
+            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite(), getSelectedPage());
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
@@ -1206,12 +1205,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ProfilingUtils.dump();
         ProfilingUtils.stop();
 
-        PageType currentPage = mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
-
         mViewModel.onResume(
                 getSelectedSite(),
                 mSelectedSiteRepository.hasSelectedSite(),
-                currentPage
+                getSelectedPage()
         );
 
         checkForInAppUpdate();
@@ -2013,5 +2010,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 );
             }
         }
+    }
+
+    @Nullable
+    private PageType getSelectedPage() {
+        return mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
     }
 }
