@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -29,7 +31,7 @@ public class CoverBlockProcessor extends BlockProcessor {
 
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
 
-    public CoverBlockProcessor(String localId, MediaFile mediaFile,
+    public CoverBlockProcessor(String localId, @NonNull MediaFile mediaFile,
                                MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;

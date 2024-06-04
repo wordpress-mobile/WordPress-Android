@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,8 +35,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
             .append("(.*)") // inner block contents
             .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
 
-    public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl, MediaUploadCompletionProcessor
-            mediaUploadCompletionProcessor) {
+    public GalleryBlockProcessor(String localId, @NonNull MediaFile mediaFile, String siteUrl,
+                                 MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
         mGalleryImageQuerySelector = new StringBuilder()

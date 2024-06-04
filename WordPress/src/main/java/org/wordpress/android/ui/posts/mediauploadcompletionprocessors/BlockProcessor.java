@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -45,7 +47,7 @@ public abstract class BlockProcessor {
      * @param localId The local media id that needs replacement
      * @param mediaFile The mediaFile containing the remote id and remote url
      */
-    BlockProcessor(String localId, MediaFile mediaFile) {
+    BlockProcessor(String localId, @NonNull MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -8,7 +10,7 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class MediaTextBlockProcessor extends BlockProcessor {
-    public MediaTextBlockProcessor(String localId, MediaFile mediaFile) {
+    public MediaTextBlockProcessor(String localId, @NonNull MediaFile mediaFile) {
         super(localId, mediaFile);
     }
 
