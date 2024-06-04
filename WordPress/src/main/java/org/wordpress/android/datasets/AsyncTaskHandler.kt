@@ -7,6 +7,7 @@ import kotlinx.coroutines.withContext
 
 /**
  * Helper class to handle async tasks by using coroutines
+ * @see <a href="https://github.com/wordpress-mobile/WordPress-Android/pull/20937">Introduction</a>
  */
 object AsyncTaskHandler {
     /**
