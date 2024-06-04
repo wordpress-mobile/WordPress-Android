@@ -198,6 +198,7 @@ private const val DEVICE_ID_PARAM = "device_id_param"
 private const val IDENTIFIER_PARAM = "identifier_param"
 private const val MARKETING_VERSION_PARAM = "marketing_version_param"
 private const val PLATFORM_PARAM = "platform_param"
+private const val ANDROID_VERSION_PARAM = "14.0"
 
 @RunWith(MockitoJUnitRunner::class)
 class CardsRestClientTest {
@@ -230,7 +231,7 @@ class CardsRestClientTest {
         )
         fetchCardsPayload = FetchCardsPayload(
             site, CARD_TYPES, BUILD_NUMBER_PARAM, DEVICE_ID_PARAM,
-            IDENTIFIER_PARAM, MARKETING_VERSION_PARAM, PLATFORM_PARAM
+            IDENTIFIER_PARAM, MARKETING_VERSION_PARAM, PLATFORM_PARAM, ANDROID_VERSION_PARAM
         )
     }
 

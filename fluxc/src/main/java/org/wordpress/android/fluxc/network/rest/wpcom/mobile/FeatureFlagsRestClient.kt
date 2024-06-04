@@ -32,7 +32,8 @@ class FeatureFlagsRestClient @Inject constructor(
         deviceId: String,
         identifier: String,
         marketingVersion: String,
-        platform: String
+        platform: String,
+        osVersion: String,
         ): FeatureFlagsFetchedPayload {
         // https://public-api.wordpress.com/wpcom/v2/mobile/feature-flagsdevice_id=12345&platform=android&build_number=570&marketing_version=15.1.1&identifier=com.jetpack.android
         val url = WPCOMV2.mobile.feature_flags.url
@@ -41,8 +42,9 @@ class FeatureFlagsRestClient @Inject constructor(
             "device_id" to deviceId,
             "identifier" to identifier,
             "marketing_version" to  marketingVersion,
-            "platform" to platform
-        )
+            "platform" to platform,
+            "os_version" to osVersion,
+            )
         val response = wpComGsonRequestBuilder.syncGetRequest(
             this,
             url,

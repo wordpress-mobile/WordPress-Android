@@ -71,7 +71,8 @@ class FeatureFlagsRestClientTest {
                 deviceId = DEVICE_ID_PARAM,
                 identifier = IDENTIFIER_PARAM,
                 marketingVersion = MARKETING_VERSION_PARAM,
-                platform = PLATFORM_PARAM
+                platform = PLATFORM_PARAM,
+                osVersion = OS_VERSION_PARAM,
             )
 
         assertEquals(urlCaptor.firstValue,
@@ -88,7 +89,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+            )
 
         assertSuccess(successResponse, result)
     }
@@ -102,7 +105,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+            )
 
         assertError(FeatureFlagsErrorType.TIMEOUT, result)
     }
@@ -116,7 +121,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+            )
 
         assertError(FeatureFlagsErrorType.API_ERROR, result)
     }
@@ -130,7 +137,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+            )
 
         assertError(FeatureFlagsErrorType.INVALID_RESPONSE, result)
     }
@@ -144,7 +153,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+            )
 
         assertError(FeatureFlagsErrorType.AUTH_ERROR, result)
     }
@@ -158,7 +169,9 @@ class FeatureFlagsRestClientTest {
             deviceId = DEVICE_ID_PARAM,
             identifier = IDENTIFIER_PARAM,
             marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM)
+            platform = PLATFORM_PARAM,
+            osVersion = OS_VERSION_PARAM,
+        )
 
         assertError(FeatureFlagsErrorType.GENERIC_ERROR, result)
     }
@@ -226,6 +239,7 @@ class FeatureFlagsRestClientTest {
         private const val IDENTIFIER_PARAM = "identifier_param"
         private const val MARKETING_VERSION_PARAM = "marketing_version_param"
         private const val PLATFORM_PARAM = "platform_param"
+        private const val OS_VERSION_PARAM = "os_version_param"
 
         private const val SUCCESS_JSON = "wp/mobile/feature-flags-success.json"
     }
