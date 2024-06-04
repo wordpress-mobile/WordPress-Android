@@ -71,7 +71,8 @@ class CardsRestClient @Inject constructor(
         "identifier" to payload.identifier,
         "marketing_version" to payload.marketingVersion,
         "platform" to payload.platform,
-    )
+        "os_version" to payload.osVersion,
+        )
 
     data class FetchCardsPayload(
         val site: SiteModel,
@@ -80,7 +81,8 @@ class CardsRestClient @Inject constructor(
         val deviceId: String,
         val identifier: String,
         val marketingVersion: String,
-        val platform: String
+        val platform: String,
+        val osVersion: String,
     )
 
     data class CardsResponse(
