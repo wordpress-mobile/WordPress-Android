@@ -23,14 +23,16 @@ class FeatureFlagsStore @Inject constructor(
         deviceId: String,
         identifier: String,
         marketingVersion: String,
-        platform: String
+        platform: String,
+        osVersion: String,
     ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch feature-flags") {
         val payload = featureFlagsRestClient.fetchFeatureFlags(
                 buildNumber,
                 deviceId,
                 identifier,
                 marketingVersion,
-                platform
+                platform,
+                osVersion,
         )
         return@withDefaultContext when {
             payload.isError -> FeatureFlagsResult(payload.error)
