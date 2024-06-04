@@ -153,6 +153,7 @@ class CardViewModelSlice @Inject constructor(
                 identifier = buildConfigWrapper.getApplicationId(),
                 marketingVersion = buildConfigWrapper.getAppVersionName(),
                 platform = FEATURE_FLAG_PLATFORM_PARAMETER,
+                osVersion = buildConfigWrapper.androidVersion
             )
             val result = cardsStore.fetchCards(payload)
             val error = result.error

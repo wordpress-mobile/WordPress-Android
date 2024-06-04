@@ -106,6 +106,7 @@ private const val DEVICE_ID_PARAM = "device_id_param"
 private const val IDENTIFIER_PARAM = "identifier_param"
 private const val MARKETING_VERSION_PARAM = "marketing_version_param"
 private const val PLATFORM_PARAM = "android"
+private const val ANDROID_VERSION_PARAM = "14.0"
 
 /* MODEL */
 
@@ -296,7 +297,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             DEVICE_ID_PARAM,
             IDENTIFIER_PARAM,
             MARKETING_VERSION_PARAM,
-            PLATFORM_PARAM
+            PLATFORM_PARAM,
+            ANDROID_VERSION_PARAM,
         )
 
         viewModelSlice.initialize(testScope())
@@ -500,7 +502,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
             DEVICE_ID_PARAM,
             IDENTIFIER_PARAM,
             MARKETING_VERSION_PARAM,
-            PLATFORM_PARAM
+            PLATFORM_PARAM,
+            ANDROID_VERSION_PARAM,
         )
         whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(CardsResult()))
         whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(apiError)
@@ -522,7 +525,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 DEVICE_ID_PARAM,
                 IDENTIFIER_PARAM,
                 MARKETING_VERSION_PARAM,
-                PLATFORM_PARAM
+                PLATFORM_PARAM,
+                ANDROID_VERSION_PARAM,
             )
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
@@ -558,7 +562,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 DEVICE_ID_PARAM,
                 IDENTIFIER_PARAM,
                 MARKETING_VERSION_PARAM,
-                PLATFORM_PARAM
+                PLATFORM_PARAM,
+                ANDROID_VERSION_PARAM,
             )
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
@@ -581,7 +586,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                 DEVICE_ID_PARAM,
                 IDENTIFIER_PARAM,
                 MARKETING_VERSION_PARAM,
-                PLATFORM_PARAM
+                PLATFORM_PARAM,
+                ANDROID_VERSION_PARAM,
             )
             whenever(cardsStore.getCards(siteModel)).thenReturn(flowOf(data))
             whenever(cardsStore.fetchCards(fetchCardsPayload)).thenReturn(success)
@@ -638,7 +644,8 @@ class CardsViewModelSliceTest : BaseUnitTest() {
                     DEVICE_ID_PARAM,
                     IDENTIFIER_PARAM,
                     MARKETING_VERSION_PARAM,
-                    PLATFORM_PARAM
+                    PLATFORM_PARAM,
+                    ANDROID_VERSION_PARAM,
                 )
             )
         }

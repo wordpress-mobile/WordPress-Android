@@ -77,7 +77,8 @@ class FeatureFlagConfig
                 ?: generateAndStoreUUID(),
             identifier = BuildConfig.APPLICATION_ID,
             marketingVersion = BuildConfig.VERSION_NAME,
-            platform = FEATURE_FLAG_PLATFORM_PARAMETER
+            platform = FEATURE_FLAG_PLATFORM_PARAMETER,
+            osVersion = android.os.Build.VERSION.RELEASE
         )
         response.featureFlags?.let { configValues ->
             AppLog.e(UTILS, "Feature flag values synced")

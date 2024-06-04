@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.os.Build
 import org.wordpress.android.BuildConfig
 import javax.inject.Inject
 
@@ -33,4 +34,6 @@ class BuildConfigWrapper @Inject constructor() {
     val isFollowedSitesSettingsEnabled = BuildConfig.ENABLE_FOLLOWED_SITES_SETTINGS
 
     val isWhatsNewFeatureEnabled = BuildConfig.ENABLE_WHATS_NEW_FEATURE
+
+    val androidVersion: String = Build.VERSION.RELEASE
 }

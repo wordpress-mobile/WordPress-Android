@@ -15,6 +15,9 @@
         "marketing_version": {
           "matches": "(.*)"
         },
+        "os_version": {
+          "matches": "(.*)"
+        },
         "platform": {
           "matches": "android"
         },
