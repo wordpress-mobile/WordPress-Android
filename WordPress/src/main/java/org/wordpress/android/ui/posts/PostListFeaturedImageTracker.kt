@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -22,8 +23,11 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     https://github.com/wordpress-mobile/WordPress-Android/issues/11487
      */
     @SuppressLint("UseSparseArrays")
-    private val featuredImageMap = HashMap<Long, String>()
-    private val ongoingRequests = HashSet<Long>()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal val featuredImageMap = HashMap<Long, String>()
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal val ongoingRequests = HashSet<Long>()
 
     fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
