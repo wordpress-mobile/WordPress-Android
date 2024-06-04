@@ -1835,6 +1835,6 @@
 
     <style name="AvatarShapeAppearanceOverlay">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/avatar_sz_medium_radius</item>
+        <item name="cornerSize">@dimen/blavatar_sz_radius</item>
     </style>
 </resources>

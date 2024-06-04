@@ -189,6 +189,7 @@
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
+    <dimen name="blavatar_sz_radius">8dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
