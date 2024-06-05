@@ -12,6 +12,7 @@ import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import kotlinx.coroutines.test.TestScope
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -82,6 +83,7 @@ class InAppUpdateManagerImplTest {
 
         inAppUpdateManager = InAppUpdateManagerImpl(
             applicationContext,
+            TestScope(),
             appUpdateManager,
             remoteConfigWrapper,
             buildConfigWrapper,

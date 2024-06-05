@@ -1140,7 +1140,7 @@ public final class AnalyticsTracker {
         IN_APP_UPDATE_SHOWN,
         IN_APP_UPDATE_DISMISSED,
         IN_APP_UPDATE_ACCEPTED,
-        IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART;
+        IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART_BY_USER;
 
         /*
          * Please set the event name in the enum only if the new Stat's name in lower case does not match it.

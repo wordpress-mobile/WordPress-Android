@@ -21,7 +21,7 @@ class InAppUpdateAnalyticsTracker @Inject constructor(
     }
 
     fun trackAppRestartToCompleteUpdate() {
-        tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART)
+        tracker.track(AnalyticsTracker.Stat.IN_APP_UPDATE_COMPLETED_WITH_APP_RESTART_BY_USER)
     }
 
     private fun createPropertyMap(updateType: Int): Map<String, String> {
