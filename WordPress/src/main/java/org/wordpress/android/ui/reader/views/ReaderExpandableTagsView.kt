@@ -19,7 +19,6 @@ import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -33,9 +32,6 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     @Inject
     lateinit var readerTracker: ReaderTracker
-
-    @Inject
-    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     private var tagsUiState: List<TagUiState>? = null
 
@@ -58,7 +54,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         get() = !isChipWithinBounds(overflowIndicatorChip)
 
     private val chipStyle
-        get() = if (readerImprovementsFeatureConfig.isEnabled()) ChipStyle.New else ChipStyle.Legacy
+        get() = ChipStyle.Default
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -200,29 +196,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         @ColorRes
         fun overflowStrokeColorRes(isCollapsed: Boolean): Int? = null
 
-        object Legacy : ChipStyle {
-            override val chipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_chip
-            override val overflowChipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_overflow_chip
-
-            override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                    hiddenChipsCount
-                )
-            }
-
-            override fun overflowBackgroundColorRes(isCollapsed: Boolean): Int {
-                return if (isCollapsed) {
-                    R.color.on_surface_chip
-                } else {
-                    AndroidR.color.transparent
-                }
-            }
-        }
-
-        object New : ChipStyle {
+        object Default : ChipStyle {
             override val chipLayoutRes: Int
                 get() = R.layout.reader_expandable_tags_view_chip_new
             override val overflowChipLayoutRes: Int

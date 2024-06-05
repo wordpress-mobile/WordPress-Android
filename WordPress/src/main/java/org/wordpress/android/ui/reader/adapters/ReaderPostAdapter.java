@@ -67,7 +67,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.NetworkUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.extensions.ContextExtensionsKt;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
@@ -135,7 +134,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
     @Inject ReaderPostMoreButtonUiStateBuilder mReaderPostMoreButtonUiStateBuilder;
     @Inject ReaderTracker mReaderTracker;
-    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
     @Inject ReaderAnnouncementHelper mReaderAnnouncementHelper;
 
     public String getSource() {
@@ -278,20 +276,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                final int layoutRestId = mReaderImprovementsFeatureConfig.isEnabled()
-                        ? R.layout.reader_cardview_xpost_new : R.layout.reader_cardview_xpost;
-                postView = LayoutInflater.from(context).inflate(layoutRestId, parent, false);
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost_new, parent, false);
                 return new ReaderXPostViewHolder(postView);
             case VIEW_TYPE_REMOVED_POST:
-                final int layoutResId = mReaderImprovementsFeatureConfig.isEnabled()
-                        ? R.layout.reader_cardview_removed_post_new : R.layout.reader_cardview_removed_post;
-                postView = LayoutInflater.from(context).inflate(layoutResId, parent, false);
+                postView = LayoutInflater.from(context).inflate(
+                        R.layout.reader_cardview_removed_post_new, parent, false
+                );
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                return mReaderImprovementsFeatureConfig.isEnabled()
-                        ? new ReaderPostNewViewHolder(mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper,
-                        parent)
-                        : new ReaderPostViewHolder(mUiHelpers, mImageManager, mReaderTracker, parent);
+                return new ReaderPostNewViewHolder(
+                        mUiHelpers, mImageManager, mReaderTracker, mNetworkUtilsWrapper, parent
+                );
         }
     }
 

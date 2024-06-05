@@ -74,47 +74,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     @Suppress("LongParameterList")
-    suspend fun mapPostToUiState(
-        source: String,
-        post: ReaderPost,
-        isDiscover: Boolean = false,
-        photonWidth: Int,
-        photonHeight: Int,
-        postListType: ReaderPostListType,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onItemClicked: (Long, Long) -> Unit,
-        onItemRendered: (ReaderCardUiState) -> Unit,
-        onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
-        onMoreDismissed: (ReaderPostUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit,
-        moreMenuItems: List<SecondaryAction>? = null
-    ): ReaderPostUiState {
-        return withContext(bgDispatcher) {
-            mapPostToUiStateBlocking(
-                source,
-                post,
-                isDiscover,
-                photonWidth,
-                photonHeight,
-                postListType,
-                onButtonClicked,
-                onItemClicked,
-                onItemRendered,
-                onDiscoverSectionClicked,
-                onMoreButtonClicked,
-                onMoreDismissed,
-                onVideoOverlayClicked,
-                onPostHeaderViewClicked,
-                onTagItemClicked,
-                moreMenuItems
-            )
-        }
-    }
-
-    @Suppress("LongParameterList")
     fun mapPostToUiStateBlocking(
         source: String,
         post: ReaderPost,
@@ -167,7 +126,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    suspend fun mapPostToNewUiState(
+    suspend fun mapPostToUiState(
         source: String,
         post: ReaderPost,
         photonWidth: Int,
@@ -248,10 +207,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     fun mapPostToBlogSectionUiState(
         post: ReaderPost,
-        isReaderImprovementsEnabled: Boolean,
         onBlogSectionClicked: () -> Unit
     ): ReaderBlogSectionUiState {
-        return buildBlogSection(post, onBlogSectionClicked, isReaderImprovementsEnabled = isReaderImprovementsEnabled)
+        return buildBlogSection(post, onBlogSectionClicked)
     }
 
     fun mapPostToActions(
@@ -315,7 +273,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onBlogSectionClicked: () -> Unit,
         postListType: ReaderPostListType? = null,
         isP2Post: Boolean = false,
-        isReaderImprovementsEnabled: Boolean = false,
     ): ReaderBlogSectionUiState {
         return ReaderBlogSectionUiState(
             postId = post.postId,
@@ -324,7 +281,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             blogUrl = buildBlogUrl(post),
             dateLine = buildDateLine(post),
             avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
-            isAuthorAvatarVisible = isP2Post || (isReaderImprovementsEnabled && post.hasBlogImageUrl()),
+            isAuthorAvatarVisible = isP2Post || post.hasBlogImageUrl(),
             blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
             authorAvatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
                 post.postAvatar,

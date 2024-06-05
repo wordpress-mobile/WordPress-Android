@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewNewBinding
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.image.ImageManager
@@ -45,24 +43,11 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     @Inject
     lateinit var uiHelpers: UiHelpers
 
-    @Inject
-    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
-
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        binding = if (readerImprovementsFeatureConfig.isEnabled()) {
-            val viewBinding = ReaderPostDetailHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true)
-            ReaderPostDetailHeaderBinding.ImprovementsEnabled(
-                viewBinding,
-                uiHelpers
-            )
-        } else {
-            val viewBinding = ReaderPostDetailHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
-            ReaderPostDetailHeaderBinding.ImprovementsDisabled(
-                viewBinding,
-                uiHelpers
-            )
-        }
+        binding = ReaderPostDetailHeaderBinding.ImprovementsEnabled(
+            ReaderPostDetailHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true), uiHelpers
+        )
     }
 
     fun updatePost(
@@ -152,43 +137,6 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         fun setAuthorAndDate(authorName: String?, dateLine: String)
 
         fun updateInteractionSection(state: InteractionSectionUiState, readingPreferences: ReaderReadingPreferences?)
-
-        class ImprovementsDisabled(
-            private val binding: ReaderPostDetailHeaderViewBinding,
-            private val uiHelpers: UiHelpers,
-        ) : ReaderPostDetailHeaderBinding {
-            override val titleText: MaterialTextView
-                get() = binding.textTitle
-            override val blogNameText: MaterialTextView
-                get() = binding.layoutBlogSection.textAuthorAndBlogName
-            override val blogUrlText: MaterialTextView
-                get() = binding.layoutBlogSection.textBlogUrl
-            override val expandableTagsView: ReaderExpandableTagsView
-                get() = binding.expandableTagsView
-            override val blogAvatarImage: ImageView
-                get() = binding.layoutBlogSection.imageAvatarOrBlavatar
-            override val authorAvatarImage: ImageView
-                get() = binding.layoutBlogSection.authorsAvatar
-            override val followButton: ReaderFollowButton
-                get() = binding.headerFollowButton
-            override val blogSectionRoot: ViewGroup
-                get() = binding.layoutBlogSection.root
-
-            override fun setAuthorAndDate(authorName: String?, dateLine: String) = with(binding) {
-                uiHelpers.setTextOrHide(textAuthor, authorName)
-                uiHelpers.setTextOrHide(postDetailTextDateline, dateLine)
-
-                textBy.setVisible(authorName != null)
-                postDetailDotSeparator.setVisible(authorName != null)
-            }
-
-            override fun updateInteractionSection(
-                state: InteractionSectionUiState,
-                readingPreferences: ReaderReadingPreferences?
-            ) {
-                // do nothing
-            }
-        }
 
         class ImprovementsEnabled(
             private val binding: ReaderPostDetailHeaderViewNewBinding,

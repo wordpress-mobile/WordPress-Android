@@ -71,7 +71,6 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -136,9 +135,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     private lateinit var parentViewModel: ReaderViewModel
 
     @Mock
-    private lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
-
-    @Mock
     private lateinit var mReaderAnnouncementHelper: ReaderAnnouncementHelper
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
@@ -163,7 +159,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             readerTracker,
             displayUtilsWrapper,
             getFollowedTagsUseCase,
-            readerImprovementsFeatureConfig,
             mReaderAnnouncementHelper,
             testDispatcher(),
             testDispatcher()
@@ -179,19 +174,16 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             uiStateBuilder.mapPostToUiState(
                 source = anyString(),
                 post = anyOrNull(),
-                isDiscover = anyBoolean(),
                 photonWidth = anyInt(),
                 photonHeight = anyInt(),
                 postListType = anyOrNull(),
                 onButtonClicked = anyOrNull(),
                 onItemClicked = anyOrNull(),
                 onItemRendered = anyOrNull(),
-                onDiscoverSectionClicked = anyOrNull(),
                 onMoreButtonClicked = anyOrNull(),
                 onMoreDismissed = anyOrNull(),
                 onVideoOverlayClicked = anyOrNull(),
                 onPostHeaderViewClicked = anyOrNull(),
-                onTagItemClicked = anyOrNull(),
                 moreMenuItems = anyOrNull()
             )
         ).thenAnswer {
@@ -209,7 +201,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         }
 
         whenever(
-            uiStateBuilder.mapPostToNewUiState(
+            uiStateBuilder.mapPostToUiState(
                 source = anyString(),
                 post = anyOrNull(),
                 photonWidth = anyInt(),
@@ -261,7 +253,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList().apply { add(mock()) })
-        whenever(readerImprovementsFeatureConfig.isEnabled()).thenReturn(false)
     }
 
     @Test
@@ -396,7 +387,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     @Test
     fun `if ReaderPostCard exist then ReaderPostNewUiState will be present in the ContentUIState`() = test {
         // Arrange
-        whenever(readerImprovementsFeatureConfig.isEnabled()).thenReturn(true)
         val uiStates = init(autoUpdateFeed = false).uiStates
         // Act
         fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())

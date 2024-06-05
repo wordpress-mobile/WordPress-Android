@@ -12,7 +12,6 @@ import org.wordpress.android.databinding.ReaderTagHeaderViewNewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleProvider
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
 
 /**
@@ -29,31 +28,20 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     lateinit var uiHelpers: UiHelpers
 
     @Inject
-    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
-
-    @Inject
     lateinit var localeProvider: LocaleProvider
 
     private var onFollowBtnClicked: (() -> Unit)? = null
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        binding = if (readerImprovementsFeatureConfig.isEnabled()) {
-            val readerTagHeaderViewNewBinding =
-                ReaderTagHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true)
+        val readerTagHeaderViewNewBinding =
+            ReaderTagHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true)
+        binding =
             ReaderTagBinding.ImprovementsEnabled(
                 textTag = readerTagHeaderViewNewBinding.textTag,
                 followButton = readerTagHeaderViewNewBinding.followContainer.followButton,
                 textTagFollowCount = readerTagHeaderViewNewBinding.followContainer.textBlogFollowCount,
             )
-        } else {
-            val readerTagHeaderViewBinding =
-                ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
-            ReaderTagBinding.ImprovementsDisabled(
-                textTag = readerTagHeaderViewBinding.textTag,
-                followButton = readerTagHeaderViewBinding.followButton,
-            )
-        }
         binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
 

@@ -10,11 +10,9 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiSt
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderAnnouncementCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardNewViewHolder
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardNewViewHolder
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.HideItemDivider
@@ -33,7 +31,6 @@ class ReaderDiscoverAdapter(
     private val imageManager: ImageManager,
     private val readerTracker: ReaderTracker,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val isReaderImprovementsEnabled: Boolean,
 ) : Adapter<ReaderViewHolder<*>>() {
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
@@ -47,24 +44,9 @@ class ReaderDiscoverAdapter(
                 parent
             )
 
-            INTEREST_VIEW_TYPE -> {
-                if (isReaderImprovementsEnabled) {
-                    ReaderInterestsCardNewViewHolder(uiHelpers, parent)
-                } else {
-                    ReaderInterestsCardViewHolder(uiHelpers, parent)
-                }
-            }
+            INTEREST_VIEW_TYPE -> ReaderInterestsCardNewViewHolder(uiHelpers, parent)
 
-            RECOMMENDED_BLOGS_VIEW_TYPE ->
-                if (isReaderImprovementsEnabled) {
-                    ReaderRecommendedBlogsCardNewViewHolder(
-                        parent, imageManager
-                    )
-                } else {
-                    ReaderRecommendedBlogsCardViewHolder(
-                        parent, imageManager, uiHelpers
-                    )
-                }
+            RECOMMENDED_BLOGS_VIEW_TYPE -> ReaderRecommendedBlogsCardNewViewHolder(parent, imageManager)
 
             READER_ANNOUNCEMENT_TYPE -> ReaderAnnouncementCardViewHolder(parent)
 
@@ -75,15 +57,13 @@ class ReaderDiscoverAdapter(
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ReaderViewHolder<*>, position: Int) {
-        if (isReaderImprovementsEnabled) {
-            // hide the item divider by setting the HideItemDivider object as view tag, which is used by the
-            // DividerItemDecorator to skip drawing the bottom divider for the item. It should be hidden for any
-            // recommendation cards and cards above them.
-            val nextPosition = position + 1
-            val shouldHideDivider = isRecommendationCard(position) ||
-                    (nextPosition < itemCount && isRecommendationCard(nextPosition))
-            holder.itemView.tag = HideItemDivider.takeIf { shouldHideDivider }
-        }
+        // hide the item divider by setting the HideItemDivider object as view tag, which is used by the
+        // DividerItemDecorator to skip drawing the bottom divider for the item. It should be hidden for any
+        // recommendation cards and cards above them.
+        val nextPosition = position + 1
+        val shouldHideDivider = isRecommendationCard(position) ||
+                (nextPosition < itemCount && isRecommendationCard(nextPosition))
+        holder.itemView.tag = HideItemDivider.takeIf { shouldHideDivider }
 
         holder.onBind(items[position])
     }

@@ -1305,7 +1305,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         postListType: ReaderPostListType = TAG_FOLLOWED,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
     ): ReaderPostNewUiState {
-        return builder.mapPostToNewUiState(
+        return builder.mapPostToUiState(
             source = "source",
             post = post,
             photonWidth = 0,
