@@ -16,40 +16,7 @@ If you're a developer wanting to contribute, read on.
 
 Notes:
 
-* To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the [OAuth2 Authentication](#oauth2-authentication) section.
 * While loading/building the app in Android Studio ignore the prompt to update the gradle plugin version as that will probably introduce build errors. On the other hand, feel free to update if you are planning to work on ensuring the compatibility of the newer version.
-
-
-## OAuth2 Authentication ##
-
-In order to use WordPress.com functions you will need a client ID and
-a client secret key. These details will be used to authenticate your
-application and verify that the API calls being made are valid. You can
-create an application or view details for your existing applications with
-our [WordPress.com applications manager][5].
-
-When creating your application, you should select "Native client" for the application type.
-The "**Website URL**", "**Redirect URLs**", and "**Javascript Origins**" fields are required but not used for
-the mobile apps. Just use "**[https://localhost](https://localhost)**".
-
-Once you've created your application in the [applications manager][5], you'll
-need to edit the `./gradle.properties` file and change the
-`wp.oauth.app_id` and `wp.oauth.app_secret` fields. Then you can compile and
-run the app on a device or an emulator and try to login with a WordPress.com
-account. Note that authenticating to WordPress.com via Google is not supported
-in development builds of the app, only in the official release.
-
-Note that credentials created with our [WordPress.com applications manager][5]
-allow login only and not signup. New accounts must be created using the [official app][1]
-or [on the web](https://wordpress.com/start). Login is restricted to the WordPress.com
-account with which the credentials were created. In other words, if the credentials
-were created with foo@email.com, you will only be able to login with foo@email.com.
-Using another account like bar@email.com will cause the `Client cannot use "password" grant_type` error.
-
-For security reasons, some account-related actions aren't supported for development
-builds when using a WordPress.com account with 2-factor authentication enabled.
-
-Read more about [OAuth2][6] and the [WordPress.com REST endpoint][7].
 
 ## Build and Test ##
 
@@ -60,6 +27,13 @@ To build, install, and test the project from the command line:
                                                                      # emulator or an Android device connected
     $ ./gradlew :WordPress:testWordPressVanillaDebugUnitTest         # assemble, install and run unit tests
     $ ./gradlew :WordPress:connectedWordPressVanillaDebugAndroidTest # assemble, install and run Android tests
+
+## Running the app ##
+
+You can use your own WordPress site for developing and testing the app. If you don't have one, you can create a temporary test site for free at https://jurassic.ninja/.
+On the app start up screen, choose "Enter your existing site address" and enter the URL of your site and your credentials.
+
+Note: Access to WordPress.com features is temporarily disabled in the development environment.
 
 ## Directory structure ##
     .

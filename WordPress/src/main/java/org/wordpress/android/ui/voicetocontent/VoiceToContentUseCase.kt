@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -35,6 +36,11 @@ class VoiceToContentUseCase @Inject constructor(
                     transcriptionResponse.model
                 }
                 is JetpackAITranscriptionResponse.Error -> {
+                    val message = "${transcriptionResponse.type} ${transcriptionResponse.message}"
+                    Log.i(
+                        javaClass.simpleName,
+                        "Error transcribing audio file: $message"
+                    )
                     null
                 }
             }
