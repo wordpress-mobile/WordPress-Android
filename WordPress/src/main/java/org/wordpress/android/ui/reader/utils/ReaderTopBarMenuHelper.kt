@@ -55,7 +55,20 @@ class ReaderTopBarMenuHelper @Inject constructor(
                 .takeIf { it.isNotEmpty() }
                 ?.let { customListsArray ->
                     add(MenuElementData.Divider)
-                    add(createCustomListsItem(customListsArray))
+                    if (customListsArray.size() > 2) {
+                        // If custom lists has more than 2 items, we add a submenu called "Lists"
+                        add(createCustomListsItem(customListsArray))
+                    } else {
+                        // If the custom lists has 2 or less items, we add the items directly without submenu
+                        customListsArray.forEach { index, readerTag ->
+                            add(
+                                MenuElementData.Item.Single(
+                                    id = getMenuItemIdFromReaderTagIndex(index),
+                                    text = UiString.UiStringText(readerTag.tagTitle),
+                                )
+                            )
+                        }
+                    }
                 }
         }
     }
