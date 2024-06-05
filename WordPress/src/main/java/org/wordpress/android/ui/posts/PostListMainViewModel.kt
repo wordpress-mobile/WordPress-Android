@@ -41,6 +41,7 @@ import org.wordpress.android.ui.posts.PostListType.TRASHED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -54,6 +55,9 @@ import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.viewmodel.posts.PostFetcher
 import org.wordpress.android.viewmodel.posts.PostListItemIdentifier.LocalPostId
 import org.wordpress.android.viewmodel.posts.PostListViewModelConnector
+import rs.wordpress.api.kotlin.WpApiClient
+import rs.wordpress.api.kotlin.WpRequestSuccess
+import uniffi.wp_api.wpAuthenticationFromUsernameAndPassword
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -305,6 +309,33 @@ class PostListMainViewModel @Inject constructor(
         }
 
         isStarted = true
+
+        fetchDemoUserFromRust()
+    }
+
+    private fun fetchDemoUserFromRust() {
+        // This is an empty test site that'll be destroyed in a few days.
+        val siteUrl = "https://loudly-special.jurassic.ninja/"
+        val authentication = wpAuthenticationFromUsernameAndPassword(
+            username = "demo", password = "50uB 6ivM b7OC vc1K GXjh zZsI"
+        )
+        val client = WpApiClient(siteUrl, authentication)
+        launch {
+            val demoUser = client.request { requestBuilder ->
+                requestBuilder.users().retrieveMeWithEditContext()
+            }
+            when (demoUser) {
+                is WpRequestSuccess -> {
+                    withContext(mainDispatcher) {
+                        _snackBarMessage.value =
+                            SnackbarMessageHolder(
+                                message = UiString.UiStringText("Demo user's name: ${demoUser.data.name}")
+                            )
+                    }
+                }
+                else -> {}
+            }
+        }
     }
 
     override fun onCleared() {

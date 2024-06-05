@@ -41,6 +41,7 @@ repositories {
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroup "rs.wordpress.api"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
@@ -350,6 +351,10 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
+    implementation('rs.wordpress.api:android:0.1-rc-9') {
+        exclude group: "net.java.dev.jna"
+    }
+    implementation 'net.java.dev.jna:jna:5.13.0@aar'
     implementation 'androidx.webkit:webkit:1.11.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
