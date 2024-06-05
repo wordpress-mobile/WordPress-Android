@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -34,13 +35,13 @@ public abstract class BlockProcessor {
 
     @NonNull String mLocalId;
     String mRemoteId;
-    String mRemoteUrl;
-    String mRemoteGuid;
+    @NonNull String mRemoteUrl;
+    @Nullable String mRemoteGuid;
 
-    private String mBlockName;
-    private JsonObject mJsonAttributes;
-    private Document mBlockContentDocument;
-    private String mClosingComment;
+    @Nullable private String mBlockName;
+    @Nullable private JsonObject mJsonAttributes;
+    @Nullable private Document mBlockContentDocument;
+    @Nullable private String mClosingComment;
 
 
     /**
