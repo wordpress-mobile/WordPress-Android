@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class MediaTextBlockProcessor extends BlockProcessor {
-    public MediaTextBlockProcessor(String localId, @NonNull MediaFile mediaFile) {
+    public MediaTextBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile) {
         super(localId, mediaFile);
     }
 

@@ -35,7 +35,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
             .append("(.*)") // inner block contents
             .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
 
-    public GalleryBlockProcessor(String localId, @NonNull MediaFile mediaFile, String siteUrl,
+    public GalleryBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl,
                                  MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;

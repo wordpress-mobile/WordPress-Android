@@ -21,7 +21,7 @@ public class MediaUploadCompletionProcessor {
      * @param mediaFile The mediaFile containing the remote id and remote url
      * @param siteUrl The site url - used to generate the attachmentPage url
      */
-    public MediaUploadCompletionProcessor(String localId, @NonNull MediaFile mediaFile, String siteUrl) {
+    public MediaUploadCompletionProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl) {
         mBlockProcessorFactory = new BlockProcessorFactory(this)
                 .init(localId, mediaFile, siteUrl);
     }

@@ -11,7 +11,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 
 public class ImageBlockProcessor extends BlockProcessor {
-    public ImageBlockProcessor(String localId, @NonNull MediaFile mediaFile) {
+    public ImageBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile) {
         super(localId, mediaFile);
     }
 

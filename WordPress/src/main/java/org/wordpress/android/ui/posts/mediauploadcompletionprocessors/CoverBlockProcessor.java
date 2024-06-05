@@ -31,7 +31,7 @@ public class CoverBlockProcessor extends BlockProcessor {
 
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
 
-    public CoverBlockProcessor(String localId, @NonNull MediaFile mediaFile,
+    public CoverBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile,
                                MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;

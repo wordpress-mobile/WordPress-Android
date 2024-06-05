@@ -32,7 +32,7 @@ public abstract class BlockProcessor {
 //            https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
             .prettyPrint(false);
 
-    String mLocalId;
+    @NonNull String mLocalId;
     String mRemoteId;
     String mRemoteUrl;
     String mRemoteGuid;
@@ -47,7 +47,7 @@ public abstract class BlockProcessor {
      * @param localId The local media id that needs replacement
      * @param mediaFile The mediaFile containing the remote id and remote url
      */
-    BlockProcessor(String localId, @NonNull MediaFile mediaFile) {
+    BlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile) {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile
