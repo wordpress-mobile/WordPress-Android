@@ -160,7 +160,7 @@ public abstract class BlockProcessor {
      * @param document The document to be mutated to make the necessary replacements
      * @return A boolean value indicating whether or not the block contents should be replaced
      */
-    abstract boolean processBlockContentDocument(Document document);
+    abstract boolean processBlockContentDocument(@Nullable Document document);
 
     /**
      * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
@@ -173,7 +173,7 @@ public abstract class BlockProcessor {
      * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
      * @return
      */
-    abstract boolean processBlockJsonAttributes(JsonObject jsonAttributes);
+    abstract boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes);
 
     /**
      * This method can be optionally overriden by concrete implementations to delegate further processing via recursion

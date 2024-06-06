@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -47,7 +48,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override boolean processBlockContentDocument(@Nullable Document document) {
         // select image element with our local id
         Element targetImg = document.select(mGalleryImageQuerySelector).first();
 
@@ -85,7 +86,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {

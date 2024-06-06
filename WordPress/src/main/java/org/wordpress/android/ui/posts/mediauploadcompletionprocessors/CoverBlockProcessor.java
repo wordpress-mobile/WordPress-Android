@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -55,7 +56,7 @@ public class CoverBlockProcessor extends BlockProcessor {
         return block;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
             addIntPropertySafely(jsonAttributes, "id", mRemoteId);
@@ -72,7 +73,7 @@ public class CoverBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override boolean processBlockContentDocument(@Nullable Document document) {
         // select cover block div
         Element targetDiv = document.selectFirst(".wp-block-cover");
 

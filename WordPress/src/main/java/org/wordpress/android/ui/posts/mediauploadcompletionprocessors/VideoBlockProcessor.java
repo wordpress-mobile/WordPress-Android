@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,7 +15,7 @@ public class VideoBlockProcessor extends BlockProcessor {
         super(localId, mediaFile);
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override boolean processBlockContentDocument(@Nullable Document document) {
         // select video element with our local id
         Element targetVideo = document.select("video").first();
 
@@ -30,7 +31,7 @@ public class VideoBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
             addIntPropertySafely(jsonAttributes, "id", mRemoteId);
