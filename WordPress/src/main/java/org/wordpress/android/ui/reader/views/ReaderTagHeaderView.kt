@@ -7,7 +7,6 @@ import android.widget.RelativeLayout
 import androidx.core.view.isGone
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
 import org.wordpress.android.databinding.ReaderTagHeaderViewNewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers

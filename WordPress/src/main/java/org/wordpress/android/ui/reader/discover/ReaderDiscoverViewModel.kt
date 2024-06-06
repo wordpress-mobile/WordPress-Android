@@ -20,7 +20,6 @@ import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.C
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -243,8 +242,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                     onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
                     onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
                     onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClickedNew,
-                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissedNew,
+                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
                     onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
                     onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
                 )
@@ -363,13 +362,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onTagItemClicked(tagSlug: String) {
-        launch(ioDispatcher) {
-            val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
-            _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
-        }
-    }
-
     private fun onPostItemClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
@@ -435,39 +427,15 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir: add on discover clicked listener
     }
 
-    private fun onMoreButtonClicked(postUiState: ReaderPostUiState) {
+    private fun onMoreButtonClicked(postUiState: ReaderPostNewUiState) {
         changeMoreMenuVisibility(postUiState, true)
     }
 
-    private fun onMoreMenuDismissed(postUiState: ReaderPostUiState) {
+    private fun onMoreMenuDismissed(postUiState: ReaderPostNewUiState) {
         changeMoreMenuVisibility(postUiState, false)
     }
 
-    private fun changeMoreMenuVisibility(currentUiState: ReaderPostUiState, show: Boolean) {
-        launch {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                val moreMenuItems = if (show) {
-                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post, false, this@ReaderDiscoverViewModel::onButtonClicked
-                    )
-                } else {
-                    null
-                }
-
-                replaceUiStateItem(currentUiState, currentUiState.copy(moreMenuItems = moreMenuItems))
-            }
-        }
-    }
-
-    private fun onMoreButtonClickedNew(postUiState: ReaderPostNewUiState) {
-        changeMoreMenuVisibilityNew(postUiState, true)
-    }
-
-    private fun onMoreMenuDismissedNew(postUiState: ReaderPostNewUiState) {
-        changeMoreMenuVisibilityNew(postUiState, false)
-    }
-
-    private fun changeMoreMenuVisibilityNew(currentUiState: ReaderPostNewUiState, show: Boolean) {
+    private fun changeMoreMenuVisibility(currentUiState: ReaderPostNewUiState, show: Boolean) {
         launch {
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
