@@ -88,4 +88,14 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium_large"
         android:text="@string/login_done" />
+
+    <!--
+        This is need to prevent a crash because is defined in LoginBaseFormFragment.setupLabel as not null.
+        With the Kotlin migration of SignupEpilogueFragment, this is will be needed until we update the code in the login library.
+    -->
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"/>
 </LinearLayout>

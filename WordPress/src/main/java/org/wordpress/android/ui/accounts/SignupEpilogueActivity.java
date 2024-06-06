@@ -48,7 +48,7 @@ public class SignupEpilogueActivity extends LocaleAwareActivity implements Signu
 
     protected void addSignupEpilogueFragment(String name, String email, String photoUrl, String username,
                                              boolean isEmail) {
-        SignupEpilogueFragment signupEpilogueSocialFragment = SignupEpilogueFragment.newInstance(
+        SignupEpilogueFragment signupEpilogueSocialFragment = SignupEpilogueFragment.Companion.newInstance(
                 name, email, photoUrl, username, isEmail);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, signupEpilogueSocialFragment, SignupEpilogueFragment.TAG);
