@@ -196,11 +196,11 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         @ColorRes
         fun overflowStrokeColorRes(isCollapsed: Boolean): Int? = null
 
-        object Default : ChipStyle {
+        data object Default : ChipStyle {
             override val chipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_chip_new
+                get() = R.layout.reader_expandable_tags_view_chip
             override val overflowChipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_overflow_chip_new
+                get() = R.layout.reader_expandable_tags_view_overflow_chip
 
             override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
                 return String.format(

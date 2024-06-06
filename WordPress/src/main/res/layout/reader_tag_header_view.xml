@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ReaderCardView"
+    style="@style/ReaderCardViewNew"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,29 +11,25 @@
         android:id="@+id/layout_tag_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/reader_tag_header_horizontal_padding"
-        android:paddingEnd="@dimen/reader_tag_header_horizontal_padding"
-        android:paddingTop="@dimen/reader_tag_header_vertical_padding"
-        android:paddingBottom="@dimen/reader_tag_header_vertical_padding">
+        android:padding="@dimen/margin_extra_large">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_tag"
-            style="@style/ReaderTextView.Tag.Header.Title"
-            android:layout_width="wrap_content"
+            style="@style/ReaderTextView.Tag.Header.NewTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/follow_button"
+            app:layout_constraintBottom_toTopOf="@+id/follow_container"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="text_tag" />
+            tools:text="Lorem ipsum dolor sit amet" />
 
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/follow_container"
+            layout="@layout/reader_header_follow_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"
-            style="@style/Reader.Follow.Button.New"
+            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

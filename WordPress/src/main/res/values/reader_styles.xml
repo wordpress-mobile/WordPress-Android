@@ -423,21 +423,7 @@
         <item name="rippleColor">@color/reader_interest_filter_chip_ripple_selector</item>
     </style>
 
-    <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChip">
-        <item name="android:checkable">false</item>
-        <item name="chipMinHeight">@dimen/reader_expandable_tags_view_chip_height</item>
-        <item name="chipStartPadding">@dimen/margin_medium</item>
-        <item name="chipEndPadding">@dimen/margin_medium</item>
-        <item name="textStartPadding">0dp</item>
-        <item name="textEndPadding">0dp</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="ensureMinTouchTargetSize">false</item>
-        <item name="chipCornerRadius">@dimen/reader_expandable_tags_view_chip_radius</item>
-        <item name="chipBackgroundColor">@color/on_surface_chip</item>
-    </style>
-
-    <style name="ReaderExpandableTagsViewChipNew" parent="@style/ReaderChipNew">
+    <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChipNew">
         <item name="android:checkable">false</item>
         <item name="chipMinHeight">@dimen/reader_expandable_tags_view_chip_new_height</item>
         <item name="chipStartPadding">@dimen/margin_extra_large</item>
@@ -452,7 +438,7 @@
         <item name="chipStrokeWidth">@dimen/reader_expandable_tags_view_chip_new_border</item>
     </style>
 
-    <style name="ReaderExpandableTagsViewChipInterestNew" parent="@style/ReaderExpandableTagsViewChipNew">
+    <style name="ReaderExpandableTagsViewChipInterest" parent="@style/ReaderExpandableTagsViewChip">
         <item name="android:textColor">@color/material_on_background_emphasis_high_type</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="chipBackgroundColor">@color/reader_you_might_like_background</item>

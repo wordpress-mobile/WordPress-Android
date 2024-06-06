@@ -82,7 +82,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        final View view = inflate(context, R.layout.reader_site_header_view_new, this);
+        final View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }

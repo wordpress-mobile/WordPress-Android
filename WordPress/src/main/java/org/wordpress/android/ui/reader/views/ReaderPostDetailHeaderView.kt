@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderPostDetailHeaderViewNewBinding
+import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.toTypeface
@@ -46,7 +46,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     init {
         (context.applicationContext as WordPress).component().inject(this)
         binding = ReaderPostDetailHeaderBinding.ImprovementsEnabled(
-            ReaderPostDetailHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true), uiHelpers
+            ReaderPostDetailHeaderViewBinding.inflate(LayoutInflater.from(context), this, true), uiHelpers
         )
     }
 
@@ -139,7 +139,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         fun updateInteractionSection(state: InteractionSectionUiState, readingPreferences: ReaderReadingPreferences?)
 
         class ImprovementsEnabled(
-            private val binding: ReaderPostDetailHeaderViewNewBinding,
+            private val binding: ReaderPostDetailHeaderViewBinding,
             private val uiHelpers: UiHelpers,
         ) : ReaderPostDetailHeaderBinding {
             override val titleText: MaterialTextView

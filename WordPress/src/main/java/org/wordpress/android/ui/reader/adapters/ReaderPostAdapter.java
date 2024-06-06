@@ -280,7 +280,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new ReaderXPostViewHolder(postView);
             case VIEW_TYPE_REMOVED_POST:
                 postView = LayoutInflater.from(context).inflate(
-                        R.layout.reader_cardview_removed_post_new, parent, false
+                        R.layout.reader_cardview_removed_post, parent, false
                 );
                 return new ReaderRemovedPostViewHolder(postView);
             default:

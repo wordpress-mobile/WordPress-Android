@@ -7,7 +7,7 @@ import android.widget.RelativeLayout
 import androidx.core.view.isGone
 import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.WordPress
-import org.wordpress.android.databinding.ReaderTagHeaderViewNewBinding
+import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleProvider
@@ -33,13 +33,13 @@ class ReaderTagHeaderView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        val readerTagHeaderViewNewBinding =
-            ReaderTagHeaderViewNewBinding.inflate(LayoutInflater.from(context), this, true)
+        val readerTagHeaderViewBinding =
+            ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
         binding =
             ReaderTagBinding.ImprovementsEnabled(
-                textTag = readerTagHeaderViewNewBinding.textTag,
-                followButton = readerTagHeaderViewNewBinding.followContainer.followButton,
-                textTagFollowCount = readerTagHeaderViewNewBinding.followContainer.textBlogFollowCount,
+                textTag = readerTagHeaderViewBinding.textTag,
+                followButton = readerTagHeaderViewBinding.followContainer.followButton,
+                textTagFollowCount = readerTagHeaderViewBinding.followContainer.textBlogFollowCount,
             )
         binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }

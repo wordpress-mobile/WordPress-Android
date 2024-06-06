@@ -62,7 +62,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
-import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
+import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -479,10 +479,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun initLayoutFooter(view: View) {
         view.findViewById<ViewStub>(R.id.layout_post_detail_footer).apply {
-            layoutResource = R.layout.reader_include_post_detail_footer_new
+            layoutResource = R.layout.reader_include_post_detail_footer
 
             setOnInflateListener { _, inflated ->
-                layoutFooterBinding = ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                layoutFooterBinding = ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
                         // the new bar should hide on scroll
                         val params = root.layoutParams as CoordinatorLayout.LayoutParams
                         params.behavior = HideBottomViewOnScrollBehavior<View>()
@@ -1868,7 +1868,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val like: View,
     )
 
-    private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
+    private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
         PostDetailFooterBarBinding(
             root,
             bookmark,
