@@ -15,13 +15,9 @@ import org.wordpress.android.util.helpers.MediaFile
 abstract class BlockProcessor internal constructor(@JvmField var mLocalId: String, mediaFile: MediaFile) {
     @JvmField
     var mRemoteId: String = mediaFile.mediaId
+
     @JvmField
-    var mRemoteUrl: String = StringUtils.notNullStr(
-        Utils.escapeQuotes(
-            mediaFile
-                .optimalFileURL
-        )
-    )
+    var mRemoteUrl: String = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.optimalFileURL))
     var mRemoteGuid: String? = mediaFile.videoPressGuid
 
     private var mBlockName: String? = null
@@ -39,27 +35,29 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
     }
 
     private fun splitBlock(block: String, isSelfClosingTag: Boolean): Boolean {
-        val captures =
-            (if (isSelfClosingTag) MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES else MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES
-                    ).matcher(block)
+        val pattern = if (isSelfClosingTag) {
+            MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES
+        } else {
+            MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES
+        }
+        val captures = pattern.matcher(block)
 
-        val capturesGroup2 = captures.group(2)
-        val capturesGroup3 = captures.group(3)
+        val jsonJsonAttributes = captures.group(GROUP_JSON_ATTRIBUTES)
+        val jsonBlockContentDocument = captures.group(GROUP_BLOCK_CONTENT_DOCUMENT)
         val capturesFound = captures.find()
 
-
-        if (capturesFound && capturesGroup2 != null && capturesGroup3 != null) {
-            mBlockName = captures.group(1)
-            mJsonAttributes = parseJson(capturesGroup2)
-            mBlockContentDocument = if (isSelfClosingTag) null else parseHTML(capturesGroup3)
-            mClosingComment = if (isSelfClosingTag) null else captures.group(4)
-            return true
+        return if (capturesFound && jsonJsonAttributes != null && jsonBlockContentDocument != null) {
+            mBlockName = captures.group(GROUP_BLOCK_NAME)
+            mJsonAttributes = parseJson(jsonJsonAttributes)
+            mBlockContentDocument = if (isSelfClosingTag) null else parseHTML(jsonBlockContentDocument)
+            mClosingComment = if (isSelfClosingTag) null else captures.group(GROUP_CLOSING_COMMENT)
+            true
         } else {
             mBlockName = null
             mJsonAttributes = null
             mBlockContentDocument = null
             mClosingComment = null
-            return false
+            false
         }
     }
 
@@ -73,46 +71,40 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
      */
     @JvmOverloads
     fun processBlock(block: String, isSelfClosingTag: Boolean = false): String {
-        if (splitBlock(block, isSelfClosingTag)) {
-            if (processBlockJsonAttributes(mJsonAttributes)) {
-                if (isSelfClosingTag) {
-                    // return injected block
-                    return StringBuilder()
-                        .append("<!-- wp:")
-                        .append(mBlockName)
-                        .append(" ")
-                        .append(mJsonAttributes) // json parser output
-                        .append(" /-->")
-                        .toString()
-                } else if (processBlockContentDocument(mBlockContentDocument)) {
-                    // return injected block
-                    return StringBuilder()
-                        .append("<!-- wp:")
-                        .append(mBlockName)
-                        .append(" ")
-                        .append(mJsonAttributes) // json parser output
-                        .append(" -->\n")
-                        .append(mBlockContentDocument!!.body().html()) // HTML parser output
-                        .append(mClosingComment)
-                        .toString()
-                }
-            } else {
-                return processInnerBlock(block) // delegate to inner blocks if needed
-            }
+        val splitBLockResult = splitBlock(block, isSelfClosingTag)
+        val processBlockJsonAttributesResult = processBlockJsonAttributes(mJsonAttributes)
+        return when {
+            splitBLockResult && processBlockJsonAttributesResult && isSelfClosingTag ->
+                // return injected block
+                StringBuilder()
+                    .append("<!-- wp:")
+                    .append(mBlockName)
+                    .append(" ")
+                    .append(mJsonAttributes) // json parser output
+                    .append(" /-->")
+                    .toString()
+
+            splitBLockResult && processBlockJsonAttributesResult && !isSelfClosingTag ->
+                // return injected block
+                StringBuilder()
+                    .append("<!-- wp:")
+                    .append(mBlockName)
+                    .append(" ")
+                    .append(mJsonAttributes) // json parser output
+                    .append(" -->\n")
+                    .append(mBlockContentDocument!!.body().html()) // HTML parser output
+                    .append(mClosingComment)
+                    .toString()
+
+            splitBLockResult -> processInnerBlock(block) // delegate to inner blocks if needed
+            else -> block // leave block unchanged
         }
-        // leave block unchanged
-        return block
     }
 
-    fun addIntPropertySafely(
-        jsonAttributes: JsonObject, propertyName: String,
-        value: String
-    ) {
-        try {
-            jsonAttributes.addProperty(propertyName, value.toInt())
-        } catch (e: NumberFormatException) {
-            AppLog.e(AppLog.T.MEDIA, e.message)
-        }
+    fun addIntPropertySafely(jsonAttributes: JsonObject, propertyName: String, value: String) = try {
+        jsonAttributes.addProperty(propertyName, value.toInt())
+    } catch (e: NumberFormatException) {
+        AppLog.e(AppLog.T.MEDIA, e.message)
     }
 
     /**
@@ -129,8 +121,8 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
 
     /**
      * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
-     * is a [JsonObject] parsed from the block header attributes. This object can be used to check for a match,
-     * and can be directly mutated if necessary.<br></br>
+     * is a [JsonObject] parsed from the block header attributes. This object can be used to check for a match, and can
+     * be directly mutated if necessary.<br></br>
      * <br></br>
      * This method should return true to indicate success. Returning false will result in the block contents being
      * unmodified.
@@ -141,29 +133,32 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
     abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean
 
     /**
-     * This method can be optionally overriden by concrete implementations to delegate further processing via recursion
-     * when [BlockProcessor.processBlockJsonAttributes] returns false (i.e. the block did not match
-     * the local id being replaced). This is useful for implementing mutual recursion with
-     * [MediaUploadCompletionProcessor.processContent] for block types that have media-containing blocks
-     * within their inner content.<br></br>
+     * This method can be optionally overridden by concrete implementations to delegate further processing via recursion
+     * when [BlockProcessor.processBlockJsonAttributes] returns false (i.e. the block did not match the local id being
+     * replaced). This is useful for implementing mutual recursion with
+     * [MediaUploadCompletionProcessor.processContent] for block types that have media-containing blocks within their
+     * inner content.<br></br>
      * <br></br>
      * The default implementation provided is a NOOP that leaves the content of the block unchanged.
      *
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    open fun processInnerBlock(block: String): String {
-        return block
-    }
+    open fun processInnerBlock(block: String) = block
 
     companion object {
         /**
          * HTML output used by the parser
          */
         val OUTPUT_SETTINGS: Document.OutputSettings = Document.OutputSettings()
-            .outline(false) //          .syntax(Syntax.xml)
-            //            Do we want xml or html here (e.g. self closing tags, boolean attributes)?
-            //            https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
+            .outline(false)
+//          .syntax(Syntax.xml)
+//          Do we want xml or html here (e.g. self closing tags, boolean attributes)?
+//          https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
             .prettyPrint(false)
+        private const val GROUP_BLOCK_NAME = 1
+        private const val GROUP_JSON_ATTRIBUTES = 2
+        private const val GROUP_BLOCK_CONTENT_DOCUMENT = 3
+        private const val GROUP_CLOSING_COMMENT = 4
     }
 }
