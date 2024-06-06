@@ -29,10 +29,7 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
     private var mBlockContentDocument: Document? = null
     private var mClosingComment: String? = null
 
-    private fun parseJson(blockJson: String): JsonObject {
-        val parser = JsonParser()
-        return parser.parse(blockJson).asJsonObject
-    }
+    private fun parseJson(blockJson: String) = JsonParser.parseString(blockJson).asJsonObject
 
     private fun parseHTML(blockContent: String): Document {
         // create document from block content
