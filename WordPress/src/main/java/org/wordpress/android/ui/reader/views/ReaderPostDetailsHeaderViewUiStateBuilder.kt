@@ -64,7 +64,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
-            readerImprovementsFeatureConfig.isEnabled(),
             onBlogSectionClicked
         )
     }

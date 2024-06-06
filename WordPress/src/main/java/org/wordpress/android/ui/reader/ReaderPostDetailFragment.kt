@@ -63,7 +63,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
-import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
 import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
@@ -1869,15 +1868,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val comment: View,
         val like: View,
     )
-
-    private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
-        PostDetailFooterBarBinding(
-            root,
-            bookmark,
-            reblog,
-            countComments,
-            countLikes,
-        )
 
     private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
         PostDetailFooterBarBinding(

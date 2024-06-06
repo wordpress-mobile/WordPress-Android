@@ -167,7 +167,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         chipStyle.overflowBackgroundColorRes(isSingleLine)?.let { chipBackgroundColorRes ->
             overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
         }
-        chipStyle.overflowStrokeColorRes(isSingleLine)?.let { chipStrokeColorRes ->
+        chipStyle.overflowStrokeColorRes(isSingleLine).let { chipStrokeColorRes ->
             overflowIndicatorChip.setChipStrokeColorResource(chipStrokeColorRes)
         }
     }
