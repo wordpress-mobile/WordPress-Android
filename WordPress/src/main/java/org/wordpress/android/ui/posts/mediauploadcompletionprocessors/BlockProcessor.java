@@ -34,7 +34,7 @@ public abstract class BlockProcessor {
             .prettyPrint(false);
 
     @NonNull String mLocalId;
-    String mRemoteId;
+    @NonNull String mRemoteId;
     @NonNull String mRemoteUrl;
     @Nullable String mRemoteGuid;
 
@@ -56,29 +56,34 @@ public abstract class BlockProcessor {
         mRemoteGuid = mediaFile.getVideoPressGuid();
     }
 
-    private JsonObject parseJson(String blockJson) {
+    @NonNull
+    private JsonObject parseJson(@NonNull String blockJson) {
         JsonParser parser = new JsonParser();
         return parser.parse(blockJson).getAsJsonObject();
     }
 
-    private Document parseHTML(String blockContent) {
+    @NonNull
+    private Document parseHTML(@NonNull String blockContent) {
         // create document from block content
         Document document = Jsoup.parse(blockContent);
         document.outputSettings(OUTPUT_SETTINGS);
         return document;
     }
 
-    private boolean splitBlock(String block, Boolean isSelfClosingTag) {
+    private boolean splitBlock(@NonNull String block, @NonNull Boolean isSelfClosingTag) {
         Matcher captures = (
                 isSelfClosingTag ? PATTERN_SELF_CLOSING_BLOCK_CAPTURES : PATTERN_BLOCK_CAPTURES
         ).matcher(block);
 
+        String capturesGroup2 = captures.group(2);
+        String capturesGroup3 = captures.group(3);
         boolean capturesFound = captures.find();
 
-        if (capturesFound) {
+
+        if (capturesFound && capturesGroup2 != null && capturesGroup3 != null) {
             mBlockName = captures.group(1);
-            mJsonAttributes = parseJson(captures.group(2));
-            mBlockContentDocument = isSelfClosingTag ? null : parseHTML(captures.group(3));
+            mJsonAttributes = parseJson(capturesGroup2);
+            mBlockContentDocument = isSelfClosingTag ? null : parseHTML(capturesGroup3);
             mClosingComment = isSelfClosingTag ? null : captures.group(4);
             return true;
         } else {
@@ -98,7 +103,8 @@ public abstract class BlockProcessor {
      * @param isSelfClosingTag True if the block tag is self-closing (e.g. <!-- wp:videopress/video {"id":100} /-->)
      * @return A string containing content with ids and urls replaced
      */
-    String processBlock(String block, Boolean isSelfClosingTag) {
+    @NonNull
+    String processBlock(@NonNull String block, @NonNull Boolean isSelfClosingTag) {
         if (splitBlock(block, isSelfClosingTag)) {
             if (processBlockJsonAttributes(mJsonAttributes)) {
                 if (isSelfClosingTag) {
@@ -130,11 +136,13 @@ public abstract class BlockProcessor {
         return block;
     }
 
-    String processBlock(String block) {
+    @NonNull
+    String processBlock(@NonNull String block) {
         return processBlock(block, false);
     }
 
-     final void addIntPropertySafely(JsonObject jsonAttributes, String propertyName, String value) {
+    final void addIntPropertySafely(@NonNull JsonObject jsonAttributes, @NonNull String propertyName,
+                                    @NonNull String value) {
         try {
             jsonAttributes.addProperty(propertyName, Integer.parseInt(value));
         } catch (NumberFormatException e) {
@@ -179,7 +187,8 @@ public abstract class BlockProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    String processInnerBlock(String block) {
+    @NonNull
+    String processInnerBlock(@NonNull String block) {
         return block;
     }
 }

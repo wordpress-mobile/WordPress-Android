@@ -37,7 +37,8 @@ public class CoverBlockProcessor extends BlockProcessor {
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
     }
 
-    @Override String processInnerBlock(String block) {
+    @NonNull
+    @Override String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_COVER_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 

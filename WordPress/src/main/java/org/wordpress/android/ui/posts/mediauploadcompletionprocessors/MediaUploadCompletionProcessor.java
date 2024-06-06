@@ -79,7 +79,8 @@ public class MediaUploadCompletionProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    private String processBlock(String block, Boolean isSelfClosingTag) {
+    @NonNull
+    private String processBlock(@NonNull String block, Boolean isSelfClosingTag) {
         final MediaBlockType blockType = MediaBlockType.detectBlockType(block);
         final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
 

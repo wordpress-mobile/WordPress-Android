@@ -109,7 +109,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override String processInnerBlock(String block) {
+    @NonNull
+    @Override String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_GALLERY_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 
