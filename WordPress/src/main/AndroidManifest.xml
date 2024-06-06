@@ -112,7 +112,6 @@
         <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme.TransparentSystemBars"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
