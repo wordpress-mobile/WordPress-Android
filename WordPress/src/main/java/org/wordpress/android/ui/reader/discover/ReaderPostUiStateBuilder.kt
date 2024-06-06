@@ -126,7 +126,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    suspend fun mapPostToUiState(
+    suspend fun mapPostToNewUiState(
         source: String,
         post: ReaderPost,
         photonWidth: Int,

@@ -234,7 +234,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
         return posts.cards.map { card ->
             when (card) {
-                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                is ReaderPostCard -> postUiStateBuilder.mapPostToNewUiState(
                     source = ReaderTracker.SOURCE_DISCOVER,
                     post = card.post,
                     photonWidth = photonWidth,

@@ -511,7 +511,7 @@ class ReaderTagsFeedViewModel @Inject constructor(
                 val photonHeight = (photonWidth * FEATURED_IMAGE_HEIGHT_WIDTH_RATION).toInt()
                 _openMoreMenuEvents.postValue(
                     MoreMenuUiState(
-                        readerCardUiState = readerPostUiStateBuilder.mapPostToUiState(
+                        readerCardUiState = readerPostUiStateBuilder.mapPostToNewUiState(
                             source = ReaderTracker.SOURCE_TAGS_FEED,
                             post = post,
                             photonWidth = photonWidth,

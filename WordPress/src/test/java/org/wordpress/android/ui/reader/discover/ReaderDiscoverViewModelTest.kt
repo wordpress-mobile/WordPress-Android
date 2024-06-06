@@ -6,7 +6,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
@@ -171,7 +170,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), any(), anyOrNull())).thenReturn(mock())
         whenever(
-            uiStateBuilder.mapPostToUiState(
+            uiStateBuilder.mapPostToNewUiState(
                 source = anyString(),
                 post = anyOrNull(),
                 photonWidth = anyInt(),
@@ -201,7 +200,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         }
 
         whenever(
-            uiStateBuilder.mapPostToUiState(
+            uiStateBuilder.mapPostToNewUiState(
                 source = anyString(),
                 post = anyOrNull(),
                 photonWidth = anyInt(),
