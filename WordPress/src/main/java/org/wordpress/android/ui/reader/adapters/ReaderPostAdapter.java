@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.AsyncTaskHandler;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -371,44 +372,47 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug());
+        AsyncTaskHandler.load(
+                () -> !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                isAskingToFollow -> {
+                    final String slugForTracking = currentTag.getTagSlug();
 
-        final String slugForTracking = currentTag.getTagSlug();
+                    ReaderActions.ActionListener listener = succeeded -> {
+                        if (!succeeded) {
+                            int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
+                                    : R.string.reader_toast_err_removing_tag;
+                            ToastUtils.showToast(context, errResId);
+                        } else {
+                            if (isAskingToFollow) {
+                                mReaderTracker.trackTag(
+                                        AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                                        slugForTracking,
+                                        mSource
+                                );
+                            } else {
+                                mReaderTracker.trackTag(
+                                        AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                                        slugForTracking,
+                                        mSource
+                                );
+                            }
+                        }
+                        renderTagHeader(currentTag, tagHolder, true);
+                    };
 
-        ReaderActions.ActionListener listener = succeeded -> {
-            if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
-                        : R.string.reader_toast_err_removing_tag;
-                ToastUtils.showToast(context, errResId);
-            } else {
-                if (isAskingToFollow) {
-                    mReaderTracker.trackTag(
-                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            slugForTracking,
-                            mSource
-                    );
-                } else {
-                    mReaderTracker.trackTag(
-                            AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                            slugForTracking,
-                            mSource
-                    );
+                    boolean success;
+                    boolean isLoggedIn = mAccountStore.hasAccessToken();
+                    if (isAskingToFollow) {
+                        success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
+                    } else {
+                        success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
+                    }
+
+                    if (isLoggedIn && success) {
+                        renderTagHeader(currentTag, tagHolder, false);
+                    }
                 }
-            }
-            renderTagHeader(currentTag, tagHolder, true);
-        };
-
-        boolean success;
-        boolean isLoggedIn = mAccountStore.hasAccessToken();
-        if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
-        } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
-        }
-
-        if (isLoggedIn && success) {
-            renderTagHeader(currentTag, tagHolder, false);
-        }
+        );
     }
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
