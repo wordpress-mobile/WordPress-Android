@@ -1,97 +1,68 @@
-package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
+package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Document.OutputSettings;
-import org.wordpress.android.editor.Utils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.helpers.MediaFile;
-
-import java.util.regex.Matcher;
-
-import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES;
-import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES;
-import static org.wordpress.android.util.AppLog.T.MEDIA;
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.wordpress.android.editor.Utils
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.helpers.MediaFile
 
 /**
- * Abstract class to be extended for each enumerated {@link MediaBlockType}.
+ * Abstract class to be extended for each enumerated [MediaBlockType].
  */
-public abstract class BlockProcessor {
-    /**
-     * HTML output used by the parser
-     */
-    @SuppressWarnings("checkstyle:LineLength") static final OutputSettings OUTPUT_SETTINGS = new OutputSettings()
-            .outline(false)
-//          .syntax(Syntax.xml)
-//            Do we want xml or html here (e.g. self closing tags, boolean attributes)?
-//            https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
-            .prettyPrint(false);
+abstract class BlockProcessor internal constructor(@JvmField var mLocalId: String, mediaFile: MediaFile) {
+    @JvmField
+    var mRemoteId: String = mediaFile.mediaId
+    @JvmField
+    var mRemoteUrl: String = StringUtils.notNullStr(
+        Utils.escapeQuotes(
+            mediaFile
+                .optimalFileURL
+        )
+    )
+    var mRemoteGuid: String? = mediaFile.videoPressGuid
 
-    @NonNull String mLocalId;
-    @NonNull String mRemoteId;
-    @NonNull String mRemoteUrl;
-    @Nullable String mRemoteGuid;
+    private var mBlockName: String? = null
+    private var mJsonAttributes: JsonObject? = null
+    private var mBlockContentDocument: Document? = null
+    private var mClosingComment: String? = null
 
-    @Nullable private String mBlockName;
-    @Nullable private JsonObject mJsonAttributes;
-    @Nullable private Document mBlockContentDocument;
-    @Nullable private String mClosingComment;
-
-
-    /**
-     * @param localId The local media id that needs replacement
-     * @param mediaFile The mediaFile containing the remote id and remote url
-     */
-    BlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile) {
-        mLocalId = localId;
-        mRemoteId = mediaFile.getMediaId();
-        mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile
-                .getOptimalFileURL()));
-        mRemoteGuid = mediaFile.getVideoPressGuid();
+    private fun parseJson(blockJson: String): JsonObject {
+        val parser = JsonParser()
+        return parser.parse(blockJson).asJsonObject
     }
 
-    @NonNull
-    private JsonObject parseJson(@NonNull String blockJson) {
-        JsonParser parser = new JsonParser();
-        return parser.parse(blockJson).getAsJsonObject();
-    }
-
-    @NonNull
-    private Document parseHTML(@NonNull String blockContent) {
+    private fun parseHTML(blockContent: String): Document {
         // create document from block content
-        Document document = Jsoup.parse(blockContent);
-        document.outputSettings(OUTPUT_SETTINGS);
-        return document;
+        val document = Jsoup.parse(blockContent)
+        document.outputSettings(OUTPUT_SETTINGS)
+        return document
     }
 
-    private boolean splitBlock(@NonNull String block, @NonNull Boolean isSelfClosingTag) {
-        Matcher captures = (
-                isSelfClosingTag ? PATTERN_SELF_CLOSING_BLOCK_CAPTURES : PATTERN_BLOCK_CAPTURES
-        ).matcher(block);
+    private fun splitBlock(block: String, isSelfClosingTag: Boolean): Boolean {
+        val captures =
+            (if (isSelfClosingTag) MediaUploadCompletionProcessorPatterns.PATTERN_SELF_CLOSING_BLOCK_CAPTURES else MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES
+                    ).matcher(block)
 
-        String capturesGroup2 = captures.group(2);
-        String capturesGroup3 = captures.group(3);
-        boolean capturesFound = captures.find();
+        val capturesGroup2 = captures.group(2)
+        val capturesGroup3 = captures.group(3)
+        val capturesFound = captures.find()
 
 
         if (capturesFound && capturesGroup2 != null && capturesGroup3 != null) {
-            mBlockName = captures.group(1);
-            mJsonAttributes = parseJson(capturesGroup2);
-            mBlockContentDocument = isSelfClosingTag ? null : parseHTML(capturesGroup3);
-            mClosingComment = isSelfClosingTag ? null : captures.group(4);
-            return true;
+            mBlockName = captures.group(1)
+            mJsonAttributes = parseJson(capturesGroup2)
+            mBlockContentDocument = if (isSelfClosingTag) null else parseHTML(capturesGroup3)
+            mClosingComment = if (isSelfClosingTag) null else captures.group(4)
+            return true
         } else {
-            mBlockName = null;
-            mJsonAttributes = null;
-            mBlockContentDocument = null;
-            mClosingComment = null;
-            return false;
+            mBlockName = null
+            mJsonAttributes = null
+            mBlockContentDocument = null
+            mClosingComment = null
+            return false
         }
     }
 
@@ -100,95 +71,102 @@ public abstract class BlockProcessor {
      * method should return the original block contents unchanged.
      *
      * @param block The raw block contents
-     * @param isSelfClosingTag True if the block tag is self-closing (e.g. <!-- wp:videopress/video {"id":100} /-->)
+     * @param isSelfClosingTag True if the block tag is self-closing (e.g. )
      * @return A string containing content with ids and urls replaced
      */
-    @NonNull
-    String processBlock(@NonNull String block, @NonNull Boolean isSelfClosingTag) {
+    @JvmOverloads
+    fun processBlock(block: String, isSelfClosingTag: Boolean = false): String {
         if (splitBlock(block, isSelfClosingTag)) {
             if (processBlockJsonAttributes(mJsonAttributes)) {
                 if (isSelfClosingTag) {
                     // return injected block
-                    return new StringBuilder()
-                            .append("<!-- wp:")
-                            .append(mBlockName)
-                            .append(" ")
-                            .append(mJsonAttributes) // json parser output
-                            .append(" /-->")
-                            .toString();
+                    return StringBuilder()
+                        .append("<!-- wp:")
+                        .append(mBlockName)
+                        .append(" ")
+                        .append(mJsonAttributes) // json parser output
+                        .append(" /-->")
+                        .toString()
                 } else if (processBlockContentDocument(mBlockContentDocument)) {
                     // return injected block
-                    return new StringBuilder()
-                            .append("<!-- wp:")
-                            .append(mBlockName)
-                            .append(" ")
-                            .append(mJsonAttributes) // json parser output
-                            .append(" -->\n")
-                            .append(mBlockContentDocument.body().html()) // HTML parser output
-                            .append(mClosingComment)
-                            .toString();
+                    return StringBuilder()
+                        .append("<!-- wp:")
+                        .append(mBlockName)
+                        .append(" ")
+                        .append(mJsonAttributes) // json parser output
+                        .append(" -->\n")
+                        .append(mBlockContentDocument!!.body().html()) // HTML parser output
+                        .append(mClosingComment)
+                        .toString()
                 }
             } else {
-                return processInnerBlock(block); // delegate to inner blocks if needed
+                return processInnerBlock(block) // delegate to inner blocks if needed
             }
         }
         // leave block unchanged
-        return block;
+        return block
     }
 
-    @NonNull
-    String processBlock(@NonNull String block) {
-        return processBlock(block, false);
-    }
-
-    final void addIntPropertySafely(@NonNull JsonObject jsonAttributes, @NonNull String propertyName,
-                                    @NonNull String value) {
+    fun addIntPropertySafely(
+        jsonAttributes: JsonObject, propertyName: String,
+        value: String
+    ) {
         try {
-            jsonAttributes.addProperty(propertyName, Integer.parseInt(value));
-        } catch (NumberFormatException e) {
-            AppLog.e(MEDIA, e.getMessage());
+            jsonAttributes.addProperty(propertyName, value.toInt())
+        } catch (e: NumberFormatException) {
+            AppLog.e(AppLog.T.MEDIA, e.message)
         }
     }
 
     /**
      * All concrete implementations must implement this method for the particular block type. The document represents
-     * the html contents of the block to be processed, and is to be mutated in place.<br>
-     * <br>
+     * the html contents of the block to be processed, and is to be mutated in place.<br></br>
+     * <br></br>
      * This method should return true to indicate success. Returning false will result in the block contents being
      * unmodified.
      *
      * @param document The document to be mutated to make the necessary replacements
      * @return A boolean value indicating whether or not the block contents should be replaced
      */
-    abstract boolean processBlockContentDocument(@Nullable Document document);
+    abstract fun processBlockContentDocument(document: Document?): Boolean
 
     /**
      * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
-     * is a {@link JsonObject} parsed from the block header attributes. This object can be used to check for a match,
-     * and can be directly mutated if necessary.<br>
-     * <br>
+     * is a [JsonObject] parsed from the block header attributes. This object can be used to check for a match,
+     * and can be directly mutated if necessary.<br></br>
+     * <br></br>
      * This method should return true to indicate success. Returning false will result in the block contents being
      * unmodified.
      *
      * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
      * @return
      */
-    abstract boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes);
+    abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean
 
     /**
      * This method can be optionally overriden by concrete implementations to delegate further processing via recursion
-     * when {@link BlockProcessor#processBlockJsonAttributes(JsonObject)} returns false (i.e. the block did not match
+     * when [BlockProcessor.processBlockJsonAttributes] returns false (i.e. the block did not match
      * the local id being replaced). This is useful for implementing mutual recursion with
-     * {@link MediaUploadCompletionProcessor#processContent(String)} for block types that have media-containing blocks
-     * within their inner content.<br>
-     * <br>
+     * [MediaUploadCompletionProcessor.processContent] for block types that have media-containing blocks
+     * within their inner content.<br></br>
+     * <br></br>
      * The default implementation provided is a NOOP that leaves the content of the block unchanged.
      *
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    @NonNull
-    String processInnerBlock(@NonNull String block) {
-        return block;
+    open fun processInnerBlock(block: String): String {
+        return block
+    }
+
+    companion object {
+        /**
+         * HTML output used by the parser
+         */
+        val OUTPUT_SETTINGS: Document.OutputSettings = Document.OutputSettings()
+            .outline(false) //          .syntax(Syntax.xml)
+            //            Do we want xml or html here (e.g. self closing tags, boolean attributes)?
+            //            https://stackoverflow.com/questions/26584974/keeping-html-boolean-attributes-in-their-original-form-when-parsing-with-jsoup
+            .prettyPrint(false)
     }
 }
