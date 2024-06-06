@@ -43,7 +43,6 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
@@ -81,7 +80,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;

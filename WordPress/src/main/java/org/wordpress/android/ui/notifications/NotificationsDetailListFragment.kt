@@ -195,7 +195,9 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         this.footerView = footerView
     }
 
-    private val mOnNoteBlockTextClickListener by lazy { NoteBlockTextClickListener(this, notification, onActionClickListener) }
+    private val mOnNoteBlockTextClickListener by lazy {
+        NoteBlockTextClickListener(this, notification, onActionClickListener)
+    }
 
     private val mOnGravatarClickedListener = object : OnGravatarClickedListener {
         override fun onGravatarClicked(siteId: Long, userId: Long, siteUrl: String?) {
@@ -531,7 +533,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
     }
 
-    fun setOnEditCommentListener(listener: CommentDetailFragment.OnActionClickListener){
+    fun setOnEditCommentListener(listener: CommentDetailFragment.OnActionClickListener) {
         onActionClickListener = listener
     }
 

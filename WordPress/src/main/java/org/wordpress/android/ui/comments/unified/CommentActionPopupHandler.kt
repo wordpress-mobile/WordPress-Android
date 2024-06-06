@@ -8,7 +8,6 @@ import android.widget.PopupWindow
 import org.wordpress.android.R
 import org.wordpress.android.databinding.CommentActionsBinding
 import org.wordpress.android.ui.comments.CommentDetailFragment
-import org.wordpress.android.util.ToastUtils
 
 object CommentActionPopupHandler {
     @JvmStatic
