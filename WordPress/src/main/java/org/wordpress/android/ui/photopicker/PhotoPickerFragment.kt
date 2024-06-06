@@ -476,6 +476,9 @@ class PhotoPickerFragment : Fragment(R.layout.photo_picker_fragment) {
             // devices lower than API 33.
             permissions.add(permission.READ_EXTERNAL_STORAGE)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            permissions.add(permission.ACCESS_MEDIA_LOCATION)
+        }
         requestPermissions(permissions.toTypedArray(), WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE)
     }
 

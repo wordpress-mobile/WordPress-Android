@@ -3100,6 +3100,7 @@
     <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
+    <string name="permission_access_media_location">Media Location</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -

@@ -88,4 +88,14 @@ class PermissionsHandler
             context, permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
+
+    private fun hasPermissionToAccessMediaLocation(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContextCompat.checkSelfPermission(
+                context, permission.ACCESS_MEDIA_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+           true
+        }
+    }
 }

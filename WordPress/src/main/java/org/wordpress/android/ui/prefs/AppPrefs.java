@@ -247,6 +247,8 @@ public class AppPrefs {
 
         ASKED_PERMISSION_NOTIFICATIONS,
 
+        ASKED_PERMISSION_ACCESS_MEDIA_LOCATION,
+
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
 
