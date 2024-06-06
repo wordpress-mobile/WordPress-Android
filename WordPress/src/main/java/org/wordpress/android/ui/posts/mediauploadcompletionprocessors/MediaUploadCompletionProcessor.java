@@ -29,7 +29,7 @@ public class MediaUploadCompletionProcessor {
     /**
      * Processes content to replace the local ids and local urls of media with remote ids and remote urls. This method
      * delineates block boundaries for media-containing blocks and delegates further processing via itself and / or
-     * {@link #processBlock(String)}, via direct and mutual recursion, respectively.
+     * {@link #processBlock(String, Boolean)}, via direct and mutual recursion, respectively.
      *
      * @param content The content to be processed
      * @return A string containing the processed content, or the original content if no match was found

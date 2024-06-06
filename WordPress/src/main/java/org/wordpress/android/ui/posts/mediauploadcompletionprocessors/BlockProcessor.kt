@@ -44,23 +44,23 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
 
         val capturesFound = captures.find()
 
-        if (capturesFound) {
-            val jsonJsonAttributes = captures.group(GROUP_JSON_ATTRIBUTES)
-            val jsonBlockContentDocument = captures.group(GROUP_BLOCK_CONTENT_DOCUMENT)
-            if (jsonJsonAttributes != null && jsonBlockContentDocument != null) {
-                blockName = captures.group(GROUP_BLOCK_NAME)
-                jsonAttributes = parseJson(jsonJsonAttributes)
-                blockContentDocument = if (isSelfClosingTag) null else parseHTML(jsonBlockContentDocument)
-                closingComment = if (isSelfClosingTag) null else captures.group(GROUP_CLOSING_COMMENT)
-                return true
+        return if (capturesFound) {
+            blockName = captures.group(GROUP_BLOCK_NAME)
+            jsonAttributes = captures.group(GROUP_JSON_ATTRIBUTES)?.let { parseJson(it) }
+            blockContentDocument = if (isSelfClosingTag) {
+                null
+            } else {
+                captures.group(GROUP_BLOCK_CONTENT_DOCUMENT)?.let { parseHTML(it) }
             }
+            closingComment = if (isSelfClosingTag) null else captures.group(GROUP_CLOSING_COMMENT)
+            true
+        } else {
+            blockName = null
+            jsonAttributes = null
+            blockContentDocument = null
+            closingComment = null
+            false
         }
-
-        blockName = null
-        jsonAttributes = null
-        blockContentDocument = null
-        closingComment = null
-        return false
     }
 
     /**
