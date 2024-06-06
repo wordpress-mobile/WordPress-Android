@@ -48,7 +48,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
-    @Override boolean processBlockContentDocument(@Nullable Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select image element with our local id
         Element targetImg = document.select(mGalleryImageQuerySelector).first();
 
@@ -86,7 +87,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {
@@ -111,7 +113,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @NonNull
-    @Override String processInnerBlock(@NonNull String block) {
+    @Override
+    public String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_GALLERY_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 

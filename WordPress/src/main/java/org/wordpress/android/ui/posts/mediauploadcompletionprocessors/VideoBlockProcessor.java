@@ -15,7 +15,8 @@ public class VideoBlockProcessor extends BlockProcessor {
         super(localId, mediaFile);
     }
 
-    @Override boolean processBlockContentDocument(@Nullable Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select video element with our local id
         Element targetVideo = document.select("video").first();
 
@@ -31,7 +32,8 @@ public class VideoBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
             addIntPropertySafely(jsonAttributes, "id", mRemoteId);

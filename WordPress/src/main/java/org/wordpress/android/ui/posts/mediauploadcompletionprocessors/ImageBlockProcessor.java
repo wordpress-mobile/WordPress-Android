@@ -16,7 +16,8 @@ public class ImageBlockProcessor extends BlockProcessor {
         super(localId, mediaFile);
     }
 
-    @Override boolean processBlockContentDocument(@Nullable Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select image element with our local id
         Element targetImg = document.select("img").first();
 
@@ -35,7 +36,8 @@ public class ImageBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
             addIntPropertySafely(jsonAttributes, "id", mRemoteId);

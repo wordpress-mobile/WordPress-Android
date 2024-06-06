@@ -39,7 +39,8 @@ public class CoverBlockProcessor extends BlockProcessor {
     }
 
     @NonNull
-    @Override String processInnerBlock(@NonNull String block) {
+    @Override
+    public String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_COVER_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 
@@ -56,7 +57,8 @@ public class CoverBlockProcessor extends BlockProcessor {
         return block;
     }
 
-    @Override boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
             addIntPropertySafely(jsonAttributes, "id", mRemoteId);
@@ -73,7 +75,8 @@ public class CoverBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockContentDocument(@Nullable Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select cover block div
         Element targetDiv = document.selectFirst(".wp-block-cover");
 
