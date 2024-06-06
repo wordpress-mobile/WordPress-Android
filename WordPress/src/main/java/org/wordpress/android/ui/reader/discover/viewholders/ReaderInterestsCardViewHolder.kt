@@ -10,24 +10,24 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import org.wordpress.android.R
-import org.wordpress.android.databinding.ReaderInterestCardNewBinding
+import org.wordpress.android.databinding.ReaderInterestCardBinding
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderInterestNewAdapter
+import org.wordpress.android.ui.reader.discover.ReaderInterestAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.widgets.RecyclerItemDecoration
 
 private const val Y_BUFFER = 10
 
-class ReaderInterestsCardNewViewHolder(
+class ReaderInterestsCardViewHolder(
     uiHelpers: UiHelpers,
     parentView: ViewGroup
-) : ReaderViewHolder<ReaderInterestCardNewBinding>(parentView.viewBinding(ReaderInterestCardNewBinding::inflate)) {
+) : ReaderViewHolder<ReaderInterestCardBinding>(parentView.viewBinding(ReaderInterestCardBinding::inflate)) {
     init {
         with(binding.recommendedTags) {
             if (adapter == null) {
                 layoutManager = FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP)
-                val readerInterestAdapter = ReaderInterestNewAdapter(uiHelpers)
+                val readerInterestAdapter = ReaderInterestAdapter(uiHelpers)
                 setItemSpacing()
                 adapter = readerInterestAdapter
             }
@@ -50,7 +50,7 @@ class ReaderInterestsCardNewViewHolder(
     override fun onBind(uiState: ReaderCardUiState) = with(binding) {
         uiState as ReaderCardUiState.ReaderInterestsCardUiState
         setOnTouchItemListener()
-        (recommendedTags.adapter as ReaderInterestNewAdapter).update(uiState.interest)
+        (recommendedTags.adapter as ReaderInterestAdapter).update(uiState.interest)
     }
 
     private fun setOnTouchItemListener() = with(binding) {

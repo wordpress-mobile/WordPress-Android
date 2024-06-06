@@ -276,7 +276,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 return new GapMarkerViewHolder(new ReaderGapMarkerView(context));
 
             case VIEW_TYPE_XPOST:
-                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost_new, parent, false);
+                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_xpost, parent, false);
                 return new ReaderXPostViewHolder(postView);
             case VIEW_TYPE_REMOVED_POST:
                 postView = LayoutInflater.from(context).inflate(
