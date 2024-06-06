@@ -332,6 +332,7 @@ class CardsViewModelSliceTest : BaseUnitTest() {
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(BUILD_NUMBER_PARAM.toInt())
         whenever(buildConfigWrapper.getApplicationId()).thenReturn(IDENTIFIER_PARAM)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn(MARKETING_VERSION_PARAM)
+        whenever(buildConfigWrapper.androidVersion).thenReturn(ANDROID_VERSION_PARAM)
         whenever(preferenceUtilsWrapper.getFluxCPreferences()).thenReturn(sharedPreferences)
         whenever(sharedPreferences.getString(any(), anyOrNull())).thenReturn(DEVICE_ID_PARAM)
     }
