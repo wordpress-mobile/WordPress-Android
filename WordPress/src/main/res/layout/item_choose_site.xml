@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_extra_large"
             android:layout_marginVertical="@dimen/margin_medium"
-            app:cardCornerRadius="@dimen/avatar_sz_medium_radius"
+            app:cardCornerRadius="@dimen/blavatar_sz_radius"
             app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
