@@ -27,13 +27,14 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gravatar.services.AvatarService
-import com.gravatar.services.ErrorType
-import com.gravatar.services.GravatarListener
+import com.gravatar.services.Result
 import com.gravatar.types.Email
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -717,10 +718,13 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             if (file.exists()) {
                 mAccountStore.accessToken?.let { accessToken ->
                     startProgress(false)
-                    mAvatarService.upload(file, Email(mAccountStore.account.email),
-                        accessToken,
-                        object : GravatarListener<Unit, ErrorType> {
-                            override fun onSuccess(response: Unit) {
+                    lifecycleScope.launch {
+                        val result = mAvatarService.upload(
+                            file, Email(mAccountStore.account.email),
+                            accessToken
+                        )
+                        when (result) {
+                            is Result.Success -> {
                                 endProgress()
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED)
                                 mPhotoUrl = WPAvatarUtils.rewriteAvatarUrl(
@@ -732,15 +736,16 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
                                 mIsAvatarAdded = true
                             }
 
-                            override fun onError(errorType: ErrorType) {
+                            is Result.Failure -> {
                                 endProgress()
                                 showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar))
                                 val properties: MutableMap<String, Any?> = HashMap()
-                                properties["error_type"] = errorType
+                                properties["error_type"] = result.error
                                 AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties)
                                 AppLog.e(AppLog.T.NUX, "Uploading image to Gravatar failed")
                             }
-                        })
+                        }
+                    }
                 }
             } else {
                 ToastUtils.showToast(
@@ -821,9 +826,9 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             try {
                 val uri = MediaUtils.downloadExternalMedia(context, Uri.parse(mUrl))
                 val file = File(URI(uri.toString()))
-                mAvatarService.upload(file, Email(mEmail), mToken,
-                    object : GravatarListener<Unit, ErrorType> {
-                        override fun onSuccess(response: Unit) {
+                lifecycleScope.launch {
+                    when (val result = mAvatarService.upload(file, Email(mEmail), mToken)) {
+                        is Result.Success -> {
                             AppLog.i(
                                 AppLog.T.NUX,
                                 "Google avatar download and Gravatar upload succeeded."
@@ -831,16 +836,17 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
                             AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOADED)
                         }
 
-                        override fun onError(errorType: ErrorType) {
+                        is Result.Failure -> {
                             AppLog.i(
                                 AppLog.T.NUX,
                                 "Google avatar download and Gravatar upload failed."
                             )
                             val properties: MutableMap<String, Any?> = HashMap()
-                            properties["error_type"] = errorType
+                            properties["error_type"] = result.error
                             AnalyticsTracker.track(Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties)
                         }
-                    })
+                    }
+                }
             } catch (exception: NullPointerException) {
                 AppLog.e(
                     AppLog.T.NUX, ("Google avatar download and Gravatar upload failed - "
