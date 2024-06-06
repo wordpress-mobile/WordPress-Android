@@ -24,7 +24,7 @@ object CommentActionPopupHandler {
                     popupWindow.dismiss()
                 }
                 textShare.setOnClickListener {
-                    ToastUtils.showToast(it.context, "not yet implemented")
+                    listener?.onShareClicked()
                     popupWindow.dismiss()
                 }
                 textEditComment.setOnClickListener {
