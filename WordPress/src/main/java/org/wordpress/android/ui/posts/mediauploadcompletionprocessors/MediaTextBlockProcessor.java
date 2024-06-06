@@ -23,11 +23,11 @@ public class MediaTextBlockProcessor extends BlockProcessor {
         // if a match is found for img, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteUrl);
+            targetImg.attr("src", remoteUrl);
 
             // replace class
-            targetImg.removeClass("wp-image-" + mLocalId);
-            targetImg.addClass("wp-image-" + mRemoteId);
+            targetImg.removeClass("wp-image-" + localId);
+            targetImg.addClass("wp-image-" + remoteId);
 
             // return injected block
             return true;
@@ -38,7 +38,7 @@ public class MediaTextBlockProcessor extends BlockProcessor {
             // if a match is found for video, proceed with replacement
             if (targetVideo != null) {
                 // replace attribute
-                targetVideo.attr("src", mRemoteUrl);
+                targetVideo.attr("src", remoteUrl);
 
                 // return injected block
                 return true;
@@ -51,8 +51,8 @@ public class MediaTextBlockProcessor extends BlockProcessor {
     @Override
     public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("mediaId");
-        if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            addIntPropertySafely(jsonAttributes, "mediaId", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
+            addIntPropertySafely(jsonAttributes, "mediaId", remoteId);
             return true;
         }
 

@@ -15,7 +15,7 @@ class FileBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor
         hyperLinkTargets?.let {
             for (target in hyperLinkTargets) {
                 // replaces the href attribute's local url with the remote counterpart.
-                target.attr(HREF_ATTRIBUTE, mRemoteUrl)
+                target.attr(HREF_ATTRIBUTE, remoteUrl)
             }
             return true
         }
@@ -25,10 +25,10 @@ class FileBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
         val id = jsonAttributes?.get(ID_ATTRIBUTE)
 
-        return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
+        return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {
-                addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
-                addProperty(HREF_ATTRIBUTE, mRemoteUrl)
+                addProperty(ID_ATTRIBUTE, Integer.parseInt(remoteId))
+                addProperty(HREF_ATTRIBUTE, remoteUrl)
             }
             true
         } else {

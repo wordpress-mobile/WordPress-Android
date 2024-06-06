@@ -60,10 +60,10 @@ public class CoverBlockProcessor extends BlockProcessor {
     @Override
     public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
-            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(localId, 10)) {
+            addIntPropertySafely(jsonAttributes, "id", remoteId);
 
-            jsonAttributes.addProperty("url", mRemoteUrl);
+            jsonAttributes.addProperty("url", remoteUrl);
 
             // check if background type is video
             JsonElement backgroundType = jsonAttributes.get("backgroundType");
@@ -85,14 +85,14 @@ public class CoverBlockProcessor extends BlockProcessor {
             if (mHasVideoBackground) {
                 Element videoElement = targetDiv.selectFirst("video");
                 if (videoElement != null) {
-                    videoElement.attr("src", mRemoteUrl);
+                    videoElement.attr("src", remoteUrl);
                 } else {
                     return false;
                 }
             } else {
                 // replace background-image url in style attribute
                 String style = PATTERN_BACKGROUND_IMAGE_URL.matcher(targetDiv.attr("style")).replaceFirst(
-                        String.format("background-image:url(%1$s)", mRemoteUrl));
+                        String.format("background-image:url(%1$s)", remoteUrl));
                 targetDiv.attr("style", style);
             }
 

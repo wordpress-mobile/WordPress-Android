@@ -56,21 +56,21 @@ public class GalleryBlockProcessor extends BlockProcessor {
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteUrl);
-            targetImg.attr("data-id", mRemoteId);
-            targetImg.attr("data-full-url", mRemoteUrl);
+            targetImg.attr("src", remoteUrl);
+            targetImg.attr("data-id", remoteId);
+            targetImg.attr("data-full-url", remoteUrl);
             targetImg.attr("data-link", mAttachmentPageUrl);
 
             // replace class
-            targetImg.removeClass("wp-image-" + mLocalId);
-            targetImg.addClass("wp-image-" + mRemoteId);
+            targetImg.removeClass("wp-image-" + localId);
+            targetImg.addClass("wp-image-" + remoteId);
 
             // set parent anchor href if necessary
             Element parent = targetImg.parent();
             if (parent != null && parent.is("a") && mLinkTo != null) {
                 switch (mLinkTo) {
                     case "file":
-                        parent.attr("href", mRemoteUrl);
+                        parent.attr("href", remoteUrl);
                         break;
                     case "post":
                         parent.attr("href", mAttachmentPageUrl);
@@ -100,9 +100,9 @@ public class GalleryBlockProcessor extends BlockProcessor {
         }
         for (int i = 0; i < ids.size(); i++) {
             JsonElement id = ids.get(i);
-            if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
+            if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
                 try {
-                    ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
+                    ids.set(i, new JsonPrimitive(Integer.parseInt(remoteId, 10)));
                 } catch (NumberFormatException e) {
                     AppLog.e(MEDIA, e.getMessage());
                 }

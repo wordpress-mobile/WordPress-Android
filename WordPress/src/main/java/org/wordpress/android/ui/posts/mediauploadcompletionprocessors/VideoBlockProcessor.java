@@ -23,7 +23,7 @@ public class VideoBlockProcessor extends BlockProcessor {
         // if a match is found for video, proceed with replacement
         if (targetVideo != null) {
             // replace attribute
-            targetVideo.attr("src", mRemoteUrl);
+            targetVideo.attr("src", remoteUrl);
 
             // return injected block
             return true;
@@ -35,8 +35,8 @@ public class VideoBlockProcessor extends BlockProcessor {
     @Override
     public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
+            addIntPropertySafely(jsonAttributes, "id", remoteId);
             return true;
         }
         return false;

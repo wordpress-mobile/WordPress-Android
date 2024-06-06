@@ -12,18 +12,18 @@ import org.wordpress.android.util.helpers.MediaFile
 /**
  * Abstract class to be extended for each enumerated [MediaBlockType].
  */
-abstract class BlockProcessor internal constructor(@JvmField var mLocalId: String, mediaFile: MediaFile) {
+abstract class BlockProcessor internal constructor(@JvmField var localId: String, mediaFile: MediaFile) {
     @JvmField
-    var mRemoteId: String = mediaFile.mediaId
+    var remoteId: String = mediaFile.mediaId
 
     @JvmField
-    var mRemoteUrl: String = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.optimalFileURL))
-    var mRemoteGuid: String? = mediaFile.videoPressGuid
+    var remoteUrl: String = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.optimalFileURL))
+    var remoteGuid: String? = mediaFile.videoPressGuid
 
-    private var mBlockName: String? = null
-    private var mJsonAttributes: JsonObject? = null
-    private var mBlockContentDocument: Document? = null
-    private var mClosingComment: String? = null
+    private var blockName: String? = null
+    private var jsonAttributes: JsonObject? = null
+    private var blockContentDocument: Document? = null
+    private var closingComment: String? = null
 
     private fun parseJson(blockJson: String) = JsonParser.parseString(blockJson).asJsonObject
 
@@ -47,16 +47,16 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
         val capturesFound = captures.find()
 
         return if (capturesFound && jsonJsonAttributes != null && jsonBlockContentDocument != null) {
-            mBlockName = captures.group(GROUP_BLOCK_NAME)
-            mJsonAttributes = parseJson(jsonJsonAttributes)
-            mBlockContentDocument = if (isSelfClosingTag) null else parseHTML(jsonBlockContentDocument)
-            mClosingComment = if (isSelfClosingTag) null else captures.group(GROUP_CLOSING_COMMENT)
+            blockName = captures.group(GROUP_BLOCK_NAME)
+            jsonAttributes = parseJson(jsonJsonAttributes)
+            blockContentDocument = if (isSelfClosingTag) null else parseHTML(jsonBlockContentDocument)
+            closingComment = if (isSelfClosingTag) null else captures.group(GROUP_CLOSING_COMMENT)
             true
         } else {
-            mBlockName = null
-            mJsonAttributes = null
-            mBlockContentDocument = null
-            mClosingComment = null
+            blockName = null
+            jsonAttributes = null
+            blockContentDocument = null
+            closingComment = null
             false
         }
     }
@@ -72,15 +72,15 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
     @JvmOverloads
     fun processBlock(block: String, isSelfClosingTag: Boolean = false): String {
         val splitBLockResult = splitBlock(block, isSelfClosingTag)
-        val processBlockJsonAttributesResult = processBlockJsonAttributes(mJsonAttributes)
+        val processBlockJsonAttributesResult = processBlockJsonAttributes(jsonAttributes)
         return when {
             splitBLockResult && processBlockJsonAttributesResult && isSelfClosingTag ->
                 // return injected block
                 StringBuilder()
                     .append("<!-- wp:")
-                    .append(mBlockName)
+                    .append(blockName)
                     .append(" ")
-                    .append(mJsonAttributes) // json parser output
+                    .append(jsonAttributes) // json parser output
                     .append(" /-->")
                     .toString()
 
@@ -88,12 +88,12 @@ abstract class BlockProcessor internal constructor(@JvmField var mLocalId: Strin
                 // return injected block
                 StringBuilder()
                     .append("<!-- wp:")
-                    .append(mBlockName)
+                    .append(blockName)
                     .append(" ")
-                    .append(mJsonAttributes) // json parser output
+                    .append(jsonAttributes) // json parser output
                     .append(" -->\n")
-                    .append(mBlockContentDocument!!.body().html()) // HTML parser output
-                    .append(mClosingComment)
+                    .append(blockContentDocument!!.body().html()) // HTML parser output
+                    .append(closingComment)
                     .toString()
 
             splitBLockResult -> processInnerBlock(block) // delegate to inner blocks if needed

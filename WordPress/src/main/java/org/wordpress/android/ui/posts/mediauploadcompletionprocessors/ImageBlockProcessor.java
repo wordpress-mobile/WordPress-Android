@@ -24,11 +24,11 @@ public class ImageBlockProcessor extends BlockProcessor {
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteUrl);
+            targetImg.attr("src", remoteUrl);
 
             // replace class
-            targetImg.removeClass("wp-image-" + mLocalId);
-            targetImg.addClass("wp-image-" + mRemoteId);
+            targetImg.removeClass("wp-image-" + localId);
+            targetImg.addClass("wp-image-" + remoteId);
 
             return true;
         }
@@ -39,8 +39,8 @@ public class ImageBlockProcessor extends BlockProcessor {
     @Override
     public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
+            addIntPropertySafely(jsonAttributes, "id", remoteId);
             return true;
         }
         return false;
