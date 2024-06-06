@@ -6,18 +6,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Helper class to handle async tasks by using coroutines
+ * Helper class to handle asynchronous I/O tasks using coroutines
  * @see <a href="https://github.com/wordpress-mobile/WordPress-Android/pull/20937">Introduction</a>
  */
-object AsyncTaskHandler {
+object AsyncIoTaskExecutor {
     /**
-     * Load data in the background and handle the result on the main thread
+     * Execute a data loading task in the IO thread and handle the result on the main thread
      */
     @JvmStatic
-    fun <T> load(backgroundTask: () -> T, callback: AsyncTaskCallback<T>) {
-        CoroutineScope(Dispatchers.IO).launch {
+    fun <T> execute(scope: CoroutineScope, backgroundTask: () -> T, callback: IoTaskResultCallback<T>) {
+        scope.launch {
             // handle the background task
-            val result = backgroundTask()
+            val result = withContext(Dispatchers.IO) {
+                backgroundTask()
+            }
 
             withContext(Dispatchers.Main) {
                 // handle the result on the main thread
@@ -26,7 +28,7 @@ object AsyncTaskHandler {
         }
     }
 
-    interface AsyncTaskCallback<T> {
+    interface IoTaskResultCallback<T> {
         fun onTaskFinished(result: T)
     }
 }
