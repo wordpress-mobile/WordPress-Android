@@ -27,24 +27,10 @@ class FeatureFlagsRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchFeatureFlags(
-        buildNumber: String,
-        deviceId: String,
-        identifier: String,
-        marketingVersion: String,
-        platform: String,
-        osVersion: String,
-        ): FeatureFlagsFetchedPayload {
+    suspend fun fetchFeatureFlags(payload: FeatureFlagsPayload): FeatureFlagsFetchedPayload {
         // https://public-api.wordpress.com/wpcom/v2/mobile/feature-flagsdevice_id=12345&platform=android&build_number=570&marketing_version=15.1.1&identifier=com.jetpack.android
         val url = WPCOMV2.mobile.feature_flags.url
-        val params = mapOf(
-            "build_number" to buildNumber,
-            "device_id" to deviceId,
-            "identifier" to identifier,
-            "marketing_version" to  marketingVersion,
-            "platform" to platform,
-            "os_version" to osVersion,
-            )
+        val params = buildFeatureFlagsParams(payload)
         val response = wpComGsonRequestBuilder.syncGetRequest(
             this,
             url,
@@ -56,6 +42,24 @@ class FeatureFlagsRestClient @Inject constructor(
             is Response.Error -> FeatureFlagsFetchedPayload(response.error.toFeatureFlagsError())
         }
     }
+
+    private fun buildFeatureFlagsParams(payload: FeatureFlagsPayload) = mapOf(
+            "build_number" to payload.buildNumber,
+            "device_id" to payload.deviceId,
+            "identifier" to payload.identifier,
+            "marketing_version" to payload.marketingVersion,
+            "platform" to payload.platform,
+            "os_version" to payload.osVersion,
+    )
+
+    data class FeatureFlagsPayload(
+        val buildNumber: String,
+        val deviceId: String,
+        val identifier: String,
+        val marketingVersion: String,
+        val platform: String,
+        val osVersion: String,
+    )
 
     private fun buildFeatureFlagsFetchedPayload(featureFlags: Map<*, *>?)
         : FeatureFlagsFetchedPayload {
