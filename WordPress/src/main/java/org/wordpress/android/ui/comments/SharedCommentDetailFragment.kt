@@ -160,7 +160,7 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         )
     }
 
-    private fun showModerationBottomSheet() {
+    override fun showModerationBottomSheet() {
         ModerationBottomSheetDialogFragment.newInstance(
             ModerationBottomSheetDialogFragment.CommentState(
                 canModerate = enabledActions.canModerate(),

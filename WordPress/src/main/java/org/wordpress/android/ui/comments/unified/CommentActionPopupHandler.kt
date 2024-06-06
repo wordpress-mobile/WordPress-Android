@@ -32,7 +32,7 @@ object CommentActionPopupHandler {
                     popupWindow.dismiss()
                 }
                 textChangeStatus.setOnClickListener {
-                    ToastUtils.showToast(it.context, "not yet implemented")
+                    listener?.onChangeStatusClicked()
                     popupWindow.dismiss()
                 }
             }.root

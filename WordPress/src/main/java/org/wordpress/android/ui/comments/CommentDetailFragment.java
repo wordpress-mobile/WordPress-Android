@@ -155,7 +155,13 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
                 ActivityLauncher.openShareIntent(getContext(), mComment.getUrl(), null);
             }
         }
+
+        @Override public void onChangeStatusClicked() {
+            showModerationBottomSheet();
+        }
     };
+
+    abstract void showModerationBottomSheet();
 
     abstract UserProfileUiState getUserProfileUiState();
 
@@ -895,5 +901,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         void onUserInfoClicked();
 
         void onShareClicked();
+
+        void onChangeStatusClicked();
     }
 }
