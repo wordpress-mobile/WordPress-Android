@@ -37,7 +37,7 @@ import org.wordpress.android.fluxc.store.bloggingprompts.BloggingPromptsStore.Bl
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.ANSWER_BLOGGING_PROMPT
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST_FROM_AUDIO_AI
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST_FROM_AUDIO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.AnswerBloggingPromptAction
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -647,7 +647,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 ANSWER_BLOGGING_PROMPT,
                 NO_ACTION,
                 CREATE_NEW_POST,
-                CREATE_NEW_POST_FROM_AUDIO_AI,
+                CREATE_NEW_POST_FROM_AUDIO,
                 CREATE_NEW_PAGE
             )
 
