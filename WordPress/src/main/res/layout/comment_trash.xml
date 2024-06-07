@@ -24,7 +24,7 @@
         android:textSize="@dimen/text_sz_small" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_delete_trash"
+        android:id="@+id/button_delete_comment"
         style="@style/Widget.ShareButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

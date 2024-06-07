@@ -87,19 +87,20 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         when (commentStatus) {
             CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.bindApprovedView()
             CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.bindPendingView()
-            CommentStatus.SPAM -> {}
-            CommentStatus.TRASH -> mBinding?.layoutCommentTrash?.bindTrashView()
-            CommentStatus.DELETED -> {}
-            CommentStatus.ALL -> {}
-            CommentStatus.UNREPLIED -> {}
-            CommentStatus.UNSPAM -> {}
-            CommentStatus.UNTRASH -> {}
+            CommentStatus.SPAM, CommentStatus.TRASH -> mBinding?.layoutCommentTrash?.bindTrashView()
+            CommentStatus.DELETED,
+            CommentStatus.ALL,
+            CommentStatus.UNREPLIED,
+            CommentStatus.UNSPAM,
+            CommentStatus.UNTRASH -> {
+                // do nothing
+            }
         }
     }
 
     private fun CommentTrashBinding.bindTrashView() {
         root.isVisible = true
-        buttonDeleteTrash.setOnClickListener {
+        buttonDeleteComment.setOnClickListener {
             showDeleteCommentDialog()
         }
     }
@@ -188,6 +189,7 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
             onApprovedClicked = { moderateComment(site, comment, mNote, CommentStatus.APPROVED) }
             onPendingClicked = { moderateComment(site, comment, mNote, CommentStatus.UNAPPROVED) }
             onTrashClicked = { moderateComment(site, comment, mNote, CommentStatus.TRASH) }
+            onSpamClicked = { moderateComment(site, comment, mNote, CommentStatus.SPAM) }
         }.show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }
