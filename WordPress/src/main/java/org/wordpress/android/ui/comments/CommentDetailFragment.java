@@ -655,7 +655,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     /*
      * approve, disapprove, spam, or trash the current comment
      */
-    private void moderateComment(
+    protected void moderateComment(
             @NonNull SiteModel site,
             @NonNull CommentModel comment,
             @Nullable Note note,

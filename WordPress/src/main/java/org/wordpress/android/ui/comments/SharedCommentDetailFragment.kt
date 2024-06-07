@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gravatar.AvatarQueryOptions
 import com.gravatar.AvatarUrl
 import com.gravatar.types.Email
@@ -99,22 +100,25 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
     private fun CommentTrashBinding.bindTrashView() {
         root.isVisible = true
         buttonDeleteTrash.setOnClickListener {
-            viewModel.dispatchModerationAction(
-                site,
-                comment,
-                CommentStatus.DELETED
-            )
+            showDeleteCommentDialog()
         }
+    }
+
+    private fun showDeleteCommentDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete)
+            .setMessage(R.string.dlg_sure_to_delete_comment)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                moderateComment(site, comment, mNote, CommentStatus.DELETED)
+            }
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .show()
     }
 
     private fun CommentPendingBinding.bindPendingView() {
         root.isVisible = true
         buttonApproveComment.setOnClickListener {
-            viewModel.dispatchModerationAction(
-                site,
-                comment,
-                CommentStatus.APPROVED
-            )
+            moderateComment(site, comment, mNote, CommentStatus.APPROVED)
         }
         textMoreOptions.setOnClickListener { showModerationBottomSheet() }
     }
@@ -181,9 +185,9 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
                 canTrash = enabledActions.canTrash(),
             )
         ).apply {
-            onApprovedClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.APPROVED) }
-            onPendingClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.UNAPPROVED) }
-            onTrashClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.TRASH) }
+            onApprovedClicked = { moderateComment(site, comment, mNote, CommentStatus.APPROVED) }
+            onPendingClicked = { moderateComment(site, comment, mNote, CommentStatus.UNAPPROVED) }
+            onTrashClicked = { moderateComment(site, comment, mNote, CommentStatus.TRASH) }
         }.show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }

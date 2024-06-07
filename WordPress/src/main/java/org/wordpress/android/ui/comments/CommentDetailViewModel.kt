@@ -61,11 +61,13 @@ class CommentDetailViewModel @Inject constructor(
      */
     fun dispatchModerationAction(site: SiteModel, comment: CommentModel, status: CommentStatus) {
         comment.apply { this.status = status.toString() }
-        if (status == CommentStatus.DELETED) {
-            CommentActionBuilder.newDeleteCommentAction(CommentStore.RemoteCommentPayload(site, comment))
-        } else {
-            CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
-        }
+        commentsStoreAdapter.dispatch(
+            if (status == CommentStatus.DELETED) {
+                CommentActionBuilder.newDeleteCommentAction(CommentStore.RemoteCommentPayload(site, comment))
+            } else {
+                CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
+            }
+        )
 
         _updatedComment.postValue(comment)
     }
