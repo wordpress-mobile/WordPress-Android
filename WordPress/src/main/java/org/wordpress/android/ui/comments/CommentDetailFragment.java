@@ -43,10 +43,10 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.fluxc.tools.FormattableContentMapper;
 import org.wordpress.android.models.Note;
-import org.wordpress.android.models.Note.EnabledActions;
 import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.models.usecases.LocalCommentCacheUpdateHandler;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
@@ -80,7 +80,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -115,7 +114,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @Nullable protected Note mNote;
     @Nullable private SuggestionAdapter mSuggestionAdapter;
     @Nullable private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
-    @Nullable private String mRestoredReplyText;
     protected boolean mIsUsersBlog = false;
     protected boolean mShouldFocusReplyField;
     @Nullable private String mPreviousStatus;
@@ -138,13 +136,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     @Nullable private OnNoteCommentActionListener mOnNoteCommentActionListener;
     @NonNull protected CommentSource mCommentSource; // this will be non-null when onCreate()
 
-    /*
-     * these determine which actions (moderation, replying, marking as spam) to enable
-     * for this comment - all actions are enabled when opened from the comment list, only
-     * changed when opened from a notification
-     */
-    @NonNull private EnumSet<EnabledActions> mEnabledActions = EnumSet.allOf(EnabledActions.class);
-
     @Nullable protected CommentDetailFragmentBinding mBinding = null;
 
     private final OnActionClickListener mOnActionClickListener = new OnActionClickListener() {
@@ -154,9 +145,21 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
         @Override public void onUserInfoClicked() {
             UserProfileBottomSheetFragment.newInstance(getUserProfileUiState())
-                    .show(getChildFragmentManager(), UserProfileBottomSheetFragment.TAG);
+                                          .show(getChildFragmentManager(), UserProfileBottomSheetFragment.TAG);
+        }
+
+        @Override public void onShareClicked() {
+            if (getContext() != null) {
+                ActivityLauncher.openShareIntent(getContext(), mComment.getUrl(), null);
+            }
+        }
+
+        @Override public void onChangeStatusClicked() {
+            showModerationBottomSheet();
         }
     };
+
+    abstract void showModerationBottomSheet();
 
     abstract UserProfileUiState getUserProfileUiState();
 
@@ -725,15 +728,6 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
         binding.textContent.setVisibility(View.GONE);
 
-        /*
-         * determine which actions to enable for this comment - if the comment is from this user's
-         * blog then all actions will be enabled, but they won't be if it's a reply to a comment
-         * this user made on someone else's blog
-         */
-        if (note != null) {
-            mEnabledActions = note.getEnabledCommentActions();
-        }
-
         if (comment != null) {
             setComment(site, comment);
         } else if (note != null) {
@@ -901,6 +895,11 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
      */
     public interface OnActionClickListener {
         void onEditCommentClicked();
+
         void onUserInfoClicked();
+
+        void onShareClicked();
+
+        void onChangeStatusClicked();
     }
 }

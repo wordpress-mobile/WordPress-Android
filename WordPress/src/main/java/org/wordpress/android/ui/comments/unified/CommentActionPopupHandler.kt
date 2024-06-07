@@ -8,7 +8,6 @@ import android.widget.PopupWindow
 import org.wordpress.android.R
 import org.wordpress.android.databinding.CommentActionsBinding
 import org.wordpress.android.ui.comments.CommentDetailFragment
-import org.wordpress.android.util.ToastUtils
 
 object CommentActionPopupHandler {
     @JvmStatic
@@ -24,7 +23,7 @@ object CommentActionPopupHandler {
                     popupWindow.dismiss()
                 }
                 textShare.setOnClickListener {
-                    ToastUtils.showToast(it.context, "not yet implemented")
+                    listener?.onShareClicked()
                     popupWindow.dismiss()
                 }
                 textEditComment.setOnClickListener {
@@ -32,7 +31,7 @@ object CommentActionPopupHandler {
                     popupWindow.dismiss()
                 }
                 textChangeStatus.setOnClickListener {
-                    ToastUtils.showToast(it.context, "not yet implemented")
+                    listener?.onChangeStatusClicked()
                     popupWindow.dismiss()
                 }
             }.root

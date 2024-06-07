@@ -60,6 +60,11 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
     @Inject
     lateinit var meGravatarLoader: MeGravatarLoader
 
+    /*
+    * these determine which actions (moderation, replying, marking as spam) to enable
+    * for this comment - all actions are enabled when opened from the comment list, only
+    * changed when opened from a notification
+    */
     abstract val enabledActions: EnumSet<EnabledActions>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -155,7 +160,7 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         )
     }
 
-    private fun showModerationBottomSheet() {
+    override fun showModerationBottomSheet() {
         ModerationBottomSheetDialogFragment.newInstance(
             ModerationBottomSheetDialogFragment.CommentState(
                 canModerate = enabledActions.canModerate(),
