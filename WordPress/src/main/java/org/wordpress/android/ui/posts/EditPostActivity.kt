@@ -3813,7 +3813,9 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post: PostModel? = event.post
-        if (post != null && post.id == editPostRepository.id) {
+        val editPostId = editPostRepository.getPost()?.id
+
+        if (post != null && post.id == editPostId) {
             if (!isRemotePreviewingFromEditor) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 val snackbarAttachView = findViewById<View>(R.id.editor_activity)
