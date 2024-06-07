@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.dashboard
 
 import android.content.Context
+import android.os.Build
 import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
@@ -82,7 +83,7 @@ class CardsRestClient @Inject constructor(
         val identifier: String,
         val marketingVersion: String,
         val platform: String,
-        val osVersion: String,
+        val osVersion: String = Build.VERSION.RELEASE,
     )
 
     data class CardsResponse(

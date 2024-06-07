@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.mobile
 
 import android.content.Context
+import android.os.Build
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
@@ -58,7 +59,7 @@ class FeatureFlagsRestClient @Inject constructor(
         val identifier: String,
         val marketingVersion: String,
         val platform: String,
-        val osVersion: String,
+        val osVersion: String = Build.VERSION.RELEASE,
     )
 
     private fun buildFeatureFlagsFetchedPayload(featureFlags: Map<*, *>?)
