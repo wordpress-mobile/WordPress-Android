@@ -140,7 +140,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -2436,7 +2436,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        AppRatingDialog.INSTANCE.incrementInteractions(
+        AppReviewManager.INSTANCE.incrementInteractions(
                 AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
         );
 

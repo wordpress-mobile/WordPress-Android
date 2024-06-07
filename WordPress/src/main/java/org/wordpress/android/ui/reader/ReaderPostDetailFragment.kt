@@ -1581,11 +1581,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
-                ReaderActivityLauncher.showReaderComments(
-                    activity, it.blogId, it.postId,
-                    directOperation, commentId.toLong(), viewModel.interceptedUri,
-                    DIRECT_OPERATION.sourceDescription
-                )
+                context?.let { nonNullContext ->
+                    ReaderActivityLauncher.showReaderComments(
+                        nonNullContext, it.blogId, it.postId,
+                        directOperation, commentId.toLong(), viewModel.interceptedUri,
+                        DIRECT_OPERATION.sourceDescription
+                    )
+                }
             }
 
             activity?.finish()

@@ -4898,4 +4898,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
     <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
+
+    <!-- Voice to Content -->
+    <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
+    <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
+
 </resources>

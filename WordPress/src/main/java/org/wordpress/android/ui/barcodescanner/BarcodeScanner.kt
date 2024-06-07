@@ -18,21 +18,20 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import org.wordpress.android.ui.compose.theme.AppTheme
 import androidx.camera.core.Preview as CameraPreview
 
 @Composable
 fun BarcodeScanner(
     codeScanner: CodeScanner,
-    onScannedResult: (Flow<CodeScannerStatus>) -> Unit
+    onScannedResult: CodeScannerCallback
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -51,30 +50,27 @@ fun BarcodeScanner(
                     .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
                     .build()
                 imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(context)) { imageProxy ->
-                    onScannedResult(codeScanner.startScan(imageProxy))
+                    val callback = object : CodeScannerCallback {
+                        override fun run(status: CodeScannerStatus?) {
+                            status?.let { onScannedResult.run(it) }
+                        }
+                    }
+                    codeScanner.startScan(imageProxy, callback)
                 }
                 try {
                     cameraProviderFuture.get().bindToLifecycle(lifecycleOwner, selector, preview, imageAnalysis)
                 } catch (e: IllegalStateException) {
-                    onScannedResult(
-                        flowOf(
-                            CodeScannerStatus.Failure(
-                                e.message
-                                    ?: "Illegal state exception while binding camera provider to lifecycle",
-                                CodeScanningErrorType.Other(e)
-                            )
-                        )
-                    )
+                    onScannedResult.run(CodeScannerStatus.Failure(
+                        e.message
+                            ?: "Illegal state exception while binding camera provider to lifecycle",
+                        CodeScanningErrorType.Other(e)
+                    ))
                 } catch (e: IllegalArgumentException) {
-                    onScannedResult(
-                        flowOf(
-                            CodeScannerStatus.Failure(
-                                e.message
-                                    ?: "Illegal argument exception while binding camera provider to lifecycle",
-                                CodeScanningErrorType.Other(e)
-                            )
-                        )
-                    )
+                    onScannedResult.run(CodeScannerStatus.Failure(
+                        e.message
+                            ?: "Illegal argument exception while binding camera provider to lifecycle",
+                        CodeScanningErrorType.Other(e)
+                    ))
                 }
                 previewView
             },
@@ -84,8 +80,8 @@ fun BarcodeScanner(
 }
 
 class DummyCodeScanner : CodeScanner {
-    override fun startScan(imageProxy: ImageProxy): Flow<CodeScannerStatus> {
-        return flowOf(CodeScannerStatus.Success("", GoogleBarcodeFormatMapper.BarcodeFormat.FormatUPCA))
+    override fun startScan(imageProxy: ImageProxy, callback: CodeScannerCallback) {
+        callback.run(CodeScannerStatus.Success("", GoogleBarcodeFormatMapper.BarcodeFormat.FormatUPCA))
     }
 }
 
@@ -94,6 +90,10 @@ class DummyCodeScanner : CodeScanner {
 @Composable
 private fun BarcodeScannerScreenPreview() {
     AppTheme {
-        BarcodeScanner(codeScanner = DummyCodeScanner(), onScannedResult = {})
+        BarcodeScanner(codeScanner = DummyCodeScanner(), onScannedResult = object : CodeScannerCallback {
+            override fun run(status: CodeScannerStatus?) {
+                // no-ops
+            }
+        })
     }
 }
