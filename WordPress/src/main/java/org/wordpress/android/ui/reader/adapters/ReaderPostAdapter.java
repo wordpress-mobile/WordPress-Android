@@ -96,8 +96,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzSmall;
 
-    private boolean mCanRequestMorePosts;
-
     @NonNull private final ReaderTypes.ReaderPostListType mPostListType;
     @NonNull private String mSource;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -673,8 +671,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * if we're nearing the end of the posts, fire request to load more
      */
     private void checkLoadMore(int position) {
-        if (mCanRequestMorePosts
-            && mDataRequestedListener != null
+        if (mDataRequestedListener != null
             && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
         }
@@ -933,7 +930,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
-        private boolean mCanRequestMorePostsTemp;
         private int mGapMarkerPositionTemp;
 
         @Override
@@ -972,10 +968,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (mPosts.isSameListWithBookmark(mAllPosts)) {
                 return false;
             }
-
-            // if we're not already displaying the max # posts, enable requesting more when
-            // the user scrolls to the end of the list
-            mCanRequestMorePostsTemp = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             // determine whether a gap marker exists - only applies to tagged posts
             mGapMarkerPositionTemp = getGapMarkerPosition();
@@ -1016,7 +1008,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected void onPostExecute(Boolean result) {
             if (result) {
                 ReaderPostAdapter.this.mGapMarkerPosition = mGapMarkerPositionTemp;
-                ReaderPostAdapter.this.mCanRequestMorePosts = mCanRequestMorePostsTemp;
                 mPosts.clear();
                 mPosts.addAll(mAllPosts);
                 notifyDataSetChanged();
