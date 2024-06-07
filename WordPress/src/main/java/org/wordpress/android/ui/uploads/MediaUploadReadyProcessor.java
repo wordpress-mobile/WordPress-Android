@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.uploads;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.WordPress;
@@ -20,8 +21,8 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     }
 
     @Override
-    public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile,
-                                                   @Nullable SiteModel site) {
+    public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, @NonNull String localMediaId,
+                                                   MediaFile mediaFile, @Nullable SiteModel site) {
         if (post != null) {
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showGutenbergEditor = AppPrefs.isGutenbergEditorEnabled();

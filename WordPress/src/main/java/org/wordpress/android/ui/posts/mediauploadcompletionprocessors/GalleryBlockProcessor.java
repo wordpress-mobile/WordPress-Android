@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,8 +36,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
             .append("(.*)") // inner block contents
             .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
 
-    public GalleryBlockProcessor(String localId, MediaFile mediaFile, String siteUrl, MediaUploadCompletionProcessor
-            mediaUploadCompletionProcessor) {
+    public GalleryBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl,
+                                 MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
         mGalleryImageQuerySelector = new StringBuilder()
@@ -45,28 +48,29 @@ public class GalleryBlockProcessor extends BlockProcessor {
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select image element with our local id
         Element targetImg = document.select(mGalleryImageQuerySelector).first();
 
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", mRemoteUrl);
-            targetImg.attr("data-id", mRemoteId);
-            targetImg.attr("data-full-url", mRemoteUrl);
+            targetImg.attr("src", remoteUrl);
+            targetImg.attr("data-id", remoteId);
+            targetImg.attr("data-full-url", remoteUrl);
             targetImg.attr("data-link", mAttachmentPageUrl);
 
             // replace class
-            targetImg.removeClass("wp-image-" + mLocalId);
-            targetImg.addClass("wp-image-" + mRemoteId);
+            targetImg.removeClass("wp-image-" + localId);
+            targetImg.addClass("wp-image-" + remoteId);
 
             // set parent anchor href if necessary
             Element parent = targetImg.parent();
             if (parent != null && parent.is("a") && mLinkTo != null) {
                 switch (mLinkTo) {
                     case "file":
-                        parent.attr("href", mRemoteUrl);
+                        parent.attr("href", remoteUrl);
                         break;
                     case "post":
                         parent.attr("href", mAttachmentPageUrl);
@@ -83,7 +87,8 @@ public class GalleryBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {
@@ -95,9 +100,9 @@ public class GalleryBlockProcessor extends BlockProcessor {
         }
         for (int i = 0; i < ids.size(); i++) {
             JsonElement id = ids.get(i);
-            if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
+            if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
                 try {
-                    ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
+                    ids.set(i, new JsonPrimitive(Integer.parseInt(remoteId, 10)));
                 } catch (NumberFormatException e) {
                     AppLog.e(MEDIA, e.getMessage());
                 }
@@ -107,7 +112,9 @@ public class GalleryBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override String processInnerBlock(String block) {
+    @NonNull
+    @Override
+    public String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_GALLERY_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 
