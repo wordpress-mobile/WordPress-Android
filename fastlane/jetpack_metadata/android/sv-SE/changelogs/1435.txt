@@ -1,0 +1,4 @@
+25.0:
+Etikettflödet är live. Du kan nu se innehåll med specifika etiketter, allt på en och samma plats. Det är praktiskt med etiketter.
+
+Vi har åtgärdat diverse krascher som uppstod på inloggnings- och inläggslisteskärmarna samt i samband med bloggpåminnelser, funktionsbilder och borttagning av användare. Mindre krascher? Fantastiskt.

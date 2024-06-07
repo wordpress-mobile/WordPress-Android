@@ -39,6 +39,8 @@ import org.wordpress.android.util.wizard.WizardManager;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus;
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData;
 
+import javax.inject.Named;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -46,6 +48,8 @@ import dagger.android.AndroidInjectionModule;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
+import kotlinx.coroutines.CoroutineScope;
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
 @InstallIn(SingletonComponent.class)
 @Module(includes = AndroidInjectionModule.class)
@@ -98,6 +102,7 @@ public abstract class ApplicationModule {
     @Provides
     public static IInAppUpdateManager provideInAppUpdateManager(
             @ApplicationContext Context context,
+            @Named(APPLICATION_SCOPE) CoroutineScope appScope,
             AppUpdateManager appUpdateManager,
             RemoteConfigWrapper remoteConfigWrapper,
             BuildConfigWrapper buildConfigWrapper,
@@ -108,6 +113,7 @@ public abstract class ApplicationModule {
         return inAppUpdatesFeatureConfig.isEnabled()
                 ? new InAppUpdateManagerImpl(
                 context,
+                appScope,
                 appUpdateManager,
                 remoteConfigWrapper,
                 buildConfigWrapper,

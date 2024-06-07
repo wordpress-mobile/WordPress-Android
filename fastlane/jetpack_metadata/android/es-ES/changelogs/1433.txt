@@ -1,5 +1,0 @@
-24.9:
-- Hemos reorganizado la pantalla de estadísticas para mostrar datos sobre el tráfico y detalles.
-- Hemos añadido una pestaña Suscriptores que incluye datos sobre los suscriptores del sitio.
-- Hemos eliminado los suscriptores de las redes sociales de la tarjeta Total de seguidores.
-- Las URL y los nombres de los sitios se colocan correctamente para los usuarios con idiomas con escritura de derecha a izquierda.

@@ -1,0 +1,4 @@
+25.0:
+Der Schlagwort-Feed ist live! Jetzt kannst du Inhalte mit spezifischen Schlagwörtern an einem zentralen Ort sehen. Viel Spaß damit!
+
+Wir haben verschiedene Abstürze auf den Anmelde- und Beitragslistenbildschirmen sowie Aktionen, die mit Blog-Erinnerungen, Beitragsbildern und Benutzerentfernung zu tun hatten, behoben. Weniger Abstürze? Klingt super, oder?
