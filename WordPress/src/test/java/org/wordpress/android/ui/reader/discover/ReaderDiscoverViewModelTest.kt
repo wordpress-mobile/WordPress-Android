@@ -32,7 +32,6 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
@@ -43,15 +42,12 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
-import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
@@ -66,23 +62,11 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
-
-private const val POST_PARAM_POSITION = 1
-private const val ON_BUTTON_CLICKED_PARAM_POSITION = 6
-private const val ON_POST_ITEM_CLICKED_PARAM_POSITION = 7
-private const val ON_ITEM_RENDERED_PARAM_POSITION = 8
-private const val ON_MORE_MENU_CLICKED_PARAM_POSITION = 10
-private const val ON_MORE_MENU_DISMISSED_PARAM_POSITION = 11
-private const val ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION = 12
-private const val ON_POST_HEADER_CLICKED_PARAM_POSITION = 13
-private const val ON_TAG_CLICKED_PARAM_POSITION = 14
 
 private const val POST_PARAM_POSITION_NEW = 1
 private const val ON_BUTTON_CLICKED_PARAM_POSITION_NEW = 5
@@ -167,37 +151,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(readerPostCardActionsHandler.preloadPostEvents).thenReturn(fakePreloadPostFeed)
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakeFollowStatusChangedFeed)
-        whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), any(), anyOrNull())).thenReturn(mock())
-        whenever(
-            uiStateBuilder.mapPostToNewUiState(
-                source = anyString(),
-                post = anyOrNull(),
-                photonWidth = anyInt(),
-                photonHeight = anyInt(),
-                postListType = anyOrNull(),
-                onButtonClicked = anyOrNull(),
-                onItemClicked = anyOrNull(),
-                onItemRendered = anyOrNull(),
-                onMoreButtonClicked = anyOrNull(),
-                onMoreDismissed = anyOrNull(),
-                onVideoOverlayClicked = anyOrNull(),
-                onPostHeaderViewClicked = anyOrNull(),
-                moreMenuItems = anyOrNull()
-            )
-        ).thenAnswer {
-            createDummyReaderPostUiState(
-                it.getArgument(POST_PARAM_POSITION),
-                it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION),
-                it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_VIDEO_OVERLAY_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_POST_HEADER_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_POST_ITEM_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_MORE_MENU_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_MORE_MENU_DISMISSED_PARAM_POSITION)
-            )
-        }
 
         whenever(
             uiStateBuilder.mapPostToNewUiState(
@@ -327,7 +281,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
             it.onItemRendered.invoke(it)
         }
         // Assert
@@ -340,7 +294,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val notCloseToEndIndex = 2
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostNewUiState).let {
             it.onItemRendered.invoke(it)
         }
         // Assert
@@ -380,7 +334,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
+        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostNewUiState::class.java)
     }
 
     @Test
@@ -515,21 +469,12 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `When user clicks on a tag, a list of posts for that tag is shown`() = test {
-        // Arrange
-        val observers = init()
-        // Act
-        ((observers.uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("t")
-        // Assert
-        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
-    }
-
-    @Test
     fun `When user clicks on like button postActionHandler is invoked`() = test {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).likeAction.onClicked!!.invoke(2, 200, LIKE)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+            .likeAction.onClicked!!.invoke(2, 200, LIKE)
         // Assert
         verify(readerPostCardActionsHandler).onAction(
             eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post),
@@ -544,25 +489,10 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).onVideoOverlayClicked(2, 200)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).onVideoOverlayClicked(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleVideoOverlayClicked(
             eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.featuredVideo)
-        )
-    }
-
-    @Test
-    fun `When user clicks on header post action handler is invoked`() = test {
-        // Arrange
-        val uiStates = init().uiStates
-        // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
-            .blogSection.blogSectionClickData!!.onBlogSectionClicked!!.invoke()
-        // Assert
-        verify(readerPostCardActionsHandler).handleHeaderClicked(
-            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.blogId),
-            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.feedId),
-            eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.isFollowedByCurrentUser)
         )
     }
 
@@ -571,7 +501,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
             .onItemClicked.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleOnItemClicked(
@@ -584,24 +514,24 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     fun `When user clicks on more button menu is shown`() = test {
         // Arrange
         val uiStates = init().uiStates
-        val cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
+        val cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState)
         // Assert
-        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).moreMenuItems).isNotNull
+        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).moreMenuItems).isNotNull
     }
 
     @Test
     fun `When user dismisses the menu the ui state is updated`() = test {
         // Arrange
         val uiStates = init().uiStates
-        var cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
+        var cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState) // show menu
-        cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
+        cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
         cardUiState.onMoreDismissed.invoke(cardUiState) // dismiss menu
         // Assert
-        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).moreMenuItems).isNull()
+        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).moreMenuItems).isNull()
     }
 
     @Test
@@ -691,7 +621,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
             it.onItemRendered.invoke(it)
         }
         fakeDiscoverFeed.value = createDummyReaderCardsList()
@@ -717,7 +647,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             scrollToTopCounter.reset()
 
             // Act for load more
-            ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+            ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
                 it.onItemRendered.invoke(it)
             }
             fakeDiscoverFeed.value = createDummyReaderCardsList()
@@ -806,62 +736,6 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         this.feedId = id * 1000
         this.title = "DummyPost"
         this.featuredVideo = id.toString()
-    }
-
-    @Suppress("LongParameterList")
-    private fun createDummyReaderPostUiState(
-        post: ReaderPost,
-        onItemRendered: (ReaderCardUiState) -> Unit = mock(),
-        onTagClicked: (String) -> Unit,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
-        postHeaderClicked: () -> Unit,
-        onItemClicked: (Long, Long) -> Unit,
-        onMoreMenuClicked: (ReaderPostUiState) -> Unit,
-        onMoreMenuDismissed: (ReaderPostUiState) -> Unit
-    ): ReaderPostUiState {
-        return ReaderPostUiState(
-            source = "source",
-            postId = post.postId,
-            blogId = post.blogId,
-            feedId = post.feedId,
-            isFollowed = post.isFollowedByCurrentUser,
-            blogSection = ReaderBlogSectionUiState(
-                post.postId,
-                post.blogId,
-                "",
-                mock(),
-                "",
-                "",
-                "",
-                false,
-                blavatarType = BLAVATAR_CIRCULAR,
-                ReaderBlogSectionClickData(postHeaderClicked, 0)
-            ),
-            tagItems = listOf(TagUiState("", "", false, onTagClicked)),
-            excerpt = "",
-            title = mock(),
-            photoTitle = "",
-            featuredImageUrl = "",
-            featuredImageCornerRadius = mock(),
-            thumbnailStripSection = mock(),
-            videoOverlayVisibility = false,
-            featuredImageVisibility = false,
-            moreMenuVisibility = false,
-            fullVideoUrl = "",
-            discoverSection = mock(),
-            expandableTagsViewVisibility = false,
-            bookmarkAction = PrimaryAction(true, onClicked = onButtonClicked, type = BOOKMARK),
-            likeAction = PrimaryAction(true, onClicked = onButtonClicked, type = LIKE),
-            reblogAction = PrimaryAction(true, onClicked = onButtonClicked, type = REBLOG),
-            commentsAction = PrimaryAction(true, onClicked = onButtonClicked, type = COMMENTS),
-            onItemClicked = onItemClicked,
-            onItemRendered = onItemRendered,
-            onMoreButtonClicked = onMoreMenuClicked,
-            onVideoOverlayClicked = onVideoOverlayClicked,
-            moreMenuItems = mock(),
-            onMoreDismissed = onMoreMenuDismissed
-        )
     }
 
     @Suppress("LongParameterList")
