@@ -1,5 +1,0 @@
-24.9 :
-- Nous avons réorganisé l’écran Statistiques pour afficher des données relatives au trafic ainsi que des tendances.
-- Nous avons ajouté un onglet Abonnés pour afficher des données relatives aux abonnés du site.
-- Nous avons retiré les abonnés via les réseaux sociaux de la carte Total des abonnés.
-- Les noms de site et les URL sont correctement positionnés pour les locuteurs de langues se lisant de droite à gauche.

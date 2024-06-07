@@ -1,0 +1,4 @@
+25.0:
+Feed Tag sudah aktif! Konten dengan tag tertentu sekarang terkumpul rapi di satu lokasi. Tag, giliran kamu sekarang.
+
+Crash pada layar login dan Daftar Pos telah diperbaiki, sama halnya dengan aksi-aksi terkait pengingat blogging, gambar andalan, dan penghapusan pengguna. Crash berkurang? Performa kian cemerlang.

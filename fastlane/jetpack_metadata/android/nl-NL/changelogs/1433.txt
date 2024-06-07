@@ -1,5 +1,0 @@
-24.9:
-- We hebben het scherm met statistieken opnieuw georganiseerd om gegevens over verkeer en inzichten weer te geven.
-- We hebben een tabblad voor abonnees toegevoegd om gegevens over abonnees van de site weer te geven.
-- We hebben sociale abonnees van de kaart Aantal volgers verwijderd.
-- Sitenamen en URL’s zijn goed gepositioneerd voor rechts-naar-links taalgebruikers.
