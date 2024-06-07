@@ -1,2 +1,0 @@
-24,9:
-I nomi e URL del sito ora sono posizionati correttamente per utenti di lingue da destra a sinistra. Proprio così!

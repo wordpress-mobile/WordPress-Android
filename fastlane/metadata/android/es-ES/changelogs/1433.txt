@@ -1,2 +1,0 @@
-24.9:
-Los nombres de los sitios y las URL están ahora colocados correctamente para los usuarios de idiomas que hablan de derecha a izquierda. ¡Bravo!.
