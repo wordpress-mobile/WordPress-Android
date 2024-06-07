@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 14:45:52+0000
+Translation-Revision-Date: 2024-05-28 06:51:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="in_app_update_restart">Herstart</string>
+    <string name="in_app_update_available">Update gedownload. Herstarten om toe te passen.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Bericht van audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">open menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">verwijder bericht vind-ik-leuk</string>
+    <string name="reader_tags_feed_action_label_like_post">vind-ik-leuk bericht</string>
+    <string name="reader_tags_feed_action_label_open_blog">open blog</string>
+    <string name="reader_tags_feed_action_label_open_post">open bericht</string>
+    <string name="reader_tags_feed_error_retry">Opnieuw proberen</string>
+    <string name="reader_tags_feed_no_content_error_description">We konden op dit moment geen berichten vinden met de tag %s.</string>
+    <string name="reader_tags_feed_loading_error_description">We konden berichten met deze tag op dit moment niet laden</string>
+    <string name="reader_tags_feed_error_title">Geen berichten gevonden voor %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Meer van %s</string>
+    <string name="reader_tags_display_name">Tags</string>
+    <string name="reader_announcement_card_reading_preferences_description">Kies kleuren en lettertypen die bij je passen. Als je een bericht leest, dan tikken op het pictogram AA bovenaan het scherm.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Leesvoorkeuren</string>
+    <string name="reader_announcement_card_tags_stream_description">Tikken op de dropdown bovenaan en selecteer Tags om toegang te krijgen tot streams van je gevolgde tags.</string>
+    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
+    <string name="reader_announcement_card_title">Nieuw in Reader</string>
+    <string name="reader_dropdown_menu_tags">Je tags</string>
+    <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
+    <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>
     <string name="stats_subscribers_marker_view_plural">Abonnees</string>
     <string name="stats_subscribers_marker_view_singular">Abonnee</string>
     <string name="stats_view_subscriber_growth">Groei van abonnees</string>
@@ -582,8 +604,6 @@ Language: nl
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader zal naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Je statistieken zullen naar de Jetpack-app worden verplaatst</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Schakel over naar de nieuwe Jetpack-app</string>
-    <string name="no_connection_error_description">Controleer je netwerkverbinding en probeer het nogmaals.</string>
-    <string name="no_connection_error_title">Deze inhoud kan momenteel niet geladen worden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Er is een fout opgetreden bij het laden van opdrachten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oeps</string>
     <string name="blogging_prompts_list_no_prompts">Er zijn nog geen opdrachten</string>
