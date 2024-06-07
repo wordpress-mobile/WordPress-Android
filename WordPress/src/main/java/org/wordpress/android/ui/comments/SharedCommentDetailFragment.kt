@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.CommentApprovedBinding
 import org.wordpress.android.databinding.CommentPendingBinding
+import org.wordpress.android.databinding.CommentTrashBinding
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
@@ -79,18 +80,30 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         // reset visibilities
         mBinding?.layoutCommentPending?.root?.isVisible = false
         mBinding?.layoutCommentApproved?.root?.isVisible = false
+        mBinding?.layoutCommentTrash?.root?.isVisible = false
 
         val commentStatus = CommentStatus.fromString(comment.status)
         when (commentStatus) {
             CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.bindApprovedView()
             CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.bindPendingView()
             CommentStatus.SPAM -> {}
-            CommentStatus.TRASH -> {}
+            CommentStatus.TRASH -> mBinding?.layoutCommentTrash?.bindTrashView()
             CommentStatus.DELETED -> {}
             CommentStatus.ALL -> {}
             CommentStatus.UNREPLIED -> {}
             CommentStatus.UNSPAM -> {}
             CommentStatus.UNTRASH -> {}
+        }
+    }
+
+    private fun CommentTrashBinding.bindTrashView() {
+        root.isVisible = true
+        buttonDeleteTrash.setOnClickListener {
+            viewModel.dispatchModerationAction(
+                site,
+                comment,
+                CommentStatus.DELETED
+            )
         }
     }
 
@@ -169,6 +182,8 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
             )
         ).apply {
             onApprovedClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.APPROVED) }
+            onPendingClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.UNAPPROVED) }
+            onTrashClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.TRASH) }
         }.show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }

@@ -465,8 +465,10 @@
     <string name="comment_action_change_status">Change status</string>
 
     <string name="comment_moderation_pending">Comment pending moderation</string>
+    <string name="comment_moderation_trash">Comment in Trash</string>
     <string name="comment_moderation_approved">Comment Approved</string>
     <string name="comment_moderation_approve">Approve comment</string>
+    <string name="comment_moderation_delete">Delete permanently</string>
     <string name="comment_moderation_more">More options</string>
     <string name="comment_moderation_status_title">Choose status</string>
     <string name="comment_moderation_status_approved">Approved</string>
