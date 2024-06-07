@@ -3813,7 +3813,10 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post: PostModel? = event.post
-        val editPostId = editPostRepository.getPost()?.id
+
+        // Check if editPostRepository is initialized
+        val editPostRepositoryInitialized = this::editPostRepository.isInitialized
+        val editPostId = if (editPostRepositoryInitialized) editPostRepository.getPost()?.id else null
 
         if (post != null && post.id == editPostId) {
             if (!isRemotePreviewingFromEditor) {
