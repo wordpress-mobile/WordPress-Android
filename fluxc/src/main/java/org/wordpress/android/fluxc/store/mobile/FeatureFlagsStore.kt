@@ -19,6 +19,20 @@ class FeatureFlagsStore @Inject constructor(
     private val featureFlagConfigDao: FeatureFlagConfigDao,
     private val coroutineEngine: CoroutineEngine
 ) {
+    suspend fun fetchFeatureFlags(
+        buildNumber: String,
+        deviceId: String,
+        identifier: String,
+        marketingVersion: String,
+        platform: String
+    ) = fetchFeatureFlags(FeatureFlagsPayload(
+        buildNumber = buildNumber,
+        deviceId = deviceId,
+        identifier = identifier,
+        marketingVersion = marketingVersion,
+        platform = platform
+    ))
+
     suspend fun fetchFeatureFlags(payload: FeatureFlagsPayload) =
         coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch feature-flags") {
             val payload = featureFlagsRestClient.fetchFeatureFlags(payload)
