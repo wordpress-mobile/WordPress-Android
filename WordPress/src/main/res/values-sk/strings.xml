@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-17 11:41:48+0000
+Translation-Revision-Date: 2024-05-25 06:19:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: sk
@@ -891,6 +891,7 @@ Language: sk
     <string name="people_dropdown_item_team">Tím</string>
     <string name="invite_message_usernames_limit">Pozvať až 10 e-mailových adries a/alebo používateľov WordPress.com. Tým, ktorí budú potrebovať používateľské meno sa pošlú pokyny ako si ho vytvoriť.</string>
     <string name="viewer_remove_confirmation_message">Ak odstránite tento zobrazovač, on alebo ona nebudú môcť navštíviť webovú stránku. Aj tak chcete odstrániť zobrazovač?</string>
+    <string name="subscriber_remove_confirmation_message">Ak sa odstráni, tento odberateľ prestane dostávať oznámenia o tejto stránke, pokiaľ sa opätovne neprihlási na odber.\n\nChcete ešte odstrániť tohto odberateľa?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
@@ -1222,6 +1223,7 @@ Language: sk
     <string name="site_picker_create_wpcom">Vytvorte webovú stránku WordPress.com</string>
     <string name="site_picker_edit_visibility">Zobraziť/skryť webové stránky</string>
     <string name="site_picker_add_self_hosted">Pridať webovú stránku s vlastným hostingom</string>
+    <string name="site_picker_add_a_site">Pridať webovú stránku</string>
     <string name="my_site_btn_view_site">Zobraziť webovú stránku</string>
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
@@ -1297,6 +1299,7 @@ Language: sk
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
     <string name="update_verb">Aktualizovať</string>
     <string name="schedule_verb">Rozvrh</string>
+    <string name="reader_hint_add_tag_or_url_follow">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>

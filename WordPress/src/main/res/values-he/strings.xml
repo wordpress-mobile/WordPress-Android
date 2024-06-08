@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 13:54:10+0000
+Translation-Revision-Date: 2024-05-29 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="in_app_update_restart">להפעיל מחדש</string>
+    <string name="in_app_update_available">העדכון הורד. כדי להחיל עדכונים יש לבצע הפעלה מחדש.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">פוסט מאודיו</string>
+    <string name="reader_tags_feed_action_label_open_menu">לפתוח תפריט</string>
+    <string name="reader_tags_feed_action_label_unlike_post">להסיר את הלייק מהפוסט</string>
+    <string name="reader_tags_feed_action_label_like_post">להוסיף לייק לפוסט</string>
+    <string name="reader_tags_feed_action_label_open_blog">לפתוח את הבלוג</string>
+    <string name="reader_tags_feed_action_label_open_post">לפתוח את הפוסט</string>
+    <string name="reader_tags_feed_error_retry">לנסות שוב</string>
+    <string name="reader_tags_feed_no_content_error_description">לא הצלחנו למצוא פוסטים עם התגית %s כעת</string>
+    <string name="reader_tags_feed_loading_error_description">לא הצלחנו לטעון את הפוסטים של התגית הזאת כעת</string>
+    <string name="reader_tags_feed_error_title">לא נמצאו פוסטים עבור %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">עוד בנושא %s</string>
+    <string name="reader_tags_display_name">תגיות</string>
+    <string name="reader_announcement_card_reading_preferences_description">לבחור צבעים וגופנים לפי טעמך. כשקוראים פוסט, אפשר ללחוץ על הסמל AA שבחלקו העליון של המסך.</string>
+    <string name="reader_announcement_card_reading_preferences_title">העדפות קריאה</string>
+    <string name="reader_announcement_card_tags_stream_description">יש להקיש על התפריט הנפתח למעלה ולבחור \'תגיות\' כדי לגשת לפיד של התגיות שבמעקב שלך.</string>
+    <string name="reader_announcement_card_tags_stream_title">פיד תגיות</string>
+    <string name="reader_announcement_card_title">חדש ב-Reader</string>
+    <string name="reader_dropdown_menu_tags">התגיות שלך</string>
+    <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
+    <string name="stats_subscribers_marker_view_plural">מנויים</string>
+    <string name="stats_subscribers_marker_view_singular">מנוי</string>
+    <string name="stats_view_subscriber_growth">צמיחת מנויים</string>
     <string name="role_subscriber">מנוי</string>
     <string name="title_email_subscriber">מנוי באימייל</string>
     <string name="people_empty_list_filtered_email_subscribers">אין עדיין מנויים באימייל</string>
@@ -572,8 +597,6 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">הכלי Reader עובר לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">הנתונים הסטטיסטיים שלך עוברים לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">לעבור לאפליקציה החדשה של Jetpack</string>
-    <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
-    <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">אירעה שגיאה בטעינת ההצעות.</string>
     <string name="blogging_prompts_list_error_fetch_title">אופס</string>
     <string name="blogging_prompts_list_no_prompts">עדיין אין הצעות</string>

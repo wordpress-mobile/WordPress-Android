@@ -1,5 +1,0 @@
-24.9:
-– Vi har organiserat om statistikskärmen så att den visar data om trafik och insikter.
-– Vi har lagt till fliken Prenumeranter för att visa data om webbplatsens prenumeranter.
-– Vi tog bort sociala prenumeranter från kortet Totalt antal följare.
-– Webbplatsnamn och URL:er är korrekt positionerade för användare med språk från höger till vänster.

@@ -1,2 +1,0 @@
-24.9:
-- Site adları ve URL'ler, sağdan sola yazılan dilleri kullanan kullanıcılar için düzgün şekilde yerleştirildi. Harika.

@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-18 13:51:21+0000
+Translation-Revision-Date: 2024-05-30 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="in_app_update_restart">재시작</string>
+    <string name="in_app_update_available">업데이트가 다운로드되었습니다. 적용하려면 재시작하세요.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">오디오에서 글 작성하기</string>
+    <string name="reader_tags_feed_action_label_open_menu">메뉴 열기</string>
+    <string name="reader_tags_feed_action_label_unlike_post">글에서 좋아요 제거하기</string>
+    <string name="reader_tags_feed_action_label_like_post">글에 좋아요 표시하기</string>
+    <string name="reader_tags_feed_action_label_open_blog">블로그 열기</string>
+    <string name="reader_tags_feed_action_label_open_post">글 열기</string>
+    <string name="reader_tags_feed_error_retry">다시 시도</string>
+    <string name="reader_tags_feed_no_content_error_description">현재 태그가 %s인 글을 찾을 수 없습니다.</string>
+    <string name="reader_tags_feed_loading_error_description">현재 이 태그에서 글을 로드할 수 없습니다.</string>
+    <string name="reader_tags_feed_error_title">%s에 대한 글을 찾을 수 없습니다.</string>
+    <string name="reader_tags_feed_see_more_from_tag">%s에서 더 보기</string>
+    <string name="reader_tags_display_name">태그</string>
+    <string name="reader_announcement_card_reading_preferences_description">자신에게 맞는 색상과 글꼴을 선택하세요. 글을 읽을 때 화면 상단의 AA 아이콘을 탭하세요.</string>
+    <string name="reader_announcement_card_reading_preferences_title">읽기 기본 설정</string>
+    <string name="reader_announcement_card_tags_stream_description">상단의 드롭다운을 탭하고 태그를 선택하여 회원님이 팔로우하는 태그의 스트림에 접근하세요.</string>
+    <string name="reader_announcement_card_tags_stream_title">태그 스트림</string>
+    <string name="reader_announcement_card_title">뉴스피드 새 항목</string>
+    <string name="reader_dropdown_menu_tags">내 태그</string>
+    <string name="no_connection_error_description">네트워크 연결을 확인하고 다시 시도하세요.</string>
+    <string name="no_connection_error_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
+    <string name="stats_subscribers_marker_view_plural">구독자</string>
+    <string name="stats_subscribers_marker_view_singular">구독자</string>
+    <string name="stats_view_subscriber_growth">구독자 성장세</string>
     <string name="role_subscriber">구독자</string>
     <string name="title_email_subscriber">이메일 구독자</string>
     <string name="people_empty_list_filtered_email_subscribers">아직 이메일 구독자 없음</string>
@@ -579,8 +604,6 @@ Language: ko_KR
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">젯팩 앱으로 리더 이동 중</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">젯팩 앱으로 통계 이동 중</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">새 젯팩 앱으로 전환</string>
-    <string name="no_connection_error_description">네트워크 연결을 확인하고 다시 시도하세요.</string>
-    <string name="no_connection_error_title">지금 이 콘텐츠를 로드할 수 없습니다.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">프롬프트 로드 중 오류가 발생했습니다.</string>
     <string name="blogging_prompts_list_error_fetch_title">죄송합니다.</string>
     <string name="blogging_prompts_list_no_prompts">아직 프롬프트 없음</string>

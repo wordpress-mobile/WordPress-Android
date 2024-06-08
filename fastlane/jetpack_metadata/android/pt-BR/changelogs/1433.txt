@@ -1,5 +1,0 @@
-24.9:
-- Reorganizamos a tela Estatísticas para mostrar dados sobre tráfego e insights.
-- Adicionamos uma guia Assinantes para mostrar dados sobre os assinantes do site.
-- Removemos assinantes de redes sociais do cartão Total de seguidores.
-- Nomes e URLs dos sites posicionados corretamente para usuários de idiomas que escrevem da direita para a esquerda.
