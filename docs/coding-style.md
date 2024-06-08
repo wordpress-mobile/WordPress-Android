@@ -1,11 +1,11 @@
 # Coding Style
 
-Our code style guidelines are based on the [Android Code Style Guidelines for Contributors](https://source.android.com/source/code-style.html). We only changed a few rules:
+Our code style guidelines are based on the [Android Code Style Guidelines for Contributors](https://source.android.com/docs/setup/contribute/code-style). We only changed a few rules:
 
 * Line length is 120 characters
 * FIXME must not be committed in the repository use TODO instead. FIXME can be used in your own local repository only.
 
-On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](http://checkstyle.sourceforge.net/) (for Java and some language-independent custom project rules), and [detekt](https://detekt.github.io/detekt/) (for Kotlin).
+On top of the Android linter rules (best run for this project using `./gradlew lintWordPressVanillaRelease`), we use two linters: [Checkstyle](https://checkstyle.sourceforge.io/) (for Java and some language-independent custom project rules), and [detekt](https://detekt.dev/) (for Kotlin).
 ## Checkstyle
 
 You can run checkstyle via a gradle command:
