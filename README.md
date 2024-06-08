@@ -5,8 +5,8 @@ If you're a developer wanting to contribute, read on.
 
 ## Build Instructions ##
 
-1. Make sure you've installed [Android Studio](https://developer.android.com/studio/index.html).
-1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/tutorials/devenv/#quickstart)
+1. Make sure you've installed [Android Studio](https://developer.android.com/studio).
+1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/getting-started/devenv/#quickstart)
 1. `cd WordPress-Android` to enter the working directory.
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
 1. In Android Studio, open the project from the local repository. This will auto-generate `local.properties` with the SDK location.
@@ -16,7 +16,7 @@ If you're a developer wanting to contribute, read on.
 
 Notes:
 
-* While loading/building the app in Android Studio ignore the prompt to update the gradle plugin version as that will probably introduce build errors. On the other hand, feel free to update if you are planning to work on ensuring the compatibility of the newer version.
+* While loading/building the app in Android Studio, ignore the prompt to update the Gradle plugin version, as that will probably introduce build errors. On the other hand, feel free to update if you are planning to work on ensuring the compatibility of the newer version.
 
 ## Build and Test ##
 
@@ -92,7 +92,7 @@ in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
 [1]: https://play.google.com/store/apps/details?id=org.wordpress.android
-[3]: http://developer.android.com/sdk/installing/studio.html
+[3]: https://developer.android.com/studio
 [4]: https://make.wordpress.org/chat/
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
