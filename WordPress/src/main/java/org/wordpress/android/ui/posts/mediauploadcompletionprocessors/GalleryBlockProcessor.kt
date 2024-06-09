@@ -8,16 +8,18 @@ import org.wordpress.android.util.helpers.MediaFile
 import java.util.regex.Pattern
 
 class GalleryBlockProcessor(
-    localId: String, mediaFile: MediaFile, siteUrl: String,
-    private val mMediaUploadCompletionProcessor: MediaUploadCompletionProcessor
+    localId: String,
+    mediaFile: MediaFile,
+    siteUrl: String,
+    private val mediaUploadCompletionProcessor: MediaUploadCompletionProcessor
 ) : BlockProcessor(localId, mediaFile) {
-    private val mAttachmentPageUrl: String? = mediaFile.getAttachmentPageURL(siteUrl)
-    private var mLinkTo: String? = null
+    private val attachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl)
+    private var linkTo: String? = null
 
     /**
      * Query selector for selecting the img element from gallery which needs processing
      */
-    private val mGalleryImageQuerySelector = StringBuilder()
+    private val galleryImageQuerySelector = StringBuilder()
         .append("img[data-id=\"")
         .append(localId)
         .append("\"]")
@@ -25,56 +27,54 @@ class GalleryBlockProcessor(
 
     override fun processBlockContentDocument(document: Document): Boolean {
         // select image element with our local id
-        val targetImg = document.select(mGalleryImageQuerySelector).first()
+        val targetImg = document.select(galleryImageQuerySelector).first()
 
         // if a match is found, proceed with replacement
-        if (targetImg != null) {
+        return targetImg?.let {
             // replace attributes
-            targetImg.attr("src", remoteUrl)
-            targetImg.attr("data-id", remoteId)
-            targetImg.attr("data-full-url", remoteUrl)
-            targetImg.attr("data-link", mAttachmentPageUrl)
+            it.attr("src", remoteUrl)
+            it.attr("data-id", remoteId)
+            it.attr("data-full-url", remoteUrl)
+            it.attr("data-link", attachmentPageUrl)
 
             // replace class
-            targetImg.removeClass("wp-image-$localId")
-            targetImg.addClass("wp-image-$remoteId")
+            it.removeClass("wp-image-$localId")
+            it.addClass("wp-image-$remoteId")
 
             // set parent anchor href if necessary
-            val parent = targetImg.parent()
-            if (parent != null && parent.`is`("a") && mLinkTo != null) {
-                when (mLinkTo) {
+            val parent = it.parent()
+            if (parent != null && parent.`is`("a") && linkTo != null) {
+                when (linkTo) {
                     "file" -> parent.attr("href", remoteUrl)
-                    "post" -> parent.attr("href", mAttachmentPageUrl)
+                    "post" -> parent.attr("href", attachmentPageUrl)
                     else -> return false
                 }
             }
 
             // return injected block
-            return true
-        }
-
-        return false
+            true
+        } ?: false
     }
 
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         val ids = jsonAttributes.getAsJsonArray("ids")
-        if (ids == null || ids.isJsonNull) {
-            return false
-        }
-        val linkTo = jsonAttributes["linkTo"]
-        if (linkTo != null && !linkTo.isJsonNull) {
-            mLinkTo = linkTo.asString
-        }
-        for (i in 0 until ids.size()) {
-            val id = ids[i]
-            if (id != null && !id.isJsonNull && id.asString == localId) {
-                try {
-                    ids[i] = JsonPrimitive(remoteId.toInt(10))
-                } catch (e: NumberFormatException) {
-                    AppLog.e(AppLog.T.MEDIA, e.message)
+
+        if (ids != null && !ids.isJsonNull) {
+            val linkTo = jsonAttributes["linkTo"]
+            if (linkTo != null && !linkTo.isJsonNull) {
+                this.linkTo = linkTo.asString
+            }
+
+            ids.forEachIndexed { index, jsonElement ->
+                if (jsonElement != null && !jsonElement.isJsonNull && jsonElement.asString == localId) {
+                    try {
+                        ids[index] = JsonPrimitive(remoteId.toInt(RADIX))
+                    } catch (e: NumberFormatException) {
+                        AppLog.e(AppLog.T.MEDIA, e.message)
+                    }
+                    return true
                 }
-                return true
             }
         }
         return false
@@ -86,12 +86,11 @@ class GalleryBlockProcessor(
 
         // process inner contents recursively
         if (innerCapturesFound) {
-            val innerProcessed =
-                mMediaUploadCompletionProcessor.processContent(innerMatcher.group(2)) //
+            val innerProcessed = mediaUploadCompletionProcessor.processContent(innerMatcher.group(2))
             return StringBuilder()
                 .append(innerMatcher.group(1))
                 .append(innerProcessed)
-                .append(innerMatcher.group(3))
+                .append(innerMatcher.group(GROUP_3))
                 .toString()
         }
 
@@ -102,11 +101,14 @@ class GalleryBlockProcessor(
         /**
          * Template pattern used to match and splice inner image blocks in the refactored gallery format
          */
-        private val PATTERN_GALLERY_INNER: Pattern = Pattern.compile(
+        private val PATTERN_GALLERY_INNER = Pattern.compile(
             StringBuilder()
                 .append("(^.*?<figure class=\"[^\"]*?wp-block-gallery[^\"]*?\">\\s*)")
                 .append("(.*)") // inner block contents
-                .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL
+                .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(),
+            Pattern.DOTALL
         )
+        private const val RADIX = 10
+        private const val GROUP_3 = 3
     }
 }
