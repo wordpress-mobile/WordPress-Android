@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -17,16 +18,16 @@ import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.Med
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.VIDEOPRESS;
 
 class BlockProcessorFactory {
+    @NonNull
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
-    private final Map<MediaBlockType, BlockProcessor> mMediaBlockTypeBlockProcessorMap;
+    private final Map<MediaBlockType, BlockProcessor> mMediaBlockTypeBlockProcessorMap = new HashMap<>();
 
     /**
      * This factory initializes block processors for all media block types and provides a method to retrieve a block
      * processor instance for a given block type.
      */
-    BlockProcessorFactory(MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
+    BlockProcessorFactory(@NonNull MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
-        mMediaBlockTypeBlockProcessorMap = new HashMap<>();
     }
 
     /**
@@ -35,7 +36,8 @@ class BlockProcessorFactory {
      * @param siteUrl The site url - used to generate the attachmentPage url
      * @return The factory instance - useful for chaining this method upon instantiation
      */
-    BlockProcessorFactory init(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl) {
+    @NonNull
+    BlockProcessorFactory init(@NonNull String localId, @NonNull MediaFile mediaFile, @NonNull String siteUrl) {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEOPRESS, new VideoPressBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
@@ -56,7 +58,8 @@ class BlockProcessorFactory {
      * @param blockType The media block type for which to provide a {@link BlockProcessor}
      * @return The {@link BlockProcessor} for the given media block type
      */
-    BlockProcessor getProcessorForMediaBlockType(MediaBlockType blockType) {
+    @Nullable
+    BlockProcessor getProcessorForMediaBlockType(@NonNull MediaBlockType blockType) {
         return mMediaBlockTypeBlockProcessorMap.get(blockType);
     }
 }
