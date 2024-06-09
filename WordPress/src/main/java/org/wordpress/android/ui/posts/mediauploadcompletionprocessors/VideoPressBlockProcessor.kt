@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
 class VideoPressBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
-    override fun processBlockContentDocument(document: Document?): Boolean {
+    override fun processBlockContentDocument(document: Document): Boolean {
         return false
     }
 

@@ -30,10 +30,11 @@ public class CoverBlockProcessor extends BlockProcessor {
     private static final Pattern PATTERN_BACKGROUND_IMAGE_URL = Pattern.compile(
             "background-image:\\s*url\\([^\\)]+\\)");
 
+    @NonNull
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
 
     public CoverBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile,
-                               MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
+                               @NonNull MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
     }
@@ -76,7 +77,7 @@ public class CoverBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockContentDocument(@Nullable Document document) {
+    public boolean processBlockContentDocument(@NonNull Document document) {
         // select cover block div
         Element targetDiv = document.selectFirst(".wp-block-cover");
 

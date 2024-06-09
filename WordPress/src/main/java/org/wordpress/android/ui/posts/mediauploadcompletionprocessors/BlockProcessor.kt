@@ -83,7 +83,7 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
                     .append(jsonAttributes) // json parser output
                     .append(" /-->")
                     .toString()
-            } else if (processBlockContentDocument(blockContentDocument)) {
+            } else if (blockContentDocument?.let { processBlockContentDocument(it) } == true) {
                 // return injected block
                 StringBuilder()
                     .append("<!-- wp:")
@@ -121,7 +121,7 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
      * @param document The document to be mutated to make the necessary replacements
      * @return A boolean value indicating whether or not the block contents should be replaced
      */
-    abstract fun processBlockContentDocument(document: Document?): Boolean
+    abstract fun processBlockContentDocument(document: Document): Boolean
 
     /**
      * All concrete implementations must implement this method for the particular block type. The jsonAttributes object

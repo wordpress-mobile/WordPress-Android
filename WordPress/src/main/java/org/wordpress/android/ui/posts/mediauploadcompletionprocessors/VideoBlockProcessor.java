@@ -16,7 +16,7 @@ public class VideoBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockContentDocument(@Nullable Document document) {
+    public boolean processBlockContentDocument(@NonNull Document document) {
         // select video element with our local id
         Element targetVideo = document.select("video").first();
 

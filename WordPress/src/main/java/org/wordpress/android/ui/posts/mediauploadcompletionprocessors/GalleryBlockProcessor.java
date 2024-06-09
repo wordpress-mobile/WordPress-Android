@@ -49,7 +49,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockContentDocument(@Nullable Document document) {
+    public boolean processBlockContentDocument(@NonNull Document document) {
         // select image element with our local id
         Element targetImg = document.select(mGalleryImageQuerySelector).first();
 

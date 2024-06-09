@@ -5,17 +5,14 @@ import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
 class AudioBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
-    override fun processBlockContentDocument(document: Document?): Boolean {
-        val audioElements = document?.select(AUDIO_TAG)
+    override fun processBlockContentDocument(document: Document): Boolean {
+        val audioElements = document.select(AUDIO_TAG)
 
-        audioElements?.let { elements ->
-            for (element in elements) {
-                // replaces the src attribute's local url with the remote counterpart.
-                element.attr(SRC_ATTRIBUTE, remoteUrl)
-            }
-            return true
+        for (element in audioElements) {
+            // replaces the src attribute's local url with the remote counterpart.
+            element.attr(SRC_ATTRIBUTE, remoteUrl)
         }
-        return false
+        return true
     }
 
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
