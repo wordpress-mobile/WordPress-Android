@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -88,7 +87,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    public boolean processBlockJsonAttributes(@NonNull JsonObject jsonAttributes) {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
         if (ids == null || ids.isJsonNull()) {

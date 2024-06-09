@@ -9,9 +9,9 @@ class VideoPressBlockProcessor(localId: String, mediaFile: MediaFile) : BlockPro
         return false
     }
 
-    override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
-        val id = jsonAttributes?.get(ID_ATTRIBUTE)
-        val src = jsonAttributes?.get(SRC_ATTRIBUTE)?.asString
+    override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
+        val id = jsonAttributes.get(ID_ATTRIBUTE)
+        val src = jsonAttributes.get(SRC_ATTRIBUTE)?.asString
 
         return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {

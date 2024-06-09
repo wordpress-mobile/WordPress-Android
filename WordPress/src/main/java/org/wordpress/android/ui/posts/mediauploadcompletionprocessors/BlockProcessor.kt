@@ -74,7 +74,10 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
     @JvmOverloads
     fun processBlock(block: String, isSelfClosingTag: Boolean = false) = when {
         !splitBlock(block, isSelfClosingTag) -> block // leave block unchanged
-        !processBlockJsonAttributes(jsonAttributes) -> processInnerBlock(block) // delegate to inner blocks if needed
+        jsonAttributes?.let { !processBlockJsonAttributes(it) } == true -> {
+            // delegate to inner blocks if needed
+            processInnerBlock(block)
+        }
         isSelfClosingTag -> {
             // return injected block
             StringBuilder()
@@ -131,7 +134,7 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
      * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
      * @return
      */
-    abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean
+    abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean
 
     /**
      * This method can be optionally overridden by concrete implementations to delegate further processing via recursion

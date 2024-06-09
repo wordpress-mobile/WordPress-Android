@@ -59,7 +59,7 @@ public class CoverBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    public boolean processBlockJsonAttributes(@NonNull JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(localId, 10)) {
             addIntPropertySafely(jsonAttributes, "id", remoteId);

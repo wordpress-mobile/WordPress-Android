@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,7 +36,7 @@ public class ImageBlockProcessor extends BlockProcessor {
     }
 
     @Override
-    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
+    public boolean processBlockJsonAttributes(@NonNull JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
         if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
             addIntPropertySafely(jsonAttributes, "id", remoteId);
