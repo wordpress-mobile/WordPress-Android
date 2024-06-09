@@ -23,8 +23,7 @@ public class MediaUploadCompletionProcessor {
      */
     public MediaUploadCompletionProcessor(@NonNull String localId, @NonNull MediaFile mediaFile,
                                           @NonNull String siteUrl) {
-        mBlockProcessorFactory = new BlockProcessorFactory(this)
-                .init(localId, mediaFile, siteUrl);
+        mBlockProcessorFactory = new BlockProcessorFactory(this, localId, mediaFile, siteUrl);
     }
 
     /**
