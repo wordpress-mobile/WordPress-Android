@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,10 +42,22 @@ class VoiceToContentViewModel @Inject constructor(
     private val _dismiss = MutableLiveData<Unit>()
     val dismiss = _dismiss as LiveData<Unit>
 
-    private val _state = MutableStateFlow<VoiceToContentUiState>(VoiceToContentUiState.Initializing(
-        header = R.string.voice_to_content_initializing,
-        labelText = R.string.voice_to_content_preparing,
-        onCloseAction = ::onClose
+    private val _amplitudes = MutableLiveData<List<Float>>()
+    val amplitudes: LiveData<List<Float>> get() = _amplitudes
+
+    private val _state = MutableStateFlow(VoiceToContentUiState(
+        uiStateType = VoiceToContentUIStateType.INITIALIZING,
+        header = HeaderUIModel(
+            label = R.string.voice_to_content_base_header_label,
+            onClose = ::onClose),
+        secondaryHeader = SecondaryHeaderUIModel(
+            label = R.string.voice_to_content_secondary_header_label,
+            isLabelVisible = true,
+            isProgressIndicatorVisible = true,
+            isTimeElapsedVisible = false),
+        recordingPanel = RecordingPanelUIModel(
+            actionLabel = R.string.voice_to_content_begin_recording_label,
+            isEnabled = false)
     ))
     val state: StateFlow<VoiceToContentUiState> = _state.asStateFlow()
 
@@ -55,32 +68,38 @@ class VoiceToContentViewModel @Inject constructor(
     }
 
     fun start() {
-        val site = selectedSiteRepository.getSelectedSite() ?: run {
-            transitionToError()
-            return
-        }
-        if (isVoiceToContentEnabled()) {
-            viewModelScope.launch {
-                when (val result = prepareVoiceToContentUseCase.execute(site)) {
-                    is PrepareVoiceToContentResult.Success -> {
-                        transitionToReadyToRecord(result.model)
-                    }
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null || !isVoiceToContentEnabled()) return
 
-                    is PrepareVoiceToContentResult.Error -> {
-                        transitionToError()
-                    }
+        viewModelScope.launch {
+            when (val result = prepareVoiceToContentUseCase.execute(site)) {
+                is PrepareVoiceToContentResult.Success -> {
+                    if (result.model.siteRequireUpgrade)
+                    delay(1000) // todo: annmarie remove this for debug only
+                    transitionToReadyToRecordOrIneligibleForFeature(result.model)
+                }
+
+                is PrepareVoiceToContentResult.Error -> {
+                    transitionToError()
                 }
             }
         }
     }
 
     // Recording
+    // todo: This doesn't work as expected
+    private fun updateAmplitudes(newAmplitudes: List<Float>) {
+        _amplitudes.value = listOf(1.1f, 2.2f, 4.4f, 3.2f, 1.1f, 2.2f, 1.0f, 3.5f) 
+        Log.d(javaClass.simpleName, "Update amplitudes: $newAmplitudes")
+    }
+
     private fun observeRecordingUpdates() {
         viewModelScope.launch {
             recordingUseCase.recordingUpdates().collect { update ->
                 if (update.fileSizeLimitExceeded) {
                     stopRecording()
                 } else {
+                    updateAmplitudes(update.amplitudes)
                     // todo: Handle other updates if needed when UI is ready, e.g., elapsed time and file size
                     Log.d("AudioRecorder", "Recording update: $update")
                 }
@@ -97,11 +116,11 @@ class VoiceToContentViewModel @Inject constructor(
                     file?.let {
                         executeVoiceToContent(it)
                     } ?: run {
-                        transitionToError()
+                       transitionToError()
                     }
                 }
                 is Error -> {
-                    transitionToError()
+                   transitionToError()
                 }
             }
         }
@@ -130,7 +149,8 @@ class VoiceToContentViewModel @Inject constructor(
 
         viewModelScope.launch {
             val result = voiceToContentUseCase.execute(site, file)
-            transitionToFinished(result.content)
+            Log.i(javaClass.simpleName, "***=> result is ${result.content}")
+            _dismiss.postValue(Unit)
         }
     }
 
@@ -166,52 +186,56 @@ class VoiceToContentViewModel @Inject constructor(
     }
 
     // transitions
-    private fun transitionToReadyToRecord(model: JetpackAIAssistantFeature) {
-        // todo: annmarie- put together the proper labels; especially the requests available count
-        _state.value = VoiceToContentUiState.ReadyToRecord(
-            header = R.string.voice_to_content_ready_to_record,
-            labelText = R.string.voice_to_content_ready_to_record_label,
-            subLabelText = R.string.voice_to_content_tap_to_start,
-            requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model),
-            isEligibleForFeature = voiceToContentFeatureUtils.isEligibleForVoiceToContent(model),
-            onMicTap = ::onMicTap,
-            onCloseAction = ::onClose,
-            onRequestPermission = ::onRequestPermission,
-            hasPermission = hasAllPermissionsForRecording()
+    private fun transitionToReadyToRecordOrIneligibleForFeature(model: JetpackAIAssistantFeature) {
+        val isEligibleForFeature = voiceToContentFeatureUtils.isEligibleForVoiceToContent(model)
+        val requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model)
+        val currentState = _state.value
+        _state.value = currentState.copy(
+            uiStateType = if (isEligibleForFeature) VoiceToContentUIStateType.READY_TO_RECORD else VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE,
+            secondaryHeader = currentState.secondaryHeader?.copy(requestsAvailable = requestsAvailable.toString(), isProgressIndicatorVisible = false),
+            recordingPanel = currentState.recordingPanel?.copy(
+                isEnabled = isEligibleForFeature,
+                isEligibleForFeature = isEligibleForFeature,
+                onMicTap = ::onMicTap,
+                onRequestPermission = ::onRequestPermission,
+                hasPermission = hasAllPermissionsForRecording())
         )
     }
 
     private fun transitionToRecording() {
-        _state.value = VoiceToContentUiState.Recording(
-            header = R.string.voice_to_content_recording,
-            elapsedTime = "0 sec",
-            onStopTap = ::onStopTap,
-            onCloseAction = ::onClose
+        val currentState = _state.value
+        _state.value = currentState.copy(
+            uiStateType = VoiceToContentUIStateType.RECORDING,
+            header = currentState.header.copy(label = R.string.voice_to_content_recording_label),
+            secondaryHeader = currentState.secondaryHeader?.copy(
+                timeElapsed = "00:00:00",
+                isTimeElapsedVisible = true
+            ),
+            recordingPanel = currentState.recordingPanel?.copy(
+                onStopTap = ::onStopTap,
+                hasPermission = true,
+                actionLabel = R.string.voice_to_content_done_label)
         )
     }
 
     private fun transitionToProcessing() {
-        _state.value = VoiceToContentUiState.Processing(
-            header = R.string.voice_to_content_processing,
-            onCloseAction = ::onClose
+        val currentState = _state.value
+        _state.value = currentState.copy(
+            uiStateType = VoiceToContentUIStateType.PROCESSING,
+            header = currentState.header.copy(label = R.string.voice_to_content_processing),
+            secondaryHeader = null,
+            recordingPanel = null
         )
     }
 
-    // todo: annmarie - transition to error hasn't been fully fleshed out ... some errors will be shown on top of
-    // the existing screen
+    // todo: annmarie - transition to error hasn't been fully fleshed out
     private fun transitionToError() {
-        _state.value = VoiceToContentUiState.Error(
-            header = R.string.voice_to_content_ready_to_record,
-            message = "Something bad happened and we can't continue",
-            onCloseAction = ::onClose
-        )
-    }
-    // todo: annmarie - transition to finished MUST be removed, as we are pushing the user to editPostActivity
-    private fun transitionToFinished(content: String?) {
-        _state.value = VoiceToContentUiState.Finished(
-            header = R.string.voice_to_content_finished_label,
-            content = content ?: "",
-            onCloseAction = ::onClose
+        val currentState = _state.value
+        _state.value = currentState.copy(
+            uiStateType = VoiceToContentUIStateType.ERROR,
+            header = currentState.header.copy( label = R.string.voice_to_content_ready_to_record),
+            secondaryHeader = null,
+            recordingPanel = null
         )
     }
 }

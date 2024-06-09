@@ -4914,4 +4914,12 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_error_label">Error</string>
     <string name="voice_to_content_processing_label">Processing</string>
     <string name="voice_to_content_finished_label">Finished</string>
+
+    <string name="voice_to_content_base_header_label">Post from Audio</string>
+    <string name="voice_to_content_secondary_header_label">Requests available:</string>
+    <string name="voice_to_content_begin_recording_label">Begin Recording</string>
+    <string name="voice_to_content_recording_label">Recording</string>
+    <string name="voice_to_content_not_eligible_for_feature">Out of requests or need requests message</string>
+    <string name="voice_to_content_done_label">Done</string>
+
 </resources>
