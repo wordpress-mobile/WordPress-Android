@@ -20,6 +20,13 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.audio.IAudioRecorder
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INITIALIZING
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.READY_TO_RECORD
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.RECORDING
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.ERROR
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.PROCESSING
+
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,7 +53,7 @@ class VoiceToContentViewModel @Inject constructor(
     val amplitudes: LiveData<List<Float>> get() = _amplitudes
 
     private val _state = MutableStateFlow(VoiceToContentUiState(
-        uiStateType = VoiceToContentUIStateType.INITIALIZING,
+        uiStateType = INITIALIZING,
         header = HeaderUIModel(
             label = R.string.voice_to_content_base_header_label,
             onClose = ::onClose),
@@ -67,6 +74,7 @@ class VoiceToContentViewModel @Inject constructor(
         observeRecordingUpdates()
     }
 
+    @Suppress("MagicNumber")
     fun start() {
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null || !isVoiceToContentEnabled()) return
@@ -88,8 +96,9 @@ class VoiceToContentViewModel @Inject constructor(
 
     // Recording
     // todo: This doesn't work as expected
+    @Suppress("MagicNumber")
     private fun updateAmplitudes(newAmplitudes: List<Float>) {
-        _amplitudes.value = listOf(1.1f, 2.2f, 4.4f, 3.2f, 1.1f, 2.2f, 1.0f, 3.5f) 
+        _amplitudes.value = listOf(1.1f, 2.2f, 4.4f, 3.2f, 1.1f, 2.2f, 1.0f, 3.5f)
         Log.d(javaClass.simpleName, "Update amplitudes: $newAmplitudes")
     }
 
@@ -191,21 +200,25 @@ class VoiceToContentViewModel @Inject constructor(
         val requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model)
         val currentState = _state.value
         _state.value = currentState.copy(
-            uiStateType = if (isEligibleForFeature) VoiceToContentUIStateType.READY_TO_RECORD else VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE,
-            secondaryHeader = currentState.secondaryHeader?.copy(requestsAvailable = requestsAvailable.toString(), isProgressIndicatorVisible = false),
+            uiStateType = if (isEligibleForFeature) READY_TO_RECORD else INELIGIBLE_FOR_FEATURE,
+            secondaryHeader = currentState.secondaryHeader?.copy(
+                requestsAvailable = requestsAvailable.toString(),
+                isProgressIndicatorVisible = false
+            ),
             recordingPanel = currentState.recordingPanel?.copy(
                 isEnabled = isEligibleForFeature,
                 isEligibleForFeature = isEligibleForFeature,
                 onMicTap = ::onMicTap,
                 onRequestPermission = ::onRequestPermission,
-                hasPermission = hasAllPermissionsForRecording())
+                hasPermission = hasAllPermissionsForRecording()
+            )
         )
     }
 
     private fun transitionToRecording() {
         val currentState = _state.value
         _state.value = currentState.copy(
-            uiStateType = VoiceToContentUIStateType.RECORDING,
+            uiStateType = RECORDING,
             header = currentState.header.copy(label = R.string.voice_to_content_recording_label),
             secondaryHeader = currentState.secondaryHeader?.copy(
                 timeElapsed = "00:00:00",
@@ -221,7 +234,7 @@ class VoiceToContentViewModel @Inject constructor(
     private fun transitionToProcessing() {
         val currentState = _state.value
         _state.value = currentState.copy(
-            uiStateType = VoiceToContentUIStateType.PROCESSING,
+            uiStateType = PROCESSING,
             header = currentState.header.copy(label = R.string.voice_to_content_processing),
             secondaryHeader = null,
             recordingPanel = null
@@ -232,7 +245,7 @@ class VoiceToContentViewModel @Inject constructor(
     private fun transitionToError() {
         val currentState = _state.value
         _state.value = currentState.copy(
-            uiStateType = VoiceToContentUIStateType.ERROR,
+            uiStateType = ERROR,
             header = currentState.header.copy( label = R.string.voice_to_content_ready_to_record),
             secondaryHeader = null,
             recordingPanel = null

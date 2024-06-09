@@ -206,10 +206,17 @@ fun PreviewInitializingView() {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.INITIALIZING,
             header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
-            secondaryHeader = SecondaryHeaderUIModel(label = R.string.voice_to_content_secondary_header_label, isProgressIndicatorVisible = true),
-            recordingPanel = RecordingPanelUIModel(actionLabel = R.string.voice_to_content_begin_recording_label, isEnabled = false, hasPermission = false)
+            secondaryHeader = SecondaryHeaderUIModel(
+                label = R.string.voice_to_content_secondary_header_label,
+                isProgressIndicatorVisible = true
+            ),
+            recordingPanel = RecordingPanelUIModel(
+                actionLabel = R.string.voice_to_content_begin_recording_label,
+                isEnabled = false,
+                hasPermission = false
+            )
         )
-      VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, amplitudes = listOf())
     }
 }
 
@@ -228,7 +235,8 @@ fun PreviewReadyToRecordView() {
                 onMicTap = {},
                 onStopTap = {},
                 onRequestPermission = {},
-                isEligibleForFeature = true)
+                isEligibleForFeature = true
+            )
         )
         VoiceToContentView(state = state, amplitudes = listOf())
     }
@@ -247,7 +255,8 @@ fun PreviewNotEligibleToRecordView() {
                 actionLabel = R.string.voice_to_content_begin_recording_label,
                 isEnabled = false,
                 isEligibleForFeature = false,
-                urlLink = "https://www.wordpress.com")
+                urlLink = "https://www.wordpress.com"
+            )
         )
         VoiceToContentView(state = state, amplitudes = listOf())
     }
@@ -269,9 +278,21 @@ fun PreviewRecordingView() {
                 onMicTap = {},
                 onStopTap = {},
                 onRequestPermission = {},
-                isEligibleForFeature = true)
+                isEligibleForFeature = true
+            )
         )
-        VoiceToContentView(state = state, amplitudes = listOf(1.1f, 2.2f, 3.3f, 4.4f, 2.2f, 3.3f, 1.1f, 2.2f, 3.3f, 4.4f, 2.2f, 3.3f, 1.1f, 2.2f, 3.3f, 4.4f, 2.2f, 3.3f))
+        VoiceToContentView(
+            state = state,
+            amplitudes = listOf(
+                1.1f,
+                2.2f,
+                3.3f,
+                4.4f,
+                2.2f,
+                3.3f,
+                1.1f
+            )
+        )
     }
 }
 

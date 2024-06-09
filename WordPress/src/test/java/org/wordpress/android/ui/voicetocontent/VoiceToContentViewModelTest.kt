@@ -1,46 +1,31 @@
 package org.wordpress.android.ui.voicetocontent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runTest
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
-import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.audio.RecordingUpdate
-import java.io.File
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class VoiceToContentViewModelTest : BaseUnitTest() {
-    @Mock
-    lateinit var voiceToContentFeatureUtils: VoiceToContentFeatureUtils
-
-    @Mock
-    lateinit var voiceToContentUseCase: VoiceToContentUseCase
-
-    @Mock
-    lateinit var recordingUseCase: RecordingUseCase
-
-    @Mock
-    lateinit var selectedSiteRepository: SelectedSiteRepository
-
-    @Mock
-    lateinit var jetpackAIStore: JetpackAIStore
-
-    private lateinit var viewModel: VoiceToContentViewModel
-
-    private lateinit var uiState: MutableList<VoiceToContentResult>
+//    @Mock
+//    lateinit var voiceToContentFeatureUtils: VoiceToContentFeatureUtils
+//
+//    @Mock
+//    lateinit var voiceToContentUseCase: VoiceToContentUseCase
+//
+//    @Mock
+//    lateinit var recordingUseCase: RecordingUseCase
+//
+//    @Mock
+//    lateinit var selectedSiteRepository: SelectedSiteRepository
+//
+//    @Mock
+//    lateinit var jetpackAIStore: JetpackAIStore
+//
+//    private lateinit var viewModel: VoiceToContentViewModel
+//
+//    private lateinit var uiState: MutableList<VoiceToContentResult>
 
    /* private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
         hasFeature = true,
