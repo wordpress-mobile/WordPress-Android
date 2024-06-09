@@ -1,137 +1,112 @@
-package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
+package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
+import org.jsoup.nodes.Document
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.helpers.MediaFile
+import java.util.regex.Pattern
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.helpers.MediaFile;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.wordpress.android.util.AppLog.T.MEDIA;
-
-public class GalleryBlockProcessor extends BlockProcessor {
-    @NonNull
-    private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
-    @Nullable
-    private String mAttachmentPageUrl;
-    @Nullable
-    private String mLinkTo;
+class GalleryBlockProcessor(
+    localId: String, mediaFile: MediaFile, siteUrl: String,
+    private val mMediaUploadCompletionProcessor: MediaUploadCompletionProcessor
+) : BlockProcessor(localId, mediaFile) {
+    private val mAttachmentPageUrl: String? = mediaFile.getAttachmentPageURL(siteUrl)
+    private var mLinkTo: String? = null
 
     /**
      * Query selector for selecting the img element from gallery which needs processing
      */
-    @NonNull
-    private String mGalleryImageQuerySelector;
+    private val mGalleryImageQuerySelector = StringBuilder()
+        .append("img[data-id=\"")
+        .append(localId)
+        .append("\"]")
+        .toString()
 
-    /**
-     * Template pattern used to match and splice inner image blocks in the refactored gallery format
-     */
-    private static final Pattern PATTERN_GALLERY_INNER = Pattern.compile(new StringBuilder()
-            .append("(^.*?<figure class=\"[^\"]*?wp-block-gallery[^\"]*?\">\\s*)")
-            .append("(.*)") // inner block contents
-            .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
-
-    public GalleryBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, @NonNull String siteUrl,
-                                 @NonNull MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
-        super(localId, mediaFile);
-        mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
-        mGalleryImageQuerySelector = new StringBuilder()
-                .append("img[data-id=\"")
-                .append(localId)
-                .append("\"]")
-                .toString();
-        mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
-    }
-
-    @Override
-    public boolean processBlockContentDocument(@NonNull Document document) {
+    override fun processBlockContentDocument(document: Document): Boolean {
         // select image element with our local id
-        Element targetImg = document.select(mGalleryImageQuerySelector).first();
+        val targetImg = document.select(mGalleryImageQuerySelector).first()
 
         // if a match is found, proceed with replacement
         if (targetImg != null) {
             // replace attributes
-            targetImg.attr("src", remoteUrl);
-            targetImg.attr("data-id", remoteId);
-            targetImg.attr("data-full-url", remoteUrl);
-            targetImg.attr("data-link", mAttachmentPageUrl);
+            targetImg.attr("src", remoteUrl)
+            targetImg.attr("data-id", remoteId)
+            targetImg.attr("data-full-url", remoteUrl)
+            targetImg.attr("data-link", mAttachmentPageUrl)
 
             // replace class
-            targetImg.removeClass("wp-image-" + localId);
-            targetImg.addClass("wp-image-" + remoteId);
+            targetImg.removeClass("wp-image-$localId")
+            targetImg.addClass("wp-image-$remoteId")
 
             // set parent anchor href if necessary
-            Element parent = targetImg.parent();
-            if (parent != null && parent.is("a") && mLinkTo != null) {
-                switch (mLinkTo) {
-                    case "file":
-                        parent.attr("href", remoteUrl);
-                        break;
-                    case "post":
-                        parent.attr("href", mAttachmentPageUrl);
-                        break;
-                    default:
-                        return false;
+            val parent = targetImg.parent()
+            if (parent != null && parent.`is`("a") && mLinkTo != null) {
+                when (mLinkTo) {
+                    "file" -> parent.attr("href", remoteUrl)
+                    "post" -> parent.attr("href", mAttachmentPageUrl)
+                    else -> return false
                 }
             }
 
             // return injected block
-            return true;
+            return true
         }
 
-        return false;
+        return false
     }
 
-    @Override
-    public boolean processBlockJsonAttributes(@NonNull JsonObject jsonAttributes) {
+    override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
         // The new format does not have an `ids` attributes, so returning false here will defer to recursive processing
-        JsonArray ids = jsonAttributes.getAsJsonArray("ids");
-        if (ids == null || ids.isJsonNull()) {
-            return false;
+        val ids = jsonAttributes.getAsJsonArray("ids")
+        if (ids == null || ids.isJsonNull) {
+            return false
         }
-        JsonElement linkTo = jsonAttributes.get("linkTo");
-        if (linkTo != null && !linkTo.isJsonNull()) {
-            mLinkTo = linkTo.getAsString();
+        val linkTo = jsonAttributes["linkTo"]
+        if (linkTo != null && !linkTo.isJsonNull) {
+            mLinkTo = linkTo.asString
         }
-        for (int i = 0; i < ids.size(); i++) {
-            JsonElement id = ids.get(i);
-            if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
+        for (i in 0 until ids.size()) {
+            val id = ids[i]
+            if (id != null && !id.isJsonNull && id.asString == localId) {
                 try {
-                    ids.set(i, new JsonPrimitive(Integer.parseInt(remoteId, 10)));
-                } catch (NumberFormatException e) {
-                    AppLog.e(MEDIA, e.getMessage());
+                    ids[i] = JsonPrimitive(remoteId.toInt(10))
+                } catch (e: NumberFormatException) {
+                    AppLog.e(AppLog.T.MEDIA, e.message)
                 }
-                return true;
+                return true
             }
         }
-        return false;
+        return false
     }
 
-    @NonNull
-    @Override
-    public String processInnerBlock(@NonNull String block) {
-        Matcher innerMatcher = PATTERN_GALLERY_INNER.matcher(block);
-        boolean innerCapturesFound = innerMatcher.find();
+    override fun processInnerBlock(block: String): String {
+        val innerMatcher = PATTERN_GALLERY_INNER.matcher(block)
+        val innerCapturesFound = innerMatcher.find()
 
         // process inner contents recursively
         if (innerCapturesFound) {
-            String innerProcessed = mMediaUploadCompletionProcessor.processContent(innerMatcher.group(2)); //
-            return new StringBuilder()
-                    .append(innerMatcher.group(1))
-                    .append(innerProcessed)
-                    .append(innerMatcher.group(3))
-                    .toString();
+            val innerProcessed =
+                mMediaUploadCompletionProcessor.processContent(innerMatcher.group(2)) //
+            return StringBuilder()
+                .append(innerMatcher.group(1))
+                .append(innerProcessed)
+                .append(innerMatcher.group(3))
+                .toString()
         }
 
-        return block;
+        return block
+    }
+
+    companion object {
+        /**
+         * Template pattern used to match and splice inner image blocks in the refactored gallery format
+         */
+        private val PATTERN_GALLERY_INNER: Pattern = Pattern.compile(
+            StringBuilder()
+                .append("(^.*?<figure class=\"[^\"]*?wp-block-gallery[^\"]*?\">\\s*)")
+                .append("(.*)") // inner block contents
+                .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL
+        )
     }
 }
