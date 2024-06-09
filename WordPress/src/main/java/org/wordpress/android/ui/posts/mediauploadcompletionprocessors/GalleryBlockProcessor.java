@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,13 +19,17 @@ import java.util.regex.Pattern;
 import static org.wordpress.android.util.AppLog.T.MEDIA;
 
 public class GalleryBlockProcessor extends BlockProcessor {
+    @NonNull
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
+    @Nullable
     private String mAttachmentPageUrl;
+    @Nullable
     private String mLinkTo;
 
     /**
      * Query selector for selecting the img element from gallery which needs processing
      */
+    @NonNull
     private String mGalleryImageQuerySelector;
 
     /**
@@ -36,7 +41,7 @@ public class GalleryBlockProcessor extends BlockProcessor {
             .append("(\\s*</figure>\\s*<!-- /wp:gallery -->.*)").toString(), Pattern.DOTALL);
 
     public GalleryBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, @NonNull String siteUrl,
-                                 MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
+                                 @NonNull MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
         mGalleryImageQuerySelector = new StringBuilder()
