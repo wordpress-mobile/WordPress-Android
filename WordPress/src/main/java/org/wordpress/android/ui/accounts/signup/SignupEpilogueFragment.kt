@@ -92,11 +92,11 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
     private lateinit var mHeaderAvatarAdd: ImageView
     private var mDisplayName: String? = null
     private lateinit var mEmailAddress: String
-    lateinit var mPhotoUrl: String
+    private lateinit var mPhotoUrl: String
     private var mUsername: String? = null
     private lateinit var mInputPassword: WPLoginInputRow
     private lateinit var mHeaderAvatar: ImageView
-    lateinit var mHeaderDisplayName: WPTextView
+    private lateinit var mHeaderDisplayName: WPTextView
     private lateinit var mHeaderEmailAddress: WPTextView
     private var mBottomShadow: View? = null
     private lateinit var mScrollView: NestedScrollView
