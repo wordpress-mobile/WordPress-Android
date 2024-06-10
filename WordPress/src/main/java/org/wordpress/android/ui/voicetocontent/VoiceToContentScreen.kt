@@ -192,8 +192,8 @@ fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
                 MicToStopIcon(model)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = stringResource(id = model.actionLabel),
-                    style = actionLabelStyle,
+                    text = stringResource(id = it.actionLabel),
+                    style = if(it.isEnabled) actionLabelStyle else actionLabelStyleDisabled
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
