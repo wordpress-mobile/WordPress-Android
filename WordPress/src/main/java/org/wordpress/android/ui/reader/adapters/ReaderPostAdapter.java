@@ -944,21 +944,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            int numExisting = 0;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
                 case SEARCH_RESULTS:
                     mAllPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                    numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
                     if (mCurrentFeedId != 0) {
                         mAllPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                        numExisting = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
                     } else {
                         mAllPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                        numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
                     break;
                 case TAGS_FEED:
