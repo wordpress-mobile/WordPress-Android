@@ -63,8 +63,10 @@ class CommentDetailViewModel @Inject constructor(
         comment.apply { this.status = status.toString() }
         commentsStoreAdapter.dispatch(
             if (status == CommentStatus.DELETED) {
+                // For deletion, we need to dispatch a specific action.
                 CommentActionBuilder.newDeleteCommentAction(CommentStore.RemoteCommentPayload(site, comment))
             } else {
+                // Actual moderation (push the modified comment).
                 CommentActionBuilder.newPushCommentAction(CommentStore.RemoteCommentPayload(site, comment))
             }
         )

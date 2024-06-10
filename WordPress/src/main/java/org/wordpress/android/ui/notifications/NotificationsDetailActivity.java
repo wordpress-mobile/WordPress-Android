@@ -568,7 +568,10 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         resultIntent.putExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA, newStatus.toString());
 
         setResult(RESULT_OK, resultIntent);
-        finish();
+
+        if (newStatus == CommentStatus.DELETED) {
+            finish();
+        }
     }
 
     @SuppressWarnings("unused")
