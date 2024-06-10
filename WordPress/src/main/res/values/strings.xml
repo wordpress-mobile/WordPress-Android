@@ -4902,24 +4902,15 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Voice to Content -->
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
-    <string name="voice_to_content_initializing">Initializing</string>
-    <string name="voice_to_content_preparing">Preparing</string>
-    <string name="voice_to_content_ready_to_record">Ready to Record</string>
-    <string name="voice_to_content_ready_to_record_label">Ready to Record</string>
-    <string name="voice_to_content_tap_to_start">Tap to start</string>
-    <string name="voice_to_content_recording">Recording</string>
-    <string name="voice_to_content_elapsed_time">Elapsed Time</string>
-    <string name="voice_to_content_tap_to_stop">Tap to stop</string>
     <string name="voice_to_content_processing">Processing</string>
     <string name="voice_to_content_error_label">Error</string>
     <string name="voice_to_content_processing_label">Processing</string>
-    <string name="voice_to_content_finished_label">Finished</string>
-
     <string name="voice_to_content_base_header_label">Post from Audio</string>
     <string name="voice_to_content_secondary_header_label">Requests available:</string>
     <string name="voice_to_content_begin_recording_label">Begin Recording</string>
     <string name="voice_to_content_recording_label">Recording</string>
-    <string name="voice_to_content_not_eligible_for_feature">Out of requests or need requests message</string>
+    <string name="voice_to_content_ineligible">You don\'t have enough requests available to create a post from audio.</string>
+    <string name="voice_to_content_upgrade">Upgrade for more requests</string>
     <string name="voice_to_content_done_label">Done</string>
 
 </resources>
