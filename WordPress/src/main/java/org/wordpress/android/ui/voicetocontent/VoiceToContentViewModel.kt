@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -82,8 +81,6 @@ class VoiceToContentViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = prepareVoiceToContentUseCase.execute(site)) {
                 is PrepareVoiceToContentResult.Success -> {
-                    if (result.model.siteRequireUpgrade)
-                    delay(1000) // todo: annmarie remove this for debug only
                     transitionToReadyToRecordOrIneligibleForFeature(result.model)
                 }
 
