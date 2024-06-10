@@ -815,10 +815,10 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
     }
 
     private fun updateUsername() {
-        val payload = PushUsernamePayload(
-            (mUsername)!!, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS
-        )
-        dispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload))
+        mUsername?.let {
+            val payload = PushUsernamePayload(it, AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS)
+            dispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload))
+        }
     }
 
     private inner class DownloadAvatarAndUploadGravatarThread(
