@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.voicetocontent
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +32,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +42,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.buttons.Drawable
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -76,7 +83,7 @@ fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
             else -> {
                 Header(state.header)
                 SecondaryHeader(state.secondaryHeader)
-                RecordingPanel(state.recordingPanel, amplitudes)
+                RecordingPanel(state, amplitudes)
             }
         }
     }
@@ -154,8 +161,8 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
 }
 
 @Composable
-fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
-    model?.let {
+fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
+    model.recordingPanel?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
@@ -168,7 +175,7 @@ fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(8.dp) // Adjust padding as needed
             ) {
-                if (model.isEligibleForFeature) {
+                if (it.isEligibleForFeature) {
                     Box(
                         contentAlignment = Alignment.Center,
                         modifier = Modifier
@@ -185,21 +192,81 @@ fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
                             color = MaterialTheme.colors.primary
                         )
                     }
-                } else {
-                    Text(text = stringResource(id = model.message), style = errorMessageStyle)
-                    Text(text = model.urlLink, style = errorUrlLinkCTA)
+                } else if (model.uiStateType == VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE) {
+                    InEligible(model = it)
                 }
-                MicToStopIcon(model)
+                MicToStopIcon(it)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(id = it.actionLabel),
-                    style = if(it.isEnabled) actionLabelStyle else actionLabelStyleDisabled
+                    style = if (it.isEnabled) actionLabelStyle else actionLabelStyleDisabled
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
 }
+
+@Composable
+fun InEligible(
+    model: RecordingPanelUIModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Text(text = stringResource(id = model.message), style = errorMessageStyle)
+        if (model.urlLink.isBlank().not()) {
+            ClickableTextViewWithLinkImage(
+                text = model.urlMessage,
+                drawableRight = Drawable(R.drawable.ic_external_white_24dp),
+                onClick = { model.onLinkTap?.invoke(model.urlLink) }
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+    }
+}
+
+@Composable
+fun ClickableTextViewWithLinkImage(
+    modifier: Modifier = Modifier,
+    drawableRight: Drawable? = null,
+    text: String,
+    onClick: () -> Unit
+) {
+    ConstraintLayout(modifier = modifier
+        .clickable { onClick.invoke() }) {
+        val (buttonTextRef) = createRefs()
+        Box(modifier = Modifier
+            .constrainAs(buttonTextRef) {
+                end.linkTo(parent.end, drawableRight?.iconSize ?: 0.dp)
+                width = Dimension.wrapContent
+            }
+        ) {
+            Text(
+                text = text,
+                style = errorUrlLinkCTA
+            )
+        }
+
+        drawableRight?.let { drawable ->
+            val (imageRight) = createRefs()
+            Image(
+                modifier = Modifier.constrainAs(imageRight) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(buttonTextRef.end, margin = 0.dp)
+                }.size(16.dp),
+                painter = painterResource(id = drawable.resId),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                contentDescription = null
+            )
+        }
+    }
+}
+
 
 private val headerStyle: TextStyle
     @Composable
@@ -302,6 +369,7 @@ fun PreviewNotEligibleToRecordView() {
                 actionLabel = R.string.voice_to_content_begin_recording_label,
                 isEnabled = false,
                 isEligibleForFeature = false,
+                urlMessage = "Upgrade to use this feature",
                 urlLink = "https://www.wordpress.com"
             )
         )
