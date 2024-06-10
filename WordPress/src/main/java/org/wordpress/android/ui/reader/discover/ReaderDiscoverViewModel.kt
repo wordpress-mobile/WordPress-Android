@@ -421,7 +421,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             }
         }
     }
-    
+
     private fun onMoreButtonClicked(postUiState: ReaderPostNewUiState) {
         changeMoreMenuVisibility(postUiState, true)
     }

@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.core.view.isGone
-import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderTagHeaderViewBinding
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState
@@ -21,7 +20,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : RelativeLayout(context, attrs, defStyleAttr) {
-    private var binding: ReaderTagBinding
+    private var binding: ReaderTagHeaderViewBinding
 
     @Inject
     lateinit var uiHelpers: UiHelpers
@@ -33,35 +32,13 @@ class ReaderTagHeaderView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        val readerTagHeaderViewBinding =
-            ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
         binding =
-            ReaderTagBinding.ImprovementsEnabled(
-                textTag = readerTagHeaderViewBinding.textTag,
-                followButton = readerTagHeaderViewBinding.followContainer.followButton,
-                textTagFollowCount = readerTagHeaderViewBinding.followContainer.textBlogFollowCount,
-            )
-        binding.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
-    }
-
-    abstract class ReaderTagBinding {
-        abstract val textTag: MaterialTextView
-        abstract val followButton: ReaderFollowButton
-
-        data class ImprovementsDisabled(
-            override val textTag: MaterialTextView,
-            override val followButton: ReaderFollowButton
-        ) : ReaderTagBinding()
-
-        data class ImprovementsEnabled(
-            override val textTag: MaterialTextView,
-            override val followButton: ReaderFollowButton,
-            val textTagFollowCount: MaterialTextView,
-        ) : ReaderTagBinding()
+            ReaderTagHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
+        binding.followContainer.followButton.setOnClickListener { onFollowBtnClicked?.invoke() }
     }
 
     fun updateUi(uiState: ReaderTagHeaderUiState) = with(binding) {
-        (binding as? ReaderTagBinding.ImprovementsEnabled)?.textTagFollowCount?.isGone = true
+        binding.followContainer.textBlogFollowCount.isGone = true
         // creative-writing -> Creative Writing
         textTag.text = uiState.title
             .split("-")
@@ -69,6 +46,7 @@ class ReaderTagHeaderView @JvmOverloads constructor(
                 it.replaceFirstChar { it.titlecase(localeProvider.getAppLocale()) }
             }
         with(uiState.followButtonUiState) {
+            val followButton = binding.followContainer.followButton
             followButton.setIsFollowed(isFollowed)
             followButton.isEnabled = isEnabled
             onFollowBtnClicked = onFollowButtonClicked
