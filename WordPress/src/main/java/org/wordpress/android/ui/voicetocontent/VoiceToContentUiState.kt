@@ -26,6 +26,7 @@ data class RecordingPanelUIModel(
     val isRecordEnabled: Boolean = false,
     val isEnabled: Boolean = false,
     @StringRes val message: Int = R.string.voice_to_content_not_eligible_for_feature,
+    val urlMessage: String = "",
     val urlLink: String = "",
     val onLinkTap: ((String) -> Unit)? = null,
     @StringRes val actionLabel: Int
