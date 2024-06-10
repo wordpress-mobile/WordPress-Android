@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -192,6 +193,8 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
             case Manifest.permission.POST_NOTIFICATIONS:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_NOTIFICATIONS;
+            case Manifest.permission.ACCESS_MEDIA_LOCATION:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_ACCESS_MEDIA_LOCATION;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
@@ -216,6 +219,8 @@ public class WPPermissionUtils {
                 return context.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:
                 return context.getString(R.string.permission_microphone);
+            case Manifest.permission.ACCESS_MEDIA_LOCATION:
+                return context.getString(R.string.permission_access_media_location);
             default:
                 AppLog.w(AppLog.T.UTILS, "No name for requested permission");
                 return context.getString(R.string.unknown);
