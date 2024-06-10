@@ -421,12 +421,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             }
         }
     }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    private fun onDiscoverClicked(postId: Long, blogId: Long) {
-        // TODO malinjir: add on discover clicked listener
-    }
-
+    
     private fun onMoreButtonClicked(postUiState: ReaderPostNewUiState) {
         changeMoreMenuVisibility(postUiState, true)
     }
