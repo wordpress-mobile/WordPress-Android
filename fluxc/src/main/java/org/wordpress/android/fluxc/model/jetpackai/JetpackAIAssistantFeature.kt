@@ -34,6 +34,7 @@ data class JetpackAIAssistantFeature(
     val usagePeriod: UsagePeriod?,
     val siteRequireUpgrade: Boolean,
     val upgradeType: String,
+    val upgradeUrl: String?,
     val currentTier: Tier?,
     val nextTier: Tier?,
     val tierPlans: List<Tier>,
