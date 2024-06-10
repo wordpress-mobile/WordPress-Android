@@ -168,7 +168,7 @@ fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent) 
+                .background(Color.Transparent)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -217,10 +217,10 @@ fun InEligible(
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text(text = stringResource(id = model.message), style = errorMessageStyle)
+        Text(text = stringResource(id = model.ineligibleMessage), style = errorMessageStyle)
          if (model.upgradeUrl?.isNotBlank() == true) {
             ClickableTextViewWithLinkImage(
-                text = model.urlMessage,
+                text = stringResource(id = model.upgradeMessage),
                 drawableRight = Drawable(R.drawable.ic_external_white_24dp),
                 onClick = { model.onLinkTap?.invoke(model.upgradeUrl) }
             )
@@ -254,11 +254,13 @@ fun ClickableTextViewWithLinkImage(
         drawableRight?.let { drawable ->
             val (imageRight) = createRefs()
             Image(
-                modifier = Modifier.constrainAs(imageRight) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(buttonTextRef.end, margin = 0.dp)
-                }.size(16.dp),
+                modifier = Modifier
+                    .constrainAs(imageRight) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(buttonTextRef.end, margin = 0.dp)
+                    }
+                    .size(16.dp),
                 painter = painterResource(id = drawable.resId),
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                 contentDescription = null
@@ -369,7 +371,7 @@ fun PreviewNotEligibleToRecordView() {
                 actionLabel = R.string.voice_to_content_begin_recording_label,
                 isEnabled = false,
                 isEligibleForFeature = false,
-                urlMessage = "Upgrade to use this feature",
+                upgradeMessage = R.string.voice_to_content_upgrade,
                 upgradeUrl = "https://www.wordpress.com"
             )
         )
