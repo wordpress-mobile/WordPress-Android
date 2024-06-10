@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -31,9 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
 
@@ -117,7 +121,7 @@ fun Header(model: HeaderUIModel) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(text = stringResource(id = model.label), style = MaterialTheme.typography.h6)
+        Text(text = stringResource(id = model.label), style = headerStyle)
         IconButton(onClick = model.onClose) {
             Icon(imageVector = Icons.Default.Close, contentDescription = null)
         }
@@ -131,7 +135,7 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = model.label), style = MaterialTheme.typography.subtitle2)
+            Text(text = stringResource(id = model.label), style = secondaryHeaderStyle)
             Spacer(modifier = Modifier.width(8.dp)) // Add space between text and progress
             if (model.isProgressIndicatorVisible) {
                 Box(
@@ -142,7 +146,7 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
                     )
                 }
             } else {
-                Text(text = model.requestsAvailable, style = MaterialTheme.typography.subtitle2)
+                Text(text = model.requestsAvailable, style = secondaryHeaderStyle)
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -182,14 +186,14 @@ fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
                         )
                     }
                 } else {
-                    Text(text = stringResource(id = model.message))
-                    Text(text = model.urlLink)
+                    Text(text = stringResource(id = model.message), style = errorMessageStyle)
+                    Text(text = model.urlLink, style = errorUrlLinkCTA)
                 }
                 MicToStopIcon(model)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(id = model.actionLabel),
-                    style = MaterialTheme.typography.h6,
+                    style = actionLabelStyle,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -295,6 +299,44 @@ fun PreviewRecordingView() {
         )
     }
 }
+
+private val headerStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val secondaryHeaderStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+    )
+
+private val actionLabelStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val errorMessageStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val errorUrlLinkCTA: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.primary
+    )
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
