@@ -81,6 +81,7 @@ import java.util.EnumSet
 import java.util.Locale
 import javax.inject.Inject
 
+@Suppress("LargeClass")
 class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
     FullScreenDialogFragment.OnConfirmListener, FullScreenDialogFragment.OnDismissListener,
     OnShownListener {
@@ -594,8 +595,8 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
         mDialog?.show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
     }
 
-    private fun loadAvatar(avatarUrl: String?, injectFilePath: String?) {
-        val newAvatarUploaded = !injectFilePath.isNullOrEmpty()
+    private fun loadAvatar(avatarUrl: String, injectFilePath: String) {
+        val newAvatarUploaded = injectFilePath.isNotEmpty()
         if (newAvatarUploaded) {
             // Remove specific URL entry from bitmap cache. Update it via injected request cache.
             getBitmapCache().removeSimilar(avatarUrl)
@@ -603,7 +604,7 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             mAppPrefsWrapper.avatarVersion += 1
         }
 
-        val bitmap = getBitmapCache()[(avatarUrl)!!]
+        val bitmap = getBitmapCache()[avatarUrl]
         // Avatar's API doesn't synchronously update the image at avatarUrl. There is a replication lag
         // (cca 5s), before the old avatar is replaced with the new avatar. Therefore we need to use this workaround,
         // which temporary saves the new image into a local bitmap cache.
@@ -613,7 +614,11 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
             mImageManager.loadIntoCircle(
                 mHeaderAvatar,
                 ImageType.AVATAR_WITHOUT_BACKGROUND,
-                (if (newAvatarUploaded) injectFilePath else avatarUrl)!!,
+                if (newAvatarUploaded) {
+                    injectFilePath
+                } else {
+                    avatarUrl
+                },
                 object : ImageManager.RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                         AppLog.e(
