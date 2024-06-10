@@ -127,7 +127,7 @@ fun ExistingLayoutPreview() {
                 onStopTap = {},
                 hasPermission = true,
                 onRequestPermission = {},
-                actionLabel = R.string.voice_to_content_ready_to_record_label, isEnabled = false
+                actionLabel = R.string.voice_to_content_base_header_label, isEnabled = false
             )
         )
     }

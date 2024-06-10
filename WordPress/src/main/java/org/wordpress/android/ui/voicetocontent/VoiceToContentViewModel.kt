@@ -244,7 +244,7 @@ class VoiceToContentViewModel @Inject constructor(
         val currentState = _state.value
         _state.value = currentState.copy(
             uiStateType = ERROR,
-            header = currentState.header.copy( label = R.string.voice_to_content_ready_to_record),
+            header = currentState.header.copy( label = R.string.voice_to_content_error_label),
             secondaryHeader = null,
             recordingPanel = null
         )
