@@ -43,7 +43,7 @@ fun MicToStopIcon(model: RecordingPanelUIModel) {
     val isLight = !isSystemInDarkTheme()
 
     val circleColor by animateColorAsState(
-        targetValue = if (!isEnabled) MaterialTheme.colors.onSurface.copy(alpha = 0.3f) //ContentAlpha.disabled or 0.3f)
+        targetValue = if (!isEnabled) MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
         else if (isMic) MaterialTheme.colors.primary
         else if (isLight) Color.Black
         else Color.White, label = ""

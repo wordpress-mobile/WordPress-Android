@@ -168,7 +168,7 @@ fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent) // todo: annmarie double check if this is needed
+                .background(Color.Transparent) 
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
