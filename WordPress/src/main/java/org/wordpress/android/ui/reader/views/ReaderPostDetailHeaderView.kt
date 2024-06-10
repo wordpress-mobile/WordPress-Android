@@ -4,11 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import com.google.android.material.textview.MaterialTextView
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
@@ -123,7 +120,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         setOnClickListener { followButtonUiState.onFollowButtonClicked?.invoke() }
     }
 
-    private fun ReaderPostDetailHeaderViewBinding.setAuthorAndDate(authorName: String?, dateLine: String) = with(binding.layoutBlogSection) {
+    private fun setAuthorAndDate(authorName: String?, dateLine: String) = with(binding.layoutBlogSection) {
         uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
 
