@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpackai
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.android.volley.RequestQueue
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Dispatcher
@@ -168,8 +169,11 @@ class JetpackAIRestClient @Inject constructor(
 
         return when (response) {
             is Response.Success -> {
-                (response.data as? JetpackAIQueryDto)?.toJetpackAIQueryResponse()
-                    ?: JetpackAIQueryResponse.Error(JetpackAIQueryErrorType.INVALID_DATA, "Can not get the object")
+                val data = response.data as? JetpackAIQueryDto
+                data?.toJetpackAIQueryResponse()
+                    ?: JetpackAIQueryResponse.Error(
+                        JetpackAIQueryErrorType.INVALID_DATA, "Can not get the object"
+                    )
             }
             is Response.Error -> {
                 JetpackAIQueryResponse.Error(
@@ -222,7 +226,8 @@ class JetpackAIRestClient @Inject constructor(
         @SerializedName ("completion") val completion: String
     )
 
-    internal data class JetpackAIQueryDto(val model: String, val choices: List<Choice>) {
+    @VisibleForTesting
+    internal data class JetpackAIQueryDto(val model: String, val choices: List<Choice>?) {
         data class Choice(val index: Int, val message: Message) {
             data class Message(val role: String, val content: String)
         }
@@ -253,7 +258,10 @@ class JetpackAIRestClient @Inject constructor(
     }
 
     private fun JetpackAIQueryDto.toJetpackAIQueryResponse(): JetpackAIQueryResponse {
-        return JetpackAIQueryResponse.Success(model, choices.map { choice ->
+        // Check if choices is null or empty
+        val safeChoices = choices ?: emptyList()
+
+        return JetpackAIQueryResponse.Success(model, safeChoices.map { choice ->
             JetpackAIQueryResponse.Success.Choice(
                 choice.index,
                 JetpackAIQueryResponse.Success.Choice.Message(
