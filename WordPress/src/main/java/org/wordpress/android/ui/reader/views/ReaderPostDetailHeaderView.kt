@@ -35,7 +35,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val binding: ReaderPostDetailHeaderBinding
+    private val binding: ReaderPostDetailHeaderViewBinding
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -45,9 +45,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        binding = ReaderPostDetailHeaderBinding.ImprovementsEnabled(
-            ReaderPostDetailHeaderViewBinding.inflate(LayoutInflater.from(context), this, true), uiHelpers
-        )
+        binding = ReaderPostDetailHeaderViewBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     fun updatePost(
@@ -61,10 +59,9 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         setAuthorAndDate(uiState.authorName, uiState.dateLine)
 
-        uiHelpers.setTextOrHide(blogNameText, uiState.blogSectionUiState.blogName)
-        blogUrlText?.let { uiHelpers.setTextOrHide(it, uiState.blogSectionUiState.blogUrl) }
+        uiHelpers.setTextOrHide(layoutBlogSection.blogSectionTextBlogName, uiState.blogSectionUiState.blogName)
 
-        followButton.update(uiState.followButtonUiState)
+        headerFollowButton.update(uiState.followButtonUiState)
 
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
@@ -72,24 +69,24 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateInteractionSection(uiState.interactionSectionUiState, readingPreferences)
     }
 
-    private fun ReaderPostDetailHeaderBinding.updateTitle(
+    private fun ReaderPostDetailHeaderViewBinding.updateTitle(
         title: UiString?,
         readingPreferences: ReaderReadingPreferences?
     ) {
-        uiHelpers.setTextOrHide(titleText, title)
+        uiHelpers.setTextOrHide(textTitle, title)
 
         readingPreferences?.let { prefs ->
             // Using the base font from the Improved header Theme for now
             val fontSize = resources.getDimension(R.dimen.text_sz_double_extra_large) * prefs.fontSize.multiplier
-            titleText.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-            titleText.typeface = prefs.fontFamily.toTypeface()
+            textTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+            textTitle.typeface = prefs.fontFamily.toTypeface()
         }
     }
 
-    private fun ReaderPostDetailHeaderBinding.updateBlogSectionClick(
+    private fun ReaderPostDetailHeaderViewBinding.updateBlogSectionClick(
         state: ReaderBlogSectionUiState
     ) {
-        blogSectionRoot.apply {
+        layoutBlogSection.root.apply {
             setBackgroundResource(context.getDrawableResIdFromAttribute(state.blogSectionClickData?.background ?: 0))
             state.blogSectionClickData?.onBlogSectionClicked?.let { onClick ->
                 setOnClickListener { onClick.invoke() }
@@ -100,7 +97,8 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         }
     }
 
-    private fun ReaderPostDetailHeaderBinding.updateAvatars(state: ReaderBlogSectionUiState) {
+    private fun ReaderPostDetailHeaderViewBinding.updateAvatars(state: ReaderBlogSectionUiState) {
+        val blogAvatarImage = layoutBlogSection.blogSectionImageBlogAvatar
         uiHelpers.updateVisibility(blogAvatarImage, state.avatarOrBlavatarUrl != null)
         if (state.avatarOrBlavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(blogAvatarImage)
@@ -108,6 +106,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
             imageManager.loadIntoCircle(blogAvatarImage, state.blavatarType, state.avatarOrBlavatarUrl)
         }
 
+        val authorAvatarImage = layoutBlogSection.blogSectionImageAuthorAvatar
         val showAuthorsAvatar = state.authorAvatarUrl != null && state.isAuthorAvatarVisible
         uiHelpers.updateVisibility(authorAvatarImage, showAuthorsAvatar)
         if (!showAuthorsAvatar) {
@@ -124,83 +123,46 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         setOnClickListener { followButtonUiState.onFollowButtonClicked?.invoke() }
     }
 
-    private interface ReaderPostDetailHeaderBinding {
-        val titleText: MaterialTextView
-        val blogNameText: MaterialTextView
-        val blogUrlText: MaterialTextView?
-        val expandableTagsView: ReaderExpandableTagsView
-        val blogAvatarImage: ImageView
-        val authorAvatarImage: ImageView
-        val followButton: ReaderFollowButton
-        val blogSectionRoot: ViewGroup
+    private fun ReaderPostDetailHeaderViewBinding.setAuthorAndDate(authorName: String?, dateLine: String) = with(binding.layoutBlogSection) {
+        uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
+        uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
 
-        fun setAuthorAndDate(authorName: String?, dateLine: String)
+        blogSectionDotSeparator.setVisible(authorName != null)
+    }
 
-        fun updateInteractionSection(state: InteractionSectionUiState, readingPreferences: ReaderReadingPreferences?)
+    private fun updateInteractionSection(
+        state: InteractionSectionUiState,
+        readingPreferences: ReaderReadingPreferences?
+    ) {
+        with(binding) {
+            val viewContext = root.context
 
-        class ImprovementsEnabled(
-            private val binding: ReaderPostDetailHeaderViewBinding,
-            private val uiHelpers: UiHelpers,
-        ) : ReaderPostDetailHeaderBinding {
-            override val titleText: MaterialTextView
-                get() = binding.textTitle
-            override val blogNameText: MaterialTextView
-                get() = binding.layoutBlogSection.blogSectionTextBlogName
-            override val blogUrlText: MaterialTextView?
-                get() = null
-            override val expandableTagsView: ReaderExpandableTagsView
-                get() = binding.expandableTagsView
-            override val blogAvatarImage: ImageView
-                get() = binding.layoutBlogSection.blogSectionImageBlogAvatar
-            override val authorAvatarImage: ImageView
-                get() = binding.layoutBlogSection.blogSectionImageAuthorAvatar
-            override val followButton: ReaderFollowButton
-                get() = binding.headerFollowButton
-            override val blogSectionRoot: ViewGroup
-                get() = binding.layoutBlogSection.root
+            val likeCount = state.likeCount
+            val commentCount = state.commentCount
 
-            override fun setAuthorAndDate(authorName: String?, dateLine: String) = with(binding.layoutBlogSection) {
-                uiHelpers.setTextOrHide(blogSectionTextAuthor, authorName)
-                uiHelpers.setTextOrHide(blogSectionTextDateline, dateLine)
+            val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
+                .takeIf { likeCount > 0 }
+            val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
+                .takeIf { commentCount > 0 }
 
-                blogSectionDotSeparator.setVisible(authorName != null)
-            }
+            uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
+            uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
+            headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
 
-            override fun updateInteractionSection(
-                state: InteractionSectionUiState,
-                readingPreferences: ReaderReadingPreferences?
-            ) {
-                with(binding) {
-                    val viewContext = root.context
+            headerLikeCount.setOnClickListener { state.onLikesClicked() }
+            headerCommentCount.setOnClickListener { state.onCommentsClicked() }
 
-                    val likeCount = state.likeCount
-                    val commentCount = state.commentCount
+            readingPreferences?.let { prefs ->
+                // Ideally we should get from the view theme directly, but let's hardcode it for now
+                val baseFontSize = viewContext.resources.getDimension(R.dimen.text_sz_medium)
+                val fontSize = baseFontSize * prefs.fontSize.multiplier
+                headerLikeCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                headerCommentCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                headerDotSeparator.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
 
-                    val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
-                        .takeIf { likeCount > 0 }
-                    val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
-                        .takeIf { commentCount > 0 }
-
-                    uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
-                    uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
-                    headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
-
-                    headerLikeCount.setOnClickListener { state.onLikesClicked() }
-                    headerCommentCount.setOnClickListener { state.onCommentsClicked() }
-
-                    readingPreferences?.let { prefs ->
-                        // Ideally we should get from the view theme directly, but let's hardcode it for now
-                        val baseFontSize = viewContext.resources.getDimension(R.dimen.text_sz_medium)
-                        val fontSize = baseFontSize * prefs.fontSize.multiplier
-                        headerLikeCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-                        headerCommentCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-                        headerDotSeparator.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
-
-                        headerLikeCount.typeface = prefs.fontFamily.toTypeface()
-                        headerCommentCount.typeface = prefs.fontFamily.toTypeface()
-                        headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
-                    }
-                }
+                headerLikeCount.typeface = prefs.fontFamily.toTypeface()
+                headerCommentCount.typeface = prefs.fontFamily.toTypeface()
+                headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
             }
         }
     }
