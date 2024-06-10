@@ -94,6 +94,8 @@ data class JetpackAIAssistantFeatureDto(
     val siteRequireUpgrade: Boolean?,
     @SerializedName("upgrade-type")
     val upgradeType: String?,
+    @SerializedName("upgrade-url")
+    val upgradeUrl: String?,
     @SerializedName("current-tier")
     val currentTier: TierDto?,
     @SerializedName("next-tier")
@@ -114,6 +116,7 @@ data class JetpackAIAssistantFeatureDto(
             usagePeriod = usagePeriod?.toUsagePeriod(),
             siteRequireUpgrade = siteRequireUpgrade ?: false,
             upgradeType = upgradeType.orEmpty(),
+            upgradeUrl = upgradeUrl, // Can be null
             currentTier = currentTier?.toTier(),
             nextTier = nextTier?.toTier(),
             tierPlans = tierPlans?.map { it.toTier() } ?: emptyList(),
