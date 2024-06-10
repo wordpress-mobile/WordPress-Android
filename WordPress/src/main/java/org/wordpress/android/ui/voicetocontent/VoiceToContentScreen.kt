@@ -223,6 +223,12 @@ private val actionLabelStyle: TextStyle
         color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
     )
 
+private val actionLabelStyleDisabled: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled)
+    )
+
 private val errorMessageStyle: TextStyle
     @Composable
     get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
