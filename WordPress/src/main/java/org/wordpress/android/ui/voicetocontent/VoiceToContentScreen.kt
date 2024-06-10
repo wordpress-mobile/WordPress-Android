@@ -218,11 +218,11 @@ fun InEligible(
             .fillMaxWidth()
     ) {
         Text(text = stringResource(id = model.message), style = errorMessageStyle)
-        if (model.urlLink.isBlank().not()) {
+         if (model.upgradeUrl?.isNotBlank() == true) {
             ClickableTextViewWithLinkImage(
                 text = model.urlMessage,
                 drawableRight = Drawable(R.drawable.ic_external_white_24dp),
-                onClick = { model.onLinkTap?.invoke(model.urlLink) }
+                onClick = { model.onLinkTap?.invoke(model.upgradeUrl) }
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -370,7 +370,7 @@ fun PreviewNotEligibleToRecordView() {
                 isEnabled = false,
                 isEligibleForFeature = false,
                 urlMessage = "Upgrade to use this feature",
-                urlLink = "https://www.wordpress.com"
+                upgradeUrl = "https://www.wordpress.com"
             )
         )
         VoiceToContentView(state = state, amplitudes = listOf())

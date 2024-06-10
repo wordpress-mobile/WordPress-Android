@@ -210,7 +210,8 @@ class VoiceToContentViewModel @Inject constructor(
                 isEligibleForFeature = isEligibleForFeature,
                 onMicTap = ::onMicTap,
                 onRequestPermission = ::onRequestPermission,
-                hasPermission = hasAllPermissionsForRecording()
+                hasPermission = hasAllPermissionsForRecording(),
+                upgradeUrl = model.upgradeUrl
             )
         )
     }
