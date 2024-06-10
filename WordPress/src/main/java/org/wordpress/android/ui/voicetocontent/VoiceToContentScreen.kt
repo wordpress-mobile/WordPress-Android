@@ -201,6 +201,43 @@ fun RecordingPanel(model: RecordingPanelUIModel?, amplitudes: List<Float>) {
     }
 }
 
+private val headerStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val secondaryHeaderStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+    )
+
+private val actionLabelStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val errorMessageStyle: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
+    )
+
+private val errorUrlLinkCTA: TextStyle
+    @Composable
+    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        color = MaterialTheme.colors.primary
+    )
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -299,44 +336,6 @@ fun PreviewRecordingView() {
         )
     }
 }
-
-private val headerStyle: TextStyle
-    @Composable
-    get() = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 20.sp,
-        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
-    )
-
-private val secondaryHeaderStyle: TextStyle
-    @Composable
-    get() = androidx.compose.material3.MaterialTheme.typography.bodySmall.copy(
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
-    )
-
-private val actionLabelStyle: TextStyle
-    @Composable
-    get() = androidx.compose.material3.MaterialTheme.typography.bodyMedium.copy(
-        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
-    )
-
-private val errorMessageStyle: TextStyle
-    @Composable
-    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.high)
-    )
-
-private val errorUrlLinkCTA: TextStyle
-    @Composable
-    get() = androidx.compose.material3.MaterialTheme.typography.titleMedium.copy(
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        color = MaterialTheme.colors.primary
-    )
 
 @Preview(showBackground = true)
 @Preview(showBackground = true, device = Devices.PIXEL_4_XL, uiMode = Configuration.UI_MODE_NIGHT_YES)
