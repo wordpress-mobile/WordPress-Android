@@ -5,13 +5,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderAnnouncementCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderAnnouncementCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder
-import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -20,7 +18,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 
-private const val POST_VIEW_TYPE: Int = 1
 private const val INTEREST_VIEW_TYPE: Int = 2
 private const val RECOMMENDED_BLOGS_VIEW_TYPE: Int = 3
 private const val POST_NEW_VIEW_TYPE: Int = 4
@@ -35,7 +32,6 @@ class ReaderDiscoverAdapter(
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
         return when (viewType) {
-            POST_VIEW_TYPE -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
             POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(
                 uiHelpers,
                 imageManager,
@@ -77,8 +73,7 @@ class ReaderDiscoverAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is ReaderPostUiState -> POST_VIEW_TYPE
-            is ReaderPostNewUiState -> POST_NEW_VIEW_TYPE
+            is ReaderPostUiState -> POST_NEW_VIEW_TYPE
             is ReaderInterestsCardUiState -> INTEREST_VIEW_TYPE
             is ReaderRecommendedBlogsCardUiState -> RECOMMENDED_BLOGS_VIEW_TYPE
             is ReaderAnnouncementCardUiState -> READER_ANNOUNCEMENT_TYPE
@@ -103,10 +98,6 @@ class ReaderDiscoverAdapter(
             return when (oldItem) {
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
-                }
-
-                is ReaderPostNewUiState -> {
-                    oldItem.postId == (newItem as ReaderPostNewUiState).postId && oldItem.blogId == newItem.blogId
                 }
 
                 is ReaderRecommendedBlogsCardUiState -> {

@@ -31,7 +31,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
@@ -154,7 +154,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), any(), anyOrNull())).thenReturn(mock())
 
         whenever(
-            uiStateBuilder.mapPostToNewUiState(
+            uiStateBuilder.mapPostToUiState(
                 source = anyString(),
                 post = anyOrNull(),
                 photonWidth = anyInt(),
@@ -170,7 +170,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                 moreMenuItems = anyOrNull()
             )
         ).thenAnswer {
-            createDummyReaderPostNewUiState(
+            createDummyReaderPostUiState(
                 it.getArgument(POST_PARAM_POSITION_NEW),
                 it.getArgument(ON_ITEM_RENDERED_PARAM_POSITION_NEW),
                 it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION_NEW),
@@ -281,7 +281,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
         }
         // Assert
@@ -294,7 +294,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val notCloseToEndIndex = 2
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostNewUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
         }
         // Assert
@@ -334,18 +334,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostNewUiState::class.java)
-    }
-
-    @Test
-    fun `if ReaderPostCard exist then ReaderPostNewUiState will be present in the ContentUIState`() = test {
-        // Arrange
-        val uiStates = init(autoUpdateFeed = false).uiStates
-        // Act
-        fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
-        // Assert
-        val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostNewUiState::class.java)
+        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
     }
 
     @Test
@@ -473,7 +462,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
             .likeAction.onClicked!!.invoke(2, 200, LIKE)
         // Assert
         verify(readerPostCardActionsHandler).onAction(
@@ -489,7 +478,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).onVideoOverlayClicked(2, 200)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).onVideoOverlayClicked(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleVideoOverlayClicked(
             eq((fakeDiscoverFeed.value!!.cards[2] as ReaderPostCard).post.featuredVideo)
@@ -501,7 +490,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         // Arrange
         val uiStates = init().uiStates
         // Act
-        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+        ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
             .onItemClicked.invoke(2, 200)
         // Assert
         verify(readerPostCardActionsHandler).handleOnItemClicked(
@@ -514,24 +503,24 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     fun `When user clicks on more button menu is shown`() = test {
         // Arrange
         val uiStates = init().uiStates
-        val cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+        val cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState)
         // Assert
-        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).moreMenuItems).isNotNull
+        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).moreMenuItems).isNotNull
     }
 
     @Test
     fun `When user dismisses the menu the ui state is updated`() = test {
         // Arrange
         val uiStates = init().uiStates
-        var cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+        var cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
         // Act
         cardUiState.onMoreButtonClicked.invoke(cardUiState) // show menu
-        cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState)
+        cardUiState = ((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState)
         cardUiState.onMoreDismissed.invoke(cardUiState) // dismiss menu
         // Assert
-        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostNewUiState).moreMenuItems).isNull()
+        assertThat(((uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).moreMenuItems).isNull()
     }
 
     @Test
@@ -621,7 +610,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
         val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
+        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
         }
         fakeDiscoverFeed.value = createDummyReaderCardsList()
@@ -647,7 +636,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
             scrollToTopCounter.reset()
 
             // Act for load more
-            ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostNewUiState).let {
+            ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
                 it.onItemRendered.invoke(it)
             }
             fakeDiscoverFeed.value = createDummyReaderCardsList()
@@ -739,23 +728,23 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
     }
 
     @Suppress("LongParameterList")
-    private fun createDummyReaderPostNewUiState(
+    private fun createDummyReaderPostUiState(
         post: ReaderPost,
         onItemRendered: (ReaderCardUiState) -> Unit = mock(),
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         postHeaderClicked: (Long, Long) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
-        onMoreMenuClicked: (ReaderPostNewUiState) -> Unit,
-        onMoreMenuDismissed: (ReaderPostNewUiState) -> Unit
-    ): ReaderPostNewUiState {
-        return ReaderPostNewUiState(
+        onMoreMenuClicked: (ReaderPostUiState) -> Unit,
+        onMoreMenuDismissed: (ReaderPostUiState) -> Unit
+    ): ReaderPostUiState {
+        return ReaderPostUiState(
             source = "source",
             postId = post.postId,
             blogId = post.blogId,
             feedId = post.feedId,
             isFollowed = post.isFollowedByCurrentUser,
-            blogSection = ReaderPostNewUiState.CompactBlogSectionData(
+            blogSection = ReaderPostUiState.CompactBlogSectionData(
                 post.postId,
                 post.blogId,
                 "",
@@ -766,7 +755,7 @@ class ReaderDiscoverViewModelTest : BaseUnitTest() {
                 blavatarType = BLAVATAR_CIRCULAR,
                 postHeaderClicked,
             ),
-            interactionSection = ReaderPostNewUiState.InteractionSectionData(
+            interactionSection = ReaderPostUiState.InteractionSectionData(
                 post.numLikes,
                 post.numReplies,
             ),

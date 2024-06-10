@@ -11,10 +11,6 @@ import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderPostDiscoverData
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
@@ -28,11 +24,8 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.InteractionSectionData
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -54,7 +47,6 @@ import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
-import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 import javax.inject.Named
 import android.R as AndroidR
@@ -70,79 +62,26 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     @Suppress("LongParameterList")
-    fun mapPostToUiStateBlocking(
+    suspend fun mapPostToUiState(
         source: String,
         post: ReaderPost,
-        isDiscover: Boolean = false,
         photonWidth: Int,
         photonHeight: Int,
         postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
-        onDiscoverSectionClicked: (Long, Long) -> Unit,
         onMoreButtonClicked: (ReaderPostUiState) -> Unit,
         onMoreDismissed: (ReaderPostUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
-        onPostHeaderViewClicked: () -> Unit,
-        onTagItemClicked: (String) -> Unit,
-        moreMenuItems: List<ReaderPostCardAction>? = null
-    ): ReaderPostUiState {
-        return ReaderPostUiState(
-            source = source,
-            postId = post.postId,
-            blogId = post.blogId,
-            feedId = post.feedId,
-            isFollowed = post.isFollowedByCurrentUser,
-            blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isP2orA8C),
-            excerpt = buildExcerpt(post),
-            title = buildTitle(post),
-            tagItems = buildTagItems(post, onTagItemClicked),
-            photoTitle = buildPhotoTitle(post),
-            featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-            featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-            thumbnailStripSection = buildThumbnailStripUrls(post),
-            expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post, isDiscover),
-            videoOverlayVisibility = buildVideoOverlayVisibility(post),
-            featuredImageVisibility = buildFeaturedImageVisibility(post),
-            moreMenuVisibility = accountStore.hasAccessToken(),
-            moreMenuItems = moreMenuItems,
-            fullVideoUrl = buildFullVideoUrl(post),
-            discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
-            bookmarkAction = buildBookmarkSection(post, onButtonClicked),
-            likeAction = buildLikeSection(post, onButtonClicked),
-            reblogAction = buildReblogSection(post, onButtonClicked),
-            commentsAction = buildCommentsSection(post, onButtonClicked),
-            onItemClicked = onItemClicked,
-            onItemRendered = onItemRendered,
-            onMoreButtonClicked = onMoreButtonClicked,
-            onMoreDismissed = onMoreDismissed,
-            onVideoOverlayClicked = onVideoOverlayClicked
-        )
-    }
-
-    @Suppress("LongParameterList")
-    suspend fun mapPostToNewUiState(
-        source: String,
-        post: ReaderPost,
-        photonWidth: Int,
-        photonHeight: Int,
-        postListType: ReaderPostListType,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
-        onItemClicked: (Long, Long) -> Unit,
-        onItemRendered: (ReaderCardUiState) -> Unit,
-        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
-        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<SecondaryAction>? = null,
-    ): ReaderPostNewUiState {
+    ): ReaderPostUiState {
         return withContext(bgDispatcher) {
-            mapPostToNewUiStateBlocking(
+            mapPostToUiStateBlocking(
                 source,
                 post,
                 photonWidth,
@@ -161,7 +100,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    fun mapPostToNewUiStateBlocking(
+    fun mapPostToUiStateBlocking(
         source: String,
         post: ReaderPost,
         photonWidth: Int,
@@ -170,13 +109,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (ReaderCardUiState) -> Unit,
-        onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
-        onMoreDismissed: (ReaderPostNewUiState) -> Unit,
+        onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        onMoreDismissed: (ReaderPostUiState) -> Unit,
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         moreMenuItems: List<ReaderPostCardAction>? = null,
-    ): ReaderPostNewUiState {
-        return ReaderPostNewUiState(
+    ): ReaderPostUiState {
+        return ReaderPostUiState(
             source = source,
             postId = post.postId,
             blogId = post.blogId,
@@ -184,8 +123,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
             isFollowed = post.isFollowedByCurrentUser,
             blogSection = buildCompactBlogSection(post, postListType, onPostHeaderViewClicked, post.isP2orA8C),
             interactionSection = buildInteractionSection(post),
-            title = buildTitle(post, forceForPhoto = true, allowEmptyTitle = true),
-            excerpt = buildExcerpt(post, forceForPhoto = true),
+            title = buildTitle(post),
+            excerpt = buildExcerpt(post),
             featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius_new),
             fullVideoUrl = buildFullVideoUrl(post),
@@ -296,8 +235,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         postListType: ReaderPostListType,
         onBlogSectionClicked: (Long, Long) -> Unit,
         isP2Post: Boolean = false,
-    ): ReaderPostNewUiState.CompactBlogSectionData {
-        return ReaderPostNewUiState.CompactBlogSectionData(
+    ): ReaderPostUiState.CompactBlogSectionData {
+        return ReaderPostUiState.CompactBlogSectionData(
             postId = post.postId,
             blogId = post.blogId,
             blogName = buildBlogName(post, isP2Post),
@@ -336,19 +275,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
         ?.blogUrl
         ?.let { urlUtilsWrapper.removeScheme(it) }
 
-    private fun buildDiscoverSection(post: ReaderPost, onDiscoverSectionClicked: (Long, Long) -> Unit) =
-        post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
-            ?.let { buildDiscoverSectionUiState(post.discoverData, onDiscoverSectionClicked) }
-
     private fun buildFullVideoUrl(post: ReaderPost) =
         post.takeIf { post.cardType == VIDEO }
             ?.let { post.featuredVideo }
-
-    private fun buildExpandedTagsViewVisibility(post: ReaderPost, isDiscover: Boolean) =
-        post.tags.isNotEmpty() && isDiscover
-
-    private fun buildTagItems(post: ReaderPost, onClicked: (String) -> Unit) =
-        readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post, onClicked)
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
@@ -367,24 +296,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
     }
 
-    private fun buildPhotoTitle(post: ReaderPost) =
-        post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
+    private fun buildTitle(post: ReaderPost): UiString? =
+        post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
 
-    private fun buildTitle(
-        post: ReaderPost,
-        forceForPhoto: Boolean = false,
-        allowEmptyTitle: Boolean = false
-    ): UiString? {
-        return if (post.cardType != PHOTO || forceForPhoto) {
-            post.takeIf { it.hasTitle() }?.title?.let { UiStringText(it) }
-                ?: UiStringRes(R.string.untitled_in_parentheses).takeUnless { allowEmptyTitle }
-        } else {
-            null
-        }
-    }
-
-    private fun buildExcerpt(post: ReaderPost, forceForPhoto: Boolean = false) =
-        post.takeIf { (post.cardType != PHOTO || forceForPhoto) && post.hasExcerpt() }?.excerpt
+    private fun buildExcerpt(post: ReaderPost) =
+        post.takeIf { post.hasExcerpt() }?.excerpt
 
     private fun buildBlogName(post: ReaderPost, isP2Post: Boolean = false): UiString {
         val blogName = post.takeIf { it.hasBlogName() }?.blogName?.let { UiStringText(it) }
@@ -414,30 +330,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost) =
         dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 
-    @Suppress("UseCheckOrError")
-    private fun buildDiscoverSectionUiState(
-        discoverData: ReaderPostDiscoverData,
-        onDiscoverSectionClicked: (Long, Long) -> Unit
-    ): DiscoverLayoutUiState {
-        val discoverText = discoverData.attributionHtml
-        val discoverAvatarUrl = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
-            discoverData.avatarUrl,
-            R.dimen.avatar_sz_small
-        )
-        @Suppress("DEPRECATION") val discoverAvatarImageType = when (discoverData.discoverType) {
-            EDITOR_PICK -> ImageType.AVATAR
-            SITE_PICK -> ImageType.BLAVATAR
-            OTHER -> throw IllegalStateException("This could should be unreachable.")
-            else -> ImageType.AVATAR
-        }
-        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
-    }
-
-    private fun retrieveGalleryThumbnailUrls(post: ReaderPost): GalleryThumbnailStripData {
+    private fun retrieveGalleryThumbnailUrls(post: ReaderPost): ReaderPostUiState.GalleryThumbnailStripData {
         // scan post content for images suitable in a gallery
         val images = readerImageScannerProvider.createReaderImageScanner(post.text, post.isPrivate)
             .getImageList(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)
-        return GalleryThumbnailStripData(images, post.isPrivate, post.text)
+        return ReaderPostUiState.GalleryThumbnailStripData(images, post.isPrivate, post.text)
     }
 
     private fun buildBookmarkSection(
