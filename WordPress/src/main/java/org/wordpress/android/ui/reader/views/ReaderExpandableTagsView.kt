@@ -53,8 +53,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private val isOverflowIndicatorChipOutsideBounds
         get() = !isChipWithinBounds(overflowIndicatorChip)
 
-    private val chipStyle
-        get() = ChipStyle.Default
+    private val chipStyle = ChipStyle()
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
@@ -164,9 +163,6 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
         }
 
-        chipStyle.overflowBackgroundColorRes(isSingleLine)?.let { chipBackgroundColorRes ->
-            overflowIndicatorChip.setChipBackgroundColorResource(chipBackgroundColorRes)
-        }
         chipStyle.overflowStrokeColorRes(isSingleLine).let { chipStrokeColorRes ->
             overflowIndicatorChip.setChipStrokeColorResource(chipStrokeColorRes)
         }
@@ -182,40 +178,25 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         })
     }
 
-    private sealed interface ChipStyle {
+    private class ChipStyle {
         @get:LayoutRes
-        val chipLayoutRes: Int
-        @get:LayoutRes
-        val overflowChipLayoutRes: Int
+        val chipLayoutRes: Int = R.layout.reader_expandable_tags_view_chip
 
-        fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String
+        @get:LayoutRes
+        val overflowChipLayoutRes: Int = R.layout.reader_expandable_tags_view_overflow_chip
+
+        fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String =
+            String.format(
+                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
+                hiddenChipsCount
+            )
 
         @ColorRes
-        fun overflowBackgroundColorRes(isCollapsed: Boolean): Int? = null
-
-        @ColorRes
-        fun overflowStrokeColorRes(isCollapsed: Boolean): Int? = null
-
-        data object Default : ChipStyle {
-            override val chipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_chip
-            override val overflowChipLayoutRes: Int
-                get() = R.layout.reader_expandable_tags_view_overflow_chip
-
-            override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
-                    hiddenChipsCount
-                )
+        fun overflowStrokeColorRes(isCollapsed: Boolean): Int =
+            if (isCollapsed) {
+                R.color.reader_chip_stroke_color
+            } else {
+                AndroidR.color.transparent
             }
-
-            override fun overflowStrokeColorRes(isCollapsed: Boolean): Int {
-                return if (isCollapsed) {
-                    R.color.reader_chip_stroke_color
-                } else {
-                    AndroidR.color.transparent
-                }
-            }
-        }
     }
 }
