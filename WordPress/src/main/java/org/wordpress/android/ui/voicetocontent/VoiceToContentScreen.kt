@@ -343,7 +343,7 @@ fun PreviewReadyToRecordView() {
     AppTheme {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.READY_TO_RECORD,
-            header = HeaderUIModel(label = R.string.voice_to_content_ready_to_record_label, onClose = { }),
+            header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
             secondaryHeader = SecondaryHeaderUIModel(label = R.string.voice_to_content_secondary_header_label),
             recordingPanel = RecordingPanelUIModel(
                 actionLabel = R.string.voice_to_content_begin_recording_label,
@@ -365,7 +365,7 @@ fun PreviewNotEligibleToRecordView() {
     AppTheme {
         val state = VoiceToContentUiState(
             uiStateType = VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE,
-            header = HeaderUIModel(label = R.string.voice_to_content_ready_to_record_label, onClose = { }),
+            header = HeaderUIModel(label = R.string.voice_to_content_base_header_label, onClose = { }),
             secondaryHeader = SecondaryHeaderUIModel(label = R.string.voice_to_content_secondary_header_label),
             recordingPanel = RecordingPanelUIModel(
                 actionLabel = R.string.voice_to_content_begin_recording_label,
