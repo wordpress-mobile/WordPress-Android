@@ -4903,5 +4903,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <!-- Voice to Content -->
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap to edit</string>
 
 </resources>
