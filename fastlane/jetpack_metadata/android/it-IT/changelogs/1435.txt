@@ -1,0 +1,4 @@
+25.0:
+Il feed dei tag è finalmente attivo. Ora puoi vedere tutti i contenuti con tag specifici in un unico posto. Così è tutto molto più semplice!
+
+Abbiamo risolto diversi arresti anomali nella schermata di accesso e in quella dell'elenco degli articoli e corretto alcune azioni associate ai promemoria relativi al blog, alle immagini in evidenza e alla rimozione di utenti. Arresti anomali? Ormai sono solo un ricordo.

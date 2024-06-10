@@ -1,2 +1,0 @@
-24.9:
-Site namen en URL's zijn nu correct gepositioneerd voor gebruikers van rechts-naar-links talen. Helemaal goed.

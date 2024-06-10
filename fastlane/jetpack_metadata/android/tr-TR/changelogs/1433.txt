@@ -1,5 +1,0 @@
-24.9:
-- İstatistikler ekranını trafik ve içgörüleri gösterecek şekilde yeniden organize ettik.
-- Site aboneleri hakkındaki verileri göstermek için Aboneler sekmesi ekledik.
-- Toplam Takipçi kartından sosyal medya abonelerini kaldırdık.
-- Site adları ve URL'ler, sağdan sola yazılan dilleri kullanan kullanıcılar için düzgün şekilde yerleştirildi.

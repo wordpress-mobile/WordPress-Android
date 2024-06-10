@@ -1,0 +1,4 @@
+25.0:
+O feed de tags está no ar! Agora você pode ver o conteúdo com tags específicas, tudo em um só lugar. É a sua vez de aproveitar as tags.
+
+Corrigimos diferentes falhas nas telas de login e listas de posts, bem como ações associadas aos lembretes de publicação, imagens destacadas e remoção de usuário. Menos falhas? Que incrível.

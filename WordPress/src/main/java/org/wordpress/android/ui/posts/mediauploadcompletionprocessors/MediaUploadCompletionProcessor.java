@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
@@ -19,7 +21,7 @@ public class MediaUploadCompletionProcessor {
      * @param mediaFile The mediaFile containing the remote id and remote url
      * @param siteUrl The site url - used to generate the attachmentPage url
      */
-    public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
+    public MediaUploadCompletionProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl) {
         mBlockProcessorFactory = new BlockProcessorFactory(this)
                 .init(localId, mediaFile, siteUrl);
     }
@@ -27,7 +29,7 @@ public class MediaUploadCompletionProcessor {
     /**
      * Processes content to replace the local ids and local urls of media with remote ids and remote urls. This method
      * delineates block boundaries for media-containing blocks and delegates further processing via itself and / or
-     * {@link #processBlock(String)}, via direct and mutual recursion, respectively.
+     * {@link #processBlock(String, Boolean)}, via direct and mutual recursion, respectively.
      *
      * @param content The content to be processed
      * @return A string containing the processed content, or the original content if no match was found
@@ -77,7 +79,8 @@ public class MediaUploadCompletionProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-    private String processBlock(String block, Boolean isSelfClosingTag) {
+    @NonNull
+    private String processBlock(@NonNull String block, Boolean isSelfClosingTag) {
         final MediaBlockType blockType = MediaBlockType.detectBlockType(block);
         final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
 

@@ -1,1 +1,0 @@
-Site names and URLs are now properly positioned for right-to-left language users. Right on.

@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -29,13 +32,15 @@ public class CoverBlockProcessor extends BlockProcessor {
 
     private final MediaUploadCompletionProcessor mMediaUploadCompletionProcessor;
 
-    public CoverBlockProcessor(String localId, MediaFile mediaFile,
+    public CoverBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile,
                                MediaUploadCompletionProcessor mediaUploadCompletionProcessor) {
         super(localId, mediaFile);
         mMediaUploadCompletionProcessor = mediaUploadCompletionProcessor;
     }
 
-    @Override String processInnerBlock(String block) {
+    @NonNull
+    @Override
+    public String processInnerBlock(@NonNull String block) {
         Matcher innerMatcher = PATTERN_COVER_INNER.matcher(block);
         boolean innerCapturesFound = innerMatcher.find();
 
@@ -52,12 +57,13 @@ public class CoverBlockProcessor extends BlockProcessor {
         return block;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
-            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsInt() == Integer.parseInt(localId, 10)) {
+            addIntPropertySafely(jsonAttributes, "id", remoteId);
 
-            jsonAttributes.addProperty("url", mRemoteUrl);
+            jsonAttributes.addProperty("url", remoteUrl);
 
             // check if background type is video
             JsonElement backgroundType = jsonAttributes.get("backgroundType");
@@ -69,7 +75,8 @@ public class CoverBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select cover block div
         Element targetDiv = document.selectFirst(".wp-block-cover");
 
@@ -78,14 +85,14 @@ public class CoverBlockProcessor extends BlockProcessor {
             if (mHasVideoBackground) {
                 Element videoElement = targetDiv.selectFirst("video");
                 if (videoElement != null) {
-                    videoElement.attr("src", mRemoteUrl);
+                    videoElement.attr("src", remoteUrl);
                 } else {
                     return false;
                 }
             } else {
                 // replace background-image url in style attribute
                 String style = PATTERN_BACKGROUND_IMAGE_URL.matcher(targetDiv.attr("style")).replaceFirst(
-                        String.format("background-image:url(%1$s)", mRemoteUrl));
+                        String.format("background-image:url(%1$s)", remoteUrl));
                 targetDiv.attr("style", style);
             }
 
