@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+25.2
+-----
+
+
 25.1
 -----
 * [*] [internal] Block editor: Add onContentUpdate bridge functionality [https://github.com/wordpress-mobile/gutenberg-mobile/pull/20852]

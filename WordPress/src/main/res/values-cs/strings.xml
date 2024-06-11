@@ -148,8 +148,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
-    <string name="no_connection_error_description">Zkontrolujte připojení k síti a zkuste to znovu.</string>
-    <string name="no_connection_error_title">Momentálně tento obsah nelze načíst</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
     <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
     <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>

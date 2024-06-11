@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.store.NotificationStore.Companion.WPCOM_PUSH_DEVICE_UUID
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore
@@ -72,12 +73,15 @@ class FeatureFlagConfig
 
     private suspend fun fetchRemoteFlags() {
         val response = featureFlagStore.fetchFeatureFlags(
-            buildNumber = BuildConfig.VERSION_CODE.toString(),
-            deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null)
-                ?: generateAndStoreUUID(),
-            identifier = BuildConfig.APPLICATION_ID,
-            marketingVersion = BuildConfig.VERSION_NAME,
-            platform = FEATURE_FLAG_PLATFORM_PARAMETER
+            FeatureFlagsRestClient.FeatureFlagsPayload(
+                buildNumber = BuildConfig.VERSION_CODE.toString(),
+                deviceId = preferences.getString(WPCOM_PUSH_DEVICE_UUID, null)
+                    ?: generateAndStoreUUID(),
+                identifier = BuildConfig.APPLICATION_ID,
+                marketingVersion = BuildConfig.VERSION_NAME,
+                platform = FEATURE_FLAG_PLATFORM_PARAMETER,
+                osVersion = android.os.Build.VERSION.RELEASE
+            )
         )
         response.featureFlags?.let { configValues ->
             AppLog.e(UTILS, "Feature flag values synced")

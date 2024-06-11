@@ -1,5 +1,0 @@
-24.9:
-- Kami menata ulang layar Status agar menampilkan data kunjungan dan wawasan.
-- Kami menambahkan tab Pelanggan untuk menampilkan data pelanggan situs.
-- Kami menghapus pelanggan media sosial dari kartu Total Pengikut.
-- Nama situs dan URL telah diposisikan dengan benar untuk pengguna bahasa yang ditulis dari kanan ke kiri.
