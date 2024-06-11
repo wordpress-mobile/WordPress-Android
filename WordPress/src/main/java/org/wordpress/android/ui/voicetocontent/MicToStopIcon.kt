@@ -56,7 +56,7 @@ fun MicToStopIcon(model: RecordingPanelUIModel) {
         else Color.Black, label = ""
     )
 
-    val micIcon: Painter = painterResource(id = R.drawable.v2c_mic)
+    val micIcon: Painter = painterResource(id = R.drawable.ic_mic_none_24)
     val stopIcon: Painter = painterResource(id = R.drawable.v2c_stop)
 
     Box(
