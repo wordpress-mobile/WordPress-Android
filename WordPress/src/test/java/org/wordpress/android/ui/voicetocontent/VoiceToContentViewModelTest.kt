@@ -5,9 +5,9 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 
-@ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
-class VoiceToContentViewModelTest : BaseUnitTest() {
+//@ExperimentalCoroutinesApi
+//@RunWith(MockitoJUnitRunner::class)
+//class VoiceToContentViewModelTest : BaseUnitTest() {
 //    @Mock
 //    lateinit var voiceToContentFeatureUtils: VoiceToContentFeatureUtils
 //
@@ -112,6 +112,6 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 //
 //        verify(recordingUseCase).startRecording(any())
 //    }
-}
+//}
 
 
