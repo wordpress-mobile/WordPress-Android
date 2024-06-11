@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsFetchedPayload
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient.FeatureFlagsPayload
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.fluxc.store.mobile.FeatureFlagsStore.FeatureFlagsResult
 import org.wordpress.android.fluxc.test
@@ -39,15 +40,19 @@ class FeatureFlagsStoreTest {
 
     @Test
     fun `given success, when fetch f-flags is triggered, then result is returned`() = test {
-        whenever(restClient.fetchFeatureFlags(any(), any(), any(), any(), any())).thenReturn(
+        whenever(restClient.fetchFeatureFlags(any())).thenReturn(
             FeatureFlagsFetchedPayload(successResponse)
         )
 
-        val response = store.fetchFeatureFlags(buildNumber = BUILD_NUMBER_PARAM,
-            deviceId = DEVICE_ID_PARAM,
-            identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM
+        val response = store.fetchFeatureFlags(
+            FeatureFlagsPayload(
+                buildNumber = BUILD_NUMBER_PARAM,
+                deviceId = DEVICE_ID_PARAM,
+                identifier = IDENTIFIER_PARAM,
+                marketingVersion = MARKETING_VERSION_PARAM,
+                platform = PLATFORM_PARAM,
+                osVersion = OS_VERSION_PARAM,
+            )
         )
 
         verify(featureFlagConfigDao).insert(successResponse)
@@ -57,15 +62,19 @@ class FeatureFlagsStoreTest {
 
     @Test
     fun `given error, when f-flags is triggered, then error result is returned`() = test {
-        whenever(restClient.fetchFeatureFlags(any(), any(), any(), any(), any())).thenReturn(
+        whenever(restClient.fetchFeatureFlags(any())).thenReturn(
             FeatureFlagsFetchedPayload(errorResponse)
         )
 
-        val response = store.fetchFeatureFlags(buildNumber = BUILD_NUMBER_PARAM,
-            deviceId = DEVICE_ID_PARAM,
-            identifier = IDENTIFIER_PARAM,
-            marketingVersion = MARKETING_VERSION_PARAM,
-            platform = PLATFORM_PARAM
+        val response = store.fetchFeatureFlags(
+            FeatureFlagsPayload(
+                buildNumber = BUILD_NUMBER_PARAM,
+                deviceId = DEVICE_ID_PARAM,
+                identifier = IDENTIFIER_PARAM,
+                marketingVersion = MARKETING_VERSION_PARAM,
+                platform = PLATFORM_PARAM,
+                osVersion = OS_VERSION_PARAM,
+            )
         )
 
         verifyNoInteractions(featureFlagConfigDao)
@@ -79,5 +88,6 @@ class FeatureFlagsStoreTest {
         private const val IDENTIFIER_PARAM = "identifier_param"
         private const val MARKETING_VERSION_PARAM = "marketing_version_param"
         private const val PLATFORM_PARAM = "platform_param"
+        private const val OS_VERSION_PARAM = "os_version_param"
     }
 }

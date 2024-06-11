@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store.mobile
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsError
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.mobile.FeatureFlagsRestClient.FeatureFlagsPayload
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlag
 import org.wordpress.android.fluxc.persistence.FeatureFlagConfigDao.FeatureFlagValueSource
@@ -24,23 +25,27 @@ class FeatureFlagsStore @Inject constructor(
         identifier: String,
         marketingVersion: String,
         platform: String
-    ) = coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch feature-flags") {
-        val payload = featureFlagsRestClient.fetchFeatureFlags(
-                buildNumber,
-                deviceId,
-                identifier,
-                marketingVersion,
-                platform
-        )
-        return@withDefaultContext when {
-            payload.isError -> FeatureFlagsResult(payload.error)
-            payload.featureFlags != null -> {
-                featureFlagConfigDao.insert(payload.featureFlags)
-                FeatureFlagsResult(payload.featureFlags)
+    ) = fetchFeatureFlags(FeatureFlagsPayload(
+        buildNumber = buildNumber,
+        deviceId = deviceId,
+        identifier = identifier,
+        marketingVersion = marketingVersion,
+        platform = platform
+    ))
+
+    suspend fun fetchFeatureFlags(payload: FeatureFlagsPayload) =
+        coroutineEngine.withDefaultContext(AppLog.T.API, this, "fetch feature-flags") {
+            val payload = featureFlagsRestClient.fetchFeatureFlags(payload)
+            return@withDefaultContext when {
+                payload.isError -> FeatureFlagsResult(payload.error)
+                payload.featureFlags != null -> {
+                    featureFlagConfigDao.insert(payload.featureFlags)
+                    FeatureFlagsResult(payload.featureFlags)
+                }
+
+                else -> FeatureFlagsResult(FeatureFlagsError(GENERIC_ERROR))
             }
-            else -> FeatureFlagsResult(FeatureFlagsError(GENERIC_ERROR))
         }
-    }
 
     fun getFeatureFlags(): List<FeatureFlag> {
         return featureFlagConfigDao.getFeatureFlagList()
