@@ -433,7 +433,9 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <include layout="@layout/plugin_ratings_cardview" />
+            <include
+                android:id="@+id/plugin_ratings_cardview"
+                layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>
     </org.wordpress.android.widgets.WPNestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

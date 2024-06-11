@@ -11,29 +11,20 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ProgressBar;
-import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
@@ -45,6 +36,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.databinding.PluginDetailActivityBinding;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -135,39 +127,14 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     private static final int DEFAULT_RETRY_DELAY_MS = 3000;
     private static final int PLUGIN_RETRY_DELAY_MS = 10000;
 
+    private PluginDetailActivityBinding mBinding;
     private SiteModel mSite;
     private String mSlug;
     protected ImmutablePluginModel mPlugin;
     private Handler mHandler;
-
-    private ViewGroup mContainer;
-    private TextView mTitleTextView;
-    private TextView mByLineTextView;
-    private TextView mVersionTopTextView;
-    private TextView mVersionBottomTextView;
-    private TextView mInstalledText;
-    private AppCompatButton mUpdateButton;
-    private AppCompatButton mInstallButton;
-    private SwitchCompat mSwitchActive;
-    private SwitchCompat mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
     private ProgressDialog mAutomatedTransferProgressDialog;
     private ProgressDialog mCheckingDomainCreditsProgressDialog;
-
-    private CardView mWPOrgPluginDetailsContainer;
-    private RelativeLayout mRatingsSectionContainer;
-
-    protected TextView mDescriptionTextView;
-    protected ImageView mDescriptionChevron;
-    protected TextView mInstallationTextView;
-    protected ImageView mInstallationChevron;
-    protected TextView mWhatsNewTextView;
-    protected ImageView mWhatsNewChevron;
-    protected TextView mFaqTextView;
-    protected ImageView mFaqChevron;
-
-    private ImageView mImageBanner;
-    private ImageView mImageIcon;
 
     private boolean mIsConfiguringPlugin;
     private boolean mIsInstallingPlugin;
@@ -241,10 +208,10 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             mPluginReCheckTimer = savedInstanceState.getInt(KEY_PLUGIN_RECHECKED_TIMES, 0);
         }
 
-        setContentView(R.layout.plugin_detail_activity);
+        mBinding = PluginDetailActivityBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mBinding.toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(null);
@@ -253,15 +220,13 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             actionBar.setElevation(0);
         }
 
-
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
 
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
         int elevatedColor = elevationOverlayProvider
                 .compositeOverlayIfNeeded(ContextExtensionsKt.getColorFromAttribute(this, R.attr.wpColorAppBar),
                         appbarElevation);
-        collapsingToolbarLayout.setContentScrimColor(elevatedColor);
+        mBinding.collapsingToolbar.setContentScrimColor(elevatedColor);
 
         mHandler = new Handler();
         setupViews();
@@ -299,8 +264,8 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         if (event.isError()) {
             AppLog.e(T.PLANS, PluginDetailActivity.class.getSimpleName() + ".onPlansFetched: "
                               + event.error.type + " - " + event.error.message);
-            WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                      .show();
+            WPSnackbar.make(mBinding.pluginDetailContainer, getString(R.string.plugin_check_domain_credit_error),
+                    Snackbar.LENGTH_LONG).show();
         } else {
             // This should not happen
             if (event.plans == null) {
@@ -308,8 +273,8 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 if (BuildConfig.DEBUG) {
                     throw new IllegalStateException(errorMessage);
                 }
-                WPSnackbar.make(mContainer, getString(R.string.plugin_check_domain_credit_error), Snackbar.LENGTH_LONG)
-                          .show();
+                WPSnackbar.make(mBinding.pluginDetailContainer, getString(R.string.plugin_check_domain_credit_error),
+                        Snackbar.LENGTH_LONG).show();
                 AppLog.e(T.PLANS, errorMessage);
                 return;
             }
@@ -390,6 +355,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
         mDispatcher.unregister(this);
         super.onDestroy();
+        mBinding = null;
     }
 
     @Override
@@ -447,52 +413,29 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     // UI Helpers
 
     private void setupViews() {
-        mContainer = findViewById(R.id.plugin_detail_container);
-        mTitleTextView = findViewById(R.id.text_title);
-        mByLineTextView = findViewById(R.id.text_byline);
-        mVersionTopTextView = findViewById(R.id.plugin_version_top);
-        mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
-        mInstalledText = findViewById(R.id.plugin_installed);
-        mUpdateButton = findViewById(R.id.plugin_btn_update);
-        mInstallButton = findViewById(R.id.plugin_btn_install);
-        mSwitchActive = findViewById(R.id.plugin_state_active);
-        mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
-        mImageBanner = findViewById(R.id.image_banner);
-        mImageIcon = findViewById(R.id.image_icon);
+        mBinding.pluginDescriptionContainer.setOnClickListener(
+                v -> toggleText(mBinding.pluginDescriptionText, mBinding.pluginDescriptionChevron));
 
-        mWPOrgPluginDetailsContainer = findViewById(R.id.plugin_wp_org_details_container);
-        mRatingsSectionContainer = findViewById(R.id.plugin_ratings_section_container);
+        mBinding.pluginInstallationContainer.setOnClickListener(
+                v -> toggleText(mBinding.pluginInstallationText, mBinding.pluginInstallationChevron));
 
-        mDescriptionTextView = findViewById(R.id.plugin_description_text);
-        mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
-        findViewById(R.id.plugin_description_container).setOnClickListener(
-                v -> toggleText(mDescriptionTextView, mDescriptionChevron));
-
-        mInstallationTextView = findViewById(R.id.plugin_installation_text);
-        mInstallationChevron = findViewById(R.id.plugin_installation_chevron);
-        findViewById(R.id.plugin_installation_container).setOnClickListener(
-                v -> toggleText(mInstallationTextView, mInstallationChevron));
-
-        mWhatsNewTextView = findViewById(R.id.plugin_whatsnew_text);
-        mWhatsNewChevron = findViewById(R.id.plugin_whatsnew_chevron);
-        findViewById(R.id.plugin_whatsnew_container).setOnClickListener(
-                v -> toggleText(mWhatsNewTextView, mWhatsNewChevron));
+        mBinding.pluginWhatsnewContainer.setOnClickListener(
+                v -> toggleText(mBinding.pluginWhatsnewText, mBinding.pluginWhatsnewChevron));
 
         // expand description if this plugin isn't installed, otherwise expand "what's new" if
         // this is an installed plugin and there's an update available
         if (mPlugin.isInstalled()) {
-            toggleText(mDescriptionTextView, mDescriptionChevron);
+            toggleText(mBinding.pluginDescriptionText, mBinding.pluginDescriptionChevron);
         } else if (PluginUtils.isUpdateAvailable(mPlugin)) {
-            toggleText(mWhatsNewTextView, mWhatsNewChevron);
+            toggleText(mBinding.pluginWhatsnewText, mBinding.pluginWhatsnewChevron);
         }
 
-        mFaqTextView = findViewById(R.id.plugin_faq_text);
-        mFaqChevron = findViewById(R.id.plugin_faq_chevron);
-        findViewById(R.id.plugin_faq_container).setOnClickListener(v -> toggleText(mFaqTextView, mFaqChevron));
+        mBinding.pluginFaqContainer.setOnClickListener(v -> toggleText(mBinding.pluginFaqText,
+                mBinding.pluginFaqChevron));
 
-        findViewById(R.id.plugin_version_layout).setOnClickListener(v -> showPluginInfoPopup());
+        mBinding.pluginVersionLayout.setOnClickListener(v -> showPluginInfoPopup());
 
-        mSwitchActive.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        mBinding.pluginStateActive.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if (compoundButton.isPressed()) {
                 if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
                     mIsActive = isChecked;
@@ -503,7 +446,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             }
         });
 
-        mSwitchAutoupdates.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+        mBinding.pluginStateAutoupdates.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if (compoundButton.isPressed()) {
                 if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
                     mIsAutoUpdateEnabled = isChecked;
@@ -514,9 +457,9 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             }
         });
 
-        mUpdateButton.setOnClickListener(view -> dispatchUpdatePluginAction());
+        mBinding.pluginBtnUpdate.setOnClickListener(view -> dispatchUpdatePluginAction());
 
-        mInstallButton.setOnClickListener(v -> {
+        mBinding.pluginBtnInstall.setOnClickListener(v -> {
             if (isCustomDomainRequired()) {
                 showDomainCreditsCheckProgressDialog();
                 mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(mSite));
@@ -525,24 +468,22 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             }
         });
 
-        View settingsView = findViewById(R.id.plugin_settings_page);
         if (canShowSettings()) {
-            settingsView.setVisibility(View.VISIBLE);
-            settingsView.setOnClickListener(v -> openUrl(mPlugin.getSettingsUrl()));
+            mBinding.pluginSettingsPage.setVisibility(View.VISIBLE);
+            mBinding.pluginSettingsPage.setOnClickListener(v -> openUrl(mPlugin.getSettingsUrl()));
         } else {
-            settingsView.setVisibility(View.GONE);
+            mBinding.pluginSettingsPage.setVisibility(View.GONE);
         }
 
-        findViewById(R.id.plugin_wp_org_page).setOnClickListener(view -> openUrl(getWpOrgPluginUrl()));
+        mBinding.pluginWpOrgPage.setOnClickListener(view -> openUrl(getWpOrgPluginUrl()));
 
-        findViewById(R.id.plugin_home_page).setOnClickListener(view -> openUrl(mPlugin.getHomepageUrl()));
+        mBinding.pluginHomePage.setOnClickListener(view -> openUrl(mPlugin.getHomepageUrl()));
 
-        findViewById(R.id.read_reviews_container).setOnClickListener(view -> openUrl(getWpOrgReviewsUrl()));
+        mBinding.pluginRatingsCardview.readReviewsContainer.setOnClickListener(view -> openUrl(getWpOrgReviewsUrl()));
 
         // set the height of the gradient scrim that appears atop the banner image
         int toolbarHeight = DisplayUtils.getActionBarHeight(this);
-        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
-        imgScrim.getLayoutParams().height = toolbarHeight * 2;
+        mBinding.imageGradientScrim.getLayoutParams().height = toolbarHeight * 2;
 
         refreshViews();
     }
@@ -552,49 +493,46 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     private void refreshViews() {
-        View scrollView = findViewById(R.id.scroll_view);
-        if (scrollView.getVisibility() != View.VISIBLE) {
-            AniUtils.fadeIn(scrollView, AniUtils.Duration.MEDIUM);
+        if (mBinding.scrollView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(mBinding.scrollView, AniUtils.Duration.MEDIUM);
         }
 
-        mTitleTextView.setText(mPlugin.getDisplayName());
-        mImageManager.load(mImageBanner, ImageType.PHOTO, StringUtils.notNullStr(mPlugin.getBanner()),
+        mBinding.textTitle.setText(mPlugin.getDisplayName());
+        mImageManager.load(mBinding.imageBanner, ImageType.PHOTO, StringUtils.notNullStr(mPlugin.getBanner()),
                 ScaleType.CENTER_CROP);
-        mImageManager.load(mImageIcon, ImageType.PLUGIN, StringUtils.notNullStr(mPlugin.getIcon()));
+        mImageManager.load(mBinding.imageIcon, ImageType.PLUGIN, StringUtils.notNullStr(mPlugin.getIcon()));
         if (mPlugin.doesHaveWPOrgPluginDetails()) {
-            mWPOrgPluginDetailsContainer.setVisibility(View.VISIBLE);
-            setCollapsibleHtmlText(mDescriptionTextView, mPlugin.getDescriptionAsHtml());
-            setCollapsibleHtmlText(mInstallationTextView, mPlugin.getInstallationInstructionsAsHtml());
-            setCollapsibleHtmlText(mWhatsNewTextView, mPlugin.getWhatsNewAsHtml());
-            setCollapsibleHtmlText(mFaqTextView, mPlugin.getFaqAsHtml());
+            mBinding.pluginWpOrgDetailsContainer.setVisibility(View.VISIBLE);
+            setCollapsibleHtmlText(mBinding.pluginDescriptionText, mPlugin.getDescriptionAsHtml());
+            setCollapsibleHtmlText(mBinding.pluginInstallationText, mPlugin.getInstallationInstructionsAsHtml());
+            setCollapsibleHtmlText(mBinding.pluginWhatsnewText, mPlugin.getWhatsNewAsHtml());
+            setCollapsibleHtmlText(mBinding.pluginFaqText, mPlugin.getFaqAsHtml());
         } else {
-            mWPOrgPluginDetailsContainer.setVisibility(View.GONE);
+            mBinding.pluginWpOrgDetailsContainer.setVisibility(View.GONE);
         }
-        mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+        mBinding.textByline.setMovementMethod(WPLinkMovementMethod.getInstance());
         if (!TextUtils.isEmpty(mPlugin.getAuthorAsHtml())) {
             //noinspection ConstantConditions
-            mByLineTextView.setText(HtmlCompat.fromHtml(mPlugin.getAuthorAsHtml(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            mBinding.textByline.setText(HtmlCompat.fromHtml(mPlugin.getAuthorAsHtml(),
+                    HtmlCompat.FROM_HTML_MODE_LEGACY));
         } else {
             String authorName = mPlugin.getAuthorName();
             String authorUrl = mPlugin.getAuthorUrl();
             if (TextUtils.isEmpty(authorUrl)) {
-                mByLineTextView.setText(String.format(getString(R.string.plugin_byline), authorName));
+                mBinding.textByline.setText(String.format(getString(R.string.plugin_byline), authorName));
             } else {
                 String authorLink = "<a href='" + authorUrl + "'>" + authorName + "</a>";
                 String byline = String.format(getString(R.string.plugin_byline), authorLink);
-                mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-                mByLineTextView.setText(HtmlCompat.fromHtml(byline, HtmlCompat.FROM_HTML_MODE_LEGACY));
+                mBinding.textByline.setMovementMethod(WPLinkMovementMethod.getInstance());
+                mBinding.textByline.setText(HtmlCompat.fromHtml(byline, HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
         }
 
-        findViewById(R.id.plugin_card_site)
-                .setVisibility(mPlugin.isInstalled() && isNotAutoManaged() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.plugin_state_active_container)
-                .setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.plugin_state_autoupdates_container)
-                .setVisibility(mSite.isAutomatedTransfer() ? View.GONE : View.VISIBLE);
-        mSwitchActive.setChecked(mIsActive);
-        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
+        mBinding.pluginCardSite.setVisibility(mPlugin.isInstalled() && isNotAutoManaged() ? View.VISIBLE : View.GONE);
+        mBinding.pluginStateActiveContainer.setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
+        mBinding.pluginStateAutoupdatesContainer.setVisibility(mSite.isAutomatedTransfer() ? View.GONE : View.VISIBLE);
+        mBinding.pluginStateActive.setChecked(mIsActive);
+        mBinding.pluginStateAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
         refreshPluginVersionViews();
         refreshRatingsViews();
@@ -631,67 +569,71 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
         } else if (!TextUtils.isEmpty(availableVersion)) {
             versionTopText = String.format(getString(R.string.plugin_version), availableVersion);
         }
-        mVersionTopTextView.setText(versionTopText);
-        mVersionBottomTextView.setVisibility(TextUtils.isEmpty(versionBottomText) ? View.GONE : View.VISIBLE);
-        mVersionBottomTextView.setText(versionBottomText);
+        mBinding.pluginVersionTop.setText(versionTopText);
+        mBinding.pluginVersionBottom.setVisibility(TextUtils.isEmpty(versionBottomText) ? View.GONE : View.VISIBLE);
+        mBinding.pluginVersionBottom.setText(versionBottomText);
 
         refreshUpdateVersionViews();
     }
 
     private void refreshUpdateVersionViews() {
         if (mPlugin.isInstalled()) {
-            mInstallButton.setVisibility(View.GONE);
+            mBinding.pluginBtnInstall.setVisibility(View.GONE);
             if (isNotAutoManaged()) {
                 boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin);
                 boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
-                mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
-                mInstalledText.setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+                mBinding.pluginBtnUpdate.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
+                mBinding.pluginInstalled.setVisibility(
+                        (isUpdateAvailable || mIsUpdatingPlugin) ? View.GONE : View.VISIBLE);
             } else {
-                mUpdateButton.setVisibility(View.GONE);
-                mInstalledText.setVisibility(View.GONE);
+                mBinding.pluginBtnUpdate.setVisibility(View.GONE);
+                mBinding.pluginInstalled.setVisibility(View.GONE);
             }
         } else {
-            mUpdateButton.setVisibility(View.GONE);
-            mInstalledText.setVisibility(View.GONE);
-            mInstallButton.setVisibility(mIsInstallingPlugin ? View.GONE : View.VISIBLE);
+            mBinding.pluginBtnUpdate.setVisibility(View.GONE);
+            mBinding.pluginInstalled.setVisibility(View.GONE);
+            mBinding.pluginBtnInstall.setVisibility(mIsInstallingPlugin ? View.GONE : View.VISIBLE);
         }
 
-        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin || mIsInstallingPlugin
+        mBinding.pluginUpdateProgressBar.setVisibility(mIsUpdatingPlugin || mIsInstallingPlugin
                 ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
         if (!mPlugin.doesHaveWPOrgPluginDetails()) {
-            mRatingsSectionContainer.setVisibility(View.GONE);
+            mBinding.pluginRatingsCardview.pluginRatingsSectionContainer.setVisibility(View.GONE);
             return;
         }
-        mRatingsSectionContainer.setVisibility(View.VISIBLE);
+        mBinding.pluginRatingsCardview.pluginRatingsSectionContainer.setVisibility(View.VISIBLE);
         int numRatingsTotal = mPlugin.getNumberOfRatings();
 
-        TextView txtNumRatings = findViewById(R.id.text_num_ratings);
         String numRatings = FormatUtils.formatInt(numRatingsTotal);
-        txtNumRatings.setText(String.format(getString(R.string.plugin_num_ratings), numRatings));
+        mBinding.pluginRatingsCardview.textNumRatings.setText(String.format(getString(R.string.plugin_num_ratings),
+                numRatings));
 
-        TextView txtNumDownloads = findViewById(R.id.text_num_downloads);
         if (mPlugin.getDownloadCount() > 0) {
             String numDownloads = FormatUtils.formatInt(mPlugin.getDownloadCount());
-            txtNumDownloads.setText(String.format(getString(R.string.plugin_num_downloads), numDownloads));
+            mBinding.pluginRatingsCardview.textNumDownloads.
+                    setText(String.format(getString(R.string.plugin_num_downloads), numDownloads));
         } else {
-            txtNumDownloads.setText("");
+            mBinding.pluginRatingsCardview.textNumDownloads.setText("");
         }
 
-        setRatingsProgressBar(R.id.progress5, mPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
-        setRatingsProgressBar(R.id.progress4, mPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
-        setRatingsProgressBar(R.id.progress3, mPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
-        setRatingsProgressBar(R.id.progress2, mPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
-        setRatingsProgressBar(R.id.progress1, mPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
+        setRatingsProgressBar(mBinding.pluginRatingsCardview.progress5, mPlugin.getNumberOfRatingsOfFive(),
+                numRatingsTotal);
+        setRatingsProgressBar(mBinding.pluginRatingsCardview.progress4, mPlugin.getNumberOfRatingsOfFour(),
+                numRatingsTotal);
+        setRatingsProgressBar(mBinding.pluginRatingsCardview.progress3, mPlugin.getNumberOfRatingsOfThree(),
+                numRatingsTotal);
+        setRatingsProgressBar(mBinding.pluginRatingsCardview.progress2, mPlugin.getNumberOfRatingsOfTwo(),
+                numRatingsTotal);
+        setRatingsProgressBar(mBinding.pluginRatingsCardview.progress1, mPlugin.getNumberOfRatingsOfOne(),
+                numRatingsTotal);
 
-        RatingBar ratingBar = findViewById(R.id.rating_bar);
-        ratingBar.setRating(mPlugin.getAverageStarRating());
+        mBinding.pluginRatingsCardview.ratingBar.setRating(mPlugin.getAverageStarRating());
     }
 
-    private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
-        ProgressBar bar = findViewById(progressResId);
+    private void setRatingsProgressBar(ProgressBar bar, int numRatingsForStar, int numRatingsTotal) {
         bar.setMax(numRatingsTotal);
         bar.setProgress(numRatingsForStar);
     }
@@ -805,47 +747,48 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
     }
 
     private void showSuccessfulUpdateSnackbar() {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_updated_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                   .show();
     }
 
     private void showSuccessfulInstallSnackbar() {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_installed_successfully, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                   .show();
     }
 
     private void showSuccessfulPluginRemovedSnackbar(String pluginDisplayName) {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_removed_successfully, pluginDisplayName),
                 Snackbar.LENGTH_LONG)
                   .show();
     }
 
     private void showUpdateFailedSnackbar() {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
                   .setAction(R.string.retry, view -> dispatchUpdatePluginAction())
                   .show();
     }
 
     private void showInstallFailedSnackbar() {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_installed_failed, mPlugin.getDisplayName()), Snackbar.LENGTH_LONG)
                   .setAction(R.string.retry, view -> dispatchInstallPluginAction())
                   .show();
     }
 
     private void showPluginRemoveFailedSnackbar() {
-        WPSnackbar.make(mContainer,
+        WPSnackbar.make(mBinding.pluginDetailContainer,
                 getString(R.string.plugin_remove_failed, mPlugin.getDisplayName()),
                 Snackbar.LENGTH_LONG)
                   .show();
     }
 
+    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
     private void showDomainCreditsCheckProgressDialog() {
         if (mCheckingDomainCreditsProgressDialog == null) {
             mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
@@ -865,7 +808,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             mCheckingDomainCreditsProgressDialog.cancel();
         }
     }
-
+    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
     private void showRemovePluginProgressDialog() {
         if (mRemovePluginProgressDialog == null) {
             mRemovePluginProgressDialog = new ProgressDialog(this);
@@ -1040,7 +983,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
             // The plugin should be disabled if it was active, we should show that to the user
             mIsActive = mPlugin.isActive();
-            mSwitchActive.setChecked(mIsActive);
+            mBinding.pluginStateActive.setChecked(mIsActive);
         }
     }
 
@@ -1285,6 +1228,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * updates site settings etc, it'll be lost when the Automated Transfer is completed. The process takes about 1 min
      * on average, and we'll be able to update the progress by checking the status of the transfer.
      */
+    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
     private void showAutomatedTransferProgressDialog() {
         if (mAutomatedTransferProgressDialog == null) {
             mAutomatedTransferProgressDialog = new ProgressDialog(this);
@@ -1421,7 +1365,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"deprecation", "unused"}) // Progress Dialog Deprecation on API 26
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
         if (isFinishing()) {
