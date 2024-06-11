@@ -55,7 +55,7 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     @Before
     fun setup() {
         // Mock the recording updates to return a non-null flow before ViewModel instantiation
-        //whenever(recordingUseCase.recordingUpdates()).thenReturn(createRecordingUpdateFlow())
+        // whenever(recordingUseCase.recordingUpdates()).thenReturn(createRecordingUpdateFlow())
 
         viewModel = VoiceToContentViewModel(
             testDispatcher(),
