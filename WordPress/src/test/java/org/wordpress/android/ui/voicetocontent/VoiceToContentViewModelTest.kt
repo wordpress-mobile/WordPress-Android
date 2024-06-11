@@ -2,26 +2,17 @@ package org.wordpress.android.ui.voicetocontent
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runTest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.any
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.audio.RecordingUpdate
-import java.io.File
+import org.wordpress.android.viewmodel.ContextProvider
+import kotlin.test.Test
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class VoiceToContentViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var voiceToContentFeatureUtils: VoiceToContentFeatureUtils
@@ -36,13 +27,30 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     lateinit var selectedSiteRepository: SelectedSiteRepository
 
     @Mock
-    lateinit var jetpackAIStore: JetpackAIStore
+    lateinit var prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase
+
+    @Mock
+    lateinit var contextProvider: ContextProvider
 
     private lateinit var viewModel: VoiceToContentViewModel
 
-    private lateinit var uiState: MutableList<VoiceToContentResult>
+//    private var uiStateChanges = mutableListOf<VoiceToContentUiState>()
+//    private val uiState
+//        get() = viewModel.state.value
 
-   /* private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
+//    private fun <T> testUiStateChanges(
+//        block: suspend CoroutineScope.() -> T
+//    ) {
+//        test {
+//            uiStateChanges.clear()
+//            val job = launch(testDispatcher()) {
+//                viewModel.state.toList(uiStateChanges)
+//            }
+//            this.block()
+//            job.cancel()
+//        }
+//    }
+    /* private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
         hasFeature = true,
         isOverLimit = false,
         requestsCount = 0,
@@ -67,16 +75,10 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
             voiceToContentFeatureUtils,
             voiceToContentUseCase,
             selectedSiteRepository,
-            jetpackAIStore,
-            recordingUseCase
+            recordingUseCase,
+            contextProvider,
+            prepareVoiceToContentUseCase
         )
-
-        uiState = mutableListOf()
-        viewModel.uiState.observeForever { event ->
-            event?.let { result ->
-                uiState.add(result)
-            }
-        }
     }
 
     // Helper function to create a consistent flow
@@ -87,46 +89,9 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     @Test
     fun `when site is null, then execute posts error state `() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
-        val dummyFile = File("dummy_path")
-        viewModel.executeVoiceToContent(dummyFile)
 
-        val expectedState = VoiceToContentResult(isError = true)
-        assertThat(uiState.first()).isEqualTo(expectedState)
-    }
+        viewModel.start()
 
-   /* @Test
-    fun `when voice to content is enabled, then execute invokes use case `() = test {
-        val site = SiteModel().apply { id = 1 }
-        val dummyFile = File("dummy_path")
-
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(voiceToContentFeatureUtils.isVoiceToContentEnabled()).thenReturn(true)
-        whenever(jetpackAIStore.fetchJetpackAIAssistantFeature(site))
-            .thenReturn(JetpackAIAssistantFeatureResponse.Success(jetpackAIAssistantFeature))
-
-        viewModel.executeVoiceToContent(dummyFile)
-
-        verify(voiceToContentUseCase).execute(site, dummyFile)
-    }*/
-
-    @Test
-    fun `when voice to content is disabled, then executeVoiceToContent does not invoke use case`() = runTest {
-        val site = SiteModel().apply { id = 1 }
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        whenever(voiceToContentFeatureUtils.isVoiceToContentEnabled()).thenReturn(false)
-        val dummyFile = File("dummy_path")
-
-        viewModel.executeVoiceToContent(dummyFile)
-
-        verifyNoInteractions(voiceToContentUseCase)
-    }
-
-    @Test
-    fun `when startRecording is called, then recordingUseCase starts recording`() {
-        viewModel.startRecording()
-
-        verify(recordingUseCase).startRecording(any())
+        verifyNoInteractions(prepareVoiceToContentUseCase)
     }
 }
-
-

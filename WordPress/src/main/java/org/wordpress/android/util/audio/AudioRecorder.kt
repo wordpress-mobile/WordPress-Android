@@ -150,10 +150,12 @@ class AudioRecorder(
                 delay(RECORDING_UPDATE_INTERVAL)
                 elapsedTimeInSeconds += (RECORDING_UPDATE_INTERVAL / 1000).toInt()
                 val fileSize = File(filePath).length()
+                val amplitude = recorder?.maxAmplitude?.toFloat() ?: 0f
                 _recordingUpdates.value = RecordingUpdate(
                     elapsedTime = elapsedTimeInSeconds,
                     fileSize = fileSize,
                     fileSizeLimitExceeded = fileSize >= recordingStrategy.maxFileSize,
+                    amplitudes = listOf(amplitude)
                 )
 
                 if ( maxFileSizeExceeded(fileSize) || maxDurationExceeded(elapsedTimeInSeconds) ) {
