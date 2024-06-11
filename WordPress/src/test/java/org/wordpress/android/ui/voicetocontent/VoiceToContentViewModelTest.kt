@@ -1,10 +1,7 @@
 package org.wordpress.android.ui.voicetocontent
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.kotlin.verifyNoInteractions
@@ -37,22 +34,22 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
 
     private lateinit var viewModel: VoiceToContentViewModel
 
-    private var uiStateChanges = mutableListOf<VoiceToContentUiState>()
-    private val uiState
-        get() = viewModel.state.value
+//    private var uiStateChanges = mutableListOf<VoiceToContentUiState>()
+//    private val uiState
+//        get() = viewModel.state.value
 
-    private fun <T> testUiStateChanges(
-        block: suspend CoroutineScope.() -> T
-    ) {
-        test {
-            uiStateChanges.clear()
-            val job = launch(testDispatcher()) {
-                viewModel.state.toList(uiStateChanges)
-            }
-            this.block()
-            job.cancel()
-        }
-    }
+//    private fun <T> testUiStateChanges(
+//        block: suspend CoroutineScope.() -> T
+//    ) {
+//        test {
+//            uiStateChanges.clear()
+//            val job = launch(testDispatcher()) {
+//                viewModel.state.toList(uiStateChanges)
+//            }
+//            this.block()
+//            job.cancel()
+//        }
+//    }
     /* private val jetpackAIAssistantFeature = JetpackAIAssistantFeature(
         hasFeature = true,
         isOverLimit = false,
