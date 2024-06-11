@@ -584,9 +584,7 @@ Language: gl_ES
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Os avisos estanse trasladando á aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O lector estase trasladando á aplicación de Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Produciuse un erro ao cargar as indicacións.</string>
-    <string name="no_connection_error_title">Neste momento non se puido cargar este contido</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">A estatísticas estanse trasladado á aplicación de Jetpack</string>
-    <string name="no_connection_error_description">Comproba a túa conexión á rede e inténtao de novo.</string>
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="close_desc">pechar</string>

@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -8,18 +11,19 @@ import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class VideoBlockProcessor extends BlockProcessor {
-    public VideoBlockProcessor(String localId, MediaFile mediaFile) {
+    public VideoBlockProcessor(@NonNull String localId, @NonNull MediaFile mediaFile) {
         super(localId, mediaFile);
     }
 
-    @Override boolean processBlockContentDocument(Document document) {
+    @Override
+    public boolean processBlockContentDocument(@Nullable Document document) {
         // select video element with our local id
         Element targetVideo = document.select("video").first();
 
         // if a match is found for video, proceed with replacement
         if (targetVideo != null) {
             // replace attribute
-            targetVideo.attr("src", mRemoteUrl);
+            targetVideo.attr("src", remoteUrl);
 
             // return injected block
             return true;
@@ -28,10 +32,11 @@ public class VideoBlockProcessor extends BlockProcessor {
         return false;
     }
 
-    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+    @Override
+    public boolean processBlockJsonAttributes(@Nullable JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
-            addIntPropertySafely(jsonAttributes, "id", mRemoteId);
+        if (id != null && !id.isJsonNull() && id.getAsString().equals(localId)) {
+            addIntPropertySafely(jsonAttributes, "id", remoteId);
             return true;
         }
         return false;

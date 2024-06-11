@@ -101,6 +101,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
             site.id,
             optimizeMediaResult.optimizedMediaUris
         )
+
         // here we pass a map of "old" (before optimisation) Uris to the new MediaModels which contain
         // both the mediaModel ids and the optimized media URLs.
         // this way, the listener will be able to process from other models pointing to the old URLs

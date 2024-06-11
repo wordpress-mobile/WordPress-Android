@@ -4,14 +4,14 @@ import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
-class AudioBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProcessor(localId, mediaFile) {
+class AudioBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
     override fun processBlockContentDocument(document: Document?): Boolean {
         val audioElements = document?.select(AUDIO_TAG)
 
         audioElements?.let { elements ->
             for (element in elements) {
                 // replaces the src attribute's local url with the remote counterpart.
-                element.attr(SRC_ATTRIBUTE, mRemoteUrl)
+                element.attr(SRC_ATTRIBUTE, remoteUrl)
             }
             return true
         }
@@ -21,9 +21,9 @@ class AudioBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProces
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
         val id = jsonAttributes?.get(ID_ATTRIBUTE)
 
-        return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
+        return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {
-                addIntPropertySafely(this, ID_ATTRIBUTE, mRemoteId)
+                addIntPropertySafely(this, ID_ATTRIBUTE, remoteId)
             }
             true
         } else {

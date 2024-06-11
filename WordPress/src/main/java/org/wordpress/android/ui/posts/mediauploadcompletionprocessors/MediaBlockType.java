@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -66,7 +68,7 @@ enum MediaBlockType {
      * @param block The raw block contents
      * @return The media block type or null if no match is found
      */
-    static MediaBlockType detectBlockType(String block) {
+    static MediaBlockType detectBlockType(@NonNull String block) {
         Matcher matcher = PATTERN_MEDIA_BLOCK_TYPES.matcher(block);
 
         if (matcher.find()) {

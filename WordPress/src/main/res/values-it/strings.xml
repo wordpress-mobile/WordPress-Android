@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 14:54:10+0000
+Translation-Revision-Date: 2024-05-29 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources>
+    <string name="in_app_update_restart">Riavvia</string>
+    <string name="in_app_update_available">Aggiornamento scaricato. Riavvia per applicarlo.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Articolo dall\'audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">apri menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">rimuovi i Mi piace agli articoli</string>
+    <string name="reader_tags_feed_action_label_like_post">mi piace articolo</string>
+    <string name="reader_tags_feed_action_label_open_blog">apri blog</string>
+    <string name="reader_tags_feed_action_label_open_post">apri articolo</string>
+    <string name="reader_tags_feed_error_retry">Riprova</string>
+    <string name="reader_tags_feed_no_content_error_description">Non abbiamo trovato articoli con il tag %s</string>
+    <string name="reader_tags_feed_loading_error_description">Non siamo riusciti a caricare gli articoli da questo tag</string>
+    <string name="reader_tags_feed_error_title">Nessun articolo trovato per %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Ulteriori informazioni da %s</string>
+    <string name="reader_tags_display_name">Tag</string>
+    <string name="reader_announcement_card_reading_preferences_description">Scegli i colori e i caratteri che più ti si addicono. Mentre leggi un articolo, tocca l\'icona AA nella parte superiore dello schermo.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferenze di lettura</string>
+    <string name="reader_announcement_card_tags_stream_description">Tocca il menu a tendina in alto e seleziona Tag per accedere agli stream dei tag seguiti.</string>
+    <string name="reader_announcement_card_tags_stream_title">Stream dei tag</string>
+    <string name="reader_announcement_card_title">Novità su Reader</string>
+    <string name="reader_dropdown_menu_tags">I tuoi tag</string>
+    <string name="no_connection_error_description">Controlla la connessione di rete e riprova.</string>
+    <string name="no_connection_error_title">Impossibile caricare questo contenuto al momento</string>
+    <string name="stats_subscribers_marker_view_plural">Abbonati</string>
+    <string name="stats_subscribers_marker_view_singular">Abbonato</string>
+    <string name="stats_view_subscriber_growth">Crescita abbonati</string>
     <string name="role_subscriber">Abbonato</string>
     <string name="title_email_subscriber">Abbonati e-mail</string>
     <string name="people_empty_list_filtered_email_subscribers">Ancora nessun abbonato e-mail</string>
@@ -574,8 +599,6 @@ Language: it
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le notifiche si stanno spostando sull\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Le tue statistiche si stanno spostando sull\'app Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passa alla nuova app Jetpack</string>
-    <string name="no_connection_error_description">Controlla la connessione di rete e riprova.</string>
-    <string name="no_connection_error_title">Impossibile caricare questo contenuto al momento</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Si è verificato un errore durante il caricamento delle richieste.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ops</string>
     <string name="blogging_prompts_list_no_prompts">Ancora nessuna richiesta</string>

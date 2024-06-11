@@ -174,8 +174,8 @@ class PostListEventListener(
     @Suppress("unused", "SpreadOperator")
     @Subscribe(threadMode = BACKGROUND)
     fun onMediaChanged(event: OnMediaChanged) {
+        featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
         if (!event.isError) {
-            featuredMediaChanged(*event.mediaList.map { it.mediaId }.toLongArray())
             uploadStatusChanged(*event.mediaList.map { it.localPostId }.toIntArray())
         }
     }

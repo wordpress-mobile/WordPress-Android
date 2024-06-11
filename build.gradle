@@ -15,7 +15,7 @@ plugins {
 ext {
     minSdkVersion = 24
     compileSdkVersion = 34
-    targetSdkVersion = 34
+    targetSdkVersion = 33
 }
 
 ext {
@@ -23,14 +23,14 @@ ext {
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.1.0'
-    gutenbergMobileVersion = 'v1.120.0-alpha1'
+    gutenbergMobileVersion = 'v1.120.0'
     wordPressAztecVersion = 'v2.1.3'
     wordPressFluxCVersion = '3028-eb0a976762876b228eed98b564ea77ab97659673'
     wordPressLoginVersion = '1.15.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
-    gravatarVersion = '0.3.0'
+    gravatarVersion = '1.0.0'
 
     // debug
     flipperVersion = '0.245.0'

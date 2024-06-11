@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.HashMap;
@@ -33,7 +35,7 @@ class BlockProcessorFactory {
      * @param siteUrl The site url - used to generate the attachmentPage url
      * @return The factory instance - useful for chaining this method upon instantiation
      */
-    BlockProcessorFactory init(String localId, MediaFile mediaFile, String siteUrl) {
+    BlockProcessorFactory init(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl) {
         mMediaBlockTypeBlockProcessorMap.put(IMAGE, new ImageBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEOPRESS, new VideoPressBlockProcessor(localId, mediaFile));
         mMediaBlockTypeBlockProcessorMap.put(VIDEO, new VideoBlockProcessor(localId, mediaFile));
