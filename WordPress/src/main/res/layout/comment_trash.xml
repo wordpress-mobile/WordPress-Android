@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider_likes" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:drawablePadding="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/comment_moderation_trash"
+        android:textColor="@color/menu_more"
+        android:textSize="@dimen/text_sz_small" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_delete_comment"
+        style="@style/Widget.ShareButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+        android:text="@string/comment_moderation_delete"
+        app:icon="@drawable/trash_24"
+        app:iconGravity="textStart"
+        app:iconTint="?attr/colorSurface" />
+</LinearLayout>

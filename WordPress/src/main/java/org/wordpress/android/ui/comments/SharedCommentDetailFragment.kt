@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.gravatar.AvatarQueryOptions
 import com.gravatar.AvatarUrl
 import com.gravatar.types.Email
@@ -16,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.CommentApprovedBinding
 import org.wordpress.android.databinding.CommentPendingBinding
+import org.wordpress.android.databinding.CommentTrashBinding
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
@@ -79,29 +81,45 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
         // reset visibilities
         mBinding?.layoutCommentPending?.root?.isVisible = false
         mBinding?.layoutCommentApproved?.root?.isVisible = false
+        mBinding?.layoutCommentTrash?.root?.isVisible = false
 
         val commentStatus = CommentStatus.fromString(comment.status)
         when (commentStatus) {
             CommentStatus.APPROVED -> mBinding?.layoutCommentApproved?.bindApprovedView()
             CommentStatus.UNAPPROVED -> mBinding?.layoutCommentPending?.bindPendingView()
-            CommentStatus.SPAM -> {}
-            CommentStatus.TRASH -> {}
-            CommentStatus.DELETED -> {}
-            CommentStatus.ALL -> {}
-            CommentStatus.UNREPLIED -> {}
-            CommentStatus.UNSPAM -> {}
-            CommentStatus.UNTRASH -> {}
+            CommentStatus.SPAM, CommentStatus.TRASH -> mBinding?.layoutCommentTrash?.bindTrashView()
+            CommentStatus.DELETED,
+            CommentStatus.ALL,
+            CommentStatus.UNREPLIED,
+            CommentStatus.UNSPAM,
+            CommentStatus.UNTRASH -> {
+                // do nothing
+            }
         }
+    }
+
+    private fun CommentTrashBinding.bindTrashView() {
+        root.isVisible = true
+        buttonDeleteComment.setOnClickListener {
+            showDeleteCommentDialog()
+        }
+    }
+
+    private fun showDeleteCommentDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.delete)
+            .setMessage(R.string.dlg_sure_to_delete_comment)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                moderateComment(site, comment, mNote, CommentStatus.DELETED)
+            }
+            .setNegativeButton(R.string.no) { _, _ -> }
+            .show()
     }
 
     private fun CommentPendingBinding.bindPendingView() {
         root.isVisible = true
         buttonApproveComment.setOnClickListener {
-            viewModel.dispatchModerationAction(
-                site,
-                comment,
-                CommentStatus.APPROVED
-            )
+            moderateComment(site, comment, mNote, CommentStatus.APPROVED)
         }
         textMoreOptions.setOnClickListener { showModerationBottomSheet() }
     }
@@ -168,7 +186,10 @@ abstract class SharedCommentDetailFragment : CommentDetailFragment() {
                 canTrash = enabledActions.canTrash(),
             )
         ).apply {
-            onApprovedClicked = { viewModel.dispatchModerationAction(site, comment, CommentStatus.APPROVED) }
+            onApprovedClicked = { moderateComment(site, comment, mNote, CommentStatus.APPROVED) }
+            onPendingClicked = { moderateComment(site, comment, mNote, CommentStatus.UNAPPROVED) }
+            onTrashClicked = { moderateComment(site, comment, mNote, CommentStatus.TRASH) }
+            onSpamClicked = { moderateComment(site, comment, mNote, CommentStatus.SPAM) }
         }.show(childFragmentManager, ModerationBottomSheetDialogFragment.TAG)
     }
 }

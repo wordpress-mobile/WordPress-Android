@@ -31,6 +31,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"/>
+
+        <include
+            android:id="@+id/layout_comment_trash"
+            layout="@layout/comment_trash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </FrameLayout>
 
     <ProgressBar

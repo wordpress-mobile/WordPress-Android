@@ -14,6 +14,7 @@ import androidx.annotation.OptIn;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.gravatar.AvatarQueryOptions;
 import com.gravatar.AvatarUrl;
@@ -138,6 +139,8 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
 
     @Nullable protected CommentDetailFragmentBinding mBinding = null;
 
+    private CommentDetailViewModel mViewModel;
+
     private final OnActionClickListener mOnActionClickListener = new OnActionClickListener() {
         @Override public void onEditCommentClicked() {
             editComment();
@@ -168,7 +171,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) requireActivity().getApplication()).component().inject(this);
-
+        mViewModel = new ViewModelProvider(this).get(CommentDetailViewModel.class);
         mCommentSource = (CommentSource) requireArguments().getSerializable(KEY_MODE);
         setHasOptionsMenu(true);
     }
@@ -655,7 +658,7 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
     /*
      * approve, disapprove, spam, or trash the current comment
      */
-    private void moderateComment(
+    protected void moderateComment(
             @NonNull SiteModel site,
             @NonNull CommentModel comment,
             @Nullable Note note,
@@ -687,30 +690,11 @@ public abstract class CommentDetailFragment extends ViewPagerFragment implements
         // Fire the appropriate listener if we have one
         if (note != null && mOnNoteCommentActionListener != null) {
             mOnNoteCommentActionListener.onModerateCommentForNote(note, newStatus);
-            dispatchModerationAction(site, comment, newStatus);
+            mViewModel.dispatchModerationAction(site, comment, newStatus);
         } else if (mOnCommentActionListener != null) {
             mOnCommentActionListener.onModerateComment(comment, newStatus);
             // Sad, but onModerateComment does the moderation itself (due to the undo bar), this should be refactored,
             // That's why we don't call dispatchModerationAction() here.
-        }
-    }
-
-    private void dispatchModerationAction(
-            @NonNull SiteModel site,
-            @NonNull CommentModel comment,
-            CommentStatus newStatus
-    ) {
-        if (newStatus == CommentStatus.DELETED) {
-            // For deletion, we need to dispatch a specific action.
-            mCommentsStoreAdapter.dispatch(
-                    CommentActionBuilder.newDeleteCommentAction(new RemoteCommentPayload(site, comment))
-            );
-        } else {
-            // Actual moderation (push the modified comment).
-            comment.setStatus(newStatus.toString());
-            mCommentsStoreAdapter.dispatch(
-                    CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(site, comment))
-            );
         }
     }
 
