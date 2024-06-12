@@ -10,16 +10,21 @@ msgstr ""
 "X-Generator: VsCode\n"
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
+msgctxt "release_note_251"
+msgid ""
+"25.1:\n"
+"We have no updates in a house.\n"
+"We have no updates with a mouse.\n"
+"We have no updates here or there.\n"
+"We have no updates anywhere.\n"
+"We have no updates to report.\n"
+"If you need help, ask tech support.\n"
+msgstr ""
+
 msgctxt "release_note_250"
 msgid ""
 "25.0:\n"
 "We fixed assorted crashes on the login and Posts List screens, as well as actions associated with blogging reminders, feature images, and user removal. Less crashing? How smashing.\n"
-msgstr ""
-
-msgctxt "release_note_249"
-msgid ""
-"24.9:\n"
-"Site names and URLs are now properly positioned for right-to-left language users. Right on.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
