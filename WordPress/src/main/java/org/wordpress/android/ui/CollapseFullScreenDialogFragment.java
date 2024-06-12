@@ -22,7 +22,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
@@ -36,6 +35,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
+import org.wordpress.android.databinding.CollapseFullScreenDialogFragmentBinding;
 
 /**
  * A {@link DialogFragment} implementing the full-screen dialog pattern defined in the
@@ -56,6 +56,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
     private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final int ID_ACTION = 1;
+    private CollapseFullScreenDialogFragmentBinding mBinding;
 
     public static final String TAG = CollapseFullScreenDialogFragment.class.getSimpleName();
 
@@ -120,7 +121,7 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mFragment = getChildFragmentManager().findFragmentById(R.id.full_screen_dialog_fragment_content);
+            mFragment = getChildFragmentManager().findFragmentById(mBinding.fullScreenDialogFragmentContent.getId());
         }
 
         mController = new CollapseFullScreenDialogController() {
@@ -171,7 +172,8 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
             hideActivityBar();
         }
 
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.collapse_full_screen_dialog_fragment, container, false);
+        mBinding = CollapseFullScreenDialogFragmentBinding.inflate(inflater, container, false);
+        ViewGroup view = mBinding.getRoot();
         initToolbar(view);
         setThemeBackground(view);
         view.setFocusableInTouchMode(true);
@@ -270,20 +272,19 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
      * @param view {@link View}
      */
     private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
-
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(view.getContext());
         float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
         int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
-        toolbar.setBackgroundColor(elevatedColor);
+        mBinding.fullScreenDialogFragmentToolbar.setBackgroundColor(elevatedColor);
 
-        toolbar.setTitle(mTitle);
-        toolbar.setNavigationContentDescription(R.string.description_collapse);
-        toolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(), R.drawable.ic_chevron_down_white_24dp));
-        toolbar.setNavigationOnClickListener(v -> onCollapseClicked());
+        mBinding.fullScreenDialogFragmentToolbar.setTitle(mTitle);
+        mBinding.fullScreenDialogFragmentToolbar.setNavigationContentDescription(R.string.description_collapse);
+        mBinding.fullScreenDialogFragmentToolbar.setNavigationIcon(ContextCompat.getDrawable(view.getContext(),
+                R.drawable.ic_chevron_down_white_24dp));
+        mBinding.fullScreenDialogFragmentToolbar.setNavigationOnClickListener(v -> onCollapseClicked());
 
         if (!mAction.isEmpty()) {
-            Menu menu = toolbar.getMenu();
+            Menu menu = mBinding.fullScreenDialogFragmentToolbar.getMenu();
             mMenuAction = menu.add(0, ID_ACTION, 0, this.mAction);
             mMenuAction.setIcon(R.drawable.ic_send_white_24dp);
             MenuItemCompat.setIconTintList(mMenuAction,
