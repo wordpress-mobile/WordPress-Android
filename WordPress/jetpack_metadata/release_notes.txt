@@ -1,2 +1,6 @@
-* [*] [internal] Block editor: Add onContentUpdate bridge functionality [https://github.com/wordpress-mobile/gutenberg-mobile/pull/20852]
-
+We have no updates in a house.
+We have no updates with a mouse.
+We have no updates here or there.
+We have no updates anywhere.
+We have no updates to report.
+If you need help, ask tech support.
