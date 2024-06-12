@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-27 22:37:55+0000
+Translation-Revision-Date: 2024-06-10 20:05:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources>
+    <string name="permission_access_media_location">Media location</string>
+    <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
+    <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
+    <string name="gutenberg_native_tap_to_edit">Tap to edit</string>
     <string name="reader_announcement_card_reading_preferences_description">Choose colours and fonts that suit you. When you’re reading a post, tap the AA icon at the top of the screen.</string>
     <string name="reader_tags_display_name">Tags</string>
     <string name="reader_tags_feed_see_more_from_tag">More from %s</string>

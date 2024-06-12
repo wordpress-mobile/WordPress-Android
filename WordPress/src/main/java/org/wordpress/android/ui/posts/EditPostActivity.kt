@@ -638,7 +638,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val hasQuickPressBlogId = extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)
 
         // QuickPress might want to use a different blog than the current blog
-        return if (!isActionSendOrNewMedia && !hasQuickPressFlag && hasQuickPressBlogId) {
+        return if ((isActionSendOrNewMedia || hasQuickPressFlag) && hasQuickPressBlogId) {
             val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
             siteStore.getSiteByLocalId(localSiteId)
         } else {
