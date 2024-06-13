@@ -4900,7 +4900,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
     <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
     <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap to edit</string>
-    
+
     <!-- Voice to Content -->
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
@@ -4914,4 +4914,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_ineligible">You don\'t have enough requests available to create a post from audio.</string>
     <string name="voice_to_content_upgrade">Upgrade for more requests</string>
     <string name="voice_to_content_done_label">Done</string>
+    <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
 </resources>
