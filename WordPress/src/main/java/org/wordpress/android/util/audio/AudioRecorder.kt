@@ -76,20 +76,16 @@ class AudioRecorder(
                 }
             } catch (e: IOException) {
                 val errorMessage = "Error preparing MediaRecorder: ${e.message}"
-                Log.e(TAG, errorMessage)
                 onRecordingFinished(Error(errorMessage))
             } catch (e: IllegalStateException) {
                 val errorMessage = "Illegal state when starting recording: ${e.message}"
-                Log.e(TAG, errorMessage)
                 onRecordingFinished(Error(errorMessage))
             } catch (e: SecurityException) {
                 val errorMessage = "Security exception when starting recording: ${e.message}"
-                Log.e(TAG, errorMessage)
                 onRecordingFinished(Error(errorMessage))
             }
         } else {
             val errorMessage = "Permission to record audio not granted"
-            Log.e(TAG, errorMessage)
             onRecordingFinished(Error(errorMessage))
         }
     }
@@ -146,16 +142,22 @@ class AudioRecorder(
     private fun startRecordingUpdates() {
         recordingJob = coroutineScope.launch {
             var elapsedTimeInSeconds = 0
+            val amplitudeList = mutableListOf<Float>()
             while (recorder != null) {
                 delay(RECORDING_UPDATE_INTERVAL)
                 elapsedTimeInSeconds += (RECORDING_UPDATE_INTERVAL / 1000).toInt()
                 val fileSize = File(filePath).length()
                 val amplitude = recorder?.maxAmplitude?.toFloat() ?: 0f
+                amplitudeList.add(amplitude)
+                // Keep the list to a manageable size (e.g., last 1000 samples)
+                if (amplitudeList.size > 1000) {
+                    amplitudeList.removeAt(0)
+                }
                 _recordingUpdates.value = RecordingUpdate(
                     elapsedTime = elapsedTimeInSeconds,
                     fileSize = fileSize,
                     fileSizeLimitExceeded = fileSize >= recordingStrategy.maxFileSize,
-                    amplitudes = listOf(amplitude)
+                    amplitudes = amplitudeList.toList()
                 )
 
                 if ( maxFileSizeExceeded(fileSize) || maxDurationExceeded(elapsedTimeInSeconds) ) {
@@ -198,7 +200,7 @@ class AudioRecorder(
 
     companion object {
         private const val TAG = "AudioRecorder"
-        private const val RECORDING_UPDATE_INTERVAL = 1000L // in milliseconds
+        private const val RECORDING_UPDATE_INTERVAL = 100L // in milliseconds
         private const val RESUME_DELAY = 500L // in milliseconds
         private const val FILE_SIZE_THRESHOLD = 100000L
         private const val DURATION_THRESHOLD = 1
