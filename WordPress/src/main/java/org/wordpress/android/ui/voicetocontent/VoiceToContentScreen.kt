@@ -91,7 +91,6 @@ fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-         //   .verticalScroll(rememberScrollState()) // Enable vertical scrolling
             .padding(16.dp)
             .background(MaterialTheme.colors.surface) // Use theme-aware background color
     ) {
