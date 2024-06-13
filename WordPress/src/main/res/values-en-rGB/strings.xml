@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 13:59:47+0000
+Translation-Revision-Date: 2024-06-10 20:05:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources>
+    <string name="permission_access_media_location">Media location</string>
+    <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
+    <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
+    <string name="gutenberg_native_tap_to_edit">Tap to edit</string>
+    <string name="reader_announcement_card_reading_preferences_description">Choose colours and fonts that suit you. When you’re reading a post, tap the AA icon at the top of the screen.</string>
+    <string name="reader_tags_display_name">Tags</string>
+    <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
+    <string name="reader_tags_feed_error_title">No posts found for %s</string>
+    <string name="reader_tags_feed_loading_error_description">We couldn\'t load posts from this tag right now</string>
+    <string name="reader_tags_feed_no_content_error_description">We couldn\'t find any posts tagged %s right now</string>
+    <string name="reader_tags_feed_error_retry">Retry</string>
+    <string name="reader_tags_feed_action_label_open_post">open post</string>
+    <string name="reader_tags_feed_action_label_open_blog">open blog</string>
+    <string name="reader_tags_feed_action_label_like_post">like post</string>
+    <string name="reader_tags_feed_action_label_unlike_post">remove post like</string>
+    <string name="reader_tags_feed_action_label_open_menu">open menu</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
+    <string name="in_app_update_available">Update downloaded. Restart to apply.</string>
+    <string name="in_app_update_restart">Restart</string>
+    <string name="reader_announcement_card_reading_preferences_title">Reading Preferences</string>
+    <string name="no_connection_error_title">Unable to load this content right now</string>
+    <string name="no_connection_error_description">Check your network connection and try again.</string>
+    <string name="reader_dropdown_menu_tags">Your tags</string>
+    <string name="reader_announcement_card_title">New in Reader</string>
+    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
+    <string name="reader_announcement_card_tags_stream_description">Tap the dropdown at the top and select Tags to access streams from your followed tags.</string>
     <string name="stats_subscribers_marker_view_plural">Subscribers</string>
     <string name="stats_subscribers_marker_view_singular">Subscriber</string>
     <string name="stats_view_subscriber_growth">Subscriber growth</string>
@@ -573,16 +599,6 @@ Language: en_GB
     <string name="wp_jetpack_feature_removal_overlay_learn_more_migration_text">Learn more at jetpack.com</string>
     <string name="jetpack_feature_card_menu_item_remind_me_later">Remind me later</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_with_deadline">Stats, Reader, Notifications and other Jetpack-powered features will be removed from the WordPress app on %s.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
-    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
-    <string name="no_connection_error_description">Check your network connection and try again.</string>
-    <string name="no_connection_error_title">Unable to load this content right now</string>
-    <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
-    <string name="blogging_prompts_list_error_fetch_title">Oops</string>
-    <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_description_without_deadline">Stats, Reader, Notifications and other Jetpack-powered features will be removed from the WordPress app soon.</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_the_jetpack_app">Switch to the Jetpack app</string>
     <string name="wp_jetpack_feature_removal_overlay_migration_helper_text">Switching is free and only takes a minute.</string>
@@ -590,6 +606,14 @@ Language: en_GB
     <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 answers</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_all_features">Jetpack features are moving soon.</string>
+    <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Notifications are moving to Jetpack</string>
+    <string name="blogging_prompts_list_error_fetch_title">Oops</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader is moving to the Jetpack app</string>
+    <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Switch to the new Jetpack app</string>
+    <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
+    <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Your stats are moving to the Jetpack app</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Answered</string>
     <string name="close_desc">close</string>
     <string name="blogging_prompts_list_title">Prompts</string>

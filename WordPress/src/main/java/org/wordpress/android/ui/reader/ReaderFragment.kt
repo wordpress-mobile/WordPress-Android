@@ -396,6 +396,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
     }
 
     fun requestBookmarkTab() {
+        if (!::viewModel.isInitialized) {
+            viewModel = ViewModelProvider(this@ReaderFragment, viewModelFactory)[ReaderViewModel::class.java]
+        }
         viewModel.bookmarkTabRequested()
     }
 

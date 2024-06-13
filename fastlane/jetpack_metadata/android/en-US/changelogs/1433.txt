@@ -1,4 +1,0 @@
-- We reorganized the Stats screen to show data about traffic and insights.
-- We added a Subscribers tab to show data about site subscribers.
-- We removed social subscribers from the Total Followers card.
-- Site names and URLs are properly positioned for right-to-left language users.

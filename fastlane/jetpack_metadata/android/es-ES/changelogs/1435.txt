@@ -1,0 +1,4 @@
+25.0:
+¡El feed de etiquetas ya está disponible! Ahora puedes ver el contenido con etiquetas específicas, todo en un solo lugar. Las etiquetas lo son todo.
+
+Hemos corregido varios fallos en las pantallas de acceso y de lista de entradas, así como en las acciones asociadas a los recordatorios de blogs, las imágenes destacadas y la eliminación de usuarios. ¿Menos caídas? Estupendo.

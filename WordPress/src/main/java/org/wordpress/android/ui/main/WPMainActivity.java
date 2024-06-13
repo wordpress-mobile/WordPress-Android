@@ -752,14 +752,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     .show(getSupportFragmentManager(), FeatureAnnouncementDialogFragment.TAG);
         });
 
-        mFloatingActionButton.setOnClickListener(v -> mViewModel.onFabClicked(getSelectedSite()));
+        mFloatingActionButton.setOnClickListener(v -> {
+            PageType selectedPage = getSelectedPage();
+            if (selectedPage != null) mViewModel.onFabClicked(getSelectedSite(), selectedPage);
+        });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
             if (v.isHapticFeedbackEnabled()) {
                 v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
 
-            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite());
+            int messageId = mViewModel.getCreateContentMessageId(getSelectedSite(), getSelectedPage());
 
             Toast.makeText(v.getContext(), messageId, Toast.LENGTH_SHORT).show();
             return true;
@@ -831,7 +834,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // initialized with the most restrictive rights case. This is OK and will be frequently checked
         // to normalize the UI state whenever mSelectedSite changes.
         // It also means that the ViewModel must accept a nullable SiteModel.
-        mViewModel.start(getSelectedSite());
+        mViewModel.start(getSelectedSite(), mBottomNav.getCurrentSelectedPage());
     }
 
     private void triggerCreatePageFlow(ActionType actionType) {
@@ -1177,8 +1180,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         mViewModel.onResume(
                 getSelectedSite(),
-                mSelectedSiteRepository.hasSelectedSite() && mBottomNav != null
-                && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE
+                mSelectedSiteRepository.hasSelectedSite(),
+                getSelectedPage()
         );
 
         if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
@@ -1267,8 +1270,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         mViewModel.onPageChanged(
-                mSiteStore.hasSite() && pageType == PageType.MY_SITE,
-                getSelectedSite()
+                getSelectedSite(),
+                mSiteStore.hasSite(),
+                pageType
         );
     }
 
@@ -1986,5 +1990,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 );
             }
         }
+    }
+
+    @Nullable
+    private PageType getSelectedPage() {
+        return mBottomNav != null ? mBottomNav.getCurrentSelectedPage() : null;
     }
 }

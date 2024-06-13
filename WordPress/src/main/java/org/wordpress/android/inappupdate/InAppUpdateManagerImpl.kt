@@ -22,6 +22,10 @@ import com.google.android.play.core.install.model.UpdateAvailability.DEVELOPER_T
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_NOT_AVAILABLE
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.inappupdate.IInAppUpdateManager.Companion.APP_UPDATE_FLEXIBLE_REQUEST_CODE
 import org.wordpress.android.inappupdate.IInAppUpdateManager.Companion.APP_UPDATE_IMMEDIATE_REQUEST_CODE
 
@@ -33,6 +37,7 @@ import javax.inject.Singleton
 @Suppress("TooManyFunctions")
 class InAppUpdateManagerImpl(
     @ApplicationContext private val applicationContext: Context,
+    private val coroutineScope: CoroutineScope,
     private val appUpdateManager: AppUpdateManager,
     private val remoteConfigWrapper: RemoteConfigWrapper,
     private val buildConfigWrapper: BuildConfigWrapper,
@@ -51,8 +56,16 @@ class InAppUpdateManagerImpl(
     }
 
     override fun completeAppUpdate() {
-        inAppUpdateAnalyticsTracker.trackAppRestartToCompleteUpdate()
-        appUpdateManager.completeUpdate()
+        coroutineScope.launch(Dispatchers.Main) {
+            // Track the app restart to complete update
+            inAppUpdateAnalyticsTracker.trackAppRestartToCompleteUpdate()
+
+            // Delay so the event above can be logged
+            delay(RESTART_DELAY_IN_MILLIS)
+
+            // Complete the update
+            appUpdateManager.completeUpdate()
+        }
     }
 
     override fun cancelAppUpdate(updateType: Int) {
@@ -226,5 +239,6 @@ class InAppUpdateManagerImpl(
         private const val TAG = "AppUpdateChecker"
         private const val PREF_NAME = "in_app_update_prefs"
         private const val KEY_LAST_APP_UPDATE_CHECK_VERSION = "last_app_update_check_version"
+        private const val RESTART_DELAY_IN_MILLIS = 500L
     }
 }

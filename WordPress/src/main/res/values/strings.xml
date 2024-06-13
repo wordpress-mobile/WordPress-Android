@@ -3100,6 +3100,7 @@
     <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
+    <string name="permission_access_media_location">Media Location</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
@@ -4898,9 +4899,19 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
     <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
     <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
-
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap to edit</string>
+    
     <!-- Voice to Content -->
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
-
+    <string name="voice_to_content_processing">Processing</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing_label">Processing</string>
+    <string name="voice_to_content_base_header_label">Post from Audio</string>
+    <string name="voice_to_content_secondary_header_label">Requests available:</string>
+    <string name="voice_to_content_begin_recording_label">Begin Recording</string>
+    <string name="voice_to_content_recording_label">Recording</string>
+    <string name="voice_to_content_ineligible">You don\'t have enough requests available to create a post from audio.</string>
+    <string name="voice_to_content_upgrade">Upgrade for more requests</string>
+    <string name="voice_to_content_done_label">Done</string>
 </resources>

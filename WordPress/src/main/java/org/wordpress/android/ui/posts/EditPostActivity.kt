@@ -638,7 +638,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         val hasQuickPressBlogId = extras.containsKey(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID)
 
         // QuickPress might want to use a different blog than the current blog
-        return if (!isActionSendOrNewMedia && !hasQuickPressFlag && hasQuickPressBlogId) {
+        return if ((isActionSendOrNewMedia || hasQuickPressFlag) && hasQuickPressBlogId) {
             val localSiteId = intent.getIntExtra(EditPostActivityConstants.EXTRA_QUICKPRESS_BLOG_ID, -1)
             siteStore.getSiteByLocalId(localSiteId)
         } else {
@@ -3813,7 +3813,12 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onPostUploaded(event: OnPostUploaded) {
         val post: PostModel? = event.post
-        if (post != null && post.id == editPostRepository.id) {
+
+        // Check if editPostRepository is initialized
+        val editPostRepositoryInitialized = this::editPostRepository.isInitialized
+        val editPostId = if (editPostRepositoryInitialized) editPostRepository.getPost()?.id else null
+
+        if (post != null && post.id == editPostId) {
             if (!isRemotePreviewingFromEditor) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 val snackbarAttachView = findViewById<View>(R.id.editor_activity)

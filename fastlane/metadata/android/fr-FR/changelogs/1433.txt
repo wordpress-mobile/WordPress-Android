@@ -1,2 +1,0 @@
-24.9 :
-Les noms de site et les URL sont désormais correctement positionnés pour les locuteurs de langues se lisant de droite à gauche. À gauche toute !

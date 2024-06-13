@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 11:54:07+0000
+Translation-Revision-Date: 2024-06-07 13:13:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
+    <string name="in_app_update_restart">重新启动</string>
+    <string name="in_app_update_available">更新内容已下载。 重新启动以应用修改。</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">从音频创建的文章</string>
+    <string name="reader_tags_feed_action_label_open_menu">打开菜单</string>
+    <string name="reader_tags_feed_action_label_unlike_post">删除文章点赞</string>
+    <string name="reader_tags_feed_action_label_like_post">点赞文章</string>
+    <string name="reader_tags_feed_action_label_open_blog">打开博客</string>
+    <string name="reader_tags_feed_action_label_open_post">打开文章</string>
+    <string name="reader_tags_feed_error_retry">重试</string>
+    <string name="reader_tags_feed_no_content_error_description">我们现在无法找到任何标签为 %s 的文章</string>
+    <string name="reader_tags_feed_loading_error_description">我们现在无法加载此标签下的文章</string>
+    <string name="reader_tags_feed_error_title">未找到关于 %s 的文章</string>
+    <string name="reader_tags_feed_see_more_from_tag">更多来自 %s</string>
+    <string name="reader_tags_display_name">标签</string>
+    <string name="reader_announcement_card_reading_preferences_description">选择适合您的颜色和字体。 阅读文章时，请点击屏幕顶部的 AA 图标。</string>
+    <string name="reader_announcement_card_reading_preferences_title">阅读偏好</string>
+    <string name="reader_announcement_card_tags_stream_description">点击顶部的下拉菜单，然后选择“标签”，即可访问您所关注的标签下的数据流。</string>
+    <string name="reader_announcement_card_tags_stream_title">标签流</string>
+    <string name="reader_announcement_card_title">阅读器新功能</string>
+    <string name="reader_dropdown_menu_tags">您的标签</string>
+    <string name="no_connection_error_description">请检查您的网络连接，然后重试。</string>
+    <string name="no_connection_error_title">现在无法加载此内容</string>
+    <string name="stats_subscribers_marker_view_plural">订阅者</string>
+    <string name="stats_subscribers_marker_view_singular">订阅者</string>
+    <string name="stats_view_subscriber_growth">订阅者增长情况</string>
     <string name="role_subscriber">订阅者</string>
     <string name="title_email_subscriber">电子邮件订阅者</string>
     <string name="people_empty_list_filtered_email_subscribers">尚无电子邮件订阅者</string>
@@ -570,8 +595,6 @@ Language: zh_CN
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">阅读器即将移至 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">统计信息即将移至 Jetpack 应用</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切换到新版 Jetpack 应用</string>
-    <string name="no_connection_error_description">请检查您的网络连接，然后重试。</string>
-    <string name="no_connection_error_title">现在无法加载此内容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">加载提示时出错。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚无提示</string>
@@ -3090,6 +3113,7 @@ Language: zh_CN
     <string name="error_all_media_upload_canceled">由于发生未知错误，所有媒体上传均已取消。请重新尝试上传</string>
     <string name="error_unknown_post_type">未知文章格式</string>
     <string name="submit_for_review">提交</string>
+    <string name="title_subscriber">订阅者</string>
     <string name="duplicate_site_detected">检测到重复的站点。</string>
     <string name="cannot_add_duplicate_site">应用中已存在此站点，无法重复添加。</string>
     <string name="already_logged_in_wpcom">您已登录 WordPress.com 账户，不能添加被其他账户绑定的 WordPress.com 站点。</string>
