@@ -196,7 +196,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        AddCategoryFragment newFragment = AddCategoryFragment.newInstance(mSite);
+        AddCategoryFragment newFragment = AddCategoryFragment.Companion.newInstance(mSite);
         newFragment.show(ft, "dialog");
     }
 

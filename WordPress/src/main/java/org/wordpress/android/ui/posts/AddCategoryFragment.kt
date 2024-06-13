@@ -1,139 +1,130 @@
-package org.wordpress.android.ui.posts;
+package org.wordpress.android.ui.posts
 
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.app.Dialog
+import android.content.DialogInterface
+import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.appcompat.view.ContextThemeWrapper
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.AddCategoryBinding
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.TermModel
+import org.wordpress.android.fluxc.store.TaxonomyStore
+import org.wordpress.android.models.CategoryNode
+import org.wordpress.android.util.ToastUtils
+import javax.inject.Inject
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.appcompat.view.ContextThemeWrapper;
+class AddCategoryFragment : AppCompatDialogFragment() {
+    private var mSite: SiteModel? = null
+    private var binding: AddCategoryBinding? = null
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+    @set:Inject
+    var mTaxonomyStore: TaxonomyStore? = null
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.databinding.AddCategoryBinding;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.TermModel;
-import org.wordpress.android.fluxc.store.TaxonomyStore;
-import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.util.ToastUtils;
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        (requireActivity().application as WordPress).component().inject(this)
+        initSite(savedInstanceState)
+        val builder =
+            MaterialAlertDialogBuilder(ContextThemeWrapper(activity, R.style.PostSettingsTheme))
+        binding = AddCategoryBinding.inflate(layoutInflater, null, false)
+        loadCategories()
+        builder.setView(binding!!.root)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
 
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-
-public class AddCategoryFragment extends AppCompatDialogFragment {
-    private SiteModel mSite;
-    private AddCategoryBinding mBinding;
-
-    @Inject TaxonomyStore mTaxonomyStore;
-
-    public static AddCategoryFragment newInstance(SiteModel site) {
-        AddCategoryFragment fragment = new AddCategoryFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(WordPress.SITE, site);
-        fragment.setArguments(bundle);
-        return fragment;
+        return builder.create()
     }
 
-    @Override
-    @NonNull
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        ((WordPress) requireActivity().getApplication()).component().inject(this);
-
-        initSite(savedInstanceState);
-
-        AlertDialog.Builder builder =
-                new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
-        // Get the layout inflater
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        //noinspection InflateParams
-        mBinding = AddCategoryBinding.inflate(inflater, null, false);
-
-        loadCategories();
-
-        builder.setView(mBinding.getRoot())
-               .setPositiveButton(android.R.string.ok, null)
-               .setNegativeButton(android.R.string.cancel, null);
-
-        return builder.create();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        AlertDialog dialog = (AlertDialog) requireDialog();
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (addCategory()) {
-                    dismiss();
-                }
+    override fun onStart() {
+        super.onStart()
+        val dialog = requireDialog() as AlertDialog
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            if (addCategory()) {
+                dismiss()
             }
-        });
+        }
     }
 
-    private void initSite(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+    @Suppress("Deprecation")
+    private fun initSite(savedInstanceState: Bundle?) {
+        mSite = if (savedInstanceState == null) {
+            if (arguments != null) {
+                requireArguments().getSerializable(WordPress.SITE) as SiteModel?
             } else {
-                mSite = (SiteModel) requireActivity().getIntent().getSerializableExtra(WordPress.SITE);
+                requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel?
             }
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(requireActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getParentFragmentManager().popBackStack();
+            ToastUtils.showToast(
+                requireActivity(),
+                R.string.blog_not_found,
+                ToastUtils.Duration.SHORT
+            )
+            parentFragmentManager.popBackStack()
         }
     }
 
-    private boolean addCategory() {
-        String categoryName = mBinding.categoryName.getText().toString();
-        CategoryNode selectedCategory = (CategoryNode) mBinding.parentCategory.getSelectedItem();
-        long parentId = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
+    private fun addCategory(): Boolean {
+        val categoryName = binding!!.categoryName.text.toString()
+        val selectedCategory = binding!!.parentCategory.selectedItem as CategoryNode
+        val parentId = selectedCategory.categoryId
 
-        if (categoryName.replaceAll(" ", "").equals("")) {
-            mBinding.categoryName.setError(getText(R.string.cat_name_required));
-            return false;
+        if (categoryName.replace(" ".toRegex(), "") == "") {
+            binding!!.categoryName.error = getText(R.string.cat_name_required)
+            return false
         }
 
-        TermModel newCategory = new TermModel(
-                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-                categoryName,
-                parentId
-        );
-        ((SelectCategoriesActivity) requireActivity()).categoryAdded(newCategory);
-
-        return true;
+        val newCategory = TermModel(
+            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+            categoryName,
+            parentId
+        )
+        (requireActivity() as SelectCategoriesActivity).categoryAdded(newCategory)
+        return true
     }
 
-    private void loadCategories() {
-        CategoryNode rootCategory = CategoryNode.createCategoryTreeFromList(mTaxonomyStore.getCategoriesForSite(mSite));
-        ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
-        categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.top_level_category_name)));
-        if (categoryLevels.size() > 0) {
-            ParentCategorySpinnerAdapter categoryAdapter =
-                    new ParentCategorySpinnerAdapter(getActivity(), R.layout.categories_row_parent, categoryLevels);
-            mBinding.parentCategory.setAdapter(categoryAdapter);
+    private fun loadCategories() {
+        val rootCategory = CategoryNode.createCategoryTreeFromList(
+            mTaxonomyStore!!.getCategoriesForSite(
+                mSite!!
+            )
+        )
+        val categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory)
+        categoryLevels.add(0, CategoryNode(0, 0, getString(R.string.top_level_category_name)))
+        if (categoryLevels.size > 0) {
+            val categoryAdapter =
+                ParentCategorySpinnerAdapter(
+                    activity,
+                    R.layout.categories_row_parent,
+                    categoryLevels
+                )
+            binding!!.parentCategory.adapter = categoryAdapter
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(WordPress.SITE, mSite)
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mBinding = null;
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
+    }
+
+    companion object {
+        fun newInstance(site: SiteModel?): AddCategoryFragment {
+            val fragment = AddCategoryFragment()
+            val bundle = Bundle()
+            bundle.putSerializable(WordPress.SITE, site)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }
