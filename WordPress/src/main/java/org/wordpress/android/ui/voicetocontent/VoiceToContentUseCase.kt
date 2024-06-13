@@ -16,7 +16,7 @@ import javax.inject.Inject
 class VoiceToContentUseCase @Inject constructor(
     private val jetpackAIStore: JetpackAIStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val logger: VoiceToContentLogger
+    private val logger: VoiceToContentTelemetry
 ) {
     companion object {
         const val FEATURE = "voice_to_content"

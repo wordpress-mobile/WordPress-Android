@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PrepareVoiceToContentUseCase @Inject constructor(
     private val jetpackAIStore: JetpackAIStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val logger: VoiceToContentLogger
+    private val logger: VoiceToContentTelemetry
 ) {
     suspend fun execute(site: SiteModel): PrepareVoiceToContentResult =
         withContext(Dispatchers.IO) {
