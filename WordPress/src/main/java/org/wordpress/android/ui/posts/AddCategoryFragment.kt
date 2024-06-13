@@ -18,7 +18,7 @@ import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 class AddCategoryFragment : AppCompatDialogFragment() {
-    private var mSite: SiteModel? = null
+    private var site: SiteModel? = null
     private var binding: AddCategoryBinding? = null
 
     @set:Inject
@@ -50,7 +50,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
 
     @Suppress("Deprecation")
     private fun initSite(savedInstanceState: Bundle?) {
-        mSite = if (savedInstanceState == null) {
+        site = if (savedInstanceState == null) {
             if (arguments != null) {
                 requireArguments().getSerializable(WordPress.SITE) as SiteModel?
             } else {
@@ -60,7 +60,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
         }
 
-        if (mSite == null) {
+        if (site == null) {
             ToastUtils.showToast(
                 requireActivity(),
                 R.string.blog_not_found,
@@ -71,8 +71,8 @@ class AddCategoryFragment : AppCompatDialogFragment() {
     }
 
     private fun addCategory(): Boolean {
-        val categoryName = binding!!.categoryName.text.toString()
-        val selectedCategory = binding!!.parentCategory.selectedItem as CategoryNode
+        val categoryName = binding?.categoryName?.text.toString()
+        val selectedCategory = binding?.parentCategory?.selectedItem as CategoryNode
         val parentId = selectedCategory.categoryId
 
         if (categoryName.replace(" ".toRegex(), "") == "") {
@@ -92,7 +92,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
     private fun loadCategories() {
         val rootCategory = CategoryNode.createCategoryTreeFromList(
             mTaxonomyStore!!.getCategoriesForSite(
-                mSite!!
+                site!!
             )
         )
         val categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory)
@@ -110,7 +110,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, mSite)
+        outState.putSerializable(WordPress.SITE, site)
     }
 
     override fun onDestroy() {
