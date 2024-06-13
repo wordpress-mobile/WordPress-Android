@@ -17,9 +17,14 @@ import org.wordpress.android.R
 import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
 import android.provider.Settings
 import androidx.compose.material.ExperimentalMaterialApi
+import org.wordpress.android.ui.ActivityNavigator
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private val viewModel: VoiceToContentViewModel by viewModels()
 
     @ExperimentalMaterialApi
@@ -48,6 +53,10 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
 
         viewModel.dismiss.observe(viewLifecycleOwner) {
             dismiss()
+        }
+
+        viewModel.onIneligibleForVoiceToContent.observe(viewLifecycleOwner) { url ->
+            launchIneligibleForVoiceToContent(url)
         }
     }
 
@@ -82,6 +91,12 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun launchIneligibleForVoiceToContent(url: String) {
+        context?.let {
+            activityNavigator.openIneligibleForVoiceToContent(it, url)
+        }
     }
 
     companion object {

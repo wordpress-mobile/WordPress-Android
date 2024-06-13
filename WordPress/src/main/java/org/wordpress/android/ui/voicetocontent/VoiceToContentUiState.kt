@@ -32,6 +32,12 @@ data class RecordingPanelUIModel(
     @StringRes val actionLabel: Int
 )
 
+data class ErrorUiModel(
+    @StringRes val errorMessage: Int? = null,
+    val allowRetry: Boolean = false,
+    val onRetryTap: (() -> Unit)? = null
+)
+
 enum class VoiceToContentUIStateType(val trackingName: String) {
     INITIALIZING("initializing"),
     READY_TO_RECORD("ready_to_record"),
@@ -45,5 +51,6 @@ data class VoiceToContentUiState(
     val uiStateType: VoiceToContentUIStateType,
     val header: HeaderUIModel,
     val secondaryHeader: SecondaryHeaderUIModel? = null,
-    val recordingPanel: RecordingPanelUIModel? = null
+    val recordingPanel: RecordingPanelUIModel? = null,
+    val errorPanel: ErrorUiModel? = null
 )
