@@ -52,13 +52,14 @@ import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.Drawable
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.audio.RecordingUpdate
 
 @Composable
 fun VoiceToContentScreen(
     viewModel: VoiceToContentViewModel
 ) {
     val state by viewModel.state.collectAsState()
-    val amplitudes by viewModel.amplitudes.observeAsState(initial = listOf())
+    val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     // Adjust the bottom sheet height based on orientation
@@ -80,13 +81,13 @@ fun VoiceToContentScreen(
                 .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
                 .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
         ) {
-            VoiceToContentView(state, amplitudes)
+            VoiceToContentView(state, recordingUpdate)
         }
     }
 }
 
 @Composable
-fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
+fun VoiceToContentView(state: VoiceToContentUiState, recordingUpdate: RecordingUpdate) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -100,7 +101,7 @@ fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
             else -> {
                 Header(state.header)
                 SecondaryHeader(state.secondaryHeader)
-                RecordingPanel(state, amplitudes)
+                RecordingPanel(state, recordingUpdate)
             }
         }
     }
@@ -183,7 +184,7 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
 }
 
 @Composable
-fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
+fun RecordingPanel(model: VoiceToContentUiState, recordingUpdate: RecordingUpdate) {
     model.recordingPanel?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -205,14 +206,7 @@ fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
                             .height(IntrinsicSize.Max)
                             .padding(48.dp)
                     ) {
-                        WaveformVisualizer(
-                            amplitudes = amplitudes,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .padding(16.dp),
-                            color = MaterialTheme.colors.primary
-                        )
+                        ScrollingWaveformVisualizer(recordingUpdate = recordingUpdate)
                     }
                 } else if (model.uiStateType == VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE) {
                     InEligible(model = it)
@@ -354,7 +348,7 @@ fun PreviewInitializingView() {
                 hasPermission = false
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
     }
 }
 
@@ -376,7 +370,7 @@ fun PreviewReadyToRecordView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
     }
 }
 
@@ -397,7 +391,7 @@ fun PreviewNotEligibleToRecordView() {
                 upgradeUrl = "https://www.wordpress.com"
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
     }
 }
 
@@ -420,18 +414,7 @@ fun PreviewRecordingView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(
-            state = state,
-            amplitudes = listOf(
-                1.1f,
-                2.2f,
-                3.3f,
-                4.4f,
-                2.2f,
-                3.3f,
-                1.1f
-            )
-        )
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
     }
 }
 
@@ -444,6 +427,6 @@ fun PreviewProcessingView() {
             uiStateType = VoiceToContentUIStateType.PROCESSING,
             header = HeaderUIModel(label = R.string.voice_to_content_processing_label, onClose = { })
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
     }
 }
