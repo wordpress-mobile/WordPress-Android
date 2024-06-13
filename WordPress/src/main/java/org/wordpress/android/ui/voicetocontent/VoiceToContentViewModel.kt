@@ -13,24 +13,24 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
-import org.wordpress.android.util.audio.IAudioRecorder
-import org.wordpress.android.viewmodel.ContextProvider
-import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INITIALIZING
-import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.READY_TO_RECORD
-import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.RECORDING
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.ERROR
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INITIALIZING
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.PROCESSING
-
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.READY_TO_RECORD
+import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.RECORDING
+import org.wordpress.android.util.audio.IAudioRecorder
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
+import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
+import org.wordpress.android.viewmodel.ContextProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
-import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
-import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
 
 @HiltViewModel
 class VoiceToContentViewModel @Inject constructor(
@@ -41,7 +41,7 @@ class VoiceToContentViewModel @Inject constructor(
     private val recordingUseCase: RecordingUseCase,
     private val contextProvider: ContextProvider,
     private val prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase,
-    private val logger: VoiceToContentLogger
+    private val logger: VoiceToContentTelemetry
 ) : ScopedViewModel(mainDispatcher) {
     private val _requestPermission = MutableLiveData<Unit>()
     val requestPermission = _requestPermission as LiveData<Unit>
@@ -51,6 +51,11 @@ class VoiceToContentViewModel @Inject constructor(
 
     private val _amplitudes = MutableLiveData<List<Float>>()
     val amplitudes: LiveData<List<Float>> get() = _amplitudes
+
+    private val _onIneligibleForVoiceToContent = MutableLiveData<String>()
+    val onIneligibleForVoiceToContent = _onIneligibleForVoiceToContent as LiveData<String>
+
+    private var isStarted = false
 
     private val _state = MutableStateFlow(VoiceToContentUiState(
         uiStateType = INITIALIZING,
@@ -79,6 +84,10 @@ class VoiceToContentViewModel @Inject constructor(
         val site = selectedSiteRepository.getSelectedSite()
         if (site == null || !isVoiceToContentEnabled()) return
 
+        if (!isStarted) {
+            logger.track(Stat.VOICE_TO_CONTENT_SHEET_SHOWN)
+        }
+
         viewModelScope.launch {
             when (val result = prepareVoiceToContentUseCase.execute(site)) {
                 is PrepareVoiceToContentResult.Success -> {
@@ -90,6 +99,8 @@ class VoiceToContentViewModel @Inject constructor(
                 }
             }
         }
+
+        isStarted = true
     }
 
     // Recording
@@ -167,6 +178,7 @@ class VoiceToContentViewModel @Inject constructor(
 
     // Permissions
     private fun onRequestPermission() {
+        logger.track(Stat.VOICE_TO_CONTENT_BUTTON_START_RECORDING_TAPPED)
         _requestPermission.postValue(Unit)
     }
 
@@ -185,20 +197,30 @@ class VoiceToContentViewModel @Inject constructor(
 
     // user actions
     private fun onMicTap() {
+        logger.track(Stat.VOICE_TO_CONTENT_BUTTON_START_RECORDING_TAPPED)
         startRecording()
     }
 
     private fun onStopTap() {
+        logger.track(Stat.VOICE_TO_CONTENT_BUTTON_DONE_TAPPED)
         stopRecording()
     }
 
     private fun onClose() {
+        logger.track(Stat.VOICE_TO_CONTENT_BUTTON_CLOSE_TAPPED)
         _dismiss.postValue(Unit)
     }
 
     private fun onRetryTap() {
         transitionToInitializing()
         start()
+    }
+
+    private fun onLinkTap(url: String?) {
+        logger.track(Stat.VOICE_TO_CONTENT_BUTTON_UPGRADE_TAPPED)
+        url?.let {
+            _onIneligibleForVoiceToContent.postValue(it)
+        }
     }
 
     // transitions
@@ -222,6 +244,9 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun transitionToReadyToRecordOrIneligibleForFeature(model: JetpackAIAssistantFeature) {
         val isEligibleForFeature = voiceToContentFeatureUtils.isEligibleForVoiceToContent(model)
+        if (!isEligibleForFeature) {
+            logger.track(Stat.VOICE_TO_CONTENT_BUTTON_RECORDING_LIMIT_REACHED)
+        }
         val requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model)
         val currentState = _state.value
         _state.value = currentState.copy(
@@ -236,7 +261,8 @@ class VoiceToContentViewModel @Inject constructor(
                 onMicTap = ::onMicTap,
                 onRequestPermission = ::onRequestPermission,
                 hasPermission = hasAllPermissionsForRecording(),
-                upgradeUrl = model.upgradeUrl
+                upgradeUrl = model.upgradeUrl,
+                onLinkTap = ::onLinkTap
             )
         )
     }
