@@ -788,7 +788,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                   .show();
     }
 
-    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
+
     private void showDomainCreditsCheckProgressDialog() {
         if (mCheckingDomainCreditsProgressDialog == null) {
             mCheckingDomainCreditsProgressDialog = new ProgressDialog(this);
@@ -808,7 +808,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
             mCheckingDomainCreditsProgressDialog.cancel();
         }
     }
-    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
+
     private void showRemovePluginProgressDialog() {
         if (mRemovePluginProgressDialog == null) {
             mRemovePluginProgressDialog = new ProgressDialog(this);
@@ -1228,7 +1228,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * updates site settings etc, it'll be lost when the Automated Transfer is completed. The process takes about 1 min
      * on average, and we'll be able to update the progress by checking the status of the transfer.
      */
-    @SuppressWarnings("deprecation") // Progress Dialog Deprecation on API 26
+
     private void showAutomatedTransferProgressDialog() {
         if (mAutomatedTransferProgressDialog == null) {
             mAutomatedTransferProgressDialog = new ProgressDialog(this);
@@ -1365,7 +1365,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
-    @SuppressWarnings({"deprecation", "unused"}) // Progress Dialog Deprecation on API 26
+    @SuppressWarnings("unused") // Progress Dialog Deprecation on API 26
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
         if (isFinishing()) {
