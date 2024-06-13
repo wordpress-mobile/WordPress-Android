@@ -24,6 +24,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -117,7 +118,12 @@ fun ErrorView(model: VoiceToContentUiState) {
     ) {
         Header(model.header)
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Unable to use Voice to Content at the moment, please try again later")
+        Text(stringResource(id = model.errorPanel?.errorMessage?:R.string.voice_to_content_generic_error))
+        if (model.errorPanel?.allowRetry == true) {
+            IconButton(onClick = model.errorPanel.onRetryTap?:{}) {
+                Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+            }
+        }
     }
 }
 
