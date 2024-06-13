@@ -6,7 +6,7 @@ import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-class VoiceToContentLogger @Inject constructor(
+class VoiceToContentTelemetry @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appLogWrapper: AppLogWrapper
 ) {
