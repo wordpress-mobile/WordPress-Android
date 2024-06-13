@@ -40,7 +40,8 @@ class VoiceToContentViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val recordingUseCase: RecordingUseCase,
     private val contextProvider: ContextProvider,
-    private val prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase
+    private val prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase,
+    private val logger: VoiceToContentLogger
 ) : ScopedViewModel(mainDispatcher) {
     private val _requestPermission = MutableLiveData<Unit>()
     val requestPermission = _requestPermission as LiveData<Unit>
@@ -84,8 +85,8 @@ class VoiceToContentViewModel @Inject constructor(
                     transitionToReadyToRecordOrIneligibleForFeature(result.model)
                 }
 
-                is PrepareVoiceToContentResult.Error -> {
-                    transitionToError()
+                is PrepareVoiceToContentResult.Failure -> {
+                    result.transitionToError()
                 }
             }
         }
@@ -122,11 +123,12 @@ class VoiceToContentViewModel @Inject constructor(
                     file?.let {
                         executeVoiceToContent(it)
                     } ?: run {
-                       transitionToError()
+                        logger.logError("$VOICE_TO_CONTENT - unable to access audio file")
+                        transitionToError(GenericFailureMsg)
                     }
                 }
                 is Error -> {
-                   transitionToError()
+                   audioRecorderResult.transitionToError()
                 }
             }
         }
@@ -149,13 +151,16 @@ class VoiceToContentViewModel @Inject constructor(
     // Workflow
     private fun executeVoiceToContent(file: File) {
         val site = selectedSiteRepository.getSelectedSite() ?: run {
-            transitionToError()
+            transitionToError(GenericFailureMsg)
             return
         }
 
         viewModelScope.launch {
-            val result = voiceToContentUseCase.execute(site, file)
-            Log.i(javaClass.simpleName, "***=> result is ${result.content}")
+            when (val result = voiceToContentUseCase.execute(site, file)) {
+                is VoiceToContentResult.Failure -> result.transitionToError()
+                is VoiceToContentResult.Success ->
+                    Log.i(javaClass.simpleName, "***=> result is ${result.content}")
+            }
             _dismiss.postValue(Unit)
         }
     }
@@ -191,7 +196,30 @@ class VoiceToContentViewModel @Inject constructor(
         _dismiss.postValue(Unit)
     }
 
+    private fun onRetryTap() {
+        transitionToInitializing()
+        start()
+    }
+
     // transitions
+    private fun transitionToInitializing() {
+        _state.value = VoiceToContentUiState(
+            uiStateType = INITIALIZING,
+            header = HeaderUIModel(
+                label = R.string.voice_to_content_base_header_label,
+                onClose = ::onClose),
+            secondaryHeader = SecondaryHeaderUIModel(
+                label = R.string.voice_to_content_secondary_header_label,
+                isLabelVisible = true,
+                isProgressIndicatorVisible = true,
+                isTimeElapsedVisible = false),
+            recordingPanel = RecordingPanelUIModel(
+                actionLabel = R.string.voice_to_content_begin_recording_label,
+                isEnabled = false),
+            errorPanel = null
+        )
+    }
+
     private fun transitionToReadyToRecordOrIneligibleForFeature(model: JetpackAIAssistantFeature) {
         val isEligibleForFeature = voiceToContentFeatureUtils.isEligibleForVoiceToContent(model)
         val requestsAvailable = voiceToContentFeatureUtils.getRequestLimit(model)
@@ -239,15 +267,40 @@ class VoiceToContentViewModel @Inject constructor(
         )
     }
 
-    // todo: annmarie - transition to error hasn't been fully fleshed out
-    private fun transitionToError() {
+    private fun VoiceToContentResult.Failure.transitionToError() {
+        when (this) {
+            VoiceToContentResult.Failure.NetworkUnavailable -> transitionToError(NetworkUnavailableMsg, true)
+            VoiceToContentResult.Failure.RemoteRequestFailure -> transitionToError(GenericFailureMsg)
+        }
+    }
+
+    private fun PrepareVoiceToContentResult.Failure.transitionToError() {
+        when (this) {
+            PrepareVoiceToContentResult.Failure.NetworkUnavailable -> transitionToError(NetworkUnavailableMsg, true)
+            PrepareVoiceToContentResult.Failure.RemoteRequestFailure -> transitionToError(GenericFailureMsg)
+        }
+    }
+
+    private fun Error.transitionToError() {
+        logger.logError("$VOICE_TO_CONTENT - ${this.errorMessage}")
+        transitionToError(GenericFailureMsg)
+    }
+
+    private fun transitionToError(errorMessage: Int, allowRetry: Boolean = false) {
         val currentState = _state.value
         _state.value = currentState.copy(
             uiStateType = ERROR,
             header = currentState.header.copy( label = R.string.voice_to_content_error_label),
             secondaryHeader = null,
-            recordingPanel = null
+            recordingPanel = null,
+            errorPanel = ErrorUiModel(errorMessage = errorMessage, allowRetry = allowRetry, onRetryTap = ::onRetryTap)
         )
+    }
+
+    companion object {
+        private val NetworkUnavailableMsg = R.string.error_network_connection
+        private val GenericFailureMsg = R.string.voice_to_content_generic_error
+        private const val VOICE_TO_CONTENT = "Voice to content"
     }
 }
 
