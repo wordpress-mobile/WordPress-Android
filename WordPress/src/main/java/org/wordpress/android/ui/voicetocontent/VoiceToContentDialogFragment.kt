@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,7 +18,10 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.R
 import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
 import android.provider.Settings
+import android.widget.FrameLayout
 import androidx.compose.material.ExperimentalMaterialApi
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.ui.ActivityNavigator
 import javax.inject.Inject
 
@@ -44,6 +49,25 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         viewModel.start()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.setOnShowListener {
+            val bottomSheet: FrameLayout = dialog.findViewById(
+                com.google.android.material.R.id.design_bottom_sheet
+            ) ?: return@setOnShowListener
+
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.isDraggable = true
+            behavior.skipCollapsed = true
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            // Disable touch interception by the bottom sheet to allow nested scrolling
+            bottomSheet.setOnTouchListener { _, _ -> false }
+        }
+        return dialog
     }
 
     private fun observeViewModel() {

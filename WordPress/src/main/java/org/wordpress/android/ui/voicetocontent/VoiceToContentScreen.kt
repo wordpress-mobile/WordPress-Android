@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
@@ -34,7 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -57,7 +61,12 @@ fun VoiceToContentScreen(
     val amplitudes by viewModel.amplitudes.observeAsState(initial = listOf())
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val bottomSheetHeight = screenHeight * 0.6f  // Set to 60% of screen height - but how can it be dynamic?
+    // Adjust the bottom sheet height based on orientation
+    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        screenHeight // Full height in landscape
+    } else {
+        screenHeight * 0.6f // 60% height in portrait
+    }
 
     Surface(
         modifier = Modifier
@@ -65,7 +74,14 @@ fun VoiceToContentScreen(
             .height(bottomSheetHeight),
         color = MaterialTheme.colors.surface
     ) {
-        VoiceToContentView(state, amplitudes)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
+                .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
+        ) {
+            VoiceToContentView(state, amplitudes)
+        }
     }
 }
 
@@ -75,6 +91,7 @@ fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
+         //   .verticalScroll(rememberScrollState()) // Enable vertical scrolling
             .padding(16.dp)
             .background(MaterialTheme.colors.surface) // Use theme-aware background color
     ) {
