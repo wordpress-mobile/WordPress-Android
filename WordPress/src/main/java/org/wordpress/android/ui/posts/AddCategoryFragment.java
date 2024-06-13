@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -17,6 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.databinding.AddCategoryBinding;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
@@ -29,8 +28,7 @@ import javax.inject.Inject;
 
 public class AddCategoryFragment extends AppCompatDialogFragment {
     private SiteModel mSite;
-    private EditText mCategoryEditText;
-    private Spinner mParentSpinner;
+    private AddCategoryBinding mBinding;
 
     @Inject TaxonomyStore mTaxonomyStore;
 
@@ -53,16 +51,12 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
         // Get the layout inflater
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-
-        // Inflate view
         //noinspection InflateParams
-        View view = inflater.inflate(R.layout.add_category, null);
-        mCategoryEditText = (EditText) view.findViewById(R.id.category_name);
-        mParentSpinner = (Spinner) view.findViewById(R.id.parent_category);
+        mBinding = AddCategoryBinding.inflate(inflater, null, false);
 
         loadCategories();
 
-        builder.setView(view)
+        builder.setView(mBinding.getRoot())
                .setPositiveButton(android.R.string.ok, null)
                .setNegativeButton(android.R.string.cancel, null);
 
@@ -101,12 +95,12 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
     }
 
     private boolean addCategory() {
-        String categoryName = mCategoryEditText.getText().toString();
-        CategoryNode selectedCategory = (CategoryNode) mParentSpinner.getSelectedItem();
+        String categoryName = mBinding.categoryName.getText().toString();
+        CategoryNode selectedCategory = (CategoryNode) mBinding.parentCategory.getSelectedItem();
         long parentId = (selectedCategory != null) ? selectedCategory.getCategoryId() : 0;
 
         if (categoryName.replaceAll(" ", "").equals("")) {
-            mCategoryEditText.setError(getText(R.string.cat_name_required));
+            mBinding.categoryName.setError(getText(R.string.cat_name_required));
             return false;
         }
 
@@ -127,7 +121,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         if (categoryLevels.size() > 0) {
             ParentCategorySpinnerAdapter categoryAdapter =
                     new ParentCategorySpinnerAdapter(getActivity(), R.layout.categories_row_parent, categoryLevels);
-            mParentSpinner.setAdapter(categoryAdapter);
+            mBinding.parentCategory.setAdapter(categoryAdapter);
         }
     }
 
@@ -135,5 +129,11 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
     }
 }
