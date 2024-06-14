@@ -110,6 +110,8 @@ class WPMainNavigationView @JvmOverloads constructor(
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.main_navigation_view, this, true)
         navigationBarView = findViewById(R.id.main_navigation_bar_view)
+        val horizontalPadding: Int = context.resources.getDimensionPixelSize(R.dimen.my_site_navigation_rail_padding)
+        navigationBarView.setPadding(horizontalPadding, 0, horizontalPadding, 0)
 
         navAdapter = NavAdapter()
         assignNavigationListeners(true)

@@ -761,6 +761,7 @@
     </item>
     <dimen name="my_site_dashboard_card_page_create_page_top_padding">14dp</dimen>
     <dimen name="my_site_dashboard_card_page_create_page_divider_top_padding">18dp</dimen>
+    <dimen name="my_site_navigation_rail_padding">0dp</dimen>
 
     <!-- Dashboard card plans -->
     <dimen name="dashboard_card_plans_layout_padding">16dp</dimen>
