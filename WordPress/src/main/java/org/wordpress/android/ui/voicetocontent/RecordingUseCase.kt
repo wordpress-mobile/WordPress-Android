@@ -14,7 +14,6 @@ class RecordingUseCase @Inject constructor(
         audioRecorder.startRecording(onRecordingFinished)
     }
 
-    @Suppress("ReturnCount")
     fun stopRecording() {
        audioRecorder.stopRecording()
     }
@@ -22,5 +21,8 @@ class RecordingUseCase @Inject constructor(
     fun recordingUpdates(): Flow<RecordingUpdate> {
         return audioRecorder.recordingUpdates()
     }
-}
 
+    fun endRecordingSession() {
+        audioRecorder.endRecordingSession()
+    }
+}
