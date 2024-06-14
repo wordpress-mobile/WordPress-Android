@@ -25,7 +25,7 @@ abstract class BlazeCampaignsDao {
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
     abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId")
     abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
 
     @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
