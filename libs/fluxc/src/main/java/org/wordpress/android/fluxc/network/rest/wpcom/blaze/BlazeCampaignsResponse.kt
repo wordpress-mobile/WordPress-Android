@@ -90,7 +90,7 @@ data class BlazeCampaign(
         val startDate = BlazeCampaignsUtils.stringToDate(startTime)
         return BlazeCampaignModel(
             campaignId = id,
-            title = textSnippet,
+            title = siteName,
             imageUrl = image.url,
             startTime = startDate,
             durationInDays = durationDays,
