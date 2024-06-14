@@ -90,7 +90,7 @@ class AudioRecorder(
         }
     }
 
-    override fun stopRecording() {
+    private fun clearResources() {
         try {
             recorder?.apply {
                 stop()
@@ -104,7 +104,11 @@ class AudioRecorder(
             _isPaused.value = false
             _isRecording.value = false
         }
-        // return filePath
+    }
+
+    override fun stopRecording() {
+        clearResources()
+        // return the filePath
         onRecordingFinished(Success(filePath))
     }
 
@@ -134,6 +138,10 @@ class AudioRecorder(
                 }
             }
         }
+    }
+
+    override fun endRecordingSession() {
+        clearResources()
     }
 
     override fun recordingUpdates(): Flow<RecordingUpdate> = recordingUpdates
