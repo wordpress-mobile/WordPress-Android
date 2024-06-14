@@ -26,6 +26,7 @@ import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.RECORDI
 import org.wordpress.android.util.audio.IAudioRecorder
 import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
 import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
+import org.wordpress.android.util.audio.RecordingUpdate
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.File
@@ -49,8 +50,8 @@ class VoiceToContentViewModel @Inject constructor(
     private val _dismiss = MutableLiveData<Unit>()
     val dismiss = _dismiss as LiveData<Unit>
 
-    private val _amplitudes = MutableLiveData<List<Float>>()
-    val amplitudes: LiveData<List<Float>> get() = _amplitudes
+    private val _recordingUpdate = MutableLiveData<RecordingUpdate>()
+    val recordingUpdate: LiveData<RecordingUpdate> get() = _recordingUpdate
 
     private val _onIneligibleForVoiceToContent = MutableLiveData<String>()
     val onIneligibleForVoiceToContent = _onIneligibleForVoiceToContent as LiveData<String>
@@ -104,11 +105,8 @@ class VoiceToContentViewModel @Inject constructor(
     }
 
     // Recording
-    // todo: This doesn't work as expected
-    @Suppress("MagicNumber")
-    private fun updateAmplitudes(newAmplitudes: List<Float>) {
-        _amplitudes.value = listOf(1.1f, 2.2f, 4.4f, 3.2f, 1.1f, 2.2f, 1.0f, 3.5f)
-        Log.d(javaClass.simpleName, "Update amplitudes: $newAmplitudes")
+    private fun updateRecordingData(recordingUpdate: RecordingUpdate) {
+        _recordingUpdate.value = recordingUpdate
     }
 
     private fun observeRecordingUpdates() {
@@ -117,7 +115,7 @@ class VoiceToContentViewModel @Inject constructor(
                 if (update.fileSizeLimitExceeded) {
                     stopRecording()
                 } else {
-                    updateAmplitudes(update.amplitudes)
+                    updateRecordingData(update)
                     // todo: Handle other updates if needed when UI is ready, e.g., elapsed time and file size
                     Log.d("AudioRecorder", "Recording update: $update")
                 }
