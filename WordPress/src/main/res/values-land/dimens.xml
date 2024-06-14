@@ -16,4 +16,6 @@
 
     <dimen name="domain_plan_card_title_top_margin">160dp</dimen>
 
+    <dimen name="login_prologue_logo_top_padding">25dp</dimen>
+
 </resources>

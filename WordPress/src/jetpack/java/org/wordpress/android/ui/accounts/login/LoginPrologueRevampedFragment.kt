@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -127,7 +128,7 @@ private fun LoginScreenRevamped(
         TopLinearGradient()
         WordpressJetpackLogo(
             modifier = Modifier
-                .padding(top = 135.dp)
+                .padding(top = dimensionResource(id = R.dimen.login_prologue_logo_top_padding))
                 .width(132.dp)
                 .align(Alignment.TopCenter)
         )

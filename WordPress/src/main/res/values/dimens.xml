@@ -679,6 +679,7 @@
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
     <dimen name="login_prologue_revamped_buttons_padding">20dp</dimen>
     <dimen name="login_prologue_revamped_buttons_max_width">600dp</dimen>
+    <dimen name="login_prologue_logo_top_padding">135dp</dimen>
 
     <!-- edit text with chips view -->
     <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
