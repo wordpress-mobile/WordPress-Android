@@ -104,6 +104,10 @@ class VoiceToContentViewModel @Inject constructor(
         isStarted = true
     }
 
+    fun onBottomSheetClosed() {
+        recordingUseCase.endRecordingSession()
+    }
+
     // Recording
     private fun updateRecordingData(recordingUpdate: RecordingUpdate) {
         _recordingUpdate.value = recordingUpdate
@@ -206,6 +210,7 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun onClose() {
         logger.track(Stat.VOICE_TO_CONTENT_BUTTON_CLOSE_TAPPED)
+        recordingUseCase.endRecordingSession()
         _dismiss.postValue(Unit)
     }
 
