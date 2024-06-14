@@ -56,6 +56,9 @@ class VoiceToContentViewModel @Inject constructor(
     private val _onIneligibleForVoiceToContent = MutableLiveData<String>()
     val onIneligibleForVoiceToContent = _onIneligibleForVoiceToContent as LiveData<String>
 
+    private val _isCancelableOutsideTouch = MutableLiveData(true)
+    val isCancelableOutsideTouch: LiveData<Boolean> get() = _isCancelableOutsideTouch
+
     private var isStarted = false
 
     private val _state = MutableStateFlow(VoiceToContentUiState(
@@ -129,6 +132,7 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun startRecording() {
         transitionToRecording()
+        disableDialogCancelableOutsideTouch()
         recordingUseCase.startRecording { audioRecorderResult ->
             when (audioRecorderResult) {
                 is Success -> {
@@ -145,6 +149,10 @@ class VoiceToContentViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun disableDialogCancelableOutsideTouch() {
+        _isCancelableOutsideTouch.value = false
     }
 
     @Suppress("ReturnCount")

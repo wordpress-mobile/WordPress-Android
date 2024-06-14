@@ -2,6 +2,7 @@ package org.wordpress.android.ui.voicetocontent
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.R
 import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
 import android.provider.Settings
+import android.util.Log
 import android.widget.FrameLayout
 import androidx.compose.material.ExperimentalMaterialApi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -68,15 +70,10 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
                 @SuppressLint("SwitchIntDef")
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN -> {
-                            // Bottom sheet is hidden, you can listen for this event here
-                            viewModel.onBottomSheetClosed()
-                        }
+                        BottomSheetBehavior.STATE_HIDDEN,
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            // Bottom sheet is collapsed, you can listen for this event here
-                            viewModel.onBottomSheetClosed()
+                            onBottomSheetClosed()
                         }
-                        // Handle other states if necessary
                     }
                 }
 
@@ -88,7 +85,23 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             // Disable touch interception by the bottom sheet to allow nested scrolling
             bottomSheet.setOnTouchListener { _, _ -> false }
         }
+
+        // Observe the ViewModel to update the cancelable state of closing on outside touch
+        viewModel.isCancelableOutsideTouch.observe(this) { cancelable ->
+            Log.i(javaClass.simpleName, "***=> disable outside touch")
+            dialog.setCanceledOnTouchOutside(cancelable)
+        }
+
         return dialog
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.onBottomSheetClosed()
+    }
+
+    private fun onBottomSheetClosed() {
+        dismiss()
     }
 
     private fun observeViewModel() {
