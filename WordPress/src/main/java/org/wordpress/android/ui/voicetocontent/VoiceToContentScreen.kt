@@ -200,7 +200,7 @@ fun formatTime(remainingTimeInSeconds: Int, maxDurationInSeconds: Int): String {
     val seconds = remainingTimeInSeconds % 60
 
     val value = if (minutes == 1) default
-        else return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+        else String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 
     return value
 }
