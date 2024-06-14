@@ -64,6 +64,27 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             behavior.skipCollapsed = true
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+            behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                @SuppressLint("SwitchIntDef")
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            // Bottom sheet is hidden, you can listen for this event here
+                            viewModel.onBottomSheetClosed()
+                        }
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            // Bottom sheet is collapsed, you can listen for this event here
+                            viewModel.onBottomSheetClosed()
+                        }
+                        // Handle other states if necessary
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // Handle the slide offset if needed
+                }
+            })
+
             // Disable touch interception by the bottom sheet to allow nested scrolling
             bottomSheet.setOnTouchListener { _, _ -> false }
         }
