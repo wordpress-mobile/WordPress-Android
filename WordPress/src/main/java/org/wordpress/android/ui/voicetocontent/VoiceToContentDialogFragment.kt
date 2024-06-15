@@ -24,7 +24,9 @@ import android.widget.FrameLayout
 import androidx.compose.material.ExperimentalMaterialApi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -116,6 +118,12 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
         viewModel.onIneligibleForVoiceToContent.observe(viewLifecycleOwner) { url ->
             launchIneligibleForVoiceToContent(url)
         }
+
+        viewModel.actionEvent.observe(viewLifecycleOwner) { actionEvent ->
+            when(actionEvent) {
+                is VoiceToContentActionEvent.LaunchEditPost -> launchEditPost(actionEvent)
+            }
+        }
     }
 
     private val requestMultiplePermissionsLauncher = registerForActivityResult(
@@ -154,6 +162,18 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     private fun launchIneligibleForVoiceToContent(url: String) {
         context?.let {
             activityNavigator.openIneligibleForVoiceToContent(it, url)
+        }
+    }
+
+    private fun launchEditPost(event: VoiceToContentActionEvent.LaunchEditPost) {
+        activity?.let {
+            ActivityLauncher.addNewPostWithContentFromAIForResult(
+                it,
+                event.site,
+                false,
+                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                event.content
+            )
         }
     }
 
