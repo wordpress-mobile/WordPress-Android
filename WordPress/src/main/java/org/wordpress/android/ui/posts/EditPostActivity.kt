@@ -309,6 +309,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var postLoadingState: PostLoadingState = PostLoadingState.NONE
     private var isXPostsCapable: Boolean? = null
     private var onGetSuggestionResult: Consumer<String?>? = null
+    private var isVoiceContentSet = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -717,6 +718,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 }
 
             isNewPost = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
+            isVoiceContentSet = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
             updatePostLoadingAndDialogState(
                 fromInt(
                     state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, 0)
@@ -1185,6 +1187,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, isNewPost)
+        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
         outState.putBoolean(
             EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
@@ -3526,6 +3529,25 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // Start VM, load prompt and populate Editor with content after edit IS ready.
         val promptId: Int = intent.getIntExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, -1)
         editorBloggingPromptsViewModel.start(siteModel, promptId)
+
+        updateVoiceContentIfNeeded()
+    }
+
+    private fun updateVoiceContentIfNeeded() {
+        // Set the voiceToContent content if it exits and this is a GB Editor fragment - do this only once
+        val hasVoiceContent = intent.hasExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
+        if (isNewPost && hasVoiceContent && !isVoiceContentSet) {
+            editorFragment?.let {
+                if (it is GutenbergEditorFragment) {
+                    val gutenbergFragment = editorFragment as GutenbergEditorFragment
+                    val content = intent.getStringExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
+                    content?.let {
+                        isVoiceContentSet = true
+                        gutenbergFragment.updateContent(content)
+                    }
+                }
+            }
+        }
     }
 
     private fun logTemplateSelection() {
