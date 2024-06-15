@@ -57,6 +57,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void onUndoPressed();
 
     public abstract void onRedoPressed();
+    public abstract void updateContent(CharSequence text);
 
 
     public enum MediaType {
