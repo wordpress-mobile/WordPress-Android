@@ -60,6 +60,9 @@ class VoiceToContentViewModel @Inject constructor(
     private val _isCancelableOutsideTouch = MutableLiveData(true)
     val isCancelableOutsideTouch: LiveData<Boolean> get() = _isCancelableOutsideTouch
 
+    private val _actionEvent = MutableLiveData<VoiceToContentActionEvent>()
+    val actionEvent = _actionEvent as LiveData<VoiceToContentActionEvent>
+
     private var isStarted = false
 
     private val _state = MutableStateFlow(VoiceToContentUiState(
@@ -182,7 +185,7 @@ class VoiceToContentViewModel @Inject constructor(
             when (val result = voiceToContentUseCase.execute(site, file)) {
                 is VoiceToContentResult.Failure -> result.transitionToError()
                 is VoiceToContentResult.Success ->
-                    Log.i(javaClass.simpleName, "***=> result is ${result.content}")
+                    _actionEvent.postValue(VoiceToContentActionEvent.LaunchEditPost(site, result.content))
             }
             _dismiss.postValue(Unit)
         }
