@@ -969,7 +969,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivityConstants.EXTRA_CONTENT_FROM_AI, content);
+        intent.putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, content);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
