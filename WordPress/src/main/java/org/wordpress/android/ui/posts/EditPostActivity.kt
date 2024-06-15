@@ -3534,18 +3534,13 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun updateVoiceContentIfNeeded() {
-        // Set the voiceToContent content if it exits and this is a GB Editor fragment - do this only once
-        val hasVoiceContent = intent.hasExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
-        if (isNewPost && hasVoiceContent && !isVoiceContentSet) {
-            editorFragment?.let {
-                if (it is GutenbergEditorFragment) {
-                    val gutenbergFragment = editorFragment as GutenbergEditorFragment
-                    val content = intent.getStringExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
-                    content?.let {
-                        isVoiceContentSet = true
-                        gutenbergFragment.updateContent(content)
-                    }
-                }
+        // Check if voice content exists and this is a new post for a Gutenberg editor fragment
+        val content = intent.getStringExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT)
+        if (isNewPost && content != null && !isVoiceContentSet) {
+            val gutenbergFragment = editorFragment as? GutenbergEditorFragment
+            gutenbergFragment?.let {
+                isVoiceContentSet = true
+                it.updateContent(content)
             }
         }
     }

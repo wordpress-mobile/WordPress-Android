@@ -83,6 +83,7 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // no op
                 }
             })
 
