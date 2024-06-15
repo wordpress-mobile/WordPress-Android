@@ -1096,6 +1096,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().setContent(postContent);
     }
 
+    @Override
+    public void updateContent(@Nullable CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (getGutenbergContainerFragment() != null) {
+            getGutenbergContainerFragment().onContentUpdate(text.toString());
+        }
+    }
+
     public void setJetpackSsoEnabled(boolean jetpackSsoEnabled) {
         mIsJetpackSsoEnabled = jetpackSsoEnabled;
     }
