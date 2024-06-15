@@ -6,27 +6,30 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.compose.theme.AppTheme
-import org.wordpress.android.R
-import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
-import android.provider.Settings
-import android.util.Log
-import android.widget.FrameLayout
-import androidx.compose.material.ExperimentalMaterialApi
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.Dismiss
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchEditPost
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchExternalBrowser
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.RequestPermission
+import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -80,17 +83,15 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    // Handle the slide offset if needed
                 }
             })
 
-            // Disable touch interception by the bottom sheet to allow nested scrolling
+            // Disable touch interception by the bottom sheet to allow nested scrolling for landscape and small screens
             bottomSheet.setOnTouchListener { _, _ -> false }
         }
 
         // Observe the ViewModel to update the cancelable state of closing on outside touch
         viewModel.isCancelableOutsideTouch.observe(this) { cancelable ->
-            Log.i(javaClass.simpleName, "***=> disable outside touch")
             dialog.setCanceledOnTouchOutside(cancelable)
         }
 
@@ -107,21 +108,12 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.requestPermission.observe(viewLifecycleOwner) {
-            requestAllPermissionsForRecording()
-        }
-
-        viewModel.dismiss.observe(viewLifecycleOwner) {
-            dismiss()
-        }
-
-        viewModel.onIneligibleForVoiceToContent.observe(viewLifecycleOwner) { url ->
-            launchIneligibleForVoiceToContent(url)
-        }
-
         viewModel.actionEvent.observe(viewLifecycleOwner) { actionEvent ->
             when(actionEvent) {
-                is VoiceToContentActionEvent.LaunchEditPost -> launchEditPost(actionEvent)
+                is LaunchEditPost -> launchEditPost(actionEvent)
+                is LaunchExternalBrowser -> launchIneligibleForVoiceToContent(actionEvent)
+                is RequestPermission -> requestAllPermissionsForRecording()
+                is Dismiss -> dismiss()
             }
         }
     }
@@ -159,13 +151,13 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             .show()
     }
 
-    private fun launchIneligibleForVoiceToContent(url: String) {
+    private fun launchIneligibleForVoiceToContent(event: LaunchExternalBrowser) {
         context?.let {
-            activityNavigator.openIneligibleForVoiceToContent(it, url)
+            activityNavigator.openIneligibleForVoiceToContent(it, event.url)
         }
     }
 
-    private fun launchEditPost(event: VoiceToContentActionEvent.LaunchEditPost) {
+    private fun launchEditPost(event: LaunchEditPost) {
         activity?.let {
             ActivityLauncher.addNewPostWithContentFromAIForResult(
                 it,
