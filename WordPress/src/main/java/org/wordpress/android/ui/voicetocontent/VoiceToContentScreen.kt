@@ -53,6 +53,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.Drawable
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.audio.RecordingUpdate
+import java.util.Locale
 
 @Composable
 fun VoiceToContentScreen(
@@ -100,7 +101,7 @@ fun VoiceToContentView(state: VoiceToContentUiState, recordingUpdate: RecordingU
             VoiceToContentUIStateType.ERROR -> ErrorView(state)
             else -> {
                 Header(state.header)
-                SecondaryHeader(state.secondaryHeader)
+                SecondaryHeader(state.secondaryHeader, recordingUpdate)
                 RecordingPanel(state, recordingUpdate)
             }
         }
@@ -159,14 +160,16 @@ fun Header(model: HeaderUIModel) {
 }
 
 @Composable
-fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
+fun SecondaryHeader(model: SecondaryHeaderUIModel?, recordingUpdate: RecordingUpdate) {
     model?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = model.label), style = secondaryHeaderStyle)
-            Spacer(modifier = Modifier.width(8.dp)) // Add space between text and progress
+            if (model.isLabelVisible) {
+                Text(text = stringResource(id = model.label), style = secondaryHeaderStyle)
+                Spacer(modifier = Modifier.width(8.dp)) // Add space between text and progress
+            }
             if (model.isProgressIndicatorVisible) {
                 Box(
                     modifier = Modifier.size(20.dp) // size the progress indicator
@@ -176,12 +179,46 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
                     )
                 }
             } else {
-                Text(text = model.requestsAvailable, style = secondaryHeaderStyle)
+                Text(
+                    text = if (model.isTimeElapsedVisible)
+                        formatTime(recordingUpdate.remainingTimeInSeconds, model.timeMaxDurationInSeconds)
+                    else model.requestsAvailable,
+                    style = secondaryHeaderStyle
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
+
+@Composable
+fun formatTime(remainingTimeInSeconds: Int, maxDurationInSeconds: Int): String {
+    val default = getDefaultTimeString(maxDurationInSeconds)
+    if (remainingTimeInSeconds == -1) return default
+
+    val minutes = remainingTimeInSeconds / 60
+    val seconds = remainingTimeInSeconds % 60
+
+    val value = if (minutes == 1) default
+        else String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+
+    return value
+}
+
+@Composable
+fun getDefaultTimeString(maxDurationInSeconds: Int): String {
+    if (maxDurationInSeconds <= 0) {
+        return "00:00"
+    }
+
+    // Calculate minutes and seconds
+    val minutes = (maxDurationInSeconds - 1) / 60
+    val seconds = (maxDurationInSeconds - 1) % 60
+
+    // Format and return the default time string
+    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+}
+
 
 @Composable
 fun RecordingPanel(model: VoiceToContentUiState, recordingUpdate: RecordingUpdate) {

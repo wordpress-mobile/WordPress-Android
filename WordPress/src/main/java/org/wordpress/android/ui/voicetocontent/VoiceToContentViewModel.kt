@@ -26,6 +26,7 @@ import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.RECORDI
 import org.wordpress.android.util.audio.IAudioRecorder
 import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Error
 import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult.Success
+import org.wordpress.android.util.audio.RecordingStrategy
 import org.wordpress.android.util.audio.RecordingUpdate
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -136,6 +137,7 @@ class VoiceToContentViewModel @Inject constructor(
         recordingUseCase.startRecording { audioRecorderResult ->
             when (audioRecorderResult) {
                 is Success -> {
+                    transitionToProcessing()
                     val file = getRecordingFile(audioRecorderResult.recordingPath)
                     file?.let {
                         executeVoiceToContent(it)
@@ -284,8 +286,9 @@ class VoiceToContentViewModel @Inject constructor(
             uiStateType = RECORDING,
             header = currentState.header.copy(label = R.string.voice_to_content_recording_label),
             secondaryHeader = currentState.secondaryHeader?.copy(
-                timeElapsed = "00:00:00",
-                isTimeElapsedVisible = true
+                isTimeElapsedVisible = true,
+                timeMaxDurationInSeconds = MAX_DURATION,
+                isLabelVisible = false
             ),
             recordingPanel = currentState.recordingPanel?.copy(
                 onStopTap = ::onStopTap,
@@ -338,6 +341,7 @@ class VoiceToContentViewModel @Inject constructor(
         private val NetworkUnavailableMsg = R.string.error_network_connection
         private val GenericFailureMsg = R.string.voice_to_content_generic_error
         private const val VOICE_TO_CONTENT = "Voice to content"
+        private val MAX_DURATION = RecordingStrategy.VoiceToContentRecordingStrategy().maxDuration
     }
 }
 

@@ -13,7 +13,7 @@ data class SecondaryHeaderUIModel(
     val isLabelVisible: Boolean = true,
     val isProgressIndicatorVisible: Boolean = false,
     val requestsAvailable: String = "0",
-    val timeElapsed: String = "00:00:00",
+    val timeMaxDurationInSeconds: Int = 0,
     val isTimeElapsedVisible: Boolean = false
 )
 
