@@ -57,6 +57,9 @@ class VoiceToContentViewModel @Inject constructor(
     private val _actionEvent = MutableLiveData<VoiceToContentActionEvent>()
     val actionEvent = _actionEvent as LiveData<VoiceToContentActionEvent>
 
+    val isRecording: StateFlow<Boolean> = recordingUseCase.isRecording()
+    val isPaused: StateFlow<Boolean> = recordingUseCase.isPaused()
+
     private var isStarted = false
 
     private val _state = MutableStateFlow(VoiceToContentUiState(
@@ -166,6 +169,14 @@ class VoiceToContentViewModel @Inject constructor(
         recordingUseCase.stopRecording()
     }
 
+    fun pauseRecording() {
+        recordingUseCase.pauseRecording()
+    }
+
+    fun resumeRecording() {
+        recordingUseCase.resumeRecording()
+    }
+
     // Workflow
     private fun executeVoiceToContent(file: File) {
         val site = selectedSiteRepository.getSelectedSite() ?: run {
@@ -176,10 +187,10 @@ class VoiceToContentViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = voiceToContentUseCase.execute(site, file)) {
                 is VoiceToContentResult.Failure -> result.transitionToError()
-                is VoiceToContentResult.Success ->
+                is VoiceToContentResult.Success -> {
                     _actionEvent.postValue(LaunchEditPost(site, result.content))
+                }
             }
-            _actionEvent.postValue(Dismiss)
         }
     }
 
@@ -288,7 +299,9 @@ class VoiceToContentViewModel @Inject constructor(
             recordingPanel = currentState.recordingPanel?.copy(
                 onStopTap = ::onStopTap,
                 hasPermission = true,
-                actionLabel = R.string.voice_to_content_done_label)
+                actionLabel = R.string.voice_to_content_done_label,
+                onResumeRecording = ::resumeRecording,
+                onPauseRecording = ::pauseRecording)
         )
     }
 
