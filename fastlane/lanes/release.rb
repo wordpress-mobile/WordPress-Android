@@ -76,7 +76,11 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    set_branch_protection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
+    copy_branch_protection(
+      repository: GHHELPER_REPO,
+      from_branch: DEFAULT_BRANCH,
+      to_branch: "release/#{new_version}"
+    )
     set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: new_version)
   end
 
