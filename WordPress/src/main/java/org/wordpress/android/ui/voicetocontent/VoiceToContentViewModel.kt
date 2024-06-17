@@ -226,7 +226,9 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun onClose() {
         logger.track(Stat.VOICE_TO_CONTENT_BUTTON_CLOSE_TAPPED)
-        recordingUseCase.endRecordingSession()
+        if (isRecording.value || isPaused.value) {
+            recordingUseCase.endRecordingSession()
+        }
         _actionEvent.postValue(Dismiss)
     }
 
