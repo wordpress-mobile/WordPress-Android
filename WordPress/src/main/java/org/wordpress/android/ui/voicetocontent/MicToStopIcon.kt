@@ -19,9 +19,7 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,9 +35,9 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 @OptIn(ExperimentalAnimationApi::class)
 @Suppress("DEPRECATION")
 @Composable
-fun MicToStopIcon(model: RecordingPanelUIModel) {
+fun MicToStopIcon(model: RecordingPanelUIModel, isRecording: Boolean) {
     val isEnabled = model.isEnabled
-    var isMic by remember { mutableStateOf(true) }
+    val isMic by rememberUpdatedState(newValue = !isRecording)
     val isLight = !isSystemInDarkTheme()
 
     val circleColor by animateColorAsState(
@@ -73,11 +71,9 @@ fun MicToStopIcon(model: RecordingPanelUIModel) {
                         } else {
                             model.onStopTap?.invoke()
                         }
-                       // isMic = !isMic
                     } else {
                         model.onRequestPermission?.invoke()
                     }
-                    isMic = !isMic
                 }
             )
     ) {
@@ -128,7 +124,8 @@ fun ExistingLayoutPreview() {
                 hasPermission = true,
                 onRequestPermission = {},
                 actionLabel = R.string.voice_to_content_base_header_label, isEnabled = false
-            )
+            ),
+            isRecording = true
         )
     }
 }
