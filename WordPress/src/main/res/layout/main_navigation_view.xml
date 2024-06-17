@@ -5,7 +5,6 @@
     android:id="@+id/main_navigation_bar_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorSurface"
     app:elevation="@dimen/navbar_elevation"
     android:visibility="visible"
     app:menu="@menu/bottom_nav_main"/>
