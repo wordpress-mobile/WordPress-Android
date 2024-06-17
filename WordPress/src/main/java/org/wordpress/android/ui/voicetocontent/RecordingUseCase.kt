@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.voicetocontent
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import org.wordpress.android.util.audio.IAudioRecorder
 import org.wordpress.android.util.audio.RecordingUpdate
 import org.wordpress.android.util.audio.VoiceToContentStrategy
@@ -24,5 +25,17 @@ class RecordingUseCase @Inject constructor(
 
     fun endRecordingSession() {
         audioRecorder.endRecordingSession()
+    }
+
+    fun isRecording(): StateFlow<Boolean> = audioRecorder.isRecording()
+    fun isPaused(): StateFlow<Boolean> = audioRecorder.isPaused()
+
+
+    fun pauseRecording() {
+        audioRecorder.pauseRecording()
+    }
+
+    fun resumeRecording() {
+        audioRecorder.resumeRecording()
     }
 }
