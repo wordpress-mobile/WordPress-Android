@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -63,6 +64,16 @@ fun VoiceToContentScreen(
     val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
+    val isRecording by viewModel.isRecording.collectAsState()
+
+    DisposableEffect(Unit) {
+        onDispose {
+            if (isRecording) {
+                viewModel.pauseRecording()
+            }
+        }
+    }
+
     // Adjust the bottom sheet height based on orientation
     val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
         screenHeight // Full height in landscape
@@ -82,13 +93,16 @@ fun VoiceToContentScreen(
                 .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
                 .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
         ) {
-            VoiceToContentView(state, recordingUpdate)
+            VoiceToContentView(state, recordingUpdate, isRecording)
         }
     }
 }
 
 @Composable
-fun VoiceToContentView(state: VoiceToContentUiState, recordingUpdate: RecordingUpdate) {
+fun VoiceToContentView(state: VoiceToContentUiState,
+                       recordingUpdate: RecordingUpdate,
+                       isRecording: Boolean
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -102,7 +116,7 @@ fun VoiceToContentView(state: VoiceToContentUiState, recordingUpdate: RecordingU
             else -> {
                 Header(state.header)
                 SecondaryHeader(state.secondaryHeader, recordingUpdate)
-                RecordingPanel(state, recordingUpdate)
+                RecordingPanel(state, recordingUpdate, isRecording)
             }
         }
     }
@@ -199,10 +213,7 @@ fun formatTime(remainingTimeInSeconds: Int, maxDurationInSeconds: Int): String {
     val minutes = remainingTimeInSeconds / 60
     val seconds = remainingTimeInSeconds % 60
 
-    val value = if (minutes == 1) default
-        else String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
-
-    return value
+    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 }
 
 @Composable
@@ -211,17 +222,17 @@ fun getDefaultTimeString(maxDurationInSeconds: Int): String {
         return "00:00"
     }
 
-    // Calculate minutes and seconds
     val minutes = (maxDurationInSeconds - 1) / 60
     val seconds = (maxDurationInSeconds - 1) % 60
 
-    // Format and return the default time string
     return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
 }
 
-
 @Composable
-fun RecordingPanel(model: VoiceToContentUiState, recordingUpdate: RecordingUpdate) {
+fun RecordingPanel(model: VoiceToContentUiState,
+                   recordingUpdate: RecordingUpdate,
+                   isRecording: Boolean
+) {
     model.recordingPanel?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -248,7 +259,7 @@ fun RecordingPanel(model: VoiceToContentUiState, recordingUpdate: RecordingUpdat
                 } else if (model.uiStateType == VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE) {
                     InEligible(model = it)
                 }
-                MicToStopIcon(it)
+                MicToStopIcon(it, isRecording=isRecording)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(id = it.actionLabel),
@@ -385,7 +396,7 @@ fun PreviewInitializingView() {
                 hasPermission = false
             )
         )
-        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -407,7 +418,7 @@ fun PreviewReadyToRecordView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -428,7 +439,7 @@ fun PreviewNotEligibleToRecordView() {
                 upgradeUrl = "https://www.wordpress.com"
             )
         )
-        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -451,7 +462,7 @@ fun PreviewRecordingView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = true)
     }
 }
 
@@ -464,6 +475,6 @@ fun PreviewProcessingView() {
             uiStateType = VoiceToContentUIStateType.PROCESSING,
             header = HeaderUIModel(label = R.string.voice_to_content_processing_label, onClose = { })
         )
-        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
