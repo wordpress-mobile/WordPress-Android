@@ -2,6 +2,4 @@
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet_landscape</dimen>
 
     <dimen name="bottom_sheet_dialog_width">512dp</dimen>
-
-    <dimen name="login_prologue_logo_top_padding">135dp</dimen>
 </resources>

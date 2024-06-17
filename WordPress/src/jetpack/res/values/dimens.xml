@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="login_prologue_revamped_prompts_padding">20dp</dimen>
+    <dimen name="login_prologue_revamped_buttons_max_width">600dp</dimen>
+    <dimen name="login_prologue_logo_top_padding">135dp</dimen>
 </resources>

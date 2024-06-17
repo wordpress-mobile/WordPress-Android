@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="login_prologue_logo_top_padding">135dp</dimen>
+</resources>
