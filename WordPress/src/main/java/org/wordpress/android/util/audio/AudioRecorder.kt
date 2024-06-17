@@ -41,16 +41,17 @@ class AudioRecorder(
     private var recordingJob: Job? = null
     private val coroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private var isPausedRecording = false
+    private val amplitudeList = mutableListOf<Float>()
+    private var remainingTimeInSeconds: Int = 0
 
     private val _recordingUpdates = MutableStateFlow(RecordingUpdate())
     private val recordingUpdates: StateFlow<RecordingUpdate> get() = _recordingUpdates.asStateFlow()
 
     private val _isRecording = MutableStateFlow(false)
-    val isRecording: StateFlow<Boolean> = _isRecording
+    private val isRecording = _isRecording.asStateFlow()
 
     private val _isPaused = MutableStateFlow(false)
-    val isPaused: StateFlow<Boolean> = _isPaused
+    private val isPaused = _isPaused.asStateFlow()
 
     @Suppress("DEPRECATION")
     override fun startRecording(onRecordingFinished: (AudioRecorderResult) -> Unit) {
@@ -70,6 +71,8 @@ class AudioRecorder(
 
                     prepare()
                     start()
+                    remainingTimeInSeconds = recordingStrategy.maxDuration
+                    amplitudeList.clear()
                     startRecordingUpdates()
                     _isRecording.value = true
                     _isPaused.value = false
@@ -125,16 +128,18 @@ class AudioRecorder(
     }
 
     override fun resumeRecording() {
-        if (isPausedRecording) {
+        if (_isPaused.value) {
             coroutineScope.launch {
                 try {
-                    delay(RESUME_DELAY)
                     recorder?.resume()
                     _isPaused.value = false
-                    isPausedRecording = false
+                    val lastRecordingUpdate = recordingUpdates.value
+                    _recordingUpdates.value = lastRecordingUpdate.copy(
+                        amplitudes = amplitudeList.toList() // Continue using the existing list
+                    )
                     startRecordingUpdates()
                 } catch (e: IllegalStateException) {
-                    Log.e(TAG, "Error resuming recording")
+                    Log.e(TAG, "Error resuming recording ${e.message}")
                 }
             }
         }
@@ -145,19 +150,22 @@ class AudioRecorder(
     }
 
     override fun recordingUpdates(): Flow<RecordingUpdate> = recordingUpdates
+    override fun isRecording(): StateFlow<Boolean> = isRecording
+    override fun isPaused(): StateFlow<Boolean> = isPaused
 
     @Suppress("MagicNumber")
     private fun startRecordingUpdates() {
+        var lastUpdateTime = System.currentTimeMillis()
         recordingJob = coroutineScope.launch {
-            val startTime = System.currentTimeMillis()
-            val amplitudeList = mutableListOf<Float>()
-            while (recorder != null) {
+            while (recorder != null && !_isPaused.value) {
                 delay(RECORDING_UPDATE_INTERVAL)
-                // Calculate elapsed time in seconds
-                val elapsedTimeInSeconds = ((System.currentTimeMillis() - startTime) / 1000).toInt()
+                val currentTime = System.currentTimeMillis()
+                val elapsedTimeInMillis = currentTime - lastUpdateTime
 
-                // Calculate remaining time
-                val remainingTimeInSeconds = recordingStrategy.maxDuration - elapsedTimeInSeconds
+                if (elapsedTimeInMillis >= 1000) {
+                    remainingTimeInSeconds -= (elapsedTimeInMillis / 1000).toInt()
+                    lastUpdateTime += (elapsedTimeInMillis / 1000) * 1000 // Reset last update time accurately
+                }
 
                 val fileSize = File(filePath).length()
                 val amplitude = recorder?.maxAmplitude?.toFloat() ?: 0f
@@ -173,7 +181,7 @@ class AudioRecorder(
                     amplitudes = amplitudeList.toList()
                 )
 
-                if ( maxFileSizeExceeded(fileSize) || maxDurationExceeded(elapsedTimeInSeconds) ) {
+                if ( maxFileSizeExceeded(fileSize) || durationExceeded(remainingTimeInSeconds) ) {
                     stopRecording()
                     break
                 }
@@ -195,16 +203,16 @@ class AudioRecorder(
     }
 
     /**
-     * Checks if the recording duration has exceeded the specified maximum duration.
+     * Checks if the recording duration has exceeded the limit.
      *
      * @param elapsedTimeInSeconds The elapsed recording time in seconds.
-     * @return `true` if the elapsed time has exceeded the maximum duration minus the threshold, `false` otherwise.
+     * @return `true` if the elapsed time has reached zero, `false` otherwise.
      *         If `recordingParams.maxDuration` is set to `-1`, this function always returns `false` indicating
      *         no limit.
      */
-    private fun maxDurationExceeded(elapsedTimeInSeconds: Int): Boolean = when {
+    private fun durationExceeded(elapsedTimeInSeconds: Int): Boolean = when {
         recordingStrategy.maxDuration == -1 -> false
-        else -> elapsedTimeInSeconds >= recordingStrategy.maxDuration - DURATION_THRESHOLD
+        else -> elapsedTimeInSeconds <= 0
     }
 
     private fun stopRecordingUpdates() {
@@ -214,8 +222,6 @@ class AudioRecorder(
     companion object {
         private const val TAG = "AudioRecorder"
         private const val RECORDING_UPDATE_INTERVAL = 75L // in milliseconds
-        private const val RESUME_DELAY = 500L // in milliseconds
         private const val FILE_SIZE_THRESHOLD = 100000L
-        private const val DURATION_THRESHOLD = 1
     }
 }
