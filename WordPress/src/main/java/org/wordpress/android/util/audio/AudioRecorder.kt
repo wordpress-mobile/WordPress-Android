@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.wordpress.android.util.AppLog
 import java.io.File
 import java.io.IOException
 import org.wordpress.android.util.audio.IAudioRecorder.AudioRecorderResult
@@ -78,18 +78,14 @@ class AudioRecorder(
                     _isPaused.value = false
                 }
             } catch (e: IOException) {
-                val errorMessage = "Error preparing MediaRecorder: ${e.message}"
-                onRecordingFinished(Error(errorMessage))
+                onRecordingFinished(Error("Error preparing MediaRecorder: ${e.message}"))
             } catch (e: IllegalStateException) {
-                val errorMessage = "Illegal state when starting recording: ${e.message}"
-                onRecordingFinished(Error(errorMessage))
+                onRecordingFinished(Error("Illegal state when starting recording: ${e.message}"))
             } catch (e: SecurityException) {
-                val errorMessage = "Security exception when starting recording: ${e.message}"
-                onRecordingFinished(Error(errorMessage))
+                onRecordingFinished(Error("Security exception when starting recording: ${e.message}"))
             }
         } else {
-            val errorMessage = "Permission to record audio not granted"
-            onRecordingFinished(Error(errorMessage))
+            onRecordingFinished(Error("Permission to record audio not granted"))
         }
     }
 
@@ -100,7 +96,7 @@ class AudioRecorder(
                 release()
             }
         } catch (e: IllegalStateException) {
-            Log.e(TAG, "Error stopping recording: ${e.message}")
+            AppLog.w(AppLog.T.UTILS, "$TAG Error stopping recording: ${e.message}")
         } finally {
             recorder = null
             stopRecordingUpdates()
@@ -121,9 +117,9 @@ class AudioRecorder(
             _isPaused.value = true
             stopRecordingUpdates()
         } catch (e: IllegalStateException) {
-            Log.e(TAG, "Error pausing recording: ${e.message}")
+            AppLog.w(AppLog.T.UTILS, "$TAG Error pausing recording: ${e.message}")
         } catch (e: UnsupportedOperationException) {
-            Log.e(TAG, "Pause not supported on this device: ${e.message}")
+            AppLog.w(AppLog.T.UTILS, "$TAG Pause not supported on this device: ${e.message}")
         }
     }
 
@@ -139,7 +135,7 @@ class AudioRecorder(
                     )
                     startRecordingUpdates()
                 } catch (e: IllegalStateException) {
-                    Log.e(TAG, "Error resuming recording ${e.message}")
+                    AppLog.w(AppLog.T.UTILS, "$TAG Error resuming recording ${e.message}")
                 }
             }
         }
