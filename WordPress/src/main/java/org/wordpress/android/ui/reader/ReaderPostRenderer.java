@@ -48,6 +48,7 @@ import java.util.regex.Pattern;
  */
 public class ReaderPostRenderer {
     private static final String JAVASCRIPT_MESSAGE_HANDLER = "wvHandler";
+    private static final String JS_OBJECT_ADDED_TAG = "jsObjectAdded";
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
@@ -645,6 +646,11 @@ public class ReaderPostRenderer {
     }
 
     private void setWebViewMessageHandler(@NonNull WebView webView) {
+        Object tag = webView.getTag(JS_OBJECT_ADDED_TAG.hashCode());
+        if (tag != null && (boolean) tag) {
+            return; // Exit if the object has already been added
+        }
+
         Set<String> allowedOrigins = new HashSet<>();
         allowedOrigins.add("*");
 
@@ -665,6 +671,9 @@ public class ReaderPostRenderer {
                     }
                     return null;
                 });
+
+        // Set the tag that the JS object has been added, so we can check before adding it again
+        webView.setTag(JS_OBJECT_ADDED_TAG.hashCode(), true);
     }
 
     void setPostMessageListener(@Nullable ReaderPostMessageListener listener) {
