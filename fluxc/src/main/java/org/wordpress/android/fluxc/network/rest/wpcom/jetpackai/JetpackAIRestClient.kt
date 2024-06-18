@@ -227,9 +227,9 @@ class JetpackAIRestClient @Inject constructor(
     )
 
     @VisibleForTesting
-    internal data class JetpackAIQueryDto(val model: String, val choices: List<Choice>?) {
-        data class Choice(val index: Int, val message: Message) {
-            data class Message(val role: String, val content: String)
+    internal data class JetpackAIQueryDto(val model: String?, val choices: List<Choice>?) {
+        data class Choice(val index: Int?, val message: Message?) {
+            data class Message(val role: String?, val content: String?)
         }
     }
     sealed class JetpackAIJWTTokenResponse {
@@ -258,16 +258,23 @@ class JetpackAIRestClient @Inject constructor(
     }
 
     private fun JetpackAIQueryDto.toJetpackAIQueryResponse(): JetpackAIQueryResponse {
-        // Check if choices is null or empty
         val safeChoices = choices ?: emptyList()
+
+        if (safeChoices.isEmpty() || safeChoices[0].message?.content.isNullOrEmpty())
+            return JetpackAIQueryResponse.Error(
+                JetpackAIQueryErrorType.INVALID_DATA,
+                "Response content is empty or null"
+            )
 
         return JetpackAIQueryResponse.Success(model, safeChoices.map { choice ->
             JetpackAIQueryResponse.Success.Choice(
-                choice.index,
-                JetpackAIQueryResponse.Success.Choice.Message(
-                    choice.message.role,
-                    choice.message.content
-                )
+                index = choice.index,
+                message = choice.message?.let { message ->
+                    JetpackAIQueryResponse.Success.Choice.Message(
+                        role = message.role,
+                        content = message.content
+                    )
+                }
             )
         })
     }
