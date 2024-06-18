@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.model.TermModel
 import org.wordpress.android.fluxc.store.TaxonomyStore
 import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.extensions.getSerializableCompat
+import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import javax.inject.Inject
 
 class AddCategoryFragment : AppCompatDialogFragment() {
@@ -22,7 +24,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
     private var binding: AddCategoryBinding? = null
 
     @set:Inject
-    var mTaxonomyStore: TaxonomyStore? = null
+    var taxonomyStore: TaxonomyStore? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         (requireActivity().application as WordPress).component().inject(this)
@@ -31,7 +33,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
             MaterialAlertDialogBuilder(ContextThemeWrapper(activity, R.style.PostSettingsTheme))
         binding = AddCategoryBinding.inflate(layoutInflater, null, false)
         loadCategories()
-        builder.setView(binding!!.root)
+        builder.setView(binding?.root)
             .setPositiveButton(android.R.string.ok, null)
             .setNegativeButton(android.R.string.cancel, null)
 
@@ -48,16 +50,15 @@ class AddCategoryFragment : AppCompatDialogFragment() {
         }
     }
 
-    @Suppress("Deprecation")
     private fun initSite(savedInstanceState: Bundle?) {
         site = if (savedInstanceState == null) {
             if (arguments != null) {
-                requireArguments().getSerializable(WordPress.SITE) as SiteModel?
+                requireArguments().getSerializableCompat(WordPress.SITE) as SiteModel?
             } else {
-                requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel?
+                requireActivity().intent.getSerializableExtraCompat(WordPress.SITE) as SiteModel?
             }
         } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel?
+            savedInstanceState.getSerializableCompat(WordPress.SITE) as SiteModel?
         }
 
         if (site == null) {
@@ -72,26 +73,28 @@ class AddCategoryFragment : AppCompatDialogFragment() {
 
     private fun addCategory(): Boolean {
         val categoryName = binding?.categoryName?.text.toString()
-        val selectedCategory = binding?.parentCategory?.selectedItem as CategoryNode
-        val parentId = selectedCategory.categoryId
+        val selectedCategory = binding?.parentCategory?.selectedItem as? CategoryNode
+        val parentId = selectedCategory?.categoryId
 
         if (categoryName.replace(" ".toRegex(), "") == "") {
-            binding!!.categoryName.error = getText(R.string.cat_name_required)
+            binding?.categoryName?.error = getText(R.string.cat_name_required)
             return false
         }
 
-        val newCategory = TermModel(
-            TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
-            categoryName,
-            parentId
-        )
+        val newCategory = parentId?.let {
+            TermModel(
+                TaxonomyStore.DEFAULT_TAXONOMY_CATEGORY,
+                categoryName,
+                it
+            )
+        }
         (requireActivity() as SelectCategoriesActivity).categoryAdded(newCategory)
         return true
     }
 
     private fun loadCategories() {
         val rootCategory = CategoryNode.createCategoryTreeFromList(
-            mTaxonomyStore!!.getCategoriesForSite(
+            taxonomyStore!!.getCategoriesForSite(
                 site!!
             )
         )
@@ -104,7 +107,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
                     R.layout.categories_row_parent,
                     categoryLevels
                 )
-            binding!!.parentCategory.adapter = categoryAdapter
+            binding?.parentCategory?.adapter = categoryAdapter
         }
     }
 
