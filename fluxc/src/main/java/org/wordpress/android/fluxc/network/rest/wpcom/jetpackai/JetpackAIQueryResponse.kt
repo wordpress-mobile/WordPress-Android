@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.jetpackai
 sealed class JetpackAIQueryResponse {
     data class Success(val model: String?, val choices: List<Choice>) : JetpackAIQueryResponse() {
         data class Choice(val index: Int?, val message: Message?) {
-            data class Message(val role: String?, val content: String?)
+            data class Message(val role: String?, val content: String)
         }
     }
 
