@@ -94,31 +94,32 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
         LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
         //noinspection InflateParams
-        PostSettingsInputDialogBinding mBinding =
+        PostSettingsInputDialogBinding binding =
                 PostSettingsInputDialogBinding.inflate(layoutInflater, null, false);
-        builder.setView(mBinding.getRoot());
+        builder.setView(binding.getRoot());
         if (mIsMultilineInput) {
-            mBinding.postSettingsInputDialogEditText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            binding.postSettingsInputDialogEditText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         } else {
-            mBinding.postSettingsInputDialogEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+            binding.postSettingsInputDialogEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         }
         if (!TextUtils.isEmpty(mCurrentInput)) {
-            mBinding.postSettingsInputDialogEditText.setText(mCurrentInput);
+            binding.postSettingsInputDialogEditText.setText(mCurrentInput);
             // move the cursor to the end
-            mBinding.postSettingsInputDialogEditText.setSelection(mCurrentInput.length());
+            binding.postSettingsInputDialogEditText.setSelection(mCurrentInput.length());
         }
-        mBinding.postSettingsInputDialogEditText.addTextChangedListener(this);
+        binding.postSettingsInputDialogEditText.addTextChangedListener(this);
 
-        mBinding.postSettingsInputDialogInputLayout.setHint(mTitle);
+        binding.postSettingsInputDialogInputLayout.setHint(mTitle);
 
-        mBinding.postSettingsInputDialogHint.setText(mHint);
+        binding.postSettingsInputDialogHint.setText(mHint);
 
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mCurrentInput = mBinding.postSettingsInputDialogEditText.getText().toString();
-                if (mListener != null) {
+                Editable text = binding.postSettingsInputDialogEditText.getText();
+                if (mListener != null && text != null) {
+                    mCurrentInput = text.toString();
                     mListener.onInputUpdated(mCurrentInput);
                 }
             }
