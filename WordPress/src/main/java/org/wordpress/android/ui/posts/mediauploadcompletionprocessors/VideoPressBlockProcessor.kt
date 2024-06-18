@@ -5,13 +5,13 @@ import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
 class VideoPressBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
-    override fun processBlockContentDocument(document: Document?): Boolean {
+    override fun processBlockContentDocument(document: Document): Boolean {
         return false
     }
 
-    override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
-        val id = jsonAttributes?.get(ID_ATTRIBUTE)
-        val src = jsonAttributes?.get(SRC_ATTRIBUTE)?.asString
+    override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
+        val id = jsonAttributes.get(ID_ATTRIBUTE)
+        val src = jsonAttributes.get(SRC_ATTRIBUTE)?.asString
 
         return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {
