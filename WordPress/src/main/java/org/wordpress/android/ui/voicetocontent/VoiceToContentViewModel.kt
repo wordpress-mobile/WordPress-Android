@@ -179,7 +179,6 @@ class VoiceToContentViewModel @Inject constructor(
                 is VoiceToContentResult.Success ->
                     _actionEvent.postValue(LaunchEditPost(site, result.content))
             }
-            _actionEvent.postValue(Dismiss)
         }
     }
 
