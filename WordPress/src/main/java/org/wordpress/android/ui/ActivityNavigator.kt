@@ -201,4 +201,11 @@ class ActivityNavigator @Inject constructor() {
             .addNextIntent(intent)
             .startActivities()
     }
+
+    fun openIneligibleForVoiceToContent(
+        context: Context,
+        url: String
+    ) {
+        WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
+    }
 }

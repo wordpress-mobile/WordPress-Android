@@ -76,8 +76,12 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
-    setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
+    copy_branch_protection(
+      repository: GHHELPER_REPO,
+      from_branch: DEFAULT_BRANCH,
+      to_branch: "release/#{new_version}"
+    )
+    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: new_version)
   end
 
   #####################################################################################
@@ -293,7 +297,7 @@ platform :android do
     release_branch = "release/#{current_release_version}"
 
     # Remove branch protection first, so that we can push the final commits directly to the release branch
-    removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
+    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
 
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
@@ -315,7 +319,7 @@ platform :android do
     push_to_git_remote(tags: false)
 
     # Wrap up
-    setfrozentag(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
+    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
     create_new_milestone(repository: GHHELPER_REPO)
     close_milestone(repository: GHHELPER_REPO, milestone: version_name)
 

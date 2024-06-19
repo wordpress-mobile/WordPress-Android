@@ -72,37 +72,37 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
      * @return A string containing content with ids and urls replaced
      */
     @JvmOverloads
-    fun processBlock(block: String, isSelfClosingTag: Boolean = false) = if (splitBlock(block, isSelfClosingTag)) {
-        if (processBlockJsonAttributes(jsonAttributes)) {
-            if (isSelfClosingTag) {
-                // return injected block
-                StringBuilder()
-                    .append("<!-- wp:")
-                    .append(blockName)
-                    .append(" ")
-                    .append(jsonAttributes) // json parser output
-                    .append(" /-->")
-                    .toString()
-            } else if (processBlockContentDocument(blockContentDocument)) {
-                // return injected block
-                StringBuilder()
-                    .append("<!-- wp:")
-                    .append(blockName)
-                    .append(" ")
-                    .append(jsonAttributes) // json parser output
-                    .append(" -->\n")
-                    .append(blockContentDocument?.body()?.html()) // HTML parser output
-                    .append(closingComment)
-                    .toString()
-            } else {
-                block
-            }
-        } else {
-            processInnerBlock(block) // delegate to inner blocks if needed
+    fun processBlock(block: String, isSelfClosingTag: Boolean = false) = when {
+        !splitBlock(block, isSelfClosingTag) -> block // leave block unchanged
+        jsonAttributes?.let { !processBlockJsonAttributes(it) } == true -> {
+            // delegate to inner blocks if needed
+            processInnerBlock(block)
         }
-    } else {
-        // leave block unchanged
-        block
+        isSelfClosingTag -> {
+            // return injected block
+            StringBuilder()
+                .append("<!-- wp:")
+                .append(blockName)
+                .append(" ")
+                .append(jsonAttributes) // json parser output
+                .append(" /-->")
+                .toString()
+        }
+
+        blockContentDocument?.let { processBlockContentDocument(it) } == true -> {
+            // return injected block
+            StringBuilder()
+                .append("<!-- wp:")
+                .append(blockName)
+                .append(" ")
+                .append(jsonAttributes) // json parser output
+                .append(" -->\n")
+                .append(blockContentDocument?.body()?.html()) // HTML parser output
+                .append(closingComment)
+                .toString()
+        }
+
+        else -> block // leave block unchanged
     }
 
     fun addIntPropertySafely(jsonAttributes: JsonObject, propertyName: String, value: String) = try {
@@ -121,7 +121,7 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
      * @param document The document to be mutated to make the necessary replacements
      * @return A boolean value indicating whether or not the block contents should be replaced
      */
-    abstract fun processBlockContentDocument(document: Document?): Boolean
+    abstract fun processBlockContentDocument(document: Document): Boolean
 
     /**
      * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
@@ -134,7 +134,7 @@ abstract class BlockProcessor internal constructor(@JvmField var localId: String
      * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
      * @return
      */
-    abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean
+    abstract fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean
 
     /**
      * This method can be optionally overridden by concrete implementations to delegate further processing via recursion
