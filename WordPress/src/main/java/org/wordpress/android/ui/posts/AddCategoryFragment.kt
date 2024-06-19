@@ -23,8 +23,8 @@ class AddCategoryFragment : AppCompatDialogFragment() {
     private var site: SiteModel? = null
     private var binding: AddCategoryBinding? = null
 
-    @set:Inject
-    var taxonomyStore: TaxonomyStore? = null
+    @Inject
+    lateinit var taxonomyStore: TaxonomyStore
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         (requireActivity().application as WordPress).component().inject(this)
@@ -93,11 +93,7 @@ class AddCategoryFragment : AppCompatDialogFragment() {
     }
 
     private fun loadCategories() {
-        val rootCategory = CategoryNode.createCategoryTreeFromList(
-            taxonomyStore!!.getCategoriesForSite(
-                site!!
-            )
-        )
+        val rootCategory = site?.let { CategoryNode.createCategoryTreeFromList(taxonomyStore.getCategoriesForSite(it)) }
         val categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory)
         categoryLevels.add(0, CategoryNode(0, 0, getString(R.string.top_level_category_name)))
         if (categoryLevels.size > 0) {
