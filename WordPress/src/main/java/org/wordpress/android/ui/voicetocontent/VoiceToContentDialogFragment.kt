@@ -16,10 +16,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityNavigator
@@ -96,12 +100,29 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             dialog.setCanceledOnTouchOutside(cancelable)
         }
 
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                if (viewModel.isPaused.value) {
+                    viewModel.resumeRecording()
+                }
+            }
+        }
+
         return dialog
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (viewModel.isRecording.value) {
+            viewModel.pauseRecording()
+        }
+    }
+
     override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        viewModel.onBottomSheetClosed()
+        if (!requireActivity().isChangingConfigurations) {
+            super.onDismiss(dialog)
+            viewModel.onBottomSheetClosed()
+        }
     }
 
     private fun onBottomSheetClosed() {
@@ -167,6 +188,7 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
                 PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
                 event.content
             )
+            dismiss()
         }
     }
 

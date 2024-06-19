@@ -62,15 +62,15 @@ class VoiceToContentUseCase @Inject constructor(
 
                 when(response) {
                     is JetpackAIQueryResponse.Success -> {
-                        val finalContent: String = response.choices[0].message.content
+                        val finalContent: String? = response.choices[0].message?.content
                         // __JETPACK_AI_ERROR__ is a special marker we ask GPT to add to the request when it can’t
                         // understand the request for any reason, so maybe something confused GPT on some requests.
-                        if (finalContent == JETPACK_AI_ERROR) {
+                        if (finalContent == null || finalContent == JETPACK_AI_ERROR) {
                             // Send back the transcribed text here
                             logger.logError(JETPACK_AI_ERROR)
                             return@withContext Success(content = transcribed)
                         } else {
-                            return@withContext Success(content = response.choices[0].message.content)
+                            return@withContext Success(content = finalContent)
                         }
                     }
 
