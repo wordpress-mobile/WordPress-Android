@@ -718,7 +718,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 }
 
             isNewPost = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
-            isVoiceContentSet = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
+            isVoiceContentSet = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
                     state.getInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, 0)
