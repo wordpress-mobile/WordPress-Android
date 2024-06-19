@@ -9,7 +9,7 @@ pluginManagement {
     gradle.ext.detektVersion = '1.23.0'
     gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '2.1.2'
-    gradle.ext.koverVersion = '0.7.5'
+    gradle.ext.koverVersion = '0.8.1'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
