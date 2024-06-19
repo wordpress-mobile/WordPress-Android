@@ -9,21 +9,18 @@ import org.wordpress.android.util.helpers.MediaFile
  * remote url for all a tags present within the wp:file block.
  */
 class FileBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
-    override fun processBlockContentDocument(document: Document?): Boolean {
-        val hyperLinkTargets = document?.select(HYPERLINK_TAG)
+    override fun processBlockContentDocument(document: Document): Boolean {
+        val hyperLinkTargets = document.select(HYPERLINK_TAG)
 
-        hyperLinkTargets?.let {
-            for (target in hyperLinkTargets) {
-                // replaces the href attribute's local url with the remote counterpart.
-                target.attr(HREF_ATTRIBUTE, remoteUrl)
-            }
-            return true
+        for (target in hyperLinkTargets) {
+            // replaces the href attribute's local url with the remote counterpart.
+            target.attr(HREF_ATTRIBUTE, remoteUrl)
         }
-        return false
+        return true
     }
 
-    override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
-        val id = jsonAttributes?.get(ID_ATTRIBUTE)
+    override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
+        val id = jsonAttributes.get(ID_ATTRIBUTE)
 
         return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {

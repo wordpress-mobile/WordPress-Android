@@ -15,7 +15,7 @@ plugins {
 ext {
     minSdkVersion = 24
     compileSdkVersion = 34
-    targetSdkVersion = 33
+    targetSdkVersion = 34
 }
 
 ext {
@@ -26,7 +26,7 @@ ext {
     gutenbergMobileVersion = 'v1.120.0'
     wordPressAztecVersion = 'v2.1.3'
     wordPressFluxCVersion = 'trunk-79f2bc35285748c715e00f2a6648ed6831632178'
-    wordPressLoginVersion = '1.15.0'
+    wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
@@ -60,7 +60,7 @@ ext {
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     androidxWorkManagerVersion = "2.9.0"
-    androidxWebkitVersion =  '1.10.0'
+    androidxWebkitVersion =  '1.11.0'
     androidxComposeMaterial3Version = '1.1.1'
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'
