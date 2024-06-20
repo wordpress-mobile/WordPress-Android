@@ -22,16 +22,16 @@ abstract class BlazeCampaignsDao {
         return campaigns.map { it.toDomainModel() }
     }
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC")
     abstract fun getCampaigns(siteId: Long): List<BlazeCampaignEntity>
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC")
     abstract fun observeCampaigns(siteId: Long): Flow<List<BlazeCampaignEntity>>
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC LIMIT 1")
     abstract fun getMostRecentCampaignForSite(siteId: Long): BlazeCampaignEntity?
 
-    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY startTime DESC LIMIT 1")
+    @Query("SELECT * from BlazeCampaigns WHERE `siteId` = :siteId ORDER BY CAST(campaignId AS int) DESC LIMIT 1")
     abstract fun observeMostRecentCampaignForSite(siteId: Long): Flow<BlazeCampaignEntity?>
 
     @Transaction
