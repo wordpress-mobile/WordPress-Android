@@ -1226,7 +1226,6 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * updates site settings etc, it'll be lost when the Automated Transfer is completed. The process takes about 1 min
      * on average, and we'll be able to update the progress by checking the status of the transfer.
      */
-
     private void showAutomatedTransferProgressDialog() {
         if (mAutomatedTransferProgressDialog == null) {
             mAutomatedTransferProgressDialog = new ProgressDialog(this);
