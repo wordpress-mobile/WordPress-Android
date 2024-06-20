@@ -355,7 +355,6 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
 
         mDispatcher.unregister(this);
         super.onDestroy();
-        mBinding = null;
     }
 
     @Override
@@ -787,7 +786,6 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
                 Snackbar.LENGTH_LONG)
                   .show();
     }
-
 
     private void showDomainCreditsCheckProgressDialog() {
         if (mCheckingDomainCreditsProgressDialog == null) {
@@ -1365,7 +1363,7 @@ public class PluginDetailActivity extends LocaleAwareActivity implements OnDomai
      * Unfortunately we can't close the progress dialog until both the site and its plugins are fetched. Check out
      * `onSiteChanged` for the next step.
      */
-    @SuppressWarnings("unused") // Progress Dialog Deprecation on API 26
+    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAutomatedTransferStatusChecked(OnAutomatedTransferStatusChecked event) {
         if (isFinishing()) {
