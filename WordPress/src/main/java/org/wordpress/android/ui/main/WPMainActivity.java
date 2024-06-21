@@ -1394,10 +1394,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 }
 
-                if (site != null && post != null) {
+                View snackbarAttachView = findViewById(R.id.coordinator);
+                if (site != null && post != null && snackbarAttachView != null) {
                     mUploadUtilsWrapper.handleEditPostResultSnackbars(
                             this,
-                            findViewById(R.id.coordinator),
+                            snackbarAttachView,
                             data,
                             post,
                             site,
@@ -1805,21 +1806,24 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 }
 
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                        this,
-                        findViewById(R.id.coordinator),
-                        event.isError(),
-                        event.isFirstTimePublish,
-                        event.post,
-                        null,
-                        targetSite,
-                        isFirstTimePublishing -> {
-                            mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
-                            if (isFirstTimePublishing) {
-                                AppReviewManager.INSTANCE.onPostPublished();
+                View snackbarAttachView = findViewById(R.id.coordinator);
+                if (snackbarAttachView != null) {
+                    mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                            this,
+                            snackbarAttachView,
+                            event.isError(),
+                            event.isFirstTimePublish,
+                            event.post,
+                            null,
+                            targetSite,
+                            isFirstTimePublishing -> {
+                                mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
+                                if (isFirstTimePublishing) {
+                                    AppReviewManager.INSTANCE.onPostPublished();
+                                }
                             }
-                        }
-                );
+                    );
+                }
             }
         }
     }
