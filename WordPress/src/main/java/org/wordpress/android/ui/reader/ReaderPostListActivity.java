@@ -337,17 +337,12 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                                 post,
                                 site,
                                 mUploadActionUseCase.getUploadAction(post),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        UploadUtils.publishPost(
-                                                ReaderPostListActivity.this,
-                                                post,
-                                                site,
-                                                mDispatcher
-                                        );
-                                    }
-                                });
+                                v -> UploadUtils.publishPost(
+                                        ReaderPostListActivity.this,
+                                        post,
+                                        site,
+                                        mDispatcher
+                                ));
                     }
                 }
                 break;
