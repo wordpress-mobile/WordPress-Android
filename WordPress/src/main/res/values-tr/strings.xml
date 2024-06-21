@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-04 07:31:03+0000
+Translation-Revision-Date: 2024-06-13 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Düzenlemek için dokunun</string>
+    <string name="voice_to_content_permissions_required_msg">Ses kaydetmek için bu uygulamanın mikrofonunuza erişim izni olması gerekir. Daha önce bu izni reddetmiştiniz. Bu özelliği kullanmak için lütfen uygulama ayarlarından mikrofon iznini etkinleştirin.</string>
+    <string name="voice_to_content_permissions_required_title">Ses Kaydı İzni Gerekli</string>
+    <string name="permission_access_media_location">Ortamın Konumu</string>
     <string name="in_app_update_restart">Yeniden Başla</string>
     <string name="in_app_update_available">Güncelleme indirildi. Uygulamak için yeniden başlayın.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Sesten gönderi oluştur</string>
