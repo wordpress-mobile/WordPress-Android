@@ -53,7 +53,7 @@ class UploadUtilsWrapper @Inject constructor(
     @Suppress("LongParameterList")
     fun onPostUploadedSnackbarHandler(
         activity: Activity?,
-        snackbarAttachView: View?,
+        snackbarAttachView: View,
         isError: Boolean,
         isFirstTimePublish: Boolean,
         post: PostModel?,
