@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-28 10:28:12+0000
+Translation-Revision-Date: 2024-06-16 18:22:38+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Atinge pentru a edita</string>
+    <string name="voice_to_content_permissions_required_msg">Pentru a înregistra audio, această aplicație are nevoie de permisiunea ta ca să-ți acceseze microfonul. Ai refuzat anterior această permisiune. Ca să folosești această funcționalitate, te rog să activezi permisiunea pentru microfon în setările aplicației.</string>
+    <string name="voice_to_content_permissions_required_title">Permisiunea pentru înregistrare audio este obligatorie</string>
+    <string name="permission_access_media_location">Locație Media</string>
     <string name="in_app_update_restart">Repornește</string>
     <string name="in_app_update_available">Am descărcat actualizarea. Repornește pentru a o aplica.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Articol din fișier audio</string>
@@ -1788,7 +1792,7 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_find_out_mode">Află mai multe</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>
     <string name="crop">decupează</string>

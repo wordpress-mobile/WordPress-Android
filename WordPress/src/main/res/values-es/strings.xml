@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 15:54:08+0000
+Translation-Revision-Date: 2024-06-11 05:16:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Toca para editar</string>
+    <string name="voice_to_content_permissions_required_msg">Para grabar audio, esta app necesita permiso para acceder a tu micrófono. Anteriormente has denegado este permiso. Habilita el permiso del micrófono en los ajustes de la aplicación para utilizar esta función.</string>
+    <string name="voice_to_content_permissions_required_title">Se requiere permiso para grabar audio</string>
+    <string name="permission_access_media_location">Ubicación de medios</string>
     <string name="in_app_update_restart">Reiniciar</string>
     <string name="in_app_update_available">Actualización descargada. Reinicia para aplicar.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Publicar desde audio</string>

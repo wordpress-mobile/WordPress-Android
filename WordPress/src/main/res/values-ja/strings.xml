@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-30 12:54:08+0000
+Translation-Revision-Date: 2024-06-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">タップして編集</string>
+    <string name="voice_to_content_permissions_required_msg">音声を録音するには、このアプリにマイクへのアクセス権限が必要です。 以前、この権限を拒否しています。 この機能を使用するには、アプリの設定でマイクの権限を有効化してください。</string>
+    <string name="voice_to_content_permissions_required_title">音声録音の権限が必須</string>
+    <string name="permission_access_media_location">メディアの位置</string>
     <string name="in_app_update_restart">再開</string>
     <string name="in_app_update_available">更新がダウンロードされました。 再起動して適用します。</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">音声ファイルから投稿</string>

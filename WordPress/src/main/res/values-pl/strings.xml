@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-07 13:43:33+0000
+Translation-Revision-Date: 2024-06-11 06:56:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Stuknij, aby edytować</string>
+    <string name="voice_to_content_permissions_required_msg">Aby nagrywać dźwięk, aplikacja potrzebuje pozwolenia na dostęp do mikrofonu. Wcześniej odmówiono. Włącz uprawnienia mikrofonu w ustawieniach aplikacji, aby nagrywać.</string>
+    <string name="voice_to_content_permissions_required_title">Wymagana zgoda na nagrywanie dźwięku</string>
+    <string name="permission_access_media_location">Położenie plików</string>
     <string name="in_app_update_restart">Uruchom ponownie</string>
     <string name="in_app_update_available">Aktualizacja pobrana. Uruchom ponownie aby ją zastosować.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Wpis z audio.</string>
@@ -23,6 +27,15 @@ Language: pl
     <string name="reader_announcement_card_reading_preferences_description">Wybierz pasujące ci kolory i czcionki. Podczas czytania wpisu kliknij ikonę AA na górze ekranu.</string>
     <string name="reader_announcement_card_reading_preferences_title">Ustawienia czytania</string>
     <string name="reader_announcement_card_tags_stream_description">Aby uzyskać dostęp do zawartości obserwowanych tagów kliknij listę rozwijaną na górze je wybierz.</string>
+    <string name="reader_announcement_card_tags_stream_title">Tagi stream</string>
+    <string name="reader_announcement_card_title">Nowość w aplikacji Reader</string>
+    <string name="reader_dropdown_menu_tags">Twoje tagi</string>
+    <string name="no_connection_error_description">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
+    <string name="no_connection_error_title">Nie można teraz załadować wybranej treści</string>
+    <string name="stats_subscribers_marker_view_plural">Subskrybenci</string>
+    <string name="stats_subscribers_marker_view_singular">Subskrybent</string>
+    <string name="stats_view_subscriber_growth">Wzrost liczby subskrybentów</string>
+    <string name="role_subscriber">Subskrybent</string>
     <string name="stats_traffic">Ruch</string>
     <string name="gutenberg_native_font_size_1_s">Rozmiar liter, %1$s</string>
     <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Plik nie jest obsługiwany jako plik mediów.</string>
