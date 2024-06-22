@@ -525,6 +525,6 @@ public class CollapseFullScreenDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mBinding = null
+        mBinding = null;
     }
 }
