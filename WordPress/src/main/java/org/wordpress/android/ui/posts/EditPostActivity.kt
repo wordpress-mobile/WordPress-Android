@@ -3891,8 +3891,11 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     }
 
     private fun refreshEditorTheme() {
-        val payload = FetchEditorThemePayload(siteModel, globalStyleSupportFeatureConfig.isEnabled())
-        dispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload))
+        val shouldLoadBlockEditorThemeData = siteModel.isWPCom || siteModel.isWPComAtomic || isJetpackSsoEnabled
+        if (shouldLoadBlockEditorThemeData) {
+            val payload = FetchEditorThemePayload(siteModel, globalStyleSupportFeatureConfig.isEnabled())
+            dispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload))
+        }
     }
 
     @Suppress("unused")
