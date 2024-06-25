@@ -123,3 +123,5 @@
 
 /shipping_methods
 /shipping_methods/<id>#String
+
+/gla/ads/connection
