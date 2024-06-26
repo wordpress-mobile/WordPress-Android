@@ -1,4 +1,0 @@
-25.0:
-Etiketler şeridi yayında! Artık belirli etiketler içeren içeriklerin hepsini bir yerde görebilirsiniz. Etiketleme zamanı geldi.
-
-Blog hatırlatıcıları, öne çıkan görseller ve kullanıcı kaldırmayla ilişkili işlemlerin yanı sıra oturum açma ve Gönderi Listesi ekranlarındaki çeşitli çökme sorunlarını düzelttik. Daha az çökme mi? Ne kadar etkileyici.
