@@ -3,6 +3,8 @@ package org.wordpress.android.fluxc.store.jetpackai
 import org.wordpress.android.fluxc.model.JWTToken
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIAssistantFeatureResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsErrorType.AUTH_ERROR
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAICompletionsResponse
@@ -10,11 +12,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.JetpackAIJWTTokenResponse.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIRestClient.ResponseFormat
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionRestClient
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import java.io.File
@@ -27,6 +27,10 @@ class JetpackAIStore @Inject constructor(
     private val jetpackAITranscriptionRestClient: JetpackAITranscriptionRestClient,
     private val coroutineEngine: CoroutineEngine
 ) {
+    companion object {
+        private const val OPENAI_GPT4_MODEL_NAME = "gpt-4o"
+    }
+
     private var token: JWTToken? = null
 
     /**
@@ -45,7 +49,6 @@ class JetpackAIStore @Inject constructor(
         feature: String,
         skipCache: Boolean = false
     ) = fetchJetpackAICompletions(site, prompt, feature, skipCache, postId)
-
 
     /**
      * Fetches Jetpack AI completions for a given prompt used globally by a site.
@@ -182,7 +185,7 @@ class JetpackAIStore @Inject constructor(
         return@withDefaultContext when {
             // Fetch token anew if using existing token returns AUTH_ERROR
             result is JetpackAITranscriptionResponse.Error &&
-                result.type == JetpackAITranscriptionErrorType.AUTH_ERROR -> {
+                    result.type == JetpackAITranscriptionErrorType.AUTH_ERROR -> {
                 // Remove cached token and retry getting the token another time
                 this@JetpackAIStore.token = null
                 if (retryCount <= maxRetries) {
@@ -197,6 +200,7 @@ class JetpackAIStore @Inject constructor(
                     result // Return the error after max retries
                 }
             }
+
             else -> result
         }
     }
@@ -245,7 +249,7 @@ class JetpackAIStore @Inject constructor(
                 }
             }
 
-        val result = jetpackAIRestClient.fetchJetpackAiQuery(
+        val result = jetpackAIRestClient.fetchJetpackAiMessageQuery(
             jwtToken = token,
             message = message,
             feature = feature,
@@ -275,6 +279,72 @@ class JetpackAIStore @Inject constructor(
                     result // Return the error after max retries
                 }
             }
+
+            else -> result
+        }
+    }
+
+    /**
+     * Fetches Jetpack AI Query for the specific prompt/question
+     *
+     * @param site      The site used to create the JWT token.
+     * @param question  The question to be expanded by the Jetpack AI BE.
+     * @param feature   Used by backend to track AI-generation usage and measure costs.
+     * @param stream    When true, the response is a set of EventSource events, otherwise a single response
+     * @param format    The format of the response: 'text' or 'json_object'. Default "text"
+     * @param model     The model to be used for the query: 'gpt-4o' or 'gpt-3.5-turbo-1106'. Optional
+     * @param fields    The fields to be requested in the response
+     */
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAIQuery(
+        site: SiteModel,
+        question: String,
+        feature: String,
+        stream: Boolean,
+        model: String = OPENAI_GPT4_MODEL_NAME,
+        format: ResponseFormat = ResponseFormat.TEXT,
+        fields: String? = null
+    ): JetpackAIQueryResponse = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch Jetpack AI Query"
+    ) {
+        val token = token?.validateExpiryDate()?.validateBlogId(site.siteId)
+            ?: fetchJetpackAIJWTToken(site).let { tokenResponse ->
+                when (tokenResponse) {
+                    is Error -> {
+                        return@withDefaultContext JetpackAIQueryResponse.Error(
+                            type = JetpackAIQueryErrorType.AUTH_ERROR,
+                            message = tokenResponse.message,
+                        )
+                    }
+
+                    is Success -> {
+                        token = tokenResponse.token
+                        tokenResponse.token
+                    }
+                }
+            }
+
+        val result = jetpackAIRestClient.fetchJetpackAiQuestionQuery(
+            jwtToken = token,
+            question = question,
+            feature = feature,
+            format = format,
+            model = model,
+            stream = stream,
+            fields = fields
+        )
+
+        return@withDefaultContext when {
+            // Fetch token anew if using existing token returns AUTH_ERROR
+            result is JetpackAIQueryResponse.Error &&
+                    result.type == JetpackAIQueryErrorType.AUTH_ERROR -> {
+                // Remove cached token and retry getting the token another time
+                this@JetpackAIStore.token = null
+                result
+            }
+
             else -> result
         }
     }
