@@ -1,2 +1,0 @@
-25.0:
-Abbiamo risolto diversi arresti anomali nella schermata di accesso e in quella dell'elenco degli articoli e corretto alcune azioni associate ai promemoria relativi al blog, alle immagini in evidenza e alla rimozione di utenti. Arresti anomali? Ormai sono solo un ricordo.

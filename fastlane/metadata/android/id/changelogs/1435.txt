@@ -1,2 +1,0 @@
-25.0:
-Crash pada layar login dan Daftar Pos telah diperbaiki, sama halnya dengan aksi-aksi terkait pengingat blogging, gambar andalan, dan penghapusan pengguna. Crash berkurang? Performa kian cemerlang.
