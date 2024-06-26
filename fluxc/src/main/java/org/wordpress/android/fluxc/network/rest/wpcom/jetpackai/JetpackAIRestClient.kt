@@ -35,7 +35,7 @@ class JetpackAIRestClient @Inject constructor(
 
     suspend fun fetchJetpackAIJWTToken(
         site: SiteModel
-    ) : JetpackAIJWTTokenResponse {
+    ): JetpackAIJWTTokenResponse {
         val url = WPCOMV2.sites.site(site.siteId).jetpack_openai_query.jwt.url
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
@@ -143,7 +143,7 @@ class JetpackAIRestClient @Inject constructor(
      * @param stream    When true, the response is a set of EventSource events, otherwise a single response
      */
     @Suppress("LongParameterList")
-    suspend fun fetchJetpackAiQuery(
+    suspend fun fetchJetpackAiMessageQuery(
         jwtToken: JWTToken,
         message: String,
         role: String,
@@ -154,7 +154,7 @@ class JetpackAIRestClient @Inject constructor(
         val url = WPCOMV2.jetpack_ai_query.url
 
         val body = mutableMapOf<String, Any>().apply {
-            put("messages", createJetpackAIQueryMessage(text = message, role=role, type = type))
+            put("messages", createJetpackAIQueryMessage(text = message, role = role, type = type))
             put("stream", stream)
             putIfNotNull("feature" to feature)
         }
@@ -175,6 +175,66 @@ class JetpackAIRestClient @Inject constructor(
                         JetpackAIQueryErrorType.INVALID_DATA, "Can not get the object"
                     )
             }
+
+            is Response.Error -> {
+                JetpackAIQueryResponse.Error(
+                    response.error.toJetpackAIQueryError(),
+                    response.error.message
+                )
+            }
+        }
+    }
+
+    /**
+     * Fetches Jetpack AI Query for a given message.
+     *
+     * @param jwtToken  The jwt authorization token.
+     * @param question  The question to be expanded by the Jetpack AI BE.
+     * @param feature   Used by backend to track AI-generation usage and measure costs. Optional.
+     * @param stream    When true, the response is a set of EventSource events, otherwise a single response
+     * @param format    The format of the response: 'text' or 'json_object'
+     * @param model     The model to be used for the query: 'gpt-4o' or 'gpt-3.5-turbo-1106'
+     * @param fields    The fields to be requested in the response
+     */
+    @Suppress("LongParameterList")
+    suspend fun fetchJetpackAiQuestionQuery(
+        jwtToken: JWTToken,
+        question: String,
+        feature: String,
+        model: String,
+        stream: Boolean,
+        format: ResponseFormat,
+        fields: String? = null
+    ): JetpackAIQueryResponse {
+        val url = WPCOMV2.jetpack_ai_query.url
+
+        val body = mapOf(
+            "question" to question,
+            "stream" to stream,
+            "feature" to feature,
+            "format" to format.value,
+            "model" to model
+        )
+
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+            restClient = this,
+            url = url,
+            params = mutableMapOf("token" to jwtToken.value).apply {
+                putIfNotNull("_fields" to fields)
+            },
+            body = body,
+            clazz = JetpackAIQueryDto::class.java,
+        )
+
+        return when (response) {
+            is Response.Success -> {
+                val data = response.data as? JetpackAIQueryDto
+                data?.toJetpackAIQueryResponse()
+                    ?: JetpackAIQueryResponse.Error(
+                        JetpackAIQueryErrorType.INVALID_DATA, "Can not get the object"
+                    )
+            }
+
             is Response.Error -> {
                 JetpackAIQueryResponse.Error(
                     response.error.toJetpackAIQueryError(),
@@ -208,6 +268,7 @@ class JetpackAIRestClient @Inject constructor(
                     response.data.toJetpackAIAssistantFeature()
                 )
             }
+
             is Response.Error -> {
                 JetpackAIAssistantFeatureResponse.Error(
                     response.error.toJetpackAIAssistantFeatureError(),
@@ -217,13 +278,13 @@ class JetpackAIRestClient @Inject constructor(
         }
     }
 
-    internal  data class JetpackAIJWTTokenDto(
-        @SerializedName ("success") val success: Boolean,
+    internal data class JetpackAIJWTTokenDto(
+        @SerializedName("success") val success: Boolean,
         @SerializedName("token") val token: String
     )
 
     internal data class JetpackAITextCompletionDto(
-        @SerializedName ("completion") val completion: String
+        @SerializedName("completion") val completion: String
     )
 
     @VisibleForTesting
@@ -232,6 +293,7 @@ class JetpackAIRestClient @Inject constructor(
             data class Message(val role: String?, val content: String?)
         }
     }
+
     sealed class JetpackAIJWTTokenResponse {
         data class Success(val token: JWTToken) : JetpackAIJWTTokenResponse()
         data class Error(
@@ -280,7 +342,7 @@ class JetpackAIRestClient @Inject constructor(
     }
 
     private fun createJetpackAIQueryMessage(text: String, type: String, role: String) =
-        listOf(mapOf("context" to mapOf("type" to type,"content" to text),"role" to role))
+        listOf(mapOf("context" to mapOf("type" to type, "content" to text), "role" to role))
 
     enum class ResponseFormat(val value: String) {
         JSON("json_object"),
@@ -293,48 +355,59 @@ class JetpackAIRestClient @Inject constructor(
             GenericErrorType.NO_CONNECTION,
             GenericErrorType.INVALID_SSL_CERTIFICATE,
             GenericErrorType.NETWORK_ERROR -> JetpackAICompletionsErrorType.NETWORK_ERROR
+
             GenericErrorType.SERVER_ERROR -> JetpackAICompletionsErrorType.API_ERROR
             GenericErrorType.PARSE_ERROR,
             GenericErrorType.NOT_FOUND,
             GenericErrorType.CENSORED,
             GenericErrorType.INVALID_RESPONSE -> JetpackAICompletionsErrorType.INVALID_RESPONSE
+
             GenericErrorType.HTTP_AUTH_ERROR,
             GenericErrorType.AUTHORIZATION_REQUIRED,
             GenericErrorType.NOT_AUTHENTICATED -> JetpackAICompletionsErrorType.AUTH_ERROR
+
             GenericErrorType.UNKNOWN -> JetpackAICompletionsErrorType.GENERIC_ERROR
             null -> JetpackAICompletionsErrorType.GENERIC_ERROR
         }
+
     private fun WPComGsonNetworkError.toJetpackAIQueryError() =
         when (type) {
             GenericErrorType.TIMEOUT -> JetpackAIQueryErrorType.TIMEOUT
             GenericErrorType.NO_CONNECTION,
             GenericErrorType.INVALID_SSL_CERTIFICATE,
             GenericErrorType.NETWORK_ERROR -> JetpackAIQueryErrorType.NETWORK_ERROR
+
             GenericErrorType.SERVER_ERROR -> JetpackAIQueryErrorType.API_ERROR
             GenericErrorType.PARSE_ERROR,
             GenericErrorType.NOT_FOUND,
             GenericErrorType.CENSORED,
             GenericErrorType.INVALID_RESPONSE -> JetpackAIQueryErrorType.INVALID_RESPONSE
+
             GenericErrorType.HTTP_AUTH_ERROR,
             GenericErrorType.AUTHORIZATION_REQUIRED,
             GenericErrorType.NOT_AUTHENTICATED -> JetpackAIQueryErrorType.AUTH_ERROR
+
             GenericErrorType.UNKNOWN -> JetpackAIQueryErrorType.GENERIC_ERROR
             null -> JetpackAIQueryErrorType.GENERIC_ERROR
         }
+
     private fun WPComGsonNetworkError.toJetpackAIAssistantFeatureError() =
         when (type) {
             GenericErrorType.TIMEOUT -> JetpackAIAssistantFeatureErrorType.TIMEOUT
             GenericErrorType.NO_CONNECTION,
             GenericErrorType.INVALID_SSL_CERTIFICATE,
             GenericErrorType.NETWORK_ERROR -> JetpackAIAssistantFeatureErrorType.NETWORK_ERROR
+
             GenericErrorType.SERVER_ERROR -> JetpackAIAssistantFeatureErrorType.API_ERROR
             GenericErrorType.PARSE_ERROR,
             GenericErrorType.NOT_FOUND,
             GenericErrorType.CENSORED,
             GenericErrorType.INVALID_RESPONSE -> JetpackAIAssistantFeatureErrorType.INVALID_RESPONSE
+
             GenericErrorType.HTTP_AUTH_ERROR,
             GenericErrorType.AUTHORIZATION_REQUIRED,
             GenericErrorType.NOT_AUTHENTICATED -> JetpackAIAssistantFeatureErrorType.AUTH_ERROR
+
             GenericErrorType.UNKNOWN -> JetpackAIAssistantFeatureErrorType.GENERIC_ERROR
             null -> JetpackAIAssistantFeatureErrorType.GENERIC_ERROR
         }
