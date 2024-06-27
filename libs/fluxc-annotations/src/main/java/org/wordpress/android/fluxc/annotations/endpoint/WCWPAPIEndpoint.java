@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.annotations.endpoint;
 
 public class WCWPAPIEndpoint {
+    private static final String WC_PREFIX = "wc";
+
     private static final String WC_PREFIX_V3 = "wc/v3";
 
     private static final String WC_PREFIX_V1 = "wc/v1";
@@ -49,6 +51,10 @@ public class WCWPAPIEndpoint {
 
     public String getPathV4() {
         return "/" + WC_PREFIX_V4 + mEndpoint;
+    }
+
+    public String getPathNoVersion() {
+        return "/" + WC_PREFIX + mEndpoint;
     }
 
     public String getPathV4Analytics() {
