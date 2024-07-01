@@ -1,17 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-agents:
-  queue: "android"
 
 steps:
   - label: "New Beta Release"
     plugins: [$CI_TOOLKIT]
     command: |
-      .buildkite/commands/configure-git-for-release-management.sh
+      source .buildkite/commands/configure-git-for-release-management.sh
 
       install_gems
 
       cp gradle.properties-example gradle.properties
 
       bundle exec fastlane new_beta_release skip_confirm:true
+    agents:
+       queue: "tumblr-metal"

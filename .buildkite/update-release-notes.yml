@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-agents:
-  queue: "android"
 
 steps:
   - label: "Update release notes"
     plugins: [$CI_TOOLKIT]
     command: |
-      .buildkite/commands/configure-git-for-release-management.sh
+      source .buildkite/commands/configure-git-for-release-management.sh
       .buildkite/commands/checkout-editorial-branch.sh
 
       install_gems
 
       bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
+    agents:
+       queue: "tumblr-metal"

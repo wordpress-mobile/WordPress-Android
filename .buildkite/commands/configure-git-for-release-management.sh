@@ -1,10 +1,11 @@
 #!/bin/bash -eu
 
-# Git command line client is not configured in Buildkite. Temporarily, we configure it in each step.
-# Later on, we should be able to configure the agent instead.
-curl -L https://api.github.com/meta | jq -r '.ssh_keys | .[]' | sed -e 's/^/github.com /' >> ~/.ssh/known_hosts
-git config --global user.email "mobile+wpmobilebot@automattic.com"
-git config --global user.name "Automattic Release Bot"
+# This script needs to be source'd as use-bot-for-git exports a variable and this needs to be visible outside
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  echo "This script must be 'source'd (instead of being called directly as an executable) to work properly"
+  exit 1
+fi
 
-# Buildkite is currently using the https url to checkout. We need to override it to be able to use the deploy key.
-git remote set-url origin git@github.com:wordpress-mobile/WordPress-Android.git
+echo '--- :robot_face: Use bot for git operations'
+# shellcheck disable=SC1091
+source use-bot-for-git
