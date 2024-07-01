@@ -7,6 +7,9 @@ common_params:
   - &common_plugins
     - automattic/a8c-ci-toolkit#3.4.2
 
+agents:
+  queue: "android"
+
 steps:
   #################
   # Gradle Wrapper Validation
