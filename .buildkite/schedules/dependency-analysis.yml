@@ -9,9 +9,7 @@ agents:
 
 steps:
   - label: "dependency analysis"
-    # The meta-data added is used by Apps Metrics Prometheus collector to find the build.
     command: |
-      buildkite-agent meta-data set "scheduled-build" "dependency-analysis"
       echo "--- 📊 Analyzing"
       cp gradle.properties-example gradle.properties
       ./gradlew buildHealth
