@@ -1,3 +1,6 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
 # This pipeline is meant to be run via the Buildkite API, and is
 # only used for release builds
 
@@ -6,6 +9,9 @@ common_params:
   # Common plugin settings to use with the `plugins` key.
   - &common_plugins
     - automattic/a8c-ci-toolkit#3.4.2
+
+agents:
+  queue: "android"
 
 steps:
   #################
