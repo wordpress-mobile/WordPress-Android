@@ -121,6 +121,18 @@ platform :android do
     create_release_management_pull_request('trunk', "Merge #{new_version} code freeze into trunk")
   end
 
+  lane :test_git_push do |options|
+    Fastlane::Helper::GitHelper.checkout_and_pull('iangmaia/trusted-agent-for-push-access')
+
+    UI.message 'Bumping beta version and build code...'
+    VERSION_FILE.write_version(
+      version_name: code_freeze_beta_version,
+      version_code: next_build_code
+    )
+    commit_version_bump
+    push_to_git_remote(tags: false)
+  end
+
   #####################################################################################
   # new_beta_release
   # -----------------------------------------------------------------------------------
