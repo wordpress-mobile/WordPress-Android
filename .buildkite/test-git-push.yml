@@ -6,6 +6,8 @@ steps:
   - label: "Test Git Push 👀"
     plugins: [$CI_TOOLKIT]
     command: |
+      source .buildkite/commands/configure-git-for-release-management.sh
+
       install_gems
 
       bundle exec fastlane test_git_push
