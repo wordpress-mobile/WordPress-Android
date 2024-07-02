@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
+
+steps:
+  - label: "Test Git Push 👀"
+    plugins: [$CI_TOOLKIT]
+    command: |
+      install_gems
+
+      bundle exec fastlane test_git_push
+    agents:
+       queue: "tumblr-metal"
