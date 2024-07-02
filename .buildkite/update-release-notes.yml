@@ -1,18 +1,12 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-# Nodes with values to reuse in the pipeline.
-common_params:
-  # Common plugin settings to use with the `plugins` key.
-  - &common_plugins
-    - automattic/a8c-ci-toolkit#3.4.2
-
 agents:
   queue: "android"
 
 steps:
   - label: "Update release notes"
-    plugins: *common_plugins
+    plugins: [$CI_TOOLKIT]
     command: |
       .buildkite/commands/configure-git-for-release-management.sh
       .buildkite/commands/checkout-editorial-branch.sh
