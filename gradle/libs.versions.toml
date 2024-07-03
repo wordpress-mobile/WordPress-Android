@@ -1,0 +1,220 @@
+[versions]
+#libs
+webkit = '1.11.0'
+androidxComposeNavigationVersion = '2.7.6'
+automatticRestVersion = '1.0.8'
+wordPressPersistentEditTextVersion = '1.0.2'
+googlePlayInAppUpdateVersion = '2.1.0'
+googlePlayInAppUpdateKtxVersion = '2.1.0'
+androidxArchCoreVersion = '2.2.0'
+googleGsonVersion = '2.10.1'
+androidxCoreVersion = '1.10.0'
+androidxLifecycleVersion = '2.6.2'
+androidxActivityVersion = '1.8.0'
+androidxFragmentVersion = '1.6.2'
+androidxAppcompatVersion = '1.6.1'
+androidxCardviewVersion = '1.0.0'
+androidxRecyclerviewVersion = '1.3.0'
+googleMaterialVersion = '1.9.0'
+androidxConstraintlayoutVersion = '2.1.4'
+googleFlexboxlayoutVersion = '3.0.0'
+androidxPercentlayoutVersion = '1.0.0'
+androidxSwipeToRefreshVersion = '1.1.0'
+androidxPreferenceVersion = '1.2.0'
+androidxWorkManagerVersion = "2.9.0"
+androidVolleyVersion = '1.2.1'
+googlePlayReviewVersion = '2.0.1'
+androidxCameraVersion = '1.3.4'
+googlePlayServicesAuthVersion = '20.4.1'
+googleMLKitBarcodeScanningCommonVersion = '17.0.0'
+googleMLKitTextRecognitionVersion = '16.0.0'
+googleMLKitBarcodeScanningVersion = '17.2.0'
+eventBusVersion = '3.3.1'
+glideVersion = '4.16.0'
+androidInstallReferrerVersion = '2.2'
+squareupRetrofitVersion = '2.9.0'
+apacheCommonsTextVersion = '1.10.0'
+lottieVersion = '6.1.0'
+facebookShimmerVersion = '0.5.0'
+uCropVersion = '2.2.9'
+indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
+zendeskVersion = '5.1.2'
+kotlinxCoroutinesVersion = '1.7.3'
+philjayMpAndroidChartVersion = 'v3.1.0'
+jsoupVersion = '1.16.2'
+googleExoPlayerVersion = '2.13.3'
+firebaseIidVersion = '21.1.0'
+androidxConstraintlayoutComposeVersion = '1.0.1'
+coilComposeVersion = '2.4.0'
+androidxComposeMaterial3Version = '1.1.1'
+cascadeComposeVersion = '2.3.0'
+automatticTracksVersion = '5.1.0'
+flipperVersion = '0.245.0'
+soLoaderVersion = '0.10.5'
+junitVersion = '4.13.2'
+mockitoAndroidVersion = '4.5.1'
+mockitoKotlinVersion = '4.1.0'
+chrisbanesPhotoviewVersion = '2.3.0'
+assertjVersion = '3.23.1'
+androidxTestEspressoVersion = '3.4.0'
+androidxTestUiAutomatorVersion = '2.2.0'
+squareupMockWebServerVersion = '4.12.0'
+wiremockVersion = '2.26.3'
+wiremockHttpClientVersion = '4.3.5.1'
+androidxTestCoreVersion = '1.5.0'
+androidxTestExtJunitVersion = '1.1.5'
+screengrabVersion = '2.1.1'
+facebookReactVersion = '0.73.3'
+androidxViewpager2Version = '1.0.0'
+squareupKotlinPoetVersion = '1.16.0'
+
+
+[libraries]
+androidxWebkit = { group = "androidx.webkit", name = "webkit", version.ref = "webkit" }
+androidxNavigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigationVersion" }
+automatticRest = { group = "com.automattic", name = "rest", version.ref = "automatticRestVersion" }
+wordPressPersistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditTextVersion" }
+googlePlayInAppUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googlePlayInAppUpdateVersion" }
+googlePlayInAppKtxUpdate = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "googlePlayInAppUpdateKtxVersion" }
+androidxCoreCommon = { group = "androidx.arch.core", name = "core-common", version.ref = "androidxArchCoreVersion" }
+androidxCoreRuntime = { group = "androidx.arch.core", name = "core-runtime", version.ref = "androidxArchCoreVersion" }
+androidxCoreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCoreVersion" }
+googleGson = { group = "com.google.code.gson", name = "gson", version.ref = "googleGsonVersion" }
+androidxCore = { group = "androidx.core", name = "core", version.ref = "androidxCoreVersion" }
+androidxCoreKtx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCoreVersion" }
+lifecycleCommon = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "androidxLifecycleVersion" }
+lifecycleRuntime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "androidxLifecycleVersion" }
+lifecycleRuntimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycleVersion" }
+lifecycleViewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidxLifecycleVersion" }
+lifecycleViewmodelKtx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycleVersion" }
+lifecycleViewmodelSavedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycleVersion" }
+lifecycleLivedataCore = { group = "androidx.lifecycle", name = "lifecycle-livedata-core", version.ref = "androidxLifecycleVersion" }
+lifecycleLivedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "androidxLifecycleVersion" }
+lifecycleLivedataKtx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycleVersion" }
+lifecycleProcess = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "androidxLifecycleVersion" }
+lifecycleViewmodelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycleVersion" }
+androidxActivity = { group = "androidx.activity", name = "activity", version.ref = "androidxActivityVersion" }
+androidxActivityKtx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivityVersion" }
+androidxActivityCompose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivityVersion" }
+androidxFragment = { group = "androidx.fragment", name = "fragment", version.ref = "androidxFragmentVersion"}
+androidxFragmentKtx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragmentVersion"}
+androidxAppcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompatVersion" }
+androidxAppcompatResources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidxAppcompatVersion" }
+androidxCardview = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardviewVersion" }
+androidxRecyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerviewVersion" }
+googleMaterial = { group = "com.google.android.material", name = "material", version.ref = "googleMaterialVersion" }
+googleFlexboxlayout = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "googleFlexboxlayoutVersion" }
+androidxPercentlayout = { group = "androidx.percentlayout", name = "percentlayout", version.ref = "androidxPercentlayoutVersion" }
+androidxSwipeToRefresh = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidxSwipeToRefreshVersion" }
+androidxPreference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreferenceVersion" }
+androidxWorkManagerRuntime = { group = "androidx.work", name = "work-runtime", version.ref = "androidxWorkManagerVersion" }
+androidxWorkManagerRuntimeKtx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWorkManagerVersion" }
+androidxWorkManagerTesting = { group = "androidx.work", name = "work-testing", version.ref = "androidxWorkManagerVersion" }
+androidxConstraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintlayoutVersion" }
+
+androidVolley = { group = "com.android.volley", name = "volley", version.ref = "androidVolleyVersion" }
+googlePlayReview = { group = "com.google.android.play", name = "review", version.ref ="googlePlayReviewVersion" }
+googlePlayReviewKtx = { group = "com.google.android.play", name = "review-ktx", version.ref ="googlePlayReviewVersion" }
+googlePlayServicesAuth = { group = "com.google.android.gms", name = "play-services-auth", version.ref ="googlePlayServicesAuthVersion" }
+googleMLKitBarcodeScanningCommon = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref ="googleMLKitBarcodeScanningCommonVersion" }
+googleMLKitTextRecognition = { group = "com.google.mlkit", name = "text-recognition", version.ref ="googleMLKitTextRecognitionVersion" }
+googleMLKitBarcodeScanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref ="googleMLKitBarcodeScanningVersion" }
+
+androidxCamera = { group = "androidx.camera", name = "camera-camera2", version.ref ="androidxCameraVersion" }
+androidxCameraLifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref ="androidxCameraVersion" }
+androidxCameraView = { group = "androidx.camera", name = "camera-view", version.ref ="androidxCameraVersion" }
+chrisbanesPhotoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref ="chrisbanesPhotoviewVersion" }
+
+
+
+eventBus = { group = "org.greenrobot", name = "eventbus", version.ref ="eventBusVersion" }
+eventBusJava = { group = "org.greenrobot", name = "eventbus-java", version.ref ="eventBusVersion" }
+androidInstallReferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref ="androidInstallReferrerVersion" }
+squareupRetrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref ="squareupRetrofitVersion" }
+
+apacheCommonsText = { group = "org.apache.commons", name = "commons-text", version.ref ="apacheCommonsTextVersion" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottieVersion" }
+facebookShimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref ="facebookShimmerVersion" }
+
+ucrop = { module = "com.github.yalantis:ucrop", version.ref = "uCropVersion" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glideVersion" }
+glideVolleyIntegration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glideVersion" }
+glideKsp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glideVersion" }
+indexosMediaForMobileDomain = { group = "com.github.indexos.media-for-mobile", name = "domain", version.ref ="indexosMediaForMobileVersion" }
+indexosMediaForMobileAndroid = { group = "com.github.indexos.media-for-mobile", name = "android", version.ref ="indexosMediaForMobileVersion" }
+zendesk = { group = "com.zendesk", name = "support", version.ref ="zendeskVersion" }
+
+
+kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutinesVersion" }
+kotlinxCoroutinesAndroid = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutinesVersion" }
+kotlinxCoroutinesTest = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutinesVersion" }
+mpAndroidChart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref ="philjayMpAndroidChartVersion" }
+jsoup = { group = "org.jsoup", name = "jsoup", version.ref ="jsoupVersion" }
+googleExoPlayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref ="googleExoPlayerVersion" }
+firebaseMessaging = { group = "com.google.firebase", name = "firebase-messaging" }
+firebaseIid = { group = "com.google.firebase", name = "firebase-iid", version.ref ="firebaseIidVersion" }
+
+composeUiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+composeUiTestJunit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+composeUiTooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+
+
+androidxComposeRuntime = { group = "androidx.compose.runtime", name = "runtime" }
+androidxComposeRuntimeLivedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
+androidxComposeFoundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidxComposeFoundationLayout = { group = "androidx.compose.foundation", name = "foundation-layout" }
+androidxComposeUi = { group = "androidx.compose.ui", name = "ui" }
+androidxComposeUiGraphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidxComposeUiText = { group = "androidx.compose.ui", name = "ui-text" }
+androidxComposeUiUnit = { group = "androidx.compose.ui", name = "ui-unit" }
+androidxComposeUiToolingPreview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidxComposeMaterial = { group = "androidx.compose.material", name = "material" }
+lottieCompose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottieVersion" }
+androidxConstraintlayoutCompose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref ="androidxConstraintlayoutComposeVersion" }
+coilCompose = { group = "io.coil-kt", name = "coil-compose", version.ref ="coilComposeVersion" }
+androidxComposeMaterial3 = { group = "androidx.compose.material3", name = "material3", version.ref ="androidxComposeMaterial3Version" }
+cascadeCompose = { group = "me.saket.cascade", name = "cascade-compose", version.ref ="cascadeComposeVersion" }
+automatticTracks = { group = "com.automattic.tracks", name = "crashlogging", version.ref ="automatticTracksVersion" }
+flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipperVersion" }
+flipperNoop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref ="flipperVersion" }
+flipperNetworkPlugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipperVersion" }
+soLoader = { group = "com.facebook.soloader", name = "soloader", version.ref ="soLoaderVersion" }
+
+junit = { group = "junit", name = "junit", version.ref ="junitVersion" }
+assertj = { group = "org.assertj", name = "assertj-core", version.ref ="assertjVersion" }
+mockitoKotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlinVersion" }
+mockitoAndroid = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroidVersion" }
+androidxTestEspressoCore = { group = "androidx.test.espresso", name = "espresso-core", version.ref ="androidxTestEspressoVersion" }
+androidxTestEspressoContrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref ="androidxTestEspressoVersion" }
+androidxTestEspressoAccessibility = { group = "androidx.test.espresso", name = "espresso-accessibility", version.ref ="androidxTestEspressoVersion" }
+androidxTestUiAutomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref ="androidxTestUiAutomatorVersion" }
+squareupMockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref ="squareupMockWebServerVersion" }
+wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremockVersion" }
+wiremockHttpClient = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClientVersion" }
+androidxTestCoreRunner = { group = "androidx.test", name = "runner", version.ref ="androidxTestCoreVersion" }
+androidxTestCoreRules = { group = "androidx.test", name = "rules", version.ref ="androidxTestCoreVersion" }
+androidxTestExtJunit = { group = "androidx.test.ext", name = "junit", version.ref ="androidxTestExtJunitVersion" }
+screengrab = { group = "tools.fastlane", name = "screengrab", version.ref ="screengrabVersion" }
+
+
+facebookReactHermesAndroid = { group = "com.facebook.react", name = "hermes-android", version.ref ="facebookReactVersion" }
+facebookReactAndroid = { group = "com.facebook.react", name = "react-android", version.ref ="facebookReactVersion" }
+androidxViewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref ="androidxViewpager2Version" }
+squareupKotlinPoet = { group = "com.squareup", name = "kotlinpoet", version.ref ="squareupKotlinPoetVersion" }
+squareupKotlinPoetKsp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref ="squareupKotlinPoetVersion" }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[plugins]
+
