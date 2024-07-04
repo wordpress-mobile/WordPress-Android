@@ -6,12 +6,15 @@ steps:
   - label: "New Beta Release"
     plugins: [$CI_TOOLKIT]
     command: |
+      echo '--- :robot_face: Use bot for git operations'
       source use-bot-for-git
 
+      echo '--- :ruby: Setup Ruby Tools'
       install_gems
 
       cp gradle.properties-example gradle.properties
 
+      echo '--- :shipit: New Beta Release'
       bundle exec fastlane new_beta_release skip_confirm:true
     agents:
        queue: "tumblr-metal"

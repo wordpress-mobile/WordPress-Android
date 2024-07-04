@@ -6,12 +6,16 @@ steps:
   - label: "Update release notes"
     plugins: [$CI_TOOLKIT]
     command: |
+      echo '--- :robot_face: Use bot for git operations'
       source use-bot-for-git
 
+      echo '--- :git: Checkout Editorial Branch'
       .buildkite/commands/checkout-editorial-branch.sh
 
+      echo '--- :ruby: Setup Ruby Tools'
       install_gems
 
+      echo '--- :memo: Update Release Notes'
       bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
     agents:
        queue: "tumblr-metal"

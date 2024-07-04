@@ -6,10 +6,13 @@ steps:
   - label: "Code Freeze"
     plugins: [$CI_TOOLKIT]
     command: |
+      echo '--- :robot_face: Use bot for git operations'
       source use-bot-for-git
 
+      echo '--- :ruby: Setup Ruby Tools'
       install_gems
 
+      echo '--- :snowflake: Start Code Freeze'
       bundle exec fastlane code_freeze skip_confirm:true
     agents:
        queue: "tumblr-metal"
