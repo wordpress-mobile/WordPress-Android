@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -84,6 +85,9 @@ public class WPMediaUtils {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
         } else {
+            // Set the default orientation tag for the EXIF data
+            exifData.put("Orientation", String.valueOf(ExifInterface.ORIENTATION_NORMAL));
+
             // Write EXIF data to the new image
             ExifUtils.writeExifData(exifData, optimizedPath);
 
