@@ -1,18 +1,23 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 ---
 
-agents:
-  queue: "android"
 
 steps:
   - label: "Finalize release"
     plugins: [$CI_TOOLKIT]
     command: |
-      .buildkite/commands/configure-git-for-release-management.sh
+      echo '--- :robot_face: Use bot for git operations'
+      source use-bot-for-git
+
+      echo '--- :git: Checkout Release Branch'
       .buildkite/commands/checkout-release-branch.sh
 
+      echo '--- :ruby: Setup Ruby Tools'
       install_gems
 
       cp gradle.properties-example gradle.properties
 
+      echo '--- :shipit: Finalize Release'
       bundle exec fastlane finalize_release skip_confirm:true
+    agents:
+       queue: "tumblr-metal"
