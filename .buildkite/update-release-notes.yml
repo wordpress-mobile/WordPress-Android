@@ -6,7 +6,8 @@ steps:
   - label: "Update release notes"
     plugins: [$CI_TOOLKIT]
     command: |
-      source .buildkite/commands/configure-git-for-release-management.sh
+      source use-bot-for-git
+
       .buildkite/commands/checkout-editorial-branch.sh
 
       install_gems

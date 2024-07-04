@@ -6,7 +6,7 @@ steps:
   - label: "Code Freeze"
     plugins: [$CI_TOOLKIT]
     command: |
-      source .buildkite/commands/configure-git-for-release-management.sh
+      source use-bot-for-git
 
       install_gems
 
