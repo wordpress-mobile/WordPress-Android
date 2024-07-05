@@ -1,8 +1,10 @@
 [versions]
-androidxWebkitVersion =  '1.11.0'
+androidxComposeNavigation = '2.7.6'
+androidxWebkit =  '1.11.0'
 
 [libraries]
-androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "androidxWebkitVersion"}
+androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
+androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "androidxWebkit"}
 
 [plugins]
 

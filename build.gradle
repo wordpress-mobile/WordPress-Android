@@ -46,7 +46,6 @@ ext {
     androidxCameraVersion = '1.3.4'
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.9'
-    androidxComposeNavigationVersion = '2.7.6'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
