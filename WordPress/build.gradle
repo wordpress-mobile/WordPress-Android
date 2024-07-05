@@ -407,9 +407,9 @@ dependencies {
     implementation libs.androidx.lifecycle.common
     implementation libs.androidx.lifecycle.runtime
     implementation libs.androidx.lifecycle.runtime.ktx
-    implementation "androidx.activity:activity:$androidxActivityVersion"
-    implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
-    implementation "androidx.activity:activity-compose:$androidxActivityVersion"
+    implementation libs.androidx.activity
+    implementation libs.androidx.activity.ktx
+    implementation libs.androidx.activity.compose
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
