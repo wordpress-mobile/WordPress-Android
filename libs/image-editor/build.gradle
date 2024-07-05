@@ -46,7 +46,7 @@ repositories {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation libs.androidx.core
     implementation "androidx.activity:activity:$androidxActivityVersion"
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"

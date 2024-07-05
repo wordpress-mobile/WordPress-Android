@@ -1,6 +1,7 @@
 [versions]
 androidxArchCore = '2.2.0'
 androidxComposeNavigation = '2.7.6'
+androidxCore = '1.10.0'
 androidxWebkit =  '1.11.0'
 automatticRest = '1.0.8'
 googlePlayAppUpdate = '2.1.0'
@@ -10,6 +11,8 @@ wordPressPersistentEditText = '1.0.2'
 [libraries]
 android-appUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googlePlayAppUpdate" }
 android-appUpdateKtx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "googlePlayAppUpdate" }
+androidx-core = { group = "androidx.core", name = "core", version.ref = "androidxCore" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
 androidx-coreCommon = { group = "androidx.arch.core", name = "core-common", version.ref = "androidxArchCore" }
 androidx-coreRuntime = { group = "androidx.arch.core", name = "core-runtime", version.ref = "androidxArchCore" }
 androidx-coreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCore" }
