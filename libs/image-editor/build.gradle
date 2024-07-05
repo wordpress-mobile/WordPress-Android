@@ -50,7 +50,7 @@ dependencies {
     implementation libs.androidx.activity
     implementation libs.androidx.activity.ktx
     implementation libs.androidx.fragment
-    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
+    implementation libs.androidx.appcompat
     implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"

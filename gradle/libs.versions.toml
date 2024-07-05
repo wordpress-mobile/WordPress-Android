@@ -1,5 +1,6 @@
 [versions]
 androidxActivity = '1.8.0'
+androidxAppcompat = '1.6.1'
 androidxArchCore = '2.2.0'
 androidxComposeNavigation = '2.7.6'
 androidxCore = '1.10.0'
@@ -17,6 +18,8 @@ android-appUpdateKtx = { group = "com.google.android.play", name = "app-update-k
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidxAppcompat" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
