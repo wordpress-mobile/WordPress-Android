@@ -71,9 +71,6 @@ ext {
     uCropVersion = '2.2.9'
     zendeskVersion = '5.1.2'
 
-    // test
-    assertjVersion = '3.23.1'
-
     // android test
     androidxTestCoreVersion = '1.5.0'
     androidxTestExtJunitVersion = '1.1.5'
