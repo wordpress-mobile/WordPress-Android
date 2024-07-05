@@ -492,25 +492,15 @@ dependencies {
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
-        version {
-            strictly androidxTestEspressoVersion
-        }
+    androidTestImplementation libs.androidx.test.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
-        version {
-            strictly androidxTestEspressoVersion
-        }
+    androidTestImplementation(libs.androidx.test.espresso.contrib) {
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation("androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion") {
-        version {
-            strictly androidxTestEspressoVersion
-        }
-    }
+    androidTestImplementation(libs.androidx.test.espresso.accessibility)
     androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'

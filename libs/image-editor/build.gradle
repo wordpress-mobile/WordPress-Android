@@ -79,9 +79,5 @@ dependencies {
     })
 
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
-    androidTestImplementation("androidx.test.espresso:espresso-core:$androidxTestEspressoVersion") {
-        version {
-            strictly androidxTestEspressoVersion
-        }
-    }
+    androidTestImplementation(libs.androidx.test.espresso.core)
 }
