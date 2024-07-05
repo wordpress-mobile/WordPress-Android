@@ -399,8 +399,8 @@ dependencies {
     implementation libs.android.appUpdate
     implementation libs.android.appUpdateKtx
 
-    implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
-    implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
+    implementation libs.androidx.coreCommon
+    implementation libs.androidx.coreRuntime
     implementation "com.google.code.gson:gson:$googleGsonVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
@@ -475,7 +475,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
-    testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
+    testImplementation(libs.androidx.coreTesting, {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
