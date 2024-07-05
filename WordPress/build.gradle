@@ -545,19 +545,19 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // - Jetpack Compose - Android Studio
-    debugImplementation "androidx.compose.ui:ui-test-manifest"
-    debugImplementation "androidx.compose.ui:ui-tooling"
+    debugImplementation libs.androidx.compose.testManifest
+    debugImplementation libs.androidx.compose.tooling
     // - Jetpack Compose - Main
-    implementation "androidx.compose.runtime:runtime"
-    implementation "androidx.compose.runtime:runtime-livedata"
-    implementation "androidx.compose.foundation:foundation"
-    implementation "androidx.compose.foundation:foundation-layout"
-    implementation "androidx.compose.ui:ui"
-    implementation "androidx.compose.ui:ui-graphics"
-    implementation "androidx.compose.ui:ui-text"
-    implementation "androidx.compose.ui:ui-unit"
-    implementation "androidx.compose.ui:ui-tooling-preview"
-    implementation "androidx.compose.material:material"
+    implementation libs.androidx.compose.runtime
+    implementation libs.androidx.compose.runtime.livedata
+    implementation libs.androidx.compose.foundation
+    implementation libs.androidx.compose.foundation.layout
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.graphics
+    implementation libs.androidx.compose.ui.text
+    implementation libs.androidx.compose.ui.unit
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.material
     // - Jetpack Compose - AndroidX
     implementation libs.androidx.lifecycle.viewmodel.compose
     implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
@@ -565,7 +565,7 @@ dependencies {
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    androidTestImplementation libs.androidx.compose.ui.test
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
 
     // Cascade - Compose nested menu
