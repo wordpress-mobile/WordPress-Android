@@ -8,6 +8,7 @@ androidxFragment = '1.6.2'
 androidxLifecycle = '2.6.2'
 androidxWebkit =  '1.11.0'
 automatticRest = '1.0.8'
+glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
 wordPressPersistentEditText = '1.0.2'
@@ -54,6 +55,9 @@ androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name =
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "androidxWebkit"}
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
+glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
+glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
