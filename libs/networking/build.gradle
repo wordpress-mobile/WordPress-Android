@@ -27,12 +27,12 @@ repositories {
 }
 
 dependencies {
-    implementation (libs.automatticRest) {
+    implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    implementation libs.androidVolley
+    implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "androidx.annotation:annotation:$androidxAnnotationVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"

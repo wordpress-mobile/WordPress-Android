@@ -350,8 +350,8 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation libs.androidxWebkit
-    implementation libs.androidxNavigation
+    implementation 'androidx.webkit:webkit:1.11.0'
+    implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
     implementation (project(path:':libs:networking')) {
@@ -390,88 +390,85 @@ dependencies {
         }
     }
 
-    implementation (libs.automatticRest) {
+    implementation ("com.automattic:rest:$automatticRestVersion") {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation libs.wordPressPersistentEditText
+    implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
+    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
-    implementation libs.googlePlayInAppUpdate
-    implementation libs.googlePlayInAppKtxUpdate
-
-    implementation libs.androidxCoreCommon
-    implementation libs.androidxCoreRuntime
-    implementation libs.googleGson
-    implementation libs.androidxCore
-    implementation libs.androidxCoreKtx
-    implementation libs.lifecycleCommon
-    implementation libs.lifecycleRuntime
-    implementation libs.lifecycleRuntimeKtx
-    implementation libs.androidxActivity
-    implementation libs.androidxActivityKtx
-    implementation libs.androidxActivityCompose
-
-    implementation libs.androidxFragment
-    implementation libs.androidxFragmentKtx
-    implementation libs.androidxAppcompat
-    implementation libs.androidxAppcompatResources
-    implementation libs.androidxCardview
-    implementation libs.androidxRecyclerview
-    implementation libs.googleMaterial
-
-    implementation libs.googleFlexboxlayout
-    implementation libs.androidxPercentlayout
-    implementation libs.androidxSwipeToRefresh
-    implementation libs.androidxPreference
-    implementation libs.androidxWorkManagerRuntime
-    implementation libs.androidxWorkManagerRuntimeKtx
-    implementation libs.androidxConstraintLayout
-    implementation libs.lifecycleViewmodel
-    implementation libs.lifecycleViewmodelKtx
-    implementation libs.lifecycleLivedata
-    implementation libs.lifecycleLivedataCore
-    implementation libs.lifecycleLivedataKtx
-    implementation libs.lifecycleProcess
-    implementation libs.androidVolley
-    implementation libs.googlePlayReview
-    implementation libs.googlePlayReviewKtx
-
-    implementation libs.googlePlayServicesAuth
-    implementation libs.googleMLKitBarcodeScanningCommon
-    implementation libs.googleMLKitTextRecognition
-    implementation libs.googleMLKitBarcodeScanning
+    implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
+    implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
+    implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation "androidx.core:core-ktx:$androidxCoreVersion"
+    implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$androidxLifecycleVersion"
+    implementation "androidx.activity:activity:$androidxActivityVersion"
+    implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
+    implementation "androidx.activity:activity-compose:$androidxActivityVersion"
+    implementation "androidx.fragment:fragment:$androidxFragmentVersion"
+    implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
+    implementation "androidx.appcompat:appcompat-resources:$androidxAppcompatVersion"
+    implementation "androidx.cardview:cardview:$androidxCardviewVersion"
+    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
+    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
+    implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
+    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
+    implementation "androidx.webkit:webkit:$androidxWebkitVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
+    implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation "com.google.android.play:review:$googlePlayReviewVersion"
+    implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
+    implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
+    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
+    implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
+    implementation "com.google.mlkit:barcode-scanning:$googleMLKitBarcodeScanningVersion"
 
     // CameraX
-    implementation libs.androidxCamera
-    implementation libs.androidxCameraLifecycle
-    implementation libs.androidxCameraView
+    implementation "androidx.camera:camera-camera2:$androidxCameraVersion"
+    implementation "androidx.camera:camera-lifecycle:$androidxCameraVersion"
+    implementation "androidx.camera:camera-view:$androidxCameraVersion"
 
-    implementation libs.chrisbanesPhotoview
-    implementation libs.androidInstallReferrer
-    implementation libs.eventBus
-    implementation libs.eventBusJava
-    implementation libs.squareupRetrofit
-    implementation libs.apacheCommonsText
-    implementation libs.lottie
-    implementation libs.facebookShimmer
-    implementation (libs.ucrop) {
+    implementation "com.android.installreferrer:installreferrer:$androidInstallReferrerVersion"
+    implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
+    implementation "org.greenrobot:eventbus:$eventBusVersion"
+    implementation "org.greenrobot:eventbus-java:$eventBusVersion"
+    implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
+    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
+    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
-    implementation libs.glide
-    ksp libs.glideKsp
-    implementation libs.glideVolleyIntegration
-    implementation libs.indexosMediaForMobileDomain
-    implementation libs.indexosMediaForMobileAndroid
-    implementation libs.zendesk
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    ksp "com.github.bumptech.glide:ksp:$glideVersion"
+    implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
+    implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
+    implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
+    implementation "com.zendesk:support:$zendeskVersion"
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
-    implementation libs.kotlinxCoroutinesCore
-    implementation libs.kotlinxCoroutinesAndroid
-    implementation libs.mpAndroidChart
-    implementation libs.jsoup
-    implementation (libs.googleExoPlayer) {
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+    implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
@@ -479,30 +476,30 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
-    testImplementation(libs.androidxCoreTesting, {
+    testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
-    testImplementation libs.junit
-    testImplementation libs.mockitoKotlin
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
-    testImplementation libs.assertj
-    testImplementation libs.kotlinxCoroutinesTest
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
 
     androidTestImplementation project(path:':libs:mocks')
 
-    androidTestImplementation libs.mockitoAndroid
-    androidTestImplementation libs.mockitoKotlin
-    androidTestImplementation libs.squareupMockWebServer
-    androidTestImplementation libs.androidxTestUiAutomator
+    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         version {
             strictly androidxTestEspressoVersion
         }
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestImplementation(libs.androidxTestEspressoContrib) {
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$androidxTestEspressoVersion") {
         version {
             strictly androidxTestEspressoVersion
         }
@@ -510,26 +507,26 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation(libs.androidxTestEspressoAccessibility) {
+    androidTestImplementation("androidx.test.espresso:espresso-accessibility:$androidxTestEspressoVersion") {
         version {
             strictly androidxTestEspressoVersion
         }
     }
-    androidTestImplementation(libs.wiremock) {
+    androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation libs.wiremockHttpClient
-    androidTestImplementation libs.androidxTestCoreRunner
-    androidTestImplementation libs.androidxTestCoreRules
-    androidTestImplementation libs.androidxTestExtJunit
-    androidTestImplementation libs.screengrab,  {
+    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
+    androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
+    androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
+    androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
-    androidTestImplementation libs.androidxWorkManagerTesting
+    androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kspAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
     // Enables Java 8+ API desugaring support
@@ -540,52 +537,52 @@ dependencies {
     def firebaseBom = platform("com.google.firebase:firebase-bom:$firebaseBomVersion")
     implementation(firebaseBom)
     // Firebase - Main
-    implementation libs.firebaseMessaging
+    implementation "com.google.firebase:firebase-messaging"
     // Firebase - Deprecated
-    implementation libs.firebaseIid
+    implementation "com.google.firebase:firebase-iid:$firebaseIidVersion"
 
     // Jetpack Compose
     def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // - Jetpack Compose - Android Studio
-    debugImplementation libs.composeUiTestManifest
-    debugImplementation libs.composeUiTooling
+    debugImplementation "androidx.compose.ui:ui-test-manifest"
+    debugImplementation "androidx.compose.ui:ui-tooling"
     // - Jetpack Compose - Main
-    implementation libs.androidxComposeRuntime
-    implementation libs.androidxComposeRuntimeLivedata
-    implementation libs.androidxComposeFoundation
-    implementation libs.androidxComposeFoundationLayout
-    implementation libs.androidxComposeUi
-    implementation libs.androidxComposeUiGraphics
-    implementation libs.androidxComposeUiText
-    implementation libs.androidxComposeUiUnit
-    implementation libs.androidxComposeUiToolingPreview
-    implementation libs.androidxComposeMaterial
+    implementation "androidx.compose.runtime:runtime"
+    implementation "androidx.compose.runtime:runtime-livedata"
+    implementation "androidx.compose.foundation:foundation"
+    implementation "androidx.compose.foundation:foundation-layout"
+    implementation "androidx.compose.ui:ui"
+    implementation "androidx.compose.ui:ui-graphics"
+    implementation "androidx.compose.ui:ui-text"
+    implementation "androidx.compose.ui:ui-unit"
+    implementation "androidx.compose.ui:ui-tooling-preview"
+    implementation "androidx.compose.material:material"
     // - Jetpack Compose - AndroidX
-    implementation libs.lifecycleViewmodelCompose
-    implementation libs.androidxConstraintlayoutCompose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
+    implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
     // - Jetpack Compose - Other
-    implementation libs.coilCompose
-    implementation libs.lottieCompose
+    implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
-    androidTestImplementation libs.composeUiTestJunit4
-    implementation libs.androidxComposeMaterial3
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4"
+    implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
 
     // Cascade - Compose nested menu
-    implementation libs.cascadeCompose
+    implementation "me.saket.cascade:cascade-compose:2.3.0"
 
-    implementation libs.automatticTracks
+    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
     // - Flipper
-    debugImplementation (libs.flipper) {
+    debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }
-    debugImplementation libs.soLoader
-    debugImplementation (libs.flipperNetworkPlugin){
+    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
+    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$flipperVersion"){
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }
-    releaseImplementation libs.flipperNoop
+    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
 }
 
 configurations.all {
