@@ -12,6 +12,7 @@ dagger = '2.50'
 glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
+lottie = '6.1.0'
 wordPressPersistentEditText = '1.0.2'
 
 [libraries]
@@ -66,6 +67,8 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="gli
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" }
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
 [plugins]

@@ -449,7 +449,7 @@ dependencies {
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
-    implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation libs.lottie
     implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
@@ -563,7 +563,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
-    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+    implementation libs.lottie.compose
     // - Jetpack Compose - UI Tests
     androidTestImplementation libs.androidx.compose.ui.test
     implementation "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
