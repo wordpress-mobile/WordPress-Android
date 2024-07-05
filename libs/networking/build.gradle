@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation ("com.automattic:rest:$automatticRestVersion") {
+    implementation (libs.automattic.rest) {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
