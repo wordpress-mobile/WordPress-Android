@@ -96,9 +96,9 @@ dependencies {
 
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
 
-    implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-core:$androidxLifecycleVersion"
+    implementation libs.androidx.lifecycle.common
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.lifecycle.livedata.core
     implementation libs.androidx.core
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
