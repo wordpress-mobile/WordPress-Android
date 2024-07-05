@@ -421,8 +421,8 @@ dependencies {
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
-    implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
-    implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
+    implementation libs.androidx.workManager.runtime
+    implementation libs.androidx.workManager.runtime.ktx
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.viewmodel.ktx
@@ -525,7 +525,7 @@ dependencies {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
-    androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
+    androidTestImplementation libs.androidx.workManager.workTesting
     androidTestImplementation libs.dagger.hilt.android.testing
     kspAndroidTest libs.dagger.hilt.android.compiler
     // Enables Java 8+ API desugaring support
