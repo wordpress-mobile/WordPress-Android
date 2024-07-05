@@ -501,13 +501,13 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
     androidTestImplementation(libs.androidx.test.espresso.accessibility)
-    androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+    androidTestImplementation(libs.wiremock) {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
     }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
+    androidTestImplementation libs.wiremock.httpclient.android
     androidTestImplementation libs.androidx.test.runner
     androidTestImplementation libs.androidx.test.rules
     androidTestImplementation libs.androidx.test.ext.junit

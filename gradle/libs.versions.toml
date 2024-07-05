@@ -29,6 +29,8 @@ mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
 soLoader = '0.10.5'
 wordPressPersistentEditText = '1.0.2'
+wiremock = '2.26.3'
+wiremockHttpClient = '4.3.5.1'
 
 [libraries]
 android-appUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googlePlayAppUpdate" }
@@ -111,6 +113,8 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" 
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
+wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremock" }
+wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
 [plugins]
