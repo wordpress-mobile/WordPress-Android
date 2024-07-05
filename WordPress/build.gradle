@@ -393,7 +393,7 @@ dependencies {
     implementation (libs.automattic.rest) {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
+    implementation libs.wordPress.persistentEditText
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"

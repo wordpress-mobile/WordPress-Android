@@ -27,7 +27,6 @@ ext {
     wordPressAztecVersion = 'v2.1.3'
     wordPressFluxCVersion = 'trunk-c670e916346bdaa2379936dd8dbb6750766ca319'
     wordPressLoginVersion = '1.16.0'
-    wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
     gravatarVersion = '1.0.0'

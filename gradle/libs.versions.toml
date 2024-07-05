@@ -1,5 +1,6 @@
 [versions]
 androidxComposeNavigation = '2.7.6'
+wordPressPersistentEditText = '1.0.2'
 automatticRest = '1.0.8'
 androidxWebkit =  '1.11.0'
 
@@ -7,6 +8,7 @@ androidxWebkit =  '1.11.0'
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
 androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "androidxWebkit"}
+wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
 [plugins]
 
