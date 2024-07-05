@@ -491,7 +491,7 @@ dependencies {
     androidTestImplementation libs.mockito.android
     androidTestImplementation libs.mockito.kotlin
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
+    androidTestImplementation libs.androidx.test.ui.automator
     androidTestImplementation libs.androidx.test.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -508,9 +508,9 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
-    androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
-    androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
-    androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
+    androidTestImplementation libs.androidx.test.runner
+    androidTestImplementation libs.androidx.test.rules
+    androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
