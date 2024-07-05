@@ -25,6 +25,9 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-appcompat-resources = { group = "androidx.appcompat", name = "appcompat-resources", version.ref = "androidxAppcompat" }
+androidx-camera = { group = "androidx.camera", name = "camera-camera2", version.ref ="androidxCamera" }
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref ="androidxCamera" }
+androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref ="androidxCamera" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
@@ -69,16 +72,12 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="gli
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
-
-androidx-camera = { group = "androidx.camera", name = "camera-camera2", version.ref ="androidxCamera" }
-androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref ="androidxCamera" }
-androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref ="androidxCamera" }
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
