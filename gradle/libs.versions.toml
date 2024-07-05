@@ -19,6 +19,7 @@ googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
 kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
+soLoader = '0.10.5'
 wordPressPersistentEditText = '1.0.2'
 
 [libraries]
@@ -82,6 +83,7 @@ dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", ve
 facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipper" }
 facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipper" }
 facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref ="flipper" }
+facebook-soLoader = { group = "com.facebook.soloader", name = "soloader", version.ref ="soLoader" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }

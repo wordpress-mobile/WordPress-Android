@@ -567,7 +567,7 @@ dependencies {
     debugImplementation (libs.facebook.flipper) {
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }
-    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
+    debugImplementation libs.facebook.soLoader
     debugImplementation (libs.facebook.flipper.network.plugin){
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }

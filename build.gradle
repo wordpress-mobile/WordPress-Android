@@ -31,10 +31,6 @@ ext {
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
     gravatarVersion = '1.0.0'
 
-    // debug
-    flipperVersion = '0.247.0'
-    soLoaderVersion = '0.10.5'
-
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
