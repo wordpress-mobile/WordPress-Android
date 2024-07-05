@@ -18,6 +18,7 @@ flipper = '0.247.0'
 glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
+junit = '4.13.2'
 kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
 mockitoAndroid = '4.5.1'
@@ -93,6 +94,7 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="gli
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+junit = { group = "junit", name = "junit", version.ref ="junit" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }

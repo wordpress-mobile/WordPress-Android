@@ -16,7 +16,7 @@ dependencies {
     def kctVersion = "1.5.0"
     testImplementation "com.github.tschuchortdev:kotlin-compile-testing:$kctVersion"
     testImplementation "com.github.tschuchortdev:kotlin-compile-testing-ksp:$kctVersion"
-    testImplementation "junit:junit:$junitVersion"
+    testImplementation libs.junit
     testImplementation "org.assertj:assertj-core:$assertjVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
 }
