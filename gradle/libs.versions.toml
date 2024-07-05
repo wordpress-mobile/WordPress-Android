@@ -8,6 +8,7 @@ androidxFragment = '1.6.2'
 androidxLifecycle = '2.6.2'
 androidxWebkit =  '1.11.0'
 automatticRest = '1.0.8'
+dagger = '2.50'
 glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
@@ -55,6 +56,12 @@ androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name =
 androidx-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxComposeNavigation" }
 androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "androidxWebkit"}
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
+dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
+dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
+dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }
+dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
+dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
+dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
@@ -62,4 +69,4 @@ google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gs
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
 [plugins]
-
+dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
