@@ -396,8 +396,8 @@ dependencies {
     implementation libs.wordPress.persistentEditText
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
-    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
-    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
+    implementation libs.android.appUpdate
+    implementation libs.android.appUpdateKtx
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
