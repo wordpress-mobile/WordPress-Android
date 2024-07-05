@@ -463,8 +463,8 @@ dependencies {
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
     implementation "com.zendesk:support:$zendeskVersion"
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
     implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
     implementation "org.jsoup:jsoup:$jsoupVersion"
     implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
@@ -484,7 +484,7 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesVersion"
+    testImplementation libs.kotlinx.coroutines.test
 
     androidTestImplementation project(path:':libs:mocks')
 

@@ -12,6 +12,7 @@ dagger = '2.50'
 glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
+kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
 wordPressPersistentEditText = '1.0.2'
 
@@ -70,6 +71,10 @@ google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gs
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
+
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
 
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
