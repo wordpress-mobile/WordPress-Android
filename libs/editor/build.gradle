@@ -80,8 +80,8 @@ dependencies {
         }
     }
 
-    implementation "com.facebook.react:hermes-android:$facebookReactVersion"
-    implementation "com.facebook.react:react-android:$facebookReactVersion"
+    implementation libs.facebook.react.hermesAndroid
+    implementation libs.facebook.react.android
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
