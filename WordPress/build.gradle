@@ -401,7 +401,7 @@ dependencies {
 
     implementation libs.androidx.coreCommon
     implementation libs.androidx.coreRuntime
-    implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation libs.google.gson
     implementation "androidx.core:core:$androidxCoreVersion"
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
