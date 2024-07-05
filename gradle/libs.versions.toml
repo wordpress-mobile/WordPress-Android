@@ -13,6 +13,7 @@ androidxWebkit =  '1.11.0'
 androidxWorkManager = "2.9.0"
 automatticRest = '1.0.8'
 dagger = '2.50'
+flipper = '0.247.0'
 glide = '4.16.0'
 googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
@@ -78,6 +79,9 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
+facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipper" }
+facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipper" }
+facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref ="flipper" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
