@@ -20,6 +20,8 @@ googlePlayAppUpdate = '2.1.0'
 gson = '2.10.1'
 kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
+mockitoAndroid = '4.5.1'
+mockitoKotlin = '4.1.0'
 soLoader = '0.10.5'
 wordPressPersistentEditText = '1.0.2'
 
@@ -96,6 +98,8 @@ kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-cor
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
+mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 
 [plugins]
