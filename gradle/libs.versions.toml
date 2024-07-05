@@ -3,6 +3,7 @@ androidxActivity = '1.8.0'
 androidxArchCore = '2.2.0'
 androidxComposeNavigation = '2.7.6'
 androidxCore = '1.10.0'
+androidxFragment = '1.6.2'
 androidxLifecycle = '2.6.2'
 androidxWebkit =  '1.11.0'
 automatticRest = '1.0.8'
@@ -21,6 +22,8 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-coreCommon = { group = "androidx.arch.core", name = "core-common", version.ref = "androidxArchCore" }
 androidx-coreRuntime = { group = "androidx.arch.core", name = "core-runtime", version.ref = "androidxArchCore" }
 androidx-coreTesting = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCore" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "androidxFragment"}
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragment"}
 androidx-lifecycle-common = { group = "androidx.lifecycle", name = "lifecycle-common", version.ref = "androidxLifecycle" }
 androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "androidxLifecycle" }
 androidx-lifecycle-livedata-core = { group = "androidx.lifecycle", name = "lifecycle-livedata-core", version.ref = "androidxLifecycle" }
@@ -37,7 +40,6 @@ androidx-webkit = {group = "androidx.webkit", name = "webkit", version.ref = "an
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
-
 
 [plugins]
 
