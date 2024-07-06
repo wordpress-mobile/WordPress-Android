@@ -423,7 +423,7 @@ dependencies {
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation libs.androidx.workManager.runtime
     implementation libs.androidx.workManager.runtime.ktx
-    implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
+    implementation libs.androidx.constraintLayout
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.viewmodel.ktx
     implementation libs.androidx.lifecycle.livedata.core
