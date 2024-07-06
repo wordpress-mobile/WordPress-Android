@@ -25,6 +25,7 @@ apacheCommonsText = '1.10.0'
 assertj = '3.23.1'
 automatticRest = '1.0.8'
 chrisbanesPhotoview = '2.3.0'
+coilCompose = '2.4.0'
 dagger = '2.50'
 eventBus = '3.3.1'
 facebookReact = '0.73.3'
@@ -124,6 +125,7 @@ apache-commons-text = { group = "org.apache.commons", name = "commons-text", ver
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref ="assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
 chrisbanes-photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref ="chrisbanesPhotoview" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref ="coilCompose" }
 dagger-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger" }
 dagger-android-support = { group = "com.google.dagger", name = "dagger-android-support", version.ref = "dagger" }
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger" }

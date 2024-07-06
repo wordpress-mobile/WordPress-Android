@@ -552,7 +552,7 @@ dependencies {
     implementation libs.androidx.lifecycle.viewmodel.compose
     implementation libs.androidx.constraintLayout.compose
     // - Jetpack Compose - Other
-    implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation libs.coil.compose
     implementation libs.lottie.compose
     // - Jetpack Compose - UI Tests
     androidTestImplementation libs.androidx.compose.ui.test
