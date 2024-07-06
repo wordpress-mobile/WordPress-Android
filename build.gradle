@@ -52,10 +52,6 @@ ext {
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
     googleMaterialVersion = '1.9.0'
-
-    googleMLKitBarcodeScanningVersion = '17.2.0'
-    googleMLKitBarcodeScanningCommonVersion = '17.0.0'
-    googleMLKitTextRecognitionVersion = '16.0.0'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.16.2'

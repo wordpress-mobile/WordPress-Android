@@ -434,9 +434,9 @@ dependencies {
     implementation libs.google.play.review
     implementation libs.google.play.review.ktx
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
-    implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
-    implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
-    implementation "com.google.mlkit:barcode-scanning:$googleMLKitBarcodeScanningVersion"
+    implementation libs.google.mlkit.barcode.scanning.common
+    implementation libs.google.mlkit.text.recognition
+    implementation libs.google.mlkit.barcode.scanning
 
     // CameraX
     implementation libs.androidx.camera
