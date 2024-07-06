@@ -48,6 +48,7 @@ mockitoKotlin = '4.1.0'
 screengrab = '2.1.1'
 soLoader = '0.10.5'
 squareupMockWebServer = '4.12.0'
+squareupRetrofit = '2.9.0'
 volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
@@ -157,6 +158,7 @@ lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", versio
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
 squareup-okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref ="squareupMockWebServer" }
+squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref ="squareupRetrofit" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremock" }
 wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }

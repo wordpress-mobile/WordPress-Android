@@ -447,7 +447,7 @@ dependencies {
     implementation libs.chrisbanes.photoview
     implementation libs.greenrobot.eventBus
     implementation libs.greenrobot.eventBus.java
-    implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
+    implementation libs.squareup.retrofit2
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation libs.lottie
     implementation libs.facebook.shimmer
