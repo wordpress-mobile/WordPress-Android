@@ -17,6 +17,7 @@ androidxWorkManager = "2.9.0"
 assertj = '3.23.1'
 automatticRest = '1.0.8'
 dagger = '2.50'
+eventBus = '3.3.1'
 facebookReact = '0.73.3'
 flipper = '0.247.0'
 glide = '4.16.0'
@@ -109,6 +110,8 @@ glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 google-play-review = { group = "com.google.android.play", name = "review", version.ref ="googlePlayReview" }
 google-play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref ="googlePlayReview" }
+greenrobot-eventBus = { group = "org.greenrobot", name = "eventbus", version.ref ="eventBus" }
+greenrobot-eventBus-java = { group = "org.greenrobot", name = "eventbus-java", version.ref ="eventBus" }
 junit = { group = "junit", name = "junit", version.ref ="junit" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
