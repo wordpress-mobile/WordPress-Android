@@ -433,7 +433,7 @@ dependencies {
     implementation libs.volley
     implementation libs.google.play.review
     implementation libs.google.play.review.ktx
-    implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
+    implementation libs.google.play.services.auth
     implementation libs.google.mlkit.barcode.scanning.common
     implementation libs.google.mlkit.text.recognition
     implementation libs.google.mlkit.barcode.scanning
