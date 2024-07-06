@@ -47,6 +47,7 @@ volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
 wordPressPersistentEditText = '1.0.2'
+zendesk = '5.1.2'
 
 [libraries]
 android-appUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googlePlayAppUpdate" }
@@ -150,6 +151,7 @@ volley = { group = "com.android.volley", name = "volley", version.ref = "volley"
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremock" }
 wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
+zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }

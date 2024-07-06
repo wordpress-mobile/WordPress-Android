@@ -52,7 +52,6 @@ ext {
     squareupKotlinPoetVersion = '1.16.0'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.9'
-    zendeskVersion = '5.1.2'
 
     // android test
     screengrabVersion = '2.1.1'
