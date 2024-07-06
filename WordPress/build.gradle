@@ -420,7 +420,7 @@ dependencies {
     implementation libs.google.flexbox
     implementation libs.androidx.percentLayout
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
-    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation libs.androidx.preference
     implementation libs.androidx.workManager.runtime
     implementation libs.androidx.workManager.runtime.ktx
     implementation libs.androidx.constraintLayout

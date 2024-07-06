@@ -102,7 +102,7 @@ dependencies {
     implementation libs.androidx.core
     implementation libs.androidx.fragment
     implementation libs.androidx.appcompat
-    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation libs.androidx.preference
     implementation libs.google.material
     implementation libs.volley
     implementation libs.google.gson
