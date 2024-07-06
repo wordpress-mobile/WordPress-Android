@@ -431,8 +431,8 @@ dependencies {
     implementation libs.androidx.lifecycle.livedata.ktx
     implementation libs.androidx.lifecycle.process
     implementation "com.android.volley:volley:$androidVolleyVersion"
-    implementation "com.google.android.play:review:$googlePlayReviewVersion"
-    implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
+    implementation libs.google.play.review
+    implementation libs.google.play.review.ktx
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
     implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
