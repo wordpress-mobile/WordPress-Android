@@ -53,9 +53,6 @@ ext {
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.9'
 
-    // android test
-    screengrabVersion = '2.1.1'
-
     // other
     androidDesugarVersion = '2.0.4'
     wordPressLintVersion = '2.1.0'

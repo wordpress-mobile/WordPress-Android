@@ -42,6 +42,7 @@ kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
+screengrab = '2.1.1'
 soLoader = '0.10.5'
 squareupMockWebServer = '4.12.0'
 volley = '1.2.1'
@@ -126,6 +127,7 @@ facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop",
 facebook-react-android = { group = "com.facebook.react", name = "react-android", version.ref ="facebookReact" }
 facebook-react-hermesAndroid = { group = "com.facebook.react", name = "hermes-android", version.ref ="facebookReact" }
 facebook-soLoader = { group = "com.facebook.soloader", name = "soloader", version.ref ="soLoader" }
+fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref ="screengrab" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
