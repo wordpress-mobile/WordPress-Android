@@ -56,6 +56,7 @@ junit = '4.13.2'
 kotlinxCoroutines = '1.7.3'
 kover = "0.7.5"
 lottie = '6.1.0'
+measureBuilds = '3.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
 navigation = "2.7.7"
@@ -207,5 +208,6 @@ dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
