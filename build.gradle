@@ -41,7 +41,6 @@ ext {
     androidxPreferenceVersion = '1.2.0'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxComposeMaterial3Version = '1.1.1'
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'

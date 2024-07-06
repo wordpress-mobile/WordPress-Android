@@ -4,6 +4,7 @@ androidxAppcompat = '1.6.1'
 androidxArchCore = '2.2.0'
 androidxCamera = '1.3.4'
 androidxCardview = '1.0.0'
+androidxComposeMaterial3 = '1.1.1'
 androidxComposeNavigation = '2.7.6'
 androidxConstraintlayout = '2.1.4'
 androidxConstraintlayoutCompose = '1.0.1'
@@ -58,6 +59,7 @@ androidx-cardView = { group = "androidx.cardview", name = "cardview", version.re
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
 androidx-compose-material = { group = "androidx.compose.material", name = "material" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref ="androidxComposeMaterial3" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata" }
 androidx-compose-testManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
