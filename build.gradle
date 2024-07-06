@@ -39,7 +39,6 @@ ext {
     googleAutoServiceVersion = '1.0.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     philjayMpAndroidChartVersion = 'v3.1.0'
-    squareupKotlinPoetVersion = '1.16.0'
     uCropVersion = '2.2.9'
 
     // other

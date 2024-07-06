@@ -9,8 +9,8 @@ targetCompatibility = JavaVersion.VERSION_1_8
 dependencies {
     implementation project(":libs:annotations")
 
-    implementation "com.squareup:kotlinpoet:$squareupKotlinPoetVersion"
-    implementation "com.squareup:kotlinpoet-ksp:$squareupKotlinPoetVersion"
+    implementation libs.squareup.kotlinpoet
+    implementation libs.squareup.kotlinpoet.ksp
     implementation "com.google.devtools.ksp:symbol-processing-api:$gradle.ext.kspVersion"
 
     def kctVersion = "1.5.0"

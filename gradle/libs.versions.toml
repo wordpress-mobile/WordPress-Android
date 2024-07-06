@@ -55,6 +55,7 @@ mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
 screengrab = '2.1.1'
 soLoader = '0.10.5'
+squareupKotlinPoet = '1.16.0'
 squareupMockWebServer = '4.12.0'
 squareupRetrofit = '2.9.0'
 volley = '1.2.1'
@@ -174,6 +175,8 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" 
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
+squareup-kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref ="squareupKotlinPoet" }
+squareup-kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref ="squareupKotlinPoet" }
 squareup-okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref ="squareupMockWebServer" }
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref ="squareupRetrofit" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
