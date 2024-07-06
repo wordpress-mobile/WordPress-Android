@@ -490,7 +490,7 @@ dependencies {
 
     androidTestImplementation libs.mockito.android
     androidTestImplementation libs.mockito.kotlin
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
+    androidTestImplementation libs.squareup.okhttp.mockWebServer
     androidTestImplementation libs.androidx.test.ui.automator
     androidTestImplementation libs.androidx.test.espresso.core, {
         exclude group: 'com.android.support', module: 'support-annotations'
