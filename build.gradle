@@ -40,7 +40,6 @@ ext {
     androidxViewpager2Version = '1.0.0'
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'
-    chrisbanesPhotoviewVersion = '2.3.0'
     firebaseBomVersion = '32.1.0'
     firebaseIidVersion = '21.1.0'
     googleAutoServiceVersion = '1.0.1'
