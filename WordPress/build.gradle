@@ -415,7 +415,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.appcompat.resources
     implementation libs.androidx.cardView
-    implementation "androidx.recyclerview:recyclerview:$androidxRecyclerviewVersion"
+    implementation libs.androidx.recyclerView
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
