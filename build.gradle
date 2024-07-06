@@ -36,7 +36,6 @@ ext {
     androidxAnnotationVersion = '1.6.0'
     androidxComposeCompilerVersion = '1.5.9'
     androidxGridlayoutVersion = '1.0.0'
-    androidxViewpager2Version = '1.0.0'
     googleAutoServiceVersion = '1.0.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     philjayMpAndroidChartVersion = 'v3.1.0'

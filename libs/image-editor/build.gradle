@@ -53,7 +53,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.recyclerView
     implementation libs.androidx.constraintLayout
-    implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
+    implementation libs.androidx.viewPager2
     implementation libs.google.material
     implementation "androidx.navigation:navigation-fragment:$gradle.ext.navigationVersion"
     implementation "androidx.navigation:navigation-ui:$gradle.ext.navigationVersion"
