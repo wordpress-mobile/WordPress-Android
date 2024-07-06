@@ -47,7 +47,6 @@ ext {
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
-    jsoupVersion = '1.16.2'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.16.0'
     squareupRetrofitVersion = '2.9.0'

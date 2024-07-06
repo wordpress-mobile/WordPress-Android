@@ -466,7 +466,7 @@ dependencies {
     implementation libs.kotlinx.coroutines.core
     implementation libs.kotlinx.coroutines.android
     implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
-    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation libs.jsoup
     implementation ("com.google.android.exoplayer:exoplayer:$googleExoPlayerVersion") {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
