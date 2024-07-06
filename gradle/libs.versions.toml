@@ -53,6 +53,7 @@ kotlinxCoroutines = '1.7.3'
 lottie = '6.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
+philjayMpAndroidChart = 'v3.1.0'
 screengrab = '2.1.1'
 soLoader = '0.10.5'
 squareupKotlinPoet = '1.16.0'
@@ -175,6 +176,7 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" 
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
+philJay-mpAndroidChart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref ="philjayMpAndroidChart" }
 squareup-kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref ="squareupKotlinPoet" }
 squareup-kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref ="squareupKotlinPoet" }
 squareup-okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref ="squareupMockWebServer" }
