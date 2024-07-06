@@ -31,6 +31,7 @@ chrisbanesPhotoview = '2.3.0'
 coilCompose = '2.4.0'
 composeBom = '2023.10.00'
 dagger = '2.50'
+dependencyAnalysis = "1.28.0"
 eventBus = '3.3.1'
 exoPlayer = '2.13.3'
 facebookReact = '0.73.3'
@@ -200,5 +201,6 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }

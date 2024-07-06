@@ -5,7 +5,7 @@ plugins {
     id "io.gitlab.arturbosch.detekt"
     id 'com.automattic.android.measure-builds'
     id "org.jetbrains.kotlinx.kover"
-    id "com.autonomousapps.dependency-analysis"
+    alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.navigation.safeargs).apply(false)
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
