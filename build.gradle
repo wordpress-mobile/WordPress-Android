@@ -34,7 +34,6 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidxAnnotationVersion = '1.6.0'
-    androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.9'
     androidxGridlayoutVersion = '1.0.0'
     androidxViewpager2Version = '1.0.0'

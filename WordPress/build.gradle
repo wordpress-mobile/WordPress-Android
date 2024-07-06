@@ -531,7 +531,7 @@ dependencies {
     implementation libs.firebase.iid
 
     // Jetpack Compose
-    def composeBom = platform("androidx.compose:compose-bom:$androidxComposeBomVersion")
+    def composeBom = platform(libs.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // - Jetpack Compose - Android Studio
