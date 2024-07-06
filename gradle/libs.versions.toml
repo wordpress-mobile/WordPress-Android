@@ -30,6 +30,7 @@ coilCompose = '2.4.0'
 composeBom = '2023.10.00'
 dagger = '2.50'
 eventBus = '3.3.1'
+exoPlayer = '2.13.3'
 facebookReact = '0.73.3'
 facebookShimmer = '0.5.0'
 firebaseBom = '32.1.0'
@@ -150,6 +151,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
+google-exoPlayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref ="exoPlayer" }
 google-flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "googleFlexbox" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
