@@ -550,7 +550,7 @@ dependencies {
     implementation libs.androidx.compose.material
     // - Jetpack Compose - AndroidX
     implementation libs.androidx.lifecycle.viewmodel.compose
-    implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
+    implementation libs.androidx.constraintLayout.compose
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
     implementation libs.lottie.compose
