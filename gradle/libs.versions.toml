@@ -69,6 +69,7 @@ squareupKotlinPoet = '1.16.0'
 squareupMockWebServer = '4.12.0'
 squareupRetrofit = '2.9.0'
 uCrop = '2.2.9'
+violationComments = '1.70.0'
 volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
@@ -214,3 +215,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
+violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violationComments" }

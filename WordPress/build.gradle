@@ -8,7 +8,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"
     alias(libs.plugins.sentry)
-    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
+    alias(libs.plugins.violation.comments)
     id "com.google.gms.google-services"
     alias(libs.plugins.dagger)
     alias(libs.plugins.kover)

@@ -2,7 +2,6 @@ pluginManagement {
     gradle.ext.kotlinVersion = '1.9.22'
     gradle.ext.agpVersion = '8.1.0'
     gradle.ext.googleServicesVersion = '4.3.15'
-    gradle.ext.violationCommentsVersion = '1.70.0'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -13,7 +12,6 @@ pluginManagement {
         id "com.android.application" version gradle.ext.agpVersion
         id "com.android.library" version gradle.ext.agpVersion
         id 'com.google.gms.google-services' version gradle.ext.googleServicesVersion
-        id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" version gradle.ext.violationCommentsVersion
     }
     repositories {
         maven {
