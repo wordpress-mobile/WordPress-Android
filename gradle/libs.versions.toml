@@ -32,6 +32,7 @@ coilCompose = '2.4.0'
 composeBom = '2023.10.00'
 dagger = '2.50'
 dependencyAnalysis = "1.28.0"
+detekt = "1.23.0"
 eventBus = '3.3.1'
 exoPlayer = '2.13.3'
 facebookReact = '0.73.3'
@@ -148,6 +149,7 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
+detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipper" }
 facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipper" }
 facebook-flipper-noop = { group = "com.facebook.flipper", name = "flipper-noop", version.ref ="flipper" }
@@ -203,6 +205,7 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }

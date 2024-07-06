@@ -2,7 +2,7 @@ import com.automattic.android.measure.reporters.InternalA8cCiReporter
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id "io.gitlab.arturbosch.detekt"
+    alias(libs.plugins.detekt)
     id 'com.automattic.android.measure-builds'
     alias(libs.plugins.kover)
     alias(libs.plugins.dependency.analysis)
@@ -91,7 +91,6 @@ allprojects {
     }
 
     detekt {
-        toolVersion = gradle.ext.detektVersion
         baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
@@ -181,7 +180,7 @@ tasks.register("configureApply") {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$gradle.ext.detektVersion"
+    detektPlugins libs.detekt.formatting
 }
 
 apply from: './config/gradle/code_coverage.gradle'
