@@ -451,7 +451,7 @@ dependencies {
     implementation libs.apache.commons.text
     implementation libs.lottie
     implementation libs.facebook.shimmer
-    implementation ("com.github.yalantis:ucrop:$uCropVersion") {
+    implementation (libs.ucrop) {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
         exclude group: 'androidx.appcompat', module: 'appcompat'

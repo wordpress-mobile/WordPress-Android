@@ -61,6 +61,7 @@ soLoader = '0.10.5'
 squareupKotlinPoet = '1.16.0'
 squareupMockWebServer = '4.12.0'
 squareupRetrofit = '2.9.0'
+uCrop = '2.2.9'
 volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
@@ -186,6 +187,7 @@ squareup-kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref
 squareup-kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref ="squareupKotlinPoet" }
 squareup-okhttp-mockWebServer = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref ="squareupMockWebServer" }
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref ="squareupRetrofit" }
+ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "uCrop" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremock" }
 wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }
