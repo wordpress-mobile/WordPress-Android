@@ -57,6 +57,7 @@ mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
 philjayMpAndroidChart = 'v3.1.0'
 screengrab = '2.1.1'
+sentry = "4.3.1"
 soLoader = '0.10.5'
 squareupKotlinPoet = '1.16.0'
 squareupMockWebServer = '4.12.0'
@@ -196,3 +197,4 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
