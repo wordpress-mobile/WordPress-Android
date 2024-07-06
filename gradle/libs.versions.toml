@@ -48,6 +48,7 @@ googlePlayAppUpdate = '2.1.0'
 googlePlayReview = '2.0.1'
 googlePlayServicesAuth = '20.4.1'
 gson = '2.10.1'
+indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
 junit = '4.13.2'
 kotlinxCoroutines = '1.7.3'
@@ -168,6 +169,8 @@ google-play-review-ktx = { group = "com.google.android.play", name = "review-ktx
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref ="googlePlayServicesAuth" }
 greenrobot-eventBus = { group = "org.greenrobot", name = "eventbus", version.ref ="eventBus" }
 greenrobot-eventBus-java = { group = "org.greenrobot", name = "eventbus-java", version.ref ="eventBus" }
+indexos-media-for-mobile-android = { group = "com.github.indexos.media-for-mobile", name = "android", version.ref ="indexosMediaForMobile" }
+indexos-media-for-mobile-domain = { group = "com.github.indexos.media-for-mobile", name = "domain", version.ref ="indexosMediaForMobile" }
 installReferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref ="androidInstallReferrer" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref ="jsoup" }
 junit = { group = "junit", name = "junit", version.ref ="junit" }

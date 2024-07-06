@@ -459,8 +459,8 @@ dependencies {
     implementation libs.glide
     ksp libs.glide.ksp
     implementation libs.glide.volley.integration
-    implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
-    implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
+    implementation libs.indexos.media.for.mobile.domain
+    implementation libs.indexos.media.for.mobile.android
     implementation libs.zendesk
     implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
     implementation libs.kotlinx.coroutines.core
