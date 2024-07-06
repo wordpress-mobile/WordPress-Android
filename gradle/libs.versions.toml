@@ -29,6 +29,8 @@ dagger = '2.50'
 eventBus = '3.3.1'
 facebookReact = '0.73.3'
 facebookShimmer = '0.5.0'
+firebaseBom = '32.1.0'
+firebaseIid = '21.1.0'
 flipper = '0.247.0'
 glide = '4.16.0'
 googleFlexbox = '3.0.0'
@@ -136,6 +138,9 @@ facebook-react-hermesAndroid = { group = "com.facebook.react", name = "hermes-an
 facebook-shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref ="facebookShimmer" }
 facebook-soLoader = { group = "com.facebook.soloader", name = "soloader", version.ref ="soLoader" }
 fastlane-screengrab = { group = "tools.fastlane", name = "screengrab", version.ref ="screengrab" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom"}
+firebase-iid = { group = "com.google.firebase", name = "firebase-iid", version.ref ="firebaseIid" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="glide" }
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
