@@ -448,7 +448,7 @@ dependencies {
     implementation libs.greenrobot.eventBus
     implementation libs.greenrobot.eventBus.java
     implementation libs.squareup.retrofit2
-    implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
+    implementation libs.apache.commons.text
     implementation libs.lottie
     implementation libs.facebook.shimmer
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {

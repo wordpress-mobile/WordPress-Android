@@ -38,7 +38,6 @@ ext {
     androidxComposeCompilerVersion = '1.5.9'
     androidxGridlayoutVersion = '1.0.0'
     androidxViewpager2Version = '1.0.0'
-    apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'
     firebaseBomVersion = '32.1.0'
     firebaseIidVersion = '21.1.0'
