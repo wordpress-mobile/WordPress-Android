@@ -53,6 +53,7 @@ indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
 junit = '4.13.2'
 kotlinxCoroutines = '1.7.3'
+kover = "0.7.5"
 lottie = '6.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
@@ -202,5 +203,6 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 [plugins]
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }

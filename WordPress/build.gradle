@@ -11,7 +11,7 @@ plugins {
     id "se.bjurr.violations.violation-comments-to-github-gradle-plugin"
     id "com.google.gms.google-services"
     alias(libs.plugins.dagger)
-    id "org.jetbrains.kotlinx.kover"
+    alias(libs.plugins.kover)
     id "com.google.devtools.ksp"
 }
 
