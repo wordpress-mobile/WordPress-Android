@@ -55,6 +55,7 @@ jsoup = '1.16.2'
 junit = '4.13.2'
 kotlinxCoroutines = '1.7.3'
 kover = "0.7.5"
+ksp = "1.9.22-1.0.17"
 lottie = '6.1.0'
 measureBuilds = '3.1.0'
 mockitoAndroid = '4.5.1'
@@ -185,6 +186,7 @@ junit = { group = "junit", name = "junit", version.ref ="junit" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
+ksp-sympol-processing-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" }
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
@@ -208,6 +210,7 @@ dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }

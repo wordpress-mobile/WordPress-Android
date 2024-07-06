@@ -11,7 +11,7 @@ dependencies {
 
     implementation libs.squareup.kotlinpoet
     implementation libs.squareup.kotlinpoet.ksp
-    implementation "com.google.devtools.ksp:symbol-processing-api:$gradle.ext.kspVersion"
+    implementation libs.ksp.sympol.processing.api
 
     def kctVersion = "1.5.0"
     testImplementation "com.github.tschuchortdev:kotlin-compile-testing:$kctVersion"

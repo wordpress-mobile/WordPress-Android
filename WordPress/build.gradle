@@ -12,7 +12,7 @@ plugins {
     id "com.google.gms.google-services"
     alias(libs.plugins.dagger)
     alias(libs.plugins.kover)
-    id "com.google.devtools.ksp"
+    alias(libs.plugins.ksp)
 }
 
 sentry {
