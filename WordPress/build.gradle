@@ -9,7 +9,7 @@ plugins {
     id "org.jetbrains.kotlin.plugin.allopen"
     alias(libs.plugins.sentry)
     alias(libs.plugins.violation.comments)
-    id "com.google.gms.google-services"
+    alias(libs.plugins.google.services)
     alias(libs.plugins.dagger)
     alias(libs.plugins.kover)
     alias(libs.plugins.ksp)

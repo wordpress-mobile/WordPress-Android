@@ -49,6 +49,7 @@ googleMLKitTextRecognition = '16.0.0'
 googlePlayAppUpdate = '2.1.0'
 googlePlayReview = '2.0.1'
 googlePlayServicesAuth = '20.4.1'
+googleServices = '4.3.15'
 gson = '2.10.1'
 indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
@@ -210,6 +211,7 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
