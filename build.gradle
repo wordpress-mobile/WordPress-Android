@@ -37,7 +37,6 @@ ext {
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.9'
     androidxGridlayoutVersion = '1.0.0'
-    androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
     apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'

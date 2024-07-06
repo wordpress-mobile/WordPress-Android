@@ -14,6 +14,7 @@ androidxLifecycle = '2.6.2'
 androidxPercentLayout = '1.0.0'
 androidxPreference = '1.2.0'
 androidxRecyclerview = '1.3.0'
+androidxSwipeRefreshLayout = '1.1.0'
 androidxTest = '1.5.0'
 androidxTestEspresso = '3.4.0'
 androidxTestExtJunit = '1.1.5'
@@ -97,6 +98,7 @@ androidx-navigation = { group = "androidx.navigation", name = "navigation-compos
 androidx-percentLayout = { group = "androidx.percentlayout", name = "percentlayout", version.ref = "androidxPercentLayout" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerview" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "androidxSwipeRefreshLayout" }
 androidx-test-espresso-accessibility = { group = "androidx.test.espresso", name = "espresso-accessibility", version.ref ="androidxTestEspresso" }
 androidx-test-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref ="androidxTestEspresso" }
 androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref ="androidxTestEspresso" }
