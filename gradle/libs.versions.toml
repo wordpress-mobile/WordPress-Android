@@ -24,6 +24,7 @@ eventBus = '3.3.1'
 facebookReact = '0.73.3'
 flipper = '0.247.0'
 glide = '4.16.0'
+googleMaterial = '1.9.0'
 googleMLKitBarcodeScanning = '17.2.0'
 googleMLKitBarcodeScanningCommon = '17.0.0'
 googleMLKitTextRecognition = '16.0.0'
@@ -118,6 +119,7 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref ="gli
 glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="glide" }
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 google-mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref ="googleMLKitBarcodeScanning" }
 google-mlkit-barcode-scanning-common = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref ="googleMLKitBarcodeScanningCommon" }
 google-mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref ="googleMLKitTextRecognition" }

@@ -54,7 +54,7 @@ dependencies {
     implementation libs.androidx.recyclerView
     implementation libs.androidx.constraintLayout
     implementation "androidx.viewpager2:viewpager2:$androidxViewpager2Version"
-    implementation "com.google.android.material:material:$googleMaterialVersion"
+    implementation libs.google.material
     implementation "androidx.navigation:navigation-fragment:$gradle.ext.navigationVersion"
     implementation "androidx.navigation:navigation-ui:$gradle.ext.navigationVersion"
     implementation libs.androidx.lifecycle.common
