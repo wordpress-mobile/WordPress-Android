@@ -450,7 +450,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation libs.lottie
-    implementation "com.facebook.shimmer:shimmer:$facebookShimmerVersion"
+    implementation libs.facebook.shimmer
     implementation ("com.github.yalantis:ucrop:$uCropVersion") {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.constraintlayout', module: 'constraintlayout'
