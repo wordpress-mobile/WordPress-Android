@@ -104,7 +104,7 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "com.google.android.material:material:$googleMaterialVersion"
-    implementation "com.android.volley:volley:$androidVolleyVersion"
+    implementation libs.volley
     implementation libs.google.gson
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
