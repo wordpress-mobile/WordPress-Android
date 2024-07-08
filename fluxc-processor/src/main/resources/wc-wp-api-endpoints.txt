@@ -125,4 +125,5 @@
 /shipping_methods/<id>#String
 
 /gla/ads/connection
+/gla/ads/campaigns
 /gla/ads/reports/programs
