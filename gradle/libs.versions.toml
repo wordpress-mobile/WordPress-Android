@@ -55,6 +55,7 @@ gson = '2.10.1'
 indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
 junit = '4.13.2'
+kotlin = '1.9.22'
 kotlinxCoroutines = '1.7.3'
 kover = "0.7.5"
 ksp = "1.9.22-1.0.17"
@@ -186,6 +187,8 @@ indexos-media-for-mobile-domain = { group = "com.github.indexos.media-for-mobile
 installReferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref ="androidInstallReferrer" }
 jsoup = { group = "org.jsoup", name = "jsoup", version.ref ="jsoup" }
 junit = { group = "junit", name = "junit", version.ref ="junit" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref ="kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref ="kotlinxCoroutines" }
@@ -215,6 +218,10 @@ dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
