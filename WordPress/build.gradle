@@ -3,7 +3,7 @@ import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitH
 import se.bjurr.violations.lib.model.SEVERITY
 
 plugins {
-    id "com.android.application"
+    alias(libs.plugins.android.application)
     id "org.jetbrains.kotlin.android"
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"

@@ -1,6 +1,5 @@
 pluginManagement {
     gradle.ext.kotlinVersion = '1.9.22'
-    gradle.ext.agpVersion = '8.1.0'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -8,8 +7,6 @@ pluginManagement {
         id "org.jetbrains.kotlin.plugin.serialization" version gradle.ext.kotlinVersion
         id "org.jetbrains.kotlin.plugin.parcelize" version gradle.ext.kotlinVersion
         id "org.jetbrains.kotlin.plugin.allopen" version gradle.ext.kotlinVersion
-        id "com.android.application" version gradle.ext.agpVersion
-        id "com.android.library" version gradle.ext.agpVersion
     }
     repositories {
         maven {

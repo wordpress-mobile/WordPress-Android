@@ -1,4 +1,5 @@
 [versions]
+agp = '8.1.0'
 androidInstallReferrer = '2.2'
 androidxActivity = '1.8.0'
 androidxAppcompat = '1.6.1'
@@ -208,6 +209,8 @@ wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedit
 zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
