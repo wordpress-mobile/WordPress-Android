@@ -36,10 +36,16 @@ class PrivateAtomicCookie
         if (!exists()) {
             return true
         }
-        val cookieExpiration: Long = cookie!!.expires.toLong()
-        val currentTime = (System.currentTimeMillis() / MILLIS)
+        try {
+            val cookieExpiration: Long = cookie!!.expires.toLong()
+            val currentTime = (System.currentTimeMillis() / MILLIS)
 
-        return currentTime + COOKIE_EXPIRATION_THRESHOLD >= cookieExpiration
+            return currentTime + COOKIE_EXPIRATION_THRESHOLD >= cookieExpiration
+        } catch (e: NumberFormatException) {
+            // we ran into a situation where cookie!!.expires contained "false" resulting
+            // in an exception attempting to convert it to a long
+            return false
+        }
     }
 
     fun exists(): Boolean {
