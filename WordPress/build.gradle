@@ -421,8 +421,8 @@ dependencies {
     implementation libs.androidx.percentLayout
     implementation libs.androidx.swiperefreshlayout
     implementation libs.androidx.preference
-    implementation libs.androidx.workManager.runtime
-    implementation libs.androidx.workManager.runtime.ktx
+    implementation libs.androidx.work.runtime
+    implementation libs.androidx.work.runtime.ktx
     implementation libs.androidx.constraintLayout
     implementation libs.androidx.lifecycle.viewmodel
     implementation libs.androidx.lifecycle.viewmodel.ktx
@@ -515,7 +515,7 @@ dependencies {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
-    androidTestImplementation libs.androidx.workManager.workTesting
+    androidTestImplementation libs.androidx.work.testing
     androidTestImplementation libs.dagger.hilt.android.testing
     kspAndroidTest libs.dagger.hilt.android.compiler
     // Enables Java 8+ API desugaring support
