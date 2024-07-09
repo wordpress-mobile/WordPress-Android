@@ -4,9 +4,9 @@ import se.bjurr.violations.lib.model.SEVERITY
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.allopen)
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id "org.jetbrains.kotlin.plugin.allopen"
     alias(libs.plugins.sentry)
     alias(libs.plugins.violation.comments)
     alias(libs.plugins.google.services)
@@ -482,7 +482,7 @@ dependencies {
     })
     testImplementation libs.junit
     testImplementation libs.mockito.kotlin
-    testImplementation libs.kotlin.test.junit
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation libs.assertj.core
     testImplementation libs.kotlinx.coroutines.test
 
