@@ -27,6 +27,7 @@ androidxWebkit =  '1.11.0'
 androidxWorkManager = "2.9.0"
 apacheCommonsText = '1.10.0'
 assertj = '3.23.1'
+automatticMeasureBuilds = '3.1.0'
 automatticRest = '1.0.8'
 cascadeCompose = '2.3.0'
 chrisbanesPhotoview = '2.3.0'
@@ -61,7 +62,6 @@ kotlinxCoroutines = '1.7.3'
 kotlinxKover = "0.7.5"
 ksp = "1.9.22-1.0.17"
 lottie = '6.1.0'
-measureBuilds = '3.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
 philjayMpAndroidChart = 'v3.1.0'
@@ -214,6 +214,7 @@ zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+automattic-measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "automatticMeasureBuilds" }
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
@@ -225,7 +226,6 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlix-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinxKover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
 violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violationComments" }

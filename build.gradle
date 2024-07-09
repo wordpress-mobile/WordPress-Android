@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.detekt)
-    alias(libs.plugins.measure.builds)
+    alias(libs.plugins.automattic.measure.builds)
     alias(libs.plugins.kotlix.kover)
     alias(libs.plugins.dependency.analysis)
     alias(libs.plugins.navigation.safeargs).apply(false)
