@@ -55,8 +55,8 @@ dependencies {
     implementation libs.androidx.constraintLayout
     implementation libs.androidx.viewPager2
     implementation libs.google.material
-    implementation libs.navigation.fragment
-    implementation libs.navigation.ui
+    implementation libs.androidx.navigation.fragment
+    implementation libs.androidx.navigation.ui
     implementation libs.androidx.lifecycle.common
     implementation libs.androidx.lifecycle.runtime
     implementation libs.androidx.lifecycle.viewmodel

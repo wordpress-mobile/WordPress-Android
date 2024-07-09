@@ -12,6 +12,7 @@ androidxConstraintlayoutCompose = '1.0.1'
 androidxCore = '1.10.0'
 androidxFragment = '1.6.2'
 androidxLifecycle = '2.6.2'
+androidxNavigation = "2.7.7"
 androidxNavigationCompose = '2.7.6'
 androidxPercentLayout = '1.0.0'
 androidxPreference = '1.2.0'
@@ -63,7 +64,6 @@ lottie = '6.1.0'
 measureBuilds = '3.1.0'
 mockitoAndroid = '4.5.1'
 mockitoKotlin = '4.1.0'
-navigation = "2.7.7"
 philjayMpAndroidChart = 'v3.1.0'
 screengrab = '2.1.1'
 sentry = "4.3.1"
@@ -126,6 +126,8 @@ androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "l
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "androidxLifecycle" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationCompose" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "androidxNavigation" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "androidxNavigation" }
 androidx-percentLayout = { group = "androidx.percentlayout", name = "percentlayout", version.ref = "androidxPercentLayout" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "androidxPreference" }
 androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerview" }
@@ -197,8 +199,6 @@ lottie = { group = "com.airbnb.android", name = "lottie", version.ref ="lottie" 
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref ="lottie" }
 mockito-android = { group = "org.mockito", name = "mockito-android", version.ref ="mockitoAndroid" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref ="mockitoKotlin" }
-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation" }
-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation" }
 philJay-mpAndroidChart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref ="philjayMpAndroidChart" }
 squareup-kotlinpoet = { group = "com.squareup", name = "kotlinpoet", version.ref ="squareupKotlinPoet" }
 squareup-kotlinpoet-ksp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref ="squareupKotlinPoet" }
@@ -226,6 +226,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
 violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violationComments" }
