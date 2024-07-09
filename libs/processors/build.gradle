@@ -1,5 +1,5 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm"
+    alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kover)
 }
 
@@ -18,5 +18,5 @@ dependencies {
     testImplementation "com.github.tschuchortdev:kotlin-compile-testing-ksp:$kctVersion"
     testImplementation libs.junit
     testImplementation libs.assertj.core
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$gradle.ext.kotlinVersion"
+    testImplementation libs.kotlin.reflect
 }

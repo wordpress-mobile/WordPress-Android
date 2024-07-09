@@ -55,6 +55,7 @@ gson = '2.10.1'
 indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
 junit = '4.13.2'
+kotlin = '1.9.22'
 kotlinxCoroutines = '1.7.3'
 kover = "0.7.5"
 ksp = "1.9.22-1.0.17"
@@ -207,6 +208,8 @@ wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="
 wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlin-test-junit = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -221,3 +224,8 @@ measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 sentry = { id = "io.sentry.android.gradle", version.ref = "sentry" }
 violation-comments = { id = "se.bjurr.violations.violation-comments-to-github-gradle-plugin", version.ref = "violationComments" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
