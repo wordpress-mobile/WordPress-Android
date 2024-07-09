@@ -95,6 +95,7 @@ allprojects {
     }
 
     detekt {
+        toolVersion = libs.versions.detekt.get()
         baseline = file("${project.rootDir}/config/detekt/baseline.xml")
         config = files("${project.rootDir}/config/detekt/detekt.yml")
         autoCorrect = false
