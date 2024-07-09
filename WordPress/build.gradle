@@ -399,8 +399,8 @@ dependencies {
     implementation libs.android.appUpdate
     implementation libs.android.appUpdate.ktx
 
-    implementation libs.androidx.coreCommon
-    implementation libs.androidx.coreRuntime
+    implementation libs.androidx.arch.core.common
+    implementation libs.androidx.arch.core.runtime
     implementation libs.google.gson
     implementation libs.androidx.core
     implementation libs.androidx.core.ktx
@@ -475,7 +475,7 @@ dependencies {
     implementation libs.dagger.hilt.android
     ksp libs.dagger.hilt.compiler
 
-    testImplementation(libs.androidx.coreTesting, {
+    testImplementation(libs.androidx.arch.core.testing, {
         exclude group: 'com.android.support', module: 'support-compat'
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
