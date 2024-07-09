@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.violation.comments)
     alias(libs.plugins.google.services)
     alias(libs.plugins.dagger)
-    alias(libs.plugins.kover)
+    alias(libs.plugins.kotlix.kover)
     alias(libs.plugins.ksp)
 }
 

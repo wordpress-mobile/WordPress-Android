@@ -58,7 +58,7 @@ jsoup = '1.16.2'
 junit = '4.13.2'
 kotlin = '1.9.22'
 kotlinxCoroutines = '1.7.3'
-kover = "0.7.5"
+kotlinxKover = "0.7.5"
 ksp = "1.9.22-1.0.17"
 lottie = '6.1.0'
 measureBuilds = '3.1.0'
@@ -223,7 +223,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+kotlix-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinxKover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 measure-builds = { id = "com.automattic.android.measure-builds", version.ref = "measureBuilds" }
 navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }

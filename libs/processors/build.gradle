@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.kover)
+    alias(libs.plugins.kotlix.kover)
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
