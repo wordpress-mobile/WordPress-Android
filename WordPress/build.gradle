@@ -397,7 +397,7 @@ dependencies {
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     implementation libs.android.appUpdate
-    implementation libs.android.appUpdateKtx
+    implementation libs.android.appUpdate.ktx
 
     implementation libs.androidx.coreCommon
     implementation libs.androidx.coreRuntime
