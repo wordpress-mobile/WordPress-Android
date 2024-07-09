@@ -443,7 +443,7 @@ dependencies {
     implementation libs.androidx.camera.lifecycle
     implementation libs.androidx.camera.view
 
-    implementation libs.installReferrer
+    implementation libs.android.installReferrer
     implementation libs.chrisbanes.photoview
     implementation libs.greenrobot.eventBus
     implementation libs.greenrobot.eventBus.java
