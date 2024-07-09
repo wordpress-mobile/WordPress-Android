@@ -20,5 +20,5 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           dependency-graph: generate-and-submit
-      - name: Generate the dependency graph which will be submitted post-job
-        run: ./gradlew :WordPress:dependencies --no-configure-on-demand
+      - name: Setup Gradle to generate and submit dependency graphs
+        uses: gradle/actions/dependency-submission@v3
