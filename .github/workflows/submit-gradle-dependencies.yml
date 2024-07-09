@@ -17,8 +17,4 @@ jobs:
           java-version: '17'
       - run: cp gradle.properties-example gradle.properties
       - name: Setup Gradle to generate and submit dependency graphs
-        uses: gradle/gradle-build-action@v2
-        with:
-          dependency-graph: generate-and-submit
-      - name: Setup Gradle to generate and submit dependency graphs
         uses: gradle/actions/dependency-submission@v3
