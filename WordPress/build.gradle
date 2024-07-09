@@ -535,8 +535,8 @@ dependencies {
     implementation(composeBom)
     androidTestImplementation(composeBom)
     // - Jetpack Compose - Android Studio
-    debugImplementation libs.androidx.compose.testManifest
-    debugImplementation libs.androidx.compose.tooling
+    debugImplementation libs.androidx.compose.ui.test.manifest
+    debugImplementation libs.androidx.compose.ui.tooling
     // - Jetpack Compose - Main
     implementation libs.androidx.compose.runtime
     implementation libs.androidx.compose.runtime.livedata
