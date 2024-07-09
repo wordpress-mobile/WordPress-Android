@@ -44,6 +44,7 @@ firebaseIid = '21.1.0'
 flipper = '0.247.0'
 glide = '4.16.0'
 googleFlexbox = '3.0.0'
+googleGson = '2.10.1'
 googleMaterial = '1.9.0'
 googleMLKitBarcodeScanning = '17.2.0'
 googleMLKitBarcodeScanningCommon = '17.0.0'
@@ -52,7 +53,6 @@ googlePlayAppUpdate = '2.1.0'
 googlePlayReview = '2.0.1'
 googlePlayServicesAuth = '20.4.1'
 googleServices = '4.3.15'
-gson = '2.10.1'
 indexosMediaForMobile = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
 jsoup = '1.16.2'
 junit = '4.13.2'
@@ -174,7 +174,7 @@ glide-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref ="g
 glide-volley-integration = { group = "com.github.bumptech.glide", name = "volley-integration", version.ref ="glide" }
 google-exoPlayer = { group = "com.google.android.exoplayer", name = "exoplayer", version.ref ="exoPlayer" }
 google-flexbox = { group = "com.google.android.flexbox", name = "flexbox", version.ref = "googleFlexbox" }
-google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "googleGson" }
 google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
 google-mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref ="googleMLKitBarcodeScanning" }
 google-mlkit-barcode-scanning-common = { group = "com.google.mlkit", name = "barcode-scanning-common", version.ref ="googleMLKitBarcodeScanningCommon" }
