@@ -396,7 +396,9 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation libs.wordPress.persistentEditText
-    implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation "$gradle.ext.gravatarBinaryPath:${libs.versions.gravatar.get()}"
 
     implementation libs.android.appUpdate
     implementation libs.android.appUpdate.ktx
