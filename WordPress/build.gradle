@@ -384,7 +384,9 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation "$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automatticAbout.get()}"
 
     implementation("$gradle.ext.tracksBinaryPath:$automatticTracksVersion") {
         version {

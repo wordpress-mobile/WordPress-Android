@@ -30,6 +30,7 @@ androidxWebkit =  '1.11.0'
 androidxWorkManager = "2.9.0"
 apacheCommonsText = '1.10.0'
 assertj = '3.23.1'
+automatticAbout = '1.4.0'
 automatticMeasureBuilds = '3.1.0'
 automatticRest = '1.0.8'
 cascadeCompose = '2.3.0'
