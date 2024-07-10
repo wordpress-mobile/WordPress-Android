@@ -530,7 +530,7 @@ dependencies {
     kspAndroidTest libs.dagger.hilt.android.compiler
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring libs.desugar.jdk.libs
-    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+    lintChecks libs.wordpress.lint
 
     // Firebase
     def firebaseBom = platform(libs.firebase.bom)

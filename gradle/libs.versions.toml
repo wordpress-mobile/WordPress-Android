@@ -78,6 +78,7 @@ volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
 wordPressPersistentEditText = '1.0.2'
+wordressLint = '2.1.0'
 zendesk = '5.1.2'
 
 [libraries]
@@ -210,6 +211,7 @@ ucrop = { group = "com.github.yalantis", name = "ucrop", version.ref = "uCrop" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 wiremock = { group = "com.github.tomakehurst", name = "wiremock", version.ref ="wiremock" }
 wiremock-httpclient-android = { group = "org.apache.httpcomponents", name = "httpclient-android", version.ref ="wiremockHttpClient" }
+wordpress-lint = { group = "org.wordpress", name = "lint", version.ref = "wordressLint" }
 wordPress-persistentEditText = { group = "org.wordpress", name = "persistentedittext", version.ref = "wordPressPersistentEditText" }
 zendesk = { group = "com.zendesk", name = "support", version.ref ="zendesk" }
 

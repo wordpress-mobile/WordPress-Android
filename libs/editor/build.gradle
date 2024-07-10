@@ -108,5 +108,5 @@ dependencies {
     implementation libs.google.gson
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
-    lintChecks "org.wordpress:lint:$wordPressLintVersion"
+    lintChecks libs.wordpress.lint
 }
