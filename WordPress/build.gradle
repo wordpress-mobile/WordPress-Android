@@ -380,7 +380,9 @@ dependencies {
             strictly libs.versions.wordPressUtils.get()
         }
     }
-    implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation ("$gradle.ext.loginFlowBinaryPath:${libs.versions.wordPressLogin.get()}") {
         exclude group: 'com.github.bumptech.glide'
         exclude group: 'org.wordpress', module: 'utils'
     }
