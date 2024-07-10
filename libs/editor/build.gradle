@@ -110,7 +110,7 @@ dependencies {
     implementation libs.google.material
     implementation libs.volley
     implementation libs.google.gson
-    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+    implementation libs.automattic.tracks.crashlogging
 
     lintChecks libs.wordpress.lint
 }

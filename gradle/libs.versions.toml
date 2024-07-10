@@ -33,6 +33,7 @@ assertj = '3.23.1'
 automatticAbout = '1.4.0'
 automatticMeasureBuilds = '3.1.0'
 automatticRest = '1.0.8'
+automatticTracks = '5.1.0'
 cascadeCompose = '2.3.0'
 chrisbanesPhotoview = '2.3.0'
 coilCompose = '2.4.0'
@@ -158,6 +159,8 @@ androidx-work-testing = { group = "androidx.work", name = "work-testing", versio
 apache-commons-text = { group = "org.apache.commons", name = "commons-text", version.ref ="apacheCommonsText" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref ="assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
+automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automatticTracks" }
+automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automatticTracks" }
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref ="cascadeCompose" }
 chrisbanes-photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref ="chrisbanesPhotoview" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref ="coilCompose" }

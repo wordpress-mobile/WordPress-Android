@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation libs.automattic.tracks.android
     implementation libs.wordpress.utils
 
     implementation libs.androidx.preference

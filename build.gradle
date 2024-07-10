@@ -25,7 +25,7 @@ ext {
 
 ext {
     // libs
-    automatticTracksVersion = '5.1.0'
+//    automatticTracksVersion = '5.1.0'
     gutenbergMobileVersion = 'v1.121.0-alpha1'
     wordPressFluxCVersion = 'trunk-c670e916346bdaa2379936dd8dbb6750766ca319'
 }

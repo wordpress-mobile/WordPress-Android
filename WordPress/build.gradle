@@ -389,10 +389,11 @@ dependencies {
     // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
     // noinspection UseTomlInstead
     implementation "$gradle.ext.aboutAutomatticBinaryPath:${libs.versions.automatticAbout.get()}"
-
-    implementation("$gradle.ext.tracksBinaryPath:$automatticTracksVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation("$gradle.ext.tracksBinaryPath:${libs.versions.automatticTracks.get()}") {
         version {
-            strictly automatticTracksVersion
+            strictly libs.versions.automatticTracks.get()
         }
     }
 
@@ -579,7 +580,7 @@ dependencies {
     // Cascade - Compose nested menu
     implementation libs.cascade.compose
 
-    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
+    implementation libs.automattic.tracks.crashlogging
 
     // - Flipper
     debugImplementation (libs.facebook.flipper) {
