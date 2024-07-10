@@ -1,11 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
 # This pipeline is meant to be run via the Buildkite API, and is
 # only used for release builds
 
-# Nodes with values to reuse in the pipeline.
-common_params:
-  # Common plugin settings to use with the `plugins` key.
-  - &common_plugins
-    - automattic/a8c-ci-toolkit#3.4.2
+agents:
+  queue: "android"
 
 steps:
   #################
@@ -15,7 +15,7 @@ steps:
     command: |
       validate_gradle_wrapper
     priority: 1
-    plugins: *common_plugins
+    plugins: [$CI_TOOLKIT]
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
@@ -51,7 +51,7 @@ steps:
         command: ".buildkite/commands/release-build.sh wordpress"
         priority: 1
         depends_on: wplint
-        plugins: *common_plugins
+        plugins: [$CI_TOOLKIT]
         notify:
           - slack: "#build-and-ship"
 
@@ -60,7 +60,7 @@ steps:
         command: ".buildkite/commands/release-build.sh jetpack"
         priority: 1
         depends_on: jplint
-        plugins: *common_plugins
+        plugins: [$CI_TOOLKIT]
         notify:
           - slack: "#build-and-ship"
 
@@ -73,4 +73,4 @@ steps:
       - jpbuild
     command: ".buildkite/commands/create-github-release.sh"
     priority: 1
-    plugins: *common_plugins
+    plugins: [$CI_TOOLKIT]

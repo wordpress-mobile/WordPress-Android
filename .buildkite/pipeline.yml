@@ -1,10 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
 # Nodes with values to reuse in the pipeline.
 common_params:
-  # Common plugin settings to use with the `plugins` key.
-  - &ci_toolkit
-    automattic/a8c-ci-toolkit#3.4.2
-  - &test_collector
-    test-collector#v1.8.0
   - &test_collector_common_params
       files: "buildkite-test-analytics/*.xml"
       format: "junit"
@@ -19,7 +17,7 @@ steps:
   - label: "Gradle Wrapper Validation"
     command: |
       validate_gradle_wrapper
-    plugins: [*ci_toolkit]
+    plugins: [$CI_TOOLKIT]
 
   # Wait for Gradle Wrapper to be validated before running any other jobs
   - wait
@@ -43,7 +41,7 @@ steps:
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew checkstyle
-        plugins: [*ci_toolkit]
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/checkstyle/checkstyle.*"
 
@@ -51,7 +49,7 @@ steps:
         command: |
           cp gradle.properties-example gradle.properties
           ./gradlew detekt
-        plugins: [*ci_toolkit]
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/detekt/detekt.html"
 
@@ -70,7 +68,7 @@ steps:
       cp gradle.properties-example gradle.properties
       .buildkite/commands/dependency-tree-diff.sh
     if: build.pull_request.id != null
-    plugins: [*ci_toolkit]
+    plugins: [$CI_TOOLKIT]
 
   #################
   # Unit Tests
@@ -80,8 +78,8 @@ steps:
       - label: "🔬 Unit Test WordPress"
         command: ".buildkite/commands/run-unit-tests.sh wordpress"
         plugins:
-          - *ci_toolkit
-          - *test_collector :
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR :
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
         artifact_paths:
@@ -90,8 +88,8 @@ steps:
       - label: "🔬 Unit Test Processors"
         command: ".buildkite/commands/run-unit-tests.sh processors"
         plugins:
-          - *ci_toolkit
-          - *test_collector :
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR :
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
         artifact_paths:
@@ -100,8 +98,8 @@ steps:
       - label: "🔬 Unit Test Image Editor"
         command: ".buildkite/commands/run-unit-tests.sh image-editor"
         plugins:
-          - *ci_toolkit
-          - *test_collector :
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR :
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
         artifact_paths:
@@ -115,8 +113,8 @@ steps:
       - label: ":wordpress: 🔬 Instrumented tests"
         command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
         plugins:
-          - *ci_toolkit
-          - *test_collector :
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR :
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
         artifact_paths:
@@ -125,8 +123,8 @@ steps:
       - label: ":jetpack: 🔬 Instrumented tests"
         command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
         plugins:
-          - *ci_toolkit
-          - *test_collector :
+          - $CI_TOOLKIT
+          - $TEST_COLLECTOR :
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
         artifact_paths:
@@ -140,9 +138,9 @@ steps:
       - label: ":wordpress: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh wordpress"
         if: build.pull_request.id != null
-        plugins: [*ci_toolkit]
+        plugins: [$CI_TOOLKIT]
 
       - label: ":jetpack: :android: Prototype Build"
         command: ".buildkite/commands/prototype-build.sh jetpack"
         if: build.pull_request.id != null
-        plugins: [*ci_toolkit]
+        plugins: [$CI_TOOLKIT]

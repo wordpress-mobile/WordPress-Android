@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.voicetocontent
 
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +16,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.jetpackai.JetpackAIAssistantFeature
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.Dismiss
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchEditPost
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchExternalBrowser
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.RequestPermission
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.ERROR
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE
 import org.wordpress.android.ui.voicetocontent.VoiceToContentUIStateType.INITIALIZING
@@ -45,20 +48,17 @@ class VoiceToContentViewModel @Inject constructor(
     private val prepareVoiceToContentUseCase: PrepareVoiceToContentUseCase,
     private val logger: VoiceToContentTelemetry
 ) : ScopedViewModel(mainDispatcher) {
-    private val _requestPermission = MutableLiveData<Unit>()
-    val requestPermission = _requestPermission as LiveData<Unit>
-
-    private val _dismiss = MutableLiveData<Unit>()
-    val dismiss = _dismiss as LiveData<Unit>
-
     private val _recordingUpdate = MutableLiveData<RecordingUpdate>()
-    val recordingUpdate: LiveData<RecordingUpdate> get() = _recordingUpdate
-
-    private val _onIneligibleForVoiceToContent = MutableLiveData<String>()
-    val onIneligibleForVoiceToContent = _onIneligibleForVoiceToContent as LiveData<String>
+    val recordingUpdate = _recordingUpdate as LiveData<RecordingUpdate>
 
     private val _isCancelableOutsideTouch = MutableLiveData(true)
-    val isCancelableOutsideTouch: LiveData<Boolean> get() = _isCancelableOutsideTouch
+    val isCancelableOutsideTouch = _isCancelableOutsideTouch as LiveData<Boolean>
+
+    private val _actionEvent = MutableLiveData<VoiceToContentActionEvent>()
+    val actionEvent = _actionEvent as LiveData<VoiceToContentActionEvent>
+
+    val isRecording: StateFlow<Boolean> = recordingUseCase.isRecording()
+    val isPaused: StateFlow<Boolean> = recordingUseCase.isPaused()
 
     private var isStarted = false
 
@@ -124,8 +124,6 @@ class VoiceToContentViewModel @Inject constructor(
                     stopRecording()
                 } else {
                     updateRecordingData(update)
-                    // todo: Handle other updates if needed when UI is ready, e.g., elapsed time and file size
-                    Log.d("AudioRecorder", "Recording update: $update")
                 }
             }
         }
@@ -171,6 +169,14 @@ class VoiceToContentViewModel @Inject constructor(
         recordingUseCase.stopRecording()
     }
 
+    fun pauseRecording() {
+        recordingUseCase.pauseRecording()
+    }
+
+    fun resumeRecording() {
+        recordingUseCase.resumeRecording()
+    }
+
     // Workflow
     private fun executeVoiceToContent(file: File) {
         val site = selectedSiteRepository.getSelectedSite() ?: run {
@@ -181,17 +187,17 @@ class VoiceToContentViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = voiceToContentUseCase.execute(site, file)) {
                 is VoiceToContentResult.Failure -> result.transitionToError()
-                is VoiceToContentResult.Success ->
-                    Log.i(javaClass.simpleName, "***=> result is ${result.content}")
+                is VoiceToContentResult.Success -> {
+                    _actionEvent.postValue(LaunchEditPost(site, result.content))
+                }
             }
-            _dismiss.postValue(Unit)
         }
     }
 
     // Permissions
     private fun onRequestPermission() {
         logger.track(Stat.VOICE_TO_CONTENT_BUTTON_START_RECORDING_TAPPED)
-        _requestPermission.postValue(Unit)
+        _actionEvent.postValue(RequestPermission)
     }
 
     private fun hasAllPermissionsForRecording(): Boolean {
@@ -220,8 +226,10 @@ class VoiceToContentViewModel @Inject constructor(
 
     private fun onClose() {
         logger.track(Stat.VOICE_TO_CONTENT_BUTTON_CLOSE_TAPPED)
-        recordingUseCase.endRecordingSession()
-        _dismiss.postValue(Unit)
+        if (isRecording.value || isPaused.value) {
+            recordingUseCase.endRecordingSession()
+        }
+        _actionEvent.postValue(Dismiss)
     }
 
     private fun onRetryTap() {
@@ -232,7 +240,7 @@ class VoiceToContentViewModel @Inject constructor(
     private fun onLinkTap(url: String?) {
         logger.track(Stat.VOICE_TO_CONTENT_BUTTON_UPGRADE_TAPPED)
         url?.let {
-            _onIneligibleForVoiceToContent.postValue(it)
+            _actionEvent.postValue(LaunchExternalBrowser(it))
         }
     }
 
@@ -293,7 +301,9 @@ class VoiceToContentViewModel @Inject constructor(
             recordingPanel = currentState.recordingPanel?.copy(
                 onStopTap = ::onStopTap,
                 hasPermission = true,
-                actionLabel = R.string.voice_to_content_done_label)
+                actionLabel = R.string.voice_to_content_done_label,
+                onResumeRecording = ::resumeRecording,
+                onPauseRecording = ::pauseRecording)
         )
     }
 

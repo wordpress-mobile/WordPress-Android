@@ -1,2 +1,0 @@
-25.0 :
-Nous avons corrigé des plantages sur les écrans de connexion et de liste d’articles, ainsi qu’avec les actions associées aux rappels de blog, les images mises en avant et la suppression d’utilisateur. Moins de plantages ? Tout à votre avantage.

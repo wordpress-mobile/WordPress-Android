@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 10:54:08+0000
+Translation-Revision-Date: 2024-06-12 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Tryck här för att redigera</string>
+    <string name="voice_to_content_permissions_required_msg">Den här appen behöver åtkomst till din mikrofon för att kunna spela in ljud. Du har tidigare nekat behörighet för detta. Aktivera mikrofonbehörighet i appinställningarna om du vill använda den här funktionen.</string>
+    <string name="voice_to_content_permissions_required_title">Tillåtelse för ljudinspelning krävs</string>
+    <string name="permission_access_media_location">Mediaplats</string>
     <string name="in_app_update_restart">Starta om</string>
     <string name="in_app_update_available">Uppdatering nedladdad. Starta om för att tillämpa.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Inlägg via ljud</string>

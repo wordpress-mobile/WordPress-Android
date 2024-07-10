@@ -1,10 +1,12 @@
-import com.automattic.android.measure.MeasureBuildsExtension
+import com.automattic.android.measure.reporters.InternalA8cCiReporter
+import com.automattic.android.measure.reporters.SlowSlowTasksMetricsReporter
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id "io.gitlab.arturbosch.detekt"
     id 'com.automattic.android.measure-builds'
     id "org.jetbrains.kotlinx.kover"
+    id "com.autonomousapps.dependency-analysis"
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -15,7 +17,7 @@ plugins {
 ext {
     minSdkVersion = 24
     compileSdkVersion = 34
-    targetSdkVersion = 33
+    targetSdkVersion = 34
 }
 
 ext {
@@ -23,9 +25,9 @@ ext {
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.1.0'
-    gutenbergMobileVersion = 'v1.120.0'
+    gutenbergMobileVersion = 'v1.121.0-alpha1'
     wordPressAztecVersion = 'v2.1.3'
-    wordPressFluxCVersion = 'trunk-0fe67fa241426afeaaa66bc3970ba46634efa5c8'
+    wordPressFluxCVersion = '3045-5fc175e4780dec098cfd04bf5eb9da7f3cce4076'
     wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
@@ -42,7 +44,7 @@ ext {
     androidxAnnotationVersion = '1.6.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
-    androidxCameraVersion = '1.2.3'
+    androidxCameraVersion = '1.3.4'
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.9'
     androidxComposeNavigationVersion = '2.7.6'
@@ -118,8 +120,14 @@ ext {
 
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
-    automatticProject = MeasureBuildsExtension.AutomatticProject.WordPress
-    authToken = findProperty('appsMetricsToken')
+    onBuildMetricsReadyListener { report ->
+        SlowSlowTasksMetricsReporter.report(report)
+        InternalA8cCiReporter.reportBlocking(
+                report,
+                "wordpress",
+                findProperty('appsMetricsToken')
+        )
+    }
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 

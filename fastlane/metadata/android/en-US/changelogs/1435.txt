@@ -1,1 +1,0 @@
-We fixed assorted crashes on the login and Posts List screens, as well as actions associated with blogging reminders, feature images, and user removal. Less crashing? How smashing.

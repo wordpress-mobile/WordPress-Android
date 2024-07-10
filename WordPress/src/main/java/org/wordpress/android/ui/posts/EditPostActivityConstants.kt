@@ -26,6 +26,7 @@ object EditPostActivityConstants{
     const val EXTRA_PAGE_TEMPLATE = "pageTemplate"
     const val EXTRA_PROMPT_ID = "extraPromptId"
     const val EXTRA_ENTRY_POINT = "extraEntryPoint"
+    const val EXTRA_VOICE_CONTENT = "extra_voice_content"
     const val STATE_KEY_EDITOR_FRAGMENT = "editorFragment"
     const val STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri"
     const val STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId"
@@ -40,4 +41,5 @@ object EditPostActivityConstants{
     const val STATE_KEY_MEDIA_CAPTURE_PATH = "stateKeyMediaCapturePath"
     const val STATE_KEY_UNDO = "stateKeyUndo"
     const val STATE_KEY_REDO = "stateKeyRedo"
+    const val STATE_KEY_IS_VOICE_CONTENT_SET = "stateKeyIsVoiceContentSet"
 }

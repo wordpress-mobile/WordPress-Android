@@ -953,6 +953,26 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
+    public static void addNewPostWithContentFromAIForResult(
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source,
+            final String content
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, content);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
     public static void addNewPostForResult(
             Activity activity,
             SiteModel site,
