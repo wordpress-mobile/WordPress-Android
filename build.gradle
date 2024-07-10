@@ -1,4 +1,5 @@
-import com.automattic.android.measure.MeasureBuildsExtension
+import com.automattic.android.measure.reporters.InternalA8cCiReporter
+import com.automattic.android.measure.reporters.SlowSlowTasksMetricsReporter
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -119,8 +120,14 @@ ext {
 
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
-    automatticProject = MeasureBuildsExtension.AutomatticProject.WordPress
-    authToken = findProperty('appsMetricsToken')
+    onBuildMetricsReadyListener { report ->
+        SlowSlowTasksMetricsReporter.report(report)
+        InternalA8cCiReporter.reportBlocking(
+                report,
+                "wordpress",
+                findProperty('appsMetricsToken')
+        )
+    }
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 
