@@ -21,9 +21,9 @@ public class MediaUploadCompletionProcessor {
      * @param mediaFile The mediaFile containing the remote id and remote url
      * @param siteUrl The site url - used to generate the attachmentPage url
      */
-    public MediaUploadCompletionProcessor(@NonNull String localId, @NonNull MediaFile mediaFile, String siteUrl) {
-        mBlockProcessorFactory = new BlockProcessorFactory(this)
-                .init(localId, mediaFile, siteUrl);
+    public MediaUploadCompletionProcessor(@NonNull String localId, @NonNull MediaFile mediaFile,
+                                          @NonNull String siteUrl) {
+        mBlockProcessorFactory = new BlockProcessorFactory(this, localId, mediaFile, siteUrl);
     }
 
     /**
@@ -82,10 +82,12 @@ public class MediaUploadCompletionProcessor {
     @NonNull
     private String processBlock(@NonNull String block, Boolean isSelfClosingTag) {
         final MediaBlockType blockType = MediaBlockType.detectBlockType(block);
-        final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
 
-        if (blockProcessor != null) {
-            return blockProcessor.processBlock(block, isSelfClosingTag);
+        if (blockType != null) {
+            final BlockProcessor blockProcessor = mBlockProcessorFactory.getProcessorForMediaBlockType(blockType);
+            if (blockProcessor != null) {
+                return blockProcessor.processBlock(block, isSelfClosingTag);
+            }
         }
 
         return block;

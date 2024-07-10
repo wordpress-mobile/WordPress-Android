@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 13:54:08+0000
+Translation-Revision-Date: 2024-06-12 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Appuyer pour modifier</string>
+    <string name="voice_to_content_permissions_required_msg">Pour enregistrer l’audio, l’application doit disposer des droits d’accès à votre microphone. Vous avez précédemment refusé ce droit. Veuillez activer les droits d’accès au microphone dans les réglages de l’application pour utiliser cette fonctionnalité.</string>
+    <string name="voice_to_content_permissions_required_title">Autorisation d’enregistrement de l’audio requise</string>
+    <string name="permission_access_media_location">Emplacement des médias</string>
     <string name="in_app_update_restart">Redémarrer</string>
     <string name="in_app_update_available">Mise à jour téléchargée. Redémarrez pour appliquer les mises à jour.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Publier à partir d’un contenu audio</string>

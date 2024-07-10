@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-07 13:13:11+0000
+Translation-Revision-Date: 2024-06-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">轻点以编辑</string>
+    <string name="voice_to_content_permissions_required_msg">要录制音频，此应用程序需要获得您麦克风的使用权限。 您之前已拒绝授予这项权限。 请在应用程序设置中启用麦克风权限，以使用此功能。</string>
+    <string name="voice_to_content_permissions_required_title">需要音频录制权限</string>
+    <string name="permission_access_media_location">媒体位置</string>
     <string name="in_app_update_restart">重新启动</string>
     <string name="in_app_update_available">更新内容已下载。 重新启动以应用修改。</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">从音频创建的文章</string>

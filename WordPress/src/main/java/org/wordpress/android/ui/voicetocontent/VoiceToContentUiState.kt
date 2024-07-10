@@ -20,6 +20,8 @@ data class SecondaryHeaderUIModel(
 data class RecordingPanelUIModel(
     val onMicTap: (() -> Unit)? = null,
     val onStopTap: (() -> Unit)? = null,
+    val onPauseRecording: (() -> Unit)? = null,
+    val onResumeRecording: (() -> Unit)? = null,
     val isEligibleForFeature: Boolean = false,
     val hasPermission: Boolean = false,
     val onRequestPermission: (() -> Unit)? = null,

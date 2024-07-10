@@ -2,6 +2,7 @@
 
 25.2
 -----
+* [*] Fix ability to update a published post's date [https://github.com/wordpress-mobile/WordPress-Android/pull/21036]
 
 
 25.1

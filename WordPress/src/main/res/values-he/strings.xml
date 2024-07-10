@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 15:54:08+0000
+Translation-Revision-Date: 2024-06-13 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">יש להקיש כדי לערוך</string>
+    <string name="voice_to_content_permissions_required_msg">כדי להקליט אודיו, יש להעניק לאפליקציה הרשאה לגשת אל המיקרופון. בעבר מנעת את ההרשאה הזאת. עליך לאפשר את ההרשאה למיקרופון בהגדרות האפליקציה כדי להשתמש באפשרות הזאת.</string>
+    <string name="voice_to_content_permissions_required_title">נדרשת הרשאה להקליט אודיו</string>
+    <string name="permission_access_media_location">מיקום המדיה</string>
     <string name="in_app_update_restart">להפעיל מחדש</string>
     <string name="in_app_update_available">העדכון הורד. כדי להחיל עדכונים יש לבצע הפעלה מחדש.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">פוסט מאודיו</string>

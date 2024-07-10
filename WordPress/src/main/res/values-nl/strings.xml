@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-28 06:51:24+0000
+Translation-Revision-Date: 2024-06-17 18:36:53+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Tikken om te bewerken</string>
+    <string name="voice_to_content_permissions_required_msg">Om audio op te nemen, heeft deze app toestemming nodig om toegang te krijgen tot je microfoon. Je hebt deze toestemming eerder geweigerd. Schakel de microfoon toestemming in de app-instellingen in om deze functie te gebruiken.</string>
+    <string name="voice_to_content_permissions_required_title">Toestemming voor audio-opname vereist</string>
+    <string name="permission_access_media_location">Medialocatie</string>
     <string name="in_app_update_restart">Herstart</string>
     <string name="in_app_update_available">Update gedownload. Herstarten om toe te passen.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Bericht van audio</string>
@@ -109,7 +113,7 @@ Language: nl
     <string name="reader_preferences_screen_preview_title">Leesvoorkeuren</string>
     <string name="reader_filter_empty_tags_action_follow">Volg een tag</string>
     <string name="button_read">Lees</string>
-    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Je kan je berichttekst kopiëren als de fout betrekking heeft op je content. Kopieer de foutdetails om te debuggen en te delen met de ondersteuning.</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Je kunt je berichttekst kopiëren als de fout betrekking heeft op je inhoud. Kopieer de foutdetails om te debuggen en te delen met ondersteuning.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">De editor is op een onverwacht probleem gestuit</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Tik hier om de berichttekst te kopiëren</string>
     <string name="gutenberg_native_tap_here_to_copy_error_details">Tik hier om de foutdetails te kopiëren</string>
@@ -126,17 +130,17 @@ Language: nl
     <string name="notifications_unread_content_description">Ongelezen</string>
     <string name="qrcode_media_deeplink_error">Site niet gevonden. Controleer of je op het juiste account bent ingelogd.</string>
     <string name="gravatar_info_sync_done_button">Gereed</string>
-    <string name="gravatar_info_sync_message">Het kan even duren voordat updates met je Gravatar-profiel worden gesynchroniseerd.</string>
+    <string name="gravatar_info_sync_message">Het kan even duren voordat updates met je Gravatar profiel worden gesynchroniseerd.</string>
     <string name="gravatar_info_learn_more_link">Wat is Gravatar?</string>
-    <string name="gravatar_info_description">Als je je avatar, naam en beschrijving hier aanpast, worden deze ook bijgewerkt op alle sites waarop het Gravatar-profiel wordt gebruikt.</string>
-    <string name="gravatar_info_title">Je WordPress.com-profiel wordt mogelijk gemaakt door Gravatar</string>
-    <string name="error_media_could_not_share_media_from_device">Unable to load the media for sharing. Controleer de bestandsrechten.\n        or use the app\'s media library.</string>
+    <string name="gravatar_info_description">Als je je avatar, naam en beschrijving hier updatet, worden deze ook geüpdatet op alle sites waarop het Gravatar profiel wordt gebruikt.</string>
+    <string name="gravatar_info_title">Je WordPress.com profiel wordt mogelijk gemaakt door Gravatar</string>
+    <string name="error_media_could_not_share_media_from_device">Kan de media niet laden om te delen. Controleer de rechten van de app.\n        of gebruik de mediabibliotheek van de app.</string>
     <string name="site_monitoring_cannot_be_started">We kunnen momenteel geen media openen. Probeer het later opnieuw</string>
-    <string name="site_monitoring_tab_title_web_server_logs">Web Server Logs</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Web server logs</string>
     <string name="site_monitoring_tab_title_php_logs">PHP-logboeken</string>
     <string name="site_monitoring_tab_title_metrics">Meetwaarden</string>
     <string name="site_monitoring">Sitebewaking</string>
-    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gebruik &lt;b&gt; Ontdekken &lt;/b&gt; om sites en tags te zoeken. Try selecting &lt;b&gt;Subscriptions&lt;/b&gt; to view subscribed content and manage your subscriptions.</string>
+    <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Gebruik &lt;b&gt;Ontdekken&lt;/b&gt; om sites en tags te zoeken. Probeer &lt;b&gt;Abonnementen&lt;/b&gt; te selecteren om geabonneerde inhoud te bekijken en je abonnementen te beheren.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Ga naar abonnementen</string>
     <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">The blogs you\'re subscribed to haven\'t posted anything recently</string>
     <string name="reader_no_followed_blogs_description_subs">Of zoek een blog die je al leuk vindt.</string>
@@ -153,12 +157,12 @@ Language: nl
     <string name="reader_label_subscribers_count_single">(1 abonnee)</string>
     <string name="reader_label_subscribers_count">%s abonnees</string>
     <string name="reader_label_subscribe_count">%,d Abonnees</string>
-    <string name="reader_label_blog_subscribed">Blog subscribed</string>
-    <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
+    <string name="reader_label_blog_subscribed">Blog geabonneerd</string>
+    <string name="reader_hint_search_subscribed_blogs">Zoek in blogs waarop je bent geabonneerd</string>
     <string name="reader_btn_subscribed">Geabonneerd</string>
     <string name="reader_btn_subscribe">Abonneren</string>
     <string name="reader_menu_block_this_blog">Deze blog blokkeren</string>
-    <string name="reader_menu_tags_and_blogs">Tags en blogs bijwerken</string>
+    <string name="reader_menu_tags_and_blogs">Tags en blogs bewerken</string>
     <string name="reader_page_followed_blogs_title">Geabonneerd op blog</string>
     <string name="reader_title_tags">Tag volgen</string>
     <string name="reader_activity_title_manage_tags_blogs">Blogs beheren</string>
@@ -166,11 +170,11 @@ Language: nl
     <string name="reader_activity_title_blog_preview">Reader-blog</string>
     <string name="reader_subscribed_display_name">Geabonneerd</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
-    <string name="reader_filter_chip_tag_one">1 Tag</string>
-    <string name="reader_filter_chip_tag_zero">0 Tags</string>
+    <string name="reader_filter_chip_tag_one">1 tag</string>
+    <string name="reader_filter_chip_tag_zero">0 tags</string>
     <string name="reader_filter_chip_blog_other">%d blogs</string>
-    <string name="reader_filter_chip_blog_one">1 Blog</string>
-    <string name="reader_filter_chip_blog_zero">0 Blogs</string>
+    <string name="reader_filter_chip_blog_one">1 blog</string>
+    <string name="reader_filter_chip_blog_zero">0 blogs</string>
     <string name="reader_dropdown_menu_lists">Lijsten</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_liked">Geliket</string>
@@ -1802,8 +1806,8 @@ Language: nl
     <string name="sitepicker_continue_flow">Doorgaan</string>
     <string name="reader_reblog_error">Reblog mislukt</string>
     <string name="reader_no_blog_to_reblog_action">Blogs beheren</string>
-    <string name="reader_no_blog_to_reblog_detail">Zodra je een WordPress.com-blog aanmaakt, kan je inhoud die je leuk vindt rebloggen op je eigen site.</string>
-    <string name="reader_no_blog_to_reblog_title">Geen beschikbare WordPress.com-blogs</string>
+    <string name="reader_no_blog_to_reblog_detail">Zodra je een WordPress.com blog aanmaakt, kan je inhoud die je leuk vindt rebloggen op je eigen site.</string>
+    <string name="reader_no_blog_to_reblog_title">Geen beschikbare WordPress.com blogs</string>
     <string name="whats_new_in_version_title">Wat is er nieuw</string>
     <string name="comment_q_action_copied_url">Link adres gekopieerd</string>
     <string name="copy_link_address">Link adres kopiëren</string>

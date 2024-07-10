@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-30 08:54:10+0000
+Translation-Revision-Date: 2024-06-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">눌러서 편집</string>
+    <string name="voice_to_content_permissions_required_msg">오디오를 녹음하려면 앱에 마이크 액세스 권한이 필요합니다. 이전에 이 권한을 거부하셨습니다. 이 기능을 사용하려면 앱 설정에서 마이크 권한을 활성화하세요.</string>
+    <string name="voice_to_content_permissions_required_title">오디오 녹음 권한 필수</string>
+    <string name="permission_access_media_location">미디어 위치</string>
     <string name="in_app_update_restart">재시작</string>
     <string name="in_app_update_available">업데이트가 다운로드되었습니다. 적용하려면 재시작하세요.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">오디오에서 글 작성하기</string>
