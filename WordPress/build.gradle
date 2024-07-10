@@ -365,9 +365,11 @@ dependencies {
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation("$gradle.ext.fluxCBinaryPath:$wordPressFluxCVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation("$gradle.ext.fluxCBinaryPath:${libs.versions.wordPressFluxC.get()}") {
         version {
-            strictly wordPressFluxCVersion
+            strictly libs.versions.wordPressFluxC.get()
         }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'

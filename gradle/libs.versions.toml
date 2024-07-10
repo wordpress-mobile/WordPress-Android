@@ -83,6 +83,7 @@ volley = '1.2.1'
 wiremock = '2.26.3'
 wiremockHttpClient = '4.3.5.1'
 wordPressAztec = 'v2.1.3'
+wordPressFluxC = 'trunk-c670e916346bdaa2379936dd8dbb6750766ca319'
 wordPressLint = '2.1.0'
 wordPressLogin = '1.16.0'
 wordPressPersistentEditText = '1.0.2'
@@ -159,8 +160,8 @@ androidx-work-testing = { group = "androidx.work", name = "work-testing", versio
 apache-commons-text = { group = "org.apache.commons", name = "commons-text", version.ref ="apacheCommonsText" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version.ref ="assertj" }
 automattic-rest = { group = "com.automattic", name = "rest", version.ref = "automatticRest" }
-automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automatticTracks" }
 automattic-tracks-android = { group = "com.automattic", name = "Automattic-Tracks-Android", version.ref = "automatticTracks" }
+automattic-tracks-crashlogging = { group = "com.automattic.tracks", name = "crashlogging", version.ref = "automatticTracks" }
 cascade-compose = { group = "me.saket.cascade", name = "cascade-compose", version.ref ="cascadeCompose" }
 chrisbanes-photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref ="chrisbanesPhotoview" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref ="coilCompose" }

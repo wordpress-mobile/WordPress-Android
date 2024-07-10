@@ -26,7 +26,6 @@ ext {
 ext {
     // libs
     gutenbergMobileVersion = 'v1.121.0-alpha1'
-    wordPressFluxCVersion = 'trunk-c670e916346bdaa2379936dd8dbb6750766ca319'
 }
 
 measureBuilds {
