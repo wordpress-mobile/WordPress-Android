@@ -493,14 +493,24 @@ dependencies {
     androidTestImplementation libs.squareup.okhttp.mockWebServer
     androidTestImplementation libs.androidx.test.ui.automator
     androidTestImplementation libs.androidx.test.espresso.core, {
+        version {
+            strictly libs.versions.androidxTestEspresso.get()
+        }
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     androidTestImplementation(libs.androidx.test.espresso.contrib) {
+        version {
+            strictly libs.versions.androidxTestEspresso.get()
+        }
         exclude group: 'com.android.support', module: 'appcompat'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation(libs.androidx.test.espresso.accessibility)
+    androidTestImplementation(libs.androidx.test.espresso.accessibility){
+        version {
+            strictly libs.versions.androidxTestEspresso.get()
+        }
+    }
     androidTestImplementation(libs.wiremock) {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
