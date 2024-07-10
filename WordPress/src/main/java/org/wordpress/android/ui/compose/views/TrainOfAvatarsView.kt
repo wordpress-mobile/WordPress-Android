@@ -22,7 +22,7 @@ import org.wordpress.android.ui.compose.components.TrainOfIcons
 import org.wordpress.android.ui.compose.components.TrainOfIconsModel
 import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.WPAvatarUtils
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 class TrainOfAvatarsView @JvmOverloads constructor(
@@ -113,7 +113,7 @@ class TrainOfAvatarsView @JvmOverloads constructor(
 
     // returning null for a model will cause the Composable to render a placeholder
     private fun avatarModels(): List<TrainOfIconsModel> = avatarsState.value
-        .map { GravatarUtils.fixGravatarUrl(it.userAvatarUrl, iconSize) }
+        .map { WPAvatarUtils.rewriteAvatarUrl(it.userAvatarUrl, iconSize) }
         .map {
             TrainOfIconsModel(
                 it.takeIf { gravatarUrl -> gravatarUrl.isNotEmpty() }

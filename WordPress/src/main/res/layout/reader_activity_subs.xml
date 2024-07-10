@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/btn_add"
-            android:hint="@string/reader_hint_add_tag_or_url_subscribe"
+            android:hint="@string/reader_hint_add_tag_or_url_follow"
             android:minHeight="@dimen/min_touch_target_sz"
             android:paddingStart="@dimen/margin_large"
             android:paddingEnd="@dimen/margin_medium"

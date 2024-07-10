@@ -326,12 +326,12 @@ sealed class MySiteCardAndItem(open val type: Type, open val activeQuickStartIte
                 val moreMenuOptions: MoreMenuOptions
             ) : BlazeCard(type = Type.BLAZE_CAMPAIGNS_CARD) {
                 data class BlazeCampaignsCardItem(
-                    val id: Int,
+                    val id: String,
                     val title: UiString,
                     val status: CampaignStatus?,
                     val featuredImageUrl: String?,
                     val stats: BlazeCampaignStats?,
-                    val onClick: (campaignId: Int) -> Unit,
+                    val onClick: (campaignId: String) -> Unit,
                 ) {
                     data class BlazeCampaignStats(
                         val impressions: UiString,

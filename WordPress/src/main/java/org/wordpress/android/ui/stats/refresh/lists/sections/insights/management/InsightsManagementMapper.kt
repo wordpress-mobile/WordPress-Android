@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.managemen
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.StatsStore.InsightType
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ACTION_GROW
@@ -36,29 +35,21 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import javax.inject.Inject
 import javax.inject.Named
 
-private val POSTS_AND_PAGES_INSIGHTS = listOf(
-    LATEST_POST_SUMMARY, POSTING_ACTIVITY, TAGS_AND_CATEGORIES
-)
-private val ACTIVITY_INSIGHTS = mutableListOf(
-    FOLLOWERS,
-    FOLLOWER_TOTALS,
-    PUBLICIZE
-)
+private val POSTS_AND_PAGES_INSIGHTS = listOf(LATEST_POST_SUMMARY, POSTING_ACTIVITY, TAGS_AND_CATEGORIES)
+private val ACTIVITY_INSIGHTS = mutableListOf(FOLLOWERS, TOTAL_LIKES, TOTAL_COMMENTS, TOTAL_FOLLOWERS, PUBLICIZE)
 private val GENERAL_INSIGHTS = mutableListOf(
     ALL_TIME_STATS,
     MOST_POPULAR_DAY_AND_HOUR,
-    ANNUAL_SITE_STATS,
-    TODAY_STATS
+    TODAY_STATS,
+    ANNUAL_SITE_STATS
 )
 
-class InsightsManagementMapper @Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) {
+class InsightsManagementMapper @Inject constructor(@Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher) {
     suspend fun buildUIModel(addedTypes: Set<InsightType>, onClick: (InsightType) -> Unit) =
         withContext(bgDispatcher) {
             val insightListItems = mutableListOf<InsightListItem>()
             insightListItems += Header(R.string.stats_insights_management_general)
-            if (BuildConfig.IS_JETPACK_APP && !GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
+            if (!GENERAL_INSIGHTS.contains(VIEWS_AND_VISITORS)) {
                 GENERAL_INSIGHTS.add(0, VIEWS_AND_VISITORS)
             }
             insightListItems += GENERAL_INSIGHTS.map { type ->
@@ -70,14 +61,6 @@ class InsightsManagementMapper @Inject constructor(
             }
             insightListItems += Header(R.string.stats_insights_management_activity)
 
-            if (BuildConfig.IS_JETPACK_APP && ACTIVITY_INSIGHTS.contains(FOLLOWER_TOTALS)) {
-                // Replace FOLLOWER_TOTALS with Stats revamp v2 total insights
-                val followerTotalsIndex = ACTIVITY_INSIGHTS.indexOf(FOLLOWER_TOTALS)
-                ACTIVITY_INSIGHTS.remove(FOLLOWER_TOTALS)
-
-                val statsRevampV2TotalInsights = listOf(TOTAL_LIKES, TOTAL_COMMENTS, TOTAL_FOLLOWERS)
-                ACTIVITY_INSIGHTS.addAll(followerTotalsIndex, statsRevampV2TotalInsights)
-            }
             insightListItems += ACTIVITY_INSIGHTS.map { type ->
                 buildInsightModel(type, addedTypes, onClick)
             }
@@ -105,18 +88,16 @@ class InsightsManagementMapper @Inject constructor(
         ALL_TIME_STATS -> R.string.stats_insights_all_time_stats
         TAGS_AND_CATEGORIES -> R.string.stats_insights_tags_and_categories
         COMMENTS -> R.string.stats_comments
-        FOLLOWERS -> R.string.stats_view_followers
+        FOLLOWERS -> R.string.stats_view_subscribers
         TODAY_STATS -> R.string.stats_insights_today
         POSTING_ACTIVITY -> R.string.stats_insights_posting_activity
         PUBLICIZE -> R.string.stats_view_publicize
         ANNUAL_SITE_STATS -> R.string.stats_insights_this_year_site_stats
         TOTAL_LIKES -> R.string.stats_view_total_likes
         TOTAL_COMMENTS -> R.string.stats_view_total_comments
-        TOTAL_FOLLOWERS -> R.string.stats_view_total_followers
+        TOTAL_FOLLOWERS -> R.string.stats_view_total_subscribers
         AUTHORS_COMMENTS -> R.string.stats_comments_authors
         POSTS_COMMENTS -> R.string.stats_comments_posts_and_pages
-        FOLLOWER_TOTALS -> R.string.stats_view_follower_totals
-        FOLLOWER_TYPES -> null
-        ACTION_REMINDER, ACTION_SCHEDULE, ACTION_GROW -> null
+        FOLLOWER_TYPES, ACTION_REMINDER, ACTION_SCHEDULE, ACTION_GROW, FOLLOWER_TOTALS -> null
     }
 }

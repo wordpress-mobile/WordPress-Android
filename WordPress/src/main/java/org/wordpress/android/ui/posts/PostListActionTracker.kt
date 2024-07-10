@@ -23,6 +23,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_READ
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PROMOTE_WITH_BLAZE
 
 fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postData: PostModel, statsEvent: Stat) {
@@ -40,6 +41,7 @@ fun trackPostListAction(site: SiteModel, buttonType: PostListButtonType, postDat
         BUTTON_RETRY -> "retry"
         BUTTON_SUBMIT -> "submit"
         BUTTON_VIEW -> "view"
+        BUTTON_READ -> "read"
         BUTTON_PREVIEW -> "preview"
         BUTTON_STATS -> "stats"
         BUTTON_TRASH -> "trash"

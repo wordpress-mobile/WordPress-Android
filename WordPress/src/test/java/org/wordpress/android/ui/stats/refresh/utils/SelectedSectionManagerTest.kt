@@ -13,9 +13,13 @@ import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.MONTHS
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 
 @ExperimentalCoroutinesApi
 class SelectedSectionManagerTest : BaseUnitTest() {
+    @Mock
+    private lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
+
     @Mock
     lateinit var sharedPreferences: SharedPreferences
 
@@ -25,7 +29,7 @@ class SelectedSectionManagerTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        selectedSectionManager = SelectedSectionManager(sharedPreferences)
+        selectedSectionManager = SelectedSectionManager(sharedPreferences, trafficSubscribersTabFeatureConfig)
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
     }
 

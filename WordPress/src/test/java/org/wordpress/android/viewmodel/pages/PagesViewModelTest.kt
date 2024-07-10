@@ -40,6 +40,7 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.blaze.BlazeFeatureUtils
 import org.wordpress.android.ui.pages.PageItem
@@ -53,6 +54,7 @@ import org.wordpress.android.ui.pages.PagesListAction.SHARE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.posts.PostConflictResolutionFeatureUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -115,6 +117,12 @@ class PagesViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    lateinit var uploadStore: UploadStore
+
+    @Mock
+    lateinit var postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils
+
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -144,7 +152,7 @@ class PagesViewModelTest : BaseUnitTest() {
             previewStateHelper = mock(),
             analyticsTracker = analyticsTracker,
             uploadStatusTracker = mock(),
-            autoSaveConflictResolver = mock(),
+            pageConflictDetector = mock(),
             uiDispatcher = testDispatcher(),
             defaultDispatcher = testDispatcher(),
             eventBusWrapper = mock(),
@@ -156,6 +164,8 @@ class PagesViewModelTest : BaseUnitTest() {
             accountStore = accountStore,
             prefs = appPrefsWrapper,
             blazeFeatureUtils = blazeFeatureUtils,
+            postConflictResolutionFeatureUtils = postConflictResolutionFeatureUtils,
+            uploadStore = uploadStore
         )
         listStates = mutableListOf()
         pages = mutableListOf()

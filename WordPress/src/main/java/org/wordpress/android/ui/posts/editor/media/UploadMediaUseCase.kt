@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.QUEUED
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import javax.inject.Inject
 
@@ -24,9 +25,13 @@ class UploadMediaUseCase @Inject constructor(
         mediaModels.let { queuedMediaModels ->
             // before starting the service, we need to update the posts' contents so we are sure the service
             // can retrieve it from there on
-            editorMediaListener.syncPostObjectWithUiAndSaveIt(EditPostActivity.OnPostUpdatedFromUIListener {
-                uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
-            })
+            val listener = object : EditPostActivity.OnPostUpdatedFromUIListener {
+                override fun onPostUpdatedFromUI(updatePostResult: EditPostRepository.UpdatePostResult) {
+                    uploadServiceFacade.uploadMediaFromEditor(ArrayList(queuedMediaModels))
+                }
+            }
+
+            editorMediaListener.syncPostObjectWithUiAndSaveIt(listener)
         }
     }
 }

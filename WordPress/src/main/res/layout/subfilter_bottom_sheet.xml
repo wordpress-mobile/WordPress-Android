@@ -26,11 +26,11 @@
             android:text="@string/reader_filter_by_blog_title" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/edit_subscriptions"
+            android:id="@+id/manage_subscriptions"
             style="@style/SiteTagBottomSheetAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit"/>
+            android:text="@string/manage"/>
     </LinearLayout>
 
     <androidx.viewpager.widget.ViewPager

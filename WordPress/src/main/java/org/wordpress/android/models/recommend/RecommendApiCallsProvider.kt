@@ -51,7 +51,7 @@ class RecommendApiCallsProvider @Inject constructor(
                 cont.resume(Failure(errorMessage))
             }
 
-            restClientProvider.getRestClientUtilsV2().get(
+            restClientProvider.getRestClientUtilsV2().getWithLocale(
                 endPointPath,
                 listener,
                 errorListener

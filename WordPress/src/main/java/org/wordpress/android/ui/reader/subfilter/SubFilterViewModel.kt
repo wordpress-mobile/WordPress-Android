@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.datasets.ReaderBlogTable
-import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
+import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
@@ -38,7 +38,6 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
-import java.util.Comparator
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Named
@@ -50,7 +49,9 @@ class SubFilterViewModel @Inject constructor(
     private val subfilterListItemMapper: SubfilterListItemMapper,
     private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore,
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val readerTagTableWrapper: ReaderTagTableWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
 ) : ScopedViewModel(bgDispatcher) {
     private val _subFilters = MutableLiveData<List<SubfilterListItem>>()
     val subFilters: LiveData<List<SubfilterListItem>> = _subFilters
@@ -125,6 +126,7 @@ class SubFilterViewModel @Inject constructor(
             ""
         }
     }
+
     fun loadSubFilters() {
         launch {
             val filterList = ArrayList<SubfilterListItem>()
@@ -132,19 +134,19 @@ class SubFilterViewModel @Inject constructor(
             if (accountStore.hasAccessToken()) {
                 val organization = mTagFragmentStartedWith?.organization
 
-                val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
+                val followedBlogs = readerBlogTableWrapper.getFollowedBlogs().let { blogList ->
                     // Filtering out all blogs not belonging to this VM organization if valid
                     blogList.filter { blog ->
                         organization?.let {
                             blog.organizationId == organization.orgId
                         } ?: false
                     }
-                }.sortedWith(Comparator { blog1, blog2 ->
+                }.sortedWith { blog1, blog2 ->
                     // sort followed blogs by name/domain to match display
                     val blogOneName = getBlogNameForComparison(blog1)
                     val blogTwoName = getBlogNameForComparison(blog2)
                     blogOneName.compareTo(blogTwoName, true)
-                })
+                }
 
                 filterList.addAll(
                     followedBlogs.map { blog ->
@@ -157,7 +159,7 @@ class SubFilterViewModel @Inject constructor(
                 )
             }
 
-            val tags = ReaderTagTable.getFollowedTags()
+            val tags = readerTagTableWrapper.getFollowedTags()
 
             for (tag in tags) {
                 filterList.add(
@@ -217,7 +219,15 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun setDefaultSubfilter(isClearingFilter: Boolean) {
-        readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
+        val filterItemType = FilterItemType.fromSubfilterListItem(getCurrentSubfilterValue())
+        if (filterItemType != null) {
+            readerTracker.track(
+                Stat.READER_FILTER_SHEET_CLEARED,
+                mutableMapOf(FilterItemType.trackingEntry(filterItemType))
+            )
+        } else {
+            readerTracker.track(Stat.READER_FILTER_SHEET_CLEARED)
+        }
         updateSubfilter(
             filter = SiteAll(
                 onClickAction = ::onSubfilterClicked,
@@ -231,13 +241,14 @@ class SubFilterViewModel @Inject constructor(
         category: SubfilterCategory,
     ) {
         updateTagsAndSites()
+        loadSubFilters()
         _bottomSheetUiState.value = Event(
             BottomSheetVisible(
                 UiStringRes(category.titleRes),
                 category
             )
         )
-        val source = when(category) {
+        val source = when (category) {
             SubfilterCategory.SITES -> "blogs"
             SubfilterCategory.TAGS -> "tags"
         }
@@ -315,9 +326,17 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        // We should not track subfilter selected if we're clearing a filter that is currently applied.
-        if (!subfilterListItem.isClearingFilter) {
-            readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+        // We should only track the selection of a subfilter if it's a tracked item (meaning it's a valid tag or site)
+        if (subfilterListItem.isTrackedItem) {
+            val filterItemType = FilterItemType.fromSubfilterListItem(subfilterListItem)
+            if (filterItemType != null) {
+                readerTracker.track(
+                    Stat.READER_FILTER_SHEET_ITEM_SELECTED,
+                    mutableMapOf(FilterItemType.trackingEntry(filterItemType))
+                )
+            } else {
+                readerTracker.track(Stat.READER_FILTER_SHEET_ITEM_SELECTED)
+            }
         }
         changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
@@ -338,6 +357,7 @@ class SubFilterViewModel @Inject constructor(
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
         _currentSubFilter.value = filter
+        onSubfilterSelected(filter)
     }
 
     fun onUserComesToReader() {
@@ -398,11 +418,13 @@ class SubFilterViewModel @Inject constructor(
         loadSubFilters()
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
+    @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.FollowedBlogsChanged) {
-        AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
-        loadSubFilters()
+    fun onEventMainThread(event: ReaderEvents.FollowedBlogsFetched) {
+        if (event.didChange()) {
+            AppLog.d(T.READER, "Subfilter bottom sheet > followed blogs changed")
+            loadSubFilters()
+        }
     }
 
     override fun onCleared() {
@@ -421,6 +443,24 @@ class SubFilterViewModel @Inject constructor(
         @JvmStatic
         fun getViewModelKeyForTag(tag: ReaderTag): String {
             return SUBFILTER_VM_BASE_KEY + tag.keyString
+        }
+    }
+
+    sealed class FilterItemType(val trackingValue: String) {
+        data object Tag : FilterItemType("topic")
+
+        data object Blog : FilterItemType("site")
+
+        companion object {
+            fun fromSubfilterListItem(subfilterListItem: SubfilterListItem): FilterItemType? =
+                when (subfilterListItem.type) {
+                    SubfilterListItem.ItemType.SITE -> Blog
+                    SubfilterListItem.ItemType.TAG -> Tag
+                    else -> null
+                }
+
+            fun trackingEntry(filterItemType: FilterItemType): Pair<String, String> =
+                "type" to filterItemType.trackingValue
         }
     }
 }

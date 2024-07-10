@@ -19,10 +19,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.engagement.BottomSheetUiState.UserProfileUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -114,7 +114,7 @@ class UserProfileBottomSheetFragment : BottomSheetDialogFragment() {
                     imageManager.loadIntoCircle(
                         userAvatar,
                         AVATAR_WITH_BACKGROUND,
-                        GravatarUtils.fixGravatarUrl(state.userAvatarUrl, avatarSz)
+                        WPAvatarUtils.rewriteAvatarUrl(state.userAvatarUrl, avatarSz)
                     )
                     userName.text = state.userName
                     userLogin.text = if (state.userLogin.isNotBlank()) {

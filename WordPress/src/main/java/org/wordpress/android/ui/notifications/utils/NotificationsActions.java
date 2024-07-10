@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.notifications.utils;
 
+import androidx.annotation.Nullable;
+
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
@@ -58,7 +60,7 @@ public class NotificationsActions {
         return notes;
     }
 
-    public static void markNoteAsRead(final Note note) {
+    public static void markNoteAsRead(@Nullable final Note note) {
         if (note == null) {
             return;
         }

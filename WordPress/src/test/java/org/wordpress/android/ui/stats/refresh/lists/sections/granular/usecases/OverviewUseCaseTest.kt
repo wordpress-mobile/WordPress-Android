@@ -38,7 +38,6 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 
@@ -83,9 +82,6 @@ class OverviewUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var statsUtils: StatsUtils
 
-    @Mock
-    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
-
     private lateinit var useCase: OverviewUseCase
     private val site = SiteModel()
     private val siteId = 1L
@@ -109,9 +105,7 @@ class OverviewUseCaseTest : BaseUnitTest() {
             analyticsTrackerWrapper,
             statsWidgetUpdaters,
             localeManagerWrapper,
-            resourceProvider,
-            statsUtils,
-            trafficTabFeatureConfig
+            resourceProvider
         )
         site.siteId = siteId
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -141,7 +135,8 @@ class OverviewUseCaseTest : BaseUnitTest() {
             assertThat(this[1]).isEqualTo(barChartItem)
             assertThat(this[2]).isEqualTo(columns)
         }
-        verify(statsWidgetUpdaters, times(2)).updateViewsWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateViewsWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateWeekViewsWidget(siteId)
     }
 
     @Test

@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -32,18 +33,16 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received with prompts card, then track once`() =
         test {
             launch {
-                helper.onResume(siteSelected())
-
                 // with prompt card (transient state)
                 helper.onDashboardCardsUpdated(
-                    this, siteSelected()
+                    this, getBloggingPromptCards()
                 )
 
                 delay(10)
 
                 // again with prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
-                    this, siteSelected()
+                    this, getBloggingPromptCards()
                 )
 
                 advanceUntilIdle()
@@ -60,54 +59,21 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
     fun `given onResume was called in dashboard, when dashboard cards are received without prompts card, then don't track`() =
         test {
             launch {
-                helper.onResume(siteSelected())
-
-                // with prompt card (transient state)
+                // without prompt card (transient state)
                 helper.onDashboardCardsUpdated(
                     this,
-                    siteSelected()
+                    emptyList()
                 )
 
-                delay(10)
-
-                // again without prompt card (final state) to test debounce
-                helper.onDashboardCardsUpdated(
-                    this,
-                    siteSelected()
-                )
-
-                advanceUntilIdle()
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed("attribution")
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
-
-    @Suppress("MaxLineLength")
-
-    @Test
-    fun `given dashboard cards were received with prompts card, when onResume is called in dashboard, then track once`() =
-        test {
-            launch {
-                // with prompt card (transient state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                    siteSelected()
-                )
-
-                delay(10)
+                delay(500L)
 
                 // again with prompt card (final state) to test debounce
                 helper.onDashboardCardsUpdated(
                     this,
-                    siteSelected()
+                    getBloggingPromptCards()
                 )
 
                 advanceUntilIdle()
-
-                helper.onResume(siteSelected())
 
                 verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed("bloganuary")
 
@@ -116,62 +82,30 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
             }
         }
 
-    @Suppress("MaxLineLength")
-    @Test
-    fun `given dashboard cards were received without prompts card, when onResume is called in dashboard, then don't track`() =
-        test {
-            launch {
-                // with prompt card (transient state)
-                helper.onDashboardCardsUpdated(
-                    this,
-                    siteSelected()
-                )
-
-                delay(10)
-
-                // again without prompt card (final state) to test debounce
-                helper.onDashboardCardsUpdated(
-                    this,
-                    siteSelected()
-                )
-
-                advanceUntilIdle()
-
-                helper.onResume(siteSelected())
-
-                verify(bloggingPromptsCardAnalyticsTracker, never()).trackMySiteCardViewed("attribution")
-
-                // need to cancel this internal job to finish the test
-                cancel()
-            }
-        }
 
     @Test
-    fun `given new site selected, when dashboard cards are updated with prompt card, then track once`() = test {
+    fun `given new site selected, when dashboard cards are updated with prompt card, then track`() = test {
         launch {
-            // old site did not have prompt card
+            // old site have prompt card
             helper.onDashboardCardsUpdated(
                 this,
-                mock()
+                getBloggingPromptCards()
             )
 
             // simulate the user was here for a while
             delay(1000L)
 
             // new site selected
-            helper.onSiteChanged(1, siteSelected())
-
-            // screen resumed
-            helper.onResume(siteSelected())
+            helper.onSiteChanged()
 
             // dashboard cards updated with prompt card
             helper.onDashboardCardsUpdated(
-                this, siteSelected()
+                this, getBloggingPromptCards()
             )
 
             advanceUntilIdle()
 
-            verify(bloggingPromptsCardAnalyticsTracker).trackMySiteCardViewed("bloganuary")
+            verify(bloggingPromptsCardAnalyticsTracker, atLeast(2)).trackMySiteCardViewed("bloganuary")
 
             // need to cancel this internal job to finish the test
             cancel()
@@ -183,24 +117,19 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
         launch {
             helper.onDashboardCardsUpdated(
                 this,
-                siteSelected().copy(
-                    dashboardData = emptyList()
-                )
+                getBloggingPromptCards()
             )
 
             // simulate the user was here for a while
             delay(1000L)
 
             // new site selected
-            helper.onSiteChanged(1, siteSelected())
-
-            // screen resumed
-            helper.onResume(siteSelected())
+            helper.onSiteChanged()
 
             // dashboard cards updated without prompt card
             helper.onDashboardCardsUpdated(
                 this,
-                siteSelected()
+                emptyList()
             )
 
             advanceUntilIdle()
@@ -212,8 +141,7 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
         }
     }
 
-    private fun siteSelected() = MySiteViewModel.State.SiteSelected(
-        dashboardData = listOf(
+    private fun getBloggingPromptCards() = listOf(
             MySiteCardAndItem.Card.BloggingPromptCard.BloggingPromptCardWithData(
                 prompt = UiString.UiStringText("prompt"),
                 respondents = listOf(
@@ -231,6 +159,5 @@ class BloggingPromptsCardTrackHelperTest : BaseUnitTest() {
                 onViewAnswersClick = {},
                 onRemoveClick = {},
             )
-        ),
-    )
+        )
 }

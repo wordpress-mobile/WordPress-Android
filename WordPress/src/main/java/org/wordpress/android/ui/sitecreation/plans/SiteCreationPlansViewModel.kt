@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.WPWebViewActivity
@@ -23,6 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SiteCreationPlansViewModel @Inject constructor(
+    private val userAgent: UserAgent,
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper
@@ -79,7 +80,7 @@ class SiteCreationPlansViewModel @Inject constructor(
             SiteCreationPlansModel(
                 enableJavascript = true,
                 enableDomStorage = true,
-                userAgent = WordPress.getUserAgent(),
+                userAgent = userAgent.toString(),
                 enableChromeClient = true,
                 url = url,
                 addressToLoad = addressToLoad

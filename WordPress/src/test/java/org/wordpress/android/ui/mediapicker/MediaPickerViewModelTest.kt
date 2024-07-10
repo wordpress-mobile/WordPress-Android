@@ -31,7 +31,6 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIcon.
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.ENABLED
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.HIDDEN
-import org.wordpress.android.ui.mediapicker.MediaPickerSetup.CameraSetup.STORIES
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.STOCK_LIBRARY
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource.WP_LIBRARY
@@ -686,15 +685,9 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `camera FAB is shown in stories when no selected items`() = test {
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), STORIES))
-        assertStoriesFabIsVisible()
-    }
-
-    @Test
     fun `camera FAB is not shown in stories when selected items`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
-        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO), STORIES))
+        setupViewModel(listOf(firstItem), buildMediaPickerSetup(true, setOf(IMAGE, VIDEO)))
 
         selectItem(0)
 
@@ -1019,12 +1012,6 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         defaultSearchView = false,
         title = R.string.wp_media_title
     )
-
-    private fun assertStoriesFabIsVisible() {
-        uiStates.last().fabUiModel.let { model ->
-            assertThat(model.show).isEqualTo(true)
-        }
-    }
 
     private fun assertStoriesFabIsHidden() {
         uiStates.last().fabUiModel.let { model ->

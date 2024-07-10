@@ -30,9 +30,11 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
+import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.store.UploadStore.ClearMediaPayload;
+import org.wordpress.android.fluxc.store.UploadStore.UploadError;
 import org.wordpress.android.ui.media.services.MediaUploadReadyListener;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -1050,6 +1052,15 @@ public class UploadService extends Service {
                         EventBus.getDefault().post(
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
+                        // Do not re-enqueue a post that has already failed with a version conflict
+                        UploadError error = mUploadStore.getUploadErrorForPost(updatedPost);
+                        if (error != null
+                            && error.postError != null
+                            && error.postError.type == PostErrorType.OLD_REVISION
+                        ) {
+                            continue;
+                        }
+
                         // Do not re-enqueue a post that has already failed
                         if (isError != null && isError && mUploadStore.isFailedPost(updatedPost)) {
                             continue;

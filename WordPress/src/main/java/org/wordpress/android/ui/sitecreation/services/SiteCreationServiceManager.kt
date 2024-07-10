@@ -136,7 +136,7 @@ class SiteCreationServiceManager @Inject constructor(
                          */
                         val errorMsg = "Site already exists - seems like an issue with domain suggestions endpoint"
                         AppLog.e(T.SITE_CREATION, errorMsg)
-                        throw IllegalStateException(errorMsg)
+                        executePhase(FAILURE)
                     }
                 } else {
                     executePhase(FAILURE)

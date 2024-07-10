@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.utils.ReaderAnnouncementHelper
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
@@ -62,6 +63,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
+    private val readerAnnouncementHelper: ReaderAnnouncementHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -159,8 +161,19 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
+                        val announcement = if (readerAnnouncementHelper.hasReaderAnnouncement()) {
+                            listOf(
+                                ReaderCardUiState.ReaderAnnouncementCardUiState(
+                                    readerAnnouncementHelper.getReaderAnnouncementItems(),
+                                    ::dismissAnnouncementCard
+                                )
+                            )
+                        } else {
+                            emptyList()
+                        }
+
                         _uiState.value = DiscoverUiState.ContentUiState(
-                            convertCardsToUiStates(posts),
+                            announcement + convertCardsToUiStates(posts),
                             reloadProgressVisibility = false,
                             loadMoreProgressVisibility = false,
                         )
@@ -175,6 +188,15 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun dismissAnnouncementCard() {
+        readerAnnouncementHelper.dismissReaderAnnouncement()
+        _uiState.value = (_uiState.value as? DiscoverUiState.ContentUiState)?.let { contentUiState ->
+            contentUiState.copy(
+                cards = contentUiState.cards.filterNot { it is ReaderCardUiState.ReaderAnnouncementCardUiState }
+            )
         }
     }
 
@@ -560,14 +582,14 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class ShowNoFollowedTagsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_empty_title
-                override val subTitleRes = R.string.reader_discover_empty_subtitle_subscribe
+                override val subTitleRes = R.string.reader_discover_empty_subtitle_follow
                 override val buttonResId = R.string.reader_discover_empty_button_text
             }
 
             data class ShowNoPostsUiState(override val action: () -> Unit) : EmptyUiState() {
                 override val titleResId = R.string.reader_discover_no_posts_title
-                override val buttonResId = R.string.reader_discover_no_posts_button_tags_text
-                override val subTitleRes = R.string.reader_discover_no_posts_subscribe_subtitle
+                override val buttonResId = R.string.reader_discover_no_posts_button_tags_text_follow
+                override val subTitleRes = R.string.reader_discover_no_posts_follow_subtitle
                 override val illustrationResId = R.drawable.illustration_reader_empty
             }
         }

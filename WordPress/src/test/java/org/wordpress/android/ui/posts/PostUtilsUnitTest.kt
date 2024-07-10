@@ -91,6 +91,51 @@ https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadCon
     }
 
     @Test
+    fun `removeWPVideoPress removes video block tags and its internals without affecting content in between`() {
+        val content = """
+<!-- wp:paragraph -->
+<p>Before</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:video {"guid":"AbCDe","id":5297} -->
+<figure class="wp-block-video"><div class="wp-block-embed__wrapper">
+https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadContent=metadata&amp;useAverageColor=true
+</div></figure>
+<!-- /wp:video -->
+
+<!-- wp:paragraph -->
+<p>Between</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:video {"guid":"AbCDe","id":5297} -->
+<figure class="wp-block-video"><div class="wp-block-embed__wrapper">
+https://videopress.com/v/AbCDe?resizeToParent=true&amp;cover=true&amp;preloadContent=metadata&amp;useAverageColor=true
+</div></figure>
+<!-- /wp:video -->
+
+<!-- wp:paragraph -->
+<p>After</p>
+<!-- /wp:paragraph -->
+"""
+        val expectedResult = """
+<!-- wp:paragraph -->
+<p>Before</p>
+<!-- /wp:paragraph -->
+
+
+<!-- wp:paragraph -->
+<p>Between</p>
+<!-- /wp:paragraph -->
+
+
+<!-- wp:paragraph -->
+<p>After</p>
+<!-- /wp:paragraph -->
+"""
+        assertThat(PostUtils.removeWPVideoPress(content)).isEqualTo(expectedResult)
+    }
+
+    @Test
     fun `prepareForPublish updates dateLocallyChanged`() {
         val post = invokePreparePostForPublish()
         assertThat(post.dateLocallyChanged).isNotEmpty()

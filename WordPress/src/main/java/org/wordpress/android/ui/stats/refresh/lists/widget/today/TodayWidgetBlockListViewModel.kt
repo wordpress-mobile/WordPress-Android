@@ -7,11 +7,13 @@ import org.wordpress.android.fluxc.model.stats.VisitsModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.BlockItemUiModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetBlockListProvider.WidgetBlockListViewModel
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -22,7 +24,8 @@ class TodayWidgetBlockListViewModel
     private val resourceProvider: ResourceProvider,
     private val todayWidgetUpdater: TodayWidgetUpdater,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val statsUtils: StatsUtils
+    private val statsUtils: StatsUtils,
+    private val trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : WidgetBlockListViewModel {
     private var siteId: Int? = null
     private var colorMode: Color = Color.LIGHT
@@ -79,7 +82,10 @@ class TodayWidgetBlockListViewModel
                 resourceProvider.getString(R.string.stats_views),
                 statsUtils.toFormattedString(domainModel.views, MILLION),
                 resourceProvider.getString(R.string.stats_visitors),
-                statsUtils.toFormattedString(domainModel.visitors, MILLION)
+                statsUtils.toFormattedString(domainModel.visitors, MILLION),
+                targetTimeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) {
+                    StatsTimeframe.TRAFFIC
+                } else StatsTimeframe.INSIGHTS
             ),
             BlockItemUiModel(
                 layout,
@@ -87,7 +93,12 @@ class TodayWidgetBlockListViewModel
                 resourceProvider.getString(R.string.likes),
                 statsUtils.toFormattedString(domainModel.likes, MILLION),
                 resourceProvider.getString(R.string.stats_comments),
-                statsUtils.toFormattedString(domainModel.comments, MILLION)
+                statsUtils.toFormattedString(domainModel.comments, MILLION),
+                targetTimeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) {
+                    StatsTimeframe.TRAFFIC
+                } else {
+                    StatsTimeframe.INSIGHTS
+                }
             )
         )
     }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases
 
 import android.view.View
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_ADD_NEW_POST_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_LATEST_POST_SUMMARY_POST_ITEM_TAPPED
@@ -32,6 +31,7 @@ import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.ListItemInteraction
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,7 +46,8 @@ class LatestPostSummaryUseCase
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val popupMenuHandler: ItemPopupMenuHandler,
     private val statsUtils: StatsUtils,
-    private val contentDescriptionHelper: ContentDescriptionHelper
+    private val contentDescriptionHelper: ContentDescriptionHelper,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) : StatelessUseCase<InsightsLatestPostModel>(LATEST_POST_SUMMARY, mainDispatcher, backgroundDispatcher) {
     override suspend fun loadCachedData(): InsightsLatestPostModel? {
         return latestPostStore.getLatestPostInsights(statsSiteProvider.siteModel)
@@ -79,7 +80,7 @@ class LatestPostSummaryUseCase
     private fun buildNullableUiModel(domainModel: InsightsLatestPostModel?): MutableList<BlockListItem> {
         val items = mutableListOf<BlockListItem>()
 
-        if (BuildConfig.IS_JETPACK_APP) {
+        if (buildConfigWrapper.isJetpackApp) {
             items.add(buildTitleViewMore(domainModel))
             items.add(latestPostSummaryMapper.buildLatestPostItem(domainModel))
             if (domainModel != null && domainModel.hasData()) items.add(buildQuickScanItems(domainModel))
@@ -185,7 +186,7 @@ class LatestPostSummaryUseCase
                 navigateAction = ListItemInteraction.create(this::onAddNewPostClick)
             )
             model.hasData() -> {
-                if (!BuildConfig.IS_JETPACK_APP) {
+                if (!buildConfigWrapper.isJetpackApp) {
                     Link(
                         text = R.string.stats_insights_view_more,
                         navigateAction = ListItemInteraction.create(

@@ -77,14 +77,18 @@ public class ReaderLikeTable {
         if (post == null) {
             return;
         }
+        setCurrentUserLikesPost(post.postId, post.blogId, isLiked, wpComUserId);
+    }
+
+    public static void setCurrentUserLikesPost(long postId, long blogId, boolean isLiked, long wpComUserId) {
         if (isLiked) {
             ContentValues values = new ContentValues();
-            values.put("blog_id", post.blogId);
-            values.put("post_id", post.postId);
+            values.put("blog_id", blogId);
+            values.put("post_id", postId);
             values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_post_likes", null, values);
         } else {
-            String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(wpComUserId)};
+            String[] args = {Long.toString(blogId), Long.toString(postId), Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_post_likes", "blog_id=? AND post_id=? AND user_id=?", args);
         }
     }

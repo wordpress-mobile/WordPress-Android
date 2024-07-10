@@ -6,12 +6,17 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -34,6 +39,9 @@ class ReaderTrackerTest {
     @Mock
     lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
+    @Mock
+    lateinit var readingPreferencesTracker: ReaderReadingPreferencesTracker
+
     private lateinit var tracker: ReaderTracker
 
     @Before
@@ -42,7 +50,8 @@ class ReaderTrackerTest {
             dateProvider,
             appPrefsWrapper,
             analyticsTrackerWrapper,
-            analyticsUtilsWrapper
+            analyticsUtilsWrapper,
+            readingPreferencesTracker,
         )
     }
 
@@ -313,6 +322,40 @@ class ReaderTrackerTest {
         verify(analyticsTrackerWrapper).track(
             stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
             properties = mapOf("id" to "list"),
+        )
+    }
+
+    @Test
+    fun `Should track dropdown menu tags feed item tapped`() {
+        tracker.trackDropdownMenuItemTapped(
+            ReaderTag(
+                "slug",
+                "displayName",
+                "title",
+                null,
+                ReaderTagType.TAGS,
+            )
+        )
+        verify(analyticsTrackerWrapper).track(
+            stat = AnalyticsTracker.Stat.READER_DROPDOWN_MENU_ITEM_TAPPED,
+            properties = mapOf("id" to "tags"),
+        )
+    }
+
+    @Test
+    fun `Should track post with reading preferences returned from ReadingPreferencesTracker`() {
+        val post = ReaderPost()
+        val readingPreferences = ReaderReadingPreferences()
+        val properties = mutableMapOf<String, Any>("key" to "value")
+        whenever(readingPreferencesTracker.getPropertiesForPreferences(eq(readingPreferences), any()))
+            .thenReturn(properties)
+
+        tracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_OPENED, post, readingPreferences)
+
+        verify(analyticsUtilsWrapper).trackWithReaderPostDetails(
+            AnalyticsTracker.Stat.READER_ARTICLE_OPENED,
+            post,
+            properties
         )
     }
 

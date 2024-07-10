@@ -13,7 +13,7 @@ import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.NextPage
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.SubHeader
 import org.wordpress.android.ui.utils.AnimationUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
     lateinit var resourceProvider: ResourceProvider
 
     @Inject
-    lateinit var gravatarUtilsWrapper: GravatarUtilsWrapper
+    lateinit var avatarUtilsWrapper: WPAvatarUtilsWrapper
 
     @Inject
     lateinit var animationUtilsWrapper: AnimationUtilsWrapper
@@ -53,7 +53,7 @@ class UnifiedCommentListAdapter(context: Context) : ListAdapter<UnifiedCommentLi
                 uiHelpers,
                 commentListUiUtils,
                 resourceProvider,
-                gravatarUtilsWrapper,
+                avatarUtilsWrapper,
                 animationUtilsWrapper
             )
             NEXT_PAGE_LOADER.ordinal -> LoadStateViewHolder(parent)

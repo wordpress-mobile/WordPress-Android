@@ -109,7 +109,13 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         val error = "Invalid response received"
         whenever(jsonObject.toString()).thenReturn("{name:\"wordpress\",message=[]}")
         whenever(context.getString(R.string.recommend_app_bad_format_response)).thenReturn(error)
-        whenever(restClientUtils.get(anyString(), listenerCaptor.capture(), errorListenerCaptor.capture())).doAnswer {
+        whenever(
+            restClientUtils.getWithLocale(
+                anyString(),
+                listenerCaptor.capture(),
+                errorListenerCaptor.capture()
+            )
+        ).doAnswer {
             listenerCaptor.lastValue.onResponse(jsonObject)
             null
         }
@@ -127,7 +133,13 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
         val error = "Invalid response received"
         whenever(jsonObject.optString("name")).thenReturn("jetpack")
         whenever(context.getString(R.string.recommend_app_bad_format_response)).thenReturn(error)
-        whenever(restClientUtils.get(anyString(), listenerCaptor.capture(), errorListenerCaptor.capture())).doAnswer {
+        whenever(
+            restClientUtils.getWithLocale(
+                anyString(),
+                listenerCaptor.capture(),
+                errorListenerCaptor.capture()
+            )
+        ).doAnswer {
             listenerCaptor.lastValue.onResponse(jsonObject)
             null
         }
@@ -144,7 +156,13 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
     fun `error is tracked on null net response`() = test {
         val error = "No response received"
         whenever(context.getString(R.string.recommend_app_null_response)).thenReturn(error)
-        whenever(restClientUtils.get(anyString(), listenerCaptor.capture(), errorListenerCaptor.capture())).doAnswer {
+        whenever(
+            restClientUtils.getWithLocale(
+                anyString(),
+                listenerCaptor.capture(),
+                errorListenerCaptor.capture()
+            )
+        ).doAnswer {
             listenerCaptor.lastValue.onResponse(null)
             null
         }
@@ -161,7 +179,13 @@ class RecommendApiCallsProviderTest : BaseUnitTest() {
     fun `error is tracked on volley error`() = test {
         val error = "Unknown error fetching recommend app template"
         whenever(context.getString(R.string.recommend_app_generic_get_template_error)).thenReturn(error)
-        whenever(restClientUtils.get(anyString(), listenerCaptor.capture(), errorListenerCaptor.capture())).doAnswer {
+        whenever(
+            restClientUtils.getWithLocale(
+                anyString(),
+                listenerCaptor.capture(),
+                errorListenerCaptor.capture()
+            )
+        ).doAnswer {
             errorListenerCaptor.lastValue.onErrorResponse(mock())
             null
         }

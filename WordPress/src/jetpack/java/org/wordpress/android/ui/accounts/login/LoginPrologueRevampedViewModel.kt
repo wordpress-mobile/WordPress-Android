@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts.login
 
-import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -9,7 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
@@ -41,7 +39,7 @@ private const val DEFAULT_PITCH = (-30 * PI / 180).toFloat()
 class LoginPrologueRevampedViewModel @Inject constructor(
     private val unifiedLoginTracker: UnifiedLoginTracker,
     analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    @ApplicationContext appContext: Context,
+    sensorManager: SensorManager,
 ) : ViewModel() {
     private val accelerometerData = FloatArray(3)
     private val magnetometerData = FloatArray(3)
@@ -88,9 +86,6 @@ class LoginPrologueRevampedViewModel @Inject constructor(
      * velocity and position for each frame.
      */
     private val _positionData = object : MutableLiveData<Float>(), SensorEventListener {
-        private val sensorManager
-            get() = appContext.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
         override fun onActive() {
             super.onActive()
             sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.also {

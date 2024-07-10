@@ -5,8 +5,6 @@
  */
 package org.wordpress.android.ui.notifications
 
-import android.annotation.SuppressLint
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
@@ -16,7 +14,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ListView
 import androidx.fragment.app.ListFragment
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
 import org.wordpress.android.R
@@ -36,6 +38,8 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
 import org.wordpress.android.fluxc.tools.FormattableRangeType.USER
 import org.wordpress.android.models.Note
+import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.ViewPagerFragment.Companion.restoreOriginalViewId
 import org.wordpress.android.ui.ViewPagerFragment.Companion.setUniqueIdToView
@@ -66,6 +70,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
+import javax.inject.Named
 
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var restoredListPosition = 0
@@ -76,7 +81,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var commentListPosition = ListView.INVALID_POSITION
     private var onCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var noteBlockAdapter: NoteBlockAdapter? = null
-    private var confettiShown = false
 
     @Inject
     lateinit var imageManager: ImageManager
@@ -86,6 +90,14 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
     @Inject
     lateinit var listScenarioUtils: ListScenarioUtils
+
+    @Inject
+    @Named(IO_THREAD)
+    lateinit var ioDispatcher: CoroutineDispatcher
+
+    @Inject
+    @Named(UI_THREAD)
+    lateinit var mainDispatcher: CoroutineDispatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,10 +146,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             showErrorToastAndFinish()
         }
 
-        val confetti: LottieAnimationView = requireActivity().findViewById(R.id.confetti)
-        if (note?.isViewMilestoneType == true && !confettiShown) {
-            confetti.playAnimation()
-            confettiShown = true
+        val animation = view?.findViewById<LottieAnimationView>(R.id.confetti)
+        if (note?.isViewMilestoneType == true) {
+            animation?.visibility = View.VISIBLE
+            animation?.playAnimation()
+        } else {
+            animation?.visibility = View.GONE
         }
     }
 
@@ -161,9 +175,6 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         if (note == null) {
             showErrorToastAndFinish()
             return
-        }
-        if (noteId != note.id) {
-            confettiShown = false
         }
         notification = note
     }
@@ -190,9 +201,15 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         super.onSaveInstanceState(outState)
     }
 
-    @Suppress("DEPRECATION")
     private fun reloadNoteBlocks() {
-        LoadNoteBlocksTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        lifecycleScope.launch(ioDispatcher) {
+            notification?.let { note ->
+                val noteBlocks = noteBlocksLoader.loadNoteBlocks(note)
+                withContext(mainDispatcher) {
+                    noteBlocksLoader.handleNoteBlocks(noteBlocks)
+                }
+            }
+        }
     }
 
     fun setFooterView(footerView: ViewGroup?) {
@@ -238,11 +255,13 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             }
 
             requireNotNull(notification).let { note ->
-                ReaderActivityLauncher.showReaderComments(
-                    activity, note.siteId.toLong(), note.postId.toLong(),
-                    note.commentId,
-                    COMMENT_NOTIFICATION.sourceDescription
-                )
+                context?.let { nonNullContext ->
+                    ReaderActivityLauncher.showReaderComments(
+                        nonNullContext, note.siteId.toLong(), note.postId.toLong(),
+                        note.commentId,
+                        COMMENT_NOTIFICATION.sourceDescription
+                    )
+                }
             }
         }
 
@@ -319,10 +338,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private data class ManageUserBlockResults(val index: Int, val noteBlock: NoteBlock, val pingbackUrl: String?)
 
     // Loop through the 'body' items in this note, and create blocks for each.
-    // TODO replace this inner async task with a coroutine
-    @Suppress("DEPRECATION")
-    @SuppressLint("StaticFieldLeak")
-    private inner class LoadNoteBlocksTask : AsyncTask<Void, Void, List<NoteBlock>?>() {
+    private val noteBlocksLoader = object {
         private var mIsBadgeView = false
 
         private fun addHeaderNoteBlock(note: Note, noteList: MutableList<NoteBlock>) {
@@ -420,7 +436,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                         ).also {
                             if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
                                 val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
-                                it.setClickableSpan(range, note.type)
+                                it.setClickableSpan(range, note.rawType)
                             }
                         }
                     } else {
@@ -428,6 +444,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                             noteObject, imageManager, notificationsUtilsWrapper,
                             mOnNoteBlockTextClickListener
                         )
+                        preloadImage(noteBlock)
                     }
 
                     // Badge notifications apply different colors and formatting
@@ -453,43 +470,45 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return pingbackUrl
         }
 
-        @Suppress("OVERRIDE_DEPRECATION")
-        override fun doInBackground(vararg params: Void): List<NoteBlock>? {
-            if (notification == null) {
-                return null
+        private fun preloadImage(noteBlock: NoteBlock) {
+            if (noteBlock.hasImageMediaItem()) {
+                noteBlock.noteMediaItem?.url?.let {
+                    imageManager.preload(requireContext(), it)
+                }
             }
-            requestReaderContentForNote()
+        }
 
-            requireNotNull(notification).let { note ->
-                val bodyArray = note.body
-                val noteList: MutableList<NoteBlock> = ArrayList()
+        suspend fun loadNoteBlocks(note: Note): List<NoteBlock> {
+            requestReaderContentForNote(note)
 
-                // Add the note header if one was provided
-                if (note.header != null) {
-                    addHeaderNoteBlock(note, noteList)
-                }
-                var pingbackUrl: String? = null
-                val isPingback = isPingback(note)
-                if (bodyArray != null && bodyArray.length() > 0) {
-                    pingbackUrl = addNotesBlock(note, noteList, bodyArray, isPingback)
-                }
-                if (isPingback) {
-                    // Remove this when we start receiving "Read the source post block" from the backend
-                    val generatedBlock = buildGeneratedLinkBlock(
-                        mOnNoteBlockTextClickListener, pingbackUrl,
-                        activity!!.getString(R.string.comment_read_source_post)
-                    )
-                    generatedBlock.setIsPingback()
-                    noteList.add(generatedBlock)
-                }
-                return noteList
+            val bodyArray = note.body
+            val noteList: MutableList<NoteBlock> = ArrayList()
+
+            // Add the note header if one was provided
+            if (note.header != null) {
+                addHeaderNoteBlock(note, noteList)
             }
+            var pingbackUrl: String? = null
+            val isPingback = isPingback(note)
+            if (bodyArray.length() > 0) {
+                pingbackUrl = addNotesBlock(note, noteList, bodyArray, isPingback)
+            }
+            if (isPingback) {
+                // Remove this when we start receiving "Read the source post block" from the backend
+                val generatedBlock = buildGeneratedLinkBlock(
+                    mOnNoteBlockTextClickListener, pingbackUrl,
+                    activity!!.getString(R.string.comment_read_source_post)
+                )
+                generatedBlock.setIsPingback()
+                noteList.add(generatedBlock)
+            }
+            return noteList
         }
 
         private fun isPingback(note: Note): Boolean {
             var hasRangeOfTypeSite = false
             var hasRangeOfTypePost = false
-            val rangesArray = note.subject.optJSONArray("ranges")
+            val rangesArray = note.subject?.optJSONArray("ranges")
             if (rangesArray != null) {
                 for (i in 0 until rangesArray.length()) {
                     val rangeObject = rangesArray.optJSONObject(i) ?: continue
@@ -518,8 +537,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             )
         }
 
-        @Suppress("OVERRIDE_DEPRECATION")
-        override fun onPostExecute(noteList: List<NoteBlock>?) {
+        fun handleNoteBlocks(noteList: List<NoteBlock>?) {
             if (!isAdded || noteList == null) {
                 return
             }
@@ -550,7 +568,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
                 // Check if this is a comment notification that has been replied to
                 // The block will not have a type, and its id will match the comment reply id in the Note.
                 (blockObject.type == null && note.commentReplyId == commentReplyId)
-            } else if (note.isFollowType || note.isLikeType || note.isReblogType) {
+            } else if (note.isFollowType || note.isLikeType) {
                 // User list notifications have a footer if they have 10 or more users in the body
                 // The last block will not have a type, so we can use that to determine if it is the footer
                 blockObject.type == null
@@ -588,37 +606,35 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     }
 
     // Requests Reader content for certain notification types
-    private fun requestReaderContentForNote() {
-        if (notification == null || !isAdded) {
-            return
+    private suspend fun requestReaderContentForNote(note: Note) = withContext(ioDispatcher) {
+        if (!isAdded) {
+            return@withContext
         }
 
         // Request the reader post so that loading reader activities will work.
-        if (notification!!.isUserList && !ReaderPostTable.postExists(
-                notification!!.siteId.toLong(),
-                notification!!.postId.toLong()
+        if (note.isUserList && !ReaderPostTable.postExists(
+                note.siteId.toLong(),
+                note.postId.toLong()
             )
         ) {
-            ReaderPostActions.requestBlogPost(notification!!.siteId.toLong(), notification!!.postId.toLong(), null)
+            ReaderPostActions.requestBlogPost(note.siteId.toLong(), note.postId.toLong(), null)
         }
 
-        requireNotNull(notification).let { note ->
-            // Request reader comments until we retrieve the comment for this note
-            val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
-            val commentNotExists = !ReaderCommentTable.commentExists(
+        // Request reader comments until we retrieve the comment for this note
+        val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
+        val commentNotExists = !ReaderCommentTable.commentExists(
+            note.siteId.toLong(),
+            note.postId.toLong(),
+            note.commentId
+        )
+
+        if (isReplyOrCommentLike && commentNotExists) {
+            ReaderCommentService.startServiceForComment(
+                activity,
                 note.siteId.toLong(),
                 note.postId.toLong(),
                 note.commentId
             )
-
-            if (isReplyOrCommentLike && commentNotExists) {
-                ReaderCommentService.startServiceForComment(
-                    activity,
-                    note.siteId.toLong(),
-                    note.postId.toLong(),
-                    note.commentId
-                )
-            }
         }
     }
 

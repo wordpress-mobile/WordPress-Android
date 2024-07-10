@@ -37,6 +37,7 @@ platform :android do
     build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'production')
+    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name) if options[:create_release]
   end
@@ -105,6 +106,7 @@ platform :android do
     build_bundle(app: app, version_name: version_name, build_code: current_build_code, flavor: 'Vanilla', buildType: 'Release')
 
     upload_build_to_play_store(app: app, version_name: version_name, track: 'beta') if options[:upload_to_play_store]
+    upload_gutenberg_sourcemaps(app: app, release_version: version_name)
 
     create_gh_release(app: app, version_name: version_name, prerelease: true) if options[:create_release]
   end
@@ -217,6 +219,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'WordPress', version_name: version_name)
+    upload_gutenberg_sourcemaps(app: 'Wordpress', release_version: version_name)
   end
 
   #####################################################################################
@@ -240,6 +243,7 @@ platform :android do
     )
 
     upload_prototype_build(product: 'Jetpack', version_name: version_name)
+    upload_gutenberg_sourcemaps(app: 'Jetpack', release_version: version_name)
   end
 
   #####################################################################################
@@ -358,5 +362,36 @@ platform :android do
 
       "#{branch}-#{commit}"
     end
+  end
+
+  # Uploads the React Native JavaScript bundle and source map files.
+  # These files are provided by the Gutenberg Mobile library.
+  #
+  # @param [String] app App name, e.g. 'WordPress' or 'Jetpack'.
+  # @param [String] release_version Release version name to attach the files to in Sentry.
+  #
+  def upload_gutenberg_sourcemaps(app:, release_version:)
+    # Load Sentry properties
+    sentry_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'src', app.downcase, 'sentry.properties')
+    sentry_properties = JavaProperties.load(sentry_path)
+    sentry_token = sentry_properties[:'auth.token']
+    project_slug = sentry_properties[:'defaults.project']
+    org_slug = sentry_properties[:'defaults.org']
+
+    # Bundle and source map files are copied to a specific folder as part of the build process.
+    bundle_source_map_path = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'react-native-bundle-source-map')
+
+    sentry_upload_sourcemap(
+      auth_token: sentry_token,
+      org_slug: org_slug,
+      project_slug: project_slug,
+      version: release_version,
+      dist: current_build_code,
+      # When the React native bundle is generated, the source map file references include the local machine path;
+      # With the `rewrite` and `strip_common_prefix` options, Sentry automatically strips this part.
+      rewrite: true,
+      strip_common_prefix: true,
+      sourcemap: bundle_source_map_path
+    )
   end
 end

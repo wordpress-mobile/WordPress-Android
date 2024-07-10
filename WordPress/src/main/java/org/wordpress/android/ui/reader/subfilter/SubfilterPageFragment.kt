@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
@@ -101,10 +100,7 @@ class SubfilterPageFragment : Fragment() {
         primaryButton = emptyStateContainer.findViewById(R.id.action_button_primary)
         secondaryButton = emptyStateContainer.findViewById(R.id.action_button_secondary)
 
-        subFilterViewModel = ViewModelProvider(
-            requireParentFragment().parentFragment as ViewModelStoreOwner,
-            viewModelFactory
-        )[subfilterVmKey, SubFilterViewModel::class.java]
+        subFilterViewModel = SubFilterViewModelProvider.getSubFilterViewModelForKey(this, subfilterVmKey)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner) {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->

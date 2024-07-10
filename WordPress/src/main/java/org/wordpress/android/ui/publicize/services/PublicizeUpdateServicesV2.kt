@@ -27,7 +27,7 @@ class PublicizeUpdateServicesV2 @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError -> failure(volleyError) }
         val path = "sites/$siteId/external-services?type=publicize"
-        restClientProvider.getRestClientUtilsV2().get(path, listener, errorListener)
+        restClientProvider.getRestClientUtilsV2().getWithLocale(path, listener, errorListener)
     }
 
     /*
@@ -45,6 +45,6 @@ class PublicizeUpdateServicesV2 @Inject constructor(
         }
         val errorListener = RestRequest.ErrorListener { volleyError -> failure(volleyError) }
         val path = String.format(Locale.ROOT, "sites/%d/publicize-connections", siteId)
-        restClientProvider.getRestClientUtilsV1_1().get(path, listener, errorListener)
+        restClientProvider.getRestClientUtilsV1_1().getWithLocale(path, listener, errorListener)
     }
 }

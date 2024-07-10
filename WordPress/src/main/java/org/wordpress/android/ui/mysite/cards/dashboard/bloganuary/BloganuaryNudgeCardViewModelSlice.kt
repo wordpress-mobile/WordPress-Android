@@ -3,12 +3,14 @@ package org.wordpress.android.ui.mysite.cards.dashboard.bloganuary
 import android.icu.util.Calendar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker
 import org.wordpress.android.ui.bloganuary.BloganuaryNudgeAnalyticsTracker.BloganuaryNudgeCardMenuItem
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsSettingsHelper
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.BloganuaryNudgeCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -26,17 +28,22 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val tracker: BloganuaryNudgeAnalyticsTracker,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val bloganuaryNudgeCardBuilder: BloganuaryNudgeCardBuilder
 ) {
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh as LiveData<Event<Boolean>>
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.BloganuaryNudgeCardModel?>()
+    val uiModel = _uiModel.distinctUntilChanged()
 
     private lateinit var scope: CoroutineScope
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
+    }
+
+    fun buildCard() {
+        _uiModel.postValue(bloganuaryNudgeCardBuilder.build(getBuilderParams()))
     }
 
     fun getBuilderParams(): BloganuaryNudgeCardBuilderParams {
@@ -85,7 +92,11 @@ class BloganuaryNudgeCardViewModelSlice @Inject constructor(
         scope.launch {
             val siteId = selectedSiteRepository.getSelectedSite()?.siteId ?: return@launch
             appPrefsWrapper.setShouldHideBloganuaryNudgeCard(siteId, true)
-            _refresh.postValue(Event(true))
+            _uiModel.postValue(null)
         }
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }

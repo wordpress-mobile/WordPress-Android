@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.store.blaze.BlazeCampaignsStore
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class FetchCampaignListUseCaseTest: BaseUnitTest() {
+class FetchCampaignListUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var store: BlazeCampaignsStore
 
@@ -38,26 +38,28 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
     @Test
     fun `given store returns error, when usecase execute, returns generic error`() = runTest {
         val siteModel = mock<SiteModel>()
-        val page = 1
-        whenever(store.fetchBlazeCampaigns(siteModel, page)).thenReturn(
+        val offset = 0
+        whenever(store.fetchBlazeCampaigns(siteModel, offset, PER_PAGE)).thenReturn(
             BlazeCampaignsStore.BlazeCampaignsResult(BlazeCampaignsError(BlazeCampaignsErrorType.INVALID_RESPONSE))
         )
 
-        val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
+        val actualResult = fetchCampaignListUseCase.execute(siteModel, offset)
 
         assertThat(actualResult is Result.Failure).isTrue
-        assertThat((actualResult as Result.Failure).value).isEqualTo(GenericError)
+        assertThat((actualResult as Result.Failure).value).isEqualTo(GenericResult)
     }
 
     @Test
     fun `given store returns empty campaigns, when usecase execute, returns no campaigns error`() = runTest {
         val siteModel = mock<SiteModel>()
-        val page = 1
-        whenever(store.fetchBlazeCampaigns(siteModel, page)).thenReturn(BlazeCampaignsStore.BlazeCampaignsResult(
-            BlazeCampaignsModel(emptyList(),1,0,1)
-        ))
+        val offset = 0
+        whenever(store.fetchBlazeCampaigns(siteModel, offset, PER_PAGE)).thenReturn(
+            BlazeCampaignsStore.BlazeCampaignsResult(
+                BlazeCampaignsModel(campaigns = emptyList(), skipped = 0, totalItems = 1)
+            )
+        )
 
-        val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
+        val actualResult = fetchCampaignListUseCase.execute(siteModel, offset)
 
         assertThat(actualResult is Result.Failure).isTrue
         assertThat((actualResult as Result.Failure).value).isEqualTo(NoCampaigns)
@@ -66,14 +68,20 @@ class FetchCampaignListUseCaseTest: BaseUnitTest() {
     @Test
     fun `given store returns campaigns, when usecase execute, returns campaigns`() = runTest {
         val siteModel = mock<SiteModel>()
-        val page = 1
-        whenever(store.fetchBlazeCampaigns(siteModel, page)).thenReturn(BlazeCampaignsStore.BlazeCampaignsResult(
-            BlazeCampaignsModel(mock(),1,0,1)
-        ))
+        val offset = 0
+        whenever(store.fetchBlazeCampaigns(siteModel, offset, PER_PAGE)).thenReturn(
+            BlazeCampaignsStore.BlazeCampaignsResult(
+                BlazeCampaignsModel(campaigns = mock(), skipped = 0, totalItems = 1)
+            )
+        )
         whenever(mapper.mapToCampaignModels(any())).thenReturn(mock())
 
-        val actualResult = fetchCampaignListUseCase.execute(siteModel, page)
+        val actualResult = fetchCampaignListUseCase.execute(siteModel, offset)
 
         assertThat(actualResult is Result.Success).isTrue
+    }
+
+    companion object {
+        const val PER_PAGE = 10
     }
 }

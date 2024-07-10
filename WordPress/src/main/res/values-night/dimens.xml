@@ -14,4 +14,7 @@
     <item name="dashboard_card_pages_status_background_alpha" format="float" type="dimen">
         @dimen/disabled_alpha
     </item>
+
+    <!-- Reader Follow Button -->
+    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_dark</dimen>
 </resources>

@@ -91,6 +91,9 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var blazeFeatureUtils: BlazeFeatureUtils
 
+    @Mock
+    lateinit var pageConflictDetector: PageConflictDetector
+
     private lateinit var viewModel: PageListViewModel
 
     private val site = SiteModel().apply {
@@ -115,7 +118,8 @@ class PageListViewModelTest : BaseUnitTest() {
             editorThemeStore,
             siteEditorMVPFeatureConfig,
             blazeFeatureUtils,
-            testDispatcher()
+            testDispatcher(),
+            pageConflictDetector
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(
@@ -418,7 +422,8 @@ class PageListViewModelTest : BaseUnitTest() {
                 anyOrNull(),
                 anyOrNull(),
                 any(),
-                any()
+                any(),
+                any(),
             )
         ).thenReturn(
             actions

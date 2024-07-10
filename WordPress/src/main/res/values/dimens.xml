@@ -14,7 +14,6 @@
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
-    <dimen name="fab_margin_stories">64dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
@@ -168,6 +167,7 @@
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
+    <dimen name="text_sz_medium_large">15sp</dimen>
     <dimen name="text_sz_large">16sp</dimen>
     <dimen name="text_sz_larger">18sp</dimen>
     <dimen name="text_sz_extra_large">20sp</dimen>
@@ -182,11 +182,13 @@
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
     <dimen name="avatar_sz_login_epilogue">72dp</dimen>
+    <dimen name="avatar_sz_extra_medium_with_padding">28dp</dimen>
     <dimen name="avatar_sz_extra_small_with_padding">26dp</dimen>
     <dimen name="avatar_sz_extra_extra_small_with_padding">22dp</dimen>
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
+    <dimen name="blavatar_sz_radius">5dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
@@ -264,19 +266,28 @@
     <dimen name="comment_list_divider_start_offset">72dp</dimen>
 
     <!-- notifications -->
-    <dimen name="note_icon_sz">16dp</dimen>
     <dimen name="comment_avatar_margin_top">6dp</dimen>
     <dimen name="notifications_max_image_size">240dp</dimen>
     <dimen name="notifications_adjusted_font_margin">10dp</dimen>
     <dimen name="notifications_content_margin">0dp</dimen>
     <dimen name="notifications_avatar_sz">48dp</dimen>
+    <dimen name="notifications_avatar_margin_start">20dp</dimen>
+    <dimen name="notifications_multiple_avatar_margin_start">17dp</dimen>
     <dimen name="notifications_text_indent_sz">22dp</dimen>
-    <dimen name="notifications_note_icon_horizontal_offset">4dp</dimen>
-    <dimen name="notifications_note_icon_vertical_offset">2dp</dimen>
-    <dimen name="notifications_note_icon_size">12dp</dimen>
     <dimen name="notification_comment_padded_frame_bg_offset">14dp</dimen>  <!-- results in 6dp border -->
     <dimen name="notification_comment_frame_bg_border_width">6dp</dimen>
-    <dimen name="notification_icon_bg_border_width">1dp</dimen>
+    <dimen name="notifications_unread_icon_sz">8dp</dimen>
+    <dimen name="notifications_item_vertical_padding">12dp</dimen>
+    <dimen name="notifications_item_horizontal_padding">18dp</dimen>
+    <dimen name="notifications_item_action_padding">12dp</dimen>
+    <dimen name="notifications_item_action_padding_end">28dp</dimen>
+    <dimen name="notifications_header_margin_top_position_0">16dp</dimen>
+    <dimen name="notifications_header_margin_top_position_n">4dp</dimen>
+    <dimen name="notifications_popup_radius">4dp</dimen>
+    <dimen name="notifications_icon_size">40dp</dimen>
+    <dimen name="notifications_multiple_icon_height">44dp</dimen>
+    <dimen name="notifications_multiple_icon_width">48dp</dimen>
+    <dimen name="notifications_image_size">180dp</dimen>
 
     <dimen name="progress_bar_height">3dp</dimen>
     <dimen name="activity_progress_bar_height">5dp</dimen>
@@ -540,6 +551,8 @@
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
+    <dimen name="stats_line_chart_tick_width">2dp</dimen>
+    <dimen name="stats_line_chart_tick_height">4dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_pie_chart_slice_width">16dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
@@ -614,10 +627,6 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_height">72dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_width">48dp</dimen>
-    <dimen name="story_thumbnail_margin">6dp</dimen>
-    <dimen name="thumbnail_background_margin">10dp</dimen>
 
     <!-- Common Picker resources -->
     <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
@@ -764,4 +773,10 @@
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
     <dimen name="navbar_me_icon_padding">4dp</dimen>
 
+    <!-- Reader Follow Button -->
+    <dimen name="reader_follow_button_stroke_alpha_light" format="float">0.12</dimen>
+    <dimen name="reader_follow_button_stroke_alpha_dark" format="float">0.25</dimen>
+
+    <dimen name="reader_follow_button_stroke_alpha" format="float">@dimen/reader_follow_button_stroke_alpha_light</dimen>
+    <dimen name="reader_follow_button_text_alpha" format="float">0.6</dimen>
 </resources>

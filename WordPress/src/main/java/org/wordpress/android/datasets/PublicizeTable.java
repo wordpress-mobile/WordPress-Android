@@ -157,7 +157,7 @@ public class PublicizeTable {
     }
 
     public static boolean onlyExternalConnections(String serviceId) {
-        if (serviceId == null && serviceId.isEmpty()) {
+        if (serviceId == null || serviceId.isEmpty()) {
             return false;
         }
 
@@ -233,7 +233,7 @@ public class PublicizeTable {
             db.delete(CONNECTIONS_TABLE, "site_id=?", new String[]{Long.toString(siteId)});
 
             stmt = db.compileStatement(
-                    "INSERT INTO " + CONNECTIONS_TABLE
+                    "INSERT OR REPLACE INTO " + CONNECTIONS_TABLE
                     + " (id," // 1
                     + " site_id," // 2
                     + " user_id," // 3

@@ -80,7 +80,13 @@ public class ReaderCommentService extends Service {
         intent.putExtra(ARG_BLOG_ID, blogId);
         intent.putExtra(ARG_POST_ID, postId);
         intent.putExtra(ARG_PAGE_INFO, PageInfo.COMMENTS_SNIPPET_PAGE);
-        context.startService(intent);
+        try {
+            context.startService(intent);
+        } catch (IllegalStateException e) {
+            // This can happen if the app still appears to be running in the background
+            // see: https://github.com/wordpress-mobile/WordPress-Android/issues/18666
+            AppLog.e(AppLog.T.READER, "Unable to start ReaderCommentService: " + e.getMessage());
+        }
     }
 
     public static void stopService(Context context) {
@@ -201,7 +207,7 @@ public class ReaderCommentService extends Service {
             }
         };
         AppLog.d(AppLog.T.READER, "updating comments");
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, null, null, listener, errorListener);
     }
 
     private static void handleUpdateCommentsResponse(final JSONObject jsonObject,

@@ -64,7 +64,7 @@ class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
     fun `Success returned when FollowedTagsFetched event is posted with success`() = test {
         // Given
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        val event = FollowedTagsFetched(true)
+        val event = FollowedTagsFetched(true, 10)
         whenever(readerUpdateServiceStarterWrapper.startService(contextProvider.getContext(), EnumSet.of(TAGS)))
             .then { useCase.onFollowedTagsFetched(event) }
 
@@ -79,7 +79,7 @@ class FetchFollowedTagsUseCaseTest : BaseUnitTest() {
     fun `RemoteRequestFailure returned when FollowedTagsFetched event is posted with failure`() = test {
         // Given
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        val event = FollowedTagsFetched(false)
+        val event = FollowedTagsFetched(false, 10)
         whenever(readerUpdateServiceStarterWrapper.startService(contextProvider.getContext(), EnumSet.of(TAGS)))
             .then { useCase.onFollowedTagsFetched(event) }
 

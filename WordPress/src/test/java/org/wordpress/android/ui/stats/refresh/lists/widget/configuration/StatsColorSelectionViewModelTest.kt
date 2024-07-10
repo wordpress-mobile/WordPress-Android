@@ -14,6 +14,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 
 @ExperimentalCoroutinesApi
@@ -25,13 +26,18 @@ class StatsColorSelectionViewModelTest : BaseUnitTest() {
     private lateinit var accountStore: AccountStore
     private lateinit var viewModel: StatsColorSelectionViewModel
 
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Before
     fun setUp() {
         viewModel = StatsColorSelectionViewModel(
             testDispatcher(),
             accountStore,
-            appPrefsWrapper
+            appPrefsWrapper,
+            buildConfigWrapper,
         )
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test

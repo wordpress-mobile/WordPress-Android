@@ -7,7 +7,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.engagement.EngageItem.Liker
 import org.wordpress.android.ui.engagement.EngagedListNavigationEvent.OpenUserProfileBottomSheet.UserProfile
-import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.WPAvatarUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -30,7 +30,7 @@ class LikerViewHolder(
             liker.login
         }
 
-        val likerAvatarUrl = GravatarUtils.fixGravatarUrl(
+        val likerAvatarUrl = WPAvatarUtils.rewriteAvatarUrl(
             liker.userAvatarUrl,
             likerRootView.context.resources.getDimensionPixelSize(R.dimen.avatar_sz_medium)
         )

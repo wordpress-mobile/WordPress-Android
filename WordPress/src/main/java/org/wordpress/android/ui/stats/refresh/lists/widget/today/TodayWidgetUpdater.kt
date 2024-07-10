@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.RemoteViews
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.utils.WidgetUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -29,7 +31,8 @@ class TodayWidgetUpdater
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val resourceProvider: ResourceProvider,
     private val widgetUtils: WidgetUtils,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : WidgetUpdater {
     override fun updateAppWidget(
         context: Context,
@@ -52,10 +55,16 @@ class TodayWidgetUpdater
         val widgetHasData = appPrefsWrapper.hasAppWidgetData(appWidgetId)
         if (networkAvailable && hasAccessToken && siteModel != null) {
             widgetUtils.setSiteIcon(siteModel, context, views, appWidgetId)
+            val timeframe = if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) {
+                StatsTimeframe.TRAFFIC
+            } else {
+                StatsTimeframe.INSIGHTS
+            }
+            val granularity = if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
             siteModel.let {
                 views.setOnClickPendingIntent(
                     R.id.widget_title_container,
-                    widgetUtils.getPendingSelfIntent(context, siteModel.id, StatsTimeframe.INSIGHTS)
+                    widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe, granularity)
                 )
             }
             widgetUtils.showList(

@@ -10,7 +10,6 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -19,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
@@ -75,16 +75,13 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
             return
         }
 
-        viewModel = ViewModelProvider(
-            parentFragment as ViewModelStoreOwner,
-            viewModelFactory
-        )[subfilterVmKey, SubFilterViewModel::class.java]
+        viewModel = SubFilterViewModelProvider.getSubFilterViewModelForKey(this, subfilterVmKey)
 
         // TODO remove the pager and support only one category
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val titleContainer = view.findViewById<View>(R.id.title_container)
         val title = view.findViewById<TextView>(R.id.title)
-        val editSubscriptions = view.findViewById<View>(R.id.edit_subscriptions)
+        val editSubscriptions = view.findViewById<View>(R.id.manage_subscriptions)
         title.text = bottomSheetTitle
         pager.adapter = SubfilterPagerAdapter(
             requireActivity(),

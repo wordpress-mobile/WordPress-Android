@@ -129,31 +129,6 @@ class PostDayViewsUseCaseTest : BaseUnitTest() {
         assertThat(result.state).isEqualTo(ERROR)
     }
 
-    /**
-     * Note that this test covers an edge condition tracked in GitHub issue
-     * https://github.com/wordpress-mobile/WordPress-Android/issues/10830
-     * For some context see
-     * See https://github.com/wordpress-mobile/WordPress-Android/pull/10850#issuecomment-559555035
-     */
-    @Test
-    fun `manage edge condition with data available but empty list`() = test {
-        val forced = false
-
-        whenever(emptyModel.dayViews).thenReturn(listOf())
-        whenever(model.dayViews).thenReturn(listOf(Day("2019-10-10", 50)))
-        whenever(store.getPostDetail(site, postId)).thenReturn(emptyModel)
-        whenever(store.fetchPostDetail(site, postId, forced)).thenReturn(
-            OnStatsFetched(
-                model
-            )
-        )
-
-        val result = loadData(true, forced)
-
-        assertThat(result.state).isEqualTo(SUCCESS)
-        assertThat(result.data).isEmpty()
-    }
-
     @Test
     fun `maps list of empty items to empty UI model`() = test {
         val forced = false

@@ -103,10 +103,9 @@
     <color name="reader_improvements_follow_button_following_state">#F4F4F4</color>
     <color name="reader_improvements_recommended_section_text">#99000000</color>
     <color name="reader_you_might_like_background">@color/neutral_0</color>
-    <color name="reader_following_button_stroke">#1F000000</color>
     <color name="reader_follow_button">@color/black</color>
-    <color name="reader_follow_button_text_color">@color/white</color>
-    <color name="reader_following_button_text_color">#99000000</color>
+    <color name="reader_follow_button_foreground">@color/white</color>
+    <color name="reader_following_button_foreground">@color/black</color>
     <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_light</color>
     <color name="reader_blog_section_avatar_internal_border">@color/black_translucent_20</color>
     <color name="reader_post_body_link">@color/blue_50</color>
@@ -150,8 +149,16 @@
     <!-- Partial Media Access -->
     <color name="partial_media_access_prompt_background">#DEDEDE</color>
 
+    <color name="text_secondary">#8A8A8E</color>
+
+    <!-- Notifications -->
+    <color name="inline_action_filled">@color/jetpack_green_50</color>
+
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#F2F2F7</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>
+
+    <!-- Post Editing -->
+    <color name="post_editing_updating">#EDD6C5</color>
 
 </resources>

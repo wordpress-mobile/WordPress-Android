@@ -7,7 +7,8 @@ public enum ReaderTagType {
     CUSTOM_LIST,
     SEARCH,
     INTERESTS,
-    DISCOVER_POST_CARDS;
+    DISCOVER_POST_CARDS,
+    TAGS;
 
     private static final int INT_DEFAULT = 0;
     private static final int INT_FOLLOWED = 1;

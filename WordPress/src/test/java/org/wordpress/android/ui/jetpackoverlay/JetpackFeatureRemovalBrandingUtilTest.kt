@@ -302,7 +302,7 @@ class JetpackFeatureRemovalBrandingUtilTest {
 
         val actual = allJpScreens.map(classToTest::getBrandingTextByPhase)
 
-        actual.assertAllMatch(R.string.wp_jetpack_feature_removal_static_posters_phase)
+        actual.assertAllMatch(R.string.wp_jetpack_powered)
         verifyNoInteractions(dateTimeUtilsWrapper)
     }
 

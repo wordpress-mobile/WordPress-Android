@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
-import org.wordpress.android.fluxc.store.StatsStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.DAY_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.GRANULAR_USE_CASE_FACTORIES
@@ -19,6 +18,7 @@ import org.wordpress.android.ui.stats.refresh.INSIGHTS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.MONTH_STATS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.NavigationTarget
 import org.wordpress.android.ui.stats.refresh.NavigationTarget.ViewInsightsManagement
+import org.wordpress.android.ui.stats.refresh.SUBSCRIBERS_USE_CASE
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.TOTAL_COMMENTS_DETAIL_USE_CASE
 import org.wordpress.android.ui.stats.refresh.TOTAL_FOLLOWERS_DETAIL_USE_CASE
@@ -52,7 +52,7 @@ abstract class StatsListViewModel(
     defaultDispatcher: CoroutineDispatcher,
     protected var statsUseCase: BaseListUseCase,
     private val analyticsTracker: AnalyticsTrackerWrapper,
-    protected var dateSelector: StatsDateSelector?,
+    var dateSelector: StatsDateSelector?,
     popupMenuHandler: ItemPopupMenuHandler? = null,
     private val newsCardHandler: NewsCardHandler? = null,
     actionCardHandler: ActionCardHandler? = null
@@ -63,6 +63,7 @@ abstract class StatsListViewModel(
     enum class StatsSection(@StringRes val titleRes: Int) {
         TRAFFIC(R.string.stats_traffic),
         INSIGHTS(R.string.stats_insights),
+        SUBSCRIBERS(R.string.stats_subscribers),
         DAYS(R.string.stats_timeframe_days),
         WEEKS(R.string.stats_timeframe_weeks),
         MONTHS(R.string.stats_timeframe_months),
@@ -71,7 +72,7 @@ abstract class StatsListViewModel(
         INSIGHT_DETAIL(R.string.stats_insights_views_and_visitors),
         TOTAL_LIKES_DETAIL(R.string.stats_view_total_likes),
         TOTAL_COMMENTS_DETAIL(R.string.stats_view_total_comments),
-        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_followers),
+        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_subscribers),
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
@@ -101,8 +102,6 @@ abstract class StatsListViewModel(
     )
 
     val scrollTo = newsCardHandler?.scrollTo
-
-    lateinit var scrollToNewCard: LiveData<Event<StatsStore.StatsType>>
 
     override fun onCleared() {
         statsUseCase.onCleared()
@@ -157,7 +156,9 @@ abstract class StatsListViewModel(
     }
 
     fun start() {
-        if (!isInitialized) {
+        if (isInitialized) {
+            mutableUiSourceAdded.call()
+        } else {
             isInitialized = true
             setUiLiveData()
             launch {
@@ -172,7 +173,6 @@ abstract class StatsListViewModel(
         uiModel = statsUseCase.data.throttle(viewModelScope, distinct = true)
         listSelected = statsUseCase.listSelected
         navigationTarget = mergeNotNull(statsUseCase.navigationTarget, mutableNavigationTarget)
-        scrollToNewCard = statsUseCase.scrollTo
         mutableUiSourceAdded.call()
     }
 
@@ -205,6 +205,24 @@ class InsightsListViewModel
 ) : StatsListViewModel(
     mainDispatcher,
     insightsUseCase,
+    analyticsTracker,
+    null,
+    popupMenuHandler,
+    newsCardHandler,
+    actionCardHandler
+)
+
+class SubscribersListViewModel
+@Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    @Named(SUBSCRIBERS_USE_CASE) private val subscribersUseCase: BaseListUseCase,
+    analyticsTracker: AnalyticsTrackerWrapper,
+    popupMenuHandler: ItemPopupMenuHandler,
+    newsCardHandler: NewsCardHandler,
+    actionCardHandler: ActionCardHandler
+) : StatsListViewModel(
+    mainDispatcher,
+    subscribersUseCase,
     analyticsTracker,
     null,
     popupMenuHandler,
@@ -247,7 +265,6 @@ class TrafficListViewModel @Inject constructor(
                     BaseStatsUseCase.UseCaseMode.BLOCK
                 )
             }
-            statsUseCase.onCleared()
             statsUseCase = statsUseCase.clone(newUseCases) // Create new BaseListUseCase with updated useCases
             launch {
                 statsUseCase.loadData()

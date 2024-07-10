@@ -63,15 +63,7 @@ class MySitesPage {
 
     fun startNewSite() {
         switchSite()
-        // If the device has a narrower display, the menu_add is hidden in the overflow
-        if (WPSupportUtils.isElementDisplayed(R.id.menu_add)) {
-            WPSupportUtils.clickOn(R.id.menu_add)
-        } else {
-            // open the overflow and then click on the item with text
-            Espresso.openActionBarOverflowOrOptionsMenu(ApplicationProvider.getApplicationContext())
-            Espresso.onView(ViewMatchers.withText(WPSupportUtils.getTranslatedString(R.string.site_picker_add_site)))
-                .perform(ViewActions.click())
-        }
+        WPSupportUtils.clickOn(R.id.button_add_site)
     }
 
     fun goToSettings() {
@@ -149,7 +141,7 @@ class MySitesPage {
         val statsButton = Espresso.onView(
             Matchers.allOf(
                 ViewMatchers.withText(R.string.stats),
-                ViewMatchers.withId(R.id.my_site_item_primary_text)
+                ViewMatchers.withId(R.id.quick_link_item)
             )
         )
         WPSupportUtils.clickOn(statsButton)
@@ -158,7 +150,7 @@ class MySitesPage {
         WPSupportUtils.waitForElementToBeDisplayedWithoutFailure(R.id.tabLayout)
 
         // Wait for the stats to load
-        WPSupportUtils.idleFor(8000)
+        WPSupportUtils.idleFor(4000)
         return StatsPage()
     }
 

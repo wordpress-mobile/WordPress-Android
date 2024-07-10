@@ -2,13 +2,15 @@ package org.wordpress.android.ui.comments.unified
 
 import android.text.TextUtils
 import android.view.ViewGroup
+import com.gravatar.AvatarQueryOptions
+import com.gravatar.AvatarUrl
+import com.gravatar.types.Email
 import org.wordpress.android.R
 import org.wordpress.android.databinding.CommentListItemBinding
 import org.wordpress.android.ui.comments.unified.UnifiedCommentListItem.Comment
 import org.wordpress.android.ui.utils.AnimationUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.extensions.viewBinding
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
@@ -21,7 +23,7 @@ class UnifiedCommentViewHolder(
     private val uiHelpers: UiHelpers,
     private val commentListUiUtils: CommentListUiUtils,
     private val resourceProvider: ResourceProvider,
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val animationUtilsWrapper: AnimationUtilsWrapper
 ) : UnifiedCommentListViewHolder<CommentListItemBinding>(parent.viewBinding(CommentListItemBinding::inflate)) {
     fun bind(item: Comment) = with(binding) {
@@ -76,15 +78,15 @@ class UnifiedCommentViewHolder(
 
     private fun getGravatarUrl(comment: Comment): String {
         return if (!TextUtils.isEmpty(comment.authorAvatarUrl)) {
-            gravatarUtilsWrapper.fixGravatarUrl(
+            avatarUtilsWrapper.rewriteAvatarUrl(
                 comment.authorAvatarUrl,
                 resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
             )
         } else if (!TextUtils.isEmpty(comment.authorEmail)) {
-            GravatarUtils.gravatarFromEmail(
-                comment.authorEmail,
-                resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium)
-            )
+            AvatarUrl(
+                Email(comment.authorEmail),
+                AvatarQueryOptions(preferredSize = resourceProvider.getDimensionPixelSize(R.dimen.avatar_sz_medium))
+            ).url().toString()
         } else {
             ""
         }

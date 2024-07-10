@@ -22,17 +22,20 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Image
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Information
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LineChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListHeader
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemActionCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemGuideCard
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithImage
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithTwoValues
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.LoadingItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.MapLegend
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.QuickScanItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ReferredItem
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.SubscribersChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.TabsItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Tag
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Text
@@ -57,15 +60,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_TWO_VALUES
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.SUBSCRIBERS_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -74,7 +80,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUES_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.VALUE_WITH_CHART_ITEM
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.values
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueWithChartItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValuesItem
@@ -98,15 +103,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ImageIt
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.InformationViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LineChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LinkViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListHeaderViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithIconViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithImageViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ListItemWithTwoValuesViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.LoadingItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapLegendViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.MapViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.PieChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.QuickScanItemViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.ReferredItemViewHolder
+import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.SubscribersChartViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TabsViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TagViewHolder
 import org.wordpress.android.ui.stats.refresh.lists.sections.viewholders.TextViewHolder
@@ -131,7 +139,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, itemType: Int): BlockListItemViewHolder {
-        return when (values()[itemType]) {
+        return when (BlockListItem.Type.entries[itemType]) {
             TITLE -> TitleViewHolder(parent)
             TITLE_WITH_MORE -> TitleWithMoreViewHolder(parent)
             BIG_TITLE -> BigTitleViewHolder(parent)
@@ -139,7 +147,9 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             IMAGE_ITEM -> ImageItemViewHolder(parent, imageManager)
             LIST_ITEM_WITH_IMAGE -> ListItemWithImageViewHolder(parent, imageManager = imageManager)
             LIST_ITEM_WITH_ICON -> ListItemWithIconViewHolder(parent, imageManager)
+            LIST_ITEM_WITH_TWO_VALUES -> ListItemWithTwoValuesViewHolder(parent)
             LIST_ITEM -> ListItemViewHolder(parent)
+            LIST_HEADER -> ListHeaderViewHolder(parent)
             EMPTY -> EmptyViewHolder(parent)
             TEXT -> TextViewHolder(parent)
             COLUMNS -> FourColumnsViewHolder(parent)
@@ -148,6 +158,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             BAR_CHART -> BarChartViewHolder(parent)
             PIE_CHART -> PieChartViewHolder(parent)
             LINE_CHART -> LineChartViewHolder(parent)
+            SUBSCRIBERS_CHART -> SubscribersChartViewHolder(parent)
             CHART_LEGEND -> ChartLegendViewHolder(parent)
             CHART_LEGENDS_BLUE -> ChartLegendsBlueViewHolder(parent)
             CHART_LEGENDS_PURPLE -> ChartLegendsPurpleViewHolder(parent)
@@ -188,9 +199,11 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is ValueViewHolder -> holder.bind(item as ValueItem)
             is ValueWithChartViewHolder -> holder.bind(item as ValueWithChartItem)
             is ValuesViewHolder -> holder.bind(item as ValuesItem)
+            is ListItemWithTwoValuesViewHolder -> holder.bind(item as ListItemWithTwoValues)
             is ListItemWithImageViewHolder -> holder.bind(item as ListItemWithImage)
             is ListItemWithIconViewHolder -> holder.bind(item as ListItemWithIcon)
             is ListItemViewHolder -> holder.bind(item as ListItem)
+            is ListHeaderViewHolder -> holder.bind(item as ListHeader)
             is TextViewHolder -> holder.bind(item as Text)
             is FourColumnsViewHolder -> holder.bind(item as Columns, payloads)
             is ChipsViewHolder -> holder.bind(item as Chips)
@@ -198,6 +211,7 @@ class BlockListAdapter(val imageManager: ImageManager) : Adapter<BlockListItemVi
             is BarChartViewHolder -> holder.bind(item as BarChartItem)
             is PieChartViewHolder -> holder.bind(item as PieChartItem)
             is LineChartViewHolder -> holder.bind(item as LineChartItem)
+            is SubscribersChartViewHolder -> holder.bind(item as SubscribersChartItem)
             is ChartLegendViewHolder -> holder.bind(item as ChartLegend)
             is ChartLegendsBlueViewHolder -> holder.bind(item as ChartLegendsBlue)
             is ChartLegendsPurpleViewHolder -> holder.bind(item as ChartLegendsPurple)

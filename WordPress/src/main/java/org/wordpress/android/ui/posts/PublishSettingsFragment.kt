@@ -83,7 +83,19 @@ abstract class PublishSettingsFragment : Fragment() {
             calIntent.putExtra(Events.TITLE, calendarEvent.title)
             calIntent.putExtra(Events.DESCRIPTION, calendarEvent.description)
             calIntent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, calendarEvent.startTime)
-            startActivity(calIntent)
+            // Check if there's an activity that can handle the intent
+            activity?.let {
+                if (calIntent.resolveActivity(it.packageManager) != null) {
+                    startActivity(calIntent)
+                } else {
+                    ToastUtils.showToast(
+                        context,
+                        getString(R.string.post_settings_no_calendar_app_exists),
+                        SHORT,
+                        Gravity.TOP
+                    )
+                }
+            }
         }
     }
 

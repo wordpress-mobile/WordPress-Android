@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
+import org.wordpress.android.ui.posts.PostConflictResolutionFeatureUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.FetchPostStatusFailed;
 import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaveFailed;
@@ -83,6 +84,7 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject AutoSavePostIfNotDraftUseCase mAutoSavePostIfNotDraftUseCase;
     @Inject PostMediaHandler mPostMediaHandler;
+    @Inject PostConflictResolutionFeatureUtils mPostConflictResolutionFeatureUtils;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -285,12 +287,18 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());
-                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    mDispatcher.dispatch(
+                            PostActionBuilder.newPushPostAction(
+                                    mPostConflictResolutionFeatureUtils.getRemotePostPayloadForPush(payload)
+                            )
+                    );
                     break;
                 case UPLOAD_AS_DRAFT:
                     mPost.setStatus(PostStatus.DRAFT.toString());
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD_AS_DRAFT. Post: " + mPost.getTitle());
-                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(payload));
+                    mDispatcher.dispatch(PostActionBuilder.newPushPostAction(
+                            mPostConflictResolutionFeatureUtils.getRemotePostPayloadForPush(payload)
+                    ));
                     break;
                 case REMOTE_AUTO_SAVE:
                     AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
@@ -341,11 +349,9 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                                 // loosely made knowing the other check ("contains blocks") is in place.
                                 // NOTE: added now first check if this post contains a WP Story and mark it created
                                 // like so.
-                                PostUtils.contentContainsWPStoryGutenbergBlocks(mPost.getContent())
-                                        ? SiteUtils.WP_STORIES_CREATOR_NAME
-                                        : (PostUtils.shouldShowGutenbergEditor(
+                                PostUtils.shouldShowGutenbergEditor(
                                                     mPost.isLocalDraft(), mPost.getContent(), selectedSite
-                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
+                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
                     }
                 }
                 if (hasGallery()) {
@@ -639,7 +645,9 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
              */
             post.setStatus(PostStatus.DRAFT.toString());
             SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(new RemotePostPayload(post, site)));
+            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(
+                    mPostConflictResolutionFeatureUtils.getRemotePostPayloadForPush(new RemotePostPayload(post, site))
+            ));
         } else {
             throw new IllegalStateException("All AutoSavePostIfNotDraftResult types must be handled");
         }
@@ -661,15 +669,30 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
         if (event.isError()) {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
                               + event.error.message);
-            Context context = WordPress.getContext();
-            String errorMessage = mUiHelpers.getTextOfUiString(context,
-                    UploadUtils.getErrorMessageResIdFromPostError(PostStatus.fromPost(event.post), event.post.isPage(),
-                            event.error, mUploadActionUseCase.isEligibleForAutoUpload(site, event.post))).toString();
-            String notificationMessage = UploadUtils.getErrorMessage(context, event.post.isPage(), errorMessage, false);
-            mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
-                    mMediaStore.getMediaForPost(event.post));
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
-            mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
+
+            if (event.error.type != PostStore.PostErrorType.OLD_REVISION) {
+                Context context = WordPress.getContext();
+                String errorMessage = mUiHelpers.getTextOfUiString(
+                        context,
+                        UploadUtils.getErrorMessageResIdFromPostError(
+                                PostStatus.fromPost(event.post),
+                                event.post.isPage(),
+                                event.error,
+                                mUploadActionUseCase.isEligibleForAutoUpload(site, event.post)
+                        )
+                ).toString();
+                String notificationMessage = UploadUtils.getErrorMessage(
+                        context,
+                        event.post.isPage(),
+                        errorMessage,
+                        false
+                );
+                mPostUploadNotifier.removePostInfoFromForegroundNotification(event.post,
+                        mMediaStore.getMediaForPost(event.post));
+                mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
+                mPostUploadNotifier.updateNotificationErrorForPost(event.post, site, notificationMessage, 0);
+            }
+
             sFirstPublishPosts.remove(event.post.getId());
         } else {
             mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(event.post);
@@ -690,8 +713,6 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                         event.post, sCurrentUploadingPostAnalyticsProperties);
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                         PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
-                sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_WP_STORIES_BLOCKS_KEY,
-                        PostUtils.contentContainsWPStoryGutenbergBlocks(event.post.getContent()));
                 sCurrentUploadingPostAnalyticsProperties
                         .put(AnalyticsUtils.PROMPT_ID, event.post.getAnsweredPromptId());
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,

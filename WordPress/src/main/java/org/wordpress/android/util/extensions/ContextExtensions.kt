@@ -45,6 +45,17 @@ fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateL
         AppCompatResources.getColorStateList(this, it)
     }
 
+fun Context.getColorFromAttributeOrRes(resId: Int): Int {
+    val typedValue = TypedValue()
+    val isAttr = theme.resolveAttribute(resId, typedValue, true)
+
+    return if (isAttr) {
+        ContextCompat.getColor(this, typedValue.resourceId)
+    } else {
+        ContextCompat.getColor(this, resId)
+    }
+}
+
 fun Context.getColorStateListFromAttributeOrRes(resId: Int): ColorStateList {
     val typedValue = TypedValue()
     val isAttr = theme.resolveAttribute(resId, typedValue, true)

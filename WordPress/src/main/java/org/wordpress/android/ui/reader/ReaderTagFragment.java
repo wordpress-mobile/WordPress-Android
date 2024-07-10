@@ -72,7 +72,7 @@ public class ReaderTagFragment extends Fragment
         }
 
         actionableEmptyView.image.setVisibility(View.GONE);
-        actionableEmptyView.title.setText(R.string.reader_no_followed_tags_title);
+        actionableEmptyView.title.setText(R.string.reader_no_followed_tags_text_title);
         actionableEmptyView.subtitle.setText(R.string.reader_empty_subscribed_tags_subtitle);
         actionableEmptyView.subtitle.setVisibility(View.VISIBLE);
         actionableEmptyView.setVisibility(hasTagAdapter() && getTagAdapter().isEmpty() ? View.VISIBLE : View.GONE);

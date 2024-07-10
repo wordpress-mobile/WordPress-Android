@@ -13,12 +13,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 /**
  * Basic activity for displaying a WebView.
@@ -34,6 +36,8 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     private static final int WEBVIEW_CHROMIUM_STATE_THRESHOLD = 300 * 1024; // 300 KB
 
     protected WebView mWebView;
+
+    @Inject UserAgent mUserAgent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,7 +68,9 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
         mWebView = (WebView) findViewById(R.id.webView);
         mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         // Setting this user agent makes Calypso sites hide any WordPress UIs (e.g. Masterbar, banners, etc.).
-        mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
+        if (mUserAgent != null) {
+            mWebView.getSettings().setUserAgentString(mUserAgent.toString());
+        }
         configureWebView();
 
         if (savedInstanceState == null) {

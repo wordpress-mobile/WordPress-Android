@@ -16,16 +16,12 @@ import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
-import com.wordpress.stories.compose.frame.FrameSaveNotifier;
-import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
-
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -75,9 +71,9 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.jetpackoverlay.JetpackStaticPosterActivity;
 import org.wordpress.android.ui.jetpackplugininstall.remoteplugin.JetpackRemoteInstallActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
-import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
+import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -85,13 +81,12 @@ import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
-import org.wordpress.android.ui.photopicker.MediaPickerConstants;
-import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostListType;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -123,7 +118,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDa
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
-import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
@@ -144,14 +138,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_INDEX;
-import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
-import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG_STORY_BLOCK_ID;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.JETPACK_LOGIN_ONLY;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
@@ -167,9 +158,6 @@ import static org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationAc
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_LIST_TYPE_KEY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
-import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
-import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
-import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_IS_DASHBOARD_CARD_ENTRY_KEY;
@@ -221,7 +209,7 @@ public class ActivityLauncher {
      * @param site     the preselected site
      */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
+        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
     }
 
@@ -246,36 +234,9 @@ public class ActivityLauncher {
      * @return the site picker intent
      */
     private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
-        Intent intent = new Intent(context, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, site.getId());
-        intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
-        return intent;
-    }
-
-    /**
-     * Use {@link org.wordpress.android.ui.photopicker.MediaPickerLauncher::showPhotoPickerForResult}  instead
-     */
-    @Deprecated
-    public static void showPhotoPickerForResult(Activity activity,
-                                                @NonNull MediaBrowserType browserType,
-                                                @Nullable SiteModel site,
-                                                @Nullable Integer localPostId) {
-        Intent intent = createShowPhotoPickerIntent(activity, browserType, site, localPostId);
-        activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
-    }
-
-    private static Intent createShowPhotoPickerIntent(Context context,
-                                                      @NonNull MediaBrowserType browserType,
-                                                      @Nullable SiteModel site,
-                                                      @Nullable Integer localPostId) {
-        Intent intent = new Intent(context, PhotoPickerActivity.class);
-        intent.putExtra(ARG_BROWSER_TYPE, browserType);
-        if (site != null) {
-            intent.putExtra(WordPress.SITE, site);
-        }
-        if (localPostId != null) {
-            intent.putExtra(MediaPickerConstants.LOCAL_POST_ID, localPostId.intValue());
-        }
+        Intent intent = new Intent(context, ChooseSiteActivity.class);
+        intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, site.getId());
+        intent.putExtra(ChooseSiteActivity.KEY_SITE_PICKER_MODE, mode.name());
         return intent;
     }
 
@@ -438,7 +399,7 @@ public class ActivityLauncher {
 
         Intent editorIntent = new Intent(context, EditPostActivity.class);
         editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -452,8 +413,8 @@ public class ActivityLauncher {
 
         Intent editorIntent = new Intent(context, EditPostActivity.class);
         editorIntent.putExtra(WordPress.SITE, site);
-        editorIntent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, localPostId);
-        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, localPostId);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
 
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(editorIntent);
@@ -493,11 +454,11 @@ public class ActivityLauncher {
         );
 
         Intent editorIntent = new Intent(activity, EditPostActivity.class);
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
-        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
-        editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_TITLE, post.getTitle());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
+        editorIntent.putExtra(EditPostActivityConstants.EXTRA_REBLOG_POST_CITATION, post.getUrl());
+        editorIntent.setAction(EditPostActivityConstants.ACTION_REBLOG);
 
         addNewPostForResult(editorIntent, activity, site, false, reblogSource, -1, null);
     }
@@ -992,6 +953,26 @@ public class ActivityLauncher {
         openUrlExternal(context, site.getAdminUrl());
     }
 
+    public static void addNewPostWithContentFromAIForResult(
+            Activity activity,
+            SiteModel site,
+            boolean isPromo,
+            PagePostCreationSourcesDetail source,
+            final String content
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, EditPostActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(EditPostActivityConstants.EXTRA_VOICE_CONTENT, content);
+        activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
     public static void addNewPostForResult(
             Activity activity,
             SiteModel site,
@@ -1019,108 +1000,12 @@ public class ActivityLauncher {
         }
 
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(EditPostActivity.EXTRA_PROMPT_ID, promptId);
-        intent.putExtra(EditPostActivity.EXTRA_ENTRY_POINT, entryPoint);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PROMPT_ID, promptId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT, entryPoint);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
-    }
-
-    public static void addNewStoryForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-    public static void addNewStoryWithMediaIdsForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source,
-            long[] mediaIds
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-    public static void addNewStoryWithMediaUrisForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source,
-            String[] mediaUris
-    ) {
-        if (site == null) {
-            return;
-        }
-
-            Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaPickerConstants.EXTRA_MEDIA_URIS, mediaUris);
-        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
-    }
-
-
-    public static void editStoryForResult(
-            Activity activity,
-            SiteModel site,
-            LocalId localPostId,
-            int storyIndex,
-            boolean allStorySlidesAreEditable,
-            boolean launchedFromGutenberg,
-            String storyBlockId
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
-        intent.putExtra(KEY_STORY_INDEX, storyIndex);
-        intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, launchedFromGutenberg);
-        intent.putExtra(KEY_ALL_UNFLATTENED_LOADED_SLIDES, allStorySlidesAreEditable);
-        intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
-    }
-
-    public static void editEmptyStoryForResult(
-            Activity activity,
-            SiteModel site,
-            LocalId localPostId,
-            int storyIndex,
-            String storyBlockId
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        AnalyticsTracker.track(Stat.STORY_BLOCK_ADD_MEDIA_TAPPED);
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(KEY_LAUNCHED_FROM_GUTENBERG, true);
-        intent.putExtra(MediaPickerConstants.EXTRA_LAUNCH_WPSTORIES_MEDIA_PICKER_REQUESTED, true);
-        intent.putExtra(KEY_POST_LOCAL_ID, localPostId.getValue());
-        intent.putExtra(KEY_STORY_INDEX, storyIndex);
-        intent.putExtra(ARG_STORY_BLOCK_ID, storyBlockId);
-        activity.startActivityForResult(intent, RequestCodes.EDIT_STORY);
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
@@ -1147,8 +1032,8 @@ public class ActivityLauncher {
         // PostModel objects can be quite large, since content field is not size restricted,
         // in order to avoid issues like TransactionTooLargeException it's better to pass the id of the post.
         // However, we still want to keep passing the SiteModel to avoid confusion around local & remote ids.
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, postLocalId);
-        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, postLocalId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
 
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1167,16 +1052,16 @@ public class ActivityLauncher {
     public static void editLandingPageForResult(@NonNull Fragment fragment, @NonNull SiteModel site, int homeLocalId,
                                                 boolean isNewSite) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
-        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, isNewSite);
         editPageForResult(intent, fragment, site, homeLocalId, false, RequestCodes.EDIT_LANDING_PAGE);
     }
 
     public static void editPageForResult(Intent intent, @NonNull Fragment fragment, @NonNull SiteModel site,
                                          int pageLocalId, boolean loadAutoSaveRevision, int requestCode) {
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, pageLocalId);
-        intent.putExtra(EditPostActivity.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
+        intent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, pageLocalId);
+        intent.putExtra(EditPostActivityConstants.EXTRA_LOAD_AUTO_SAVE_REVISION, loadAutoSaveRevision);
         fragment.startActivityForResult(intent, requestCode);
     }
 
@@ -1190,11 +1075,11 @@ public class ActivityLauncher {
     ) {
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1208,11 +1093,11 @@ public class ActivityLauncher {
             @NonNull PagePostCreationSourcesDetail source) {
         Intent intent = new Intent(fragment.getContext(), EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, true);
+        intent.putExtra(EditPostActivityConstants.EXTRA_IS_PROMO, false);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivityConstants.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -1378,22 +1263,6 @@ public class ActivityLauncher {
 
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
-        activity.startActivity(intent);
-    }
-
-    public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
-        Intent intent = new Intent(activity, StoryComposerActivity.class);
-        intent.putExtra(KEY_STORY_SAVE_RESULT, event);
-        intent.putExtra(WordPress.SITE, site);
-
-        // we need to have a way to cancel the related error notification when the user comes
-        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
-        // errored story but the error notification will remain existing in the system dashboard)
-        intent.setAction(String.valueOf(FrameSaveNotifier.getNotificationIdForError(
-                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
-                event.getStoryIndex()
-        )));
-
         activity.startActivity(intent);
     }
 

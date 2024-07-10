@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats.refresh.utils
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Header
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListHeader
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -12,6 +13,17 @@ class ContentDescriptionHelper
     fun buildContentDescription(header: Header, key: String, value: Any): String {
         return buildContentDescription(header.startLabel, key, header.endLabel, value)
     }
+
+    fun buildContentDescription(header: ListHeader, key: String, value1: String, value2: String) =
+        resourceProvider.getString(
+            R.string.stats_list_item_with_two_values_description,
+            resourceProvider.getString(header.label),
+            key,
+            resourceProvider.getString(header.valueLabel1),
+            value1,
+            resourceProvider.getString(header.valueLabel2),
+            value2
+        )
 
     fun buildContentDescription(
         @StringRes keyLabel: Int,

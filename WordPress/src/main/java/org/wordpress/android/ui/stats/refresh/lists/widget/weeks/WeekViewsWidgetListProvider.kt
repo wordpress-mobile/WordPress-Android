@@ -7,12 +7,15 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.stats.StatsTimeframe
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
+import org.wordpress.android.ui.stats.StatsTimeframe.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.lists.widget.SITE_ID_KEY
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color
 import org.wordpress.android.ui.stats.refresh.lists.widget.utils.getColorMode
 import org.wordpress.android.ui.stats.refresh.utils.StatsLaunchedFrom
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Inject
 
 class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : RemoteViewsFactory {
@@ -21,6 +24,10 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
 
     @Inject
     lateinit var widgetUpdater: WeekViewsWidgetUpdater
+
+    @Inject
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
+
     private val colorMode: Color = intent.getColorMode()
     private val siteId: Int = intent.getIntExtra(SITE_ID_KEY, 0)
     private val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
@@ -66,9 +73,13 @@ class WeekViewsWidgetListProvider(val context: Context, intent: Intent) : Remote
         rv.setTextViewText(R.id.period, uiModel.key)
         rv.setTextViewText(R.id.value, uiModel.value)
         val intent = Intent()
+        val timeframe = if (trafficSubscribersTabFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+        if (trafficSubscribersTabFeatureConfig.isEnabled()) {
+            intent.putExtra(StatsActivity.ARG_GRANULARITY, StatsGranularity.WEEKS)
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(WordPress.LOCAL_SITE_ID, uiModel.localSiteId)
-        intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, StatsTimeframe.INSIGHTS)
+        intent.putExtra(StatsActivity.ARG_DESIRED_TIMEFRAME, timeframe)
         intent.putExtra(StatsActivity.ARG_LAUNCHED_FROM, StatsLaunchedFrom.WIDGET)
         rv.setOnClickFillInIntent(R.id.container, intent)
         return rv

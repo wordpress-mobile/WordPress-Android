@@ -60,7 +60,7 @@ class JetpackFeatureRemovalBrandingUtil @Inject constructor(
 
     fun getBrandingTextByPhase(screen: JetpackPoweredScreen): UiString {
         return when (jetpackFeatureRemovalPhaseHelper.getCurrentPhase()) {
-            PhaseStaticPosters -> UiStringRes(R.string.wp_jetpack_feature_removal_static_posters_phase)
+            PhaseStaticPosters -> UiStringRes(R.string.wp_jetpack_powered)
             PhaseThree -> (screen as? JetpackPoweredScreen.WithDynamicText)?.let { screenWithDynamicText ->
                 getDynamicBrandingForScreen(screenWithDynamicText)
             } ?: UiStringRes(JetpackBrandingUiState.RES_JP_POWERED)

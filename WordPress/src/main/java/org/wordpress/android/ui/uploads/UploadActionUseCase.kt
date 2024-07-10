@@ -3,6 +3,7 @@ package org.wordpress.android.ui.uploads
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.UploadStore
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction.DO_NOTHING
@@ -39,7 +40,8 @@ class UploadActionUseCase @Inject constructor(
         }
 
         // Do not auto-upload post which is in conflict with remote
-        if (postUtilsWrapper.isPostInConflictWithRemote(post)) {
+        if (uploadStore.getUploadErrorForPost(post)?.postError?.type == PostStore.PostErrorType.OLD_REVISION
+            || postUtilsWrapper.isPostInConflictWithRemote(post)) {
             return DO_NOTHING
         }
 

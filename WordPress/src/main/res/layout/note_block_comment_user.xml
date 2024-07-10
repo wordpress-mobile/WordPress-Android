@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
-        android:fontFamily="serif"
+        android:fontFamily="sans-serif"
         android:paddingBottom="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceBody1"
         tools:text="Thanks for stopping by my blog! I hope to see you again. " />

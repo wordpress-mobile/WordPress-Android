@@ -91,7 +91,6 @@ import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_PARENT_ID_KEY;
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORY_IDS;
 
 public class EditPostSettingsFragment extends Fragment {
@@ -659,7 +658,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
         Intent categoriesIntent = new Intent(requireActivity(), SelectCategoriesActivity.class);
         categoriesIntent.putExtra(WordPress.SITE, getSite());
-        categoriesIntent.putExtra(EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
+        categoriesIntent.putExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, getEditPostRepository().getId());
         startActivityForResult(categoriesIntent, ACTIVITY_REQUEST_CODE_SELECT_CATEGORIES);
     }
 

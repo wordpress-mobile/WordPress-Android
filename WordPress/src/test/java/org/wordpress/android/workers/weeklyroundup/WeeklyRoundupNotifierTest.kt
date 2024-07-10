@@ -7,7 +7,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyArray
+import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -39,7 +40,20 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     }
     private val contextProvider: ContextProvider = mock()
     private val resourceProvider: ResourceProvider = mock {
-        on { getString(any(), anyArray<Any>()) }.thenReturn("mock_string")
+        on { getString(eq(R.string.weekly_roundup_notification_title), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_title")
+        on { getString(eq(R.string.weekly_roundup_notification_text_views_only), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_views_only")
+        on { getString(eq(R.string.weekly_roundup_notification_text_views_and_comments), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_views_and_comments")
+        on { getString(eq(R.string.weekly_roundup_notification_text_views_and_likes), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_views_and_likes")
+        on { getString(eq(R.string.weekly_roundup_notification_text_all), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_all")
+        on { getString(eq(R.string.weekly_roundup_notification_text_views_likes_comment), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_views_likes_comment")
+        on { getString(eq(R.string.weekly_roundup_notification_text_views_like_comments), anyVararg()) }
+            .thenReturn("weekly_roundup_notification_text_views_like_comments")
     }
     private val weeklyRoundupScheduler: WeeklyRoundupScheduler = mock()
     private val notificationsTracker: SystemNotificationsTracker = mock()
@@ -157,7 +171,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
         val mockSites = buildMockSites()
         val data1 = buildMockData(mockSites[0], views = 10, comments = 0, likes = 0)
         val data2 = buildMockData(mockSites[1], views = 9, comments = 8, likes = 8)
-        val data3 = buildMockData(mockSites[2], views = 10, comments = 1, likes = 1)
+        val data3 = buildMockData(mockSites[2], views = 10, comments = 2, likes = 2)
         val unsortedData = listOf(data1, data2, data3)
         val sortedData = listOf(data1, data3, data2)
 
@@ -181,7 +195,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_only,
                 statsUtils.toFormattedString(data!!.views)
@@ -192,14 +206,14 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
     @Test
     fun `buildNotifications should not include likes with 0 count`() = test {
         val mockSites = buildMockSites()
-        val data = buildMockData(mockSites[2], views = 10, comments = 1, likes = 0)
+        val data = buildMockData(mockSites[2], views = 10, comments = 2, likes = 0)
 
         whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
         whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_comments,
                 statsUtils.toFormattedString(data!!.views),
@@ -218,7 +232,7 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_views_and_likes,
                 statsUtils.toFormattedString(data!!.views),
@@ -237,11 +251,49 @@ class WeeklyRoundupNotifierTest : BaseUnitTest() {
 
         val list = weeklyRoundupNotifier.buildNotifications()
 
-        assertThat(list.first().contentTitle).isEqualTo(
+        assertThat(list.first().contentText).isEqualTo(
             resourceProvider.getString(
                 R.string.weekly_roundup_notification_text_all,
                 statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.likes),
+                statsUtils.toFormattedString(data.comments)
+            )
+        )
+    }
+
+    @Test
+    fun `buildNotifications should include singular comment string if the comment is one`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[1], views = 9, comments = 1, likes = 8)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentText).isEqualTo(
+            resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_views_likes_comment,
+                statsUtils.toFormattedString(data!!.views),
+                statsUtils.toFormattedString(data.likes),
+            )
+        )
+    }
+
+    @Test
+    fun `buildNotifications should include singular like string if the comment is one`() = test {
+        val mockSites = buildMockSites()
+        val data = buildMockData(mockSites[1], views = 9, comments = 8, likes = 1)
+
+        whenever(siteStore.sitesAccessedViaWPComRest).thenReturn(mockSites)
+        whenever(weeklyRoundupRepository.fetchWeeklyRoundupData(any())).then { data }
+
+        val list = weeklyRoundupNotifier.buildNotifications()
+
+        assertThat(list.first().contentText).isEqualTo(
+            resourceProvider.getString(
+                R.string.weekly_roundup_notification_text_views_like_comments,
+                statsUtils.toFormattedString(data!!.views),
                 statsUtils.toFormattedString(data.comments)
             )
         )

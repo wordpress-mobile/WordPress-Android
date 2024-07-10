@@ -27,6 +27,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ActionCardHandler
 import org.wordpress.android.ui.stats.refresh.utils.ItemPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateUtils
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.text.PercentFormatter
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.math.RoundingMode
@@ -60,6 +61,9 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
     lateinit var actionCardHandler: ActionCardHandler
 
     @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    @Mock
     private lateinit var percentFormatter: PercentFormatter
     private lateinit var useCase: MostPopularInsightsUseCase
     private val day = 2
@@ -81,7 +85,8 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
             resourceProvider,
             popupMenuHandler,
             actionCardHandler,
-            percentFormatter
+            percentFormatter,
+            buildConfigWrapper
         )
         whenever(
             percentFormatter.format(
@@ -111,6 +116,7 @@ class MostPopularInsightsUseCaseTest : BaseUnitTest() {
                 R.string.stats_most_popular_percent_views, "20%"
             )
         ).thenReturn("${highestHourPercent.roundToInt()}% of views")
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test

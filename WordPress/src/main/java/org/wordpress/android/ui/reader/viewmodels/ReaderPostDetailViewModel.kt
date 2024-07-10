@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -92,6 +91,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.mapSafe
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -127,7 +127,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val commentsSnippetFeatureConfig: CommentsSnippetFeatureConfig,
     private val readerCommentTableWrapper: ReaderCommentTableWrapper,
-    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
+    private val readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper,
+    private val readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig,
 ) : ScopedViewModel(mainDispatcher) {
     private var getLikesJob: Job? = null
 
@@ -155,6 +156,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private val _showJetpackPoweredBottomSheet = MutableLiveData<Event<Boolean>>()
     val showJetpackPoweredBottomSheet: LiveData<Event<Boolean>> = _showJetpackPoweredBottomSheet
+
+    private val _reloadFragment = MutableLiveData<Event<Unit>>()
+    val reloadFragment: LiveData<Event<Unit>> = _reloadFragment
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -445,7 +449,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                        post, false, this@ReaderPostDetailViewModel::onButtonClicked
+                        post,
+                        includeBookmark = false,
+                        includeReadingPreferences = readingPreferencesFeatureConfig.isEnabled(),
+                        onButtonClicked = this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null
@@ -579,9 +586,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
         val stat = if (isGlobal) {
-            AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+            Stat.READER_GLOBAL_RELATED_POST_CLICKED
         } else {
-            AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
+            Stat.READER_LOCAL_RELATED_POST_CLICKED
         }
         readerTracker.trackPost(stat, findPost(blogId, postId))
     }
@@ -617,7 +624,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updatePostDetailsUi() {
         post?.let {
-            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, it)
+            readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
             _uiState.value = convertPostToUiState(it)
         }
@@ -679,9 +686,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackNotAuthorisedState() {
         if (shouldOfferSignIn) {
-            post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
+            post?.let { readerTracker.trackPost(Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
-        post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, it) }
+        post?.let { readerTracker.trackPost(Stat.READER_USER_UNAUTHORIZED, it) }
     }
 
     private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
@@ -699,7 +706,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun buildLikersUiState(updateLikesState: GetLikesState?): TrainOfFacesUiState {
-        val (likers, numLikes, iLiked) = getLikersEssentials(updateLikesState)
+        val (likers, numLikes) = getLikersEssentials(updateLikesState)
 
         val showLoading = updateLikesState is Loading
         var showEmptyState = false
@@ -717,7 +724,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         } ?: false
 
         val engageItemsList = if (showLikeFacesTrainContainer) {
-            likers + getLikersFacesText(showEmptyState, numLikes, iLiked)
+            likers + getLikersFacesText(showEmptyState, numLikes)
         } else {
             listOf()
         }
@@ -750,56 +757,25 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     @Suppress("LongMethod")
-    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int, iLiked: Boolean): List<TrainOfAvatarsItem> {
+    private fun getLikersFacesText(showEmptyState: Boolean, numLikes: Int): List<TrainOfAvatarsItem> {
         @AttrRes val labelColor = R.attr.wpColorOnSurfaceMedium
         return when {
             showEmptyState -> {
                 listOf()
             }
-            numLikes == 1 && iLiked -> {
+            numLikes == 1 -> {
                 TrailingLabelTextItem(
                     UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_faces_you_like_text)
+                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.like_title_singular)
                     ),
                     labelColor
                 ).toList()
             }
-            numLikes == 2 && iLiked -> {
+            numLikes > 1 -> {
                 TrailingLabelTextItem(
                     UiStringText(
                         htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_you_plus_one_like_text
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes > 2 && iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_you_plus_others_like_text,
-                            numLikes - 1
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes == 1 && !iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_one_blogger_likes_text
-                        )
-                    ),
-                    labelColor
-                ).toList()
-            }
-            numLikes > 1 && !iLiked -> {
-                TrailingLabelTextItem(
-                    UiStringText(
-                        htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                            R.string.like_faces_others_like_text,
+                            R.string.like_title_plural,
                             numLikes
                         )
                     ),
@@ -1020,6 +996,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onReadingPreferencesThemeChanged() {
+        _reloadFragment.value = Event(Unit)
+    }
+
     override fun onCleared() {
         super.onCleared()
         getLikesJob?.cancel()
@@ -1029,6 +1009,14 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (commentsSnippetFeatureConfig.isEnabled()) {
             eventBusWrapper.unregister(this)
         }
+    }
+
+    fun onArticleTextCopied() {
+        readerTracker.track(Stat.READER_ARTICLE_TEXT_COPIED)
+    }
+
+    fun onArticleTextHighlighted() {
+        readerTracker.track(Stat.READER_ARTICLE_TEXT_HIGHLIGHTED)
     }
 
     companion object {

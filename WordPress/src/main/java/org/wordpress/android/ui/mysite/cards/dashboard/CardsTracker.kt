@@ -19,6 +19,7 @@ class CardsTracker @Inject constructor(
 ) {
     enum class Type(val label: String) {
         ERROR("error"),
+        QUICK_LINKS("quick_links"),
         QUICK_START("quick_start"),
         STATS("stats"),
         POST("post"),
@@ -128,6 +129,7 @@ class CardsTracker @Inject constructor(
 fun MySiteCardAndItem.Type.toTypeValue(): Type {
     return when (this) {
         MySiteCardAndItem.Type.ERROR_CARD -> Type.ERROR
+        MySiteCardAndItem.Type.QUICK_LINK_RIBBON -> Type.QUICK_LINKS
         MySiteCardAndItem.Type.QUICK_START_CARD -> Type.QUICK_START
         MySiteCardAndItem.Type.TODAYS_STATS_CARD_ERROR -> Type.ERROR
         MySiteCardAndItem.Type.TODAYS_STATS_CARD -> Type.STATS

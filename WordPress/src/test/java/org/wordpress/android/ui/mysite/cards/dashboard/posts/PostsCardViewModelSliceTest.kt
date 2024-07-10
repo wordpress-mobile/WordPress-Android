@@ -12,13 +12,14 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
 import org.wordpress.android.ui.mysite.cards.dashboard.CardsTracker
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuItemType
 import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuCard
+import org.wordpress.android.ui.mysite.cards.dashboard.posts.PostsCardViewModelSlice.PostMenuItemType
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -32,13 +33,16 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var postCardBuilder: PostCardBuilder
+
     private lateinit var postsCardViewModelSlice: PostsCardViewModelSlice
 
     private val site = mock<SiteModel>()
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
-    private lateinit var refreshEvents: MutableList<Boolean>
+    private lateinit var uiModels : MutableList<List<MySiteCardAndItem.Card>?>
 
     private val postId = 100
 
@@ -47,7 +51,8 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
         postsCardViewModelSlice = PostsCardViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            postCardBuilder
         )
 
         navigationActions = mutableListOf()
@@ -57,12 +62,11 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
             }
         }
 
-        refreshEvents = mutableListOf()
-        postsCardViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
-        }
+        uiModels = mutableListOf()
+        postsCardViewModelSlice.uiModel.observeForever { uiModels.add(it) }
+
+
+
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
@@ -173,7 +177,7 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(siteId, PostCardType.DRAFT.name, true)
 
-        assertThat(refreshEvents).containsOnly(true)
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test
@@ -202,7 +206,7 @@ class PostsCardViewModelSliceTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).setShouldHidePostDashboardCard(siteId, PostCardType.SCHEDULED.name, true)
 
-        assertThat(refreshEvents).containsOnly(true)
+        assertThat(uiModels.last()).isNull()
     }
 
     @Test

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: uz
 -->
 <resources>
@@ -54,7 +54,6 @@ Language: uz
     <string name="new_notifications">%d ta yangi xabarlar</string>
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
-    <string name="follows">Kuzatadi</string>
     <string name="loading">Yuklanmoqda…</string>
     <string name="httppassword">HTTP parol</string>
     <string name="httpuser">HTTP foydalanuvchi nomi</string>

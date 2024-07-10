@@ -5,11 +5,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.whenever
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_ONE_YEAR_ID
 import org.wordpress.android.ui.plans.PlansConstants.BLOGGER_PLAN_TWO_YEARS_ID
 import org.wordpress.android.ui.plans.PlansConstants.FREE_PLAN_ID
@@ -26,9 +23,6 @@ import org.wordpress.android.util.image.ImageType.P2_BLAVATAR_ROUNDED_CORNERS
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteUtilsTest {
-    @Mock
-    private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
-
     @Test
     fun `onFreePlan returns true when site is on free plan`() {
         val site = SiteModel()
@@ -179,55 +173,6 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `supportsStoriesFeature returns true when origin is wpcom rest`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
-        val site = SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsWPCom(true)
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
-
-        assertTrue(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns true when Jetpack site meets requirement`() {
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(true)
-        val site = initJetpackSite().apply {
-            jetpackVersion = SiteUtils.WP_STORIES_JETPACK_VERSION
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
-
-        assertTrue(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns false when Jetpack site does not meet requirement`() {
-        val site = initJetpackSite().apply {
-            jetpackVersion = (SiteUtils.WP_STORIES_JETPACK_VERSION.toFloat() - 1).toString()
-        }
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
-
-        assertFalse(supportsStoriesFeature)
-    }
-
-    @Test
-    fun `supportsStoriesFeature returns false when Jetpack features are removed`() {
-        val site = SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsWPCom(true)
-        }
-        whenever(jetpackFeatureRemovalPhaseHelper.shouldShowStoryPost()).thenReturn(false)
-
-        val supportsStoriesFeature = SiteUtils.supportsStoriesFeature(site, jetpackFeatureRemovalPhaseHelper)
-
-        assertFalse(supportsStoriesFeature)
-    }
-
-    @Test
     fun `getSiteIconType returns correct value for p2 and regular sites`() {
         val squareP2Image = SiteUtils.getSiteImageType(true, SQUARE)
         assertThat(squareP2Image).isEqualTo(P2_BLAVATAR)
@@ -246,13 +191,5 @@ class SiteUtilsTest {
 
         val circularSiteImage = SiteUtils.getSiteImageType(false, CIRCULAR)
         assertThat(circularSiteImage).isEqualTo(BLAVATAR_CIRCULAR)
-    }
-
-    private fun initJetpackSite(): SiteModel {
-        return SiteModel().apply {
-            origin = SiteModel.ORIGIN_WPCOM_REST
-            setIsJetpackInstalled(true)
-            setIsJetpackConnected(true)
-        }
     }
 }

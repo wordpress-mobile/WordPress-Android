@@ -101,7 +101,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         useCase = useCaseFactory.build(BLOCK)
         whenever(statsSinceLabelFormatter.getSinceLabelLowerCase(dateSubscribed)).thenReturn(sinceLabel)
         whenever(resourceProvider.getString(any())).thenReturn(wordPressLabel)
-        whenever(resourceProvider.getString(eq(R.string.stats_followers_count_message), any(), any())).thenReturn(
+        whenever(resourceProvider.getString(eq(R.string.stats_subscribers_count_message), any(), any())).thenReturn(
             message
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
@@ -319,7 +319,6 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
         useCase.liveData.observeForever { if (it != null) updatedResult = it }
 
-        whenever(insightsStore.getEmailFollowers(site, LimitMode.All)).thenReturn(updatedEmailModel)
         button.loadMore()
         updatedResult.data!!.assertViewAllFollowersSecondLoad()
     }
@@ -334,7 +333,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
 
     private fun assertTitle(item: BlockListItem) {
         assertThat(item.type).isEqualTo(TITLE)
-        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_followers)
+        assertThat((item as Title).textResource).isEqualTo(R.string.stats_view_subscribers)
     }
 
     private fun List<BlockListItem>.assertViewAllFollowersFirstLoad(position: Int): LoadingItem {
@@ -346,7 +345,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(this[1]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[2]).isEqualTo(
             Header(
-                R.string.stats_follower_label,
+                R.string.stats_subscriber_label,
                 R.string.stats_follower_since_label
             )
         )
@@ -381,7 +380,7 @@ class FollowersUseCaseTest : BaseUnitTest() {
         assertThat(this[2]).isEqualTo(Information("Total followers count is 50"))
         assertThat(this[3]).isEqualTo(
             Header(
-                R.string.stats_follower_label,
+                R.string.stats_subscriber_label,
                 R.string.stats_follower_since_label
             )
         )

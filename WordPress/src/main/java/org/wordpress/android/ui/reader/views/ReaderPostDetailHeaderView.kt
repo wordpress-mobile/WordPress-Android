@@ -2,21 +2,26 @@ package org.wordpress.android.ui.reader.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.google.android.material.textview.MaterialTextView
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewBinding
 import org.wordpress.android.databinding.ReaderPostDetailHeaderViewNewBinding
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.toTypeface
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.extensions.getDrawableResIdFromAttribute
 import org.wordpress.android.util.extensions.setVisible
@@ -60,11 +65,14 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         }
     }
 
-    fun updatePost(uiState: ReaderPostDetailsHeaderUiState) = with(binding) {
+    fun updatePost(
+        uiState: ReaderPostDetailsHeaderUiState,
+        readingPreferences: ReaderReadingPreferences? = null,
+    ) = with(binding) {
         expandableTagsView.setVisible(uiState.tagItemsVisibility)
-        expandableTagsView.updateUi(uiState.tagItems)
+        expandableTagsView.updateUi(uiState.tagItems, readingPreferences)
 
-        uiHelpers.setTextOrHide(titleText, uiState.title)
+        updateTitle(uiState.title, readingPreferences)
 
         setAuthorAndDate(uiState.authorName, uiState.dateLine)
 
@@ -76,7 +84,21 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         updateAvatars(uiState.blogSectionUiState)
         updateBlogSectionClick(uiState.blogSectionUiState)
 
-        updateInteractionSection(uiState.interactionSectionUiState)
+        updateInteractionSection(uiState.interactionSectionUiState, readingPreferences)
+    }
+
+    private fun ReaderPostDetailHeaderBinding.updateTitle(
+        title: UiString?,
+        readingPreferences: ReaderReadingPreferences?
+    ) {
+        uiHelpers.setTextOrHide(titleText, title)
+
+        readingPreferences?.let { prefs ->
+            // Using the base font from the Improved header Theme for now
+            val fontSize = resources.getDimension(R.dimen.text_sz_double_extra_large) * prefs.fontSize.multiplier
+            titleText.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+            titleText.typeface = prefs.fontFamily.toTypeface()
+        }
     }
 
     private fun ReaderPostDetailHeaderBinding.updateBlogSectionClick(
@@ -129,7 +151,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
 
         fun setAuthorAndDate(authorName: String?, dateLine: String)
 
-        fun updateInteractionSection(state: InteractionSectionUiState)
+        fun updateInteractionSection(state: InteractionSectionUiState, readingPreferences: ReaderReadingPreferences?)
 
         class ImprovementsDisabled(
             private val binding: ReaderPostDetailHeaderViewBinding,
@@ -160,7 +182,10 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 postDetailDotSeparator.setVisible(authorName != null)
             }
 
-            override fun updateInteractionSection(state: InteractionSectionUiState) {
+            override fun updateInteractionSection(
+                state: InteractionSectionUiState,
+                readingPreferences: ReaderReadingPreferences?
+            ) {
                 // do nothing
             }
         }
@@ -193,23 +218,41 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
                 blogSectionDotSeparator.setVisible(authorName != null)
             }
 
-            override fun updateInteractionSection(state: InteractionSectionUiState) = with(binding) {
-                val viewContext = root.context
+            override fun updateInteractionSection(
+                state: InteractionSectionUiState,
+                readingPreferences: ReaderReadingPreferences?
+            ) {
+                with(binding) {
+                    val viewContext = root.context
 
-                val likeCount = state.likeCount
-                val commentCount = state.commentCount
+                    val likeCount = state.likeCount
+                    val commentCount = state.commentCount
 
-                val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
-                    .takeIf { likeCount > 0 }
-                val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
-                    .takeIf { commentCount > 0 }
+                    val likeLabel = ReaderUtils.getShortLikeLabelText(viewContext, likeCount)
+                        .takeIf { likeCount > 0 }
+                    val commentLabel = ReaderUtils.getShortCommentLabelText(viewContext, commentCount)
+                        .takeIf { commentCount > 0 }
 
-                uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
-                uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
-                headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
+                    uiHelpers.setTextOrHide(headerLikeCount, likeLabel)
+                    uiHelpers.setTextOrHide(headerCommentCount, commentLabel)
+                    headerDotSeparator.isVisible = likeLabel != null && commentLabel != null
 
-                headerLikeCount.setOnClickListener { state.onLikesClicked() }
-                headerCommentCount.setOnClickListener { state.onCommentsClicked() }
+                    headerLikeCount.setOnClickListener { state.onLikesClicked() }
+                    headerCommentCount.setOnClickListener { state.onCommentsClicked() }
+
+                    readingPreferences?.let { prefs ->
+                        // Ideally we should get from the view theme directly, but let's hardcode it for now
+                        val baseFontSize = viewContext.resources.getDimension(R.dimen.text_sz_medium)
+                        val fontSize = baseFontSize * prefs.fontSize.multiplier
+                        headerLikeCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                        headerCommentCount.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+                        headerDotSeparator.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize)
+
+                        headerLikeCount.typeface = prefs.fontFamily.toTypeface()
+                        headerCommentCount.typeface = prefs.fontFamily.toTypeface()
+                        headerDotSeparator.typeface = prefs.fontFamily.toTypeface()
+                    }
+                }
             }
         }
     }

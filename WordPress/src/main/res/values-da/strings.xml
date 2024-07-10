@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2021-08-01 11:11:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: da_DK
 -->
 <resources>
@@ -87,7 +87,6 @@ Language: da_DK
     <string name="site_picker_create_wpcom">Opret WordPress.com websted</string>
     <string name="site_picker_edit_visibility">Vis/skjul websteder</string>
     <string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
-    <string name="site_picker_add_site">Tilføj nyt websted</string>
     <string name="my_site_btn_view_site">Vis websted</string>
     <string name="site_picker_title">Vælg websted</string>
     <string name="my_site_btn_switch_site">Skift websted</string>
@@ -128,7 +127,6 @@ Language: da_DK
     <string name="stats_followers_months">%1$d måneder</string>
     <string name="themes_fetching">Henter temaer…</string>
     <string name="stats_view_videos">Videoer</string>
-    <string name="stats_view_followers">Følgere</string>
     <string name="stats_view_countries">Lande</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_timeframe_years">År</string>
@@ -265,7 +263,6 @@ Language: da_DK
     <string name="more_notifications">og %d mere.</string>
     <string name="new_notifications">%d nye notifikationer</string>
     <string name="note_reply_successful">Svar sendt</string>
-    <string name="follows">Følger</string>
     <string name="loading">Indlæser…</string>
     <string name="httpuser">HTTP-brugernavn</string>
     <string name="httppassword">HTTP-adgangskode</string>

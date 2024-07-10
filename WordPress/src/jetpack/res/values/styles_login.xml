@@ -23,16 +23,4 @@
         <item name="colorOnSurface">@color/white</item>
     </style>
 
-    <style name="Widget.LoginFlow.TextAppTagLine.Prologue" parent="">
-        <item name="android:textAlignment">center</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <!-- Cards -->
-    <style name="Widget.LoginFlow.CardView.BottomBar.Prologue" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">0dp</item>
-        <item name="cardElevation">0dp</item>
-        <item name="cardBackgroundColor">@color/wordpress_blue_90</item>
-    </style>
 </resources>

@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.refresh.StatsViewModel.DateSelectorUiModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
 import org.wordpress.android.util.perform
 import javax.inject.Inject
 
@@ -16,8 +15,7 @@ constructor(
     private val statsDateFormatter: StatsDateFormatter,
     private val siteProvider: StatsSiteProvider,
     var statsGranularity: StatsGranularity,
-    private val isGranularitySpinnerVisible: Boolean,
-    private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    private val isGranularitySpinnerVisible: Boolean
 ) {
     private val _dateSelectorUiModel = MutableLiveData<DateSelectorUiModel>()
     val dateSelectorData: LiveData<DateSelectorUiModel> = _dateSelectorUiModel
@@ -35,18 +33,13 @@ constructor(
     fun updateDateSelector() {
         val updatedDate = getDateLabelForSection()
         val currentState = dateSelectorData.value
-        val timeZone = if (statsTrafficTabFeatureConfig.isEnabled()) {
-            null
-        } else {
-            statsDateFormatter.printTimeZone(siteProvider.siteModel)
-        }
         val updatedState = DateSelectorUiModel(
             true,
             isGranularitySpinnerVisible,
             updatedDate,
             enableSelectPrevious = selectedDateProvider.hasPreviousDate(statsGranularity),
             enableSelectNext = selectedDateProvider.hasNextDate(statsGranularity),
-            timeZone = timeZone
+            timeZone = statsDateFormatter.printTimeZone(siteProvider.siteModel)
         )
         emitValue(currentState, updatedState)
     }
@@ -87,8 +80,7 @@ constructor(
     @Inject constructor(
         private val selectedDateProvider: SelectedDateProvider,
         private val siteProvider: StatsSiteProvider,
-        private val statsDateFormatter: StatsDateFormatter,
-        private val statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+        private val statsDateFormatter: StatsDateFormatter
     ) {
         fun build(statsGranularity: StatsGranularity, isGranularitySpinnerVisible: Boolean = false): StatsDateSelector {
             return StatsDateSelector(
@@ -96,8 +88,7 @@ constructor(
                 statsDateFormatter,
                 siteProvider,
                 statsGranularity,
-                isGranularitySpinnerVisible,
-                statsTrafficTabFeatureConfig
+                isGranularitySpinnerVisible
             )
         }
     }

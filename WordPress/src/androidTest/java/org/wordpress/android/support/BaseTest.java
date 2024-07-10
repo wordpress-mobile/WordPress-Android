@@ -1,7 +1,9 @@
 package org.wordpress.android.support;
 
 import android.app.Instrumentation;
+import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.compose.ui.test.junit4.ComposeTestRule;
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -10,6 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.DateOffset;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.helpers.HandlebarsHelper;
@@ -28,14 +31,18 @@ import org.wordpress.android.R;
 import org.wordpress.android.e2e.flows.LoginFlow;
 import org.wordpress.android.e2e.pages.MePage;
 import org.wordpress.android.e2e.pages.MySitesPage;
+import org.wordpress.android.editor.Utils;
 import org.wordpress.android.mocks.AndroidNotifier;
 import org.wordpress.android.mocks.AssetFileSource;
+import org.wordpress.android.rules.RetryTestRule;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.wiremock.WireMockStub;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -52,6 +59,7 @@ import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import dagger.hilt.android.testing.HiltAndroidRule;
 
 public class BaseTest {
+    static final String TAG = BaseTest.class.getSimpleName();
     public static final int WIREMOCK_PORT = 8080;
 
     @Rule(order = 0)
@@ -70,18 +78,48 @@ public class BaseTest {
     @Rule(order = 4)
     public WireMockRule wireMockRule;
 
-    {
-        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+    @Rule(order = 5)
+    public RetryTestRule retryTestRule = new RetryTestRule();
 
+    public BaseTest() {
+        this(null);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param wireMockStubs the wiremock stubs to use for this specific test.
+     */
+    public BaseTest(@Nullable final List<WireMockStub> wireMockStubs) {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         wireMockRule = new WireMockRule(
                 options().port(WIREMOCK_PORT)
-                         .fileSource(new AssetFileSource(instrumentation.getContext().getAssets()))
+                         .fileSource(
+                             new AssetFileSource(instrumentation.getContext().getAssets())
+                         )
+
                          .extensions(new ResponseTemplateTransformer(true, new HashMap<String, Helper>() {
                              {
                                  put("fnow", new UnlocalizedDateHelper());
                              }
                          }))
                          .notifier(new AndroidNotifier()));
+        if (wireMockStubs != null && !wireMockStubs.isEmpty()) {
+            for (WireMockStub wireMockStub : wireMockStubs) {
+                try {
+                    final String result = Utils.getStringFromInputStream(
+                            instrumentation.getContext().getClassLoader().getResourceAsStream(
+                                    wireMockStub.getFileName()
+                            )
+                    );
+                    // This is where we can stub out
+                    wireMockRule.stubFor(WireMock.get(WireMock.urlPathMatching(wireMockStub.getUrlPath().getPath()))
+                                                 .willReturn(WireMock.aResponse().withBody(result)));
+                } catch (final Exception exception) {
+                    Log.e(TAG, "Problem stubbing endpoint", exception);
+                }
+            }
+        }
     }
 
     @Before

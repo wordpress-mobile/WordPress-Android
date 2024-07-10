@@ -90,34 +90,56 @@ class WeeklyRoundupNotifier @Inject constructor(
     }
 
     private fun buildContentText(data: WeeklyRoundupData) = when {
-        data.likes <= 0 && data.comments <= 0 -> {
-            resourceProvider.getString(
-                R.string.weekly_roundup_notification_text_views_only,
-                statsUtils.toFormattedString(data.views)
-            )
-        }
-        data.likes > 0 && data.comments <= 0 -> {
-            resourceProvider.getString(
-                R.string.weekly_roundup_notification_text_views_and_likes,
-                statsUtils.toFormattedString(data.views),
-                statsUtils.toFormattedString(data.likes)
-            )
-        }
-        data.likes <= 0 && data.comments > 0 -> {
-            resourceProvider.getString(
-                R.string.weekly_roundup_notification_text_views_and_comments,
-                statsUtils.toFormattedString(data.views),
-                statsUtils.toFormattedString(data.comments)
-            )
-        }
-        else -> {
-            resourceProvider.getString(
-                R.string.weekly_roundup_notification_text_all,
-                statsUtils.toFormattedString(data.views),
-                statsUtils.toFormattedString(data.likes),
-                statsUtils.toFormattedString(data.comments)
-            )
-        }
+        data.likes <= 0 && data.comments <= 0 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_only,
+            statsUtils.toFormattedString(data.views)
+        )
+
+        data.likes.toInt() == 1 && data.comments <= 0 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_and_like,
+            statsUtils.toFormattedString(data.views)
+        )
+
+        data.likes > 0 && data.comments <= 0 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_and_likes,
+            statsUtils.toFormattedString(data.views),
+            statsUtils.toFormattedString(data.likes)
+        )
+
+        data.likes <= 0 && data.comments.toInt() == 1 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_and_comment,
+            statsUtils.toFormattedString(data.views)
+        )
+
+        data.likes <= 0 && data.comments > 0 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_and_comments,
+            statsUtils.toFormattedString(data.views),
+            statsUtils.toFormattedString(data.comments)
+        )
+
+        data.likes.toInt() == 1 && data.comments.toInt() == 1 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_like_comment,
+            statsUtils.toFormattedString(data.views)
+        )
+
+        data.likes.toInt() == 1 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_like_comments,
+            statsUtils.toFormattedString(data.views),
+            statsUtils.toFormattedString(data.comments)
+        )
+
+        data.comments.toInt() == 1 -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_views_likes_comment,
+            statsUtils.toFormattedString(data.views),
+            statsUtils.toFormattedString(data.likes)
+        )
+
+        else -> resourceProvider.getString(
+            R.string.weekly_roundup_notification_text_all,
+            statsUtils.toFormattedString(data.views),
+            statsUtils.toFormattedString(data.likes),
+            statsUtils.toFormattedString(data.comments)
+        )
     }
 
     companion object {

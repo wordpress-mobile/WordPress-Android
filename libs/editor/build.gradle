@@ -13,6 +13,8 @@ repositories {
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.gutenberg-mobile"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
+            includeGroup "com.automattic"
+            includeGroup "com.automattic.tracks"
         }
     }
     maven {
@@ -104,6 +106,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
+    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

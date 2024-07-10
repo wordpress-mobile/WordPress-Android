@@ -263,7 +263,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with positive difference`() {
-        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("300")
+        whenever(percentFormatter.formatWithJavaLib(value = 3.0F, rounding = HALF_UP)).thenReturn("300")
         val previousValue = 5L
         val value = 20L
         val positive = true
@@ -278,12 +278,12 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with infinite positive difference`() {
-        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("∞")
+        whenever(percentFormatter.format(100)).thenReturn("100")
         val previousValue = 0L
         val value = 20L
         val positive = true
-        val expectedChange = "+20 (∞%)"
-        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("∞")))
+        val expectedChange = "+20 (100%)"
+        whenever(resourceProvider.getString(eq(R.string.stats_traffic_increase), eq("20"), eq("100")))
             .thenReturn(expectedChange)
 
         val change = statsUtils.buildChange(previousValue, value, positive, isFormattedNumber = true)
@@ -293,7 +293,7 @@ class StatsUtilsTest {
 
     @Test
     fun `build change with negative difference`() {
-        whenever(percentFormatter.format(value = -0.33333334F, rounding = HALF_UP)).thenReturn("-33")
+        whenever(percentFormatter.formatWithJavaLib(value = -0.33333334F, rounding = HALF_UP)).thenReturn("-33")
         val previousValue = 30L
         val value = 20L
         val positive = false
@@ -309,7 +309,7 @@ class StatsUtilsTest {
     @Test
     fun `build change with max negative difference`() {
         val previousValue = 20L
-        whenever(percentFormatter.format(value = -1F, rounding = HALF_UP)).thenReturn("-100")
+        whenever(percentFormatter.formatWithJavaLib(value = -1F, rounding = HALF_UP)).thenReturn("-100")
         val value = 0L
         val positive = false
         val expectedChange = "-20 (-100%)"
@@ -337,8 +337,8 @@ class StatsUtilsTest {
 
     @Test
     fun `when buildChange, should call PercentFormatter`() {
-        whenever(percentFormatter.format(value = 3.0F, rounding = HALF_UP)).thenReturn("3%")
+        whenever(percentFormatter.formatWithJavaLib(value = 3.0F, rounding = HALF_UP)).thenReturn("3%")
         statsUtils.buildChange(5L, 20L, true, isFormattedNumber = true)
-        verify(percentFormatter).format(value = 3.0F, rounding = HALF_UP)
+        verify(percentFormatter).formatWithJavaLib(value = 3.0F, rounding = HALF_UP)
     }
 }

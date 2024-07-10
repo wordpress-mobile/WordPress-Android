@@ -13,6 +13,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.ActivityCardBuilderParams.ActivityCardItemClickParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -31,11 +32,14 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
     @Mock
     lateinit var appPrefsWrapper: AppPrefsWrapper
 
+    @Mock
+    lateinit var activityCardBuilder: ActivityCardBuilder
+
     private lateinit var activityLogCardViewModelSlice: ActivityLogCardViewModelSlice
 
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
 
-    private lateinit var refreshEvents: MutableList<Boolean>
+    private lateinit var uiModels : MutableList<MySiteCardAndItem.Card.ActivityCard?>
 
     private val site = mock<SiteModel>()
 
@@ -47,7 +51,8 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
         activityLogCardViewModelSlice = ActivityLogCardViewModelSlice(
             cardsTracker,
             selectedSiteRepository,
-            appPrefsWrapper
+            appPrefsWrapper,
+            activityCardBuilder
         )
         navigationActions = mutableListOf()
         activityLogCardViewModelSlice.onNavigation.observeForever { event ->
@@ -55,12 +60,12 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
                 navigationActions.add(it)
             }
         }
-        refreshEvents = mutableListOf()
-        activityLogCardViewModelSlice.refresh.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                refreshEvents.add(it)
-            }
+
+        uiModels = mutableListOf()
+        activityLogCardViewModelSlice.uiModel.observeForever { uiModel ->
+            uiModels.add(uiModel)
         }
+
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
     }
 
@@ -114,11 +119,11 @@ class ActivityLogCardViewModelSliceTest : BaseUnitTest() {
 
             params.onHideMenuItemClick()
 
-            Assertions.assertThat(refreshEvents).containsOnly(true)
             verify(cardsTracker).trackCardMoreMenuItemClicked(
                 CardsTracker.Type.ACTIVITY.label,
                 ActivityLogCardViewModelSlice.MenuItemType.HIDE_THIS.label
             )
             verify(appPrefsWrapper).setShouldHideActivityDashboardCard(any(), any())
+            Assertions.assertThat(uiModels.last()).isNull()
         }
 }

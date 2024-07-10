@@ -63,6 +63,7 @@ class StatsActivity : LocaleAwareActivity() {
         const val INITIAL_SELECTED_PERIOD_KEY = "INITIAL_SELECTED_PERIOD_KEY"
         const val ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM"
         const val ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME"
+        const val ARG_GRANULARITY = "ARG_GRANULARITY"
 
         @JvmStatic
         @JvmOverloads

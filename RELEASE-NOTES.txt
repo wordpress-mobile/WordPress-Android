@@ -1,13 +1,70 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+25.2
+-----
+* [*] Fix ability to update a published post's date [https://github.com/wordpress-mobile/WordPress-Android/pull/21036]
+
+
+25.1
+-----
+* [*] [internal] Block editor: Add onContentUpdate bridge functionality [https://github.com/wordpress-mobile/gutenberg-mobile/pull/20852]
+
+25.0
+-----
+* [*] Fixed a rare crash on Posts List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20813]
+* [*] Fixed a rare crash on the Login screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20821]
+* [*] Fix a crash that occurs when remove a user [https://github.com/wordpress-mobile/WordPress-Android/pull/20837]
+* [*] Fixed a rare crash on the featured image confirmation dialog [https://github.com/wordpress-mobile/WordPress-Android/pull/20836]
+* [*] Fixed an ANR issue on the Post List screen [https://github.com/wordpress-mobile/WordPress-Android/pull/20833]
+* [*] Fixed a crash that occurs with Blogging Reminders [https://github.com/wordpress-mobile/WordPress-Android/pull/20845]
+* [*] [internal] Block Editor: Upgrade target sdk version to Android API 34 [https://github.com/wordpress-mobile/WordPress-Android/pull/20841]
+* [*] [internal] In-app updates feature [https://github.com/wordpress-mobile/WordPress-Android/pull/20822]
+* [**] [Jetpack-only] Reader: Add a new feed dedicated to tags [https://github.com/wordpress-mobile/WordPress-Android/pull/20812]
+
+24.9
+-----
+* [*] [Jetpack-only] Removed Social section from the detail screen of Total Followers card [https://github.com/wordpress-mobile/WordPress-Android/pull/20763]
+* [***] [Jetpack-only] Reorganized Stats to include updated Traffic and Insights tabs, along with a newly added Subscribers tab to improve subscriber metrics analysis [https://github.com/wordpress-mobile/WordPress-Android/pull/20756]
+* [*] Site picker: Fixed the UI alignment issue in RTL [https://github.com/wordpress-mobile/WordPress-Android/pull/20804]
+
+24.8
+-----
+* [*] [Jetpack-only] Fixed percentage numbers direction on Stats for RTL languages [https://github.com/wordpress-mobile/WordPress-Android/pull/20656]
+
+24.7
+-----
+* [**] Site picker: Added the feature to pin sites, redesigned the UI, and deprecated the Show/Hide sites functionality. [https://github.com/wordpress-mobile/WordPress-Android/pull/20521]
+* [*] [internal] Updates the way the app retrieves the User-Agent request header [https://github.com/wordpress-mobile/WordPress-Android/pull/20603]
+
+24.6
+-----
+* [**] Block editor: Highlight text fixes [https://github.com/WordPress/gutenberg/pull/57650]
+* [*] Block editor: Fixes an Aztec editor crash occurring on some occasions when the keyboard suggestions are used [https://github.com/wordpress-mobile/WordPress-Android/pull/20518]
+* [*] [Jetpack-only] Change "∞" symbol with "100%" on stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20564]
+* [**] [internal][Jetpack-only] Reader: introduce "reading preferences", an experimental feature that allows users to customize their Reader post content screen with the color, font, and size that they like the most. [https://github.com/wordpress-mobile/WordPress-Android/pull/20567]
+
+24.5
+-----
+* [*] [internal] Block editor: Remove code associated to Story block [https://github.com/wordpress-mobile/WordPress-Android/pull/20400]
+* [*] [Jetpack-only] Fixes broken links on some notifications [https://github.com/wordpress-mobile/WordPress-Android/pull/20417]
+* [**] [internal] Block editor: Upgrade React Native to version 0.73.3 [#20167]
+
 24.4
 -----
-
+* [***] [Jetpack-only] Improved Notifications experience with richer UI elements and interactions [https://github.com/wordpress-mobile/WordPress-Android/pull/20072]
+* [**] [Jetpack-only] Block editor: Introduce VideoPress v5 support, to fix issues using video block with dotcom and Jetpack sites [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6634]
+* [**] [internal] Removed the Stories from the codebase [https://github.com/wordpress-mobile/WordPress-Android/pull/20016]
+* [***] [Jetpack-only] Stats: Introducing Traffic tab, delivering improved graphs, and combining Days/Weeks/Months/Years tabs into one, behind a feature flag. [https://github.com/wordpress-mobile/WordPress-Android/pull/19942]
+* [*] Block editor: Prevent crash when autoscrolling to blocks [https://github.com/WordPress/gutenberg/pull/59110]
+* [*] Block editor: Remove opacity change when images are being uploaded [https://github.com/WordPress/gutenberg/pull/59264]
+* [*] Block editor: Media & Text blocks correctly show an error message when the attached video upload fails [https://github.com/WordPress/gutenberg/pull/59288]
+* [*] [Jetpack-only] Themes: Filters themes that are not available due to tier to prevent activation errors. [https://github.com/wordpress-mobile/WordPress-Android/pull/20425]
 
 24.3
 -----
 * [**] Added support to use third-party passkey providers and other devices passkeys as a WordPress.com login option [https://github.com/wordpress-mobile/WordPress-Android/pull/20174]
 * [*] [Jetpack-only] Fix the visibility issue with the menu button on the stats [https://github.com/wordpress-mobile/WordPress-Android/pull/20175]
+* [*] [internal][WordPress-only] Updates Jetpack banners and badges copy for consistency [https://github.com/wordpress-mobile/WordPress-Android/pull/20123]
 
 24.2
 -----

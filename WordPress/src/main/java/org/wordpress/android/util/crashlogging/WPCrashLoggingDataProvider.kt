@@ -5,8 +5,10 @@ import com.automattic.android.tracks.crashlogging.CrashLoggingDataProvider
 import com.automattic.android.tracks.crashlogging.CrashLoggingUser
 import com.automattic.android.tracks.crashlogging.EventLevel
 import com.automattic.android.tracks.crashlogging.ExtraKnownKey
+import com.automattic.android.tracks.crashlogging.ReleaseName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -33,6 +35,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
     private val localeManager: LocaleManagerWrapper,
     private val encryptedLogging: EncryptedLogging,
     private val logFileProvider: LogFileProviderWrapper,
+    private val webviewVersionProvider: WebviewVersionProvider,
     private val buildConfig: BuildConfigWrapper,
     @Named(APPLICATION_SCOPE) private val appScope: CoroutineScope,
     wpPerformanceMonitoringConfig: WPPerformanceMonitoringConfig,
@@ -46,10 +49,14 @@ class WPCrashLoggingDataProvider @Inject constructor(
     override val enableCrashLoggingLogs: Boolean = false
     override val locale: Locale
         get() = localeManager.getLocale()
-    override val releaseName: String = BuildConfig.VERSION_NAME
+    override val releaseName: ReleaseName = if (buildConfig.isDebug()) {
+        ReleaseName.SetByApplication("debug")
+    } else {
+        ReleaseName.SetByTracksLibrary
+    }
     override val sentryDSN: String = BuildConfig.SENTRY_DSN
 
-    override val applicationContextProvider = MutableStateFlow<Map<String, String>>(emptyMap())
+    override val applicationContextProvider = flowOf(mapOf(WEBVIEW_VERSION to webviewVersionProvider.getVersion()))
 
     override fun crashLoggingEnabled(): Boolean {
         if (buildConfig.isDebug()) {
@@ -135,6 +142,7 @@ class WPCrashLoggingDataProvider @Inject constructor(
 
     companion object {
         const val EXTRA_UUID = "uuid"
+        const val WEBVIEW_VERSION = "webview.version"
         const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
         const val EVENT_BUS_EXCEPTION = "EventBusException"
         const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"

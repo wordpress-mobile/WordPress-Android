@@ -31,7 +31,6 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
-    private var closeKeyboard = true
     private lateinit var siteModel: SiteModel
 
     private val _navigateBack = MutableLiveData<Bundle?>()
@@ -50,11 +49,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     val uiState: LiveData<UiState> = _uiState
 
     // Public
-    fun start(
-        siteModel: SiteModel,
-        closeKeyboard: Boolean = false
-    ) {
-        this.closeKeyboard = closeKeyboard
+    fun start(siteModel: SiteModel) {
         this.siteModel = siteModel
 
         if (isStarted) return
@@ -141,10 +136,7 @@ class PrepublishingAddCategoryViewModel @Inject constructor(
     }
 
     private fun cleanupAndFinish(bundle: Bundle? = null) {
-        if (closeKeyboard) {
-            _dismissKeyboard.postValue(Event(Unit))
-        }
-
+        _dismissKeyboard.postValue(Event(Unit))
         _navigateBack.postValue(bundle)
     }
 

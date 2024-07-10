@@ -10,6 +10,6 @@ import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignLis
 @SuppressLint("ParcelCreator")
 sealed class BlazeCampaignPage : Parcelable {
     data class CampaignListingPage(val source: CampaignListingPageSource) : BlazeCampaignPage()
-    data class CampaignDetailsPage(val campaignId: Int, val source: CampaignDetailPageSource) : BlazeCampaignPage()
+    data class CampaignDetailsPage(val campaignId: String, val source: CampaignDetailPageSource) : BlazeCampaignPage()
     object Done: BlazeCampaignPage()
 }

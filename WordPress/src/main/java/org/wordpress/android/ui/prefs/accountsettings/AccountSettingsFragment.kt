@@ -264,7 +264,7 @@ class AccountSettingsFragment : PreferenceFragmentLifeCycleOwner(),
         primarySiteSettingsUiState?.let { state ->
             primarySitePreference.apply {
                 value = (state.primarySite?.siteId ?: "").toString()
-                summary = state.primarySite?.siteName
+                summary = state.primarySite?.siteName?.replace("%", "%%")
                 entries = state.siteNames
                 entryValues = state.siteIds
                 canShowDialog = state.canShowChoosePrimarySiteDialog

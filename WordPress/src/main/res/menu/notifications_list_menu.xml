@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/notifications_settings"
-        android:icon="@drawable/ic_cog_white_24dp"
-        android:title="@string/notification_settings"
+        android:id="@+id/notifications_actions"
+        android:title="@string/more"
+        app:actionLayout="@layout/notification_action_menu"
         app:showAsAction="always"/>
-
 </menu>

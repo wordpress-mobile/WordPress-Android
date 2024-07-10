@@ -28,7 +28,9 @@ private const val POST_TYPE = "post_type"
 class PostListDialogHelper(
     private val showDialog: (DialogHolder) -> Unit,
     private val checkNetworkConnection: () -> Boolean,
-    private val analyticsTracker: AnalyticsTrackerWrapper
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val showConflictResolutionOverlay: ((PostResolutionOverlayActionEvent.ShowDialogAction) -> Unit)? = null,
+    private val isPostConflictResolutionEnabled: Boolean
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
@@ -115,28 +117,45 @@ class PostListDialogHelper(
     }
 
     fun showConflictedPostResolutionDialog(post: PostModel) {
-        val dialogHolder = DialogHolder(
-            tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
-            title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
-            message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
-            positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
-            negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
-        )
         localPostIdForConflictResolutionDialog = post.id
-        showDialog.invoke(dialogHolder)
+        if (isPostConflictResolutionEnabled) {
+            showConflictResolutionOverlay?.invoke(
+                PostResolutionOverlayActionEvent.ShowDialogAction(
+                    post,
+                    PostResolutionType.SYNC_CONFLICT
+                )
+            )
+        } else {
+            val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_load_remote_post_title),
+                message = UiStringText(PostUtils.getConflictedPostCustomStringForDialog(post)),
+                positiveButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_local),
+                negativeButton = UiStringRes(R.string.dialog_confirm_load_remote_post_discard_web)
+            )
+            showDialog.invoke(dialogHolder)
+        }
     }
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
-        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
-        val dialogHolder = DialogHolder(
-            tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
-            title = UiStringRes(R.string.dialog_confirm_autosave_title),
-            message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
-            positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
-            negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
-        )
         localPostIdForAutosaveRevisionResolutionDialog = post.id
-        showDialog.invoke(dialogHolder)
+        if (isPostConflictResolutionEnabled) {
+            showConflictResolutionOverlay?.invoke(
+                PostResolutionOverlayActionEvent.ShowDialogAction(
+                    post, PostResolutionType.AUTOSAVE_REVISION_CONFLICT
+                )
+            )
+        } else {
+            analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
+            val dialogHolder = DialogHolder(
+                tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_autosave_title),
+                message = PostUtils.getCustomStringForAutosaveRevisionDialog(post),
+                positiveButton = UiStringRes(R.string.dialog_confirm_autosave_restore_button),
+                negativeButton = UiStringRes(R.string.dialog_confirm_autosave_dont_restore_button)
+            )
+            showDialog.invoke(dialogHolder)
+        }
     }
 
     fun showCopyConflictDialog(post: PostModel) {
@@ -254,6 +273,73 @@ class PostListDialogHelper(
                 editLocalPost = editLocalPost,
                 copyLocalPost = copyLocalPost
             )
+        }
+    }
+
+    fun onPostResolutionConfirmed(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit,
+        editRestoredAutoSavePost: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionType) {
+            PostResolutionType.AUTOSAVE_REVISION_CONFLICT -> {
+                handleAutosaveRevisionConflict(event, editRestoredAutoSavePost, editLocalPost)
+            }
+
+            PostResolutionType.SYNC_CONFLICT -> {
+                handleSyncRevisionConflict(
+                    event,
+                    updateConflictedPostWithLocalVersion,
+                    updateConflictedPostWithRemoteVersion
+                )
+            }
+        }
+    }
+
+    private fun handleAutosaveRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        editRestoredAutoSavePost: (Int) -> Unit,
+        editLocalPost: (Int) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                localPostIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the local post (don't use the auto save version)
+                    editLocalPost(it)
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                localPostIdForAutosaveRevisionResolutionDialog?.let {
+                    // open the editor with the restored auto save
+                    localPostIdForAutosaveRevisionResolutionDialog = null
+                    editRestoredAutoSavePost(it)
+                }
+            }
+        }
+    }
+
+    private fun handleSyncRevisionConflict(
+        event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent,
+        updateConflictedPostWithLocalVersion: (Int) -> Unit,
+        updateConflictedPostWithRemoteVersion: (Int) -> Unit
+    ) {
+        when (event.postResolutionConfirmationType) {
+            PostResolutionConfirmationType.CONFIRM_LOCAL -> {
+                localPostIdForConflictResolutionDialog?.let {
+                    updateConflictedPostWithLocalVersion(it)
+                }
+            }
+
+            PostResolutionConfirmationType.CONFIRM_OTHER -> {
+                localPostIdForConflictResolutionDialog?.let {
+                    localPostIdForConflictResolutionDialog = null
+                    // here load version from remote
+                    updateConflictedPostWithRemoteVersion(it)
+                }
+            }
         }
     }
 }

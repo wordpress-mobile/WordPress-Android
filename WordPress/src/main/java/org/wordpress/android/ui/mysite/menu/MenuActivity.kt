@@ -425,7 +425,7 @@ fun MySiteListItemPreviewWithSecondaryImage() {
         MenuItemState.MenuListItem(
             primaryIcon = R.drawable.ic_posts_white_24dp,
             primaryText = UiString.UiStringText("Plans"),
-            secondaryIcon = R.drawable.ic_story_icon_24dp,
+            secondaryIcon = R.drawable.ic_pages_white_24dp,
             secondaryText = null,
             showFocusPoint = false,
             onClick = ListItemInteraction.create { onClick() },

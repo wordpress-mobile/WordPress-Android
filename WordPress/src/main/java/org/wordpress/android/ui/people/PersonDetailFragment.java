@@ -31,7 +31,7 @@ import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.JetpackBrandingUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -183,7 +183,7 @@ public class PersonDetailFragment extends Fragment {
         Person person = loadPerson();
         if (person != null) {
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.people_avatar_sz);
-            String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), avatarSz);
+            String avatarUrl = WPAvatarUtils.rewriteAvatarUrl(person.getAvatarUrl(), avatarSz);
 
             mImageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITH_BACKGROUND, avatarUrl);
             mDisplayNameTextView.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
@@ -207,9 +207,9 @@ public class PersonDetailFragment extends Fragment {
             } else {
                 mSubscribedDateContainer.setVisibility(View.VISIBLE);
                 if (mPersonType == Person.PersonType.FOLLOWER) {
-                    mSubscribedDateTitleView.setText(R.string.title_follower);
+                    mSubscribedDateTitleView.setText(R.string.title_subscriber);
                 } else if (mPersonType == Person.PersonType.EMAIL_FOLLOWER) {
-                    mSubscribedDateTitleView.setText(R.string.title_email_follower);
+                    mSubscribedDateTitleView.setText(R.string.title_email_subscriber);
                 }
                 String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                 String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);

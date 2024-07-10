@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteStatement;
 import org.wordpress.android.models.ReaderUser;
 import org.wordpress.android.models.ReaderUserIdList;
 import org.wordpress.android.models.ReaderUserList;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.WPAvatarUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
@@ -108,7 +108,7 @@ public class ReaderUserTable {
             if (c.moveToFirst()) {
                 do {
                     long userId = c.getLong(0);
-                    String url = GravatarUtils.fixGravatarUrl(c.getString(1), avatarSz);
+                    String url = WPAvatarUtils.rewriteAvatarUrl(c.getString(1), avatarSz);
                     // add current user to the top
                     if (userId == wpComUserId) {
                         avatars.add(0, url);

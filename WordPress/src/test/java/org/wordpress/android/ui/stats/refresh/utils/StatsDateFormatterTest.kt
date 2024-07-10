@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import java.util.Locale
@@ -28,13 +29,21 @@ class StatsDateFormatterTest : BaseUnitTest() {
     lateinit var localeManagerWrapper: LocaleManagerWrapper
 
     @Mock
+    lateinit var mStatsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
+
+    @Mock
     lateinit var resourceProvider: ResourceProvider
     private lateinit var statsDateFormatter: StatsDateFormatter
 
     @Before
     fun setUp() {
         whenever(localeManagerWrapper.getLocale()).thenReturn(Locale.US)
-        statsDateFormatter = StatsDateFormatter(localeManagerWrapper, resourceProvider)
+        whenever(mStatsTrafficSubscribersTabsFeatureConfig.isEnabled()).thenReturn(false)
+        statsDateFormatter = StatsDateFormatter(
+            localeManagerWrapper,
+            resourceProvider,
+            mStatsTrafficSubscribersTabsFeatureConfig
+        )
     }
 
     @Test
@@ -70,6 +79,42 @@ class StatsDateFormatterTest : BaseUnitTest() {
         val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
 
         assertThat(parsedDate).isEqualTo("Dec 17 - Dec 23")
+    }
+
+    @Test
+    fun `prints a week date in the same year in string format with stats traffic tab enabled`() {
+        whenever(mStatsTrafficSubscribersTabsFeatureConfig.isEnabled()).thenReturn(true)
+        val unparsedDate = "2018W12W19"
+        val result = "Dec 17 - Dec 23, 2018"
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "Dec 17",
+                "Dec 23, 2018"
+            )
+        ).thenReturn(result)
+
+        val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
+
+        assertThat(parsedDate).isEqualTo("Dec 17 - Dec 23, 2018")
+    }
+
+    @Test
+    fun `prints a week date in two different years in string format with traffic tab enabled`() {
+        whenever(mStatsTrafficSubscribersTabsFeatureConfig.isEnabled()).thenReturn(true)
+        val unparsedDate = "2018W12W31"
+        val result = "Dec 31, 2018 - Jan 6, 2019"
+        whenever(
+            resourceProvider.getString(
+                R.string.stats_from_to_dates_in_week_label,
+                "Dec 31, 2018",
+                "Jan 6, 2019"
+            )
+        ).thenReturn(result)
+
+        val parsedDate = statsDateFormatter.printGranularDate(unparsedDate, WEEKS)
+
+        assertThat(parsedDate).isEqualTo("Dec 31, 2018 - Jan 6, 2019")
     }
 
     @Test

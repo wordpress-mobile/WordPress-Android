@@ -45,7 +45,6 @@ import org.wordpress.android.ui.mediapicker.MediaNavigationEvent.PreviewUrl
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.ANDROID_CHOOSE_FROM_DEVICE
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.CAPTURE_PHOTO
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.SWITCH_SOURCE
-import org.wordpress.android.ui.mediapicker.MediaPickerFragment.MediaPickerIconType.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.mediapicker.MediaPickerSetup.DataSource
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.ActionModeUiModel
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.BrowseMenuUiModel.BrowseAction.DEVICE
@@ -86,7 +85,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
     enum class MediaPickerIconType {
         ANDROID_CHOOSE_FROM_DEVICE,
         SWITCH_SOURCE,
-        WP_STORIES_CAPTURE,
         CAPTURE_PHOTO;
 
         companion object {
@@ -117,7 +115,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             val allowMultipleSelection: Boolean
         ) : MediaPickerAction()
 
-        data class OpenCameraForWPStories(val allowMultipleSelection: Boolean) : MediaPickerAction()
         object OpenCameraForPhotos : MediaPickerAction()
         data class SwitchMediaPicker(val mediaPickerSetup: MediaPickerSetup) : MediaPickerAction()
     }
@@ -128,8 +125,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
         ) : MediaPickerIcon(ANDROID_CHOOSE_FROM_DEVICE)
 
         data class SwitchSource(val dataSource: DataSource) : MediaPickerIcon(SWITCH_SOURCE)
-
-        object WpStoriesCapture : MediaPickerIcon(WP_STORIES_CAPTURE)
         object CapturePhoto : MediaPickerIcon(CAPTURE_PHOTO)
 
         fun toBundle(bundle: Bundle) {
@@ -145,7 +140,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                     bundle.putInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, this.dataSource.ordinal)
                 }
                 is CapturePhoto -> Unit // Do nothing
-                is WpStoriesCapture -> Unit // Do nothing
             }
         }
 
@@ -164,7 +158,6 @@ class MediaPickerFragment : Fragment(), MenuProvider {
                         }.toSet()
                         ChooseFromAndroidDevice(allowedTypes)
                     }
-                    WP_STORIES_CAPTURE -> WpStoriesCapture
                     CAPTURE_PHOTO -> CapturePhoto
                     SWITCH_SOURCE -> {
                         val ordinal = bundle.getInt(KEY_LAST_TAPPED_ICON_DATA_SOURCE, -1)
@@ -692,6 +685,9 @@ class MediaPickerFragment : Fragment(), MenuProvider {
             // READ_EXTERNAL_STORAGE is the equivalent of READ_MEDIA_IMAGES, READ_MEDIA_VIDEO and READ_MEDIA_AUDIO on
             // devices lower than API 33.
             permissions.add(permission.READ_EXTERNAL_STORAGE)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            permissions.add(permission.ACCESS_MEDIA_LOCATION)
         }
         requestPermissions(permissions.toTypedArray(), WPPermissionUtils.PHOTO_PICKER_MEDIA_PERMISSION_REQUEST_CODE)
     }

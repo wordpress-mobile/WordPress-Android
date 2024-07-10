@@ -7,7 +7,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.engagement.HeaderData
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode
+import org.wordpress.android.ui.main.SitePickerMode
 import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 
 sealed class ReaderNavigationEvents {
@@ -67,4 +67,6 @@ sealed class ReaderNavigationEvents {
         val postId: Long,
         val headerData: HeaderData
     ) : ReaderNavigationEvents()
+
+    data object ShowReadingPreferences : ReaderNavigationEvents()
 }

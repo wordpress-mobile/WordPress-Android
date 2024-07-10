@@ -5,11 +5,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -19,7 +19,8 @@ class StatsColorSelectionViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val accountStore: AccountStore,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) : ScopedViewModel(mainDispatcher) {
     private val mutableViewMode = MutableLiveData<Color>()
     val viewMode: LiveData<Color> = mutableViewMode
@@ -51,7 +52,7 @@ class StatsColorSelectionViewModel
         if (accountStore.hasAccessToken()) {
             mutableDialogOpened.postValue(Event(Unit))
         } else {
-            val message = if (BuildConfig.IS_JETPACK_APP) {
+            val message = if (buildConfigWrapper.isJetpackApp) {
                 R.string.stats_widget_log_in_to_add_message
             } else {
                 R.string.stats_widget_log_in_message

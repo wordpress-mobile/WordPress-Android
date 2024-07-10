@@ -46,7 +46,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
+import org.wordpress.android.ui.posts.PostResolutionOverlayActionEvent
+import org.wordpress.android.ui.posts.PostResolutionOverlayFragment
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
@@ -176,7 +179,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                     data,
                     this@PagesFragment,
                     viewModel.site,
-                    data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0),
+                    data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0),
                     false
                 )
 
@@ -184,7 +187,7 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
                 return
             }
             // we need to work with local ids, since local drafts don't have remote ids
-            val localPageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, -1)
+            val localPageId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, -1)
             if (localPageId != -1) {
                 viewModel.onPageEditFinished(localPageId, data)
             }
@@ -470,9 +473,22 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
     }
 
+    @Suppress("LongMethod")
     private fun setupActions(activity: FragmentActivity) {
         viewModel.dialogAction.observe(viewLifecycleOwner) {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
+        }
+
+        viewModel.conflictResolutionAction.observe(viewLifecycleOwner) {
+            if (isAdded) {
+                val fragment = requireActivity().supportFragmentManager
+                    .findFragmentByTag(PostResolutionOverlayFragment.TAG)
+                if (fragment == null) {
+                    PostResolutionOverlayFragment
+                        .newInstance(it.postModel, it.postResolutionType)
+                        .show(requireActivity().supportFragmentManager, PostResolutionOverlayFragment.TAG)
+                }
+            }
         }
 
         viewModel.postUploadAction.observe(viewLifecycleOwner) {
@@ -508,15 +524,19 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
         }
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner) {
-            it?.let { (page, isError, isFirstTimePublish) ->
+            it?.let { (page, errorWrapper, isFirstTimePublish) ->
+                val errorMessage = errorWrapper.errorMessage?.let {
+                    uiHelpers.getTextOfUiString(activity, it).toString()
+                }
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     activity,
                     activity.findViewById(R.id.coordinator),
-                    isError,
+                    errorWrapper.isError,
                     isFirstTimePublish,
                     page.post,
-                    null,
-                    page.site
+                    errorMessage,
+                    page.site,
+                    showRetry = errorWrapper.retry
                 )
             }
         }
@@ -671,6 +691,10 @@ class PagesFragment : Fragment(R.layout.pages_fragment), ScrollableViewInitializ
             appbarMain.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
             appbarMain.setTag(R.id.pages_non_search_recycler_view_id_tag_key, containerId)
         }
+    }
+
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        viewModel.onPostResolutionConfirmed(event)
     }
 }
 

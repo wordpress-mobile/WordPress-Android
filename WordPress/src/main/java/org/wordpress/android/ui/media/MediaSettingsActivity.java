@@ -67,6 +67,7 @@ import org.wordpress.android.fluxc.action.MediaAction;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
@@ -152,6 +153,8 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     }
 
     private MediaType mMediaType;
+
+    @Inject UserAgent mUserAgent;
 
     @Inject MediaStore mMediaStore;
     @Inject Dispatcher mDispatcher;
@@ -1031,7 +1034,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         }
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        request.addRequestHeader("User-Agent", WordPress.getUserAgent());
+        request.addRequestHeader("User-Agent", mUserAgent.toString());
 
         mDownloadId = dm.enqueue(request);
         invalidateOptionsMenu();

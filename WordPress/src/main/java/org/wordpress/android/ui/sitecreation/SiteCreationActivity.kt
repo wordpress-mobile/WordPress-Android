@@ -24,7 +24,7 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayVi
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.DismissDialog
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureOverlayActions.OpenPlayStore
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
-import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleEmpty
@@ -118,7 +118,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.preloadThumbnails(this)
 
         observeVMState()
-        observeOverlayEvents(savedInstanceState)
+        observeOverlayEvents()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -131,10 +131,10 @@ class SiteCreationActivity : LocaleAwareActivity(),
         mainViewModel.navigationTargetObservable.observe(this, ::showStep)
         mainViewModel.onCompleted.observe(this) { (result, isTitleTaskComplete) ->
             val intent = Intent().apply {
-                putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
-                putExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskComplete)
-                // Let `SitePickerActivity` handle this with a SnackBar message
-                putExtra(SitePickerActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, result is CreatedButNotFetched)
+                putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, (result as? Created)?.site?.id)
+                putExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, isTitleTaskComplete)
+                // Let `ChooseSiteActivity` handle this with a SnackBar message
+                putExtra(ChooseSiteActivity.KEY_SITE_CREATED_BUT_NOT_FETCHED, result is CreatedButNotFetched)
             }
             setResult(if (result is Completed) Activity.RESULT_OK else Activity.RESULT_CANCELED, intent)
             finish()
@@ -169,20 +169,13 @@ class SiteCreationActivity : LocaleAwareActivity(),
         previewViewModel.onOkButtonClicked.observe(this, mainViewModel::onWizardFinished)
     }
 
-    private fun observeOverlayEvents(savedInstanceState: Bundle?) {
+    private fun observeOverlayEvents() {
         if(BuildConfig.IS_JETPACK_APP)
             return
 
-        val fragment =  if (savedInstanceState == null) {
-            JetpackFeatureFullScreenOverlayFragment
-                .newInstance(
-                    isSiteCreationOverlay = true,
-                    siteCreationSource = getSiteCreationSource()
-                )
-        }else {
-            supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
-                    as JetpackFeatureFullScreenOverlayFragment
-        }
+        val fragment = supportFragmentManager.findFragmentByTag(JetpackFeatureFullScreenOverlayFragment.TAG)
+                    as? JetpackFeatureFullScreenOverlayFragment ?: JetpackFeatureFullScreenOverlayFragment
+                        .newInstance(isSiteCreationOverlay = true, siteCreationSource = getSiteCreationSource())
 
         jetpackFullScreenViewModel.action.observe(this) { action ->
             if (mainViewModel.siteCreationDisabled) finish()

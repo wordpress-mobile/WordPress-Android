@@ -39,7 +39,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
             cont.resume(Failure(error))
         }
 
-        WordPress.getRestClientUtilsV1_1().get(
+        WordPress.getRestClientUtilsV1_1().getWithLocale(
             endPointPath,
             listener,
             errorListener

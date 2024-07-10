@@ -71,7 +71,7 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
 
         with(viewModel.emptyState.value as VisibleEmptyUiState) {
             assertThat(title).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_title))
-            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_text))
+            assertThat(text).isEqualTo(UiStringRes(R.string.reader_filter_empty_tags_list_follow_text))
             assertThat(primaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
                     text = UiStringRes(R.string.reader_filter_empty_tags_action_suggested),
@@ -80,7 +80,7 @@ class SubfilterPageViewModelTest : BaseUnitTest() {
             )
             assertThat(secondaryButton).isEqualTo(
                 VisibleEmptyUiState.Button(
-                    text = UiStringRes(R.string.reader_filter_empty_tags_action_subscribe),
+                    text = UiStringRes(R.string.reader_filter_empty_tags_action_follow),
                     action = ActionType.OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
                 )
             )

@@ -2,9 +2,9 @@ package org.wordpress.android.ui.blaze.blazepromote
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.blaze.BlazeFlowSource
 import org.wordpress.android.ui.blaze.BlazeUIModel
 import org.wordpress.android.ui.blaze.BlazeUiState
@@ -18,7 +18,7 @@ const val ARG_BLAZE_FLOW_SOURCE = "blaze_flow_source"
 const val ARG_BLAZE_SHOULD_SHOW_OVERLAY = "blaze_flow_should_show_overlay"
 
 @AndroidEntryPoint
-class BlazePromoteParentActivity : AppCompatActivity() {
+class BlazePromoteParentActivity : LocaleAwareActivity() {
     private val viewModel: BlazeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +46,10 @@ class BlazePromoteParentActivity : AppCompatActivity() {
                 }
                 else -> {}
             }
+        }
+
+        viewModel.onSelectedSiteMissing.observe(this) {
+            finish()
         }
     }
 

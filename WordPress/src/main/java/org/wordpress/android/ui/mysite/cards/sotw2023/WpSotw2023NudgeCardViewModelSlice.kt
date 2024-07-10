@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite.cards.sotw2023
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteCardAndItem.Card.WpSotw2023NudgeCardModel
@@ -27,22 +28,28 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh as LiveData<Event<Boolean>>
-
+    private val _uiModel = MutableLiveData<WpSotw2023NudgeCardModel?>()
+    val uiModel: LiveData<WpSotw2023NudgeCardModel?> = _uiModel.distinctUntilChanged()
     private lateinit var scope: CoroutineScope
 
     fun initialize(scope: CoroutineScope) {
         this.scope = scope
     }
 
-    fun buildCard(): WpSotw2023NudgeCardModel? = WpSotw2023NudgeCardModel(
-        title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
-        text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
-        ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
-        onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
-        onCtaClick = ListItemInteraction.create(::onCtaClick),
-    ).takeIf { isEligible() }
+    fun buildCard(){
+        if (shouldShow().not()) _uiModel.postValue(null)
+        else {
+            _uiModel.postValue(
+                WpSotw2023NudgeCardModel(
+                    title = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_title),
+                    text = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_text),
+                    ctaText = UiStringRes(R.string.wp_sotw_2023_dashboard_nudge_cta),
+                    onHideMenuItemClick = ListItemInteraction.create(::onHideMenuItemClick),
+                    onCtaClick = ListItemInteraction.create(::onCtaClick)
+                )
+            )
+        }
+    }
 
     fun trackShown() {
         tracker.trackShown()
@@ -55,7 +62,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
     private fun onHideMenuItemClick() {
         tracker.trackHideTapped()
         appPrefsWrapper.setShouldHideSotw2023NudgeCard(true)
-        _refresh.value = Event(true)
+        _uiModel.postValue(null)
     }
 
     private fun onCtaClick() {
@@ -63,7 +70,7 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
         _onNavigation.value = Event(OpenExternalUrl(URL))
     }
 
-    private fun isEligible(): Boolean {
+    private fun shouldShow(): Boolean {
         val eventTime = Instant.parse(POST_EVENT_START)
         val now = dateTimeUtilsWrapper.getInstantNow()
         val isDateEligible = now.isAfter(eventTime)
@@ -75,6 +82,10 @@ class WpSotw2023NudgeCardViewModelSlice @Inject constructor(
                 !appPrefsWrapper.getShouldHideSotw2023NudgeCard() &&
                 isDateEligible &&
                 isLanguageEligible
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 
     companion object {

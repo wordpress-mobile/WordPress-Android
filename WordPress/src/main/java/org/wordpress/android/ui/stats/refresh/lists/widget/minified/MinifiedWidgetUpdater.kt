@@ -11,12 +11,14 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
+import org.wordpress.android.ui.stats.StatsTimeframe.TRAFFIC
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.DARK
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsColorSelectionViewModel.Color.LIGHT
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,7 +50,8 @@ class MinifiedWidgetUpdater
     private val statsUtils: StatsUtils,
     private val todayInsightsStore: TodayInsightsStore,
     private val widgetUtils: WidgetUtils,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : WidgetUpdater {
     private val coroutineScope = CoroutineScope(defaultDispatcher)
     override fun updateAppWidget(
@@ -74,9 +78,13 @@ class MinifiedWidgetUpdater
             views.setViewVisibility(R.id.widget_content, View.VISIBLE)
             views.setViewVisibility(R.id.widget_site_icon, View.VISIBLE)
             views.setViewVisibility(R.id.widget_retry_button, View.GONE)
+
+            val timeframe = if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) TRAFFIC else INSIGHTS
+            val granularity = if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) StatsGranularity.DAYS else null
+
             views.setOnClickPendingIntent(
                 R.id.widget_container,
-                widgetUtils.getPendingSelfIntent(context, siteModel.id, INSIGHTS)
+                widgetUtils.getPendingSelfIntent(context, siteModel.id, timeframe, granularity)
             )
             showValue(widgetManager, appWidgetId, views, siteModel, dataType, isWideView)
         } else {

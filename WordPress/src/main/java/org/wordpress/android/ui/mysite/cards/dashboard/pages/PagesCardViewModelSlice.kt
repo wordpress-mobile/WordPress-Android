@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.pages
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.fluxc.model.dashboard.CardModel.PagesCardModel
+import org.wordpress.android.ui.mysite.MySiteCardAndItem
 import org.wordpress.android.ui.mysite.MySiteCardAndItemBuilderParams.PagesCardBuilderParams
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.mysite.SiteNavigationAction
@@ -13,13 +15,20 @@ import javax.inject.Inject
 class PagesCardViewModelSlice @Inject constructor(
     private val cardsTracker: CardsTracker,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val pagesCardBuilder: PagesCardBuilder
 ) {
+    private val _uiModel = MutableLiveData<MySiteCardAndItem.Card.PagesCard?>()
+    val uiModel: LiveData<MySiteCardAndItem.Card.PagesCard?> = _uiModel
+
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation
 
-    private val _refresh = MutableLiveData<Event<Boolean>>()
-    val refresh = _refresh
+    fun buildCard(pagesCardModel: PagesCardModel?) {
+        _uiModel.postValue(
+            pagesCardBuilder.build(getPagesCardBuilderParams(pagesCardModel))
+        )
+    }
 
     fun getPagesCardBuilderParams(pagesCardModel: PagesCardModel?): PagesCardBuilderParams {
         return PagesCardBuilderParams(
@@ -49,7 +58,7 @@ class PagesCardViewModelSlice @Inject constructor(
     private fun onPagesCardHideThisCardClick() {
         cardsTracker.trackCardMoreMenuItemClicked(CardsTracker.Type.PAGES.label, PagesMenuItemType.HIDE_THIS.label)
         appPrefsWrapper.setShouldHidePagesDashboardCard(selectedSiteRepository.getSelectedSite()!!.siteId, true)
-        _refresh.postValue(Event(true))
+        _uiModel.value = null
     }
 
     private fun onPagesItemClick(params: PagesCardBuilderParams.PagesItemClickParams) {
@@ -93,6 +102,10 @@ class PagesCardViewModelSlice @Inject constructor(
                     requireNotNull(selectedSiteRepository.getSelectedSite())
                 )
             )
+    }
+
+    fun clearValue() {
+        _uiModel.postValue(null)
     }
 }
 

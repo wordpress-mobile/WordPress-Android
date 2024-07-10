@@ -25,15 +25,18 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_HEADER
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_IMAGE
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_TWO_VALUES
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.MAP_LEGEND
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.PIE_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.QUICK_SCAN_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.REFERRED_ITEM
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.SUBSCRIBERS_CHART
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TABS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TAG_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.TEXT
@@ -61,7 +64,9 @@ sealed class BlockListItem(val type: Type) {
         VALUE_ITEM,
         VALUE_WITH_CHART_ITEM,
         VALUES_ITEM,
+        LIST_HEADER,
         LIST_ITEM,
+        LIST_ITEM_WITH_TWO_VALUES,
         LIST_ITEM_WITH_ICON,
         LIST_ITEM_WITH_IMAGE,
         INFO,
@@ -73,6 +78,7 @@ sealed class BlockListItem(val type: Type) {
         BAR_CHART,
         PIE_CHART,
         LINE_CHART,
+        SUBSCRIBERS_CHART,
         CHART_LEGEND,
         CHART_LEGENDS_BLUE,
         CHART_LEGENDS_PURPLE,
@@ -126,6 +132,7 @@ sealed class BlockListItem(val type: Type) {
         @StringRes val unit: Int,
         val isFirst: Boolean = false,
         val change: String? = null,
+        val period: Int = 0,
         val state: State = POSITIVE,
         val contentDescription: String
     ) : BlockListItem(VALUE_ITEM) {
@@ -142,12 +149,28 @@ sealed class BlockListItem(val type: Type) {
         val contentDescription2: String? = null
     ) : BlockListItem(VALUES_ITEM)
 
+    data class ListHeader(
+        @StringRes val label: Int,
+        @StringRes val valueLabel1: Int,
+        @StringRes val valueLabel2: Int
+    ) : BlockListItem(LIST_HEADER)
+
     data class ListItem(
         val text: String,
         val value: String,
         val showDivider: Boolean = true,
         val contentDescription: String
     ) : BlockListItem(LIST_ITEM) {
+        override val itemId: Int
+            get() = text.hashCode()
+    }
+
+    data class ListItemWithTwoValues(
+        val text: String,
+        val value1: String,
+        val value2: String,
+        val contentDescription: String
+    ) : BlockListItem(LIST_ITEM_WITH_TWO_VALUES) {
         override val itemId: Int
             get() = text.hashCode()
     }
@@ -293,6 +316,18 @@ sealed class BlockListItem(val type: Type) {
         val onLineChartDrawn: ((visibleLineCount: Int) -> Unit)? = null,
         val entryContentDescriptions: List<String>
     ) : BlockListItem(LINE_CHART) {
+        data class Line(val label: String, val id: String, val value: Int)
+
+        override val itemId: Int
+            get() = entries.hashCode()
+    }
+
+    data class SubscribersChartItem(
+        val entries: List<Line>,
+        val selectedItemPeriod: String? = null,
+        val onLineSelected: (() -> Unit)? = null,
+        val entryContentDescriptions: List<String>
+    ) : BlockListItem(SUBSCRIBERS_CHART) {
         data class Line(val label: String, val id: String, val value: Int)
 
         override val itemId: Int

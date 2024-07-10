@@ -5,6 +5,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -12,8 +13,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 private val localColors = staticCompositionLocalOf { extraPaletteLight }
+internal val localTypography = staticCompositionLocalOf { extraTypography }
 
 @Composable
 fun DesignSystemTheme(
@@ -35,36 +40,38 @@ fun DesignSystemThemeWithoutBackground(
     } else {
         extraPaletteLight
     }
-
-    CompositionLocalProvider (localColors provides extraColors) {
+    val extraTypography = extraTypography
+    CompositionLocalProvider (localColors provides extraColors, localTypography provides extraTypography) {
         MaterialTheme(
             colorScheme = if (isDarkTheme) paletteDarkScheme else paletteLightScheme,
+            typography = typography,
             content = content
         )
     }
 }
+
 private val paletteLightScheme = lightColorScheme(
     primary = DesignSystemAppColor.Black,
     primaryContainer = DesignSystemAppColor.White,
-    secondary = DesignSystemAppColor.Gray40,
-    secondaryContainer = DesignSystemAppColor.Gray,
-    tertiary = DesignSystemAppColor.Gray50,
-    tertiaryContainer = DesignSystemAppColor.Gray10,
+    secondary = DesignSystemAppColor.DarkGray55,
+    secondaryContainer = DesignSystemAppColor.DarkGray8,
+    tertiary = DesignSystemAppColor.DarkGray30,
+    tertiaryContainer = DesignSystemAppColor.DarkGray15,
     error = DesignSystemAppColor.Red,
     )
 
 private val paletteDarkScheme = darkColorScheme(
     primary = DesignSystemAppColor.White,
     primaryContainer = DesignSystemAppColor.Black,
-    secondary = DesignSystemAppColor.Gray20,
-    secondaryContainer = DesignSystemAppColor.Gray70,
-    tertiary = DesignSystemAppColor.Gray10,
-    tertiaryContainer = DesignSystemAppColor.Gray80,
+    secondary = DesignSystemAppColor.Gray60,
+    secondaryContainer = DesignSystemAppColor.Gray22,
+    tertiary = DesignSystemAppColor.Gray,
+    tertiaryContainer = DesignSystemAppColor.Gray30,
     error = DesignSystemAppColor.Red10,
     )
 
 private val extraPaletteLight = ExtraColors(
-    quartenaryContainer = DesignSystemAppColor.Gray30,
+    quaternaryContainer = DesignSystemAppColor.DarkGray40,
     brand = DesignSystemAppColor.Green,
     brandContainer = DesignSystemAppColor.Green,
     warning = DesignSystemAppColor.Orange,
@@ -73,7 +80,7 @@ private val extraPaletteLight = ExtraColors(
     )
 
 private val extraPaletteDark = ExtraColors(
-    quartenaryContainer = DesignSystemAppColor.Gray60,
+    quaternaryContainer = DesignSystemAppColor.Gray40,
     brand = DesignSystemAppColor.Green10,
     brandContainer = DesignSystemAppColor.Green20,
     warning = DesignSystemAppColor.Orange10,
@@ -82,7 +89,7 @@ private val extraPaletteDark = ExtraColors(
     )
 
 data class ExtraColors(
-    val quartenaryContainer: Color,
+    val quaternaryContainer: Color,
     val brand: Color,
     val brandContainer: Color,
     val warning: Color,
@@ -90,10 +97,10 @@ data class ExtraColors(
     val wpContainer: Color,
     )
 @Suppress("UnusedReceiverParameter")
-val ColorScheme.quartenary
+val ColorScheme.quaternaryContainer
     @Composable
     @ReadOnlyComposable
-    get() = localColors.current.quartenaryContainer
+    get() = localColors.current.quaternaryContainer
 
 @Suppress("UnusedReceiverParameter")
 val ColorScheme.brand
@@ -124,6 +131,98 @@ val ColorScheme.wpContainer
     @Composable
     @ReadOnlyComposable
     get() = localColors.current.wpContainer
+
+private val extraTypography = ExtraTypography(
+    heading1 = DesignSystemAppTypography.heading1,
+    heading2 = DesignSystemAppTypography.heading2,
+    heading3 = DesignSystemAppTypography.heading3,
+    heading4 = DesignSystemAppTypography.heading4,
+    bodyLargeEmphasized = DesignSystemAppTypography.bodyLargeEmphasized,
+    bodyMediumEmphasized = DesignSystemAppTypography.bodyMediumEmphasized,
+    bodySmallEmphasized = DesignSystemAppTypography.bodySmallEmphasized,
+    footnote = DesignSystemAppTypography.footnote,
+    footnoteEmphasized = DesignSystemAppTypography.footnoteEmphasized,
+    )
+
+data class ExtraTypography(
+    val heading1: TextStyle,
+    val heading2: TextStyle,
+    val heading3: TextStyle,
+    val heading4: TextStyle,
+    val bodyLargeEmphasized: TextStyle,
+    val bodyMediumEmphasized: TextStyle,
+    val bodySmallEmphasized: TextStyle,
+    val footnote: TextStyle,
+    val footnoteEmphasized: TextStyle,
+    )
+@Suppress("UnusedReceiverParameter")
+val Typography.heading1
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading1
+
+@Suppress("UnusedReceiverParameter")
+val Typography.heading2
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading2
+
+@Suppress("UnusedReceiverParameter")
+val Typography.heading3
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading3
+
+val Typography.heading4
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.heading4
+
+val Typography.bodyLargeEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodyLargeEmphasized
+
+val Typography.bodyMediumEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodyMediumEmphasized
+
+val Typography.bodySmallEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.bodySmallEmphasized
+
+val Typography.footnote
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.footnote
+
+val Typography.footnoteEmphasized
+    @Composable
+    @ReadOnlyComposable
+    get() = localTypography.current.footnoteEmphasized
+
+val typography = Typography(
+    bodyLarge = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.25.sp
+    ),
+    bodyMedium = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.25.sp
+    ),
+    bodySmall = TextStyle(
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.25.sp
+    ),
+)
 
 @Composable
 private fun ContentInSurface(

@@ -8,12 +8,12 @@ import org.wordpress.android.util.AppLog
 @Suppress("MagicNumber")
 
 enum class CampaignStatus(val status: String, @StringRes val stringResource: Int) {
+    InModeration("pending", R.string.campaign_status_in_moderation),
+    Scheduled("scheduled", R.string.campaign_status_scheduled),
     Active("active", R.string.campaign_status_active),
-    Completed("finished", R.string.campaign_status_completed),
     Rejected("rejected", R.string.campaign_status_rejected),
     Canceled("canceled", R.string.campaign_status_canceled),
-    Scheduled("scheduled", R.string.campaign_status_scheduled),
-    InModeration("created", R.string.campaign_status_in_moderation);
+    Completed("finished", R.string.campaign_status_completed);
 
     companion object {
         fun fromString(status: String): CampaignStatus? {

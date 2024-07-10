@@ -908,6 +908,10 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
+        if (settingsObject == null) {
+            AppLog.e(AppLog.T.API, "Error: response doesn't contain settings object");
+            return;
+        }
         mRemoteJpSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }

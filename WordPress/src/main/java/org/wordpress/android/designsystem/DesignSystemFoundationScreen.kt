@@ -13,6 +13,7 @@ import org.wordpress.android.R
 
 @Composable
 fun DesignSystemFoundationScreen(
+    onButtonClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn (
@@ -25,8 +26,8 @@ fun DesignSystemFoundationScreen(
         item {
             DesignSystemDataSource.foundationScreenButtonOptions.forEach { item ->
                 SelectOptionButton(
-                    labelResourceId = item,
-                    onClick = {}
+                    labelResourceId = item.first,
+                    onClick = { onButtonClicked(item.second) }
                 )
             }
         }
@@ -36,10 +37,13 @@ fun DesignSystemFoundationScreen(
 @Preview
 @Composable
 fun StartDesignSystemFoundationScreenPreview(){
-    DesignSystemFoundationScreen(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.button_container_shadow_height))
-    )
+     DesignSystemTheme {
+         DesignSystemFoundationScreen(
+             onButtonClicked = {},
+             modifier = Modifier
+                 .fillMaxSize()
+                 .padding(dimensionResource(R.dimen.button_container_shadow_height))
+         )
+     }
 }
 

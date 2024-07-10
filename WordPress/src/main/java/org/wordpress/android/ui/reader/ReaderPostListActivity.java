@@ -38,6 +38,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -316,36 +317,32 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                 break;
             case RequestCodes.EDIT_POST:
                 if (resultCode == Activity.RESULT_OK && data != null && !isFinishing()) {
-                    int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                    int localId = data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0);
                     final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
                     final PostModel post = mPostStore.getPostByLocalPostId(localId);
 
                     if (EditPostActivity.checkToRestart(data)) {
                         ActivityLauncher.editPostOrPageForResult(data, ReaderPostListActivity.this, site,
-                                data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                                data.getIntExtra(EditPostActivityConstants.EXTRA_POST_LOCAL_ID, 0));
                         // a restart will happen so, no need to continue here
                         return;
                     }
 
-                    if (site != null && post != null) {
+                    View snackbarAttachView = findViewById(R.id.coordinator);
+                    if (site != null && post != null && snackbarAttachView != null) {
                         mUploadUtilsWrapper.handleEditPostResultSnackbars(
                                 this,
-                                findViewById(R.id.coordinator),
+                                snackbarAttachView,
                                 data,
                                 post,
                                 site,
                                 mUploadActionUseCase.getUploadAction(post),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        UploadUtils.publishPost(
-                                                ReaderPostListActivity.this,
-                                                post,
-                                                site,
-                                                mDispatcher
-                                        );
-                                    }
-                                });
+                                v -> UploadUtils.publishPost(
+                                        ReaderPostListActivity.this,
+                                        post,
+                                        site,
+                                        mDispatcher
+                                ));
                     }
                 }
                 break;
@@ -356,10 +353,11 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
-        if (site != null && event.post != null) {
+        View snackbarAttachView = findViewById(R.id.coordinator);
+        if (site != null && event.post != null && snackbarAttachView != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,
-                    findViewById(R.id.coordinator),
+                    snackbarAttachView,
                     event.isError(),
                     event.isFirstTimePublish,
                     event.post,

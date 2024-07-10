@@ -47,7 +47,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -99,7 +99,7 @@ class StatsViewModelTest : BaseUnitTest() {
     lateinit var jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil
 
     @Mock
-    lateinit var trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
     private lateinit var viewModel: StatsViewModel
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     private val liveSelectedSection: LiveData<StatsSection> = _liveSelectedSection
@@ -127,7 +127,7 @@ class StatsViewModelTest : BaseUnitTest() {
             notificationsTracker,
             jetpackBrandingUtils,
             jetpackFeatureRemovalOverlayUtil,
-            trafficTabFeatureConfig
+            trafficSubscribersTabFeatureConfig
         )
 
         viewModel.start(1, StatsLaunchedFrom.QUICK_ACTIONS, TRAFFIC, null, false, null)

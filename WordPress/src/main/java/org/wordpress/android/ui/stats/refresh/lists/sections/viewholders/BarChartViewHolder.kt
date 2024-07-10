@@ -90,7 +90,7 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         val dataSet = if (hasData) {
             buildDataSet(context, mappedEntries)
         } else {
-            buildEmptyDataSet(context, cutEntries.size)
+            buildEmptyDataSet(cutEntries.size)
         }
         item.onBarChartDrawn?.invoke(dataSet.entryCount)
         val dataSets = mutableListOf<IBarDataSet>()
@@ -208,37 +208,15 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         }
     }
 
-    private fun buildEmptyDataSet(context: Context, count: Int): BarDataSet {
-        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 1f, "empty") }
-        val dataSet = BarDataSet(emptyValues, "Empty")
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.primary_5
-            ), ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            )
-        )
-        dataSet.formLineWidth = 0f
-        dataSet.setDrawValues(false)
-        dataSet.isHighlightEnabled = false
-        dataSet.highLightAlpha = 255
-        return dataSet
+    private fun buildEmptyDataSet(count: Int): BarDataSet {
+        val emptyValues = (0 until count).map { index -> BarEntry(index.toFloat(), 0f, "empty") }
+        return BarDataSet(emptyValues, "Empty").apply { setDrawValues(false) }
     }
 
     private fun buildDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.stats_bar_chart_top)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_top
-            ), ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_top
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
@@ -252,16 +230,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     private fun buildOverlappingDataSet(context: Context, cut: List<BarEntry>): BarDataSet {
         val dataSet = BarDataSet(cut, "Overlapping data")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, R.color.primary_60)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_bottom
-            ), ContextCompat.getColor(
-                context,
-                R.color.stats_bar_chart_bottom
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.setDrawValues(false)
         dataSet.isHighlightEnabled = true
@@ -279,16 +249,8 @@ class BarChartViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
             BarEntry(it.x, maxEntry.y, it.data)
         }
         val dataSet = BarDataSet(highlightedDataSet, "Highlight")
+        chart.renderer.paintRender.shader = null
         dataSet.color = ContextCompat.getColor(context, AndroidR.color.transparent)
-        dataSet.setGradientColor(
-            ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            ), ContextCompat.getColor(
-                context,
-                AndroidR.color.transparent
-            )
-        )
         dataSet.formLineWidth = 0f
         dataSet.isHighlightEnabled = true
         dataSet.highLightColor = ContextCompat.getColor(

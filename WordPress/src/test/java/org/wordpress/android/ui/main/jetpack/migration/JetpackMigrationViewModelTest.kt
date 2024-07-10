@@ -40,7 +40,7 @@ import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationViewModel.UiState.Loading
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -54,7 +54,7 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
     private val refreshAppThemeObserver: Observer<Unit> = mock()
     private val refreshAppLanguageObserver: Observer<String> = mock()
     private val siteUtilsWrapper: SiteUtilsWrapper = mock()
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper = mock()
+    private val avatarUtilsWrapper: WPAvatarUtilsWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
     private val localMigrationOrchestrator: LocalMigrationOrchestrator = mock()
     private val migrationEmailHelper: MigrationEmailHelper = mock()
@@ -71,13 +71,13 @@ class JetpackMigrationViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(any(), any())).thenReturn("")
+        whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(any(), any())).thenReturn("")
         whenever(localeManagerWrapper.getLanguage()).thenReturn("")
         classToTest = JetpackMigrationViewModel(
             mainDispatcher = testDispatcher(),
             dispatcher = dispatcher,
             siteUtilsWrapper = siteUtilsWrapper,
-            gravatarUtilsWrapper = gravatarUtilsWrapper,
+            avatarUtilsWrapper = avatarUtilsWrapper,
             contextProvider = contextProvider,
             preventDuplicateNotifsFeatureConfig = preventDuplicateNotifsFeatureConfig,
             appPrefsWrapper = appPrefsWrapper,

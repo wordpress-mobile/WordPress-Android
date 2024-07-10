@@ -34,7 +34,7 @@ class UploadUtilsWrapper @Inject constructor(
     @Suppress("LongParameterList")
     fun onMediaUploadedSnackbarHandler(
         activity: Activity?,
-        snackbarAttachView: View?,
+        snackbarAttachView: View,
         isError: Boolean,
         mediaList: List<MediaModel?>?,
         site: SiteModel?,
@@ -53,13 +53,14 @@ class UploadUtilsWrapper @Inject constructor(
     @Suppress("LongParameterList")
     fun onPostUploadedSnackbarHandler(
         activity: Activity?,
-        snackbarAttachView: View?,
+        snackbarAttachView: View,
         isError: Boolean,
         isFirstTimePublish: Boolean,
         post: PostModel?,
         errorMessage: String?,
         site: SiteModel?,
-        onPublishingCallback: OnPublishingCallback? = null
+        onPublishingCallback: OnPublishingCallback? = null,
+        showRetry: Boolean = true
     ) = UploadUtils.onPostUploadedSnackbarHandler(
         activity,
         snackbarAttachView,
@@ -70,7 +71,8 @@ class UploadUtilsWrapper @Inject constructor(
         site,
         dispatcher,
         sequencer,
-        onPublishingCallback
+        onPublishingCallback,
+        showRetry
     )
 
     @JvmOverloads

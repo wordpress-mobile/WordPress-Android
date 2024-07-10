@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.engagement
 
+import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -36,9 +38,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 // NOTE: Do not remove the commentStore and postStore fields; commentStore seems needed so that the store is registered
 // when we dispatch events; postStore added to keep the rational even if not strictly needed as of today.
@@ -50,7 +50,7 @@ class GetLikesUseCase @Inject constructor(
     @Suppress("Unused") val postStore: PostStore,
     val accountStore: AccountStore
 ) {
-    private var getLikesContinuations = mutableMapOf<String, Continuation<OnChanged<*>>>()
+    private var getLikesContinuations = mutableMapOf<String, CancellableContinuation<OnChanged<*>>>()
 
     init {
         dispatcher.register(this)
@@ -128,7 +128,7 @@ class GetLikesUseCase @Inject constructor(
         fingerPrint: LikeGroupFingerPrint,
         paginationParams: PaginationParams
     ): OnChanged<*> {
-        return suspendCoroutine {
+        return suspendCancellableCoroutine {
             getLikesContinuations[category.getActionKey(fingerPrint.siteId, fingerPrint.postOrCommentId)] = it
             when (category) {
                 POST_LIKE -> {
@@ -203,7 +203,9 @@ class GetLikesUseCase @Inject constructor(
         val key = POST_LIKE.getActionKey(event.siteId, event.postId)
 
         getLikesContinuations[key]?.let {
-            it.resume(event)
+            if(it.isActive) {
+                it.resume(event)
+            }
             getLikesContinuations.remove(key)
         }
     }

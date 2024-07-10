@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:importantForAccessibility="no"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/margin_extra_large">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/label"
+        style="@style/StatsBlockLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_weight="1"
+        android:importantForAccessibility="no" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/valueLabel1"
+        style="@style/StatsBlockLabel"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:gravity="end"
+        android:importantForAccessibility="no" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/valueLabel2"
+        style="@style/StatsBlockLabel"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:importantForAccessibility="no" />
+</LinearLayout>

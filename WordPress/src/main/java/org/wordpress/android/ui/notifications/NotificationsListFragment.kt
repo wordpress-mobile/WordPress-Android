@@ -3,15 +3,17 @@
 package org.wordpress.android.ui.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
+import android.widget.PopupWindow
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
@@ -30,6 +32,8 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_MARK_ALL_READ_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_MENU_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.databinding.NotificationsListFragmentBinding
 import org.wordpress.android.fluxc.store.AccountStore
@@ -43,32 +47,30 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFragment
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil.JetpackFeatureOverlayScreenType
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType
 import org.wordpress.android.ui.mysite.jetpackbadge.JetpackPoweredBottomSheetFragment
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_ALL
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_COMMENT
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_FOLLOW
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_LIKE
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
+import org.wordpress.android.ui.notifications.NotificationsListFragmentPage.Companion.KEY_TAB_POSITION
+import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.JetpackBrandingUtils
-import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.WPPermissionUtils.NOTIFICATIONS_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPUrlUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener {
+class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment), ScrollableViewInitializedListener,
+    OnScrollToTopListener {
     @Inject
     lateinit var accountStore: AccountStore
 
@@ -78,11 +80,15 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     @Inject
     lateinit var uiHelpers: UiHelpers
 
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private val viewModel: NotificationsListViewModel by viewModels()
 
-    private var shouldRefreshNotifications = false
     private var lastTabPosition = 0
     private var binding: NotificationsListFragmentBinding? = null
+
+    private var containerId: Int? = null
 
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -90,11 +96,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         if (savedInstanceState != null) {
             binding?.setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, All.ordinal))
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        shouldRefreshNotifications = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -152,11 +153,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        shouldRefreshNotifications = true
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
@@ -175,14 +171,19 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 connectJetpack.visibility = View.GONE
                 tabLayout.visibility = View.VISIBLE
                 viewPager.visibility = View.VISIBLE
-                if (shouldRefreshNotifications) {
-                    fetchNotesFromRemote()
-                }
+                fetchRemoteNotes()
             }
             setSelectedTab(lastTabPosition)
             setNotificationPermissionWarning()
         }
         viewModel.onResume()
+    }
+
+    private fun fetchRemoteNotes() {
+        if (!isAdded) {
+            return
+        }
+        NotificationsUpdateServiceStarter.startService(activity)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -195,13 +196,6 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             val params = toolbarMain.layoutParams as LayoutParams
             params.scrollFlags = 0
         }
-    }
-
-    private fun fetchNotesFromRemote() {
-        if (!isAdded || !NetworkUtils.isNetworkAvailable(activity)) {
-            return
-        }
-        NotificationsUpdateServiceStarter.startService(activity)
     }
 
     private fun NotificationsListFragmentBinding.setSelectedTab(position: Int) {
@@ -280,8 +274,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val notificationSettings = menu.findItem(R.id.notifications_settings)
-        notificationSettings.isVisible = accountStore.hasAccessToken()
+        val notificationActions = menu.findItem(R.id.notifications_actions)
+        notificationActions.isVisible = accountStore.hasAccessToken()
+        notificationActions.actionView?.setOnClickListener {
+            analyticsTrackerWrapper.track(NOTIFICATION_MENU_TAPPED)
+            showNotificationActionsPopup(it)
+        }
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -291,13 +289,37 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    @Suppress("OVERRIDE_DEPRECATION")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.notifications_settings) {
-            ActivityLauncher.viewNotificationsSettings(activity)
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+    /**
+     * For displaying the popup of notifications settings
+     */
+    @SuppressLint("InflateParams")
+    private fun showNotificationActionsPopup(anchorView: View) {
+        val popupWindow = PopupWindow(requireContext(), null, R.style.WordPress)
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = resources.getDimension(R.dimen.popup_over_toolbar_elevation)
+        popupWindow.contentView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.notification_actions, null).apply {
+                findViewById<View>(R.id.text_mark_all_as_read).setOnClickListener {
+                    markAllAsRead()
+                    popupWindow.dismiss()
+                }
+                findViewById<View>(R.id.text_settings).setOnClickListener {
+                    ActivityLauncher.viewNotificationsSettings(activity)
+                    popupWindow.dismiss()
+                }
+            }
+        popupWindow.showAsDropDown(anchorView)
+    }
+
+    /**
+     * For marking the status of every notification as read
+     */
+    private fun markAllAsRead() {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_MARK_ALL_READ_TAPPED)
+        (childFragmentManager.fragments.firstOrNull {
+            // use -1 to make sure that the (null == null) will not happen
+            (it.arguments?.getInt(KEY_TAB_POSITION) ?: -1) == binding?.viewPager?.currentItem
+        } as? NotificationsListFragmentPage)?.markAllNotesAsRead()
     }
 
     companion object {
@@ -308,12 +330,12 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
 
-        enum class TabPosition(@StringRes val titleRes: Int, val filter: FILTERS) {
-            All(R.string.notifications_tab_title_all, FILTER_ALL),
-            Unread(R.string.notifications_tab_title_unread_notifications, FILTER_UNREAD),
-            Comment(R.string.notifications_tab_title_comments, FILTER_COMMENT),
-            Follow(R.string.notifications_tab_title_follows, FILTER_FOLLOW),
-            Like(R.string.notifications_tab_title_likes, FILTER_LIKE);
+        enum class TabPosition(@StringRes val titleRes: Int, val filter: Filter) {
+            All(R.string.notifications_tab_title_all, Filter.ALL),
+            Unread(R.string.notifications_tab_title_unread_notifications, Filter.UNREAD),
+            Comment(R.string.notifications_tab_title_comments, Filter.COMMENT),
+            Subscribers(R.string.notifications_tab_title_subscribers, Filter.FOLLOW),
+            Like(R.string.notifications_tab_title_likes, Filter.LIKE);
         }
 
         private const val KEY_LAST_TAB_POSITION = "lastTabPosition"
@@ -334,7 +356,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
             noteId: String?,
             shouldShowKeyboard: Boolean,
             replyText: String?,
-            filter: FILTERS?,
+            filter: Filter?,
             isTappedFromPushNotification: Boolean
         ) {
             if (noteId == null || activity == null) {
@@ -359,6 +381,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
+        this.containerId = containerId
         binding?.appBar?.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
         if (jetpackBrandingUtils.shouldShowJetpackBranding()) {
             val screen = JetpackPoweredScreen.WithDynamicText.NOTIFICATIONS
@@ -366,7 +389,7 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                 // post is used to create a minimal delay here. containerId changes just before
                 // onScrollableViewInitialized is called, and findViewById can't find the new id before the delay.
                 val jetpackBannerView = binding?.jetpackBanner?.root ?: return@post
-                val scrollableView = binding?.root?.findViewById<View>(containerId) as? RecyclerView ?: return@post
+                val scrollableView = getRecyclerViewById() ?: return@post
                 jetpackBrandingUtils.showJetpackBannerIfScrolledToTop(jetpackBannerView, scrollableView)
                 jetpackBrandingUtils.initJetpackBannerAnimation(jetpackBannerView, scrollableView)
                 binding?.jetpackBanner?.jetpackBannerText?.text = uiHelpers.getTextOfUiString(
@@ -383,6 +406,18 @@ class NotificationsListFragment : Fragment(R.layout.notifications_list_fragment)
                     }
                 }
             }
+        }
+    }
+
+    private fun getRecyclerViewById() =
+        containerId?.let {
+            binding?.root?.findViewById<View>(it) as? RecyclerView
+        }
+
+    override fun onScrollToTop() {
+        if (isAdded) {
+            getRecyclerViewById()?.smoothScrollToPosition(0)
+            binding?.appBar?.setExpanded(true, true)
         }
     }
 }

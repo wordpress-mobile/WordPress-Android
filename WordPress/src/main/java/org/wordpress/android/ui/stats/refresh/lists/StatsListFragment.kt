@@ -8,11 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +34,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
 import org.wordpress.android.ui.stats.refresh.utils.StatsNavigator
 import org.wordpress.android.ui.stats.refresh.utils.drawDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.toNameResource
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
@@ -56,7 +58,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     lateinit var navigator: StatsNavigator
 
     @Inject
-    lateinit var statsTrafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+    lateinit var statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 
     @Inject
     lateinit var selectedTrafficGranularityManager: SelectedTrafficGranularityManager
@@ -128,6 +130,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         }
 
         this@StatsListFragment.layoutManager = layoutManager
+        this.recyclerView.tag = statsSection.name
         recyclerView.layoutManager = this@StatsListFragment.layoutManager
         recyclerView.addItemDecoration(
             StatsListItemDecoration(
@@ -152,23 +155,17 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             }
         })
 
-        if (statsTrafficTabFeatureConfig.isEnabled()) {
+        if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) {
             dateSelector.granularitySpinner.adapter = ArrayAdapter(
                 requireContext(),
                 R.layout.filter_spinner_item,
                 StatsGranularity.entries.map { getString(it.toNameResource()) }
             ).apply { setDropDownViewResource(R.layout.toolbar_spinner_dropdown_item) }
 
-            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
-                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
-            )
-            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
-
             dateSelector.granularitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     with(StatsGranularity.entries[position]) {
                         selectedTrafficGranularityManager.setSelectedTrafficGranularity(this)
-                        (viewModel as TrafficListViewModel).onGranularitySelected(this)
                     }
                 }
 
@@ -228,6 +225,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             StatsSection.TRAFFIC -> TrafficListViewModel::class.java
             StatsSection.ANNUAL_STATS,
             StatsSection.INSIGHTS -> InsightsListViewModel::class.java
+            StatsSection.SUBSCRIBERS -> SubscribersListViewModel::class.java
             StatsSection.DAYS -> DaysListViewModel::class.java
             StatsSection.WEEKS -> WeeksListViewModel::class.java
             StatsSection.MONTHS -> MonthsListViewModel::class.java
@@ -245,7 +243,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             viewModel.uiModel.removeObservers(viewLifecycleOwner)
             viewModel.navigationTarget.removeObservers(viewLifecycleOwner)
             viewModel.listSelected.removeObservers(viewLifecycleOwner)
-            viewModel.scrollToNewCard.removeObservers(viewLifecycleOwner)
         }
 
         viewModel.uiSourceAdded.observe(viewLifecycleOwner) {
@@ -276,6 +273,19 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         }
+
+        selectedTrafficGranularityManager.liveSelectedGranularity.observe(viewLifecycleOwner) {
+            // Manage the logic of granularity selection in the viewmodel
+            (viewModel as? TrafficListViewModel)?.onGranularitySelected(it)
+
+            // Manage the UI update of the new granularity selection
+            val selectedGranularityItemPos = StatsGranularity.entries.indexOf(
+                selectedTrafficGranularityManager.getSelectedTrafficGranularity()
+            )
+            dateSelector.granularitySpinner.setSelection(selectedGranularityItemPos)
+
+            recyclerView.scrollToPosition(0)
+        }
     }
 
     private fun StatsListFragmentBinding.observeUiChanges(activity: FragmentActivity) {
@@ -286,16 +296,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner) { target -> navigator.navigate(activity, target) }
 
         viewModel.listSelected.observe(viewLifecycleOwner) { viewModel.onListSelected() }
-
-        viewModel.scrollToNewCard.observeEvent(viewLifecycleOwner) {
-            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
-                adapter.registerAdapterDataObserver(object : AdapterDataObserver() {
-                    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                        layoutManager?.smoothScrollToPosition(recyclerView, null, adapter.itemCount)
-                    }
-                })
-            }
-        }
     }
 
     private fun StatsListFragmentBinding.showUiModel(
@@ -306,14 +306,14 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 updateInsights(it.data)
             }
             is Error, null -> {
-                recyclerView.visibility = View.GONE
-                errorView.statsErrorView.visibility = View.VISIBLE
-                emptyView.statsEmptyView.visibility = View.GONE
+                recyclerView.isGone = true
+                emptyView.statsEmptyView.isGone = true
+                errorView.statsErrorView.isVisible = true
             }
             is Empty -> {
-                recyclerView.visibility = View.GONE
-                emptyView.statsEmptyView.visibility = View.VISIBLE
-                errorView.statsErrorView.visibility = View.GONE
+                recyclerView.isInvisible = true
+                errorView.statsErrorView.isGone = true
+                emptyView.statsEmptyView.isVisible = true
                 emptyView.statsEmptyView.title.setText(it.title)
                 if (it.subtitle != null) {
                     emptyView.statsEmptyView.subtitle.setText(it.subtitle)
@@ -331,10 +331,6 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     }
 
     private fun StatsListFragmentBinding.updateInsights(statsState: List<StatsBlock>) {
-        recyclerView.visibility = View.VISIBLE
-        errorView.statsErrorView.visibility = View.GONE
-        emptyView.statsEmptyView.visibility = View.GONE
-
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {
             adapter = StatsBlockAdapter(imageManager)
@@ -346,7 +342,11 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         val layoutManager = recyclerView.layoutManager
         val recyclerViewState = layoutManager?.onSaveInstanceState()
         adapter.update(statsState)
-        recyclerView.scrollToPosition(0)
+
+        errorView.statsErrorView.isGone = true
+        emptyView.statsEmptyView.isGone = true
+        recyclerView.isVisible = true
+
         layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 }

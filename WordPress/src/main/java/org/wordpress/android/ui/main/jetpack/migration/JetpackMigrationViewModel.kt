@@ -65,7 +65,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.JetpackMigrationLanguageUtil
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.SiteUtilsWrapper
@@ -81,7 +81,7 @@ class JetpackMigrationViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val dispatcher: Dispatcher,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val avatarUtilsWrapper: WPAvatarUtilsWrapper,
     private val contextProvider: ContextProvider,
     private val preventDuplicateNotifsFeatureConfig: PreventDuplicateNotifsFeatureConfig,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -386,7 +386,7 @@ class JetpackMigrationViewModel @Inject constructor(
         postActionEvent(FinishActivity)
     }
 
-    private fun resizeAvatarUrl(avatarUrl: String) = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+    private fun resizeAvatarUrl(avatarUrl: String) = avatarUtilsWrapper.rewriteAvatarUrlWithResource(
         avatarUrl,
         R.dimen.jp_migration_user_avatar_size
     )

@@ -15,10 +15,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -36,14 +36,13 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
-import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -86,7 +85,7 @@ import org.wordpress.android.ui.avatars.AvatarItemDecorator
 import org.wordpress.android.ui.avatars.TrainOfAvatarsAdapter
 import org.wordpress.android.ui.avatars.TrainOfAvatarsItem
 import org.wordpress.android.ui.engagement.EngagementNavigationSource
-import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -95,6 +94,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderActivityLauncher.PhotoViewerOption
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation
+import org.wordpress.android.ui.reader.ReaderPostRenderer.ReaderPostMessageListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
@@ -107,9 +107,11 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.models.ReaderReadingPreferences
+import org.wordpress.android.ui.reader.tracker.ReaderReadingPreferencesTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
-import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL
 import org.wordpress.android.ui.reader.tracker.ReaderTracker.Companion.SOURCE_POST_DETAIL_TOOLBAR
+import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
@@ -144,11 +146,12 @@ import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelp
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
 import org.wordpress.android.util.extensions.getSerializableCompat
-import org.wordpress.android.util.extensions.isDarkTheme
 import org.wordpress.android.util.extensions.setVisible
+import org.wordpress.android.util.extensions.setWindowNavigationBarColor
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -168,7 +171,6 @@ import com.google.android.material.R as MaterialR
 @Suppress("LargeClass")
 class ReaderPostDetailFragment : ViewPagerFragment(),
     WPMainActivity.OnActivityBackPressedListener,
-    MenuProvider,
     ScrollDirectionListener,
     ReaderCustomViewListener,
     ReaderWebViewPageFinishedListener,
@@ -284,6 +286,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject
     lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
+    @Inject
+    lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
+
+    @Inject
+    lateinit var getReadingPreferences: ReaderGetReadingPreferencesSyncUseCase
+
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
             .post(ReaderEvents.DoSignIn())
@@ -298,32 +306,28 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
             val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
 
-            context?.let { context ->
+            view?.context?.let { context ->
                 val menu: Menu = toolbar.menu
-                val menuBrowse: MenuItem? = menu.findItem(R.id.menu_browse)
-                val menuShare: MenuItem? = menu.findItem(R.id.menu_share)
-                val menuMore: MenuItem? = menu.findItem(R.id.menu_more)
 
                 val collapsingToolbarHeight = collapsingToolbarLayout.height
                 val isCollapsed = (collapsingToolbarHeight + verticalOffset) <=
                         collapsingToolbarLayout.scrimVisibleHeightTrigger
-                val isDarkTheme = context.resources.configuration.isDarkTheme()
 
-                val colorAttr = if (isCollapsed || isDarkTheme) {
-                    MaterialR.attr.colorOnSurface
+                val color = if (isCollapsed) {
+                    context.getColorFromAttribute(MaterialR.attr.colorOnSurface)
                 } else {
-                    MaterialR.attr.colorSurface
+                    ContextCompat.getColor(context, R.color.white)
                 }
-                val color = context.getColorFromAttribute(colorAttr)
                 val colorFilter = BlendModeColorFilterCompat
                     .createBlendModeColorFilterCompat(color, BlendModeCompat.SRC_ATOP)
 
                 toolbar.setTitleTextColor(color)
                 toolbar.navigationIcon?.colorFilter = colorFilter
 
-                menuBrowse?.icon?.colorFilter = colorFilter
-                menuShare?.icon?.colorFilter = colorFilter
-                menuMore?.icon?.colorFilter = colorFilter
+                for (i in 0 until menu.size()) {
+                    val menuItem = menu.getItem(i)
+                    menuItem.icon?.colorFilter = colorFilter
+                }
             }
         }
 
@@ -363,9 +367,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val viewBinding = ReaderFragmentPostDetailBinding.inflate(inflater, container, false).also { binding = it }
+        val readingPreferences = getReadingPreferences()
+        val contextThemeWrapper: Context = ContextThemeWrapper(requireContext(), readingPreferences.theme.style)
+        val customInflater = inflater.cloneInContext(contextThemeWrapper)
+
+        val viewBinding = ReaderFragmentPostDetailBinding.inflate(customInflater, container, false)
+            .also { binding = it }
         val view = viewBinding.root
 
+        initNavigationBar()
         initSwipeRefreshLayout(view)
         initAppBar(view)
         initScrollView(view)
@@ -404,7 +414,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
 
-        toolBar.setVisible(true)
         appBar.addOnOffsetChangedListener(appBarLayoutOffsetChangedListener)
 
         // Fixes collapsing toolbar layout being obscured by the status bar when drawn behind it
@@ -417,7 +426,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         // Fixes viewpager not displaying menu items for first fragment
+        val activity = activity as? AppCompatActivity
+        activity?.supportActionBar?.hide()
         toolBar.inflateMenu(R.menu.reader_detail)
+        toolBar.setOnMenuItemClickListener { handleMenuItemSelected(it)}
 
         // for related posts, show an X in the toolbar which closes the activity
         if (isRelatedPost) {
@@ -516,24 +528,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        replaceActivityToolbarWithCollapsingToolbar()
-    }
-
-    private fun replaceActivityToolbarWithCollapsingToolbar() {
-        val activity = activity as? AppCompatActivity
-        activity?.supportActionBar?.hide()
-
-        toolBar.setVisible(true)
-        activity?.setSupportActionBar(toolBar)
-
-        activity?.supportActionBar?.setDisplayShowTitleEnabled(isRelatedPost)
+    private fun initNavigationBar() {
+        val readingPreferences = getReadingPreferences()
+        val themeValues = ReaderReadingPreferences.ThemeValues.from(requireContext(), readingPreferences.theme)
+        activity?.window?.setWindowNavigationBarColor(themeValues.intBackgroundColor)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         initLikeFacesRecycler(savedInstanceState)
         initCommentSnippetRecycler(savedInstanceState)
@@ -662,6 +664,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             JetpackPoweredBottomSheetFragment
                 .newInstance()
                 .show(childFragmentManager, JetpackPoweredBottomSheetFragment.TAG)
+        }
+
+        viewModel.reloadFragment.observeEvent(viewLifecycleOwner) {
+            if (isAdded) {
+                //  Based on my research some people did that in a single transaction and it worked in the past,
+                //  but I tested on SDK 34 and I had to do it in two transactions for getting it to work properly.
+                parentFragmentManager.commit(allowStateLoss = true) {
+                    detach(this@ReaderPostDetailFragment)
+                }
+                parentFragmentManager.commit {
+                    attach(this@ReaderPostDetailFragment)
+                }
+            }
         }
     }
 
@@ -813,7 +828,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        binding.headerView.updatePost(state.headerUiState)
+        binding.headerView.updatePost(state.headerUiState, getReadingPreferences())
         showOrHideMoreMenu(state)
 
         updateFeaturedImage(state.featuredImageUiState, binding)
@@ -834,7 +849,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Suppress("ForbiddenComment")
     private fun onPostExecuteShowPost() {
         // make sure options menu reflects whether we now have a post
-        activity?.invalidateOptionsMenu()
+        prepareMenu(toolBar.menu)
 
         viewModel.post?.let {
             if (handleDirectOperation()) return
@@ -917,6 +932,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     EngagementNavigationSource.LIKE_READER_LIST
                 )
             }
+
+            ReaderNavigationEvents.ShowReadingPreferences ->
+                ReaderReadingPreferencesDialogFragment.show(
+                    childFragmentManager,
+                    ReaderReadingPreferencesTracker.Source.POST_DETAIL_MORE_MENU,
+                )
+
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
@@ -1044,12 +1066,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         moreMenuPopup?.dismiss()
     }
 
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        menu.clear()
-        menuInflater.inflate(R.menu.reader_detail, menu)
-    }
-
-    override fun onPrepareMenu(menu: Menu) {
+    private fun prepareMenu(menu: Menu) {
         val postHasUrl = viewModel.post?.hasUrl() == true
         val menuBrowse = menu.findItem(R.id.menu_browse)
         // browse require the post to have a URL (some feed-based posts don't have one) or an intercepted URI
@@ -1057,9 +1074,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // share require the post to have a URL
         val menuShare = menu.findItem(R.id.menu_share)
         menuShare?.isVisible = postHasUrl
+        // reading preferences require the feature flag to be on
+        val menuReadingPreferences = menu.findItem(R.id.menu_reading_preferences)
+        menuReadingPreferences?.isVisible = readingPreferencesFeatureConfig.isEnabled()
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
+    private fun handleMenuItemSelected(menuItem: MenuItem) = when (menuItem.itemId) {
         R.id.menu_browse -> {
             val interceptedUri = viewModel.interceptedUri
             if (viewModel.hasPost) {
@@ -1087,6 +1107,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
         R.id.menu_more -> {
             viewModel.onMoreButtonClicked()
+            true
+        }
+        R.id.menu_reading_preferences -> {
+            ReaderReadingPreferencesDialogFragment.show(
+                childFragmentManager,
+                ReaderReadingPreferencesTracker.Source.POST_DETAIL_TOOLBAR,
+            )
             true
         }
         else -> false
@@ -1376,7 +1403,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(
-                        SitePickerActivity.KEY_SITE_LOCAL_ID,
+                        ChooseSiteActivity.KEY_SITE_LOCAL_ID,
                         SelectedSiteRepository.UNAVAILABLE
                     ) ?: SelectedSiteRepository.UNAVAILABLE
                     viewModel.onReblogSiteSelected(siteLocalId)
@@ -1554,11 +1581,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun handleDirectOperation() = when (directOperation) {
         DirectOperation.COMMENT_JUMP, DirectOperation.COMMENT_REPLY, DirectOperation.COMMENT_LIKE -> {
             viewModel.post?.let {
-                ReaderActivityLauncher.showReaderComments(
-                    activity, it.blogId, it.postId,
-                    directOperation, commentId.toLong(), viewModel.interceptedUri,
-                    DIRECT_OPERATION.sourceDescription
-                )
+                context?.let { nonNullContext ->
+                    ReaderActivityLauncher.showReaderComments(
+                        nonNullContext, it.blogId, it.postId,
+                        directOperation, commentId.toLong(), viewModel.interceptedUri,
+                        DIRECT_OPERATION.sourceDescription
+                    )
+                }
             }
 
             activity?.finish()
@@ -1578,8 +1607,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             readerWebView,
             viewModel.post,
             readerCssProvider,
-            readerImprovementsFeatureConfig.isEnabled()
-        )
+            getReadingPreferences()
+        ).also {
+            it.setPostMessageListener(object : ReaderPostMessageListener {
+                override fun onArticleTextCopied() {
+                    viewModel.onArticleTextCopied()
+                }
+
+                override fun onArticleTextHighlighted() {
+                    viewModel.onArticleTextHighlighted()
+                }
+            })
+        }
 
         // if the post is from private atomic site postpone render until we have a special access cookie
         if (post.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {

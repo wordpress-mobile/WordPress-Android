@@ -1,17 +1,29 @@
 package org.wordpress.android.ui.notifications
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -19,6 +31,7 @@ import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATIONS_INLINE_ACTION_TAPPED
 import org.wordpress.android.databinding.NotificationsListFragmentPageBinding
 import org.wordpress.android.datasets.NotificationsTable
 import org.wordpress.android.fluxc.model.CommentStatus
@@ -36,41 +49,49 @@ import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsCh
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshCompleted
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsRefreshError
 import org.wordpress.android.ui.notifications.NotificationEvents.NotificationsUnseenStatus
+import org.wordpress.android.ui.notifications.NotificationEvents.OnNoteCommentLikeChanged
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.All
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Comment
-import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Follow
+import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Subscribers
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Like
 import org.wordpress.android.ui.notifications.NotificationsListFragment.Companion.TabPosition.Unread
+import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent
+import org.wordpress.android.ui.notifications.NotificationsListViewModel.InlineActionEvent.SharePostButtonTapped
+import org.wordpress.android.ui.notifications.adapters.Filter
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.DataLoadedListener
-import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
+import org.wordpress.android.ui.reader.ReaderActivityLauncher
+import org.wordpress.android.ui.reader.comments.ThreadedCommentsActionSource
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
+import org.wordpress.android.widgets.AppReviewManager.incrementInteractions
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_list_fragment_page),
-    OnScrollToTopListener,
-    DataLoadedListener {
-    private var notesAdapter: NotesAdapter? = null
+    OnScrollToTopListener {
+    private lateinit var notesAdapter: NotesAdapter
     private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var isAnimatingOutNewNotificationsBar = false
-    private var shouldRefreshNotifications = false
     private var tabPosition = 0
+    private val viewModel: NotificationsListViewModel by viewModels()
 
     @Inject
     lateinit var accountStore: AccountStore
 
     @Inject
     lateinit var gcmMessageHandler: GCMMessageHandler
+
+    @Inject
+    lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
@@ -80,25 +101,9 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
 
     private var binding: NotificationsListFragmentPageBinding? = null
 
-    interface OnNoteClickListener {
-        fun onClickNote(noteId: String?)
-    }
-
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val adapter = createOrGetNotesAdapter()
-        binding?.notificationsList?.adapter = adapter
-        if (savedInstanceState != null) {
-            tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, All.ordinal)
-        }
-        (TabPosition.values().getOrNull(tabPosition) ?: All).let { adapter.setFilter(it.filter) }
-    }
-
-    @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
-            shouldRefreshNotifications = false
             if (resultCode == Activity.RESULT_OK) {
                 val noteId = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)
                 val newStatus = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA)
@@ -112,7 +117,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        shouldRefreshNotifications = true
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,28 +124,45 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, All.ordinal)
         }
+        notesAdapter = NotesAdapter(requireActivity(), inlineActionEvents = viewModel.inlineActionEvents).apply {
+            onNoteClicked = { noteId -> handleNoteClick(noteId) }
+            onNotesLoaded = {
+                itemCount -> updateEmptyLayouts(itemCount)
+                swipeToRefreshHelper?.isRefreshing = false
+            }
+            viewModel.inlineActionEvents.flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+                .onEach(::handleInlineActionEvent)
+                .launchIn(viewLifecycleOwner.lifecycleScope)
+        }
         binding = NotificationsListFragmentPageBinding.bind(view).apply {
-            notificationsList.layoutManager = LinearLayoutManager(activity)
+            notificationsList.layoutManager = LinearLayoutManagerWrapper(view.context)
+            notificationsList.adapter = notesAdapter
             swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notificationsRefresh) {
                 hideNewNotificationsBar()
-                fetchNotesFromRemote()
+                fetchRemoteNotes()
             }
             layoutNewNotificatons.visibility = View.GONE
             layoutNewNotificatons.setOnClickListener { onScrollToTop() }
+            (TabPosition.entries.getOrNull(tabPosition) ?: All).let { notesAdapter.setFilter(it.filter) }
         }
+        viewModel.updatedNote.observe(viewLifecycleOwner) {
+            notesAdapter.updateNote(it)
+        }
+
+        swipeToRefreshHelper?.isRefreshing = true
+        notesAdapter.reloadLocalNotes()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        notesAdapter?.cancelReloadNotesTask()
-        notesAdapter = null
+        notesAdapter.cancelReloadLocalNotes()
         swipeToRefreshHelper = null
         binding?.notificationsList?.adapter = null
         binding?.notificationsList?.removeCallbacks(showNewUnseenNotificationsRunnable)
         binding = null
     }
 
-    override fun onDataLoaded(itemsCount: Int) {
+    private fun updateEmptyLayouts(itemsCount: Int) {
         if (!isAdded) {
             AppLog.d(
                 T.NOTIFS,
@@ -157,11 +178,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        shouldRefreshNotifications = true
-    }
-
     override fun getScrollableViewForUniqueIdProvision(): View? {
         return binding?.notificationsList
     }
@@ -170,12 +186,6 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onResume()
         binding?.hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (accountStore.hasAccessToken()) {
-            notesAdapter!!.reloadNotesFromDBAsync()
-            if (shouldRefreshNotifications) {
-                fetchNotesFromRemote()
-            }
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -206,21 +216,34 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         super.onStop()
     }
 
-    private val mOnNoteClickListener: OnNoteClickListener = object : OnNoteClickListener {
-        override fun onClickNote(noteId: String?) {
-            if (!isAdded) {
-                return
-            }
-            if (TextUtils.isEmpty(noteId)) {
-                return
-            }
-            incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
-
-            // Open the latest version of this note in case it has changed, which can happen if the note was tapped
-            // from the list after it was updated by another fragment (such as NotificationsDetailListFragment).
-            openNoteForReply(activity, noteId, false, null, notesAdapter!!.currentFilter, false)
+    private fun handleNoteClick(noteId: String) {
+        if (!isAdded || noteId.isEmpty()) {
+            return
         }
+        incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION)
+
+        viewModel.openNote(
+            noteId,
+            { siteId, postId, commentId ->
+                activity?.let {
+                    ReaderActivityLauncher.showReaderComments(
+                        it,
+                        siteId,
+                        postId,
+                        commentId,
+                        ThreadedCommentsActionSource.COMMENT_NOTIFICATION.sourceDescription
+                    )
+                }
+            },
+            {
+                // Open the latest version of this note in case it has changed, which can happen if the note was
+                // tapped from the list after it was updated by another fragment (such as the
+                // NotificationsDetailListFragment).
+                openNoteForReply(activity, noteId, filter = notesAdapter.currentFilter)
+            }
+        )
     }
+
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -232,18 +255,23 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
     private fun NotificationsListFragmentPageBinding.clearPendingNotificationsItemsOnUI() {
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        NotificationsActions.updateNotesSeenTimestamp()
-        Thread { gcmMessageHandler.removeAllNotifications(activity) }.start()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                NotificationsActions.updateNotesSeenTimestamp()
+                gcmMessageHandler.removeAllNotifications(activity)
+            }
+        }
     }
 
-    private fun fetchNotesFromRemote() {
-        if (!isAdded || notesAdapter == null) {
+    private fun fetchRemoteNotes() {
+        if (!isAdded) {
             return
         }
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             swipeToRefreshHelper?.isRefreshing = false
             return
         }
+        swipeToRefreshHelper?.isRefreshing = true
         NotificationsUpdateServiceStarter.startService(activity)
     }
 
@@ -338,8 +366,8 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 descriptionResId = R.string.notifications_empty_action_comments
                 buttonResId = R.string.notifications_empty_view_reader
             }
-            Follow.ordinal -> {
-                titleResId = R.string.notifications_empty_followers
+            Subscribers.ordinal -> {
+                titleResId = R.string.notifications_empty_subscribers
                 descriptionResId = R.string.notifications_empty_action_followers_likes
                 buttonResId = R.string.notifications_empty_view_reader
             }
@@ -389,45 +417,67 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
-    private fun updateNote(noteId: String, status: CommentStatus) {
-        val note = NotificationsTable.getNoteById(noteId)
-        if (note != null) {
-            note.localStatus = status.toString()
-            NotificationsTable.saveNote(note)
-            EventBus.getDefault().post(NotificationsChanged())
+    private fun updateNote(noteId: String, status: CommentStatus) = lifecycleScope.launch {
+        withContext(Dispatchers.IO) {
+            val note = NotificationsTable.getNoteById(noteId)
+            if (note != null) {
+                note.localStatus = status.toString()
+                NotificationsTable.saveNote(note)
+                EventBus.getDefault().post(NotificationsChanged())
+            }
         }
     }
 
-    private fun createOrGetNotesAdapter(): NotesAdapter {
-        return notesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
-            notesAdapter = this
-            this.setOnNoteClickListener(mOnNoteClickListener)
+    private fun handleInlineActionEvent(actionEvent: InlineActionEvent) {
+        analyticsTrackerWrapper.track(NOTIFICATIONS_INLINE_ACTION_TAPPED, mapOf(
+            InlineActionEvent.KEY_INLINE_ACTION to actionEvent::class.simpleName
+        ))
+        when (actionEvent) {
+            is SharePostButtonTapped -> actionEvent.notification.let { postNotification ->
+                context?.let {
+                    ActivityLauncher.openShareIntent(it, postNotification.url, postNotification.title)
+                }
+            }
+            is InlineActionEvent.LikeCommentButtonTapped -> viewModel.likeComment(actionEvent.note, actionEvent.liked)
+            is InlineActionEvent.LikePostButtonTapped -> viewModel.likePost(actionEvent.note, actionEvent.liked)
         }
+    }
+
+
+    /**
+     * Mark notifications as read in CURRENT tab, use filteredNotes instead of notes
+     */
+    fun markAllNotesAsRead() {
+        viewModel.markNoteAsRead(requireContext(), notesAdapter.filteredNotes)
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NoteLikeOrModerationStatusChanged) {
-        NotificationsActions.downloadNoteAndUpdateDB(
-            event.noteId,
-            {
-                EventBus.getDefault()
-                    .removeStickyEvent(
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                NotificationsActions.downloadNoteAndUpdateDB(
+                    event.noteId,
+                    {
+                        EventBus.getDefault()
+                            .removeStickyEvent(
+                                NoteLikeOrModerationStatusChanged::class.java
+                            )
+                    }
+                ) {
+                    EventBus.getDefault().removeStickyEvent(
                         NoteLikeOrModerationStatusChanged::class.java
                     )
+                }
             }
-        ) {
-            EventBus.getDefault().removeStickyEvent(
-                NoteLikeOrModerationStatusChanged::class.java
-            )
         }
     }
 
-    @Subscribe(threadMode = MAIN)
+    @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NotificationsChanged) {
         if (!isAdded) {
             return
         }
-        notesAdapter!!.reloadNotesFromDBAsync()
+        notesAdapter.reloadLocalNotes()
         if (event.hasUnseenNotes) {
             binding?.showNewUnseenNotificationsUI()
         }
@@ -439,7 +489,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
             return
         }
         swipeToRefreshHelper?.isRefreshing = false
-        notesAdapter!!.addAll(event.notes, true)
+        notesAdapter.addAll(event.notes)
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
@@ -464,8 +514,24 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         }
     }
 
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: OnNoteCommentLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note)
+    }
+
+    @Subscribe(sticky = true, threadMode = MAIN)
+    fun onEventMainThread(event: NotificationEvents.OnNotePostLikeChanged) {
+        if (!isAdded) {
+            return
+        }
+        notesAdapter.updateNote(event.note.apply { setLikedPost(event.liked) })
+    }
+
     companion object {
-        private const val KEY_TAB_POSITION = "tabPosition"
+        const val KEY_TAB_POSITION = "tabPosition"
         fun newInstance(position: Int): Fragment {
             val fragment = NotificationsListFragmentPage()
             val bundle = Bundle()
@@ -484,10 +550,10 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
         fun openNoteForReply(
             activity: Activity?,
             noteId: String?,
-            shouldShowKeyboard: Boolean,
-            replyText: String?,
-            filter: FILTERS?,
-            isTappedFromPushNotification: Boolean
+            shouldShowKeyboard: Boolean = false,
+            replyText: String? = null,
+            filter: Filter? = null,
+            isTappedFromPushNotification: Boolean = false,
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {
                 return
@@ -502,11 +568,29 @@ class NotificationsListFragmentPage : ViewPagerFragment(R.layout.notifications_l
                 NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
                 isTappedFromPushNotification
             )
-            openNoteForReplyWithParams(detailIntent, activity)
-        }
-
-        private fun openNoteForReplyWithParams(detailIntent: Intent, activity: Activity) {
             activity.startActivityForResult(detailIntent, RequestCodes.NOTE_DETAIL)
         }
+    }
+
+    /**
+     * LinearLayoutManagerWrapper is a workaround for a bug in RecyclerView that blocks the UI thread
+     * when we perform the first click on the inline actions in the notifications list.
+     */
+    internal class LinearLayoutManagerWrapper : LinearLayoutManager {
+        constructor(context: Context) : super(context)
+        constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(
+            context,
+            orientation,
+            reverseLayout
+        )
+
+        constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(
+            context,
+            attrs,
+            defStyleAttr,
+            defStyleRes
+        )
+
+        override fun supportsPredictiveItemAnimations(): Boolean = false
     }
 }

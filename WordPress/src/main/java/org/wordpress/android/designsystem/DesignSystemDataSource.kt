@@ -8,9 +8,8 @@ object DesignSystemDataSource {
         Pair(R.string.design_system_components, DesignSystemScreen.Components.name),
     )
     val foundationScreenButtonOptions = listOf(
-        R.string.design_system_foundation_colors,
-        R.string.design_system_foundation_fonts,
-        R.string.design_system_foundation_lengths
+        Pair(R.string.design_system_foundation_colors, DesignSystemScreen.Colors.name),
+        Pair(R.string.design_system_foundation_fonts, DesignSystemScreen.Fonts.name)
     )
     val componentsScreenButtonOptions = listOf(
         R.string.design_system_components_dsbutton

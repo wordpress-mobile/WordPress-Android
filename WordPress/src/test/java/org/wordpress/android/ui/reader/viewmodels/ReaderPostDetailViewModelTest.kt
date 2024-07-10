@@ -27,6 +27,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.AccountModel
@@ -109,6 +110,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
+import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -199,6 +201,9 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var readerCommentServiceStarterWrapper: ReaderCommentServiceStarterWrapper
 
+    @Mock
+    private lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
+
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
     private val fakeNavigationFeed = MutableLiveData<Event<ReaderNavigationEvents>>()
@@ -246,7 +251,8 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             networkUtilsWrapper,
             commentsSnippetFeatureConfig,
             readerCommentTableWrapper,
-            readerCommentServiceStarterWrapper
+            readerCommentServiceStarterWrapper,
+            readingPreferencesFeatureConfig,
         )
         whenever(readerGetPostUseCase.get(any(), any(), any())).thenReturn(Pair(readerPost, false))
         whenever(readerPostCardActionsHandler.followStatusUpdated).thenReturn(fakePostFollowStatusChangedFeed)
@@ -978,7 +984,7 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
     fun `ui state show likers faces when data available`() {
         val likesState = getGetLikesState(TEST_CONFIG_1) as LikesData
         val likers = MutableList(5) { mock<AvatarItem>() }
-        val testTextString = "10 bloggers like this."
+        val testTextString = "10 likes"
 
         getLikesState.value = likesState
         whenever(accountStore.account).thenReturn(AccountModel().apply { userId = -1 })
@@ -1093,6 +1099,18 @@ class ReaderPostDetailViewModelTest : BaseUnitTest() {
             anyOrNull(),
             anyOrNull()
         )
+    }
+
+    @Test
+    fun `onArticleTextCopied tracks the reader_article_text_copied event`() {
+        viewModel.onArticleTextCopied()
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_ARTICLE_TEXT_COPIED)
+    }
+
+    @Test
+    fun `onArticleTextHighlighted tracks the reader_article_text_highlighted event`() {
+        viewModel.onArticleTextHighlighted()
+        verify(readerTracker).track(AnalyticsTracker.Stat.READER_ARTICLE_TEXT_HIGHLIGHTED)
     }
 
     private fun <T> testWithoutLocalPost(block: suspend CoroutineScope.() -> T) {

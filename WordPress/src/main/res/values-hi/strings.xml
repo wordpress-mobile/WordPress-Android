@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-08-08 10:50:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: hi_IN
 -->
 <resources>
@@ -16,12 +16,8 @@ Language: hi_IN
     <string name="user_profile_site_section_header">साइट</string>
     <string name="gutenberg_native_new">नया</string>
     <string name="reader_post_details_header_by_author_name">द्वारा</string>
-    <string name="typeface_label_shrikhand">बोल्ड</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">छिपायें</string>
-    <string name="dialog_discard_page_ok_button">मिटाएं</string>
-    <string name="sound_button_alt">ध्वनि</string>
-    <string name="text_button_alt">टेक्स्ट</string>
     <string name="login_or">या</string>
     <string name="login_done">हो गया</string>
     <string name="me">मैं</string>
@@ -225,7 +221,6 @@ Language: hi_IN
     <string name="stats_followers_a_month">एक महीना</string>
     <string name="stats_followers_a_year">एक साल</string>
     <string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
-    <string name="stats_view_followers">प्रसंशक</string>
     <string name="stats_timeframe_years">वर्ष </string>
     <string name="stats_view_countries">देश</string>
     <string name="ssl_certificate_details">विवरण</string>

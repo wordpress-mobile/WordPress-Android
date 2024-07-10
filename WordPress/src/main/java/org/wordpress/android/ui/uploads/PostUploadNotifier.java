@@ -28,6 +28,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PostsListActivityKt;
@@ -444,8 +445,8 @@ class PostUploadNotifier {
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
+            writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+            writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
             writePostIntent.setAction(String.valueOf(notificationId));
 
             PendingIntent actionPendingIntent =
@@ -512,7 +513,7 @@ class PostUploadNotifier {
                 mContext,
                 (int) notificationId,
                 notificationIntent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         notificationBuilder.setSmallIcon(android.R.drawable.stat_notify_error);

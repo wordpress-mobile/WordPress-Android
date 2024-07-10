@@ -10,13 +10,16 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.MONTHS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
-import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.INSIGHTS
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Inject
 
 const val SELECTED_SECTION_KEY = "SELECTED_STATS_SECTION_KEY"
 
 class SelectedSectionManager
-@Inject constructor(private val sharedPrefs: SharedPreferences) {
+@Inject constructor(
+    private val sharedPrefs: SharedPreferences,
+    private val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
+) {
     private val _liveSelectedSection = MutableLiveData<StatsSection>()
     val liveSelectedSection: LiveData<StatsSection>
         get() {
@@ -28,8 +31,13 @@ class SelectedSectionManager
         }
 
     fun getSelectedSection(): StatsSection {
-        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, INSIGHTS.name)
-        return value?.let { StatsSection.valueOf(value) } ?: INSIGHTS
+        val defaultValue = if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) {
+            StatsSection.TRAFFIC
+        } else {
+            StatsSection.INSIGHTS
+        }
+        val value = sharedPrefs.getString(SELECTED_SECTION_KEY, defaultValue.name)
+        return value?.let { StatsSection.valueOf(value) } ?: StatsSection.INSIGHTS
     }
 
     fun setSelectedSection(selectedSection: StatsSection) {
@@ -43,6 +51,7 @@ class SelectedSectionManager
 fun StatsSection.toStatsGranularity(): StatsGranularity? {
     return when (this) {
         StatsSection.TRAFFIC,
+        StatsSection.SUBSCRIBERS,
         StatsSection.ANNUAL_STATS,
         StatsSection.DETAIL,
         StatsSection.TOTAL_LIKES_DETAIL,
@@ -57,18 +66,9 @@ fun StatsSection.toStatsGranularity(): StatsGranularity? {
     }
 }
 
-fun StatsGranularity.toStatsSection(): StatsSection {
-    return when (this) {
-        DAYS -> StatsSection.DAYS
-        WEEKS -> StatsSection.WEEKS
-        MONTHS -> StatsSection.MONTHS
-        YEARS -> StatsSection.YEARS
-    }
-}
-
 fun StatsGranularity.toNameResource() = when {
-    this == DAYS -> R.string.stats_timeframe_by_day
-    this == WEEKS -> R.string.stats_timeframe_by_week
-    this == MONTHS -> R.string.stats_timeframe_by_month
-    else -> R.string.stats_timeframe_by_year
+    this == DAYS -> R.string.stats_timeframe_days
+    this == WEEKS -> R.string.stats_timeframe_weeks
+    this == MONTHS -> R.string.stats_timeframe_months
+    else -> R.string.stats_timeframe_years
 }

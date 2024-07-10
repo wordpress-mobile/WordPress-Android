@@ -31,6 +31,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.POSTS
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
@@ -64,6 +65,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_TRASH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_VIEW
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_READ
 import javax.inject.Inject
 
 /**
@@ -74,7 +76,8 @@ class PostListItemUiStateHelper @Inject constructor(
     private val uploadUiStateUseCase: PostModelUploadUiStateUseCase,
     private val labelColorUseCase: PostPageListLabelColorUseCase,
     private val jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper,
-    private val blazeFeatureUtils: BlazeFeatureUtils
+    private val blazeFeatureUtils: BlazeFeatureUtils,
+    private val buildConfigWrapper: BuildConfigWrapper
 ) {
     @Suppress("LongParameterList", "LongMethod")
     fun createPostListItemUiState(
@@ -95,7 +98,6 @@ class PostListItemUiStateHelper @Inject constructor(
     ): PostListItemUiState {
         val postStatus: PostStatus = PostStatus.fromPost(post)
         val uploadUiState = uploadUiStateUseCase.createUploadUiState(post, site, uploadStatusTracker)
-
         val onButtonClicked = { buttonType: PostListButtonType ->
             onAction.invoke(post, buttonType, POST_LIST_BUTTON_PRESSED)
         }
@@ -437,6 +439,9 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowViewButton) {
             buttonTypes.addViewOrPreviewAction(isLocalDraft || isLocallyChanged)
+            if (buildConfigWrapper.isJetpackApp) {
+                buttonTypes.addReadAction(isLocalDraft || isLocallyChanged)
+            }
         }
 
         if (canShowStats) {
@@ -473,6 +478,12 @@ class PostListItemUiStateHelper @Inject constructor(
 
     private fun MutableList<PostListButtonType>.addViewOrPreviewAction(shouldShowPreview: Boolean) {
         add(if (shouldShowPreview) BUTTON_PREVIEW else BUTTON_VIEW)
+    }
+
+    private fun MutableList<PostListButtonType>.addReadAction(isPreview: Boolean) {
+        if (!isPreview) {
+            add(BUTTON_READ)
+        }
     }
 
     private fun MutableList<PostListButtonType>.addDeletingOrTrashAction(

@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -23,11 +24,13 @@ import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.uploads.PostEvents
 import org.wordpress.android.ui.uploads.ProgressEvent
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 /**
  * This is a temporary class to make the PagesViewModel more manageable. It was inspired by the PostListEventListener
@@ -41,9 +44,10 @@ class PageListEventListener(
     private val siteStore: SiteStore,
     private val site: SiteModel,
     private val handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-    private val handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
+    private val handlePostUploadFinished: (RemoteId, PageUploadErrorWrapper, Boolean) -> Unit,
     private val invalidateUploadStatus: (List<LocalId>) -> Unit,
-    private val handleHomepageSettingsChange: (SiteModel) -> Unit
+    private val handleHomepageSettingsChange: (SiteModel) -> Unit,
+    private val handlePageUpdatedWithoutError: () -> Unit
 ) : CoroutineScope {
     init {
         dispatcher.register(this)
@@ -100,6 +104,8 @@ class PageListEventListener(
                             "Error updating the post with type: ${event.error.type} and" +
                                     " message: ${event.error.message}"
                         )
+                    } else {
+                        handlePageUpdatedWithoutError.invoke()
                     }
                     uploadStatusChanged(LocalId((event.causeOfChange as CauseOfOnPostChanged.UpdatePost).localPostId))
                 }
@@ -125,8 +131,27 @@ class PageListEventListener(
     fun onPostUploaded(event: OnPostUploaded) {
         if (event.post != null && event.post.isPage && event.post.localSiteId == site.id) {
             uploadStatusChanged(LocalId(event.post.id))
-            handlePostUploadFinished(RemoteId(event.post.remotePostId), event.isError, event.isFirstTimePublish)
+            val errorMessage = getPageUploadErrorMessage(event)
+            handlePostUploadFinished(
+                RemoteId(event.post.remotePostId),
+                PageUploadErrorWrapper(event.isError, errorMessage, shouldRetryAfterPageUploadError(event)),
+                event.isFirstTimePublish
+            )
         }
+    }
+
+    private fun getPageUploadErrorMessage(event: OnPostUploaded): UiString? {
+        return when {
+            event.error?.type == PostStore.PostErrorType.OLD_REVISION ->
+                UiStringRes(R.string.page_upload_conflict_error)
+            event.error?.message != null ->
+                UiString.UiStringText(event.error.message)
+            else -> null
+        }
+    }
+
+    private fun shouldRetryAfterPageUploadError(event: OnPostUploaded): Boolean {
+        return event.error?.type != PostStore.PostErrorType.OLD_REVISION
     }
 
     @Suppress("unused")
@@ -208,8 +233,9 @@ class PageListEventListener(
             site: SiteModel,
             invalidateUploadStatus: (List<LocalId>) -> Unit,
             handleRemoteAutoSave: (LocalId, Boolean) -> Unit,
-            handlePostUploadFinished: (RemoteId, Boolean, Boolean) -> Unit,
-            handleHomepageSettingsChange: (SiteModel) -> Unit
+            handlePostUploadFinished: (RemoteId, PageUploadErrorWrapper, Boolean) -> Unit,
+            handleHomepageSettingsChange: (SiteModel) -> Unit,
+            handlePageUpdatedWithoutError: () -> Unit,
         ): PageListEventListener {
             return PageListEventListener(
                 dispatcher = dispatcher,
@@ -221,7 +247,8 @@ class PageListEventListener(
                 invalidateUploadStatus = invalidateUploadStatus,
                 handleRemoteAutoSave = handleRemoteAutoSave,
                 handlePostUploadFinished = handlePostUploadFinished,
-                handleHomepageSettingsChange = handleHomepageSettingsChange
+                handleHomepageSettingsChange = handleHomepageSettingsChange,
+                handlePageUpdatedWithoutError = handlePageUpdatedWithoutError
             )
         }
     }

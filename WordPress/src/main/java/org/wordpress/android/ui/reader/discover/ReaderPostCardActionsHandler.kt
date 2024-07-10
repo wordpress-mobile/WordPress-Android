@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReadingPreferences
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportUser
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.READING_PREFERENCES
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_USER
@@ -76,7 +78,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.widgets.AppRatingDialogWrapper
+import org.wordpress.android.widgets.AppReviewsManagerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -95,7 +97,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val appRatingDialogWrapper: AppRatingDialogWrapper,
+    private val appReviewsManagerWrapper: AppReviewsManagerWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -195,6 +197,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             REPORT_POST -> handleReportPostClicked(post)
             REPORT_USER -> handleReportUserClicked(post)
             TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, source)
+            READING_PREFERENCES -> handleReadingPreferencesClicked()
             SPACER_NO_ACTION -> Unit // Do nothing
         }
     }
@@ -204,7 +207,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         withContext(bgDispatcher) {
-            appRatingDialogWrapper.incrementInteractions(
+            appReviewsManagerWrapper.incrementInteractions(
                 AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
             )
 
@@ -391,6 +394,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleVisitSiteClicked(post: ReaderPost) {
         readerTracker.track(AnalyticsTracker.Stat.READER_ARTICLE_VISITED)
         _navigationEvents.postValue(Event(OpenPost(post)))
+    }
+
+    private fun handleReadingPreferencesClicked() {
+        _navigationEvents.postValue(Event(ShowReadingPreferences))
     }
 
     private suspend fun handleBlockSiteClicked(

@@ -17,7 +17,6 @@ import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorForAllSi
 import org.wordpress.android.fluxc.store.SiteStore.DesignateMobileEditorPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchSitesPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SiteFilter;
-import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhaseHelper;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
@@ -32,8 +31,7 @@ import java.util.ArrayList;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
-    public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
-    public static final String WP_STORIES_JETPACK_VERSION = "9.1";
+    public static final String WP_VIDEOPRESS_V5_JETPACK_VERSION = "8.5";
     public static final String WP_CONTACT_INFO_JETPACK_VERSION = "8.5";
     public static final String WP_FACEBOOK_EMBED_JETPACK_VERSION = "9.0";
     public static final String WP_INSTAGRAM_EMBED_JETPACK_VERSION = "9.0";
@@ -319,11 +317,6 @@ public class SiteUtils {
         return VersionUtils.checkMinimalVersion(site.getSoftwareVersion(), minVersion);
     }
 
-    public static boolean supportsStoriesFeature(SiteModel site, JetpackFeatureRemovalPhaseHelper helper) {
-       return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION))
-               && helper.shouldShowStoryPost();
-    }
-
     public static boolean supportsContactInfoFeature(SiteModel site) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
     }
@@ -338,6 +331,11 @@ public class SiteUtils {
 
     public static boolean supportsVideoPressFeature(SiteModel site) {
         return site != null && site.isWPCom();
+    }
+
+    public static boolean supportsVideoPressV5Feature(SiteModel site, String minimalJetpackVersion) {
+        return site != null && site.isWPCom() || site.isWPComAtomic() || checkMinimalJetpackVersion(site,
+                minimalJetpackVersion);
     }
 
     public static boolean supportsEmbedVariationFeature(SiteModel site, String minimalJetpackVersion) {

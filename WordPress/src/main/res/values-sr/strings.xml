@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2023-12-11 09:55:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: sr_RS
 -->
 <resources>
@@ -120,11 +120,6 @@ Language: sr_RS
     <string name="comment_edit_user_name">Име</string>
     <string name="comment_edit_menu_done">Готово</string>
     <string name="gutenberg_native_embed_options">Могућности угнежђавања</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Вама и %1$s блогера&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Вама и 1 блогеру&lt;/a&gt; се ово свиђа.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Вама&lt;/a&gt; се ово свиђа.</string>
     <string name="my_site_btn_domains">Домени</string>
     <string name="blogging_reminders_site_settings_label">%1$s недељно у %2$s</string>
     <string name="gutenberg_native_selected_s">Одабрано: %s</string>
@@ -203,17 +198,9 @@ Language: sr_RS
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Очисти</string>
     <string name="activity_log_activity_type_filter_apply">Примени</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF датотеке нису подржане</string>
-    <string name="color_picker_label_background">Позадина</string>
-    <string name="color_picker_label_text">Текст</string>
-    <string name="dialog_discard_story_ok_button_edit">Одбаци</string>
-    <string name="dialog_discard_story_title_edit">Одбацити измене?</string>
     <string name="label_done_button">Готово</string>
-    <string name="label_next_button">Следеће</string>
-    <string name="delete_button_alt">Обриши</string>
     <string name="hpp_choose_error">Дошло је до грешке при одабиру дизајна.</string>
     <string name="hpp_error_subtitle">Додирните на покушај поново када се поново повежете на мрежу.</string>
-    <string name="dialog_discard_story_message_edit">Било које измене неће бити сачуване.</string>
     <string name="hpp_retry_error">Молимо проверите своју интернет везу и покушајте поново.</string>
     <string name="reader_discover_empty_title">Добродошли!</string>
     <string name="reader_discover_no_posts_title">Нема недавних чланака</string>
@@ -248,12 +235,6 @@ Language: sr_RS
     <string name="gutenberg_native_help_button">Дугме помоћи</string>
     <string name="gutenberg_native_edit_using_web_editor">Уреди помоћу веб уређивача</string>
     <string name="gutenberg_native_choose_images">Одабери слике</string>
-    <string name="stories_intro_create_story_post_label">Направи чланак приче</string>
-    <string name="stories_intro_title_second">Чланци приче не нестају</string>
-    <string name="stories_intro_title_first">Приче су сада за све</string>
-    <string name="stories_intro_image_caption_second">Пример наслова приче</string>
-    <string name="stories_intro_image_caption_first">Како направити чланак приче</string>
-    <string name="stories_intro_main_title">Представљамо чланке приче</string>
     <string name="mlp_notice_blank_page_created">Празна страница је направљена</string>
     <string name="mlp_notice_page_created">Страница направљена</string>
     <string name="reader_label_toolbar_back">Назад</string>
@@ -281,61 +262,9 @@ Language: sr_RS
     <string name="gutenberg_native_page_title_empty">Наслов странице. Празно</string>
     <string name="toast_error_playing_video">Грешка се појавила током пуштања Вашег видео записа</string>
     <string name="camera_error">Овај уређај не подржава Camera2 API.</string>
-    <string name="toast_error_saving_video">Видео запис није могао бити сачуван</string>
-    <string name="toast_error_saving_image">Грешка приликом чувања слике</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Види складиште</string>
-    <string name="toast_capture_operation_in_progress">Операција у току, покушајте поново</string>
-    <string name="toast_story_page_not_found">Није могуће пронаћи слајд Приче</string>
-    <string name="dialog_insufficient_device_storage_error_title">Недеовољно складишта на уређају</string>
-    <string name="dialog_story_saving_error_title_plural">Није могуће сачувати %1$d слајдове</string>
-    <string name="dialog_story_saving_error_title_singular">Није могуће сачувати 1 слајд</string>
-    <string name="story_saving_failed_quick_action_manage">Управљај</string>
-    <string name="story_saving_failed_message_plural">%1$d слајдова захтева радњу</string>
-    <string name="story_saving_failed_message_singular">1 слајд захтева радњу</string>
-    <string name="dialog_story_saving_error_message">Покушајте поново да сачувате или обришете слајдове, затим покушајте поново да објавите Вашу причу.</string>
-    <string name="story_saving_failed_title">Није могуће отпремити \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Није могуће отпремити \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" је објављен</string>
-    <string name="story_saving_snackbar_started">Отпремање \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d преосталих слајдова</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 преостао слајд</string>
-    <string name="story_saving_title_several">неколико прича</string>
-    <string name="story_saving_title">Снимање \"%1$s\"…</string>
-    <string name="story_saving_untitled">Без наслова</string>
-    <string name="dialog_discard_story_ok_button">Одбаци</string>
-    <string name="dialog_discard_story_message">Ваш чланак Приче се неће сачувати као нацрт.</string>
-    <string name="dialog_discard_story_title">Одбаци чланак приче?</string>
-    <string name="dialog_discard_page_ok_button">Обриши</string>
-    <string name="dialog_discard_page_message">Овај слајд ће бити уклоњен из Ваше приче.</string>
-    <string name="dialog_discard_errored_page_message">Овај слајд још увек није сачуван. Ако обришете овај слајд, изгубићете сва уређивања која сте направили.</string>
-    <string name="dialog_discard_page_title">Обриши слајд приче?</string>
-    <string name="label_text_color_button">Измени боју текста</string>
-    <string name="label_text_alignment_button">Измени поравнање текста</string>
-    <string name="label_frame_errored">има грешку</string>
-    <string name="label_frame_selected_border">одабрано</string>
-    <string name="label_frame_unselected_border">није одабрано</string>
     <string name="mlp_create_page">Напарвити страницу</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Направити чланак или причу</string>
     <string name="mlp_create_blank_page">Направити празну страницу</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Направите чланак, страницу или причу</string>
-    <string name="label_frame_image">Слајд</string>
-    <string name="label_retry_icon">Покушај поново</string>
-    <string name="label_saved_icon">Сачувано</string>
     <string name="label_close_button">Затвори</string>
-    <string name="label_share_to">Подели</string>
-    <string name="label_snackbar_share">ПОДЕЛИ</string>
-    <string name="label_snackbar_loop_frame_saved">Сачувано међу фотографијама</string>
-    <string name="label_control_retry">Покушај поново</string>
-    <string name="label_control_saved">Сачувано</string>
-    <string name="label_control_saving">Чува се</string>
-    <string name="label_control_flip_camera">Окрени</string>
-    <string name="label_control_flash">Блиц</string>
-    <string name="sound_button_alt">Звук</string>
-    <string name="text_button_alt">Текст</string>
-    <string name="stickers_button_alt">Налепнице</string>
-    <string name="flash_button_alt">Блиц</string>
-    <string name="flip_button_alt">Окрени камеру</string>
-    <string name="capture_button_alt">Ухвати</string>
     <string name="mlp_preview_page">Преглед</string>
     <string name="mlp_choose_layout_title">Одабери распоред</string>
     <string name="prepublishing_nudges_story_title_hint">Доделите својој причи наслов</string>
@@ -485,7 +414,6 @@ Language: sr_RS
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Није повезано</string>
     <string name="post_list_tab_trashed_posts">Пребачено у отпад</string>
     <string name="notifications_tab_title_comments">Коментари</string>
-    <string name="notifications_tab_title_follows">Праћења</string>
     <string name="notifications_tab_title_likes">Свиђања</string>
     <string name="notifications_tab_title_unread_notifications">Непрочитано</string>
     <string name="dlg_cancel_action_dont_trash">Не шаљи на отпад</string>
@@ -697,8 +625,6 @@ Language: sr_RS
     <string name="register_domain">Региструј домен</string>
     <string name="domains_suggestions_empty_list">Нема пронађених предлога</string>
     <string name="stats_insights_annual_site_stats">Годишње статистике сајта</string>
-    <string name="stats_insights_social">Друштвено</string>
-    <string name="stats_view_follower_totals">Укупан број пратилаца</string>
     <string name="domain_suggestions_fetch_error">Предлози домена се нису могли учитати</string>
     <string name="domain_suggestions_search_hint">Укуцајте кључну реч за више идеја</string>
     <string name="stats_menu_move_down">Помери доле</string>
@@ -833,7 +759,6 @@ Language: sr_RS
     <string name="stats_comments_posts_and_pages">Чланци и странице</string>
     <string name="stats_comments_authors">Аутори</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
-    <string name="stats_publicize_followers_label">Пратиоци</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_service_label">Услуга</string>
     <string name="stats_tags_and_categories_views_label">Прегледи</string>
@@ -841,8 +766,6 @@ Language: sr_RS
     <string name="stats_posts_and_pages_views_label">Прегледи</string>
     <string name="stats_posts_and_pages_title_label">Наслов</string>
     <string name="stats_follower_since_label">Од</string>
-    <string name="stats_follower_label">Пратилац</string>
-    <string name="stats_followers_count_message">Укупно %1$s пратилаца: %2$s</string>
     <string name="stats_followers_email">Електронска пошта</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Управљај увидима</string>
@@ -929,13 +852,10 @@ Language: sr_RS
     <string name="reader_label_post_search_explainer">Шта бисте желели да пронађете?</string>
     <string name="themes_empty_list">Нема тема које се поклапају са Вашом претрагом</string>
     <string name="media_empty_search_list">Нема садржаја који се поклапа са Вашом претрагом</string>
-    <string name="people_empty_list_filtered_followers">Још увек нема пратилаца</string>
     <string name="people_empty_list_filtered_users">Још увек нема корисника</string>
-    <string name="people_empty_list_filtered_email_followers">Још увек нема пратилаца електронске поште</string>
     <string name="people_empty_list_filtered_viewers">Још увек нема гледалаца</string>
     <string name="reader_empty_posts_liked_description">Чланци који Вам се свиђају ће се појавити овде</string>
     <string name="notifications_empty_likes">Још нема свиђања</string>
-    <string name="notifications_empty_followers">Још нема пратилаца</string>
     <string name="activity_log_empty_title">Још увек нема активности</string>
     <string name="posts_empty_list_button">Направити чланак</string>
     <string name="pages_empty_list_button">Направити страницу</string>
@@ -1485,34 +1405,24 @@ Language: sr_RS
     <string name="preference_open_device_settings">Отвори подешавања телефона</string>
     <string name="invite_invalid_email">%s: Неисправан емаил</string>
     <string name="invite_user_blocked_invites">%s: Корисник је блокирао позивнице</string>
-    <string name="invite_already_following">%s: Већ прати</string>
     <string name="invite_already_a_member">%s: Већ је члан</string>
     <string name="invite_username_not_found">%s: Корисник није пронађен</string>
     <string name="comment_moderated_approved">Коментар одобрен!</string>
     <string name="like">Лајк</string>
     <string name="timespan_now">сада</string>
     <string name="role_viewer">Посетилац</string>
-    <string name="role_follower">Пратилац</string>
     <string name="error_post_my_profile_no_connection">Нема конекције, нисмо могли да сачувамо ваш профил</string>
     <string name="alignment_right">Десно</string>
     <string name="alignment_left">Лево</string>
     <string name="alignment_none">Без</string>
     <string name="site_settings_list_editor_action_mode_title">Изабрани %1$d</string>
     <string name="error_fetch_users_list">Нисмо могли да прикажемо кориснике сајта</string>
-    <string name="title_email_follower">Емаил Пратилац</string>
-    <string name="title_follower">Пратилац</string>
     <string name="people_fetching">Преузимам кориснике…</string>
     <string name="people_dropdown_item_viewers">Гледаоци</string>
-    <string name="people_dropdown_item_email_followers">Пошаљите е-пошту пратиоцима</string>
-    <string name="people_dropdown_item_followers">Пратиоци</string>
     <string name="people_dropdown_item_team">Тим</string>
     <string name="invite_message_usernames_limit">Позовите до 10 адреса е-поште и/или корисничких имена са WordPress.com. Онима којима је потребно корисничко име биће послата упутства како да га креирају.</string>
-    <string name="follower_remove_confirmation_message">Ако га уклоните, овај пратилац ће престати да добија обавештења о овом сајту, осим уколико не крену поново да га прате. Да ли и даље желите да уклоните овог пратиоца?</string>
     <string name="follower_subscribed_since">Од %1$s</string>
-    <string name="error_remove_follower">Пратилац није уклоњен</string>
     <string name="error_remove_viewer">Није могуће уклонити прегледач</string>
-    <string name="error_fetch_email_followers_list">Нисмо могли да преузмемо емаилове пратиоца сајта</string>
-    <string name="error_fetch_followers_list">Нисмо могли да преузмемо пратиоце сајта</string>
     <string name="editor_failed_uploads_switch_html">Неки од медија које сте послали нису успешно послати. У овом тренутку не можете да се пребаците у HTML мод.\nЖелите ли да уклоните све неуспешне медије и да наставите?</string>
     <string name="visual_editor">Визуелни едитор</string>
     <string name="image_thumbnail">Умањена слика</string>
@@ -1610,7 +1520,6 @@ Language: sr_RS
     <string name="username_mentions">Предлози корисничког имена</string>
     <string name="site_achievements">Достигнућа интернет места</string>
     <string name="likes_on_my_posts">Свиђања мојих чланака</string>
-    <string name="site_follows">Праћена сајта</string>
     <string name="likes_on_my_comments">Лајкови на мојим коментарима</string>
     <string name="comments_on_my_site">Коментари на мом веб месту</string>
     <string name="site_settings_list_editor_summary_other">%d предмета</string>
@@ -1804,7 +1713,6 @@ Language: sr_RS
     <string name="site_picker_create_wpcom">Направи WordPress.com сајт</string>
     <string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>
     <string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
-    <string name="site_picker_add_site">Додај нови сајт</string>
     <string name="my_site_btn_view_admin">Види управљање</string>
     <string name="my_site_btn_view_site">Види веб место</string>
     <string name="site_picker_title">Одабери веб место</string>
@@ -1848,7 +1756,6 @@ Language: sr_RS
     <string name="stats_followers_a_minute_ago">пре минут</string>
     <string name="stats_followers_seconds_ago">пре пар секунди</string>
     <string name="stats_view_videos">Видео снимци</string>
-    <string name="stats_view_followers">Пратиоци</string>
     <string name="stats_view_countries">Државе</string>
     <string name="stats_likes">Свиђања</string>
     <string name="stats_views">Прегледа</string>
@@ -2003,7 +1910,6 @@ Language: sr_RS
     <string name="new_notifications">%d нових обавештења</string>
     <string name="more_notifications">и %d још.</string>
     <string name="sign_in">Пријава</string>
-    <string name="follows">Праћења</string>
     <string name="loading">Учитавање…</string>
     <string name="httpuser">HTTP корисничко име</string>
     <string name="httppassword">HTTP лозинка</string>

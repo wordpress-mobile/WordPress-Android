@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_small"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="?attr/wpColorOnSurfaceHigh"
+        android:textSize="@dimen/text_sz_large"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="All sites"
+        tools:visibility="visible" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/pin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            android:padding="16dp"
+            android:src="@drawable/pin_filled"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/avatar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginVertical="@dimen/margin_medium"
+            app:cardCornerRadius="@dimen/blavatar_sz_radius"
+            app:cardElevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/blavatar_sz"
+                android:layout_height="@dimen/blavatar_sz"
+                android:contentDescription="@string/blavatar_desc"
+                android:src="@drawable/bg_rectangle_placeholder_radius_4dp_globe_32dp"
+                app:shapeAppearanceOverlay="@style/AvatarShapeAppearanceOverlay"
+                app:strokeWidth="1dp" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/Widget.LoginFlow.TextView.List.Line1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="viewStart"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/text_domain"
+            app:layout_constraintEnd_toStartOf="@+id/pin"
+            app:layout_constraintStart_toEndOf="@+id/avatar_container"
+            app:layout_constraintTop_toTopOf="@+id/avatar_container"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
+            tools:text="Around the World with Pam" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_domain"
+            style="@style/Widget.LoginFlow.TextView.List.Line2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:textAlignment="viewStart"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/avatar_container"
+            app:layout_constraintEnd_toStartOf="@+id/pin"
+            app:layout_constraintStart_toEndOf="@+id/avatar_container"
+            app:layout_constraintTop_toBottomOf="@+id/text_title"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_goneMarginEnd="@dimen/margin_extra_large"
+            tools:text="pamelanguyen.com" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

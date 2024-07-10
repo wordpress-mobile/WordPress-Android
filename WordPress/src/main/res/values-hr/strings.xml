@@ -1,19 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2022-10-18 07:57:05+0000
+Translation-Revision-Date: 2024-04-16 07:31:04+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: hr
 -->
 <resources>
-    <string name="color_picker_label_background">Pozadina</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Odbaci</string>
-    <string name="dialog_discard_story_message_edit">Sve izvršene promjene neće biti spremljene.</string>
-    <string name="dialog_discard_story_title_edit">Odbaciti promjene?</string>
     <string name="label_done_button">Gotovo</string>
-    <string name="label_next_button">Sljedeće</string>
-    <string name="delete_button_alt">Izbrisati</string>
     <string name="scan">Skeniraj</string>
     <string name="reader_discover_empty_title">Dobro došli!</string>
     <string name="hpp_choose_button">Odaberi</string>
@@ -35,12 +28,6 @@ Language: hr
     <string name="gutenberg_native_help_button">Gumb za pomoć</string>
     <string name="gutenberg_native_edit_using_web_editor">Uređujte pomoću web uređivača</string>
     <string name="gutenberg_native_choose_images">Odaberite slike</string>
-    <string name="stories_intro_create_story_post_label">Napravite članak o priči</string>
-    <string name="stories_intro_title_second">Članci priče ne nestaju</string>
-    <string name="stories_intro_title_first">Priče su sada za sve</string>
-    <string name="stories_intro_image_caption_second">Primjer naslova priče</string>
-    <string name="stories_intro_image_caption_first">Kako napraviti članak iz priče</string>
-    <string name="stories_intro_main_title">Predstavljamo vam članke priče</string>
     <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
     <string name="mlp_notice_page_created">Stranica kreirana</string>
     <string name="reader_label_toolbar_back">Povratak</string>
@@ -66,19 +53,7 @@ Language: hr
     <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
     <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
     <string name="camera_error">Ovaj uređaj ne podržava API Camera2.</string>
-    <string name="toast_error_saving_video">Videozapis nije moguće spremiti</string>
-    <string name="toast_error_saving_image">Pogreška prilikom spremanja slike</string>
-    <string name="toast_capture_operation_in_progress">Operacija je u tijeku, pokušajte ponovo</string>
-    <string name="toast_story_page_not_found">Slajd Story nije pronađen</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Pogledajte spremište</string>
     <string name="label_close_button">Zatvori</string>
-    <string name="label_share_to">Podijeli</string>
-    <string name="label_control_retry">Pokušaj ponovno</string>
-    <string name="label_control_saved">Spremljeno</string>
-    <string name="label_control_saving">Spremanje</string>
-    <string name="sound_button_alt">Zvuk</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="stickers_button_alt">Naljepnice</string>
     <string name="comment_q_action_replying">Odgovaram …</string>
     <string name="comment_q_action_approving">Odobravam …</string>
     <string name="comment_q_action_liking">Sviđa mi se …</string>
@@ -92,13 +67,11 @@ Language: hr
     <string name="preference_open_device_settings">Otvorite postavke telefona</string>
     <string name="invite_invalid_email">%s: Neispravna e-pošta</string>
     <string name="invite_user_blocked_invites">%s: Korisnik je blokirao pozivnice</string>
-    <string name="invite_already_following">%s: Već pratite</string>
     <string name="invite_username_not_found">%s: Korisnik nije pronađen</string>
     <string name="invite_already_a_member">%s: Već ste član</string>
     <string name="comment_moderated_approved">Komentar odobren!</string>
     <string name="like">Kao</string>
     <string name="timespan_now">sada</string>
-    <string name="role_follower">Pratitelj</string>
     <string name="role_viewer">Pregledavač</string>
     <string name="error_post_my_profile_no_connection">Nema internetske veze, nije moguće spremiti vaš profil</string>
     <string name="alignment_none">Ništa</string>
@@ -106,20 +79,12 @@ Language: hr
     <string name="alignment_left">Lijevo</string>
     <string name="site_settings_list_editor_action_mode_title">Odabrano %1$d</string>
     <string name="error_fetch_users_list">Nije moguće dohvatiti korisnike stranice</string>
-    <string name="title_follower">Sljedbenik</string>
     <string name="people_fetching">Dohvaćanje korisnika…</string>
-    <string name="title_email_follower">Pratitelji pošte</string>
     <string name="people_dropdown_item_viewers">Posjetitelji</string>
-    <string name="people_dropdown_item_email_followers">Pratitelji putem e-pošte</string>
-    <string name="people_dropdown_item_followers">Pratitelji</string>
     <string name="people_dropdown_item_team">Tim</string>
     <string name="invite_message_usernames_limit">Pozovite do 10 adresa e-pošte i/ili korisničkih imena s WordPress.com. Oni koji trebaju korisničko ime dobit će upute kako ga izraditi.</string>
-    <string name="follower_remove_confirmation_message">Ako ga uklonite, ovaj će pratitelj prestati primati obavijesti o ovoj stranici, osim ako ih ponovno ne počne pratiti. Želite li i dalje ukloniti ovog pratitelja?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
-    <string name="error_remove_follower">Nije moguće ukloniti pratitelja</string>
     <string name="error_remove_viewer">Nije moguće ukloniti pregledavača</string>
-    <string name="error_fetch_email_followers_list">Nije moguće dohvatiti e-poštu pratitelja ove stranice</string>
-    <string name="error_fetch_followers_list">Nije moguće dohvatiti pratitelje stranice</string>
     <string name="editor_failed_uploads_switch_html">Neki od medijskih zapisa koje ste prenijeli nisu uspješno preneseni. Trenutačno se ne možete prebaciti na HTML način. Želite li ukloniti sve neuspjele medijske zapise i nastaviti?</string>
     <string name="visual_editor">Vizualni uređivač</string>
     <string name="image_thumbnail">Sličica</string>
@@ -220,7 +185,6 @@ Language: hr
     <string name="username_mentions">Spominjanja korisnika</string>
     <string name="site_achievements">Dostignuća na web sjedištu</string>
     <string name="likes_on_my_posts">\"Sviđa mi se\" u mojim objavama</string>
-    <string name="site_follows">Praćena stranica </string>
     <string name="likes_on_my_comments">\"Sviđa mi se\" na moje komentare</string>
     <string name="comments_on_my_site">Komentari na mojoj web stranici</string>
     <string name="site_settings_list_editor_summary_other">%d stavki</string>
@@ -444,7 +408,7 @@ Language: hr
     <string name="site_picker_create_wpcom">Kreiraj WordPress.com web-stranicu</string>
     <string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
     <string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
-    <string name="site_picker_add_site">Dodaj novu web-stranicu</string>
+    <string name="site_picker_add_a_site">Dodaj novu web-stranicu</string>
     <string name="my_site_btn_view_site">Pogledaj stranicu</string>
     <string name="site_picker_title">Odaberi stranicu</string>
     <string name="my_site_btn_view_admin">Prikaži Admin</string>
@@ -483,7 +447,6 @@ Language: hr
     <string name="stats_followers_seconds_ago">prije sekundu</string>
     <string name="stats_view_top_posts_and_pages">Objave i stranice</string>
     <string name="stats_view_videos">Videi</string>
-    <string name="stats_view_followers">Sljedbenici</string>
     <string name="stats_view_countries">Države</string>
     <string name="stats_likes">Lajkovi</string>
     <string name="stats_visitors">Posjetitelji</string>
@@ -520,6 +483,7 @@ Language: hr
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="update_verb">Ažuriraj</string>
     <string name="schedule_verb">Zakazati</string>
+    <string name="reader_hint_add_tag_or_url_follow">Unesite URL adresu ili oznaku za praćenje </string>
     <string name="help">Pomoć</string>
     <string name="ssl_certificate_error">Nevažeći SSL certifikat</string>
     <string name="ssl_certificate_ask_trust">Ako se inače uspijete spojiti sa ovom web-stranicom bez problema, ova greška mogla bi značiti da netko pokušava oponašati tu web-stranicu, i ne bi trebali nastaviti. Vjerujete certifikat unatoč tome? </string>
@@ -642,7 +606,6 @@ Language: hr
     <string name="new_notifications">%d novih obavijesti</string>
     <string name="more_notifications">i %d više.</string>
     <string name="note_reply_successful">Odgovor objavljen</string>
-    <string name="follows">Praćenje</string>
     <string name="loading">Učitavanje…</string>
     <string name="httpuser">HTTP korisničko ime</string>
     <string name="httppassword">HTTP lozinka</string>

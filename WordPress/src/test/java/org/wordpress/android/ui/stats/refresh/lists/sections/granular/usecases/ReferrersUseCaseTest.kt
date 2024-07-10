@@ -43,6 +43,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.ReferrerPopupMenuHandler
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
@@ -118,6 +119,9 @@ class ReferrersUseCaseTest : BaseUnitTest() {
     )
     private val contentDescription = "title, views"
 
+    @Mock
+    private lateinit var buildConfigWrapper: BuildConfigWrapper
+
     @Before
     fun setUp() {
         useCase = ReferrersUseCase(
@@ -132,7 +136,8 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             statsUtils,
             resourceProvider,
             BLOCK_DETAIL,
-            popupMenuHandler
+            popupMenuHandler,
+            buildConfigWrapper,
         )
         whenever(statsSiteProvider.siteModel).thenReturn(site)
         whenever((selectedDateProvider.getSelectedDate(statsGranularity))).thenReturn(selectedDate)
@@ -150,6 +155,7 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             )
         ).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
     }
 
     @Test
@@ -226,7 +232,8 @@ class ReferrersUseCaseTest : BaseUnitTest() {
             statsUtils,
             resourceProvider,
             BLOCK,
-            popupMenuHandler
+            popupMenuHandler,
+            buildConfigWrapper,
         )
 
         val forced = false

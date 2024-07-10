@@ -1,11 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-08 09:40:32+0000
+Translation-Revision-Date: 2024-06-11 06:56:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Stuknij, aby edytować</string>
+    <string name="voice_to_content_permissions_required_msg">Aby nagrywać dźwięk, aplikacja potrzebuje pozwolenia na dostęp do mikrofonu. Wcześniej odmówiono. Włącz uprawnienia mikrofonu w ustawieniach aplikacji, aby nagrywać.</string>
+    <string name="voice_to_content_permissions_required_title">Wymagana zgoda na nagrywanie dźwięku</string>
+    <string name="permission_access_media_location">Położenie plików</string>
+    <string name="in_app_update_restart">Uruchom ponownie</string>
+    <string name="in_app_update_available">Aktualizacja pobrana. Uruchom ponownie aby ją zastosować.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Wpis z audio.</string>
+    <string name="reader_tags_feed_action_label_open_menu">otwórz menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">usuń polubienie wpisu</string>
+    <string name="reader_tags_feed_action_label_like_post">polub wpis</string>
+    <string name="reader_tags_feed_action_label_open_blog">otwórz blog</string>
+    <string name="reader_tags_feed_action_label_open_post">otwórz wpis</string>
+    <string name="reader_tags_feed_error_retry">Spróbuj ponownie</string>
+    <string name="reader_tags_feed_no_content_error_description">Nie znaleziono żadnego  wpisu z tagiem %s</string>
+    <string name="reader_tags_feed_loading_error_description">Nie można było wczytać wpisów z tym tagiem</string>
+    <string name="reader_tags_feed_error_title">Nie znaleziono wpisów dla %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Więcej z %s</string>
+    <string name="reader_tags_display_name">Tagi</string>
+    <string name="reader_announcement_card_reading_preferences_description">Wybierz pasujące ci kolory i czcionki. Podczas czytania wpisu kliknij ikonę AA na górze ekranu.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Ustawienia czytania</string>
+    <string name="reader_announcement_card_tags_stream_description">Aby uzyskać dostęp do zawartości obserwowanych tagów kliknij listę rozwijaną na górze je wybierz.</string>
+    <string name="reader_announcement_card_tags_stream_title">Tagi stream</string>
+    <string name="reader_announcement_card_title">Nowość w aplikacji Reader</string>
+    <string name="reader_dropdown_menu_tags">Twoje tagi</string>
+    <string name="no_connection_error_description">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
+    <string name="no_connection_error_title">Nie można teraz załadować wybranej treści</string>
+    <string name="stats_subscribers_marker_view_plural">Subskrybenci</string>
+    <string name="stats_subscribers_marker_view_singular">Subskrybent</string>
+    <string name="stats_view_subscriber_growth">Wzrost liczby subskrybentów</string>
+    <string name="role_subscriber">Subskrybent</string>
+    <string name="stats_traffic">Ruch</string>
+    <string name="gutenberg_native_font_size_1_s">Rozmiar liter, %1$s</string>
+    <string name="gutenberg_native_file_type_not_supported_as_a_media_file">Plik nie jest obsługiwany jako plik mediów.</string>
+    <string name="media_cannot_be_started">Nie można odtworzyć pliku mediów. Spróbuj ponownie później</string>
+    <string name="domains_just_search_for_a_domain_button">Wyszukaj domenę</string>
+    <string name="domains_site_domain_never_expires">Nigdy nie wygasa</string>
+    <string name="domains_site_other_domains">Pozostałe domeny dla %s</string>
+    <string name="domains_site_domain">%s</string>
+    <string name="domains_upgrade_to_a_plan_button">Uaktualnij do planu</string>
+    <string name="domains_upgrade_to_plan_caption">Uzyskaj bezpłatną roczną rejestrację domeny lub transfer z dowolnym płatnym planem rocznym.</string>
+    <string name="domains_free_domain">Twoja darmowa subdomena na WordPress.com</string>
+    <string name="domains_primary_site_domain_chip">Domena główna</string>
+    <string name="new_domain_search_screen_transfer_domain_button">Transferuj domenę</string>
+    <string name="purchase_domain_screen_error_title">Błąd</string>
+    <string name="new_domain_search_screen_list_item_regular_price">%s / rocznie</string>
+    <string name="post_status_post_edited">Edytowano</string>
+    <string name="personalization_screen_cards_tab_title">Zakładki</string>
+    <string name="domain_management_purchase_a_domain">Kup domenę</string>
+    <string name="site_creation_plans_selection_title">Wybierz plan</string>
+    <string name="reader_secondary_bookmark">Zapisz</string>
+    <string name="reader_secondary_bookmarked">Zapisano</string>
+    <string name="reader_discover_recommended_header_new">Może polubisz</string>
+    <string name="pages_no_site_something_went_wrong">Coś poszło nie tak. Proszę spróbować później.</string>
     <string name="missing_splits_dialog_button">ZAMKNIJ</string>
     <string name="gutenberg_native_insert_video_block">Wstaw blok filmu</string>
     <string name="gutenberg_native_insert_image_block">Wstaw blok obrazka</string>
@@ -59,6 +112,7 @@ Language: pl
     <string name="account_closure_dialog_error_atomic_site">Konto użytkownika nie może zostać natychmiast zamknięte, ponieważ ma aktywne zakupy. Skontaktuj się z naszym zespołem pomocy technicznej, aby dokończyć jego usuwanie.</string>
     <string name="account_closure_dialog_error_unauthorized">Brak uprawnień do zamknięcia konta.</string>
     <string name="account_closure_dialog_title">Potwierdź zamknięcie konta…</string>
+    <string name="account_closure_dialog_error_title">Nie możesz automatycznie zamknąć konta!</string>
     <string name="account_closure_dialog_message">Aby potwierdzić, wprowadź ponownie swoją nazwę użytkownika przed zamknięciem konta.</string>
     <string name="close_account">Zamknij konto</string>
     <string name="sharing_twitter_deprecation_notice_find_out_more">Dowiedz się więcej</string>
@@ -158,7 +212,6 @@ Language: pl
     <string name="me_btn_scan_login_code">Zeskanuj kod logowania</string>
     <string name="stats_insights_likes_guide_card">⭐️ Twój ostatni wpis %1$s otrzymał %2$s polubień.</string>
     <string name="stats_most_popular_percent_views_empty">Za mało aktywności. Sprawdź później, gdy witryna będzie miała więcej odwiedzających!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% wszystkich obserwujących</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="quick_start_list_upload_media_title">Prześlij zdjęcia lub filmy</string>
     <string name="pages_copy_link">Skopiuj odnośnik</string>
@@ -177,7 +230,6 @@ Language: pl
     <string name="stats_published_minutes_ago">Opublikowano %1$d minut temu</string>
     <string name="stats_published_a_minute_ago">Opublikowano minutę temu</string>
     <string name="stats_published_seconds_ago">Opublikowano sekundy temu</string>
-    <string name="stats_view_total_followers">Łączna liczba obserwujących</string>
     <string name="stats_view_total_comments">Łączna liczba komentarzy</string>
     <string name="blogging_prompts_notification_dismiss">Zamknij</string>
     <string name="blogging_prompts_onboarding_got_it">Rozumiem</string>
@@ -385,11 +437,6 @@ Language: pl
     <string name="gutenberg_native_embed_options">Opcje zagnieżdzania</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Stuknij dwukrotnie aby podejrzeć opcje zagnieżdzania.</string>
     <string name="quick_start_list_create_site_message">Utworzono witrynę! Ukończ kolejne zadanie.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s blogujących &lt;/a&gt; lubi to.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 blogujący&lt;/a&gt; lubi to.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Ty oraz %1$s blogujących&lt;/a&gt; lubi to.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Ty oraz 1 blogujący&lt;/a&gt; lubicie to.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Ty&lt;/a&gt; to polubiłeś.</string>
     <string name="domains_free_plan_get_your_domain_title">Zdobądź własną domenę</string>
     <string name="recommend_app_generic_get_template_error">Nieznany błąd podczas pobierania rekomendowanego szablonu aplikacji</string>
     <string name="gutenberg_native_line_height">Interlinia</string>
@@ -601,7 +648,6 @@ Language: pl
     <string name="gutenberg_native_add_button_text">Dodaj tekst przycisku</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Odrzuć</string>
     <string name="activity_log_backup_download_notice_download_action">Pobierz</string>
-    <string name="stories_intro_main_subtitle">Nowy sposób tworzenia i publikacji angażujących treści na twojej witrynie.</string>
     <string name="threat_fix_all_confirmation_message_plural">Proszę o potwierdzenie, że chcesz usunąć wszyskie %s aktywne/ych zagrożeń/nia.</string>
     <string name="threat_fix_all_status_success_message_plural">Zagrożenia zostały z powodzeniem usunięte.</string>
     <string name="scan_fixing_threats_description_plural">Pracujemy nad usunięciem tych zagrożeń. Możesz używać swojej witryny jak dotychczas i w dowolnym czasie sprawdzać nasze postępy.</string>
@@ -676,6 +722,7 @@ Language: pl
     <string name="people_optional_custom_message_helper_text">Opcjonalne: wprowadź własną wiadomość, która zostanie wysłana wraz z zaproszeniem.</string>
     <string name="gutenberg_native_audio_caption_s">Podpis pliku audio. %s</string>
     <string name="gutenberg_native_audio_caption_empty">Podpis pliku audio. Pusty</string>
+    <string name="gutenberg_native_add_audio">Dodaj plik audio</string>
     <string name="people_learn_more_about_roles">Dowiedz się więcej o rolach</string>
     <string name="threat_found_header">Znaleziono</string>
     <string name="threat_status_fixed">Naprawiono</string>
@@ -756,7 +803,6 @@ Language: pl
     <string name="request_failed_message">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować później.</string>
     <string name="gutenberg_native_change_block_position">Zmień pozycję bloku</string>
     <string name="gutenberg_native_move_to_bottom">Przenieś na dół</string>
-    <string name="label_control_upload">Prześlij</string>
     <string name="jetpack_icon_content_description">ikona</string>
     <string name="backup_download_complete_info">Przesłaliśmy również odnośnik do twojego pliku na adres email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Przycisk udostępniania łącza</string>
@@ -850,7 +896,6 @@ Language: pl
     <string name="dialog_confirm_copy_local_edit_button">Najpierw edytuj wpis</string>
     <string name="dialog_confirm_copy_local_title">Konflikt synchronizacji wpisu</string>
     <string name="button_copy">Powiel</string>
-    <string name="toast_edit_story_update_in_progress_title">Relacja jest zapisywana, proszę czekać…</string>
     <string name="gutenberg_native_file_block_settings">Ustawienia bloku pliku</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Nie można było zapisać plików.\nStuknij aby wejść w opcje.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Nie można było przesłać plików.\nStuknij aby wejść w opcje.</string>
@@ -868,21 +913,8 @@ Language: pl
     <string name="activity_log_activity_type_filter_apply">Zastosuj</string>
     <string name="reader_follow_comments_bad_format_response">Otrzymano nieprawidłową odpowiedź</string>
     <string name="reader_follow_comments_null_response">Nie otrzymano żadnej odpowiedzi</string>
-    <string name="dialog_edit_story_unsupported_format_title">Pliki GIF nie są obsługiwane</string>
-    <string name="dialog_edit_story_unrecoverable_title">Nie można edytować Relacji</string>
-    <string name="dialog_edit_story_unavailable_title">Nie można edytować Relacji</string>
-    <string name="dialog_edit_story_unrecoverable_message">Nie można było odnaleźć w witrynie mediów dla tej relacji</string>
-    <string name="dialog_edit_story_unavailable_message">Nie można było wczytać mediów dla tej Relacji. Sprawdź swoje połączenie internetowe i spróbuj ponownie za chwilę.</string>
-    <string name="dialog_edit_story_limited_title">Ograniczone edytowanie Relacji</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media zostały usunięte. Proszę spróbować odtworzyć relację.</string>
-    <string name="color_picker_label_background">Tło</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Odrzuć</string>
-    <string name="dialog_discard_story_message_edit">Wszelkie zmiany nie zostaną zapisane</string>
-    <string name="dialog_discard_story_title_edit">Odrzucić zmiany?</string>
     <string name="label_done_button">Gotowe</string>
-    <string name="label_next_button">Następny</string>
-    <string name="delete_button_alt">Usuń</string>
     <string name="hpp_retry_error">Sprawdź swoje połączenie internetowe i spróbuj ponownie.</string>
     <string name="hpp_error_subtitle">Stuknij ponów kiedy będziesz spowrotem online</string>
     <string name="hpp_error_title">Szablony nie są dostępne w trybie offline</string>
@@ -892,6 +924,7 @@ Language: pl
     <string name="reader_discover_no_posts_title">Brak ostatnich wpisów</string>
     <string name="reader_discover_empty_title">Witaj!</string>
     <string name="scan">Skanuj</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Spróbuj zastosować więcej tagów, aby poszerzyć wyszukiwanie</string>
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; odpowiedział na twój wpis</string>
     <string name="login_prologue_third_subtitle_two">Twoja witryna otrzymała dziś &lt;b&gt;50 polubień&lt;/b&gt;</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; polubił(a) twój wpis</string>
@@ -927,17 +960,9 @@ Language: pl
     <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Z każdym wydaniem pracujemy nad dodawaniem większej ilości bloków.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierane</string>
-    <string name="stories_intro_create_story_post_label">Utwórz wpis z relacją</string>
     <string name="gutenberg_native_help_button">Przycisk wsparcia</string>
     <string name="gutenberg_native_edit_using_web_editor">Edytuj używając edytora web</string>
     <string name="gutenberg_native_choose_images">Wybierz obrazki</string>
-    <string name="stories_intro_description_second">Są publikowane jako nowe wpisy na twoim blogu, dzięki czemu nie ominą twojej widowni.</string>
-    <string name="stories_intro_title_second">Wpisy z relacjami nie znikają</string>
-    <string name="stories_intro_description_first">Połącz zdjęcia, filmy i tekst aby utworzyć interesujące wpisy z relacjami.</string>
-    <string name="stories_intro_image_caption_second">Przykładowy tytuł relacji</string>
-    <string name="stories_intro_image_caption_first">Jak utworzyć wpis z relacją</string>
-    <string name="stories_intro_main_title">Wprowadzamy wpisy z relacjami</string>
-    <string name="stories_intro_title_first">Nowe relacje są dla każdego</string>
     <string name="mlp_notice_blank_page_created">Utworzono pustą stronę</string>
     <string name="mlp_notice_page_created">Utworzono stronę</string>
     <string name="media_insert_failed">Nie udało się osadzić plików mediów.</string>
@@ -946,6 +971,7 @@ Language: pl
     <string name="reader_label_toolbar_back">Powrót</string>
     <string name="reader_discover_empty_button_text">Rozpocznij</string>
     <string name="reader_post_details_header_by_author_name">Autor</string>
+    <string name="reader_discover_empty_subtitle_follow">Obserwuj tagi aby odkryć nowe blogi</string>
     <string name="stats_referrer_popup_unmark_as_spam">Oznacz jako Nie Spam</string>
     <string name="stats_referrer_popup_menu_open_website">Otwórz witrynę</string>
     <string name="media_uploading_gif_library_photo">Przesyłanie plików gif</string>
@@ -958,15 +984,8 @@ Language: pl
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
     <string name="suggestion_no_connection">Brak połączenia internetowego.\nSugestie nie są dostępne.</string>
-    <string name="typeface_label_pacifico">Zabawna</string>
-    <string name="typeface_label_nunito">Codzienna</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">wybrano %s</string>
-    <string name="toast_capture_operation_permission_needed">Aby nagrywać filmy, musisz nadać aplikacji uprawnienia do nagrywania dźwięku</string>
-    <string name="typeface_label_oswald">Silne</string>
-    <string name="typeface_label_space_mono">Nowoczesny</string>
-    <string name="typeface_label_shrikhand">Półgruby</string>
-    <string name="typeface_label_libre_baskerville">Klasyczny</string>
     <string name="login_get_link_by_email">Otrzymaj odnośnik do zalogowania przez email</string>
     <string name="permission_microphone">Mikrofon</string>
     <string name="comment_unable_to_show_error">Nie można było wyświetlić tego komentarza</string>
@@ -990,68 +1009,15 @@ Language: pl
     <string name="gutenberg_native_page_title_empty">Tytuł strony. Pusty</string>
     <string name="toast_error_playing_video">Podczas odtwarzania filmu wystąpił błąd</string>
     <string name="camera_error">To urządzenie nie wspiera API Camera2.</string>
-    <string name="toast_error_saving_video">Nie można było zapisać filmu</string>
-    <string name="toast_error_saving_image">Błąd zapisu obrazka</string>
-    <string name="toast_capture_operation_in_progress">Operacja w trakcie, spróbuj ponownie</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Sprawdź pamięć</string>
     <string name="gutenberg_native_video_caption_empty">Podpis pod filmem. Pusty</string>
-    <string name="toast_story_page_not_found">Nie znaleziono slajdu Relacji</string>
-    <string name="dialog_insufficient_device_storage_error_title">Niewystarczająca ilość pamięci w urządzeniu</string>
-    <string name="dialog_story_saving_error_title_plural">Nie udało się zachować %1$d slajdów</string>
-    <string name="dialog_story_saving_error_title_singular">Nie udało się zachować jednego slajdu</string>
-    <string name="story_saving_failed_quick_action_manage">Zarządzaj</string>
-    <string name="story_saving_failed_message_plural">%1$d slajdów wymaga podjęcia działania</string>
-    <string name="story_saving_failed_message_singular">Jeden slajd wymaga podjęcia działania</string>
-    <string name="dialog_insufficient_device_storage_error_message">Zanim będzie można ją opublikować, musimy zachować Relację na twoim urządzeniu. Przejrzyj ustawienia pamięci i usuń pliki, aby zwolnić miejsce.</string>
-    <string name="dialog_story_saving_error_message">Spróbuj zachować ponownie lub usuń slajdy, a następnie opublikuj swoją Relację jeszcze raz.</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" - opublikowano</string>
-    <string name="story_saving_failed_title">Nie udało się przesłać \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Nie udało się przesłać \"%1$s\"</string>
-    <string name="story_saving_snackbar_started">Przesyłanie \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Pozostało %1$d slajdów</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Pozostał jeden slajd</string>
-    <string name="story_saving_title">Zapisywanie \"%1$s\"…</string>
-    <string name="story_saving_title_several">kilka relacji</string>
-    <string name="dialog_discard_page_ok_button">Usuń</string>
-    <string name="dialog_discard_errored_page_message">Ten slajd nie został jeszcze zachowany. Jeśli go usuniesz, stracisz wszystkie zmiany, które wprowadziłeś.</string>
-    <string name="label_text_color_button">Zmień kolor tekstu</string>
-    <string name="label_text_alignment_button">Zmień wyrównanie tekstu</string>
-    <string name="label_frame_errored">z błędem</string>
-    <string name="label_frame_unselected_border">niewybrany</string>
-    <string name="dialog_discard_story_ok_button">Odrzuć</string>
-    <string name="dialog_discard_story_message">Wpis z relacją nie zostanie zapisany jako szkic.</string>
-    <string name="dialog_discard_story_title">Czy odrzucić ten wpis z relacją?</string>
-    <string name="dialog_discard_page_message">Ten slajd zostanie usunięty z twojej relacji.</string>
-    <string name="dialog_discard_page_title">Czy usunąć slajd z relacji?</string>
-    <string name="label_frame_selected_border">wybrano</string>
-    <string name="story_saving_untitled">Nienazwane</string>
-    <string name="label_frame_image">Slajd</string>
     <string name="label_close_button">Zamknij</string>
-    <string name="label_snackbar_share">UDOSTĘPNIJ</string>
-    <string name="label_snackbar_loop_frame_saved">Zapisano w obrazach</string>
-    <string name="label_control_saved">Zapisano</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Odwróć</string>
-    <string name="sound_button_alt">Dźwięk</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="stickers_button_alt">Naklejki</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">kamera z funkcją flip</string>
-    <string name="capture_button_alt">Przechwyć</string>
     <string name="mlp_preview_page">Podgląd</string>
     <string name="mlp_create_page">Utwórz stronę</string>
     <string name="mlp_create_blank_page">Utwórz pustą stronę</string>
     <string name="mlp_choose_layout_subtitle">Zacznij od wybrania układu z szerokiej gamy gotowców lub rozpocznij z pustą stroną.</string>
     <string name="mlp_choose_layout_title">Wybierz układ</string>
     <string name="quick_start_dialog_create_new_post_message_short">Stuknij %1$s Utwórz. %2$s Następnie wybierz &lt;b&gt;Wpis na blogu&lt;/b&gt;</string>
-    <string name="label_share_to">Udostępnij na</string>
     <string name="prepublishing_nudges_story_title_hint">Nadaj tytuł swojej relacji</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Utwórz wpis lub relację</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Utwórz wpis, stronę lub relację</string>
-    <string name="label_control_saving">Zapisywanie</string>
-    <string name="label_saved_icon">Zapisano</string>
-    <string name="label_control_retry">Spróbuj ponownie</string>
-    <string name="label_retry_icon">Spróbuj ponownie</string>
     <string name="photo_picker_choose_file">Wybierz z urządzenia</string>
     <string name="reader_toast_err_page_jump_not_found">Nie można odnaleźć przejścia do linkowanej strony</string>
     <string name="error_media_quota_exceeded_toast">Nie można przesłać pliku.\nNiewystarczająca ilość miejsca.</string>
@@ -1141,9 +1107,11 @@ Language: pl
     <string name="ccpa_privacy_notice_read">Przeczytaj notkę o prywatności CCPA</string>
     <string name="ccpa_privacy_notice_caption">Akt CPA wymaga aby dostarczyć rezydentom Kaliforni dodakowej informacji o danych które pozyskujemy.</string>
     <string name="post_status_post_trashed">W koszu</string>
+    <string name="reader_choose_interests_tags_content_description">Wybierz tagi</string>
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
     <string name="gutenberg_native_move_to_top">Przenieś na górę</string>
     <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
@@ -1195,6 +1163,9 @@ Language: pl
     <string name="copy_link_address">Skopiuj adres odnośnika</string>
     <string name="reader_reblog_error">Nie udało się reblogować</string>
     <string name="whats_new_in_version_title">Co nowego</string>
+    <string name="reader_no_blog_to_reblog_action">Zarządzanie blogami</string>
+    <string name="reader_no_blog_to_reblog_detail">Po utworzeniu bloga WordPress.com możesz ponownie publikować wybrane treści na własnej witrynie.</string>
+    <string name="reader_no_blog_to_reblog_title">Brak dostępnych blogów WordPress.com</string>
     <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
@@ -1257,6 +1228,7 @@ Language: pl
     <string name="editor_page_saved_online">Strona zapisana online</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
+    <string name="gutenberg_native_warning_message">Wiadomość ostrzeżenia</string>
     <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
@@ -1273,7 +1245,6 @@ Language: pl
     <string name="post_list_tab_trashed_posts">W koszu</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowano</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
-    <string name="notifications_tab_title_follows">Obserwuje</string>
     <string name="notifications_tab_title_comments">Komentarze</string>
     <string name="notifications_tab_title_unread_notifications">Nieprzeczytane</string>
     <string name="dlg_cancel_action_dont_trash">Nie usuwaj</string>
@@ -1286,6 +1257,8 @@ Language: pl
     <string name="reader_self_hosted_select_filter">Użyj przycisku filtra aby odnaleźć wpisy dotyczące określonych tematów</string>
     <string name="reader_btn_remove_filter_content_description">Usuń bieżący filtr</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>
+    <string name="reader_bottom_sheet_select_content_description">Wybierz tag lub blog, wyskakujące okno</string>
+    <string name="reader_filter_self_hosted_empty_blogs_list">Zaloguj się do WordPress.com, aby zobaczyć najnowsze wpisy z subskrybowanych blogów</string>
     <string name="gutenberg_native_replace_current_block">Zamień aktualny blok</string>
     <string name="gutenberg_native_add_to_end">Dodaj zakończenie</string>
     <string name="gutenberg_native_add_to_beginning">Dodaj początek</string>
@@ -1395,6 +1368,7 @@ Language: pl
     <string name="gutenberg_native_add_description">Dodaj opis</string>
     <string name="gutenberg_native_add_alt_text">Dodaj tekst alternatywny</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Proszę spróbować ponownie.</string>
+    <string name="gutenberg_native_add_video">Dodaj film</string>
     <string name="reader_empty_saved_posts_content_description">Stuknij przycisk Dodaj do Zapisanych Wpisów aby zapisać wpis na swojej liście. </string>
     <string name="reader_acessibility_list_loaded">\"Lista ma %1$d elementów.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Powiadomienia</string>
@@ -1590,14 +1564,12 @@ Language: pl
     <string name="error_restoring_post">Wystąpił błąd podczas odzyskiwania wpisu</string>
     <string name="post_list_tab_drafts">Szkice</string>
     <string name="stats_insights_annual_site_stats">Roczne statystyki witryny</string>
-    <string name="stats_view_follower_totals">Suma obserwujących</string>
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
     <string name="register_domain">Zarejestruj domenę</string>
     <string name="domain_suggestions_fetch_error">Nie można było wczytać sugestii dla nazwy domeny</string>
     <string name="domain_suggestions_search_hint">Wpisz słowo kluczowe aby uzyskać więcej pomysłów</string>
     <string name="domains_suggestions_empty_list">Nie znaleziono sugestii</string>
     <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Na tej karcie możesz dodawać i organizować najistotniejsze dla siebie trendy.</string>
-    <string name="stats_insights_social">Media społecznościowe</string>
     <string name="stats_item_settings">Ustawienia statystyk</string>
     <string name="post_moving_to_draft">Wpis jest przesuwany do szkiców</string>
     <string name="post_restoring">Wpis jest odzyskiwany</string>
@@ -1757,7 +1729,6 @@ Language: pl
     <string name="stats_insights_latest_post_with_no_engagement">Minęło %1$s od kiedy wpis %2$s został opublikowany. Zwiększ ilość wyświetleń udostępniając swój wpis:</string>
     <string name="stats_insights_all_time_stats">Od początku</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Obserwujący</string>
     <string name="stats_publicize_service_label">Usługa</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_title_label">Tytuł</string>
@@ -1768,8 +1739,6 @@ Language: pl
     <string name="stats_comments_posts_and_pages">Wpisy i strony</string>
     <string name="stats_comments_authors">Autorzy</string>
     <string name="stats_follower_since_label">Od</string>
-    <string name="stats_follower_label">Obserwujący</string>
-    <string name="stats_followers_count_message">Całkowita liczba obserwujących %1$s: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Zarządzaj trendami</string>
@@ -1870,12 +1839,9 @@ Language: pl
     <string name="site_settings_tags_empty_subtitle">Dodaj w tym miejscu najczęściej wykorzystywane tagi tak aby je wygodnie użyć do oznaczenia swoich wpisów</string>
     <string name="sign_out_wpcom_confirm_with_changes">Masz zmiany we wpisach,  które nie zostały wczytanie do twojej witryny.  Wylogowanie spowoduje usunięcie zmian z twojego urządzenia. Czy na pewno wylogować? </string>
     <string name="reader_empty_posts_liked_description">Pojawią się tu wpisy które polubisz</string>
-    <string name="people_empty_list_filtered_followers">Brak obserwujących</string>
     <string name="people_empty_list_filtered_viewers">Brak oglądających</string>
-    <string name="people_empty_list_filtered_email_followers">Brak oglądających przez email</string>
     <string name="people_empty_list_filtered_users">Jeszcze nie ma użytkowników</string>
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
-    <string name="notifications_empty_followers">Brak obserwujących</string>
     <string name="notifications_empty_likes">Brak polubień</string>
     <string name="activity_log_limited_content_on_free_plan">Korzystasz z planu darmowego,  więc zobaczysz tylko ograniczoną liczbę działań w ramach swojej aktywności. </string>
     <string name="activity_log_empty_title">Brak aktywności jak dotąd</string>
@@ -2489,6 +2455,8 @@ Language: pl
     <string name="site_settings_image_quality_hint">Jakość obrazków. Wyższa wartość oznacza lepszą jakość.</string>
     <string name="site_settings_optimize_images_summary">Uaktywnij aby zmienić rozmiar i skompresować obrazki</string>
     <string name="media_upload_state_uploaded">Wysłano</string>
+    <string name="media_encoder_quality_maximum">Maksymalnie</string>
+    <string name="media_encoder_quality_medium">Średnio</string>
     <string name="media_upload_state_deleted">Usunięto</string>
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>
@@ -2546,13 +2514,11 @@ Language: pl
     <string name="preference_open_device_settings">Przejdź do ustawień urządzenia</string>
     <string name="invite_invalid_email">%s: Nieprawidłowy email</string>
     <string name="invite_user_blocked_invites">%s: Użytkownik zablokował zaproszenia</string>
-    <string name="invite_already_following">%s: Już obserwowany</string>
     <string name="invite_already_a_member">%s: Jest już członkiem</string>
     <string name="invite_username_not_found">%s: Użytkownik nie odnaleziony</string>
     <string name="comment_moderated_approved">Komentarz zatwierdzony!</string>
     <string name="like">Lubię</string>
     <string name="timespan_now">teraz</string>
-    <string name="role_follower">Subskrybent</string>
     <string name="role_viewer">Oglądający</string>
     <string name="error_post_my_profile_no_connection">Brak połączenia, nie można zapisać twojego profilu</string>
     <string name="alignment_none">Brak wyrównania</string>
@@ -2560,21 +2526,13 @@ Language: pl
     <string name="alignment_right">Do prawej</string>
     <string name="site_settings_list_editor_action_mode_title">Wybrano %1$d</string>
     <string name="error_fetch_users_list">Nie można pobrać użytkowników witryny</string>
-    <string name="title_follower">Obserwujący</string>
-    <string name="title_email_follower">Obserwujący przez e-mail</string>
     <string name="people_fetching">Pobieranie użytkowników…</string>
     <string name="people_dropdown_item_viewers">Oglądający</string>
-    <string name="people_dropdown_item_email_followers">Obserwujący przez e-mail</string>
-    <string name="people_dropdown_item_followers">Obserwujący</string>
     <string name="people_dropdown_item_team">Zespół</string>
     <string name="invite_message_usernames_limit">Zaproś do 10 adresów email i/lub użytkowników WordPress.com. \nTym, którym będzie potrzebna nazwa użytkownika zostaną przesłane instrukcje jak ją utworzyć.</string>
     <string name="viewer_remove_confirmation_message">Jeśli usuniesz tego oglądającego, nie będzie mógł przejść do tej witryny.\nCzy nadal chcesz usunąć tego oglądającego?</string>
-    <string name="follower_remove_confirmation_message">Jeśli usuniesz tego obserwującego, przestanie on otrzymywać powiadomienia o tej witrynie, chyba że zacznie ponownie obserwować.\nCzy wciąż chcesz usunąć tego obserwującego?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
-    <string name="error_remove_follower">Nie można usunąć obserwującego</string>
     <string name="error_remove_viewer">Nie można usunąć oglądającego</string>
-    <string name="error_fetch_email_followers_list">Nie można pobrać obserwujących witrynę przez e-mail</string>
-    <string name="error_fetch_followers_list">Nie można usunąć obserwujących witrynę</string>
     <string name="editor_failed_uploads_switch_html">Nie udało się przesłać niektórych mediów. Nie możesz przejść do trybu HTML w tym momencie. Usunąć wszystkie błędnie przesłane media i kontynuować?</string>
     <string name="image_thumbnail">Miniaturka obrazka</string>
     <string name="visual_editor">Edytor wizualny</string>
@@ -2680,7 +2638,6 @@ Language: pl
     <string name="site_achievements">Osiągnięcia witryny</string>
     <string name="username_mentions">Wspomniana nazwa użytkow.</string>
     <string name="likes_on_my_posts">Polubienia moich wpisów</string>
-    <string name="site_follows">Obserwowanie witryny</string>
     <string name="likes_on_my_comments">Polubienia moich komentarzy</string>
     <string name="comments_on_my_site">Komentarze na mojej witrynie</string>
     <string name="site_settings_list_editor_summary_other">%d elementów</string>
@@ -2906,7 +2863,6 @@ Language: pl
     <string name="site_picker_create_wpcom">Utwórz witrynę WordPress.com</string>
     <string name="site_picker_edit_visibility">Pokaż/ukryj witryny</string>
     <string name="site_picker_add_self_hosted">Dodaj witrynę z własnym hostingiem</string>
-    <string name="site_picker_add_site">Dodaj nową witrynę</string>
     <string name="site_picker_title">Wybierz witrynę</string>
     <string name="my_site_btn_view_site">Zobacz witrynę</string>
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>
@@ -2954,7 +2910,6 @@ Language: pl
     <string name="stats_view_countries">Kraje</string>
     <string name="stats_likes">Polubienia</string>
     <string name="stats_timeframe_years">Lata</string>
-    <string name="stats_view_followers">Obserwujący</string>
     <string name="stats_views">Wyświetlenia</string>
     <string name="stats_visitors">Odwiedzający</string>
     <string name="ssl_certificate_details">Szczegóły</string>
@@ -3105,7 +3060,6 @@ Language: pl
     <string name="note_reply_successful">Odpowiedź opublikowana</string>
     <string name="new_notifications">%d nowych powiadomień</string>
     <string name="more_notifications">i %d więcej.</string>
-    <string name="follows">Obserwuje</string>
     <string name="sign_in">Zaloguj się</string>
     <string name="loading">Wczytywanie…</string>
     <string name="httpuser">Nazwa użytkownika protokołu HTTP</string>

@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.EditPostActivityConstants;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction;
@@ -50,6 +51,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -96,6 +98,8 @@ public class UploadUtils {
             case UNAUTHORIZED:
                 return isPage ? new UiStringRes(R.string.error_refresh_unauthorized_pages)
                         : new UiStringRes(R.string.error_refresh_unauthorized_posts);
+            case OLD_REVISION:
+                return new UiStringRes(R.string.local_post_is_conflicted);
             case UNSUPPORTED_ACTION:
             case INVALID_RESPONSE:
             case GENERIC_ERROR:
@@ -194,13 +198,13 @@ public class UploadUtils {
                                                           SnackbarSequencer sequencer,
                                                           View.OnClickListener publishPostListener,
                                                           @Nullable OnPublishingCallback onPublishingCallback) {
-        boolean hasChanges = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false);
+        boolean hasChanges = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, false);
         if (!hasChanges) {
             // if there are no changes, we don't need to do anything
             return;
         }
 
-        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivity.EXTRA_UPLOAD_NOT_STARTED, false);
+        boolean uploadNotStarted = data.getBooleanExtra(EditPostActivityConstants.EXTRA_UPLOAD_NOT_STARTED, false);
         if (uploadNotStarted && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can enqueue a request to upload local changes later
             UploadWorkerKt.enqueueUploadWorkRequestForSite(site);
@@ -214,16 +218,16 @@ public class UploadUtils {
             return;
         }
 
-        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
+        boolean hasFailedMedia = data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, post.isPage() ? R.string.editor_page_saved_locally_failed_media
                             : R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
-                         new View.OnClickListener() {
-                             @Override
-                             public void onClick(View v) {
-                                 ActivityLauncher.editPostOrPageForResult(activity, site, post);
-                             }
-                         }, sequencer);
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityLauncher.editPostOrPageForResult(activity, site, post);
+                        }
+                    }, sequencer);
             return;
         }
 
@@ -265,16 +269,16 @@ public class UploadUtils {
                 // if the post is publishable, we offer the PUBLISH button
                 if (uploadNotStarted) {
                     showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
-                                              R.string.button_publish,
-                                              publishPostListener, sequencer);
+                            R.string.button_publish,
+                            publishPostListener, sequencer);
                 } else {
                     if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                         || UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(snackbarAttachView, R.string.editor_uploading_draft, sequencer);
                     } else {
                         showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                                                  R.string.button_publish,
-                                                  publishPostListener, sequencer);
+                                R.string.button_publish,
+                                publishPostListener, sequencer);
                     }
                 }
             } else {
@@ -285,7 +289,7 @@ public class UploadUtils {
                 showSnackbar(snackbarAttachView,
                         post.isPage() ? R.string.editor_page_saved_locally : R.string.editor_post_saved_locally,
                         R.string.button_publish,
-                             publishPostListener, sequencer);
+                        publishPostListener, sequencer);
             } else {
                 if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
                     || UploadService.isPostUploadingOrQueued(post)) {
@@ -294,26 +298,26 @@ public class UploadUtils {
                 } else {
                     showSnackbarSuccessAction(snackbarAttachView,
                             post.isPage() ? R.string.editor_page_saved_online : R.string.editor_post_saved_online,
-                                              R.string.button_publish,
-                                              publishPostListener, sequencer);
+                            R.string.button_publish,
+                            publishPostListener, sequencer);
                 }
             }
         }
     }
 
     public static void showSnackbarError(View view, String message, int buttonTitleRes,
-                                          OnClickListener onClickListener, SnackbarSequencer sequencer) {
+                                         OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(
                         new Info(
-                             view,
-                             new UiStringText(message),
-                             K_SNACKBAR_WAIT_TIME_MS,
-                             true
+                                view,
+                                new UiStringText(message),
+                                K_SNACKBAR_WAIT_TIME_MS,
+                                true
                         ),
                         new Action(
-                             new UiStringRes(buttonTitleRes),
-                             onClickListener
+                                new UiStringRes(buttonTitleRes),
+                                onClickListener
                         ),
                         null,
                         null
@@ -467,19 +471,21 @@ public class UploadUtils {
         return !SiteUtils.isAccessedViaWPComRest(site) || site.getHasCapabilityPublishPosts();
     }
 
-    public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
+    public static void onPostUploadedSnackbarHandler(final Activity activity,
+                                                     View snackbarAttachView,
                                                      boolean isError,
                                                      boolean isFirstTimePublish,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
                                                      SnackbarSequencer sequencer,
-                                                     @Nullable OnPublishingCallback onPublishingCallback) {
+                                                     @Nullable OnPublishingCallback onPublishingCallback,
+                                                     final boolean showRetry) {
         boolean userCanPublish = userCanPublish(site);
         if (isError) {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
-                if (AppPrefs.isAztecEditorEnabled()) {
+                if (AppPrefs.isAztecEditorEnabled() && showRetry) {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
                             new View.OnClickListener() {
                                 @Override
@@ -608,8 +614,9 @@ public class UploadUtils {
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 writePostIntent.putExtra(WordPress.SITE, site);
-                                writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-                                writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_IS_PAGE, false);
+                                writePostIntent.putExtra(EditPostActivityConstants.EXTRA_INSERT_MEDIA,
+                                        mediaListToInsertInPost);
                                 activity.startActivity(writePostIntent);
                             }
                         }, sequencer);
@@ -651,9 +658,22 @@ public class UploadUtils {
     }
 
     public static boolean postLocalChangesAlreadyRemoteAutoSaved(PostImmutableModel post) {
-        return !TextUtils.isEmpty(post.getAutoSaveModified())
-               && DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged())
-                               .before(DateTimeUtils.dateFromIso8601(post.getAutoSaveModified()));
+        // Check if the autoSaveModified field is not empty.
+        boolean isAutoSaveModifiedNotEmpty = !TextUtils.isEmpty(post.getAutoSaveModified());
+
+        // If autoSaveModified is null, return false immediately.
+        if (!isAutoSaveModifiedNotEmpty) {
+            return false;
+        }
+
+        // Parse dates from ISO8601 format.
+        Date dateLocallyChanged = DateTimeUtils.dateFromIso8601(post.getDateLocallyChanged());
+        Date autoSaveModified = DateTimeUtils.dateFromIso8601(post.getAutoSaveModified());
+
+        // Check if dateLocallyChanged is not after autoSaveModified (it is before or the same).
+        boolean isDateLocallyChangedNotAfter = !dateLocallyChanged.after(autoSaveModified);
+
+        return isAutoSaveModifiedNotEmpty && isDateLocallyChangedNotAfter;
     }
 
     public static int cancelPendingAutoUpload(PostModel post, Dispatcher dispatcher) {

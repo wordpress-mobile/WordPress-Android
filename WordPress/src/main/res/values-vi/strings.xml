@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-11-08 05:57:29+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: vi_VN
 -->
 <resources>
@@ -77,7 +77,6 @@ Language: vi_VN
     <string name="stats_published_minutes_ago">Đăng %1$d phút trước</string>
     <string name="stats_published_a_minute_ago">Vừa xong</string>
     <string name="stats_published_seconds_ago">Vừa xong</string>
-    <string name="stats_view_total_followers">Tổng người theo dõi</string>
     <string name="stats_view_total_comments">Tổng bình luận</string>
     <string name="stats_view_total_likes">Tổng lượt thích</string>
     <string name="blogging_prompts_notification_dismiss">Bỏ qua</string>
@@ -330,11 +329,6 @@ Language: vi_VN
     <string name="gutenberg_native_embed_options">Tùy chọn nhúng</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Nhấn hai lần để xem tùy chọn nhúng.</string>
     <string name="quick_start_list_create_site_message">Đã tạo blog! Tiếp tục nhiệm vụ khác.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;%1$s người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;1 người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;Bạn và %1$s người khác&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;Bạn và 1 người&lt;/a&gt; thích bài này.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;Bạn&lt;/a&gt; thích bài này.</string>
     <string name="gutenberg_native_line_height">Khoảng cách dòng</string>
     <string name="domains_free_plan_get_your_domain_title">Tên miền miễn phí</string>
     <string name="recommend_app_generic_get_template_error">Xảy ra lỗi khi tải mẫu ứng dụng đề xuất</string>
@@ -544,7 +538,6 @@ Language: vi_VN
     <string name="jetpack_brute_force_allowlist_title">Luôn cho phép những IP</string>
     <string name="site_settings_denylist_title">Cấm bình luận</string>
     <string name="gutenberg_native_add_button_text">Thêm chữ trên nút</string>
-    <string name="stories_intro_main_subtitle">Một cách mới để viết và đăng nội dung trên blog của bạn.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Bỏ qua</string>
     <string name="activity_log_backup_download_notice_download_action">Tải về</string>
     <string name="threat_fix_all_status_success_message_plural">Đã sửa mối đe dọa xong.</string>
@@ -712,7 +705,6 @@ Language: vi_VN
     <string name="request_failed_message">Xảy ra lỗi khi xử lý yêu cầu. Xin thử lại sau.</string>
     <string name="gutenberg_native_move_to_bottom">Chuyển xuống</string>
     <string name="gutenberg_native_change_block_position">Đổi vị trí khối</string>
-    <string name="label_control_upload">Tải lên</string>
     <string name="jetpack_icon_content_description">Biểu tượng</string>
     <string name="backup_download_complete_info">Chúng tôi cũng sẽ gửi liên kết tải tập tin cho bạn qua email.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Nút chia sẻ liên kết</string>
@@ -813,7 +805,6 @@ Language: vi_VN
     <string name="dialog_confirm_copy_local_message">Bài viết mà bạn sao chép có hai phiên bản đang xung đột bởi vì bạn đã chỉnh sửa nhưng chưa lưu.\nSửa bài viết để hết xung đột hoặc tiếp tục sao chép phiên bản từ ứng dụng này.</string>
     <string name="dialog_confirm_copy_local_title">Lỗi đồng bộ bài viết</string>
     <string name="button_copy">Tạo bản sao</string>
-    <string name="toast_edit_story_update_in_progress_title">Đang lưu story, xin chờ…</string>
     <string name="gutenberg_native_file_name">Tên tập tin</string>
     <string name="gutenberg_native_file_block_settings">Thiết lập khối tập tin</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Tải lên tập tin thất bại.\nNhấn để xem tùy chọn.</string>
@@ -831,23 +822,8 @@ Language: vi_VN
     <string name="reader_follow_comments_null_response">Không nhận được phản hồi</string>
     <string name="activity_log_activity_type_filter_clear">Xóa</string>
     <string name="activity_log_activity_type_filter_apply">Áp dụng</string>
-    <string name="dialog_edit_story_unsupported_format_message">Một hoặc nhiều slide đã không được thêm vào Story bởi vì Story không hỗ trợ ảnh GIF. Xin chọn ảnh tĩnh hoặc video thay thế.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Không hỗ trợ ảnh GIF</string>
-    <string name="dialog_edit_story_unrecoverable_message">Không tìm thấy media của story này.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Không thể sửa Story</string>
-    <string name="dialog_edit_story_unavailable_message">Không thể nạp media cho story này. Kiểm tra kết nối mạng và thử lại sau.</string>
-    <string name="dialog_edit_story_unavailable_title">Không thể sửa Story</string>
-    <string name="dialog_edit_story_limited_message">Story này được chỉnh sửa trên thiết bị khác nên khả năng chỉnh sửa có thể bị giới hạn.</string>
-    <string name="dialog_edit_story_limited_title">Giới hạn chỉnh sửa Story</string>
     <string name="cannot_retry_deleted_media_item_fatal">Media đã bị xóa. Thử tạo lại Story khác.</string>
-    <string name="color_picker_label_background">Nền</string>
-    <string name="color_picker_label_text">Chữ</string>
-    <string name="dialog_discard_story_ok_button_edit">Bỏ qua</string>
-    <string name="dialog_discard_story_message_edit">Những thay đổi sẽ không được lưu.</string>
-    <string name="dialog_discard_story_title_edit">Bỏ qua thay đổi?</string>
     <string name="label_done_button">Xong</string>
-    <string name="label_next_button">Tiếp theo</string>
-    <string name="delete_button_alt">Xóa</string>
     <string name="hpp_choose_error">Xảy ra lỗi khi chọn thiết kế.</string>
     <string name="hpp_retry_error">Kiểm tra kết nối mạng và thử lại.</string>
     <string name="hpp_error_subtitle">Nhấn thử lại khi có mạng trở lại.</string>
@@ -897,14 +873,6 @@ Language: vi_VN
     <string name="gutenberg_native_help_button">Nút trợ giúp</string>
     <string name="gutenberg_native_edit_using_web_editor">Sửa bằng trình chỉnh sửa web</string>
     <string name="gutenberg_native_choose_images">Chọn ảnh</string>
-    <string name="stories_intro_create_story_post_label">Tạo bài Story</string>
-    <string name="stories_intro_description_second">Đây là một dạng bài viết mới trên blog của bạn để độc giả không bỏ sót thứ gì từ bạn.</string>
-    <string name="stories_intro_title_second">Bài Story không biến mất</string>
-    <string name="stories_intro_description_first">Ghép ảnh, video và văn bản để tạo tương tác có thể nhấn vào.</string>
-    <string name="stories_intro_title_first">Story cho tất cả mọi người</string>
-    <string name="stories_intro_image_caption_second">Tựa đề story mẫu</string>
-    <string name="stories_intro_image_caption_first">Cách tạo bài story</string>
-    <string name="stories_intro_main_title">Giới thiệu Bài Story</string>
     <string name="mlp_notice_blank_page_created">Đã tạo trang trống</string>
     <string name="mlp_notice_page_created">Đã tạo trang</string>
     <string name="media_insert_failed">Chèn media thất bại.</string>
@@ -925,13 +893,6 @@ Language: vi_VN
     <string name="gutenberg_native_add_this_link">Thêm liên kết này</string>
     <string name="gutenberg_native_add_this_email_link">Thêm email này</string>
     <string name="suggestion_no_connection">Không có kết nối mạng.\nKhông thể tải đề xuất.</string>
-    <string name="typeface_label_shrikhand">Đậm</string>
-    <string name="typeface_label_space_mono">Hiện đại</string>
-    <string name="typeface_label_pacifico">Phóng khoáng</string>
-    <string name="typeface_label_oswald">Mạnh mẽ</string>
-    <string name="typeface_label_libre_baskerville">Cổ điển</string>
-    <string name="typeface_label_nunito">Thông dụng</string>
-    <string name="toast_capture_operation_permission_needed">Bạn cần mở quyền ghi âm âm thanh ứng dụng để quay video</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">Đã chọn %s</string>
     <string name="login_get_link_by_email">Đăng nhập bằng email</string>
@@ -958,66 +919,13 @@ Language: vi_VN
     <string name="gutenberg_native_page_title_empty">Tựa đề trang. Trống</string>
     <string name="toast_error_playing_video">Xảy ra lỗi khi phát video</string>
     <string name="camera_error">Thiết bị này không hỗ trợ API Camera2.</string>
-    <string name="toast_error_saving_video">Không thể lưu video</string>
-    <string name="toast_error_saving_image">Lỗi khi lưu ảnh</string>
-    <string name="toast_capture_operation_in_progress">Hệ thống đang xử lý, xin thử lại</string>
-    <string name="toast_story_page_not_found">Không tìm thấy slide Story</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Xem dung lượng lưu trữ</string>
-    <string name="dialog_insufficient_device_storage_error_message">Chúng tôi cần lưu Story trên thiết bị của bạn trước đăng. Xem lại thiết lập dung lượng lưu trữ và xóa bớt tập tin để có thêm dung lượng.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Dung lượng thiết bị không đủ</string>
-    <string name="dialog_story_saving_error_message">Thử lưu lại hoặc xóa slide, sau đó đăng Story lại lần nữa.</string>
-    <string name="dialog_story_saving_error_title_plural">Không thể lưu %1$d slide</string>
-    <string name="dialog_story_saving_error_title_singular">Không thể lưu 1 slide</string>
-    <string name="story_saving_failed_quick_action_manage">Quản lý</string>
-    <string name="story_saving_failed_message_plural">Yêu cầu hành động trên %1$d slide</string>
-    <string name="story_saving_failed_message_singular">Yêu cầu hành động trên 1 slide</string>
-    <string name="story_saving_failed_title">Không thể tải lên \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Không thể tải lên \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">Đã đăng \"%1$s\"</string>
-    <string name="story_saving_snackbar_started">Đang tải lên \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Còn lại %1$d slide</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Còn lại 1 slide</string>
-    <string name="story_saving_title_several">nhiều story</string>
-    <string name="story_saving_title">Đang lưu \"%1$s\"…</string>
-    <string name="story_saving_untitled">Chưa có tựa đề</string>
-    <string name="dialog_discard_story_ok_button">Hủy</string>
-    <string name="dialog_discard_story_message">Story của bạn sẽ không được lưu thành nháp.</string>
-    <string name="dialog_discard_story_title">Hủy story?</string>
-    <string name="dialog_discard_page_ok_button">Xóa</string>
-    <string name="dialog_discard_errored_page_message">Chưa lưu slide này. Nếu bạn xóa slide, những sửa đổi trên đó sẽ bị mất hết.</string>
-    <string name="dialog_discard_page_message">Slide này sẽ bị xóa khỏi story.</string>
-    <string name="dialog_discard_page_title">Xóa slide story?</string>
-    <string name="label_text_color_button">Đổi màu chữ</string>
-    <string name="label_text_alignment_button">Đổi căn lề</string>
-    <string name="label_frame_errored">có lỗi</string>
-    <string name="label_frame_selected_border">đã chọn</string>
-    <string name="label_frame_unselected_border">bỏ chọn</string>
-    <string name="label_frame_image">Slide</string>
-    <string name="label_retry_icon">Thử lại</string>
-    <string name="label_saved_icon">Đã lưu</string>
     <string name="label_close_button">Đóng</string>
-    <string name="label_share_to">Chia sẻ tới</string>
-    <string name="label_snackbar_share">CHIA SẺ</string>
-    <string name="label_snackbar_loop_frame_saved">Lưu thành hình ảnh</string>
-    <string name="label_control_retry">Thử lại</string>
-    <string name="label_control_saved">Đã lưu</string>
-    <string name="label_control_saving">Đang lưu</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Lật</string>
-    <string name="sound_button_alt">Âm thanh</string>
-    <string name="text_button_alt">Văn bản</string>
-    <string name="stickers_button_alt">Sticker</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">Lật camera</string>
-    <string name="capture_button_alt">Quay</string>
     <string name="mlp_preview_page">Xem trước</string>
     <string name="mlp_create_page">Tạo trang</string>
     <string name="mlp_create_blank_page">Tạo trang trống</string>
     <string name="mlp_choose_layout_subtitle">Bắt đầu bằng cách chọn một trong những bố cục cho sẵn. Hoặc tạo một trang trống.</string>
     <string name="mlp_choose_layout_title">Chọn bố cục</string>
     <string name="prepublishing_nudges_story_title_hint">Đặt tựa đề story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Tạo bài viết hoặc story</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Tạo bài viết, trang hoặc story</string>
     <string name="quick_start_dialog_create_new_post_message_short">Nhấn %1$s Tạo. %2$s Chọn tiếp &lt;b&gt;Bài viết&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Chọn từ thiết bị</string>
     <string name="my_site_bottom_sheet_add_story">Story</string>
@@ -1239,7 +1147,6 @@ Language: vi_VN
     <string name="post_list_tab_published_posts">Đã đăng</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Chưa kết nối</string>
     <string name="notifications_tab_title_likes">Lượt thích</string>
-    <string name="notifications_tab_title_follows">Theo dõi</string>
     <string name="notifications_tab_title_comments">Bình luận</string>
     <string name="notifications_tab_title_unread_notifications">Chưa đọc</string>
     <string name="dlg_cancel_action_dont_trash">Đừng cho vào thùng rác</string>
@@ -1555,9 +1462,7 @@ Language: vi_VN
     <string name="error_restoring_post">Xảy ra lỗi khi khôi phục bài viết</string>
     <string name="backdated_for">Lùi ngày: %s</string>
     <string name="stats_insights_management_title">Chỉ xem những số liệu liên quan. Thêm hoặc sắp xếp ở dưới.</string>
-    <string name="stats_insights_social">MXH</string>
     <string name="stats_insights_annual_site_stats">Số liệu thường niên</string>
-    <string name="stats_view_follower_totals">Tổng số người theo dõi</string>
     <string name="domain_suggestions_fetch_error">Không thể tải gợi ý tên miền</string>
     <string name="domain_suggestions_search_hint">Nhập một từ khóa để có thêm ý tưởng</string>
     <string name="domains_suggestions_empty_list">Không có gợi ý</string>
@@ -1718,7 +1623,6 @@ Language: vi_VN
     <string name="stats_insights_tags_and_categories">Thẻ và Chuyên mục</string>
     <string name="stats_insights_all_time_stats">Mọi lúc</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Người theo dõi</string>
     <string name="stats_publicize_service_label">Dịch vụ</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Lượt xem</string>
@@ -1731,8 +1635,6 @@ Language: vi_VN
     <string name="stats_comments_posts_and_pages">Bài viết và trang</string>
     <string name="stats_comments_authors">Người gửi</string>
     <string name="stats_follower_since_label">Từ</string>
-    <string name="stats_follower_label">Người theo dõi</string>
-    <string name="stats_followers_count_message">Số người theo dõi %1$s: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Quản lý số liệu</string>
@@ -1830,13 +1732,10 @@ Language: vi_VN
     <string name="sign_out_wpcom_confirm_with_no_changes">Đăng xuất WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Những thay đổi với bài viết chưa được cập nhật trên blog của bạn. Đăng xuất sẽ khiến những thay đổi đó biến mất. Vẫn đăng xuất?</string>
     <string name="people_empty_list_filtered_viewers">Chưa có độc giả</string>
-    <string name="people_empty_list_filtered_email_followers">Chưa có người theo dõi bằng email</string>
-    <string name="people_empty_list_filtered_followers">Chưa có người theo dõi</string>
     <string name="people_empty_list_filtered_users">Chưa có thành viên</string>
     <string name="reader_empty_posts_liked_description">Bài viết bạn thích sẽ xuất hiện ở đây</string>
     <string name="reader_empty_posts_liked_title">Chưa có bài viết được thích</string>
     <string name="notifications_empty_likes">Chưa có lượt thích</string>
-    <string name="notifications_empty_followers">Chưa có người theo dõi</string>
     <string name="activity_log_limited_content_on_free_plan">Vì bạn đang dùng gói miễn phí nên sẽ bị hạn chế xem lại hoạt động.</string>
     <string name="activity_log_empty_subtitle">Khi bạn cập nhật blog, nó sẽ xuất hiện ở đây</string>
     <string name="activity_log_empty_title">Chưa có hoạt động</string>
@@ -2503,35 +2402,25 @@ Language: vi_VN
     <string name="preference_open_device_settings">Thông tin ứng dụng</string>
     <string name="invite_invalid_email">%s: Email không hợp lệ</string>
     <string name="invite_user_blocked_invites">%s: Người dùng đã chặn thư mời</string>
-    <string name="invite_already_following">%s: Đã theo dõi</string>
     <string name="invite_already_a_member">%s: Đã là thành viên</string>
     <string name="invite_username_not_found">%s: Không tìm thấy người dùng</string>
     <string name="comment_moderated_approved">Đã duyệt bình luận!</string>
     <string name="like">Thích</string>
     <string name="timespan_now">vừa xong</string>
     <string name="role_viewer">Độc giả</string>
-    <string name="role_follower">Người theo dõi</string>
     <string name="error_post_my_profile_no_connection">Không có kết nối, không thể lưu hồ sơ của bạn</string>
     <string name="alignment_right">Phải</string>
     <string name="alignment_left">Trái</string>
     <string name="alignment_none">Không</string>
     <string name="site_settings_list_editor_action_mode_title">Đã chọn %1$d</string>
     <string name="error_fetch_users_list">Không thể tải người dùng trên blog</string>
-    <string name="title_email_follower">Người theo dõi qua email</string>
-    <string name="title_follower">Người theo dõi</string>
     <string name="people_fetching">Đang tải người dùng…</string>
     <string name="people_dropdown_item_viewers">Độc giả</string>
-    <string name="people_dropdown_item_email_followers">Người theo dõi qua email</string>
-    <string name="people_dropdown_item_followers">Người theo dõi</string>
     <string name="people_dropdown_item_team">Đội ngũ</string>
     <string name="invite_message_usernames_limit">Mời tối đa 10 địa chỉ email hoặc tên người dùng WordPress.com. Những người chưa có tên người dùng sẽ được gửi hướng dẫn cách tạo tên người dùng.</string>
     <string name="viewer_remove_confirmation_message">Nếu bạn chặn độc giả này, họ sẽ không thể vào thăm blog này.\n\nBạn vẫn muốn thực hiện chứ?</string>
-    <string name="follower_remove_confirmation_message">Nếu xóa, người theo dõi này sẽ không được nhận thông báo về blog cho tới khi họ theo dõi lại.\n\nBạn vẫn muốn xóa người theo dõi này?</string>
     <string name="follower_subscribed_since">Từ %1$s</string>
     <string name="error_remove_viewer">Không thể chặn độc giả</string>
-    <string name="error_remove_follower">Không thể xóa người theo dõi</string>
-    <string name="error_fetch_email_followers_list">Không thể tải danh sách người theo dõi qua email</string>
-    <string name="error_fetch_followers_list">Không thể tải danh sách người theo dõi</string>
     <string name="editor_failed_uploads_switch_html">Một số media tải lên đã bị lỗi. Bạn không thể chuyển sang chế độ HTML \n      trong tình huống này. Xóa những media tải lên bị lỗi và tiếp tục?</string>
     <string name="image_thumbnail">Hình thu nhỏ Ảnh</string>
     <string name="visual_editor">Trình biên tập trực quan</string>
@@ -2636,7 +2525,6 @@ Language: vi_VN
     <string name="replies_to_my_comments">Lượt trả lời bình luận của tôi</string>
     <string name="username_mentions">Lượt nhắc tên người dùng</string>
     <string name="site_achievements">Thành tích của blog</string>
-    <string name="site_follows">Lượt theo dõi blog</string>
     <string name="likes_on_my_posts">Lượt thích bài viết</string>
     <string name="likes_on_my_comments">Lượt thích bình luận</string>
     <string name="comments_on_my_site">Bình luận trên blog</string>
@@ -2862,7 +2750,6 @@ Language: vi_VN
     <string name="site_picker_cant_hide_current_site">Không ẩn được \"%s\" vì đó là blog hiện tại</string>
     <string name="site_picker_create_wpcom">Tạo blog với WordPress.com</string>
     <string name="site_picker_add_self_hosted">Thêm trang self-host</string>
-    <string name="site_picker_add_site">Tạo blog mới</string>
     <string name="site_picker_edit_visibility">Hiện/Ẩn blog</string>
     <string name="site_picker_title">Chọn Blog</string>
     <string name="my_site_btn_view_site">Xem blog</string>
@@ -2905,7 +2792,6 @@ Language: vi_VN
     <string name="stats_followers_minutes">%1$d phút</string>
     <string name="stats_followers_a_minute_ago">1 phút trước</string>
     <string name="stats_followers_seconds_ago">giây trước</string>
-    <string name="stats_view_followers">Người theo dõi</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Bài viết &amp; Trang</string>
     <string name="stats_view_countries">Quốc gia</string>
@@ -3061,7 +2947,6 @@ Language: vi_VN
     <string name="manage">Quản lý</string>
     <string name="more_notifications">và %d thông báo nữa.</string>
     <string name="new_notifications">%d thông báo mới</string>
-    <string name="follows">Lượt theo dõi</string>
     <string name="note_reply_successful">Đã gửi bình luận</string>
     <string name="sign_in">Đăng nhập</string>
     <string name="loading">Đang tải…</string>

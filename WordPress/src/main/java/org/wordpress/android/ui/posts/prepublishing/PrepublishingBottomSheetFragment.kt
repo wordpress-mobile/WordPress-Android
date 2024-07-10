@@ -211,11 +211,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> {
-                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-                    "arguments can't be null."
-                }
                 Pair(
-                    PrepublishingHomeFragment.newInstance(isStoryPost),
+                    PrepublishingHomeFragment.newInstance(),
                     PrepublishingHomeFragment.TAG
                 )
             }
@@ -226,23 +223,16 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             )
 
             TAGS -> {
-                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-                    "arguments can't be null."
-                }
                 Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site),
                     PrepublishingTagsFragment.TAG
                 )
             }
 
             CATEGORIES -> {
-                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-                    "arguments can't be null."
-                }
                 Pair(
                     PrepublishingCategoriesFragment.newInstance(
                         navigationTarget.site,
-                        isStoryPost,
                         navigationTarget.bundle
                     ),
                     PrepublishingCategoriesFragment.TAG
@@ -250,13 +240,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
 
             ADD_CATEGORY -> {
-                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
-                    "arguments can't be null."
-                }
                 Pair(
                     PrepublishingAddCategoryFragment.newInstance(
                         navigationTarget.site,
-                        isStoryPost,
                         navigationTarget.bundle
                     ),
                     PrepublishingAddCategoryFragment.TAG
@@ -367,15 +353,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
-        const val IS_STORY_POST = "prepublishing_bottom_sheet_is_story_post"
 
         @JvmStatic
-        fun newInstance(site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
+        fun newInstance(site: SiteModel, isPage: Boolean) =
             PrepublishingBottomSheetFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(SITE, site)
                     putBoolean(IS_PAGE, isPage)
-                    putBoolean(IS_STORY_POST, isStoryPost)
                 }
             }
     }

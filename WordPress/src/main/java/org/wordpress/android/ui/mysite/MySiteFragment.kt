@@ -38,8 +38,10 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureFullScreenOverlayFr
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalOverlayUtil
 import org.wordpress.android.ui.jetpackoverlay.individualplugin.WPJetpackIndividualPluginFragment
 import org.wordpress.android.ui.jetpackplugininstall.fullplugin.onboarding.JetpackFullPluginInstallOnboardingDialogFragment
-import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.AddSiteHandler
+import org.wordpress.android.ui.main.ChooseSiteActivity
 import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
@@ -49,7 +51,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.posts.BasicDialogViewModel
-import org.wordpress.android.ui.posts.EditPostActivity
+import org.wordpress.android.ui.posts.EditPostActivityConstants
 import org.wordpress.android.ui.posts.PostListType
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.posts.QuickStartPromptDialogFragment
@@ -91,7 +93,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     TextInputDialogFragment.Callback,
     QuickStartPromptClickInterface,
     FullScreenDialogFragment.OnConfirmListener,
-    FullScreenDialogFragment.OnDismissListener {
+    FullScreenDialogFragment.OnDismissListener,
+    OnScrollToTopListener {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -256,9 +259,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 }
             }
             RequestCodes.STORIES_PHOTO_PICKER,
-            RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.handleStoriesPhotoPickerResult(data)
-            }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -279,14 +279,14 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
                 val isNewSite = requestCode == RequestCodes.CREATE_SITE ||
                         data.getBooleanExtra(LoginEpilogueActivity.KEY_SITE_CREATED_FROM_LOGIN_EPILOGUE, false)
                 viewModel.performFirstStepAfterSiteCreation(
-                    data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                    data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = isNewSite
                 )
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                     viewModel.performFirstStepAfterSiteCreation(
-                        data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                        data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                         isNewSite = true
                     )
                 } else {
@@ -295,9 +295,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             }
             RequestCodes.EDIT_LANDING_PAGE -> {
                 viewModel.checkAndStartQuickStart(
-                    data.getBooleanExtra(SitePickerActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
+                    data.getBooleanExtra(ChooseSiteActivity.KEY_SITE_TITLE_TASK_COMPLETED, false),
                     isNewSite = data.getBooleanExtra(
-                        EditPostActivity.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
+                        EditPostActivityConstants.EXTRA_IS_LANDING_EDITOR_OPENED_FOR_NEW_SITE, false
                     )
                 )
             }
@@ -385,7 +385,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     @Suppress("LongMethod")
     private fun MySiteFragmentBinding.setupObservers() {
         viewModel.uiModel.observe(viewLifecycleOwner) { uiModel ->
-            hideRefreshIndicatorIfNeeded()
             when (uiModel) {
                 is State.SiteSelected -> loadData(uiModel)
                 is State.NoSites -> loadEmptyView(uiModel)
@@ -448,18 +447,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             if (quickStartScrollPosition == -1) {
                 quickStartScrollPosition = 0
             }
-            if (quickStartScrollPosition > 0) recyclerView.scrollToPosition(quickStartScrollPosition)
+            recyclerView.scrollToPosition(quickStartScrollPosition)
         }
 
         wpMainActivityViewModel.mySiteDashboardRefreshRequested.observeEvent(viewLifecycleOwner) {
             viewModel.refresh()
         }
-    }
 
-    private fun MySiteFragmentBinding.hideRefreshIndicatorIfNeeded() {
-        swipeRefreshLayout.postDelayed({
-            swipeToRefreshHelper.isRefreshing = viewModel.isRefreshing()
-        }, CHECK_REFRESH_DELAY)
+        viewModel.isRefreshingOrLoading.observe(viewLifecycleOwner) {
+            swipeToRefreshHelper.isRefreshing = it
+        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -541,15 +538,16 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
 
         if (!noSitesView.actionableEmptyView.isVisible) {
             noSitesView.actionableEmptyView.setVisible(true)
-            noSitesView.actionableEmptyView.image.setVisible(state.shouldShowImage)
             viewModel.onActionableEmptyViewVisible()
-            showAvatarSettingsView(state)
         }
+        showAvatarSettingsView(state)
         siteTitle = getString(R.string.my_site_section_screen_title)
     }
 
     private fun MySiteFragmentBinding.showAvatarSettingsView(state: State.NoSites) {
-        if (state.shouldShowAccountSettings) {
+        // For a newly created account, avatar may be null
+        if (state.accountName != null || state.avatarUrl != null){
+            noSitesView.actionableEmptyView.image.setVisible(true)
             noSitesView.avatarAccountSettings.visibility = View.VISIBLE
             noSitesView.meDisplayName.text = state.accountName
             if (state.accountName.isNullOrEmpty()) {
@@ -618,21 +616,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
         is SiteNavigationAction.StartWPComLoginForJetpackStats ->
             ActivityLauncher.loginForJetpackStats(this@MySiteFragment)
-        is SiteNavigationAction.OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
-        is SiteNavigationAction.AddNewStory ->
-            ActivityLauncher.addNewStoryForResult(activity, action.site, action.source)
-        is SiteNavigationAction.AddNewStoryWithMediaIds -> ActivityLauncher.addNewStoryWithMediaIdsForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaIds.toLongArray()
-        )
-        is SiteNavigationAction.AddNewStoryWithMediaUris -> ActivityLauncher.addNewStoryWithMediaUrisForResult(
-            activity,
-            action.site,
-            action.source,
-            action.mediaUris.toTypedArray()
-        )
         is SiteNavigationAction.OpenDomains -> ActivityLauncher.viewDomainsDashboardActivity(
             activity,
             action.site
@@ -654,7 +637,8 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             DomainRegistrationActivity.DomainRegistrationPurpose.DOMAIN_PURCHASE
         )
 
-        is SiteNavigationAction.AddNewSite -> SitePickerActivity.addSite(activity, action.hasAccessToken, action.source)
+        is SiteNavigationAction.AddNewSite ->
+            AddSiteHandler.addSite(requireActivity(), action.hasAccessToken, action.source)
         is SiteNavigationAction.ShowQuickStartDialog -> showQuickStartDialog(
             action.title,
             action.message,
@@ -674,10 +658,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         is SiteNavigationAction.EditScheduledPost ->
             ActivityLauncher.viewCurrentBlogPostsOfType(requireActivity(), action.site, PostListType.SCHEDULED)
 
-        is SiteNavigationAction.OpenStatsInsights -> ActivityLauncher.viewBlogStatsForTimeframe(
+        is SiteNavigationAction.OpenStatsByDay -> ActivityLauncher.viewBlogStatsForTimeframe(
             requireActivity(),
             action.site,
-            StatsTimeframe.INSIGHTS,
+            StatsTimeframe.DAY,
             StatsLaunchedFrom.TODAY_STATS_CARD
         )
 
@@ -869,7 +853,6 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
     companion object {
         @JvmField
         var TAG: String = MySiteFragment::class.java.simpleName
-        private const val CHECK_REFRESH_DELAY = 300L
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val TAG_QUICK_START_DIALOG = "TAG_QUICK_START_DIALOG"
@@ -877,5 +860,9 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
         }
+    }
+
+    override fun onScrollToTop() {
+        binding?.recyclerView?.smoothScrollToPosition(0)
     }
 }

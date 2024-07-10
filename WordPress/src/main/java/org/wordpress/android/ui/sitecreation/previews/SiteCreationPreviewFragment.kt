@@ -18,10 +18,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.R
-import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteCreationFormScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenBinding
 import org.wordpress.android.databinding.SiteCreationPreviewScreenDefaultBinding
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity.Companion.ARG_STATE
 import org.wordpress.android.ui.sitecreation.SiteCreationBaseFormFragment
 import org.wordpress.android.ui.sitecreation.SiteCreationState
@@ -39,6 +39,9 @@ private const val SLIDE_IN_ANIMATION_DURATION = 450L
 @AndroidEntryPoint
 class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     ErrorManagedWebViewClientListener {
+    @Inject
+    lateinit var userAgent: UserAgent
+
     @Inject
     internal lateinit var uiHelpers: UiHelpers
 
@@ -94,6 +97,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     uiHelpers.updateVisibility(sitePreviewWebError, ui.webViewErrorVisibility)
                     uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, ui.shimmerVisibility)
                 }
+                ui.errorTitle?.let { error ->
+                    siteCreationPreviewHeaderItem.sitePreviewTitle.text =
+                        uiHelpers.getTextOfUiString(requireContext(), error)
+                }
             }
         }
     }
@@ -102,7 +109,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.preloadPreview.observe(this) { url ->
             url?.let { urlString ->
                 webView.webViewClient = URLFilteredWebViewClient(urlString, this)
-                webView.settings.userAgentString = WordPress.getUserAgent()
+                webView.settings.userAgentString = userAgent.toString()
                 webView.loadUrl(urlString)
             }
         }

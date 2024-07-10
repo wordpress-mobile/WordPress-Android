@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.times
@@ -64,13 +63,13 @@ class PaginateCommentsUseCaseTest : BaseUnitTest() {
         whenever(paginateCommentsResourceProvider.unrepliedCommentsUtils).thenReturn(unrepliedCommentsUtils)
         whenever(paginateCommentsResourceProvider.networkUtilsWrapper).thenReturn(networkUtilsWrapper)
 
-        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
+        whenever(commentStore.fetchCommentsPage(eq(site), any(), eq(0), any(), any()))
             .thenReturn(testCommentsPayload30)
-        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(30), any(), any()))
+        whenever(commentStore.fetchCommentsPage(eq(site), any(), eq(30), any(), any()))
             .thenReturn(testCommentsPayload60)
-        `when`(commentStore.fetchCommentsPage(eq(site), any(), eq(60), any(), any()))
+        whenever(commentStore.fetchCommentsPage(eq(site), any(), eq(60), any(), any()))
             .thenReturn(testCommentsPayloadLastPage)
-        `when`(commentStore.getCachedComments(eq(site), any(), any()))
+        whenever(commentStore.getCachedComments(eq(site), any(), any()))
             .thenReturn(testCommentsPayload60)
 
         paginateCommentsUseCase = PaginateCommentsUseCase(paginateCommentsResourceProvider)

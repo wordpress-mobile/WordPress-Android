@@ -2,8 +2,8 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="5dp" />
-    <solid android:color="@color/transparent" />
+    <solid android:color="?attr/readerFollowButtonSelectedBackground" />
     <stroke
         android:width="1dp"
-        android:color="@color/reader_following_button_stroke" />
+        android:color="@color/reader_follow_button_selected_stroke_color" />
 </shape>

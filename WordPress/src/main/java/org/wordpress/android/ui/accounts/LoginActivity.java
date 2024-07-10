@@ -56,12 +56,11 @@ import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
-import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.login.LoginPrologueRevampedFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginNoSitesFragment;
 import org.wordpress.android.ui.accounts.login.jetpack.LoginSiteCheckErrorFragment;
-import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface;
@@ -77,7 +76,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.config.ContactSupportFeatureConfig;
-import org.wordpress.android.util.config.LandingScreenRevampFeatureConfig;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
@@ -138,9 +136,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject protected SiteStore mSiteStore;
     @Inject protected ViewModelProvider.Factory mViewModelFactory;
     @Inject BuildConfigWrapper mBuildConfigWrapper;
-
-    @Inject LandingScreenRevampFeatureConfig mLandingScreenRevampFeatureConfig;
-
     @Inject ContactSupportFeatureConfig mContactSupportFeatureConfig;
 
     @Override
@@ -232,11 +227,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     private void loginFromPrologue() {
-        if (mLandingScreenRevampFeatureConfig.isEnabled()) {
-            showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
-        } else {
-            showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
-        }
+        showFragment(new LoginPrologueRevampedFragment(), LoginPrologueRevampedFragment.TAG);
         mIsSmartLockTriggeredFromPrologue = true;
         mIsSiteLoginAvailableFromPrologue = true;
         initSmartLockIfNotFinished(true);
@@ -277,11 +268,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         googleFragment.setRetainInstance(true);
         fragmentTransaction.add(googleFragment, tag);
         fragmentTransaction.commit();
-    }
-
-    private LoginPrologueFragment getLoginPrologueFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(LoginPrologueFragment.TAG);
-        return fragment == null ? null : (LoginPrologueFragment) fragment;
     }
 
     private LoginPrologueRevampedFragment getLoginPrologueRevampedFragment() {
@@ -352,7 +338,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
                 if (newSitesIds.size() > 0) {
                     Intent intent = new Intent();
-                    intent.putExtra(SitePickerActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
+                    intent.putExtra(ChooseSiteActivity.KEY_SITE_LOCAL_ID, newSitesIds.get(0));
                     setResult(Activity.RESULT_OK, intent);
                 } else {
                     AppLog.e(T.MAIN, "Couldn't detect newly added self-hosted site. "
@@ -448,7 +434,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             return;
         }
 
-        if (getLoginPrologueFragment() == null && getLoginPrologueRevampedFragment() == null) {
+        if (getLoginPrologueRevampedFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
             showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
 

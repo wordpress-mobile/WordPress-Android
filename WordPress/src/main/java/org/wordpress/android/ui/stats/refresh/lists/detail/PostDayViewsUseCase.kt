@@ -123,7 +123,7 @@ class PostDayViewsUseCase
         )
     }
 
-    private fun onBarSelected(period: String?) {
+    internal fun onBarSelected(period: String?) {
         if (period != null && period != "empty") {
             val selectedDate = statsDateFormatter.parseStatsDate(DAYS, period)
             selectedDateProvider.selectDate(
@@ -133,7 +133,7 @@ class PostDayViewsUseCase
         }
     }
 
-    private fun onBarChartDrawn(visibleBarCount: Int) {
+    internal fun onBarChartDrawn(visibleBarCount: Int) {
         updateUiState { it.copy(visibleBarCount = visibleBarCount) }
     }
 

@@ -114,11 +114,11 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no campaigns in db + api, when viewmodel start, then should show no campaigns error`() = runTest {
-        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
+        val noCampaigns = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
-        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, 0)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()
@@ -129,10 +129,10 @@ class CampaignListingViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no campaigns in db + api, when click is invoked on create, then navigate to blaze flow`() = runTest {
-        val noCampaigns: Result<NoCampaigns, List<CampaignModel>> = Result.Failure(NoCampaigns)
+        val noCampaigns = Result.Failure(NoCampaigns)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(getCampaignListFromDbUseCase.execute(siteModel)).thenReturn(noCampaigns)
-        whenever(fetchCampaignListUseCase.execute(siteModel, 1)).thenReturn(noCampaigns)
+        whenever(fetchCampaignListUseCase.execute(siteModel, offset = 0)).thenReturn(noCampaigns)
 
         viewModel.start(CampaignListingPageSource.DASHBOARD_CARD)
         advanceUntilIdle()

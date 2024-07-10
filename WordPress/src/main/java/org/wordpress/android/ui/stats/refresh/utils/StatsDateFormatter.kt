@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.network.utils.StatsGranularity.WEEKS
 import org.wordpress.android.fluxc.network.utils.StatsGranularity.YEARS
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
+import org.wordpress.android.util.extensions.enforceWesternArabicNumerals
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DateFormat
 import java.text.ParseException
@@ -23,12 +25,18 @@ import kotlin.math.abs
 private const val STATS_INPUT_FORMAT = "yyyy-MM-dd"
 private const val MONTH_FORMAT = "MMM, yyyy"
 private const val YEAR_FORMAT = "yyyy"
+private const val DAYS_FORMAT = "d"
+private const val YEARS_FORMAT = "MMM"
 
 @Suppress("CheckStyle")
 private const val REMOVE_YEAR = "([^\\p{Alpha}']|('[\\p{Alpha}]+'))*y+([^\\p{Alpha}']|('[\\p{Alpha}]+'))*"
 
 class StatsDateFormatter
-@Inject constructor(private val localeManagerWrapper: LocaleManagerWrapper, val resourceProvider: ResourceProvider) {
+@Inject constructor(
+    private val localeManagerWrapper: LocaleManagerWrapper,
+    val resourceProvider: ResourceProvider,
+    val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
+) {
     private val inputFormat: SimpleDateFormat
         get() {
             return SimpleDateFormat(STATS_INPUT_FORMAT, localeManagerWrapper.getLocale())
@@ -50,6 +58,16 @@ class StatsDateFormatter
             val sdf = outputFormat as SimpleDateFormat
             sdf.applyPattern(sdf.toPattern().replace(REMOVE_YEAR.toRegex(), ""))
             return sdf
+        }
+
+    private val outputFormatTrafficDays: SimpleDateFormat
+        get() {
+            return SimpleDateFormat(DAYS_FORMAT, localeManagerWrapper.getLocale())
+        }
+
+    private val outputFormatTrafficYears: SimpleDateFormat
+        get() {
+            return SimpleDateFormat(YEARS_FORMAT, localeManagerWrapper.getLocale())
         }
 
     /**
@@ -98,12 +116,52 @@ class StatsDateFormatter
                 val startCalendar = Calendar.getInstance()
                 startCalendar.time = endCalendar.time
                 startCalendar.add(Calendar.DAY_OF_WEEK, -6)
-                return printWeek(startCalendar, endCalendar)
+                return printWeek(startCalendar, endCalendar, statsTrafficSubscribersTabsFeatureConfig.isEnabled())
             }
             MONTHS -> outputMonthFormat.format(date)
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             YEARS -> outputYearFormat.format(date)
         }
+    }
+
+    /**
+     * Prints the given date in a localized format according to the StatsGranularity:
+     * DAYS - returns Jan 1, 2019
+     * WEEKS - returns day sequence as 1, 2, 3...
+     * MONTHS - returns week ranges 18-24, 25-31...
+     * YEARS - returns months J, F, M...
+     * @param date to be printed
+     * @param granularity defines the output format
+     * @return printed date
+     */
+    private fun printTrafficGranularDate(date: Date, granularity: StatsGranularity): String {
+        return when (granularity) {
+            DAYS -> outputFormatTrafficDays.format(date)
+            WEEKS -> {
+                val endCalendar = Calendar.getInstance()
+                endCalendar.time = date
+                if (endCalendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                    endCalendar.time = dateToWeekDate(date)
+                }
+                val startCalendar = Calendar.getInstance()
+                startCalendar.time = endCalendar.time
+                startCalendar.add(Calendar.DAY_OF_WEEK, -6)
+                return printTrafficWeek(startCalendar, endCalendar)
+            }
+            MONTHS -> outputFormatTrafficYears.format(date).first().toString()
+            YEARS -> outputYearFormat.format(date)
+        }
+    }
+
+    private fun printTrafficWeek(
+        startCalendar: Calendar,
+        endCalendar: Calendar
+    ): String {
+        return resourceProvider.getString(
+            R.string.stats_from_to_dates_in_week_label,
+            outputFormatTrafficDays.format(startCalendar.time),
+            outputFormatTrafficDays.format(endCalendar.time)
+        )
     }
 
     /**
@@ -162,6 +220,11 @@ class StatsDateFormatter
     fun printGranularDate(date: String, granularity: StatsGranularity): String {
         val parsedDate = parseStatsDate(granularity, date)
         return printGranularDate(parsedDate, granularity)
+    }
+
+    fun printTrafficGranularDate(date: String, granularity: StatsGranularity): String {
+        val parsedDate = parseStatsDate(granularity, date)
+        return printTrafficGranularDate(parsedDate, granularity)
     }
 
     /**
@@ -252,6 +315,13 @@ class StatsDateFormatter
                 timeZoneResource,
                 utcTime
             )
-        } else null
+        } else {
+            null
+        }
+    }
+
+    fun getStatsDateFromPeriodDay(period: String): String {
+        val date = parseStatsDate(DAYS, period)
+        return printDayWithoutYear(date).enforceWesternArabicNumerals() as String
     }
 }

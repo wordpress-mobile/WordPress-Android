@@ -55,19 +55,17 @@ rather than strict requirements.
     4. [PlayServicesAuth](#playservicesauth)
     5. [PlayServicesCoreScanner](#playservicescodescanner)
     6. [PlayReview](#playreview)
-5. Network
-    1. [Okio](#okio)
-6. Tool
+5. Tool
     1. [Zendesk](#zendesk)
     2. [JSoup](#jsoup)
-7. Other Core
+6. Other Core
     1. [AutoService](#autoservice)
     2. [KotlinPoet](#kotlinpoet)
-8. Other UI
+7. Other UI
     1. [Lottie](#lottie)
     2. [UCrop](#ucrop)
-9. [Smoke Test](#smoke-test)
-10. [Special](#special)
+8. [Smoke Test](#smoke-test)
+9. [Special](#special)
 
 ℹ️ Every test instruction should be prefixed with one of the following:
 - [JP/WP] This test applies to both, the `Jetpack` and `WordPress` apps.
@@ -428,23 +426,8 @@ Step.3:
     <summary>1. In app reviews</summary>
 
 - Perform a clean install.
-- Publish three (`ReviewViewModel.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
+- Publish three (`AppReviewManager.TARGET_COUNT_POST_PUBLISHED + 1`) new posts or stories.
 - Verify that there are no crashes.
-
-</details>
-
------
-
-### Okio [[squareupOkioVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="okio"></a>
-
-<details>
-    <summary>1. [JP/WP] Me Screen [GravatarApi.java + StreamingRequest.java]</summary>
-
-- Go to `Me` tab.
-- From the `Me` screen you are in, click on your profile's icon (`CHANGE PHOTO`).
-- Choose an image and wait for the `Edit Photo` screen to appear.
-- Crop the image and click the `done` menu option (top right).
-- Verify the image is updated accordingly.
 
 </details>
 
@@ -854,9 +837,58 @@ and [here](https://github.com/orgs/wordpress-mobile/projects/95)).
 <details>
     <summary>Why & How</summary>
 
-- TODO
-- TODO
-- TODO
+`sentryVersion` in this project relates to Sentry Gradle Plugin only. Sentry SDK is bundled with
+[Automattic-Tracks-Android](https://github.com/Automattic/Automattic-Tracks-Android).
+
+#### Why?
+We use Sentry Gradle Plugin to send ProGuard mapping files and source context files to Sentry. It
+makes stacktrace readable on Sentry dashboard. This should be the main focus when testing after
+bumping `sentryVersion`.
+
+#### To Test
+
+Please build the release variant (`vanillaRelease`) of both WordPress and Jetpack flavors and verify if issues are sent correctly. You can use the following snippet.
+
+<details><summary>PATCH (warning: it'll probably have some conflicts in the future when `WPMainActivityViewModel` change. It's more for an idea:</summary>
+
+```PATCH
+Subject: [PATCH] tests: add a test for features in development generation
+---
+Index: WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt b/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt
+--- a/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt	(revision 806913d9fb807250cecd5b24b36001d55ea4c255)
++++ b/WordPress/src/main/java/org/wordpress/android/viewmodel/main/WPMainActivityViewModel.kt	(date 1710772966823)
+@@ -5,6 +5,7 @@
+ import androidx.lifecycle.LiveData
+ import androidx.lifecycle.MutableLiveData
+ import androidx.lifecycle.distinctUntilChanged
++import com.automattic.android.tracks.crashlogging.CrashLogging
+ import kotlinx.coroutines.CoroutineDispatcher
+ import kotlinx.coroutines.flow.firstOrNull
+ import org.wordpress.android.R
+@@ -67,6 +68,7 @@
+     private val bloggingPromptsStore: BloggingPromptsStore,
+     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
+     private val shouldAskPrivacyConsent: ShouldAskPrivacyConsent,
++    private val crashLogging: CrashLogging,
+ ) : ScopedViewModel(mainDispatcher) {
+     private var isStarted = false
+
+@@ -161,6 +163,7 @@
+         launch { loadMainActions(site) }
+
+         updateFeatureAnnouncements()
++        crashLogging.sendReport(Throwable("Test crash"))
+     }
+
+     @Suppress("LongMethod")
+```
+</details>
+
 
 </details>
 

@@ -49,7 +49,7 @@ class ActivityNavigator @Inject constructor() {
 
     fun navigateToCampaignDetailPage(
         context: Context,
-        campaignId: Int,
+        campaignId: String,
         campaignDetailPageSource: CampaignDetailPageSource
     ) {
         context.startActivity(
@@ -200,5 +200,12 @@ class ActivityNavigator @Inject constructor() {
             .addNextIntent(mainActivityIntent)
             .addNextIntent(intent)
             .startActivities()
+    }
+
+    fun openIneligibleForVoiceToContent(
+        context: Context,
+        url: String
+    ) {
+        WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(context, url)
     }
 }

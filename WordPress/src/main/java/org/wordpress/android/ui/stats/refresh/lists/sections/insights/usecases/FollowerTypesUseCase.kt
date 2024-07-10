@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TYPES
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
-import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.StatelessUseCase
@@ -18,7 +17,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieCh
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.PieChartItem.Pie
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType.EMAIL
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType.SOCIAL
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase.FollowerType.WP_COM
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
@@ -31,7 +29,6 @@ class FollowerTypesUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val followersStore: FollowersStore,
-    private val publicizeStore: PublicizeStore,
     private val statsSiteProvider: StatsSiteProvider,
     private val contentDescriptionHelper: ContentDescriptionHelper,
     private val statsUtils: StatsUtils,
@@ -44,19 +41,16 @@ class FollowerTypesUseCase @Inject constructor(
     override suspend fun loadCachedData(): Map<FollowerType, Int>? {
         val wpComFollowers = followersStore.getWpComFollowers(statsSiteProvider.siteModel, LimitMode.Top(0))
         val emailFollowers = followersStore.getEmailFollowers(statsSiteProvider.siteModel, LimitMode.Top(0))
-        val publicizeServices = publicizeStore.getPublicizeData(statsSiteProvider.siteModel, LimitMode.All)
-        if (wpComFollowers != null && emailFollowers != null && publicizeServices != null) {
-            val socialFollowers = publicizeServices.services.sumOf { it.followers }
-            return buildDataModel(wpComFollowers.totalCount, emailFollowers.totalCount, socialFollowers)
+        if (wpComFollowers != null && emailFollowers != null) {
+            return buildDataModel(wpComFollowers.totalCount, emailFollowers.totalCount)
         }
         return null
     }
 
-    private fun buildDataModel(wpComTotals: Int?, emailTotals: Int?, socialTotals: Int?): Map<FollowerType, Int> {
+    private fun buildDataModel(wpComTotals: Int?, emailTotals: Int?): Map<FollowerType, Int> {
         val map = mutableMapOf<FollowerType, Int>()
         wpComTotals?.let { map[WP_COM] = it }
         emailTotals?.let { map[EMAIL] = it }
-        socialTotals?.let { map[SOCIAL] = it }
         return map
     }
 
@@ -69,20 +63,15 @@ class FollowerTypesUseCase @Inject constructor(
         val deferredEmailResponse = async(bgDispatcher) {
             followersStore.fetchEmailFollowers(statsSiteProvider.siteModel, fetchMode, forced)
         }
-        val deferredPublicizeResponse = async(bgDispatcher) {
-            publicizeStore.fetchPublicizeData(statsSiteProvider.siteModel, LimitMode.All, forced)
-        }
 
         val wpComResponse = deferredWpComResponse.await()
         val emailResponse = deferredEmailResponse.await()
-        val publicizeResponse = deferredPublicizeResponse.await()
 
         val wpComModel = wpComResponse.model
         val emailModel = emailResponse.model
-        val socialTotals = publicizeResponse.model?.services?.sumOf { it.followers }
 
-        val error = wpComResponse.error ?: emailResponse.error ?: publicizeResponse.error
-        val data = buildDataModel(wpComModel?.totalCount, emailModel?.totalCount, socialTotals)
+        val error = wpComResponse.error ?: emailResponse.error
+        val data = buildDataModel(wpComModel?.totalCount, emailModel?.totalCount)
         return when {
             error != null -> State.Error(error.message ?: error.type.name)
             data.isNotEmpty() -> State.Data(data)
@@ -93,7 +82,6 @@ class FollowerTypesUseCase @Inject constructor(
     private fun getTitle(type: FollowerType) = when (type) {
         WP_COM -> R.string.stats_followers_wordpress_com
         EMAIL -> R.string.email
-        SOCIAL -> R.string.stats_insights_social
     }
 
     override fun buildUiModel(domainModel: Map<FollowerType, Int>): List<BlockListItem> {
@@ -125,7 +113,7 @@ class FollowerTypesUseCase @Inject constructor(
                 )
 
                 val contentDescription = resourceProvider.getString(
-                    R.string.stats_total_followers_content_description,
+                    R.string.stats_total_subscribers_content_description,
                     it.value,
                     formattedPercentage
                 )
@@ -167,7 +155,7 @@ class FollowerTypesUseCase @Inject constructor(
             Pie(label, it.value)
         }
 
-    enum class FollowerType { WP_COM, EMAIL, SOCIAL }
+    enum class FollowerType { WP_COM, EMAIL }
 
     companion object {
         private const val PERCENT_HUNDRED = 100.0

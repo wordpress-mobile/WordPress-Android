@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.blaze
 
-import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.blaze.blazecampaigns.campaigndetail.CampaignDetailPageSource
 import org.wordpress.android.ui.blaze.blazecampaigns.campaignlisting.CampaignListingPageSource
@@ -18,6 +18,7 @@ import org.wordpress.android.util.config.BlazeManageCampaignFeatureConfig
 import javax.inject.Inject
 
 class BlazeFeatureUtils @Inject constructor(
+    private val userAgent: UserAgent,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val blazeFeatureConfig: BlazeFeatureConfig,
@@ -153,7 +154,7 @@ class BlazeFeatureUtils @Inject constructor(
         )
     }
 
-    fun getUserAgent() = WordPress.getUserAgent()
+    fun getUserAgent() = userAgent.toString()
 
     fun getAuthenticationPostData(authenticationUrl: String,
                                   urlToLoad: String,

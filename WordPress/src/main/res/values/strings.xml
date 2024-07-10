@@ -120,6 +120,11 @@
     <string name="me">Me</string>
     <string name="everyone">Everyone</string>
 
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
+
+    <string name="no_connection_error_title">Unable to load this content right now</string>
+    <string name="no_connection_error_description">Check your network connection and try again.</string>
+
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
@@ -296,6 +301,7 @@
     <string name="button_publish">Publish</string>
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
+    <string name="button_read">Read</string>
     <string name="button_preview">Preview</string>
     <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
@@ -373,6 +379,18 @@
     <string name="snackbar_conflict_local_version_discarded">Local version discarded</string>
     <string name="snackbar_conflict_web_version_discarded">Web version discarded</string>
     <string name="snackbar_conflict_undo">Undo</string>
+
+    <!-- Post Resolution Overlay -->
+    <string name="dialog_post_conflict_title">Resolve Conflict</string>
+    <string name="dialog_post_conflict_body">The post was modified on another device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_conflict_body_for_page">The page was modified on another device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_conflict_current_device">Current Device</string>
+    <string name="dialog_post_conflict_another_device">Another Device</string>
+    <string name="dialog_post_autosave_title">Autosave Available</string>
+    <string name="dialog_post_autosave_body">You\'ve made unsaved changes to this post from a different device. Please select the version of the post to keep.</string>
+    <string name="dialog_post_autosave_body_for_page">You\'ve made unsaved changes to this page from a different device. Please select the version of the page to keep.</string>
+    <string name="dialog_post_autosave_current_device" translatable="false">@string/dialog_post_conflict_current_device</string>
+    <string name="dialog_post_autosave_another_device" translatable="false">@string/dialog_post_conflict_another_device</string>
 
     <!-- post autosave revision dialog -->
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
@@ -978,8 +996,8 @@
     <string name="stats_manage_insights">Manage Insights</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_followers_email">Email</string>
-    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
-    <string name="stats_follower_label">Follower</string>
+    <string name="stats_subscribers_count_message">Total %1$s Subscribers: %2$s</string>
+    <string name="stats_subscriber_label">Subscriber</string>
     <string name="stats_follower_since_label">Since</string>
     <string name="stats_comments_authors">Authors</string>
     <string name="stats_comments_posts_and_pages">Posts and pages</string>
@@ -992,7 +1010,7 @@
     <string name="stats_tags_and_categories_views_label">Views</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_publicize_service_label">Service</string>
-    <string name="stats_publicize_followers_label">Followers</string>
+    <string name="stats_publicize_subscribers_label">Subscribers</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_item_settings">Stats item settings</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
@@ -1010,6 +1028,11 @@
     <string name="stats_site_positive_utc">Site timezone (UTC + %s)</string>
     <string name="stats_site_negative_utc">Site timezone (UTC - %s)</string>
     <string name="stats_data_not_recorded_for_period">File download stats were not recorded before June 28th 2019.</string>
+    <string name="stats_name_label">Name</string>
+    <string name="stats_subscriber_since_label">Subscriber since</string>
+    <string name="stats_emails_latest_emails_label">Latest emails</string>
+    <string name="stats_emails_opens_label">Opens</string>
+    <string name="stats_emails_clicks_label">Clicks</string>
 
     <!-- Number suffixes -->
     <string name="negative_prefix">-%s</string>
@@ -1023,13 +1046,14 @@
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% of total subscribers</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
     <string name="stats_item_expanded">Item expanded</string>
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
 
@@ -1284,10 +1308,6 @@
     <string name="stats_timeframe_weeks">Weeks</string>
     <string name="stats_timeframe_months">Months</string>
     <string name="stats_timeframe_years">Years</string>
-    <string name="stats_timeframe_by_day">By day</string>
-    <string name="stats_timeframe_by_week">By week</string>
-    <string name="stats_timeframe_by_month">By month</string>
-    <string name="stats_timeframe_by_year">By year</string>
     <string name="stats_timeframe_last_seven_days">Last 7-days</string>
     <string name="stats_timeframe_previous_seven_days">Previous 7-days</string>
     <string name="stats_views">Views</string>
@@ -1306,11 +1326,15 @@
     <string name="stats_view_comments" translatable="false">@string/comments</string>
     <string name="stats_view_search_terms">Search Terms</string>
     <string name="stats_view_publicize">Jetpack Social Connections</string>
-    <string name="stats_view_followers">Followers</string>
-    <string name="stats_view_follower_totals">Follower Totals</string>
+    <string name="stats_view_subscriber_totals">Subscriber Totals</string>
     <string name="stats_view_total_likes">Total Likes</string>
     <string name="stats_view_total_comments">Total Comments</string>
-    <string name="stats_view_total_followers">Total Followers</string>
+    <string name="stats_view_total_subscribers">Total Subscribers</string>
+    <string name="stats_view_subscriber_growth">Subscriber Growth</string>
+    <string name="stats_view_subscribers">Subscribers</string>
+    <string name="stats_view_emails">Emails</string>
+    <string name="stats_subscribers_marker_view_singular">Subscriber</string>
+    <string name="stats_subscribers_marker_view_plural">Subscribers</string>
 
     <!-- stats: followers -->
     <string name="stats_followers_seconds_ago">seconds ago</string>
@@ -1343,6 +1367,7 @@
     <!-- Stats insights -->
     <string name="stats_traffic">Traffic</string>
     <string name="stats_insights">Insights</string>
+    <string name="stats_subscribers">Subscribers</string>
     <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
     <string name="stats_insights_today">Today\'s Stats</string>
     <string name="stats_insights_views_and_visitors">Views &amp; Visitors</string>
@@ -1387,7 +1412,6 @@
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_google_plus">Google+</string>
     <string name="stats_insights_linkedin">LinkedIn</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_path">Path</string>
     <string name="stats_most_popular_percent_views">%1$s of views</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
@@ -1401,7 +1425,7 @@
     <string name="stats_insights_like_guide_card">⭐️ Your latest post %1$s has received %2$s like.</string>
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
-    <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Commenting on other blogs is a great way to build attention and subscribers for your new site.</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -1488,7 +1512,7 @@
     <string name="notifications_empty_all">No notifications…yet.</string>
     <string name="notifications_empty_unread">You\'re all up to date!</string>
     <string name="notifications_empty_comments">No comments yet</string>
-    <string name="notifications_empty_followers">No followers yet</string>
+    <string name="notifications_empty_subscribers">No subscribers yet</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_action_all">Get active! Comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_unread">Reignite the conversation: write a new post</string>
@@ -1503,14 +1527,15 @@
     <string name="error_notification_open">Could not open notification</string>
     <string name="ignore">Ignore</string>
     <string name="push_auth_expired">The request has expired. Log in to WordPress.com to try again.</string>
-    <string name="follows">Follows</string>
+    <string name="subscribers">Subscribers</string>
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="notifications_tab_title_unread_notifications">Unread</string>
     <string name="notifications_tab_title_comments">Comments</string>
-    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_subscribers">Subscribers</string>
     <string name="notifications_tab_title_likes">Likes</string>
+    <string name="notifications_unread_content_description">Unread</string>
 
     <!-- Notification permission -->
     <string name="notifications_permission_fix">Fix</string>
@@ -1577,20 +1602,22 @@
     <string name="notifications_tab_dialog_main_off_title">To see notifications on notifications tab for this site, turn Notifications for this site on.</string>
     <string name="notifications_tab_dialog_main_off_message">Turning Notifications for this site off will disable notifications display on notifications tab for this site. You can fine-tune which kind of notification you see after turning Notifications for this site on.</string>
 
+    <string name="notifications_action_mark_all_as_read">Mark all as read</string>
+
     <string name="main_switch_default_title_on">On</string>
     <string name="main_switch_default_title_off">Off</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
     <string name="likes_on_my_posts">Likes on my posts</string>
-    <string name="site_follows">Site follows</string>
+    <string name="site_subscriptions">Site subscriptions</string>
     <string name="site_achievements">Site achievements</string>
     <string name="username_mentions">Username mentions</string>
     <string-array name="notifications_blog_settings" translatable="false">
         <item>@string/comments_on_my_site</item>
         <item>@string/likes_on_my_comments</item>
         <item>@string/likes_on_my_posts</item>
-        <item>@string/site_follows</item>
+        <item>@string/site_subscriptions</item>
         <item>@string/site_achievements</item>
         <item>@string/username_mentions</item>
     </string-array>
@@ -1626,14 +1653,6 @@
     <string name="like_title_singular">1 Like</string>
     <string name="like_title_plural">%d Likes</string>
     <string name="like_faces_error_loading_message">Error loading like data. %s.</string>
-    <!-- Note for translators: the '&lt;a href=""&gt;' and '&lt;/a&gt;' must be kept without
-    translations/modifications and are used to enclose the portion of the text
-    that will be rendered as underlined. -->
-    <string name="like_faces_you_like_text">&lt;a href=""&gt;You&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=""&gt;You and 1 blogger&lt;/a&gt; like this.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=""&gt;You and %1$s bloggers&lt;/a&gt; like this.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=""&gt;1 blogger&lt;/a&gt; likes this.</string>
-    <string name="like_faces_others_like_text">&lt;a href=""&gt;%1$s bloggers&lt;/a&gt; like this.</string>
 
     <!-- reader -->
     <string name="reader">Reader</string>
@@ -1641,7 +1660,6 @@
     <string name="reader_filter_by_blog_title">Filter by blog</string>
     <string name="reader_filter_by_tag_title">Filter by tag</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
-    <string name="reader_filter_empty_tags_list_subscribe">You can subscribe to posts on a specific subject by adding a tag</string>
     <string name="reader_filter_self_hosted_empty_blogs_list">Log in to WordPress.com to see the latest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_self_hosted_empty_tags_list">Log in to WordPress.com to see the latest posts from tags you\'re subscribed to</string>
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
@@ -1649,10 +1667,10 @@
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
     <string name="reader_filter_empty_blogs_list_text">Subscribe to blogs in Discover and you’ll see their latest posts here. Or search for a blog that you like already.</string>
     <string name="reader_filter_empty_tags_list_title">No tags</string>
-    <string name="reader_filter_empty_tags_list_text">Subscribe to a tag and you’ll be able to see the best posts from it here.</string>
+    <string name="reader_filter_empty_tags_list_follow_text">Follow a tag and you’ll be able to see the best posts from it here.</string>
     <string name="reader_filter_empty_blogs_action_search">Search for a blog</string>
     <string name="reader_filter_empty_tags_action_suggested">Suggested tags</string>
-    <string name="reader_filter_empty_tags_action_subscribe">Subscribe to a tag</string>
+    <string name="reader_filter_empty_tags_action_follow">Follow a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
@@ -1665,11 +1683,11 @@
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="show_n_hidden_items_desc">%1$s more items</string>
     <string name="reader_discover_empty_title">Welcome!</string>
-    <string name="reader_discover_empty_subtitle_subscribe">Subscribe to tags to discover new blogs</string>
+    <string name="reader_discover_empty_subtitle_follow">Follow tags to discover new blogs</string>
     <string name="reader_discover_no_posts_title">No recent posts</string>
-    <string name="reader_discover_no_posts_subscribe_subtitle">Try subscribing to more tags to broaden the search</string>
+    <string name="reader_discover_no_posts_follow_subtitle">Try following more tags to broaden the search</string>
     <string name="reader_discover_empty_button_text">Get Started</string>
-    <string name="reader_discover_no_posts_button_tags_text">Subscribe to tags</string>
+    <string name="reader_discover_no_posts_button_tags_text_follow">Follow tags</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
     <string name="reader_follow_comments_null_response">No response received</string>
     <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
@@ -1695,6 +1713,7 @@
     <string name="reader_dropdown_menu_saved">Saved</string>
     <string name="reader_dropdown_menu_liked">Liked</string>
     <string name="reader_dropdown_menu_automattic">Automattic</string>
+    <string name="reader_dropdown_menu_tags">Your Tags</string>
     <string name="reader_dropdown_menu_lists">Lists</string>
     <string name="reader_filter_chip_blog_zero">0 Blogs</string>
     <string name="reader_filter_chip_blog_one">1 Blog</string>
@@ -1702,6 +1721,44 @@
     <string name="reader_filter_chip_tag_zero">0 Tags</string>
     <string name="reader_filter_chip_tag_one">1 Tag</string>
     <string name="reader_filter_chip_tag_other">%d Tags</string>
+    <string name="reader_announcement_card_title">New in Reader</string>
+    <string name="reader_announcement_card_tags_stream_title">Tags stream</string>
+    <string name="reader_announcement_card_tags_stream_description">Tap the dropdown at the top and select Tags to access streams from your followed tags.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Reading Preferences</string>
+    <string name="reader_announcement_card_reading_preferences_description">Choose colors and fonts that suit you. When you’re reading a post tap the AA icon at the top of the screen.</string>
+
+    <string name="reader_preferences_screen_preview_title">Reading Preferences</string>
+    <string name="reader_preferences_screen_preview_tags" translatable="false">reading,colors,fonts</string>
+    <string name="reader_preferences_screen_preview_text">Choose your colors, fonts and sizes. Preview your selection here, and read posts with your styles once you’re done.</string>
+
+    <!-- translators: %s is replaced with the string in reader_preferences_screen_preview_text_feedback_link, so please translate both in a way that the full final sentence make sense -->
+    <string name="reader_preferences_screen_preview_text_feedback">This is a new feature still in development. To help us improve it %s.</string>
+    <string name="reader_preferences_screen_preview_text_feedback_link">send your feedback</string>
+    <!-- translators: this is the accessibility label for this action and the verb should likely be translated in the infinitive, here's the usage context in English: "Double tap to 'send your feedback'." -->
+    <string name="reader_preferences_screen_preview_text_feedback_label">send your feedback</string>
+
+    <string name="reader_preferences_screen_theme_label">Color Scheme</string>
+    <string name="reader_preferences_theme_system">Default</string>
+    <string name="reader_preferences_theme_soft">Soft</string>
+    <string name="reader_preferences_theme_sepia">Sepia</string>
+    <string name="reader_preferences_theme_evening">Evening</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_candy">Candy</string>
+
+    <string name="reader_preferences_screen_font_family_label">Font</string>
+    <string name="reader_preferences_screen_font_family_preview" translatable="false">Aa</string>
+    <string name="reader_preferences_font_family_serif" translatable="false">Serif</string>
+    <string name="reader_preferences_font_family_sans" translatable="false">Sans</string>
+    <string name="reader_preferences_font_family_mono" translatable="false">Mono</string>
+
+    <string name="reader_preferences_screen_font_size_label">Font Size</string>
+    <string name="reader_preferences_font_size_extra_small">Extra small</string>
+    <string name="reader_preferences_font_size_small">Small</string>
+    <string name="reader_preferences_font_size_normal">Normal</string>
+    <string name="reader_preferences_font_size_large">Large</string>
+    <string name="reader_preferences_font_size_extra_large">Extra large</string>
+    <string name="reader_preferences_screen_font_size_preview" translatable="false">A</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1717,6 +1774,8 @@
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
+    <string name="editor_updating_content">Updating content</string>
+    <string name="editor_updating_content_failed">Failed to update content</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1746,6 +1805,8 @@
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
+    <string name="post_settings_no_calendar_app_exists">No app found to handle the request to add to calendar</string>
+    <string name="post_settings_add_to_calendar_error">Unable to add to calendar</string>
     <string name="post_settings_jetpack_social_header">Social Sharing</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_message">Increase your traffic by auto-sharing your posts with your friends on social media.</string>
     <string name="post_settings_jetpack_social_connect_social_profiles_button">Connect accounts</string>
@@ -1940,6 +2001,8 @@
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
     <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
+    <string name="page_upload_conflict_error">There is a revision of this page that is more recent</string>
+
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>
@@ -2020,12 +2083,12 @@
     <string name="error_post_remote_site_settings">Couldn\'t save site info</string>
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
     <string name="error_fetch_authors_list">Couldn\'t retrieve authors</string>
-    <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
-    <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
+    <string name="error_fetch_subscribers_list">Couldn\'t retrieve site subscribers</string>
+    <string name="error_fetch_email_subscribers_list">Couldn\'t retrieve site email subscribers</string>
     <string name="error_fetch_viewers_list">Couldn\'t retrieve site viewers</string>
     <string name="error_update_role">Couldn\'t update user role</string>
     <string name="error_remove_user">Couldn\'t remove user</string>
-    <string name="error_remove_follower">Couldn\'t remove follower</string>
+    <string name="error_remove_subscriber">Couldn\'t remove subscriber</string>
     <string name="error_remove_viewer">Couldn\'t remove viewer</string>
     <string name="error_notif_q_action_like">Could not like comment. Please try again later.</string>
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
@@ -2035,6 +2098,7 @@
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
     <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
+    <string name="error_no_camera_available">No camera app available.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
@@ -2084,6 +2148,7 @@
     <string name="reader_discover_display_name">Discover</string>
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="reader_subscribed_display_name">Subscribed</string>
+    <string name="reader_tags_display_name">Tags</string>
 
     <!-- timespan shown for posts/comments published within the past 60 seconds -->
     <string name="timespan_now" tools:ignore="UnusedResources">now</string>
@@ -2106,7 +2171,7 @@
     <string name="reader_title_tags">Follow tags</string>
 
     <!-- view pager titles -->
-    <string name="reader_page_followed_tags_title">Subscribed tags</string>
+    <string name="reader_page_followed_tags_text_title">Followed tags</string>
     <string name="reader_page_followed_blogs_title">Subscribed blogs</string>
 
     <!-- menu text -->
@@ -2117,6 +2182,7 @@
     <string name="reader_menu_mark_as_seen">Mark as seen</string>
     <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
     <string name="reader_menu_block_user">Block user</string>
+    <string name="reader_menu_reading_preferences">Reading Preferences</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2149,7 +2215,7 @@
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
-    <string name="reader_hint_add_tag_or_url_subscribe">Enter a URL or tag to subscribe to</string>
+    <string name="reader_hint_add_tag_or_url_follow">Enter a URL or tag to follow</string>
     <string name="reader_hint_post_search">Search WordPress</string>
     <string name="reader_hint_search_subscribed_blogs">Search subscribed blogs</string>
 
@@ -2200,7 +2266,7 @@
 
     <!-- toast messages -->
     <string name="reader_toast_err_comment_failed">Couldn\'t post your comment</string>
-    <string name="reader_toast_err_tag_already_subscribed">You\'re already subscribed to this tag</string>
+    <string name="reader_toast_err_tag_already_following">You\'re already following this tag</string>
     <string name="reader_toast_err_tag_not_valid">That isn\'t a valid tag</string>
     <string name="reader_toast_err_adding_tag">Unable to add this tag</string>
     <string name="reader_toast_err_removing_tag">Unable to remove this tag</string>
@@ -2241,7 +2307,7 @@
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_blogs_posts_in_custom_list">The blogs in this list have not posted anything recently</string>
     <string name="reader_empty_subscribed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
-    <string name="reader_no_followed_tags_title">No subscribed tags</string>
+    <string name="reader_no_followed_tags_text_title">No followed tags</string>
     <string name="reader_no_recommended_blogs_title">No recommended blogs</string>
     <string name="reader_no_followed_blogs_title" translatable="false">@string/reader_filter_empty_blogs_list_title</string>
     <string name="reader_no_followed_blogs_search_title">No blogs matching your search</string>
@@ -2279,6 +2345,18 @@
     <!-- dialogs -->
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
     <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices.</string>
+
+    <!-- Reader tags feed -->
+    <string name="reader_tags_feed_see_more_from_tag">More from %s</string>
+    <string name="reader_tags_feed_error_title">No posts found for %s</string>
+    <string name="reader_tags_feed_loading_error_description">We couldn\'t load posts from this tag right now</string>
+    <string name="reader_tags_feed_no_content_error_description">We couldn\'t find any posts tagged %s right now</string>
+    <string name="reader_tags_feed_error_retry">Retry</string>
+    <string name="reader_tags_feed_action_label_open_post">open post</string>
+    <string name="reader_tags_feed_action_label_open_blog">open blog</string>
+    <string name="reader_tags_feed_action_label_like_post">like post</string>
+    <string name="reader_tags_feed_action_label_unlike_post">remove post like</string>
+    <string name="reader_tags_feed_action_label_open_menu">open menu</string>
 
     <!-- connection bar which appears on main activity when there's no connection -->
     <string name="connectionbar_no_connection">No connection</string>
@@ -2387,6 +2465,7 @@
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
     <string name="my_site_quick_actions_title">Quick Links</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Post from audio</string>
 
     <string name="jetpack_feature_card_more_menu_item_hide_this" translatable="false">@string/my_site_dashboard_card_more_menu_hide_card</string>
 
@@ -2452,7 +2531,7 @@
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
-    <string name="site_picker_add_site">Add new site</string>
+    <string name="site_picker_add_a_site">Add a site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
@@ -2460,6 +2539,10 @@
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
     <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="site_picker_edit_pins">Edit Pins</string>
+    <string name="site_picker_pinned_sites">Pinned Sites</string>
+    <string name="site_picker_all_sites">All Sites</string>
+    <string name="site_picker_recent_sites">Recent Sites</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -2589,7 +2672,7 @@
     <string name="follower_subscribed_since">Since %1$s</string>
     <string name="person_remove_confirmation_title">Remove %1$s</string>
     <string name="user_remove_confirmation_message">If you remove %1$s, that user will no longer be able to access this site, but any content that was created by %1$s will remain on the site.\n\nWould you still like to remove this user?</string>
-    <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
+    <string name="subscriber_remove_confirmation_message">If removed, this subscriber will stop receiving notifications about this site, unless they re-subscribe.\n\nWould you still like to remove this subscriber?</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="invite_people">Invite People</string>
@@ -2598,7 +2681,7 @@
     <string name="button_invite" translatable="false">@string/invite</string>
     <string name="invite_username_not_found">%s: User not found</string>
     <string name="invite_already_a_member">%s: Already a member</string>
-    <string name="invite_already_following">%s: Already following</string>
+    <string name="invite_already_subscribed">%s: Already subscribed</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_message_title">Custom message</string>
@@ -2615,18 +2698,18 @@
     <string name="people_optional_custom_message_helper_text">Optional: enter a custom message to be sent with your invitation.</string>
 
     <string name="people_dropdown_item_team">Team</string>
-    <string name="people_dropdown_item_followers">Followers</string>
-    <string name="people_dropdown_item_email_followers">Email Followers</string>
+    <string name="people_dropdown_item_subscribers">Subscribers</string>
+    <string name="people_dropdown_item_email_subscribers">Email Subscribers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
-    <string name="people_empty_list_filtered_followers">No followers yet</string>
-    <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
+    <string name="people_empty_list_filtered_subscribers">No subscribers yet</string>
+    <string name="people_empty_list_filtered_email_subscribers">No email subscribers yet</string>
     <string name="people_empty_list_filtered_viewers">No viewers yet</string>
     <string name="people_fetching">Fetching users…</string>
-    <string name="title_follower">Follower</string>
-    <string name="title_email_follower">Email Follower</string>
+    <string name="title_subscriber">Subscriber</string>
+    <string name="title_email_subscriber">Email Subscriber</string>
 
-    <string name="role_follower">Follower</string>
+    <string name="role_subscriber">Subscriber</string>
     <string name="role_viewer">Viewer</string>
 
     <string name="invite_links_section_title">Invite Link</string>
@@ -3017,6 +3100,7 @@
     <string name="permission_images_video_audio">Photos and videos &amp; Music and audio</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_microphone">Microphone</string>
+    <string name="permission_access_media_location">Media Location</string>
 
     <!-- Login -->
     <!-- If any of these appear unused, be sure to check the same string in the login library -
@@ -3463,9 +3547,6 @@
     <string name="create_page_fab_tooltip">Create a page</string>
     <string name="create_post_story_fab_tooltip">Create a post or story</string>
 
-    <string name="create_post_page_fab_tooltip_stories_enabled">Create a post, page or story</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Create a post or story</string>
-
     <!-- Site Creation -->
     <string name="new_site_creation_screen_title_general">Create Site</string>
     <string name="new_site_creation_screen_title_step_count">%1$d of %2$d</string>
@@ -3638,83 +3719,9 @@
     <string name="hpp_recommended_default_vertical">Blogging</string>
     <string name="hpp_bottom_helper_text">Can\'t decide? You can change the theme at any time.</string>
 
-    <!-- Stories -->
-    <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
-    <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
-    <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
-    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
-    <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
-    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
-    <string name="capture_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Capture</string>
-    <string name="flip_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Flip camera</string>
-    <string name="flash_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Flash</string>
-    <string name="stickers_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Stickers</string>
-    <string name="text_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Text</string>
-    <string name="sound_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Sound</string>
-    <string name="label_control_flip_camera" tools:ignore="UnusedResources" a8c-src-lib="stories">Flip</string>
-    <string name="label_control_flash" tools:ignore="UnusedResources" a8c-src-lib="stories">Flash</string>
-    <string name="label_control_saving" tools:ignore="UnusedResources" a8c-src-lib="stories">Saving</string>
-    <string name="label_control_saved" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved</string>
-    <string name="label_control_retry" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry</string>
-    <string name="label_snackbar_loop_frame_saved" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved to photos</string>
-    <string name="label_snackbar_share" tools:ignore="UnusedResources" a8c-src-lib="stories">SHARE</string>
-    <string name="label_share_to" tools:ignore="UnusedResources" a8c-src-lib="stories">Share to</string>
     <string name="label_close_button">Close</string>
-    <string name="label_saved_icon" tools:ignore="UnusedResources" a8c-src-lib="stories">Saved</string>
-    <string name="label_retry_icon" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry</string>
-    <string name="label_frame_image" tools:ignore="UnusedResources" a8c-src-lib="stories">Slide</string>
-    <string name="label_frame_unselected_border" tools:ignore="UnusedResources" a8c-src-lib="stories">unselected</string>
-    <string name="label_frame_selected_border" tools:ignore="UnusedResources" a8c-src-lib="stories">selected</string>
-    <string name="label_frame_errored" tools:ignore="UnusedResources" a8c-src-lib="stories">errored</string>
-    <string name="label_text_alignment_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Change text alignment</string>
-    <string name="label_text_color_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Change text color</string>
-    <string name="dialog_discard_page_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete story slide?</string>
-    <string name="dialog_discard_page_message" tools:ignore="UnusedResources" a8c-src-lib="stories">This slide will be removed from your story.</string>
-    <string name="dialog_discard_errored_page_message" tools:ignore="UnusedResources" a8c-src-lib="stories">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
-    <string name="dialog_discard_page_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete</string>
-    <string name="dialog_discard_story_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard story post?</string>
-    <string name="dialog_discard_story_message" tools:ignore="UnusedResources" a8c-src-lib="stories">Your story post will not be saved as a draft.</string>
-    <string name="dialog_discard_story_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard</string>
-    <string name="pref_camera_selection" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">pref_camera_selection</string>
-    <string name="pref_flash_mode_selection" translatable="false" tools:ignore="UnusedResources" a8c-src-lib="stories">pref_flash_mode_selection</string>
-    <string name="story_saving_untitled" tools:ignore="UnusedResources" a8c-src-lib="stories">Untitled</string>
-    <string name="story_saving_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Saving "%1$s"…</string>
-    <string name="story_saving_title_several" tools:ignore="UnusedResources" a8c-src-lib="stories">several stories</string>
-    <string name="story_saving_subtitle_frames_remaining_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">1 slide remaining</string>
-    <string name="story_saving_subtitle_frames_remaining_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">%1$d slides remaining</string>
-    <string name="story_saving_snackbar_started">Uploading "%1$s"…</string>
-    <string name="story_saving_snackbar_finished_successfully" tools:ignore="UnusedResources" a8c-src-lib="stories">"%1$s" published</string>
-    <string name="story_saving_snackbar_finished_with_error">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to upload "%1$s"</string>
-    <string name="story_saving_failed_message_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">1 slide requires action</string>
-    <string name="story_saving_failed_message_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">%1$d slides require action</string>
-    <string name="story_saving_failed_quick_action_manage">Manage</string>
-    <string name="dialog_story_saving_error_title_singular" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to save 1 slide</string>
-    <string name="dialog_story_saving_error_title_plural" tools:ignore="UnusedResources" a8c-src-lib="stories">Unable to save %1$d slides</string>
-    <string name="dialog_story_saving_error_message" tools:ignore="UnusedResources" a8c-src-lib="stories">Retry saving or delete the slides, then try publishing your story again.</string>
-    <string name="dialog_insufficient_device_storage_error_title" tools:ignore="UnusedResources" a8c-src-lib="stories">Insufficient device storage</string>
-    <string name="dialog_insufficient_device_storage_error_message" tools:ignore="UnusedResources" a8c-src-lib="stories">We need to save the story on your device before it can be published. Review your storage settings and remove files to free up space.</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button" tools:ignore="UnusedResources" a8c-src-lib="stories">View Storage</string>
-    <string name="toast_story_page_not_found" tools:ignore="UnusedResources" a8c-src-lib="stories">Couldn\'t find Story slide</string>
-    <string name="toast_capture_operation_in_progress" tools:ignore="UnusedResources" a8c-src-lib="stories">Operation in progress, try again</string>
-    <string name="toast_error_saving_image" tools:ignore="UnusedResources" a8c-src-lib="stories">Error saving image</string>
-    <string name="toast_error_saving_video" tools:ignore="UnusedResources" a8c-src-lib="stories">Video could not be saved</string>
     <string name="camera_error" tools:ignore="UnusedResources">This device doesn\'t support Camera2 API.</string>
     <string name="toast_error_playing_video" tools:ignore="UnusedResources">An error occurred while playing your video</string>
-
-    <!-- Intro to Stories screen -->
-    <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
-    <string name="stories_intro_image_caption_first">How to create a story post</string>
-    <string name="stories_intro_image_caption_second">Example story title</string>
-    <string name="stories_intro_title_first">Now stories are for everyone</string>
-    <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
-    <string name="stories_intro_title_second">Story posts don\'t disappear</string>
-    <string name="stories_intro_description_second">They\’re published as a new blog post on your site so your audience never misses out on a thing.</string>
-    <string name="stories_intro_create_story_post_label">Create Story Post</string>
 
     <!-- Gutenberg Native -->
     <!-- translators: %1$s: Select control font size name e.g. Small, %2$s: Select control font size e.g. 12px -->
@@ -4079,21 +4086,7 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="gutenberg_native_you_can_edit_this_block_using_the_web_version_of_the_editor" tools:ignore="UnusedResources">You can edit this block using the web version of the editor.</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the" tools:ignore="UnusedResources">You can rearrange blocks by tapping a block and then tapping the up and down arrows that appear on the bottom left side of the block to move it above or below other blocks.</string>
 
-    <string name="toast_capture_operation_permission_needed" tools:ignore="UnusedResources" a8c-src-lib="stories">You need to grant the app audio recording permission in order to record video</string>
-    <string name="typeface_label_nunito" tools:ignore="UnusedResources" a8c-src-lib="stories">Casual</string>
-    <string name="typeface_label_libre_baskerville" tools:ignore="UnusedResources" a8c-src-lib="stories">Classic</string>
-    <string name="typeface_label_oswald" tools:ignore="UnusedResources" a8c-src-lib="stories">Strong</string>
-    <string name="typeface_label_pacifico" tools:ignore="UnusedResources" a8c-src-lib="stories">Playful</string>
-    <string name="typeface_label_space_mono" tools:ignore="UnusedResources" a8c-src-lib="stories">Modern</string>
-    <string name="typeface_label_shrikhand" tools:ignore="UnusedResources" a8c-src-lib="stories">Bold</string>
-    <string name="delete_button_alt" tools:ignore="UnusedResources" a8c-src-lib="stories">Delete</string>
-    <string name="label_next_button" tools:ignore="UnusedResources" a8c-src-lib="stories">Next</string>
     <string name="label_done_button">Done</string>
-    <string name="dialog_discard_story_title_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard changes?</string>
-    <string name="dialog_discard_story_message_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Any changes made will not be saved.</string>
-    <string name="dialog_discard_story_ok_button_edit" tools:ignore="UnusedResources" a8c-src-lib="stories">Discard</string>
-    <string name="color_picker_label_text" tools:ignore="UnusedResources" a8c-src-lib="stories">Text</string>
-    <string name="color_picker_label_background" tools:ignore="UnusedResources" a8c-src-lib="stories">Background</string>
 
     <!-- Jetpack backup download -->
     <string name="backup_download">Backup Download</string>
@@ -4139,7 +4132,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
 
     <string name="jetpack_icon_content_description">icon</string>
-    <string name="label_control_upload" tools:ignore="UnusedResources" a8c-src-lib="stories">Upload</string>
 
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
@@ -4269,9 +4261,14 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="weekly_roundup">Weekly Roundup</string>
     <string name="weekly_roundup_notification_title">Weekly Roundup: %s</string>
     <string name="weekly_roundup_notification_text_all">Last week you had %1$s views, %2$s likes, and %3$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_like_comments">Last week you had %1$s views, 1 like, and %2$s comments.</string>
+    <string name="weekly_roundup_notification_text_views_likes_comment">Last week you had %1$s views, %2$s likes, and 1 comment.</string>
+    <string name="weekly_roundup_notification_text_views_like_comment">Last week you had %1$s views, 1 like, and 1 comment.</string>
     <string name="weekly_roundup_notification_text_views_only">Last week you had %1$s views.</string>
     <string name="weekly_roundup_notification_text_views_and_likes">Last week you had %1$s views and %2$s likes</string>
+    <string name="weekly_roundup_notification_text_views_and_like">Last week you had %1$s views and 1 like</string>
     <string name="weekly_roundup_notification_text_views_and_comments">Last week you had %1$s views and %2$s comments</string>
+    <string name="weekly_roundup_notification_text_views_and_comment">Last week you had %1$s views and 1 comment</string>
 
     <!-- About -->
     <string name="about_blog">Blog</string>
@@ -4335,8 +4332,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
-    <string name="blogging_prompts_list_error_network_title">Unable to load this content right now</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Check your network connection and try again.</string>
 
     <!-- Editor module -->
     <string name="post_content" tools:ignore="UnusedResources" a8c-src-lib="module:editor">Content</string>
@@ -4552,7 +4547,6 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="wp_jetpack_feature_removal_phase_new_users_notifications_description">Get notifications for new comments, likes, views, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_description">The Jetpack mobile app is designed to work in companion with the Jetpack plugin. Switch now to get access to stats, notifications, reader, and more.</string>
     <string name="wp_jetpack_feature_removal_phase_self_hosted_users_title">Your site has the Jetpack plugin</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Moving to the Jetpack app in a few days.</string>
 
 
     <!-- Deep Linking Activity Aliases -->
@@ -4847,6 +4841,9 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="login_error_security_key" tools:ignore="UnusedResources" a8c-src-lib="login">There was some trouble with the Security key login</string>
     <string name="notification_security_key_needed" tools:ignore="UnusedResources" a8c-src-lib="login">Please provide your security key to continue.</string>
 
+    <string name="in_app_update_available">Update downloaded. Restart to apply.</string>
+    <string name="in_app_update_restart">Restart</string>
+
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Alternatively, you can flatten the content by ungrouping the block.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using the web editor.</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">For this reason, we recommend editing the block using your web browser.</string>
@@ -4888,4 +4885,34 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
 
     <!-- Super Fast Media Upload QRCodeMediaLink -->
     <string name="qrcode_media_deeplink_error">Site not found. Check that you are logged into the correct account.</string>
+    <string name="gutenberg_native_autoplay_may_cause_usability_issues_for_some_users" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Autoplay may cause usability issues for some users.</string>
+    <string name="gutenberg_native_edit_video_024aee6d" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Edit video</string>
+    <string name="gutenberg_native_video_caption_empty_663aab49" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. Empty</string>
+    <string name="gutenberg_native_video_caption_s_0141bd20" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Video caption. %s</string>
+    <string name="gutenberg_native_button_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy error details</string>
+    <string name="gutenberg_native_button_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Button to copy post text</string>
+    <string name="gutenberg_native_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy error details</string>
+    <string name="gutenberg_native_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Copy post text</string>
+    <string name="gutenberg_native_tap_here_to_copy_error_details" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy error details</string>
+    <string name="gutenberg_native_tap_here_to_copy_post_text" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap here to copy post text</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">The editor has encountered an unexpected error</string>
+    <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">You can copy your post text in case your content is impacted. Copy error details to debug and share with support.</string>
+    <string name="gutenberg_native_clear_selected_color" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Clear selected color</string>
+    <string name="gutenberg_native_link_label" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Link label</string>
+    <string name="gutenberg_native_tap_to_edit" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Tap to edit</string>
+
+    <!-- Voice to Content -->
+    <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
+    <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
+    <string name="voice_to_content_processing">Processing</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing_label">Processing</string>
+    <string name="voice_to_content_base_header_label">Post from Audio</string>
+    <string name="voice_to_content_secondary_header_label">Requests available:</string>
+    <string name="voice_to_content_begin_recording_label">Begin Recording</string>
+    <string name="voice_to_content_recording_label">Recording</string>
+    <string name="voice_to_content_ineligible">You don\'t have enough requests available to create a post from audio.</string>
+    <string name="voice_to_content_upgrade">Upgrade for more requests</string>
+    <string name="voice_to_content_done_label">Done</string>
+    <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
 </resources>

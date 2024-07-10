@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: cy_GB
 -->
 <resources>
@@ -50,13 +50,11 @@ Language: cy_GB
     <string name="preference_open_device_settings">Agor gosodiadau\'r ddyfais</string>
     <string name="invite_invalid_email">%s: E-bost annilys</string>
     <string name="invite_user_blocked_invites">%s: Mae\'r defnyddiwr wedi rhwystro gwahoddiadau</string>
-    <string name="invite_already_following">%s: Eisoes yn dilyn</string>
     <string name="invite_already_a_member">%s: Eisoes yn aelod</string>
     <string name="invite_username_not_found">%s: Heb ganfod y defnyddiwr</string>
     <string name="comment_moderated_approved">Sylw wedi ei gymeradwyo!</string>
     <string name="like">Hoffi</string>
     <string name="timespan_now">nawr</string>
-    <string name="role_follower">Dilynwr</string>
     <string name="role_viewer">Darllenydd</string>
     <string name="error_post_my_profile_no_connection">Dim cysylltiad, methu cadw ei proffil</string>
     <string name="alignment_none">Dim</string>
@@ -65,20 +63,12 @@ Language: cy_GB
     <string name="site_settings_list_editor_action_mode_title">Dewis %1$d</string>
     <string name="error_fetch_users_list">Methu adfer defnyddiwr y wefan</string>
     <string name="people_fetching">Estyn defnyddwyr…</string>
-    <string name="title_follower">Dilynwr</string>
-    <string name="title_email_follower">Dilynwr e-bost</string>
-    <string name="people_dropdown_item_email_followers">Dilynwyr E-bost</string>
     <string name="people_dropdown_item_viewers">Darllenwyr</string>
-    <string name="people_dropdown_item_followers">Dilynwyr</string>
     <string name="people_dropdown_item_team">Tîm</string>
     <string name="invite_message_usernames_limit">Gwahoddwch hyd at 10 cyfeiriadau e-bost a/neu enwau defnyddwyr WordPress.com. I\'r rhai y mae angen enw defnyddiwr bydd cyfarwyddiadau yn cael eu anfon ar sut i greu un.</string>
     <string name="viewer_remove_confirmation_message">Os ydych yn tynnu y darllenydd hwn, ni fydd ef neu hi yn gallu ymweld â wefan hon.\n\nHoffech chi dal i dynnu\'r darllenydd hwn?</string>
-    <string name="follower_remove_confirmation_message">Os ei ddileu, bydd y dilynwr hwn yn methu derbyn hysbysiadau am y wefan hon, oni bai eu bod yn ail dilyn.\n\nHoffech chi dal i dynnu\'r dilynwr hwn?</string>
     <string name="follower_subscribed_since">Ers %1$s</string>
-    <string name="error_remove_follower">Methu tynnu ddilynwr</string>
     <string name="error_remove_viewer">Methu tynnu darllenydd</string>
-    <string name="error_fetch_email_followers_list">Methu adfer dilynwr e-bost y wefan</string>
-    <string name="error_fetch_followers_list">Methu adfer dilynwr y wefan</string>
     <string name="editor_failed_uploads_switch_html">Mae rhai lwythi cyfryngau wedi methu. Nid oes modd newid i\'r modd HTML\n       yn y cyflwr hwn. Tynnu pob cyfrwng sydd wedi methu a pharhau?</string>
     <string name="visual_editor">Golygydd gweledol</string>
     <string name="image_thumbnail">Llun bach delwedd</string>
@@ -175,7 +165,6 @@ Language: cy_GB
     <string name="site_achievements">Llwyddiannau\'r wefan</string>
     <string name="username_mentions">Cyfeiriadau gan yr enw defnyddiwr</string>
     <string name="likes_on_my_posts">Hoffi fy nghofnodion</string>
-    <string name="site_follows">Mae\'r wefan yn dilyn</string>
     <string name="likes_on_my_comments">Hoffi fy sylwadau</string>
     <string name="comments_on_my_site">Sylwadau ar fy ngwefan</string>
     <string name="site_settings_list_editor_summary_other">%d eitem</string>
@@ -420,7 +409,6 @@ Language: cy_GB
     <string name="stats_followers_seconds_ago">eiliad yn ôl</string>
     <string name="stats_view_top_posts_and_pages">Cofnod a Thudalen</string>
     <string name="stats_view_videos">Fideos</string>
-    <string name="stats_view_followers">Dilynwyr</string>
     <string name="stats_view_countries">Gwledydd</string>
     <string name="stats_likes">Hoffi</string>
     <string name="stats_timeframe_years">Blwyddyn</string>
@@ -564,7 +552,6 @@ Language: cy_GB
     <string name="note_reply_successful">Ateb wedi ei gyhoeddi</string>
     <string name="new_notifications">%d hysbysiadau newydd</string>
     <string name="more_notifications">a %d yn rhagor.</string>
-    <string name="follows">Yn Dilyn</string>
     <string name="sign_in">Mewngofnodi</string>
     <string name="loading">Llwytho…</string>
     <string name="httpuser">Enw defnyddiwr HTTP</string>

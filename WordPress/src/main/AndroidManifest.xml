@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <!-- Required for storing and retrieving screenshots, taking photos, accessing media files -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -28,6 +29,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <!-- GCM all build types configuration -->
@@ -249,15 +251,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsListActivity" />
         </activity>
-
-        <!-- Story composer activity -->
-        <activity
-            android:name=".ui.stories.StoryComposerActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/WordPress.Stories.Immersive">
-        </activity>
-
         <activity
             android:name=".ui.posts.PostsListActivity"
             android:launchMode="singleTop"
@@ -659,7 +652,7 @@
         </activity>
 
         <activity
-            android:name=".ui.main.SitePickerActivity"
+            android:name=".ui.main.ChooseSiteActivity"
             android:label="@string/site_picker_title"
             android:theme="@style/WordPress.NoActionBar" />
 
@@ -851,105 +844,88 @@
         <service
             android:name=".ui.reader.services.update.ReaderUpdateService"
             android:exported="false"
-            android:label="Reader Update Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Update Service" />
         <service
             android:name=".ui.reader.services.update.ReaderUpdateJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Reader Update JobService"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Update JobService" />
 
         <service
             android:name=".ui.reader.services.discover.ReaderDiscoverService"
             android:exported="false"
-            android:label="Reader Discover Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Discover Service" />
         <service
             android:name=".ui.reader.services.discover.ReaderDiscoverJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Reader Discover JobService"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Discover JobService" />
 
         <service
             android:name=".ui.reader.services.post.ReaderPostService"
             android:exported="false"
-            android:label="Reader Post Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Post Service" />
         <service
             android:name=".ui.reader.services.post.ReaderPostJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Reader Post JobService"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Post JobService" />
 
         <service
             android:name=".ui.reader.services.search.ReaderSearchService"
             android:exported="false"
-            android:label="Reader Search Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Search Service" />
         <service
             android:name=".ui.reader.services.search.ReaderSearchJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Reader Search Job Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Search Job Service" />
 
         <service
             android:name=".ui.reader.services.comment.ReaderCommentService"
             android:exported="false"
-            android:label="Reader Comment Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Reader Comment Service" />
 
         <service
             android:name=".ui.suggestion.service.SuggestionService"
             android:exported="false"
-            android:label="Suggestion Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Suggestion Service" />
         <service
             android:name=".push.NotificationsProcessingService"
             android:exported="false"
-            android:label="Notifications Quick Actions processing Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Notifications Quick Actions processing Service" />
 
         <service
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
-            android:label="Notifications Update Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Notifications Update Service" />
         <service
             android:name=".ui.notifications.services.NotificationsUpdateJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Notifications Update Job Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Notifications Update Job Service" />
 
         <service
             android:name=".util.analytics.service.InstallationReferrerService"
             android:exported="true"
             android:permission="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"
-            android:label="Installation Referrer Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Installation Referrer Service" />
 
         <service
             android:name=".util.analytics.service.InstallationReferrerJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false"
-            android:label="Installation Referrer Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Installation Referrer Service" />
 
         <service
             android:name=".login.LoginWpcomService"
             android:exported="false"
-            android:label="Login to WPCOM Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Login to WPCOM Service" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
-            android:label="Site Creation Service"
-            android:foregroundServiceType="dataSync"/>
+            android:label="Site Creation Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -1023,8 +999,7 @@
         <receiver android:name=".ui.notifications.DismissNotificationReceiver" />
         <service
             android:name=".ui.stats.refresh.lists.widget.WidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:foregroundServiceType="dataSync"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".ui.stats.refresh.lists.widget.views.StatsViewsWidgetConfigureActivity"
@@ -1084,8 +1059,7 @@
 
         <service
             android:name=".push.GCMMessageService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -1156,8 +1130,6 @@
             android:exported="false"
             android:label="@string/site_monitoring"
             android:theme="@style/WordPress.NoActionBar"/>
-
-        <meta-data android:name="io.sentry.traces.activity.enable" android:value="false" />
 
     </application>
     <queries>

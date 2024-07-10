@@ -3,10 +3,12 @@ package org.wordpress.android.ui.reader.discover
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderAnnouncementCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderAnnouncementCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardNewViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostNewViewHolder
@@ -17,24 +19,34 @@ import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.utils.HideItemDivider
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 
 private const val POST_VIEW_TYPE: Int = 1
 private const val INTEREST_VIEW_TYPE: Int = 2
 private const val RECOMMENDED_BLOGS_VIEW_TYPE: Int = 3
 private const val POST_NEW_VIEW_TYPE: Int = 4
+private const val READER_ANNOUNCEMENT_TYPE: Int = 5
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
     private val imageManager: ImageManager,
     private val readerTracker: ReaderTracker,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val isReaderImprovementsEnabled: Boolean,
 ) : Adapter<ReaderViewHolder<*>>() {
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder<*> {
         return when (viewType) {
             POST_VIEW_TYPE -> ReaderPostViewHolder(uiHelpers, imageManager, readerTracker, parent)
-            POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(uiHelpers, imageManager, readerTracker, parent)
+            POST_NEW_VIEW_TYPE -> ReaderPostNewViewHolder(
+                uiHelpers,
+                imageManager,
+                readerTracker,
+                networkUtilsWrapper,
+                parent
+            )
+
             INTEREST_VIEW_TYPE -> {
                 if (isReaderImprovementsEnabled) {
                     ReaderInterestsCardNewViewHolder(uiHelpers, parent)
@@ -42,6 +54,7 @@ class ReaderDiscoverAdapter(
                     ReaderInterestsCardViewHolder(uiHelpers, parent)
                 }
             }
+
             RECOMMENDED_BLOGS_VIEW_TYPE ->
                 if (isReaderImprovementsEnabled) {
                     ReaderRecommendedBlogsCardNewViewHolder(
@@ -52,6 +65,9 @@ class ReaderDiscoverAdapter(
                         parent, imageManager, uiHelpers
                     )
                 }
+
+            READER_ANNOUNCEMENT_TYPE -> ReaderAnnouncementCardViewHolder(parent)
+
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -85,6 +101,7 @@ class ReaderDiscoverAdapter(
             is ReaderPostNewUiState -> POST_NEW_VIEW_TYPE
             is ReaderInterestsCardUiState -> INTEREST_VIEW_TYPE
             is ReaderRecommendedBlogsCardUiState -> RECOMMENDED_BLOGS_VIEW_TYPE
+            is ReaderAnnouncementCardUiState -> READER_ANNOUNCEMENT_TYPE
         }
     }
 
@@ -107,14 +124,17 @@ class ReaderDiscoverAdapter(
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
                 }
+
                 is ReaderPostNewUiState -> {
                     oldItem.postId == (newItem as ReaderPostNewUiState).postId && oldItem.blogId == newItem.blogId
                 }
+
                 is ReaderRecommendedBlogsCardUiState -> {
                     val newItemState = newItem as? ReaderRecommendedBlogsCardUiState
                     oldItem.blogs.map { it.blogId to it.feedId } == newItemState?.blogs?.map { it.blogId to it.feedId }
                 }
-                is ReaderInterestsCardUiState -> {
+
+                is ReaderInterestsCardUiState, is ReaderAnnouncementCardUiState -> {
                     oldItem == newItem
                 }
             }

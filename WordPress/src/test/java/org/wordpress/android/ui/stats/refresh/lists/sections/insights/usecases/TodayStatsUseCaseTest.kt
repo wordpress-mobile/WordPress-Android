@@ -92,7 +92,7 @@ class TodayStatsUseCaseTest : BaseUnitTest() {
             assertViewsAndVisitors(this[1])
             assertLikesAndComments(this[2])
         }
-        verify(statsWidgetUpdaters, times(2)).updateTodayWidget(siteId)
+        verify(statsWidgetUpdaters, times(1)).updateTodayWidget(siteId)
     }
 
     @Test

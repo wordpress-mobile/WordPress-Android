@@ -12,7 +12,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 class BarChartAccessibilityHelper(
     private val barChart: BarChart,
     private val contentDescriptions: List<String>,
-    private val accessibilityEvent: BarChartAccessibilityEvent
+    private val accessibilityEvent: BarChartAccessibilityEvent? = null
 ) : ExploreByTouchHelper(barChart) {
     private val dataSet: IBarDataSet = barChart.data.dataSets.first()
 
@@ -51,7 +51,7 @@ class BarChartAccessibilityHelper(
         when (action) {
             AccessibilityNodeInfoCompat.ACTION_CLICK -> {
                 val entry = dataSet.getEntryForIndex(virtualViewId)
-                accessibilityEvent.onHighlight(entry, virtualViewId)
+                accessibilityEvent?.onHighlight(entry, virtualViewId)
                 return true
             }
         }
@@ -74,7 +74,7 @@ class BarChartAccessibilityHelper(
             }
         }
 
-        node.addAction(AccessibilityActionCompat.ACTION_CLICK)
+        accessibilityEvent?.let { node.addAction(AccessibilityActionCompat.ACTION_CLICK) }
         val entryRectF = barChart.getBarBounds(dataSet.getEntryForIndex(virtualViewId))
         val entryRect = Rect()
         entryRectF.round(entryRect)

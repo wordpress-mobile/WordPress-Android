@@ -82,8 +82,12 @@ class PostListMainViewModel @Inject constructor(
     private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val uploadStarter: UploadStarter
+    private val uploadStarter: UploadStarter,
+    private val postConflictResolutionFeatureUtils: PostConflictResolutionFeatureUtils,
+    private val postConflictDetector: PostConflictDetector
 ) : ViewModel(), CoroutineScope {
+    private var isStarted = false
+
     private val lifecycleOwner = object : LifecycleOwner {
         val lifecycleRegistry = LifecycleRegistry(this)
         override val lifecycle: Lifecycle = lifecycleRegistry
@@ -127,6 +131,10 @@ class PostListMainViewModel @Inject constructor(
     private val _dialogAction = SingleLiveEvent<DialogHolder>()
     val dialogAction: LiveData<DialogHolder> = _dialogAction
 
+    private val _conflictResolutionAction = SingleLiveEvent<PostResolutionOverlayActionEvent.ShowDialogAction>()
+    val conflictResolutionAction: LiveData<PostResolutionOverlayActionEvent.ShowDialogAction> =
+        _conflictResolutionAction
+
     private val _postUploadAction = SingleLiveEvent<PostUploadAction>()
     val postUploadAction: LiveData<PostUploadAction> = _postUploadAction
 
@@ -149,8 +157,10 @@ class PostListMainViewModel @Inject constructor(
     private val postListDialogHelper: PostListDialogHelper by lazy {
         PostListDialogHelper(
             showDialog = { _dialogAction.postValue(it) },
+            showConflictResolutionOverlay = { _conflictResolutionAction.postValue(it) },
             checkNetworkConnection = this::checkNetworkConnection,
-            analyticsTracker = analyticsTracker
+            analyticsTracker = analyticsTracker,
+            isPostConflictResolutionEnabled = postConflictResolutionFeatureUtils.isPostConflictResolutionEnabled()
         )
     }
 
@@ -161,8 +171,9 @@ class PostListMainViewModel @Inject constructor(
             getPostByLocalPostId = postStore::getPostByLocalPostId,
             invalidateList = this::invalidateAllLists,
             checkNetworkConnection = this::checkNetworkConnection,
-            showSnackbar = { _snackBarMessage.postValue(it) },
-            showToast = { _toastMessage.postValue(it) }
+            showSnackBar = { _snackBarMessage.postValue(it) },
+            uploadStore = uploadStore,
+            postStore = postStore
         )
     }
 
@@ -172,8 +183,8 @@ class PostListMainViewModel @Inject constructor(
             site = site,
             postStore = postStore,
             postListDialogHelper = postListDialogHelper,
-            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-            hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            doesPostHaveUnhandledConflict = postConflictDetector::hasUnhandledConflict,
+            hasUnhandledAutoSave = postConflictDetector::hasUnhandledAutoSave,
             triggerPostListAction = { _postListAction.postValue(it) },
             triggerPostUploadAction = { _postUploadAction.postValue(it) },
             triggerPublishAction = this::showPrepublishingBottomSheet,
@@ -182,13 +193,14 @@ class PostListMainViewModel @Inject constructor(
             showSnackbar = { _snackBarMessage.postValue(it) },
             showToast = { _toastMessage.postValue(it) },
             triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
-            copyPost = this::copyPost
+            copyPost = this::copyPost,
+            postConflictResolutionFeatureUtils = postConflictResolutionFeatureUtils
         )
     }
 
     fun copyPost(site: SiteModel, postToCopy: PostModel, performChecks: Boolean = false) {
-        if (performChecks && (postConflictResolver.doesPostHaveUnhandledConflict(postToCopy) ||
-                    postConflictResolver.hasUnhandledAutoSave(postToCopy))
+        if (performChecks && (postConflictDetector.hasUnhandledConflict(postToCopy) ||
+                    postConflictDetector.hasUnhandledAutoSave(postToCopy))
         ) {
             postListDialogHelper.showCopyConflictDialog(postToCopy)
             return
@@ -231,6 +243,7 @@ class PostListMainViewModel @Inject constructor(
         currentBottomSheetPostId: LocalId,
         editPostRepository: EditPostRepository
     ) {
+        if (isStarted) return
         this.site = site
         this.editPostRepository = editPostRepository
 
@@ -290,6 +303,8 @@ class PostListMainViewModel @Inject constructor(
                 savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
+
+        isStarted = true
     }
 
     override fun onCleared() {
@@ -310,8 +325,8 @@ class PostListMainViewModel @Inject constructor(
             postListType = postListType,
             postActionHandler = postActionHandler,
             uploadStatusTracker = uploadStatusTracker,
-            doesPostHaveUnhandledConflict = postConflictResolver::doesPostHaveUnhandledConflict,
-            hasAutoSave = postConflictResolver::hasUnhandledAutoSave,
+            doesPostHaveUnhandledConflict = postConflictDetector::hasUnhandledConflict,
+            hasAutoSave = postConflictDetector::hasUnhandledAutoSave,
             postFetcher = postFetcher,
             getFeaturedImageUrl = featuredImageTracker::getFeaturedImageUrl
         )
@@ -406,8 +421,8 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun switchToDraftTabIfNeeded(data: Intent?) {
-        if (data != null && data.getBooleanExtra(EditPostActivity.EXTRA_IS_NEW_POST, false) &&
-            data.getBooleanExtra(EditPostActivity.EXTRA_HAS_CHANGES, false)
+        if (data != null && data.getBooleanExtra(EditPostActivityConstants.EXTRA_IS_NEW_POST, false) &&
+            data.getBooleanExtra(EditPostActivityConstants.EXTRA_HAS_CHANGES, false)
         ) {
             _selectTab.value = POST_LIST_PAGES.indexOf(DRAFTS)
         }
@@ -471,6 +486,17 @@ class PostListMainViewModel @Inject constructor(
             updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
             editLocalPost = this::editLocalPost,
             copyLocalPost = this::copyLocalPost
+        )
+    }
+
+    // Post Resolution Overlay Actions
+    fun onPostResolutionConfirmed(event: PostResolutionOverlayActionEvent.PostResolutionConfirmationEvent) {
+        postListDialogHelper.onPostResolutionConfirmed(
+            event = event,
+            updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
+            editRestoredAutoSavePost = this::editRestoredAutoSavePost,
+            editLocalPost = this::editLocalPost,
+            updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion
         )
     }
 

@@ -61,6 +61,7 @@ class StatsViewAllFragment : Fragment(R.layout.stats_view_all_fragment) {
 
     @Inject
     lateinit var uiHelpers: UiHelpers
+
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
     private var binding: StatsViewAllFragmentBinding? = null

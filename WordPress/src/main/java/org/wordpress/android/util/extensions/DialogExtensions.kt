@@ -22,16 +22,11 @@ fun Dialog.getPreferenceDialogContainerView(): View? {
     return view
 }
 
-@Suppress("DEPRECATION")
 fun Dialog.setStatusBarAsSurfaceColor() {
-    window?.apply {
-        statusBarColor = context.getColorFromAttribute(MaterialR.attr.colorSurface)
-        if (!context.resources.configuration.isDarkTheme()) {
-            decorView.systemUiVisibility = decorView
-                .systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-    }
+    val statusBarColor = context.getColorFromAttribute(MaterialR.attr.colorSurface)
+    window?.setWindowStatusBarColor(statusBarColor)
 }
+
 
 fun BottomSheetDialog.fillScreen(isDraggable: Boolean = false) {
     setOnShowListener {

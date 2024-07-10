@@ -75,15 +75,6 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         actionListener = null
     }
 
-    override fun onResume() {
-        // Note: This supports the re-calculation and visibility of views when coming from stories.
-        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
-        if (needsRequestLayout) {
-            requireActivity().window.decorView.requestLayout()
-        }
-        super.onResume()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(PrepublishingCategoriesFragmentBinding.bind(view)) {
@@ -207,12 +198,10 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            needsRequestLayout: Boolean,
             bundle: Bundle? = null
         ): PrepublishingCategoriesFragment {
             val newBundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
-                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
             bundle?.let {
                 newBundle.putAll(bundle)

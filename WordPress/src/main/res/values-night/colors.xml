@@ -100,10 +100,9 @@
     <!-- Reader Improvements -->
     <color name="reader_you_might_like_background">#1FFFFFFF</color>
     <color name="reader_improvements_recommended_section_text">#99FFFFFF</color>
-    <color name="reader_following_button_stroke">#40FFFFFF</color>
     <color name="reader_follow_button">@color/white</color>
-    <color name="reader_follow_button_text_color">@color/black</color>
-    <color name="reader_following_button_text_color">#99FFFFFF</color>
+    <color name="reader_follow_button_foreground">@color/black</color>
+    <color name="reader_following_button_foreground">@color/white</color>
     <color name="reader_follow_button_ripple">@color/reader_follow_button_ripple_selector_dark</color>
     <color name="reader_blog_section_avatar_internal_border">@color/white_translucent_20</color>
     <color name="reader_post_body_link">@color/blue_30</color>
@@ -115,8 +114,10 @@
     <color name="reader_interest_filter_chip_text_checked">@color/black</color>
     <color name="reader_interest_filter_chip_background_checked">@color/white</color>
 
+    <!-- Notifications -->
+    <color name="inline_action_filled">@color/jetpack_green_30</color>
+
     <!-- Gravatar Info Banners -->
     <color name="gravatar_info_banner">#1C1C1E</color>
     <color name="gravatar_sync_info_banner">#2C2C2E</color>
-
 </resources>

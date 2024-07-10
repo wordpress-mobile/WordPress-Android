@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-06-10 14:21:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: nb_NO
 -->
 <resources>
@@ -34,7 +34,6 @@ Language: nb_NO
     <string name="stats_published_minutes_ago">Publisert for %1$d minutter siden</string>
     <string name="stats_published_a_minute_ago">Publisert for et minutt siden</string>
     <string name="stats_published_seconds_ago">Publisert for noen sekunder siden</string>
-    <string name="stats_view_total_followers">Antall følgere</string>
     <string name="stats_view_total_comments">Antall kommentarer</string>
     <string name="stats_view_total_likes">Antall likerklikk</string>
     <string name="blogging_prompts_notification_dismiss">Avvis</string>
@@ -274,7 +273,6 @@ Language: nb_NO
     <string name="scan_history_all_threats_tab">Alle</string>
     <string name="scan_history_menu_title">Historikk</string>
     <string name="gutenberg_native_move_to_bottom">Flytt til bunnen</string>
-    <string name="label_control_upload">Last opp</string>
     <string name="jetpack_icon_content_description">ikon</string>
     <string name="backup_download_complete_download_action_button_content_description">Nedlastingsknapp</string>
     <string name="backup_download_complete_download_share_action_button">Del lenke</string>
@@ -327,15 +325,7 @@ Language: nb_NO
     <string name="reader_btn_follow_comments">Følg samtalen på e-post</string>
     <string name="activity_log_activity_type_filter_clear">Tøm</string>
     <string name="activity_log_activity_type_filter_apply">Bruk</string>
-    <string name="dialog_edit_story_unsupported_format_title">GIF-filer ikke støttet</string>
-    <string name="color_picker_label_background">Bakgrunn</string>
-    <string name="color_picker_label_text">Tekst</string>
-    <string name="dialog_discard_story_ok_button_edit">Forkast</string>
-    <string name="dialog_discard_story_message_edit">Ingen endringer vil bli lagret.</string>
-    <string name="dialog_discard_story_title_edit">Forkaste endringer?</string>
     <string name="label_done_button">Fullført</string>
-    <string name="label_next_button">Neste</string>
-    <string name="delete_button_alt">Slett</string>
     <string name="reader_discover_no_posts_title">Ingen nylige innlegg</string>
     <string name="reader_discover_empty_title">Velkommen!</string>
     <string name="scan">Skann</string>
@@ -369,12 +359,6 @@ Language: nb_NO
     <string name="gutenberg_native_add_this_telephone_link">Legg til denne telefonlenken</string>
     <string name="gutenberg_native_add_this_link">Legg til denne lenken</string>
     <string name="gutenberg_native_add_this_email_link">Legg til denne e-postlenken</string>
-    <string name="typeface_label_shrikhand">Fet</string>
-    <string name="typeface_label_space_mono">Moderne</string>
-    <string name="typeface_label_pacifico">Lekende</string>
-    <string name="typeface_label_oswald">Sterkt</string>
-    <string name="typeface_label_libre_baskerville">Klassisk</string>
-    <string name="typeface_label_nunito">Hverdagslig</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s valgt</string>
     <string name="login_get_link_by_email">Få en innloggingslenke med e-post</string>
@@ -392,60 +376,12 @@ Language: nb_NO
     <string name="gutenberg_native_page_title_s">Sidetittel. %s</string>
     <string name="gutenberg_native_page_title_empty">Sidetittel. Tom.</string>
     <string name="toast_error_playing_video">Det oppsto en feil under avspilling av din video</string>
-    <string name="toast_error_saving_video">Video kunne ikke lagres</string>
-    <string name="toast_error_saving_image">Feil ved lagring av bilde</string>
-    <string name="toast_capture_operation_in_progress">Operasjon pågår, prøv igjen</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Se lagring</string>
-    <string name="dialog_insufficient_device_storage_error_title">Utilstrekkelig lagringsplass på enheten</string>
-    <string name="dialog_story_saving_error_message">Prøv å lagre på nytt, eller slett lysbildene og forsøk så publisere fortellingen på nytt.</string>
-    <string name="dialog_story_saving_error_title_plural">Kunne ikke lagre %1$d lysbilder</string>
-    <string name="dialog_story_saving_error_title_singular">Kunne ikke lagre 1 lysbilde</string>
-    <string name="story_saving_failed_quick_action_manage">Behandle</string>
-    <string name="story_saving_failed_message_plural">%1$d lysbilder trenger handling</string>
-    <string name="story_saving_failed_message_singular">1 lysbilde trenger handling</string>
-    <string name="story_saving_failed_title">Kunne ikke laste opp \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_with_error">Kunne ikke laste opp \"%1$s\"</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" publisert</string>
-    <string name="story_saving_snackbar_started">Laster opp \"%1$s\"…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d lysbilder igjen</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">1 lysbilde igjen</string>
-    <string name="story_saving_title_several">mange fortellinger</string>
-    <string name="story_saving_title">Lagrer \"%1$s\"…</string>
-    <string name="story_saving_untitled">Uten tittel</string>
-    <string name="dialog_discard_story_ok_button">Forkast</string>
-    <string name="dialog_discard_story_message">Din fortelling vil ikke lagres som kladd.</string>
-    <string name="dialog_discard_story_title">Forkaste fortelling?</string>
-    <string name="dialog_discard_page_ok_button">Slett</string>
-    <string name="dialog_discard_page_title">Slette fortellingslysbilde?</string>
-    <string name="label_text_color_button">Endre tekstfarge</string>
-    <string name="label_text_alignment_button">Endre tekstjustering</string>
-    <string name="label_frame_errored">feilet</string>
-    <string name="label_frame_selected_border">valgte</string>
-    <string name="label_frame_unselected_border">fravalgte</string>
-    <string name="label_frame_image">Lysbilde</string>
-    <string name="label_retry_icon">Prøv igjen</string>
-    <string name="label_saved_icon">Lagret</string>
     <string name="label_close_button">Lukk</string>
-    <string name="label_share_to">Del på</string>
-    <string name="label_snackbar_share">DEL</string>
-    <string name="label_snackbar_loop_frame_saved">Lagret til forografier</string>
-    <string name="label_control_retry">Prøv på nytt</string>
-    <string name="label_control_saved">Lagret</string>
-    <string name="label_control_saving">Lagrer</string>
-    <string name="label_control_flash">Blitz</string>
-    <string name="label_control_flip_camera">Snu</string>
-    <string name="sound_button_alt">Lyd</string>
-    <string name="text_button_alt">Tekst</string>
-    <string name="flash_button_alt">Blitz</string>
-    <string name="flip_button_alt">Snu kamera</string>
-    <string name="capture_button_alt">Fang opp</string>
     <string name="mlp_preview_page">Forhåndsvis</string>
     <string name="mlp_create_page">Lag side</string>
     <string name="mlp_create_blank_page">Lag tom side</string>
     <string name="mlp_choose_layout_title">Velg et oppsett</string>
     <string name="prepublishing_nudges_story_title_hint">Gi din fortelling en tittel</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Lag et innlegg eller en fortelling</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Lag et innlegg, en side eller fortelling</string>
     <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Lag. %2$s Velg så &lt;b&gt;blogginnlegg&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Velg fra enheten</string>
     <string name="my_site_bottom_sheet_add_story">Fortelling</string>
@@ -627,7 +563,6 @@ Language: nb_NO
     <string name="post_list_tab_published_posts">Publisert</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Ikke tilkoblet</string>
     <string name="notifications_tab_title_likes">Likinger</string>
-    <string name="notifications_tab_title_follows">Følger</string>
     <string name="notifications_tab_title_comments">Kommentarer</string>
     <string name="notifications_tab_title_unread_notifications">Ulest</string>
     <string name="dlg_cancel_action_dont_trash">Ikke kast</string>
@@ -933,9 +868,7 @@ Language: nb_NO
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
     <string name="backdated_for">Tilbakedatert til: %s</string>
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
-    <string name="stats_insights_social">Sosialt</string>
     <string name="stats_insights_annual_site_stats">Årlig nettstedsstatistikk</string>
-    <string name="stats_view_follower_totals">Følger-totaler</string>
     <string name="domain_suggestions_fetch_error">Domeneforslag kunne ikke lastes</string>
     <string name="domain_suggestions_search_hint">Skriv inn et nøkkelord for flere detaljer</string>
     <string name="domains_suggestions_empty_list">Ingen forslag funnet</string>
@@ -1096,7 +1029,6 @@ Language: nb_NO
     <string name="stats_insights_tags_and_categories">Stikkord og kategorier</string>
     <string name="stats_insights_all_time_stats">Til all tid</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Følgere</string>
     <string name="stats_publicize_service_label">Tjeneste</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Visninger</string>
@@ -1109,8 +1041,6 @@ Language: nb_NO
     <string name="stats_comments_posts_and_pages">Innlegg og sider</string>
     <string name="stats_comments_authors">Forfattere</string>
     <string name="stats_follower_since_label">Siden</string>
-    <string name="stats_follower_label">Følger</string>
-    <string name="stats_followers_count_message">Totalt %1$s følgere: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Behandle innsikter</string>
@@ -1208,13 +1138,10 @@ Language: nb_NO
     <string name="sign_out_wpcom_confirm_with_no_changes">Logg ut av WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Du har endringer for innlegg som ikke er lastet opp til ditt nettsted. Hvis du logger ut nå vil disse endringene bli slettet fra din enhet. Logge ut likevel?</string>
     <string name="people_empty_list_filtered_viewers">Ingen besøkende ennå</string>
-    <string name="people_empty_list_filtered_email_followers">Ingen epost-følgere ennå</string>
-    <string name="people_empty_list_filtered_followers">Ingen følgere ennå</string>
     <string name="people_empty_list_filtered_users">Ingen brukere ennå</string>
     <string name="reader_empty_posts_liked_description">Innlegg du liker vil dukke opp her</string>
     <string name="reader_empty_posts_liked_title">Ingen likt ennå</string>
     <string name="notifications_empty_likes">Ingen likinger ennå</string>
-    <string name="notifications_empty_followers">Ingen følgere ennå</string>
     <string name="activity_log_limited_content_on_free_plan">Siden du ikke har et abonnement vil du bare se et begrenset antall handelser i din aktivitet.</string>
     <string name="activity_log_empty_subtitle">Når du gjør endringer på ditt nettsted vil du kunne se historikken her</string>
     <string name="activity_log_empty_title">Ingen aktivitet ennå</string>
@@ -1859,35 +1786,25 @@ Language: nb_NO
     <string name="preference_open_device_settings">Åpne enhetsinnstillingene</string>
     <string name="invite_invalid_email">%s: Ugyldig E-post</string>
     <string name="invite_user_blocked_invites">%s: Brukeren har blokkert invitasjoner</string>
-    <string name="invite_already_following">%s: Følger allerede</string>
     <string name="invite_already_a_member">%s: Allerede et medlem</string>
     <string name="invite_username_not_found">%s: Brukeren ble ikke funnet</string>
     <string name="comment_moderated_approved">Kommentaren er godkjent!</string>
     <string name="like">Like</string>
     <string name="timespan_now">nå</string>
     <string name="role_viewer">Leser</string>
-    <string name="role_follower">Følger</string>
     <string name="error_post_my_profile_no_connection">Ingen tilkobling; klarte ikke å lagre profilen din</string>
     <string name="alignment_right">Høyre</string>
     <string name="alignment_left">Venstre</string>
     <string name="alignment_none">Ingen</string>
     <string name="site_settings_list_editor_action_mode_title">Valgte %1$d</string>
     <string name="error_fetch_users_list">Klarte ikke å hente inn sidebrukerne</string>
-    <string name="title_email_follower">E-postfølger</string>
-    <string name="title_follower">Følger</string>
     <string name="people_fetching">Henter tak i brukere …</string>
     <string name="people_dropdown_item_viewers">Lesere</string>
-    <string name="people_dropdown_item_email_followers">E-postfølgere</string>
-    <string name="people_dropdown_item_followers">Følgere</string>
     <string name="people_dropdown_item_team">Arbeidslag</string>
     <string name="invite_message_usernames_limit">Inviter opp til 10 E-postadresser og/eller WordPress.com-brukernavn. De som trenger et brukernavn, vil bli sendt instruksjoner om hvordan man lager et.</string>
     <string name="viewer_remove_confirmation_message">Hvis du fjerner denne leseren, vil han/hun ikke kune besøke dette nettstedet.\n\nVil du fortsatt fjerne denne leseren?</string>
-    <string name="follower_remove_confirmation_message">Hvis den er fjernet, vil denne følgeren slutte å motta notifikasjoner om dette nettstedet, med mindre de følger deg på nytt.\n\nVil du fortsatt fjerne denne brukeren?</string>
     <string name="follower_subscribed_since">Siden %1$s</string>
     <string name="error_remove_viewer">Klarte ikke å fjerne leseren</string>
-    <string name="error_remove_follower">Klarte ikke å fjerne følgeren</string>
-    <string name="error_fetch_email_followers_list">Kunne ikke hente inn nettstedets E-postfølgere</string>
-    <string name="error_fetch_followers_list">Kunne ikke hente inn nettstedets følgere</string>
     <string name="editor_failed_uploads_switch_html">Noen medieopplastninger har mislyktes. Du kan ikke bytte til HTML-modus i\n  denne tilstanden. Vil du fjerne alle mislykkede opplastninger og fortsette?</string>
     <string name="image_thumbnail">Miniatyrbilde</string>
     <string name="visual_editor">Visuell redigerer</string>
@@ -1992,7 +1909,6 @@ Language: nb_NO
     <string name="replies_to_my_comments">Svar til mine kommentarer</string>
     <string name="username_mentions">Nevninger av brukernavnet</string>
     <string name="site_achievements">Nettstedets oppnåelser</string>
-    <string name="site_follows">Nettstedets følgere</string>
     <string name="likes_on_my_posts">Likes på mine innlegg</string>
     <string name="likes_on_my_comments">Likes på mine kommentarer</string>
     <string name="comments_on_my_site">Kommentarer på siden min</string>
@@ -2218,7 +2134,6 @@ Language: nb_NO
     <string name="site_picker_cant_hide_current_site">«%s» ble ikke skjult, siden det er det nåværende nettstedet</string>
     <string name="site_picker_create_wpcom">Opprett et WordPress.com-nettsted</string>
     <string name="site_picker_add_self_hosted">Legg til selvbetjent nettsted</string>
-    <string name="site_picker_add_site">Legg til nettsted</string>
     <string name="site_picker_edit_visibility">Vis/skjul nettsteder</string>
     <string name="site_picker_title">Velg nettsted</string>
     <string name="my_site_btn_view_site">Vis nettsted</string>
@@ -2261,7 +2176,6 @@ Language: nb_NO
     <string name="stats_followers_minutes">%1$d minutter</string>
     <string name="stats_followers_a_minute_ago">ett minutt siden</string>
     <string name="stats_followers_seconds_ago">sekunder siden</string>
-    <string name="stats_view_followers">Følgere</string>
     <string name="stats_view_videos">Videoer</string>
     <string name="stats_view_top_posts_and_pages">Innlegg og sider</string>
     <string name="stats_view_countries">Land</string>
@@ -2416,7 +2330,6 @@ Language: nb_NO
     <string name="manage">Håndter</string>
     <string name="more_notifications">og %d flere.</string>
     <string name="new_notifications">%d nye varsler</string>
-    <string name="follows">Følg</string>
     <string name="note_reply_successful">Kommentar publisert</string>
     <string name="sign_in">Logg inn</string>
     <string name="loading">Laster inn …</string>

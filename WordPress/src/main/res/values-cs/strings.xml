@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-12-13 09:55:25+0000
+Translation-Revision-Date: 2024-02-29 12:55:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: cs_CZ
 -->
 <resources>
+    <string name="site_monitoring_cannot_be_started">V současné době nemůžeme spustit monitorování webu. Zkuste to prosím později</string>
+    <string name="site_monitoring_tab_title_web_server_logs">Protokoly webového serveru</string>
+    <string name="site_monitoring_tab_title_php_logs">Protokoly PHP</string>
+    <string name="site_monitoring">Monitorování webu</string>
+    <string name="gutenberg_native_waiting_for_connection">Čekání na připojení</string>
+    <string name="gutenberg_native_font_size_1_s">Velikost písma, %1$s</string>
+    <string name="gutenberg_native_network_connection_lost_working_offline">Ztráta síťového připojení, práce v režimu offline</string>
+    <string name="gutenberg_native_network_connection_re_established">Obnovení síťového připojení</string>
+    <string name="gutenberg_native_working_offline">Práce v režimu offline</string>
+    <string name="domains_site_domain">%s</string>
+    <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">Jdeme na to!</string>
     <string name="blaze_campaigns_card_footer_label">Vytvořit kampaň</string>
     <string name="privacy_banner_save">Uložit</string>
     <string name="privacy_banner_settings">Nastavení</string>
@@ -27,7 +38,6 @@ Language: cs_CZ
     <string name="jetpack_full_plugin_install_onboarding_description_this_site">Tento web</string>
     <string name="jetpack_full_plugin_install_concise_description_multiple">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte prosím %3$s.</string>
     <string name="jetpack_full_plugin_install_concise_description_single">%1$s používá aplikaci %2$s, která zatím nepodporuje všechny funkce aplikace. Nainstalujte %3$s.</string>
-    <string name="wp_jetpack_feature_removal_static_posters_phase">Přesun do aplikace Jetpack za pár dní.</string>
     <string name="wp_jp_static_poster_footnote">Přepínání je zdarma a trvá jen minutu.</string>
     <string name="wp_jp_static_poster_button_secondary">Více se dozvíte na Jetpack.com</string>
     <string name="wp_jp_static_poster_button_primary">Přepněte do aplikace Jetpack</string>
@@ -138,8 +148,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Zkontrolujte připojení k síti a zkuste to znovu.</string>
-    <string name="blogging_prompts_list_error_network_title">Momentálně tento obsah nelze načíst</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
     <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
     <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>
@@ -265,7 +273,6 @@ Language: cs_CZ
     <string name="qrcode_auth_flow_validated_subtitle">Skenujte pouze QR kódy pořízené přímo z vašeho webového prohlížeče. Nikdy neskenujte kód, který vám poslal někdo jiný.</string>
     <string name="qrcode_auth_flow_validated_default_title">Pokoušíte se přihlásit do webového prohlížeče poblíž %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Pokoušíte se přihlásit do %1$s poblíž %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Komentování na jiných blozích je skvělý způsob, jak získat pozornost a sledovatele vašeho nového webu.</string>
     <string name="stats_insights_comments_guide_card">💡Klepnutím na „ZOBRAZIT VÍCE“ zobrazíte své nejlepší komentátory.</string>
     <string name="stats_insights_latest_post_empty">Vraťte se, až publikujete svůj první příspěvek!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Podívejte se na naše nejlepší tipy ke zvýšení počtu zhlédnutí a návštěvnosti %1$s</string>
@@ -303,7 +310,6 @@ Language: cs_CZ
     <string name="me_btn_scan_login_code">Naskenujte přihlašovací kód</string>
     <string name="stats_insights_likes_guide_card">⭐️ Váš poslední příspěvek %1$s má %2$s lajků.</string>
     <string name="stats_most_popular_percent_views_empty">Nedostatek aktivity. Vraťte se později, až budou mít vaše stránky více návštěvníků!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% z celkového počtu sledujících</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopírovat odkaz</string>
     <string name="quick_start_completed_tour_title">Gratuluji! Vyznáte se&lt;br/&gt;</string>
@@ -331,7 +337,6 @@ Language: cs_CZ
     <string name="stats_published_a_minute_ago">Publikováno před minutou</string>
     <string name="stats_published_seconds_ago">Publikováno před sekundami</string>
     <string name="stats_view_total_comments">Celkový počet komentářů</string>
-    <string name="stats_view_total_followers">Celkem počet fanoušků</string>
     <string name="stats_view_total_likes">Celkem to se mi líbí</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
@@ -588,11 +593,6 @@ Language: cs_CZ
     <string name="gutenberg_native_embed_options">Možnosti vložení</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Dvojitým klepnutím zobrazíte možnosti vložení.</string>
     <string name="quick_start_list_create_site_message">Stránka vytvořena! Dokončete další úkol.</string>
-    <string name="like_faces_others_like_text">Toto se líbí &lt;a href=\"\"&gt;%1$s blogerům&lt;/a&gt;.</string>
-    <string name="like_faces_one_blogger_likes_text">To se líbí &lt;a href=\"\"&gt;1 blogerovi&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_others_like_text">Toto se líbí &lt;a href=\"\"&gt;vám a %1$s bloggerům&lt;/a&gt;.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;To se líbí vám a 1 bloggerovi&lt;/a&gt;.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;To se vám&lt;/a&gt; líbí.</string>
     <string name="gutenberg_native_line_height">Výška řádku</string>
     <string name="domains_free_plan_get_your_domain_title">Získejte svou doménu</string>
     <string name="recommend_app_generic_get_template_error">Neznámá chyba při načítání šablony doporučené aplikace</string>
@@ -757,6 +757,7 @@ Language: cs_CZ
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_link_label">Popisek odkazu</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
@@ -811,7 +812,6 @@ Language: cs_CZ
     <string name="gutenberg_native_add_button_text">Přidat text tlačítka</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
     <string name="activity_log_backup_download_notice_download_action">Stáhnout</string>
-    <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
     <string name="threat_fix_all_status_success_message_plural">Hrozby byly úspěšně opraveny.</string>
     <string name="threat_fix_all_confirmation_message_plural">Potvrďte, že chcete opravit všechny aktivní hrozby %s.</string>
     <string name="scan_idle_threats_description_plural">Prohledávání zjistilo %1$s potenciálních hrozeb s %2$s. Zkontrolujte je prosím níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
@@ -981,7 +981,6 @@ Language: cs_CZ
     <string name="backup_download_complete_download_share_action_button_content_description">Tlačítko sdílet odkaz</string>
     <string name="backup_download_complete_info">Také jsme vám zaslali e-mailem odkaz na váš soubor.</string>
     <string name="jetpack_icon_content_description">ikona</string>
-    <string name="label_control_upload">Nahrát</string>
     <string name="backup_download_complete_download_share_action_button">Sdílet odkaz</string>
     <string name="backup_download_complete_download_action_button">Stáhnout</string>
     <string name="backup_download_complete_header">Vaše záloha je nyní k dispozici ke stažení</string>
@@ -1079,7 +1078,6 @@ Language: cs_CZ
     <string name="dialog_confirm_copy_local_edit_button">Nejprve upravte příspěvek</string>
     <string name="dialog_confirm_copy_local_copy_button">Zkopírujte verzi z této aplikace</string>
     <string name="activity_log_activity_type_filter_header">Filtrovat podle typu aktivity</string>
-    <string name="toast_edit_story_update_in_progress_title">Příběh se ukládá, prosím čekejte…</string>
     <string name="gutenberg_native_file_name">Název souboru</string>
     <string name="gutenberg_native_edit_file">Upravit soubor</string>
     <string name="gutenberg_native_copy_file_url">Zkopírujte adresu URL souboru</string>
@@ -1097,27 +1095,12 @@ Language: cs_CZ
     <string name="activity_log_activity_type_filter_apply">Potvrdit</string>
     <string name="reader_follow_comments_null_response">Žádná odpověď přijata</string>
     <string name="reader_follow_comments_bad_format_response">Přijata neplatná odpověď</string>
-    <string name="dialog_edit_story_unsupported_format_message">Jeden nebo více snímků nebylo přidáno do vašeho příběhu, protože příběhy momentálně nepodporují soubory GIF. Místo toho zvolte statický obrázek nebo pozadí videa.</string>
-    <string name="dialog_edit_story_limited_message">Tento příběh byl upraven na jiném zařízení a schopnost upravovat určité objekty může být omezená.</string>
-    <string name="dialog_edit_story_unavailable_title">Příběh nelze upravit</string>
-    <string name="dialog_edit_story_unavailable_message">Nelze načíst média pro tento příběh. Zkontrolujte své připojení k internetu a zkuste to za chvíli znovu.</string>
-    <string name="dialog_edit_story_unrecoverable_title">Příběh nelze upravit</string>
-    <string name="dialog_edit_story_unrecoverable_message">Na webu jsme nenašli média tohoto příběhu.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Soubory GIF nejsou podporovány</string>
     <string name="cannot_retry_deleted_media_item_fatal">Média byla odstraněna. Zkuste svůj příběh vytvořit znovu.</string>
-    <string name="dialog_edit_story_limited_title">Omezená úprava příběhu</string>
     <string name="label_done_button">Hotovo</string>
-    <string name="label_next_button">Další</string>
-    <string name="delete_button_alt">Smazat</string>
     <string name="hpp_error_title">Rozložení nejsou k dispozici v režimu offline</string>
     <string name="hpp_error_subtitle">Až budete znovu online, klepněte na opakovat.</string>
     <string name="hpp_retry_error">Zkontrolujte prosím připojení k internetu a zkuste to znovu.</string>
     <string name="hpp_choose_error">Při výběru designu došlo k chybě.</string>
-    <string name="dialog_discard_story_title_edit">Zrušit změny?</string>
-    <string name="dialog_discard_story_message_edit">Jakékoli provedené změny nebudou uloženy.</string>
-    <string name="dialog_discard_story_ok_button_edit">Zahodit</string>
-    <string name="color_picker_label_text">Text</string>
-    <string name="color_picker_label_background">Pozadí</string>
     <string name="scan">Prohledat</string>
     <string name="reader_discover_empty_title">Vítejte!</string>
     <string name="reader_discover_no_posts_title">Žádné nedávné příspěvky</string>
@@ -1160,19 +1143,11 @@ Language: cs_CZ
     <string name="media_loading_failed">Načítání média se nezdařilo</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' není plně podporován</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Usilovně pracujeme na přidání dalších bloků s každým vydáním.</string>
-    <string name="stories_intro_description_second">Jsou publikovány jako nový blogový příspěvek na vašem webu, takže vašemu publiku nikdy nic neunikne.</string>
-    <string name="stories_intro_create_story_post_label">Vytvořit příběhový příspěvek</string>
     <string name="gutenberg_native_choose_images">Vyberte obrázky</string>
     <string name="gutenberg_native_edit_using_web_editor">Upravit pomocí webového editoru</string>
     <string name="gutenberg_native_help_button">Tlačítko nápověda</string>
-    <string name="stories_intro_description_first">Zkombinujte fotografie, videa a text a vytvořte poutavé příběhy příspěvků, na které lze klepnout, které se vašim návštěvníkům budou líbit.</string>
-    <string name="stories_intro_title_second">Příběhový příspěvek nezmizí</string>
     <string name="mlp_notice_page_created">Stránka byla vytvořena</string>
     <string name="mlp_notice_blank_page_created">Prázdná stránka vytvořena</string>
-    <string name="stories_intro_main_title">Představujeme příběhy</string>
-    <string name="stories_intro_image_caption_first">Jak vytvořit příběhový příspěvek</string>
-    <string name="stories_intro_image_caption_second">Příklad názvu příběhu</string>
-    <string name="stories_intro_title_first">Nyní jsou příběhy pro každého</string>
     <string name="photo_picker_wordpress_media_library">Vyberte si z knihovny médií WordPress</string>
     <string name="media_insert_failed_with_reason">Vložení média se nezdařilo: %s</string>
     <string name="media_insert_failed">Vložení média se nezdařilo.</string>
@@ -1193,13 +1168,6 @@ Language: cs_CZ
     <string name="suggestion_no_connection">Žádné internetové připojení.\nNávrhy nejsou k dispozici.</string>
     <string name="mlp_selected_description">%s vybrat</string>
     <string name="mlp_notselected_description">%s</string>
-    <string name="toast_capture_operation_permission_needed">Abyste mohli nahrávat video, musíte aplikaci udělit oprávnění k nahrávání zvuku</string>
-    <string name="typeface_label_nunito">Neformální</string>
-    <string name="typeface_label_libre_baskerville">Klasický</string>
-    <string name="typeface_label_oswald">Silné</string>
-    <string name="typeface_label_pacifico">Hravý</string>
-    <string name="typeface_label_space_mono">Moderní</string>
-    <string name="typeface_label_shrikhand">Tučně</string>
     <string name="media_browse_for_items">Vyhledejte položky</string>
     <string name="comment_unable_to_show_error">Tento komentář nelze zobrazit</string>
     <string name="permission_microphone">Mikrofon</string>
@@ -1217,11 +1185,6 @@ Language: cs_CZ
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Skrýt</string>
     <string name="reader_discover_interests_header">Možná se vám bude líbit</string>
     <string name="create_post_story_fab_tooltip">Vytvořte příspěvek nebo příběh</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Zobrazit úložiště</string>
-    <string name="toast_story_page_not_found">Nepodařilo se najít snímek příběhu</string>
-    <string name="toast_capture_operation_in_progress">Probíhá operace, zkuste to znovu</string>
-    <string name="toast_error_saving_image">Chyba při ukládání obrázku</string>
-    <string name="toast_error_saving_video">Video se nepodařilo uložit</string>
     <string name="camera_error">Toto zařízení nepodporuje API Camera2.</string>
     <string name="toast_error_playing_video">Při přehrávání videa došlo k chybě</string>
     <string name="gutenberg_native_page_title_empty">Název stránky. Prázdný</string>
@@ -1229,62 +1192,14 @@ Language: cs_CZ
     <string name="gutenberg_native_paste_block_after">Vložte blok za</string>
     <string name="gutenberg_native_updates_the_title">Aktualizuje název.</string>
     <string name="gutenberg_native_video_caption_empty">Titulek videa. Prázdný</string>
-    <string name="story_saving_failed_message_singular">1 snímek vyžaduje akci</string>
-    <string name="story_saving_failed_message_plural">%1$d snímků vyžaduje akci</string>
-    <string name="story_saving_failed_quick_action_manage">Spravovat</string>
-    <string name="dialog_story_saving_error_title_singular">Nelze uložit 1 snímek</string>
-    <string name="dialog_story_saving_error_title_plural">Nelze uložit %1$d snímků</string>
-    <string name="dialog_story_saving_error_message">Opakujte uložení nebo smazání snímků a zkuste svůj příběh znovu publikovat.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Nedostatečné úložiště zařízení</string>
-    <string name="dialog_insufficient_device_storage_error_message">Před publikováním musíme příběh uložit do zařízení. Zkontrolujte své nastavení úložiště a odeberte soubory, abyste uvolnili místo.</string>
-    <string name="story_saving_snackbar_started">Nahrávám \"%1$s\"…</string>
-    <string name="story_saving_snackbar_finished_successfully">\"%1$s\" zveřejněno</string>
-    <string name="story_saving_snackbar_finished_with_error">Nelze nahrát \"%1$s\"</string>
-    <string name="story_saving_failed_title">Nelze nahrát \"%1$s\"</string>
-    <string name="story_saving_title">Ukládání \"%1$s\"…</string>
-    <string name="story_saving_title_several">několik příběhů</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Zbývá 1 snímek</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">%1$d zbývající snímky</string>
-    <string name="label_frame_unselected_border">nevybraný</string>
-    <string name="label_frame_selected_border">vybráno</string>
-    <string name="label_frame_errored">chybných</string>
-    <string name="label_text_alignment_button">Změnit zarovnání textu</string>
-    <string name="label_text_color_button">Změnit barvu textu</string>
-    <string name="dialog_discard_page_title">Smazat snímek příběhu?</string>
-    <string name="dialog_discard_page_message">Tento snímek bude z vašeho příběhu odstraněn.</string>
-    <string name="dialog_discard_errored_page_message">Tento snímek ještě nebyl uložen. Pokud tento snímek odstraníte, přijdete o všechny provedené úpravy.</string>
-    <string name="dialog_discard_page_ok_button">Odstranit</string>
-    <string name="dialog_discard_story_title">Zahodit příspěvek příběhu?</string>
-    <string name="dialog_discard_story_message">Váš příběhový příspěvek nebude uložen jako koncept.</string>
-    <string name="dialog_discard_story_ok_button">Vyřadit</string>
-    <string name="story_saving_untitled">Nepojmenované</string>
-    <string name="label_control_saved">Uloženo</string>
-    <string name="label_control_saving">Ukládání</string>
-    <string name="sound_button_alt">Zvuk</string>
-    <string name="text_button_alt">Text</string>
     <string name="mlp_preview_page">Náhled</string>
     <string name="mlp_create_page">Vytvořit stránku</string>
     <string name="mlp_create_blank_page">Vytvořit prázdnou stránku</string>
     <string name="quick_start_dialog_create_new_post_message_short">Klepněte na %1$s Vytvořit. %2$s Poté vyberte &lt;b&gt;Blogový příspěvek&lt;/b&gt;</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Vytvořte příspěvek, stránku nebo příběh</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Vytvořte příspěvek nebo příběh</string>
     <string name="prepublishing_nudges_story_title_hint">Dejte svému příběhu název</string>
     <string name="mlp_choose_layout_title">Vyberte rozložení</string>
     <string name="mlp_choose_layout_subtitle">Začněte výběrem z široké škály předem připravených rozvržení stránky. Nebo jen začněte s prázdnou stránkou.</string>
-    <string name="capture_button_alt">Zachytit</string>
-    <string name="flip_button_alt">Překlopit fotoaparát</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="stickers_button_alt">Samolepky</string>
-    <string name="label_control_flip_camera">Překlopit</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_retry">Zkusit znovu</string>
-    <string name="label_snackbar_loop_frame_saved">Uloženo do fotek</string>
-    <string name="label_snackbar_share">SDÍLET</string>
-    <string name="label_share_to">Sdílet s</string>
     <string name="label_close_button">Zavřít</string>
-    <string name="label_saved_icon">Uloženo</string>
-    <string name="label_retry_icon">Zkusit znovu</string>
-    <string name="label_frame_image">Posuvník</string>
     <string name="error_media_quota_exceeded">Byla překročena kvóta úložiště</string>
     <string name="error_media_quota_exceeded_toast">Soubor nelze nahrát.\nByla překročena kvóta úložiště.</string>
     <string name="reader_toast_err_page_jump_not_found">Nelze najít propojený odkaz na stránku</string>
@@ -1377,6 +1292,7 @@ Language: cs_CZ
     <string name="status_and_visibility">Stav &amp; Viditelnost</string>
     <string name="update_now">Aktualizovat nyní</string>
     <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
+    <string name="pages_item_subtitle">%1$s ·</string>
     <string name="gutenberg_native_open_block_actions_menu">Otevřete nabídku blokovat akce</string>
     <string name="gutenberg_native_move_to_top">Přesunout nahoru</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
@@ -1511,7 +1427,6 @@ Language: cs_CZ
     <string name="notifications_tab_title_unread_notifications">Nepřečteno</string>
     <string name="dlg_cancel_action_dont_trash">Ponechat</string>
     <string name="dlg_confirm_action_trash">Odstranit</string>
-    <string name="notifications_tab_title_follows">Odběry</string>
     <string name="notifications_tab_title_likes">Líbí se</string>
     <string name="stats_insights_management_activity">Aktivita</string>
     <string name="stats_insights_management_posts_and_pages">Příspěvky a Stránky</string>
@@ -1829,9 +1744,7 @@ Language: cs_CZ
     <string name="domains_suggestions_empty_list">Nebyly nalezeny žádné návrhy</string>
     <string name="domain_suggestions_search_hint">Napište klíčové slovo pro více nápadů</string>
     <string name="domain_suggestions_fetch_error">Návrhy domén nelze načíst</string>
-    <string name="stats_view_follower_totals">Odběratelé celkem</string>
     <string name="stats_insights_annual_site_stats">Roční statistiky stránek</string>
-    <string name="stats_insights_social">Sociální</string>
     <string name="stats_insights_management_title">Zobrazují se pouze nejrelevantnější statistiky. Níže přidejte a uspořádejte své statistiky.</string>
     <string name="backdated_for">Zpětné pro: %s</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Místní změny</string>
@@ -2004,11 +1917,8 @@ Language: cs_CZ
     <string name="stats_comments_title_label">Název</string>
     <string name="stats_comments_posts_and_pages">Příspěvky a stránky</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_publicize_followers_label">Fanoušci</string>
     <string name="stats_publicize_service_label">Služba</string>
     <string name="stats_follower_since_label">Od té doby</string>
-    <string name="stats_follower_label">Fanoušek</string>
-    <string name="stats_followers_count_message">Celkem %1$s fanoušků: %2$s</string>
     <string name="stats_manage_insights">Správa přehledů</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_no_data_yet">Zatím žádná data</string>
@@ -2106,14 +2016,11 @@ Language: cs_CZ
     <string name="sign_out_wpcom_confirm_with_no_changes">Odhlásit se z WordPressu?</string>
     <string name="media_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="sign_out_wpcom_confirm_with_changes">U příspěvků, které nebyly nahrány na váš web, došlo ke změnám. Odhlášením se tyto změny ze zařízení smažou. Odhlásit se?</string>
-    <string name="people_empty_list_filtered_followers">Zatím žádní fanoušci</string>
     <string name="people_empty_list_filtered_users">Zatím žádní uživatelé</string>
     <string name="people_empty_list_filtered_viewers">Zatím žádné zobrazení</string>
     <string name="reader_empty_posts_liked_description">Příspěvky, kterým jste dali líbí se mi se zobrazí zde.</string>
-    <string name="people_empty_list_filtered_email_followers">Zatím žádné e-mailové následovníci</string>
     <string name="reader_empty_posts_liked_title">Zatím se nic nelíbilo</string>
     <string name="activity_log_limited_content_on_free_plan">Jelikož máte bezplatný plán, uvidíte ve své aktivitě omezené události.</string>
-    <string name="notifications_empty_followers">Zatím žádní fanoušci</string>
     <string name="notifications_empty_likes">Zatím žádné to se mi líbí</string>
     <string name="activity_log_empty_title">Zatím žádná aktivita</string>
     <string name="activity_log_empty_subtitle">Když na svém webu provedete změny, uvidíte zde svoji historii aktivit.</string>
@@ -2790,14 +2697,12 @@ Language: cs_CZ
     <string name="preference_open_device_settings">Otevřít nastavení v zařízení</string>
     <string name="invite_user_blocked_invites">Uživatel %s má zablokované pozvánky</string>
     <string name="invite_invalid_email">%s je neplatný e-mail</string>
-    <string name="invite_already_following">Uživatel %s již sleduje</string>
     <string name="invite_already_a_member">%s je již uživatel</string>
     <string name="invite_username_not_found">Uživatel %s nenalezen</string>
     <string name="comment_moderated_approved">Komentář schválen!</string>
     <string name="like">To se mi líbí</string>
     <string name="timespan_now">nyní</string>
     <string name="role_viewer">Návštěvník</string>
-    <string name="role_follower">Následovník</string>
     <string name="error_post_my_profile_no_connection">Žádné přípojení, nepodařilo se uložit váš profil</string>
     <string name="alignment_none">Žádné</string>
     <string name="alignment_left">Doleva</string>
@@ -2805,20 +2710,12 @@ Language: cs_CZ
     <string name="site_settings_list_editor_action_mode_title">Vybraný %1$d</string>
     <string name="error_fetch_users_list">Nelze načíst uživatele webu</string>
     <string name="people_fetching">Načítání uživatelů…</string>
-    <string name="title_follower">Fanoušek</string>
-    <string name="title_email_follower">E-mail fanouška</string>
     <string name="people_dropdown_item_viewers">Zobrazení</string>
-    <string name="people_dropdown_item_email_followers">E-maily fanoušků</string>
-    <string name="people_dropdown_item_followers">Fanoušci</string>
     <string name="people_dropdown_item_team">Tým</string>
     <string name="invite_message_usernames_limit">Pozvěte uživatele pomocí až 10 e-mailů / nebo WordPress.com uživatelských jmen. Ty, kteří si budou chtít uživatelské jméno vytvořit, dostanou pokynu pro vytvoření.</string>
     <string name="viewer_remove_confirmation_message">Chcete odstranit tento prohlížeč, pak už nikdo nebude moct navštívit tuto webovou stránku.\n\nChcete určitě odstranit tento prohlížeč?</string>
-    <string name="follower_remove_confirmation_message">Pokud odstraníte tohoto fanouška, nebude už dostávat žádné upozornění z tohoto webu..\n\nChcete určitě odstranit tohoto fanouška?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
-    <string name="error_remove_follower">Nepodařilo se odstranit fanouška</string>
     <string name="error_remove_viewer">Nepodařilo se odstranit zobrazení</string>
-    <string name="error_fetch_email_followers_list">Nepodařilo se načít e-maily fanoušků</string>
-    <string name="error_fetch_followers_list">Nepodařilo se načít webové stránky fanoušků</string>
     <string name="editor_failed_uploads_switch_html">Některá média se nenahrála. Nelze přepnout do režimu HTML\n        v tomhle stavu. Chcete odstranit všechny neúspěšně nahrané soubory a pak pokračovat?</string>
     <string name="visual_editor">Vizuální editor</string>
     <string name="image_thumbnail">Náhled</string>
@@ -2923,7 +2820,6 @@ Language: cs_CZ
     <string name="notif_research">Výzkum</string>
     <string name="site_achievements">Úspěchy webu</string>
     <string name="username_mentions">Uživatelské jméno obsahuje</string>
-    <string name="site_follows">Weboví fanoušci</string>
     <string name="likes_on_my_posts">To se mi líbí u mých příspěvků</string>
     <string name="likes_on_my_comments">To se mi líbí u mých komentářů</string>
     <string name="comments_on_my_site">Komentáře na mém webu</string>
@@ -3150,7 +3046,6 @@ Language: cs_CZ
     <string name="site_picker_create_wpcom">Vytvořit web na WordPress.com</string>
     <string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>
     <string name="site_picker_edit_visibility">Zobrazitt/skrýt stránky</string>
-    <string name="site_picker_add_site">Přidat web</string>
     <string name="my_site_btn_view_admin">Zobrazit administraci</string>
     <string name="site_picker_title">Vybrat web</string>
     <string name="my_site_btn_switch_site">Přepnout web</string>
@@ -3181,7 +3076,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
-    <string name="stats_view_followers">Sledující</string>
     <string name="stats_followers_months">%1$d měsíc</string>
     <string name="stats_followers_a_year">Za rok</string>
     <string name="stats_followers_years">%1$d roky</string>
@@ -3347,7 +3241,6 @@ Language: cs_CZ
     <string name="manage">Spravovat</string>
     <string name="discard">Zahodit</string>
     <string name="note_reply_successful">Odpověď publikována</string>
-    <string name="follows">Sledovat</string>
     <string name="new_notifications">%d nových notifikací</string>
     <string name="more_notifications">a %d dalších.</string>
     <string name="sign_in">Přihlásit se</string>

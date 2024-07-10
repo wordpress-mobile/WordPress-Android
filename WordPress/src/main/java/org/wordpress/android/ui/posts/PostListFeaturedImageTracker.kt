@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -22,13 +23,27 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     https://github.com/wordpress-mobile/WordPress-Android/issues/11487
      */
     @SuppressLint("UseSparseArrays")
-    private val featuredImageMap = HashMap<Long, String>()
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal val featuredImageMap = HashMap<Long, String>()
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal val ongoingRequests = HashSet<Long>()
 
     fun getFeaturedImageUrl(site: SiteModel, featuredImageId: Long): String? {
         if (featuredImageId == 0L) {
             return null
         }
-        featuredImageMap[featuredImageId]?.let { return it }
+
+        featuredImageMap[featuredImageId]?.let {
+            return it
+        }
+
+        // Check if a request for this image is already ongoing
+        if (ongoingRequests.contains(featuredImageId)) {
+            // If the request is ongoing, just return. The callback will be invoked upon completion.
+            return null
+        }
+
         mediaStore.getSiteMediaWithId(site, featuredImageId)?.let { media ->
             // This should be a pretty rare case, but some media seems to be missing url
             return if (media.url.isNotBlank()) {
@@ -36,7 +51,11 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
                 media.url
             } else null
         }
+
         // Media is not in the Store, we need to download it
+        // Mark the request as ongoing
+        ongoingRequests.add(featuredImageId)
+
         val mediaToDownload = MediaModel(
             site.id,
             featuredImageId
@@ -47,6 +66,9 @@ class PostListFeaturedImageTracker(private val dispatcher: Dispatcher, private v
     }
 
     fun invalidateFeaturedMedia(featuredImageIds: List<Long>) {
-        featuredImageIds.forEach { featuredImageMap.remove(it) }
+        featuredImageIds.forEach {
+            featuredImageMap.remove(it)
+            ongoingRequests.remove(it)
+        }
     }
 }

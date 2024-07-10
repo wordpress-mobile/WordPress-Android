@@ -18,7 +18,6 @@ import org.wordpress.android.models.CategoryNode
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.ParentCategorySpinnerAdapter
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingScreenClosedListener
-import org.wordpress.android.ui.posts.prepublishing.tags.PrepublishingTagsFragment
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingViewModel
 import org.wordpress.android.ui.posts.prepublishing.categories.addcategory.PrepublishingAddCategoryViewModel.SubmitButtonUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -55,15 +54,6 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     override fun onDetach() {
         super.onDetach()
         closeListener = null
-    }
-
-    override fun onResume() {
-        // Note: This supports the re-calculation and visibility of views when coming from stories.
-        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
-        if (needsRequestLayout) {
-            requireActivity().window.decorView.requestLayout()
-        }
-        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,9 +143,8 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
         startObserving()
 
-        val needsRequestLayout = requireArguments().getBoolean(PrepublishingTagsFragment.NEEDS_REQUEST_LAYOUT)
         val siteModel = requireNotNull(arguments?.getSerializableCompat<SiteModel>(WordPress.SITE))
-        viewModel.start(siteModel, !needsRequestLayout)
+        viewModel.start(siteModel)
     }
 
     private fun PrepublishingAddCategoryFragmentBinding.startObserving() {
@@ -216,17 +205,14 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
 
     companion object {
         const val TAG = "prepublishing_add_category_fragment_tag"
-        const val NEEDS_REQUEST_LAYOUT = "prepublishing_add_category_fragment_needs_request_layout"
 
         @JvmStatic
         fun newInstance(
             site: SiteModel,
-            needsRequestLayout: Boolean,
             bundle: Bundle? = null
         ): PrepublishingAddCategoryFragment {
             val newBundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
-                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
             bundle?.let {
                 newBundle.putAll(bundle)

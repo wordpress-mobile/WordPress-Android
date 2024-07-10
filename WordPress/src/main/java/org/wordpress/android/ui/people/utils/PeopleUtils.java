@@ -62,7 +62,7 @@ public class PeopleUtils {
         params.put("order_by", "display_name");
         params.put("order", "ASC");
         String path = String.format(Locale.US, "sites/%d/users", site.getSiteId());
-        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, params, null, listener, errorListener);
     }
 
     public static void fetchAuthors(final SiteModel site, final int offset, final FetchUsersCallback callback) {
@@ -95,7 +95,7 @@ public class PeopleUtils {
         params.put("order", "ASC");
         params.put("authors_only", "true");
         String path = String.format(Locale.US, "sites/%d/users", site.getSiteId());
-        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, params, null, listener, errorListener);
     }
 
     public static void fetchRevisionAuthorsDetails(final SiteModel site, List<String> authors,
@@ -144,7 +144,7 @@ public class PeopleUtils {
                             site.getSiteId(), authors.get(i)));
         }
 
-        WordPress.getRestClientUtilsV1_1().get("batch/", batchParams, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale("batch/", batchParams, null, listener, errorListener);
     }
 
     public static void fetchFollowers(final SiteModel site, final int page, final FetchFollowersCallback callback) {
@@ -195,7 +195,7 @@ public class PeopleUtils {
         params.put("page", Integer.toString(page));
         params.put("type", isEmailFollower ? "email" : "wp_com");
         String path = String.format(Locale.US, "sites/%d/stats/followers", site.getSiteId());
-        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, params, null, listener, errorListener);
     }
 
     public static void fetchViewers(final SiteModel site, final int offset, final FetchViewersCallback callback) {
@@ -233,7 +233,7 @@ public class PeopleUtils {
         params.put("number", Integer.toString(FETCH_LIMIT));
         params.put("page", Integer.toString(page));
         String path = String.format(Locale.US, "sites/%d/viewers", site.getSiteId());
-        WordPress.getRestClientUtilsV1_1().get(path, params, null, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().getWithLocale(path, params, null, listener, errorListener);
     }
 
     public static void updateRole(final SiteModel site, long personID, String newRole, final int localTableBlogId,
@@ -455,7 +455,7 @@ public class PeopleUtils {
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
                                     continue;
                                 case "invalid_input_following":
-                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_FOLLOWING);
+                                    callback.onUsernameValidation(username, ValidationResult.ALREADY_SUBSCRIBED);
                                     continue;
                                 case "invalid_user_blocked_invites":
                                     callback.onUsernameValidation(username, ValidationResult.BLOCKED_INVITES);
@@ -518,7 +518,7 @@ public class PeopleUtils {
         enum ValidationResult {
             USER_NOT_FOUND,
             ALREADY_MEMBER,
-            ALREADY_FOLLOWING,
+            ALREADY_SUBSCRIBED,
             BLOCKED_INVITES,
             INVALID_EMAIL,
             USER_FOUND

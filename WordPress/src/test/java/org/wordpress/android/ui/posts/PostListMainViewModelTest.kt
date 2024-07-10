@@ -66,7 +66,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
             postListEventListenerFactory = mock(),
             uploadStarter = uploadStarter,
             uploadActionUseCase = mock(),
-            savePostToDbUseCase = savePostToDbUseCase
+            savePostToDbUseCase = savePostToDbUseCase,
+            postConflictResolutionFeatureUtils = mock(),
+            postConflictDetector = mock()
         )
     }
 

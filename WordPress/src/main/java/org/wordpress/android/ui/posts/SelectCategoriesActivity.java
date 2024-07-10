@@ -49,7 +49,7 @@ import java.util.HashSet;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
+import static org.wordpress.android.ui.posts.EditPostActivityConstants.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class SelectCategoriesActivity extends LocaleAwareActivity {
@@ -196,7 +196,7 @@ public class SelectCategoriesActivity extends LocaleAwareActivity {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        AddCategoryFragment newFragment = AddCategoryFragment.newInstance(mSite);
+        AddCategoryFragment newFragment = AddCategoryFragment.Companion.newInstance(mSite);
         newFragment.show(ft, "dialog");
     }
 

@@ -98,7 +98,7 @@ class ViewsWidgetListViewModelTest {
                 any(),
                 any()
             )
-        ).thenReturn(ValueItem(firstViews.toString(), 0, false, change, POSITIVE, change))
+        ).thenReturn(ValueItem(firstViews.toString(), 0, false, change, state = POSITIVE, contentDescription = change))
         whenever(
             overviewMapper.buildTitle(
                 eq(dates[1]),
@@ -108,7 +108,7 @@ class ViewsWidgetListViewModelTest {
                 any(),
                 any()
             )
-        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEGATIVE, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, state = NEGATIVE, contentDescription = change))
         whenever(
             overviewMapper.buildTitle(
                 eq(dates[2]),
@@ -118,7 +118,7 @@ class ViewsWidgetListViewModelTest {
                 any(),
                 any()
             )
-        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, NEUTRAL, change))
+        ).thenReturn(ValueItem(todayViews.toString(), 0, true, change, state = NEUTRAL, contentDescription = change))
 
         viewModel.start(siteId, color, showChangeColumn, appWidgetId)
 

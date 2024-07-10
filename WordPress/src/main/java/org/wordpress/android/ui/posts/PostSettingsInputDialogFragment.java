@@ -8,9 +8,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -18,9 +15,9 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.wordpress.android.R;
+import org.wordpress.android.databinding.PostSettingsInputDialogBinding;
 import org.wordpress.android.util.ActivityUtils;
 
 public class PostSettingsInputDialogFragment extends DialogFragment implements TextWatcher {
@@ -35,6 +32,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     private static final String HINT_TAG = "hint";
     private static final String DISABLE_EMPTY_INPUT_TAG = "disable_empty_input";
     private static final String MULTILINE_INPUT_TAG = "is_multiline_input";
+
     private String mCurrentInput;
     private String mTitle;
     private String mHint;
@@ -94,35 +92,34 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder =
                 new MaterialAlertDialogBuilder(new ContextThemeWrapper(getActivity(), R.style.PostSettingsTheme));
-        LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+        LayoutInflater layoutInflater = requireActivity().getLayoutInflater();
         //noinspection InflateParams
-        View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
-        builder.setView(dialogView);
-        final EditText editText = dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);
+        PostSettingsInputDialogBinding binding =
+                PostSettingsInputDialogBinding.inflate(layoutInflater, null, false);
+        builder.setView(binding.getRoot());
         if (mIsMultilineInput) {
-            editText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            binding.postSettingsInputDialogEditText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         } else {
-            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+            binding.postSettingsInputDialogEditText.setInputType(InputType.TYPE_CLASS_TEXT);
         }
         if (!TextUtils.isEmpty(mCurrentInput)) {
-            editText.setText(mCurrentInput);
+            binding.postSettingsInputDialogEditText.setText(mCurrentInput);
             // move the cursor to the end
-            editText.setSelection(mCurrentInput.length());
+            binding.postSettingsInputDialogEditText.setSelection(mCurrentInput.length());
         }
-        editText.addTextChangedListener(this);
+        binding.postSettingsInputDialogEditText.addTextChangedListener(this);
 
-        TextInputLayout textInputLayout = dialogView.findViewById(R.id.post_settings_input_dialog_input_layout);
-        textInputLayout.setHint(mTitle);
+        binding.postSettingsInputDialogInputLayout.setHint(mTitle);
 
-        TextView hintTextView = dialogView.findViewById(R.id.post_settings_input_dialog_hint);
-        hintTextView.setText(mHint);
+        binding.postSettingsInputDialogHint.setText(mHint);
 
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mCurrentInput = editText.getText().toString();
-                if (mListener != null) {
+                Editable text = binding.postSettingsInputDialogEditText.getText();
+                if (mListener != null && text != null) {
+                    mCurrentInput = text.toString();
                     mListener.onInputUpdated(mCurrentInput);
                 }
             }

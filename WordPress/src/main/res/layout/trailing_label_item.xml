@@ -16,6 +16,6 @@
         android:paddingBottom="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceCaption"
-        tools:text="19 bloggers like this." />
+        tools:text="19 likes" />
 
 </FrameLayout>

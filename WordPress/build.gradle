@@ -1,10 +1,10 @@
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
 
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
-    id "org.jetbrains.kotlin.kapt"
     id "org.jetbrains.kotlin.plugin.parcelize"
     id "org.jetbrains.kotlin.plugin.allopen"
     id "io.sentry.android.gradle"
@@ -12,19 +12,24 @@ plugins {
     id "com.google.gms.google-services"
     id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
+    id "com.google.devtools.ksp"
 }
 
 sentry {
     tracingInstrumentation {
         enabled = true
-        features = [io.sentry.android.gradle.extensions.InstrumentationFeature.DATABASE]
-        logcat {
-            enabled = false
-        }
+        features = [InstrumentationFeature.DATABASE]
+        logcat.enabled = false
     }
-    autoInstallation {
-        enabled = false
-    }
+    autoInstallation.enabled = false
+    includeSourceContext = true
+    autoUploadSourceContext = true
+    includeDependenciesReport = false
+    /* Sentry won't send source context or add performance instrumentations for debug builds
+    so we can save build times. Sending events will still work in debug builds
+    (if enabled in WPCrashLoggingDataProvider).
+    */
+    ignoredBuildTypes = ["debug"]
 }
 
 repositories {
@@ -38,8 +43,8 @@ repositories {
             includeGroup "org.wordpress.gutenberg-mobile"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
-            includeGroup "com.automattic.stories"
             includeGroup "com.automattic.tracks"
+            includeGroup "com.gravatar"
         }
     }
     maven {
@@ -113,7 +118,6 @@ android {
         buildConfigField "boolean", "READER_COMMENTS_MODERATION", "false"
         buildConfigField "boolean", "SITE_INTENT_QUESTION", "true"
         buildConfigField "boolean", "SITE_NAME", "false"
-        buildConfigField "boolean", "LANDING_SCREEN_REVAMP", "true"
         buildConfigField "boolean", "LAND_ON_THE_EDITOR", "false"
         buildConfigField "boolean", "QRCODE_AUTH_FLOW", "false"
         buildConfigField "boolean", "BETA_SITE_DESIGNS", "false"
@@ -142,9 +146,15 @@ android {
         buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
         buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
-        buildConfigField "boolean", "IN_APP_REVIEWS", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
-        buildConfigField "boolean", "STATS_TRAFFIC_TAB", "false"
+        buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TABS", "false"
+        buildConfigField "boolean", "READER_DISCOVER_NEW_ENDPOINT", "false"
+        buildConfigField "boolean", "READER_READING_PREFERENCES", "false"
+        buildConfigField "boolean", "READER_READING_PREFERENCES_FEEDBACK", "false"
+        buildConfigField "boolean", "READER_TAGS_FEED", "false"
+        buildConfigField "boolean", "READER_ANNOUNCEMENT_CARD", "false"
+        buildConfigField "boolean", "VOICE_TO_CONTENT", "false"
+        buildConfigField "boolean", "READER_FLOATING_BUTTON", "false"
 
         // Override these constants in jetpack product flavor to enable/ disable features
         buildConfigField "boolean", "ENABLE_SITE_CREATION", "true"
@@ -159,6 +169,8 @@ android {
         buildConfigField "boolean", "BLAZE_MANAGE_CAMPAIGNS", "false"
         buildConfigField "boolean", "DASHBOARD_PERSONALIZATION", "false"
         buildConfigField "boolean", "ENABLE_SITE_MONITORING", "false"
+        buildConfigField "boolean", "SYNC_PUBLISHING", "false"
+        buildConfigField "boolean", "ENABLE_IN_APP_UPDATES", "false"
 
         manifestPlaceholders = [magicLinkScheme:"wordpress"]
     }
@@ -336,16 +348,12 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
         variant.buildConfigField "String", it.key.toUpperCase(), "\"${it.value}\""
     }
 }
-kapt {
-    // Enable to infer error types in stubs (see: https://kotlinlang.org/docs/kapt.html#non-existent-type-correction)
-    correctErrorTypes true
-}
 
 dependencies {
-    implementation 'androidx.webkit:webkit:1.10.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
-    kapt project(':libs:processors')
+    ksp project(':libs:processors')
     implementation (project(path:':libs:networking')) {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
@@ -357,7 +365,7 @@ dependencies {
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation("$gradle.ext.fluxCBinaryPath") {
+    implementation("$gradle.ext.fluxCBinaryPath:$wordPressFluxCVersion") {
         version {
             strictly wordPressFluxCVersion
         }
@@ -365,7 +373,7 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    implementation ("$gradle.ext.wputilsBinaryPath") {
+    implementation ("$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion") {
         version {
             strictly wordPressUtilsVersion
         }
@@ -375,13 +383,8 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
     }
     implementation "$gradle.ext.aboutAutomatticBinaryPath:$automatticAboutVersion"
-    implementation ("$gradle.ext.storiesAndroidPath:$automatticStoriesVersion") {
-        exclude group: 'androidx.navigation', module: 'navigation-fragment-ktx'
-        exclude group: 'androidx.navigation', module: 'navigation-ui-ktx'
-    }
-    implementation "$gradle.ext.storiesAndroidMp4ComposePath:$automatticStoriesVersion"
 
-    implementation("$gradle.ext.tracksBinaryPath") {
+    implementation("$gradle.ext.tracksBinaryPath:$automatticTracksVersion") {
         version {
             strictly automatticTracksVersion
         }
@@ -391,6 +394,10 @@ dependencies {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation "org.wordpress:persistentedittext:$wordPressPersistentEditTextVersion"
+    implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
+
+    implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
+    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
     implementation "androidx.arch.core:core-common:$androidxArchCoreVersion"
     implementation "androidx.arch.core:core-runtime:$androidxArchCoreVersion"
@@ -441,7 +448,6 @@ dependencies {
     implementation "com.github.chrisbanes:PhotoView:$chrisbanesPhotoviewVersion"
     implementation "org.greenrobot:eventbus:$eventBusVersion"
     implementation "org.greenrobot:eventbus-java:$eventBusVersion"
-    implementation "com.squareup.okio:okio:$squareupOkioVersion"
     implementation "com.squareup.retrofit2:retrofit:$squareupRetrofitVersion"
     implementation "org.apache.commons:commons-text:$apacheCommonsTextVersion"
     implementation "com.airbnb.android:lottie:$lottieVersion"
@@ -452,7 +458,7 @@ dependencies {
         exclude group: 'androidx.appcompat', module: 'appcompat'
     }
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    ksp "com.github.bumptech.glide:ksp:$glideVersion"
     implementation "com.github.bumptech.glide:volley-integration:$glideVersion"
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
@@ -466,11 +472,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
     implementation "com.google.dagger:dagger-android-support:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
+    ksp "com.google.dagger:dagger-android-processor:$gradle.ext.daggerVersion"
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
-    kapt "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
-
-    testImplementation "$gradle.ext.storiesAndroidPhotoEditorPath:$automatticStoriesVersion"
+    ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -478,7 +482,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
     testImplementation "junit:junit:$junitVersion"
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$gradle.ext.kotlinVersion"
     testImplementation "org.assertj:assertj-core:$assertjVersion"
@@ -486,7 +489,7 @@ dependencies {
 
     androidTestImplementation project(path:':libs:mocks')
 
-    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
+    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
@@ -525,7 +528,7 @@ dependencies {
     androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
-    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
+    kspAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
     // Enables Java 8+ API desugaring support
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
@@ -568,6 +571,8 @@ dependencies {
 
     // Cascade - Compose nested menu
     implementation "me.saket.cascade:cascade-compose:2.3.0"
+
+    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
     // - Flipper
     debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
@@ -721,6 +726,29 @@ if (project.hasProperty("debugStoreFile")) {
                     storeFile sharedDebugStore
                 }
             }
+        }
+    }
+}
+
+// Copy React Native JavaScript bundle and source map so they can be upload it to the Crash logging
+// service during the build process.
+android {
+    applicationVariants.configureEach { variant ->
+        def variantAssets = variant.mergeAssetsProvider.get().outputDir.get()
+
+        tasks.register("delete${variant.name.capitalize()}ReactNativeBundleSourceMap", Delete) {
+            delete(fileTree(dir: variantAssets, includes: ['**/*.bundle.map']))
+        }
+
+        tasks.register("copy${variant.name.capitalize()}ReactNativeBundleSourceMap", Copy) {
+            from(variantAssets)
+            into("${buildDir}/react-native-bundle-source-map")
+            include("*.bundle", "*.bundle.map")
+            finalizedBy("delete${variant.name.capitalize()}ReactNativeBundleSourceMap")
+        }
+
+        variant.mergeAssetsProvider.configure {
+            finalizedBy("copy${variant.name.capitalize()}ReactNativeBundleSourceMap")
         }
     }
 }

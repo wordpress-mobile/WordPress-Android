@@ -6,8 +6,7 @@ import org.wordpress.android.ui.stats.refresh.utils.ONE_THOUSAND
 import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiString
 import javax.inject.Inject
-
-const val CENTS_IN_DOLLARS = 100
+import kotlin.math.roundToInt
 
 class CampaignListingUIModelMapper @Inject constructor(
     private val statsUtils: StatsUtils
@@ -24,7 +23,7 @@ class CampaignListingUIModelMapper @Inject constructor(
             featureImageUrl = campaignModel.imageUrl,
             impressions = mapToStatsStringIfNeeded(campaignModel.impressions),
             clicks = mapToStatsStringIfNeeded(campaignModel.clicks),
-            budget = convertToDollars(campaignModel.budgetCents)
+            budget = UiString.UiStringText("$${campaignModel.totalBudget.roundToInt()}")
         )
     }
 
@@ -35,9 +34,5 @@ class CampaignListingUIModelMapper @Inject constructor(
         } else {
             null
         }
-    }
-
-    private fun convertToDollars(budgetCents: Long): UiString {
-        return UiString.UiStringText("$" + (budgetCents / CENTS_IN_DOLLARS).toString())
     }
 }

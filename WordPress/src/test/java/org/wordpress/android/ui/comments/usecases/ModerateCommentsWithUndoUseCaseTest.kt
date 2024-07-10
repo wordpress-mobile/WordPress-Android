@@ -7,7 +7,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.eq
@@ -64,7 +63,7 @@ class ModerateCommentsWithUndoUseCaseTest : BaseUnitTest() {
             localCommentCacheUpdateHandler
         )
 
-        `when`(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
+        whenever(commentStore.getCommentByLocalSiteAndRemoteId(eq(site.id), eq(1)))
             .thenReturn(listOf(approvedComment))
 
         moderateCommentWithUndoUseCase = ModerateCommentWithUndoUseCase(moderateCommentsResourceProvider)

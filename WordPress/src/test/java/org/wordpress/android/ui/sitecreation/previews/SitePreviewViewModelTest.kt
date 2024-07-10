@@ -31,6 +31,7 @@ import org.wordpress.android.ui.sitecreation.SITE_CREATION_STATE
 import org.wordpress.android.ui.sitecreation.SITE_MODEL
 import org.wordpress.android.ui.sitecreation.SITE_REMOTE_ID
 import org.wordpress.android.ui.sitecreation.SUB_DOMAIN
+import org.wordpress.android.ui.sitecreation.SiteCreationResult
 import org.wordpress.android.ui.sitecreation.SiteCreationResult.Created
 import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.URL
@@ -38,6 +39,8 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotCreatedErrorUiState
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SiteNotFoundInDbUiState
 import org.wordpress.android.ui.sitecreation.progress.LOADING_STATE_TEXT_ANIMATION_DELAY
 import org.wordpress.android.ui.sitecreation.services.FetchWpComSiteUseCase
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -59,7 +62,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var uiStateObserver: Observer<SitePreviewUiState>
 
     @Mock
-    private lateinit var onOkClickedObserver: Observer<Created>
+    private lateinit var onOkClickedObserver: Observer<Created?>
 
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>
@@ -87,9 +90,22 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on start show error when result is not created`() = testWith(FETCH_SUCCESS) {
+        startViewModel(SITE_CREATION_STATE.copy(result = SiteCreationResult.NotCreated))
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotCreatedErrorUiState::class.java)
+    }
+
+    @Test
     fun `on start fetches site by remote id when result is created`() = testWith(FETCH_SUCCESS) {
         startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
         verify(fetchWpComSiteUseCase).fetchSiteWithRetry(SITE_REMOTE_ID)
+    }
+
+    @Test
+    fun `on start if site is created but cannot be retrieved from fb fails show error`() = testWith(FETCH_SUCCESS) {
+        whenever(siteStore.getSiteBySiteId(SITE_REMOTE_ID)).thenReturn(null)
+        startViewModel(SITE_CREATION_STATE.copy(result = RESULT_NOT_IN_LOCAL_DB))
+        assertThat(viewModel.uiState.value).isInstanceOf(SiteNotFoundInDbUiState::class.java)
     }
 
     @Test

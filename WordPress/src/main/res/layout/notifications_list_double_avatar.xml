@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/notifications_multiple_icon_width"
+    android:layout_height="@dimen/notifications_multiple_icon_height"
+    android:layout_marginStart="@dimen/notifications_multiple_avatar_margin_start"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="MergeRootFrame">
+
+    <ImageView
+        android:id="@+id/two_avatars_1"
+        style="@style/NotificationsAvatarDouble"
+        android:layout_gravity="center_vertical|start"
+        android:contentDescription="@null"
+        tools:src="@drawable/bg_oval_placeholder_user_32dp" />
+
+    <ImageView
+        android:id="@+id/two_avatars_2"
+        style="@style/NotificationsAvatarDouble"
+        android:layout_gravity="center_vertical|end"
+        android:contentDescription="@null"
+        tools:src="@drawable/bg_oval_placeholder_user_32dp" />
+</FrameLayout>

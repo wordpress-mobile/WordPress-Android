@@ -32,7 +32,8 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         uploadUiState: PostUploadUiState,
         siteModel: SiteModel,
         remoteId: Long,
-        isPageEligibleForBlaze: Boolean = false
+        isPageEligibleForBlaze: Boolean = false,
+        hasVersionConflict: Boolean = false
     ): List<PagesListAction> {
         return when (listType) {
             SCHEDULED -> return getScheduledPageActions(uploadUiState)
@@ -41,7 +42,8 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                 remoteId,
                 listType,
                 uploadUiState,
-                isPageEligibleForBlaze
+                isPageEligibleForBlaze,
+                hasVersionConflict
             )
 
             DRAFTS -> getDraftsPageActions(uploadUiState)
@@ -71,19 +73,21 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
         (uploadUiState is UploadWaitingForConnection ||
                 (uploadUiState is UploadFailed && uploadUiState.isEligibleForAutoUpload))
 
+    @Suppress("LongParameterList")
     private fun getPublishedPageActions(
         siteModel: SiteModel,
         remoteId: Long,
         listType: PageListType,
         uploadUiState: PostUploadUiState,
-        isPageEligibleForBlaze: Boolean
+        isPageEligibleForBlaze: Boolean,
+        hasVersionConflict: Boolean
     ): List<PagesListAction> {
         return mutableListOf(
-            VIEW_PAGE,
             COPY,
             SHARE,
             SET_PARENT
         ).apply {
+            if (!hasVersionConflict) add(VIEW_PAGE)
             if (siteModel.isUsingWpComRestApi &&
                 siteModel.showOnFront == ShowOnFront.PAGE.value &&
                 remoteId > 0

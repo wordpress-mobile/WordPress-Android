@@ -2,12 +2,11 @@
 <!--
 Translation-Revision-Date: 2021-02-17 12:52:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: hu
 -->
 <resources>
     <string name="timespan_now">most</string>
-    <string name="role_follower">Követő</string>
     <string name="language">Nyelv</string>
     <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
     <string name="stats_view_authors">Szerzők</string>

@@ -46,7 +46,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.A
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AnnualSiteStatsUseCase.AnnualSiteStatsUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.AuthorsCommentsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.CommentsUseCase
-import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTotalsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowerTypesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.FollowersUseCase.FollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.LatestPostSummaryUseCase
@@ -62,14 +61,19 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.T
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalFollowersUseCase.TotalFollowersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TotalLikesUseCase.TotalLikesUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase.ViewsAndVisitorsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase.EmailsUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersChartUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase.SubscribersUseCaseFactory
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.TotalSubscribersUseCase.TotalSubscribersUseCaseFactory
 import org.wordpress.android.ui.stats.refresh.utils.SelectedTrafficGranularityManager
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
-import org.wordpress.android.util.config.StatsTrafficTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import javax.inject.Named
 import javax.inject.Singleton
 
 const val INSIGHTS_USE_CASE = "InsightsUseCase"
 const val TRAFFIC_USE_CASE = "TrafficStatsUseCase"
+const val SUBSCRIBERS_USE_CASE = "SubscribersStatsUseCase"
 const val DAY_STATS_USE_CASE = "DayStatsUseCase"
 const val WEEK_STATS_USE_CASE = "WeekStatsUseCase"
 const val MONTH_STATS_USE_CASE = "MonthStatsUseCase"
@@ -84,6 +88,7 @@ const val LIST_STATS_USE_CASES = "ListStatsUseCases"
 const val BLOCK_INSIGHTS_USE_CASES = "BlockInsightsUseCases"
 const val VIEW_ALL_INSIGHTS_USE_CASES = "ViewAllInsightsUseCases"
 const val GRANULAR_USE_CASE_FACTORIES = "GranularUseCaseFactories"
+const val BLOCK_SUBSCRIBERS_USE_CASES = "BlockSubscribersUseCases"
 
 // These are injected only internally
 private const val BLOCK_DETAIL_USE_CASES = "BlockDetailUseCases"
@@ -117,7 +122,6 @@ class StatsModule {
         tagsAndCategoriesUseCaseFactory: TagsAndCategoriesUseCaseFactory,
         publicizeUseCaseFactory: PublicizeUseCaseFactory,
         postingActivityUseCase: PostingActivityUseCase,
-        followerTotalsUseCase: FollowerTotalsUseCase,
         totalLikesUseCaseFactory: TotalLikesUseCaseFactory,
         totalCommentsUseCaseFactory: TotalCommentsUseCaseFactory,
         totalFollowersUseCaseFactory: TotalFollowersUseCaseFactory,
@@ -137,14 +141,13 @@ class StatsModule {
             useCases.add(actionCardGrowUseCase)
             useCases.add(actionCardReminderUseCase)
             useCases.add(actionCardScheduleUseCase)
-        } else {
-            useCases.add(followerTotalsUseCase)
         }
+
         useCases.addAll(
             listOf(
+                todayStatsUseCase,
                 allTimeStatsUseCase,
                 latestPostSummaryUseCase,
-                todayStatsUseCase,
                 followersUseCaseFactory.build(BLOCK),
                 commentsUseCase,
                 mostPopularInsightsUseCase,
@@ -174,7 +177,9 @@ class StatsModule {
         postMonthsAndYearsUseCaseFactory: PostMonthsAndYearsUseCaseFactory,
         postAverageViewsPerDayUseCaseFactory: PostAverageViewsPerDayUseCaseFactory,
         postRecentWeeksUseCaseFactory: PostRecentWeeksUseCaseFactory,
-        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory
+        annualSiteStatsUseCaseFactory: AnnualSiteStatsUseCaseFactory,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
+        emailsUseCaseFactory: EmailsUseCaseFactory
     ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> {
         return listOf(
             followersUseCaseFactory.build(VIEW_ALL),
@@ -183,7 +188,9 @@ class StatsModule {
             postMonthsAndYearsUseCaseFactory.build(VIEW_ALL),
             postAverageViewsPerDayUseCaseFactory.build(VIEW_ALL),
             postRecentWeeksUseCaseFactory.build(VIEW_ALL),
-            annualSiteStatsUseCaseFactory.build(VIEW_ALL)
+            annualSiteStatsUseCaseFactory.build(VIEW_ALL),
+            subscribersUseCaseFactory.build(VIEW_ALL),
+            emailsUseCaseFactory.build(VIEW_ALL)
         )
     }
 
@@ -204,7 +211,7 @@ class StatsModule {
         searchTermsUseCaseFactory: SearchTermsUseCaseFactory,
         authorsUseCaseFactory: AuthorsUseCaseFactory,
         overviewUseCaseFactory: OverviewUseCaseFactory,
-        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory
+        fileDownloadsUseCaseFactory: FileDownloadsUseCaseFactory,
     ): List<@JvmSuppressWildcards GranularUseCaseFactory> {
         return listOf(
             postsAndPagesUseCaseFactory,
@@ -215,7 +222,7 @@ class StatsModule {
             searchTermsUseCaseFactory,
             authorsUseCaseFactory,
             overviewUseCaseFactory,
-            fileDownloadsUseCaseFactory
+            fileDownloadsUseCaseFactory,
         )
     }
 
@@ -241,6 +248,26 @@ class StatsModule {
             postRecentWeeksUseCaseFactory.build(BLOCK)
         )
     }
+
+    /**
+     * Provides a list of use cases for the Subscribers screen based in Stats. Modify this method when you want to add
+     * more blocks to the Insights screen.
+     */
+    @Provides
+    @Singleton
+    @Named(BLOCK_SUBSCRIBERS_USE_CASES)
+    @Suppress("LongParameterList")
+    fun provideBlockSubscribersUseCases(
+        totalSubscribersUseCaseFactory: TotalSubscribersUseCaseFactory,
+        subscribersChartUseCase: SubscribersChartUseCase,
+        subscribersUseCaseFactory: SubscribersUseCaseFactory,
+        emailsUseCaseFactory: EmailsUseCaseFactory
+    ): List<@JvmSuppressWildcards BaseStatsUseCase<*, *>> = listOf(
+    totalSubscribersUseCaseFactory.build(VIEW_ALL),
+    subscribersChartUseCase,
+        subscribersUseCaseFactory.build(BLOCK),
+        emailsUseCaseFactory.build(BLOCK)
+    )
 
     /**
      * Provides a singleton usecase that represents the Insights screen. It consists of list of use cases that build
@@ -269,7 +296,7 @@ class StatsModule {
     }
 
     /**
-     * Provides a singleton usecase that represents the TRAFFIC stats screen.
+     * Provides a singleton use case that represents the TRAFFIC stats screen.
      * @param useCasesFactories build the use cases for the DAYS granularity
      */
     @Provides
@@ -293,6 +320,32 @@ class StatsModule {
             },
             { statsStore.getTimeStatsTypes(it) },
             uiModelMapper::mapTimeStats
+        )
+    }
+
+    /**
+     * Provides a singleton use case that represents the Subscribers Stats screen. It consists of list of use cases
+     * that build the subscribers blocks.
+     */
+    @Provides
+    @Singleton
+    @Named(SUBSCRIBERS_USE_CASE)
+    @Suppress("LongParameterList")
+    fun provideSubscribersUseCase(
+        statsStore: StatsStore,
+        @Named(BG_THREAD) bgDispatcher: CoroutineDispatcher,
+        @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+        statsSiteProvider: StatsSiteProvider,
+        @Named(BLOCK_SUBSCRIBERS_USE_CASES) useCases: List<@JvmSuppressWildcards BaseStatsUseCase<*, *>>,
+        uiModelMapper: UiModelMapper
+    ): BaseListUseCase {
+        return BaseListUseCase(
+            bgDispatcher,
+            mainDispatcher,
+            statsSiteProvider,
+            useCases,
+            { statsStore.getSubscriberTypes() },
+            uiModelMapper::mapSubscribers
         )
     }
 
@@ -409,14 +462,19 @@ class StatsModule {
     fun provideListStatsUseCases(
         @Named(INSIGHTS_USE_CASE) insightsUseCase: BaseListUseCase,
         @Named(TRAFFIC_USE_CASE) trafficUseCase: BaseListUseCase,
+        @Named(SUBSCRIBERS_USE_CASE) subscribersUseCase: BaseListUseCase,
         @Named(DAY_STATS_USE_CASE) dayStatsUseCase: BaseListUseCase,
         @Named(WEEK_STATS_USE_CASE) weekStatsUseCase: BaseListUseCase,
         @Named(MONTH_STATS_USE_CASE) monthStatsUseCase: BaseListUseCase,
         @Named(YEAR_STATS_USE_CASE) yearStatsUseCase: BaseListUseCase,
-        trafficTabFeatureConfig: StatsTrafficTabFeatureConfig
+        trafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
     ): Map<StatsSection, BaseListUseCase> {
-        return if (trafficTabFeatureConfig.isEnabled()) {
-            mapOf(StatsSection.TRAFFIC to trafficUseCase, StatsSection.INSIGHTS to insightsUseCase)
+        return if (trafficSubscribersTabFeatureConfig.isEnabled()) {
+            mapOf(
+                StatsSection.TRAFFIC to trafficUseCase,
+                StatsSection.INSIGHTS to insightsUseCase,
+                StatsSection.SUBSCRIBERS to subscribersUseCase
+            )
         } else {
             mapOf(
                 StatsSection.INSIGHTS to insightsUseCase,

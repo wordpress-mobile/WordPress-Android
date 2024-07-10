@@ -13,12 +13,12 @@ import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.usecases.ReaderGetReadingPreferencesSyncUseCase;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 
 import javax.inject.Inject;
 
@@ -38,7 +38,7 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
 
     @Inject ReaderCssProvider mReaderCssProvider;
 
-    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
+    @Inject ReaderGetReadingPreferencesSyncUseCase mGetReadingPreferencesUseCase;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
         ReaderPostWebViewCachingFragment fragment = new ReaderPostWebViewCachingFragment();
@@ -79,7 +79,7 @@ public class ReaderPostWebViewCachingFragment extends Fragment {
                 });
 
                 ReaderPostRenderer rendered = new ReaderPostRenderer((ReaderWebView) view, post,
-                        mReaderCssProvider, mReaderImprovementsFeatureConfig.isEnabled());
+                        mReaderCssProvider, mGetReadingPreferencesUseCase.invoke());
                 rendered.beginRender(); // rendering will cache post content using native WebView implementation.
             } else {
                 // abort mission if post is not available

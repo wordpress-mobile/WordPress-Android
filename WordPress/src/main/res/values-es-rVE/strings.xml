@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2022-08-22 17:29:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/4.0.0-beta.2
+Generator: GlotPress/4.0.1
 Language: es_VE
 -->
 <resources>
@@ -52,7 +52,6 @@ Language: es_VE
     <string name="qrcode_auth_flow_validated_subtitle">Escanea solo los códigos QR que has cogido directamente del navegador web. No escanees nunca un código que te haya enviado alguien.</string>
     <string name="qrcode_auth_flow_validated_default_title">¿Estás intentando acceder a tu navegador web cerca de %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">¿Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Comentar en otros blogs es una buena forma de llamar la atención y tener más seguidores en tu nuevo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca \"VER MÁS\" para ver los principales comentaristas.</string>
     <string name="stats_insights_latest_post_empty">¡Vuelve a comprobarlo cuando hayas publicado tu primera entrada!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Comprueba nuestros consejos destacados para aumentar tus visitas y tu tráfico %1$s</string>
@@ -90,7 +89,6 @@ Language: es_VE
     <string name="me_btn_scan_login_code">Explorar código de acceso</string>
     <string name="stats_insights_likes_guide_card">⭐️  Tu última entrada %1$s ha recibido %2$s me gusta.</string>
     <string name="stats_most_popular_percent_views_empty">No hay suficiente actividad. ¡Vuelve a comprobarlo más tarde, cuando tu sitio haya tenido más visitas!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% del total de seguidores</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiar enlace</string>
     <string name="quick_start_completed_tour_title">¡Enhorabuena! Ya sabes manejarte&lt;br/&gt;</string>
@@ -117,7 +115,6 @@ Language: es_VE
     <string name="stats_published_minutes_ago">Publicada hace %1$d minutos</string>
     <string name="stats_published_a_minute_ago">Publicada hace un minuto</string>
     <string name="stats_published_seconds_ago">Publicada hace unos segundos</string>
-    <string name="stats_view_total_followers">Total de seguidores</string>
     <string name="stats_view_total_comments">Total de comentarios</string>
     <string name="stats_view_total_likes">Total de «Me gusta»</string>
     <string name="blogging_prompts_notification_dismiss">Descartar</string>
@@ -370,11 +367,6 @@ Language: es_VE
     <string name="gutenberg_native_embed_options">Opciones de incrustación</string>
     <string name="gutenberg_native_double_tap_to_view_embed_options">Doble toque para ver las opciones de incrustación.</string>
     <string name="quick_start_list_create_site_message">¡Sitio creado! Completa otra tarea.</string>
-    <string name="like_faces_others_like_text">&lt;a href=\"\"&gt;A %1$s blogueros&lt;/a&gt; les gusta.</string>
-    <string name="like_faces_one_blogger_likes_text">&lt;a href=\"\"&gt;A 1 bloguero&lt;/a&gt; le gusta.</string>
-    <string name="like_faces_you_plus_others_like_text">&lt;a href=\"\"&gt;A ti y a %1$s blogueros&lt;/a&gt; os gusta.</string>
-    <string name="like_faces_you_plus_one_like_text">&lt;a href=\"\"&gt;A ti y a 1 bloguero&lt;/a&gt; os gusta.</string>
-    <string name="like_faces_you_like_text">&lt;a href=\"\"&gt;A ti&lt;/a&gt; te gusta.</string>
     <string name="gutenberg_native_line_height">Altura de la línea</string>
     <string name="domains_free_plan_get_your_domain_title">Obtén tu dominio</string>
     <string name="recommend_app_generic_get_template_error">Error desconocido al recuperar la plantilla recomendada de la aplicación</string>
@@ -535,6 +527,7 @@ Language: es_VE
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Uno</string>
     <string name="gutenberg_native_no_preview_available">Vista previa no disponible</string>
+    <string name="gutenberg_native_link_label">Etiqueta del enlace</string>
     <string name="gutenberg_native_text_color">Color del texto</string>
     <string name="gutenberg_native_s_link">Enlace %s</string>
     <string name="gutenberg_native_padding">Relleno</string>
@@ -585,7 +578,6 @@ Language: es_VE
     <string name="jetpack_brute_force_allowlist_title">Direcciones IP permitidas siempre</string>
     <string name="site_settings_denylist_title">Comentarios no permitidos</string>
     <string name="gutenberg_native_add_button_text">Añadir el texto del botón</string>
-    <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenidos atrayentes en tu sitio.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
     <string name="activity_log_backup_download_notice_download_action">Descargar</string>
     <string name="threat_fix_all_status_success_message_plural">Amenazas corregidas correctamente.</string>
@@ -753,7 +745,6 @@ Language: es_VE
     <string name="request_failed_message">Ha ocurrido un problema al gestionar la petición. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="gutenberg_native_move_to_bottom">Mover al final</string>
     <string name="gutenberg_native_change_block_position">Cambiar la posición del bloque</string>
-    <string name="label_control_upload">Subir</string>
     <string name="jetpack_icon_content_description">Icono</string>
     <string name="backup_download_complete_info">También hemos enviado un enlace a tu archivo.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Botón de compartir enlace</string>
@@ -854,7 +845,6 @@ Language: es_VE
     <string name="dialog_confirm_copy_local_message">La entrada que estás tratando de copiar tiene dos versiones que están en conflicto o has hecho cambios recientemente, pero no los has guardado.\nEdita la entrada primero para resolver cualquier conflicto o procede a copiar la versión de esta aplicación.</string>
     <string name="dialog_confirm_copy_local_title">Conflicto de sincronización de la entrada</string>
     <string name="button_copy">Duplicar</string>
-    <string name="toast_edit_story_update_in_progress_title">La historia está siendo guardada, por favor, espera…</string>
     <string name="gutenberg_native_file_name">Nombre del archivo</string>
     <string name="gutenberg_native_file_block_settings">Ajustes del archivo del bloque</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Fallo al subir los archivos.\nPor favor, toca para ver las opciones.</string>
@@ -872,23 +862,8 @@ Language: es_VE
     <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
     <string name="activity_log_activity_type_filter_clear">Vaciar</string>
     <string name="activity_log_activity_type_filter_apply">Aplicar</string>
-    <string name="dialog_edit_story_unsupported_format_message">Una o más diapositivas no se han añadido a tu historia porque en este momento las historias no son compatibles con archivos GIF. Por favor, elige una imagen estática o un video de fondo en su lugar.</string>
-    <string name="dialog_edit_story_unsupported_format_title">Los archivos GIF no son compatibles</string>
-    <string name="dialog_edit_story_unrecoverable_message">No hemos podido encontrar en el sitio los medios para esta historia.</string>
-    <string name="dialog_edit_story_unrecoverable_title">No se puede editar la historia</string>
-    <string name="dialog_edit_story_unavailable_message">No ha sido posible subir medios a esta historia. Comprueba tu conexión a Internet e inténtalo de nuevo dentro de un momento.</string>
-    <string name="dialog_edit_story_unavailable_title">No se puede editar la historia</string>
-    <string name="dialog_edit_story_limited_message">Esta historia se ha editado en un dispositivo diferente y la posibilidad de editar ciertos objetos puede estar limitada.</string>
-    <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
     <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta volver a crear tu historia.</string>
-    <string name="color_picker_label_background">Fondo</string>
-    <string name="color_picker_label_text">Texto</string>
-    <string name="dialog_discard_story_ok_button_edit">Descartar</string>
-    <string name="dialog_discard_story_message_edit">Cualquier cambio realizado no se guardará.</string>
-    <string name="dialog_discard_story_title_edit">¿Descartar cambios?</string>
     <string name="label_done_button">Hecho</string>
-    <string name="label_next_button">Siguiente</string>
-    <string name="delete_button_alt">Borrar</string>
     <string name="hpp_choose_error">Se ha producido un error al elegir el tema.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
@@ -938,14 +913,6 @@ Language: es_VE
     <string name="gutenberg_native_help_button">Botón de ayuda</string>
     <string name="gutenberg_native_edit_using_web_editor">Editar usando el editor web</string>
     <string name="gutenberg_native_choose_images">Elegir las imágenes</string>
-    <string name="stories_intro_create_story_post_label">Crear una entrada de historia</string>
-    <string name="stories_intro_description_second">Son publicados como una nueva entrada de blog en tu sitio para que tu audiencia nunca se pierda nada.</string>
-    <string name="stories_intro_title_second">Las entradas de historias no desaparecen</string>
-    <string name="stories_intro_description_first">Combina fotos, videos y texto para crear entradas de historias atractivas y accesibles que les encantarán a tus visitantes.</string>
-    <string name="stories_intro_title_first">Ahora las historias son para todos</string>
-    <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
-    <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
-    <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="media_insert_failed">Inserción del medio fallida.</string>
@@ -966,13 +933,6 @@ Language: es_VE
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
     <string name="suggestion_no_connection">No hay conexión a Internet.\nNo están disponibles las sugerencias.</string>
-    <string name="typeface_label_shrikhand">Negrita</string>
-    <string name="typeface_label_space_mono">Moderno</string>
-    <string name="typeface_label_pacifico">Alegre</string>
-    <string name="typeface_label_oswald">Fuerte</string>
-    <string name="typeface_label_libre_baskerville">Clásico</string>
-    <string name="typeface_label_nunito">Casual</string>
-    <string name="toast_capture_operation_permission_needed">Tienes que conceder permisos de grabación de audio a la aplicación para grabar video</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s seleccionado</string>
     <string name="login_get_link_by_email">Obtener un enlace de acceso por correo electrónico</string>
@@ -999,66 +959,13 @@ Language: es_VE
     <string name="gutenberg_native_page_title_empty">Título de la página. Vacío</string>
     <string name="toast_error_playing_video">Ha ocurrido un error al reproducir tu video</string>
     <string name="camera_error">Este dispositivo no es compatible con la API de Camera2</string>
-    <string name="toast_error_saving_video">No se ha podido guardar el video</string>
-    <string name="toast_error_saving_image">Error al guardar la imagen</string>
-    <string name="toast_capture_operation_in_progress">Operación en progreso, inténtalo de nuevo</string>
-    <string name="toast_story_page_not_found">No se ha podido encontrar la diapositiva de la historia</string>
-    <string name="dialog_insufficient_device_storage_error_ok_button">Ver el almacenamiento</string>
-    <string name="dialog_insufficient_device_storage_error_message">Tenemos que guardar la historia en tu dispositivo antes de que pueda ser publicada. Revisa tus ajustes de almacenamiento y elimina archivos para ganar espacio.</string>
-    <string name="dialog_insufficient_device_storage_error_title">Insuficiente almacenamiento en el dispositivo</string>
-    <string name="dialog_story_saving_error_message">Intenta volver a guardar o borrar las diapositivas y, después, intenta volver a publicar tu historia.</string>
-    <string name="dialog_story_saving_error_title_plural">No se han podido guardar %1$d diapositivas</string>
-    <string name="dialog_story_saving_error_title_singular">No se ha podido guardar 1 diapositiva</string>
-    <string name="story_saving_failed_quick_action_manage">Gestionar</string>
-    <string name="story_saving_failed_message_plural">%1$d diapositivas necesitan una acción</string>
-    <string name="story_saving_failed_message_singular">1 diapositiva necesita una acción</string>
-    <string name="story_saving_failed_title">No se ha podido subir «%1$s»</string>
-    <string name="story_saving_snackbar_finished_with_error">No se ha podido subir «%1$s»</string>
-    <string name="story_saving_snackbar_finished_successfully">Publicado «%1$s»</string>
-    <string name="story_saving_snackbar_started">Subiendo «%1$s»…</string>
-    <string name="story_saving_subtitle_frames_remaining_plural">Quedan %1$d diapositivas</string>
-    <string name="story_saving_subtitle_frames_remaining_singular">Queda 1 diapositiva</string>
-    <string name="story_saving_title_several">varias historias</string>
-    <string name="story_saving_title">Guardando «%1$s»…</string>
-    <string name="story_saving_untitled">Sin título</string>
-    <string name="dialog_discard_story_ok_button">Descartar</string>
-    <string name="dialog_discard_story_message">La entrada de tu historia no se guardará como borrador.</string>
-    <string name="dialog_discard_story_title">¿Descartar la entrada de la historia?</string>
-    <string name="dialog_discard_page_ok_button">Borrar</string>
-    <string name="dialog_discard_errored_page_message">Esta diapositiva aún no ha sido guardada. Si borras esta diapositiva, perderás cualquier edición que hayas hecho.</string>
-    <string name="dialog_discard_page_message">Esta diapositiva será eliminada de tu historia.</string>
-    <string name="dialog_discard_page_title">¿Borrar la diapositiva de la historia?</string>
-    <string name="label_text_color_button">Cambiar el color del texto</string>
-    <string name="label_text_alignment_button">Cambiar la alineación del texto</string>
-    <string name="label_frame_errored">con error</string>
-    <string name="label_frame_selected_border">seleccionado</string>
-    <string name="label_frame_unselected_border">sin seleccionar</string>
-    <string name="label_frame_image">Diapositiva</string>
-    <string name="label_retry_icon">Reintentar</string>
-    <string name="label_saved_icon">Guardado</string>
     <string name="label_close_button">Cerrar</string>
-    <string name="label_share_to">Compartir con</string>
-    <string name="label_snackbar_share">COMPARTIR</string>
-    <string name="label_snackbar_loop_frame_saved">Guardado en fotos</string>
-    <string name="label_control_retry">Reintentar</string>
-    <string name="label_control_saved">Guardado</string>
-    <string name="label_control_saving">Guardando</string>
-    <string name="label_control_flash">Flash</string>
-    <string name="label_control_flip_camera">Girar</string>
-    <string name="sound_button_alt">Sonido</string>
-    <string name="text_button_alt">Texto</string>
-    <string name="stickers_button_alt">Pegatinas</string>
-    <string name="flash_button_alt">Flash</string>
-    <string name="flip_button_alt">Girar la cámara</string>
-    <string name="capture_button_alt">Capturar</string>
     <string name="mlp_preview_page">Vista previa</string>
     <string name="mlp_create_page">Crear una página</string>
     <string name="mlp_create_blank_page">Crear una página en blanco</string>
     <string name="mlp_choose_layout_subtitle">Empieza eligiendo entre una amplia variedad de diseños de página prefabricados. O simplemente empieza con una página en blanco.</string>
     <string name="mlp_choose_layout_title">Elegir un diseño</string>
     <string name="prepublishing_nudges_story_title_hint">Pon un título a tu historia</string>
-    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">Crear una entrada o historia</string>
-    <string name="create_post_page_fab_tooltip_stories_enabled">Crear una entrada, página o historia</string>
     <string name="quick_start_dialog_create_new_post_message_short">Toca crear %1$s. %2$s Después selecciona &lt;b&gt;Entrada del blog&lt;/b&gt;</string>
     <string name="photo_picker_choose_file">Elegir el dispositivo</string>
     <string name="my_site_bottom_sheet_add_story">Entrada de la historia</string>
@@ -1280,7 +1187,6 @@ Language: es_VE
     <string name="post_list_tab_published_posts">Publicada</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
-    <string name="notifications_tab_title_follows">Seguimientos</string>
     <string name="notifications_tab_title_comments">Comentarios</string>
     <string name="notifications_tab_title_unread_notifications">No leído</string>
     <string name="dlg_cancel_action_dont_trash">No enviar a la papelera</string>
@@ -1596,9 +1502,7 @@ Language: es_VE
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
-    <string name="stats_view_follower_totals">Seguidores totales</string>
     <string name="domain_suggestions_fetch_error">No se pudieron cargar las sugerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea una palabra clave para más ideas</string>
     <string name="domains_suggestions_empty_list">No se han encontrado sugerencias</string>
@@ -1759,7 +1663,6 @@ Language: es_VE
     <string name="stats_insights_tags_and_categories">Etiquetas y categorías</string>
     <string name="stats_insights_all_time_stats">Histórico</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Seguidores</string>
     <string name="stats_publicize_service_label">Servicio</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Vistas</string>
@@ -1772,8 +1675,6 @@ Language: es_VE
     <string name="stats_comments_posts_and_pages">Entradas y páginas</string>
     <string name="stats_comments_authors">Autores</string>
     <string name="stats_follower_since_label">Desde</string>
-    <string name="stats_follower_label">Seguidor</string>
-    <string name="stats_followers_count_message">Total %1$s seguidores: %2$s</string>
     <string name="stats_followers_email">Correo electrónico</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Gestionar datos</string>
@@ -1871,13 +1772,10 @@ Language: es_VE
     <string name="sign_out_wpcom_confirm_with_no_changes">¿Salir de WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Tienes cambios en entradas que no se han subido a tu sitio. Salir ahora borrará esos cambios de tu dispositivo. ¿Quieres salir de todos modos?</string>
     <string name="people_empty_list_filtered_viewers">No hay lectores aún</string>
-    <string name="people_empty_list_filtered_email_followers">No hay seguidores por correo electrónico aún</string>
-    <string name="people_empty_list_filtered_followers">No hay seguidores aún</string>
     <string name="people_empty_list_filtered_users">No hay usuarios aún</string>
     <string name="reader_empty_posts_liked_description">Las entradas que te gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
     <string name="notifications_empty_likes">No hay me gusta aún</string>
-    <string name="notifications_empty_followers">No hay seguidores aún</string>
     <string name="activity_log_limited_content_on_free_plan">Como estás en un plan gratuito verás eventos limitados en tu actividad.</string>
     <string name="activity_log_empty_subtitle">Cuando hagas cambios en tu sitio podrás ver el historial de tu actividad aquí</string>
     <string name="activity_log_empty_title">No hay actividad aún</string>
@@ -2545,35 +2443,25 @@ Language: es_VE
     <string name="preference_open_device_settings">Abrir ajustes del dispositivo</string>
     <string name="invite_invalid_email">%s: Correo electrónico no válido</string>
     <string name="invite_user_blocked_invites">%s: Invitaciones bloqueadas por el usuario</string>
-    <string name="invite_already_following">%s: Siguiendo</string>
     <string name="invite_already_a_member">%s: Ya es miembro</string>
     <string name="invite_username_not_found">%s: Usuario no encontrado</string>
     <string name="comment_moderated_approved">¡Comentario aprobado!</string>
     <string name="like">Me gusta</string>
     <string name="timespan_now">ahora</string>
     <string name="role_viewer">Espectador</string>
-    <string name="role_follower">Seguidor</string>
     <string name="error_post_my_profile_no_connection">Sin conexión, no se pudo guardar tu perfil</string>
     <string name="alignment_right">Derecha</string>
     <string name="alignment_left">Izquierda</string>
     <string name="alignment_none">Ninguna</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">No se pudieron recuperar los usuarios del sitio</string>
-    <string name="title_email_follower">Correo electrónico del seguidor</string>
-    <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Recuperando usuarios…</string>
     <string name="people_dropdown_item_viewers">Espectadores</string>
-    <string name="people_dropdown_item_email_followers">Suscriptores por correo electrónico</string>
-    <string name="people_dropdown_item_followers">Seguidores</string>
     <string name="people_dropdown_item_team">Equipo</string>
     <string name="invite_message_usernames_limit">Invita como máximo a 10 personas con sus correos electrónicos o nombre de usuarios de WordPress.com. A aquellos que necesiten un nombre de usuario se le enviará instrucciones sobre cómo hacerlo.</string>
     <string name="viewer_remove_confirmation_message">Si eliminas a este espectador, no podrá visitar tu sitio\n\n¿Todavía quieres eliminar a este espectador?</string>
-    <string name="follower_remove_confirmation_message">Si lo eliminas, este seguidor dejará de recibir informaciones de tu sitio, a no ser que vuelta a seguirte. \n\n¿Todavía quieres eliminar a este seguidor? </string>
     <string name="follower_subscribed_since">Desde %1$s</string>
     <string name="error_remove_viewer">No se pudo quitar el espectador</string>
-    <string name="error_remove_follower">No se pudo quitar al seguidor</string>
-    <string name="error_fetch_email_followers_list">No se pudieron recuperar los correos electrónicos de los seguidores del sitio</string>
-    <string name="error_fetch_followers_list">No se pudieron recuperar los seguidores del sitio</string>
     <string name="editor_failed_uploads_switch_html">Algunas subidas de medios han fallado. Puedes cambiar al modo HTML \ncuando esto pasa. ¿Borramos todas las subidas fallidas y seguimos?</string>
     <string name="image_thumbnail">Miniatura de la imagen</string>
     <string name="visual_editor">Editor visual</string>
@@ -2678,7 +2566,6 @@ Language: es_VE
     <string name="replies_to_my_comments">Respuestas a mis comentarios</string>
     <string name="username_mentions">Menciones del nombre de usuario</string>
     <string name="site_achievements">Logros del sitio</string>
-    <string name="site_follows">Seguidores del sitio</string>
     <string name="likes_on_my_posts">«Me gusta» en mis entradas</string>
     <string name="likes_on_my_comments">«Me gusta» en mis comentarios</string>
     <string name="comments_on_my_site">Comentarios en mi sitio</string>
@@ -2904,7 +2791,6 @@ Language: es_VE
     <string name="site_picker_cant_hide_current_site">«%s» no se ha ocultado porque es el sitio actual</string>
     <string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
-    <string name="site_picker_add_site">Añadir sitio nuevo</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
     <string name="site_picker_title">Elegir sitio</string>
     <string name="my_site_btn_view_site">Ver sitio</string>
@@ -2947,7 +2833,6 @@ Language: es_VE
     <string name="stats_followers_minutes">%1$d minutos</string>
     <string name="stats_followers_a_minute_ago">hace un minuto</string>
     <string name="stats_followers_seconds_ago">hace unos segundos</string>
-    <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_videos">Videos</string>
     <string name="stats_view_top_posts_and_pages">Entradas y páginas</string>
     <string name="stats_view_countries">Países</string>
@@ -3103,7 +2988,6 @@ Language: es_VE
     <string name="manage">Gestionar</string>
     <string name="more_notifications">y %d más.</string>
     <string name="new_notifications">%d nuevos avisos</string>
-    <string name="follows">Seguimientos</string>
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="sign_in">Acceder</string>
     <string name="loading">Cargando…</string>

@@ -4,22 +4,19 @@ import com.google.gson.JsonObject
 import org.jsoup.nodes.Document
 import org.wordpress.android.util.helpers.MediaFile
 
-class VideoPressBlockProcessor(
-    localId: String?,
-    mediaFile: MediaFile?
-) : BlockProcessor(localId, mediaFile) {
-    override fun processBlockContentDocument(document: Document?): Boolean {
+class VideoPressBlockProcessor(localId: String, mediaFile: MediaFile) : BlockProcessor(localId, mediaFile) {
+    override fun processBlockContentDocument(document: Document): Boolean {
         return false
     }
 
-    override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
-        val id = jsonAttributes?.get(ID_ATTRIBUTE)
-        val src = jsonAttributes?.get(SRC_ATTRIBUTE)?.asString
+    override fun processBlockJsonAttributes(jsonAttributes: JsonObject): Boolean {
+        val id = jsonAttributes.get(ID_ATTRIBUTE)
+        val src = jsonAttributes.get(SRC_ATTRIBUTE)?.asString
 
-        return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
+        return if (id != null && !id.isJsonNull && id.asString == localId) {
             jsonAttributes.apply {
-                addProperty(ID_ATTRIBUTE, Integer.parseInt(mRemoteId))
-                addProperty(GUID_ATTRIBUTE, mRemoteGuid)
+                addIntPropertySafely(this, ID_ATTRIBUTE, remoteId)
+                addProperty(GUID_ATTRIBUTE, remoteGuid)
                 if (src?.startsWith("file:") == true) {
                     remove(SRC_ATTRIBUTE)
                 }
