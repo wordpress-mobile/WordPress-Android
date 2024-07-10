@@ -529,7 +529,7 @@ dependencies {
     androidTestImplementation libs.dagger.hilt.android.testing
     kspAndroidTest libs.dagger.hilt.android.compiler
     // Enables Java 8+ API desugaring support
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$androidDesugarVersion"
+    coreLibraryDesugaring libs.desugar.jdk.libs
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 
     // Firebase

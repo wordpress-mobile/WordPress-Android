@@ -39,7 +39,6 @@ ext {
     androidxComposeCompilerVersion = '1.5.9'
 
     // other
-    androidDesugarVersion = '2.0.4'
     wordPressLintVersion = '2.1.0'
 }
 

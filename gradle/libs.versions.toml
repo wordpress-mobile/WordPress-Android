@@ -1,5 +1,6 @@
 [versions]
 agp = '8.1.0'
+androidDesugar = '2.0.4'
 androidInstallReferrer = '2.2'
 androidxActivity = '1.8.0'
 androidxAppcompat = '1.6.1'
@@ -158,6 +159,7 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref ="androidDesugar" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipper" }
 facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipper" }
