@@ -59,7 +59,7 @@ android {
 dependencies {
     implementation ("$gradle.ext.wputilsBinaryPath") {
         version {
-            strictly wordPressUtilsVersion
+            strictly libs.versions.wordPressUtils.get()
         }
     }
     api ("$gradle.ext.aztecAndroidAztecPath") {
@@ -94,7 +94,7 @@ dependencies {
         exclude module: 'react-android'
     }
 
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    implementation libs.wordpress.utils
 
     implementation libs.androidx.lifecycle.common
     implementation libs.androidx.lifecycle.runtime

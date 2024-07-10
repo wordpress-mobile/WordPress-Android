@@ -373,9 +373,11 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    implementation ("$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation ("$gradle.ext.wputilsBinaryPath:${libs.versions.wordPressUtils.get()}") {
         version {
-            strictly wordPressUtilsVersion
+            strictly libs.versions.wordPressUtils.get()
         }
     }
     implementation ("$gradle.ext.loginFlowBinaryPath:$wordPressLoginVersion") {

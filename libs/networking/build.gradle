@@ -30,7 +30,7 @@ dependencies {
     implementation (libs.automattic.rest) {
         exclude group: 'com.mcxiaoke.volley'
     }
-    implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    implementation libs.wordpress.utils
 
     implementation libs.volley
     implementation libs.androidx.annotation
