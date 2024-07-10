@@ -517,7 +517,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation(libs.androidx.test.espresso.accessibility){
+    androidTestImplementation(libs.androidx.test.espresso.accessibility) {
         version {
             strictly libs.versions.androidxTestEspresso.get()
         }
@@ -589,7 +589,7 @@ dependencies {
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }
     debugImplementation libs.facebook.soLoader
-    debugImplementation (libs.facebook.flipper.network.plugin){
+    debugImplementation (libs.facebook.flipper.network.plugin) {
         exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
     }
     releaseImplementation libs.facebook.flipper.noop
