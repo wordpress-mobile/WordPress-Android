@@ -9,7 +9,7 @@ pluginManagement {
     gradle.ext.detektVersion = '1.23.0'
     gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '3.1.0'
-    gradle.ext.koverVersion = '0.7.5'
+    gradle.ext.koverVersion = '0.8.2'
     gradle.ext.dependencyAnalysisVersion = '1.28.0'
 
     plugins {
