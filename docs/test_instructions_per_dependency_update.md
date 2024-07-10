@@ -74,7 +74,7 @@ rather than strict requirements.
 
 -----
 
-### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/settings.gradle)] <a name="navigation"></a>
+### Navigation [[navigationVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/gradle/libs.versions.toml)] <a name="navigation"></a>
 
 <details>
     <summary>1. [JP/WP] Image Editing Flow [libs:image-editor]</summary>
@@ -157,7 +157,7 @@ rather than strict requirements.
 
 </details>
 
-### Preference (Android) [[N/A](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)]
+### Preference (Android) [[N/A](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/gradle/libs.versions.toml)]
 
 ℹ️ Note that this is not an actual dependency, it being part of the `Android` SDK, that it is
    deprecated and will be migrated to its `AndroidX` equivalent in the future. [[Issue](https://github.com/wordpress-mobile/WordPress-Android/issues/17962)]
@@ -386,7 +386,7 @@ rather than strict requirements.
 
 -----
 
-### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/build.gradle)] <a name="playservicescodescanner"></a>
+### PlayServicesCodeScanner [[googlePlayServicesCodeScannerVersion](https://github.com/wordpress-mobile/WordPress-Android/blob/trunk/gradle/libs.versions.toml)] <a name="playservicescodescanner"></a>
 
 <details>
   <summary>1. [JP] Scan Login Code</summary>
