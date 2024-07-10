@@ -2,7 +2,7 @@ package org.wordpress.android.ui.bloggingprompts
 
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType
-import org.wordpress.android.ui.reader.services.post.ReaderPostLogic
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class BloggingPromptsPostTagProvider @Inject constructor(
             promptIdTag,
             promptIdTag,
             promptIdTag,
-            ReaderPostLogic.formatFullEndpointForTag(promptIdTag),
+            ReaderPostRepository.formatFullEndpointForTag(promptIdTag),
             ReaderTagType.FOLLOWED,
         )
     }

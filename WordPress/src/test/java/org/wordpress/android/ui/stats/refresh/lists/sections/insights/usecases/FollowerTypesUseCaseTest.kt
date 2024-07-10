@@ -14,11 +14,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.FollowersModel
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.PagedMode
-import org.wordpress.android.fluxc.model.stats.PublicizeModel
-import org.wordpress.android.fluxc.model.stats.PublicizeModel.Service
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.stats.insights.FollowersStore
-import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel
 import org.wordpress.android.ui.stats.refresh.lists.sections.BaseStatsUseCase.UseCaseModel.UseCaseState.SUCCESS
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItem
@@ -33,9 +30,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 class FollowerTypesUseCaseTest : BaseUnitTest() {
     @Mock
     lateinit var followersStore: FollowersStore
-
-    @Mock
-    lateinit var publicizeStore: PublicizeStore
 
     @Mock
     lateinit var statsSiteProvider: StatsSiteProvider
@@ -55,12 +49,8 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
 
     private val wpModel = FollowersModel(3, emptyList(), false)
     private val emailModel = FollowersModel(7, emptyList(), false)
-    private val socialModel = PublicizeModel(
-        listOf(Service("Twitter", 10), Service("FB", 5)), false
-    )
     private val wpComTitle = "WordPress"
     private val emailTitle = "Email"
-    private val socialTitle = "Social"
     private val totalLabel = "Totals"
     private val contentDescriptionValue = "value, percentage of total followers"
     private val contentDescription = "title: $contentDescriptionValue"
@@ -71,7 +61,6 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
             testDispatcher(),
             testDispatcher(),
             followersStore,
-            publicizeStore,
             statsSiteProvider,
             contentDescriptionHelper,
             statsUtils,
@@ -81,19 +70,17 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
 
         whenever(followersStore.getEmailFollowers(site, LimitMode.Top(0))).thenReturn(emailModel)
         whenever(followersStore.getWpComFollowers(site, LimitMode.Top(0))).thenReturn(wpModel)
-        whenever(publicizeStore.getPublicizeData(site, LimitMode.All)).thenReturn(socialModel)
         whenever(contentDescriptionHelper.buildContentDescription(any(), any())).thenReturn(contentDescription)
         whenever(statsUtils.toFormattedString(any<Int>(), any())).then { (it.arguments[0] as Int).toString() }
         whenever(
             resourceProvider.getString(
-                eq(R.string.stats_total_followers_content_description),
+                eq(R.string.stats_total_subscribers_content_description),
                 any<Int>(),
                 any<String>()
             )
         ).then { contentDescriptionValue }
         whenever(resourceProvider.getString(R.string.stats_followers_wordpress_com)).then { wpComTitle }
         whenever(resourceProvider.getString(R.string.email)).then { emailTitle }
-        whenever(resourceProvider.getString(R.string.stats_insights_social)).then { socialTitle }
         whenever(resourceProvider.getString(eq(R.string.stats_value_percent), any<String>(), any<String>()))
             .then { "${it.arguments[1]} (${it.arguments[2]}%)" }
         whenever(resourceProvider.getString(R.string.stats_follower_types_pie_chart_total_label)).then { totalLabel }
@@ -106,16 +93,15 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
 
         whenever(followersStore.fetchEmailFollowers(site, PagedMode(0))).thenReturn(OnStatsFetched(emailModel))
         whenever(followersStore.fetchWpComFollowers(site, PagedMode(0))).thenReturn(OnStatsFetched(wpModel))
-        whenever(publicizeStore.fetchPublicizeData(site, LimitMode.All)).thenReturn(OnStatsFetched(socialModel))
 
         val result = loadFollowerTypesData(refresh, forced)
 
         assertThat(result.state).isEqualTo(SUCCESS)
         result.data!!.apply {
-            assertThat(this).hasSize(4)
+            assertThat(this).hasSize(3)
             assertThat(this[0].type).isEqualTo(PIE_CHART)
 
-            for (i in 1..3) {
+            for (i in 1..2) {
                 assertThat(this[i].type).isEqualTo(LIST_ITEM)
                 assertItem(this[i] as ListItem)
             }
@@ -124,9 +110,8 @@ class FollowerTypesUseCaseTest : BaseUnitTest() {
 
     private fun assertItem(item: ListItem) {
         when (item.text) {
-            wpComTitle -> assertThat(item.value).isEqualTo("3 (12%)")
-            emailTitle -> assertThat(item.value).isEqualTo("7 (28%)")
-            socialTitle -> assertThat(item.value).isEqualTo("15 (60%)")
+            wpComTitle -> assertThat(item.value).isEqualTo("3 (30%)")
+            emailTitle -> assertThat(item.value).isEqualTo("7 (70%)")
         }
         assertThat(item.contentDescription).isEqualTo(contentDescription)
     }

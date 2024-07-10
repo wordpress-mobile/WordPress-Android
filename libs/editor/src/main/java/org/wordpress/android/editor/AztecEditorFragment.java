@@ -1690,6 +1690,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override public void onRedoPressed() {
     }
 
+    @Override
+    public void updateContent(@Nullable CharSequence text) {
+        // not implemented for Aztec
+    }
+
     private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight,
                                final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
@@ -2127,7 +2132,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile) {
+                                                 @NonNull String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             String remoteUrl = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
             // fill in Aztec with the post's content

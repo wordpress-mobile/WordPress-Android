@@ -246,7 +246,7 @@ class TagsAndCategoriesUseCaseTest : BaseUnitTest() {
         } else {
             assertThat(item.barWidth).isNull()
         }
-        assertThat(item.icon).isEqualTo(R.drawable.ic_tag_white_24dp)
+        assertThat(item.icon).isEqualTo(R.drawable.ic_reader_tag)
         assertThat(item.contentDescription).isEqualTo(contentDescription)
     }
 

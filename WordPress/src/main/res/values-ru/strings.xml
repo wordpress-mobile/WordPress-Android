@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 18:54:10+0000
+Translation-Revision-Date: 2024-06-12 12:54:07+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Коснитесь, чтобы внести изменения</string>
+    <string name="voice_to_content_permissions_required_msg">Чтобы делать аудиозаписи, приложению необходимо разрешение на доступ к микрофону. Ранее вы отказались дать такое разрешение. Дайте разрешение на доступ к микрофону в настройках приложения, чтобы пользоваться этой функцией.</string>
+    <string name="voice_to_content_permissions_required_title">Требуется разрешение на аудиозапись</string>
+    <string name="permission_access_media_location">Местоположение медиафайлов</string>
+    <string name="in_app_update_restart">Перезапуск</string>
+    <string name="in_app_update_available">Обновите загруженное. Выполните перезагрузку, чтобы обновления вступили в силу.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Публикация из аудио</string>
+    <string name="reader_tags_feed_action_label_open_menu">открыть меню</string>
+    <string name="reader_tags_feed_action_label_unlike_post">удалить отметку «Нравится» в публикации</string>
+    <string name="reader_tags_feed_action_label_like_post">поставить отметку «Нравится»</string>
+    <string name="reader_tags_feed_action_label_open_blog">открыть блог</string>
+    <string name="reader_tags_feed_action_label_open_post">открыть запись</string>
+    <string name="reader_tags_feed_error_retry">Повторить</string>
+    <string name="reader_tags_feed_no_content_error_description">Не удалось найти записи с метками %s</string>
+    <string name="reader_tags_feed_loading_error_description">Не удалось загрузить записи с этой меткой</string>
+    <string name="reader_tags_feed_error_title">Записей по запросу %s не найдено</string>
+    <string name="reader_tags_feed_see_more_from_tag">Другие записи с меткой %s</string>
+    <string name="reader_tags_display_name">Метки</string>
+    <string name="reader_announcement_card_reading_preferences_description">Выберите цвета и шрифты по своему вкусу. Во время чтения записи нажмите значок АА в верхней части экрана.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Настройки чтения</string>
+    <string name="reader_announcement_card_tags_stream_description">Нажмите раскрывающееся меню в верхней части и выберите «Метки», чтобы перейти к лентам записей с метками, на которые вы подписались.</string>
+    <string name="reader_announcement_card_tags_stream_title">Ленты записей с метками</string>
+    <string name="reader_announcement_card_title">Новое в «Чтиве»</string>
+    <string name="reader_dropdown_menu_tags">Ваши метки</string>
+    <string name="no_connection_error_description">Проверьте подключение к сети и попробуйте снова.</string>
+    <string name="no_connection_error_title">Сейчас невозможно загрузить этот контент.</string>
+    <string name="stats_subscribers_marker_view_plural">Подписчики</string>
+    <string name="stats_subscribers_marker_view_singular">Подписчик</string>
+    <string name="stats_view_subscriber_growth">Рост числа подписчиков</string>
+    <string name="role_subscriber">Подписчик</string>
+    <string name="title_email_subscriber">Подписчик на рассылку по эл. почте</string>
+    <string name="people_empty_list_filtered_email_subscribers">Подписчиков на рассылку по эл. почте пока нет</string>
+    <string name="people_empty_list_filtered_subscribers">Подписчиков ещё нет</string>
+    <string name="people_dropdown_item_email_subscribers">Подписчики по эл. почте</string>
+    <string name="people_dropdown_item_subscribers">Подписчики</string>
+    <string name="invite_already_subscribed">%s: подписка уже оформлена</string>
+    <string name="error_no_camera_available">Приложение камеры недоступно.</string>
+    <string name="error_remove_subscriber">Не удалось удалить подписчика</string>
+    <string name="error_fetch_email_subscribers_list">Не удалось получить список подписчиков по электронной почте</string>
+    <string name="error_fetch_subscribers_list">Не удалось получить список подписчиков сайта</string>
+    <string name="post_settings_add_to_calendar_error">Не удалось добавить в календарь</string>
+    <string name="post_settings_no_calendar_app_exists">Не удалось обнаружить приложение для обработки запроса по добавлению в календарь</string>
+    <string name="site_subscriptions">Подписки сайта</string>
+    <string name="notifications_tab_title_subscribers">Подписчики</string>
+    <string name="subscribers">Подписчики</string>
+    <string name="notifications_empty_subscribers">Подписчиков ещё нет</string>
+    <string name="stats_view_emails">Адреса эл. почты</string>
+    <string name="stats_view_subscribers">Подписчики</string>
+    <string name="stats_view_total_subscribers">Всего подписчиков</string>
+    <string name="stats_view_subscriber_totals">Всего подписчиков</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Переходы</string>
+    <string name="stats_emails_opens_label">Посещения</string>
+    <string name="stats_emails_latest_emails_label">Недавние рассылки</string>
+    <string name="stats_subscriber_since_label">Подписчик с</string>
+    <string name="stats_name_label">Имя</string>
+    <string name="stats_publicize_subscribers_label">Подписчики</string>
+    <string name="stats_subscriber_label">Подписчик</string>
+    <string name="stats_subscribers_count_message">Всего подписчиков %1$s: %2$s</string>
+    <string name="page_upload_conflict_error">Найдена более свежая редакция страницы</string>
+    <string name="editor_updating_content">Обновление содержимого</string>
+    <string name="stats_subscribers">Подписчики</string>
     <string name="weekly_roundup_notification_text_views_and_comment">За последнюю неделю вы получили: просмотров — %1$s, комментариев — 1</string>
     <string name="weekly_roundup_notification_text_views_and_like">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1</string>
     <string name="weekly_roundup_notification_text_views_like_comment">За последнюю неделю вы получили: просмотров — %1$s, отметок «Нравится» — 1, комментариев — 1.</string>
@@ -32,12 +94,14 @@ Language: ru
     <string name="reader_preferences_screen_font_family_label">Шрифт</string>
     <string name="reader_preferences_screen_theme_label">Цветовая схема</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">отправить отзыв</string>
+    <string name="experimental_badge">&lt;Экспериментальный&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Очистить выбранный цвет</string>
     <string name="reader_no_followed_tags_text_title">Нет подписок на метки</string>
     <string name="reader_toast_err_tag_already_following">Вы уже подписаны на эту метку</string>
     <string name="reader_menu_reading_preferences">Читательские предпочтения</string>
     <string name="reader_page_followed_tags_text_title">Отслеживаемые метки</string>
     <string name="reader_preferences_theme_candy">Карамель</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
     <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">Вечер</string>
     <string name="reader_preferences_theme_sepia">Сепия</string>
@@ -50,13 +114,14 @@ Language: ru
     <string name="reader_filter_empty_tags_action_follow">Подписаться на метку</string>
     <string name="button_read">Читать</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Вы можете копировать текст своей записи на случай, если ваш контент окажется повреждён. Скопируйте данные об ошибке, чтобы сообщить их инженерам поддержки и устранить неполадку.</string>
-    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора.</string>
+    <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">Произошла непредвиденная ошибка редактора</string>
     <string name="gutenberg_native_tap_here_to_copy_post_text">Нажмите здесь, чтобы скопировать текст записи</string>
     <string name="gutenberg_native_tap_here_to_copy_error_details">Нажмите здесь, чтобы скопировать данные об ошибке</string>
     <string name="gutenberg_native_copy_post_text">Скопировать текст записи</string>
     <string name="gutenberg_native_copy_error_details">Скопировать данные об ошибке</string>
     <string name="gutenberg_native_button_to_copy_post_text">Кнопка для копирования текста записи</string>
     <string name="gutenberg_native_button_to_copy_error_details">Кнопка для копирования данных об ошибке</string>
+    <string name="editor_updating_content_failed">Не удалось обновить содержимое</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Подпись к видео. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Подпись к видео. Пустое значение</string>
     <string name="gutenberg_native_edit_video_024aee6d">Редактировать видео</string>
@@ -77,7 +142,7 @@ Language: ru
     <string name="site_monitoring">Мониторинг сайтов</string>
     <string name="quick_start_dialog_follow_sites_message_short_discover_and_subscriptions">Используйте раздел &lt;b&gt;Поиск&lt;/b&gt;, чтобы искать сайты и теги. Перейдите в раздел &lt;b&gt;Подписки&lt;/b&gt;, чтобы просмотреть подписной контент и управлять своими подписками.</string>
     <string name="reader_empty_followed_blogs_button_subscriptions">Перейти в «Подписки»</string>
-    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось.</string>
+    <string name="reader_empty_followed_blogs_subscribed_no_recent_posts_description">В блогах, на которые вы подписаны, в последнее время ничего нового не публиковалось</string>
     <string name="reader_no_followed_blogs_description_subs">Подписывайтесь на блоги с помощью раздела «Поиск» или найдите блог, который вам уже понравился.</string>
     <string name="reader_no_recommended_blogs_title">Нет рекомендуемых блогов</string>
     <string name="reader_no_posts_with_this_tag">Нет записей с этой меткой</string>
@@ -129,10 +194,6 @@ Language: ru
     <string name="reader_filter_empty_blogs_list">Просмотреть последние записи из блогов, на которые вы подписаны</string>
     <string name="reader_filter_by_tag_title">Фильтр по метке</string>
     <string name="reader_filter_by_blog_title">Фильтровать по блогу</string>
-    <string name="stats_timeframe_by_year">По году</string>
-    <string name="stats_timeframe_by_month">По месяцу</string>
-    <string name="stats_timeframe_by_week">По неделе</string>
-    <string name="stats_timeframe_by_day">По дню</string>
     <string name="gutenberg_native_waiting_for_connection">Ожидание подключения</string>
     <string name="stats_traffic">Посещаемость</string>
     <string name="gutenberg_native_working_offline">Автономная работа</string>
@@ -547,8 +608,6 @@ Language: ru
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Проверьте ваше подключение к сети и попробуйте снова.</string>
-    <string name="blogging_prompts_list_error_network_title">Сейчас невозможно загрузить это содержимое</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
     <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>
@@ -674,7 +733,7 @@ Language: ru
     <string name="qrcode_auth_flow_validated_subtitle">Сканируйте только QR-коды, полученные напрямую из браузера. Не сканируйте коды, полученные от других людей.</string>
     <string name="qrcode_auth_flow_validated_default_title">Это вы пытаетесь войти через веб-браузер в %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Вы пытаетесь войти через %1$s в %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡 Комментировать другие блоги ― отличный способ привлечь внимание и новых подписчиков.</string>
+    <string name="stats_insights_subscribers_guide_card">💡 Комментировать другие блоги ― отличный способ привлечь внимание и новых подписчиков.</string>
     <string name="stats_insights_comments_guide_card">💡 Нажмите \"ПОДРОБНЕЕ\", чтобы просмотреть список топ-комментаторов.</string>
     <string name="stats_insights_latest_post_empty">Вернитесь, когда опубликуете первую запись!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Прочитайте советы по повышению просмотров и посещаемости %1$s</string>
@@ -712,7 +771,7 @@ Language: ru
     <string name="me_btn_scan_login_code">Отсканировать код для входа</string>
     <string name="stats_insights_likes_guide_card">⭐️%2$s ― столько отметок \"Нравится\" получала ваша последняя публикация %1$s.</string>
     <string name="stats_most_popular_percent_views_empty">Недостаточно активности. Вернитесь позже, когда на сайте будет больше посетителей!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% от общего количества подписчиков</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% от общего количества подписчиков</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Копировать ссылку</string>
     <string name="quick_start_completed_tour_title">Поздравляем! Теперь вы знаете, как тут всё устроено&lt;br/&gt;</string>
@@ -739,7 +798,6 @@ Language: ru
     <string name="stats_published_minutes_ago">Опубликовано %1$d мин. назад</string>
     <string name="stats_published_a_minute_ago">Опубликовано минуту назад</string>
     <string name="stats_published_seconds_ago">Опубликовано несколько секунд назад</string>
-    <string name="stats_view_total_followers">Общее количество подписчиков</string>
     <string name="stats_view_total_comments">Всего комментариев</string>
     <string name="stats_view_total_likes">Всего отметок \"нравится\"</string>
     <string name="blogging_prompts_notification_dismiss">Закрыть</string>
@@ -1165,6 +1223,7 @@ Language: ru
     <string name="gutenberg_native_add_title">Добавить заголовок</string>
     <string name="gutenberg_native_no_preview_available">Предварительный просмотр недоступен</string>
     <string name="gutenberg_native_loading">Загрузка</string>
+    <string name="gutenberg_native_link_label">Ярлык ссылки</string>
     <string name="gutenberg_native_text_color">Цвет текста</string>
     <string name="gutenberg_native_s_link">ссылка на %s</string>
     <string name="gutenberg_native_padding">Отступ</string>
@@ -1837,7 +1896,6 @@ Language: ru
     <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook не может обнаружить страниц, Jetpack Social не может использовать профили Facebook, только страницы.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Нет подключения</string>
     <string name="notifications_tab_title_likes">Отметки \"Нравится\"</string>
-    <string name="notifications_tab_title_follows">Подписки</string>
     <string name="notifications_tab_title_comments">Комментарии</string>
     <string name="notifications_tab_title_unread_notifications">Непрочитанные</string>
     <string name="dlg_cancel_action_dont_trash">Не удалять</string>
@@ -2162,9 +2220,7 @@ Language: ru
     <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
     <string name="backdated_for">Датировано задним числом для: %s</string>
     <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
-    <string name="stats_insights_social">Социальные</string>
     <string name="stats_insights_annual_site_stats">Данные по сайту за год</string>
-    <string name="stats_view_follower_totals">Статистика подписок</string>
     <string name="domain_suggestions_fetch_error">Предложения по доменам не могут быть загружены</string>
     <string name="domain_suggestions_search_hint">Напишите ключевое слово для получения предложений</string>
     <string name="domains_suggestions_empty_list">Нет предложений</string>
@@ -2328,7 +2384,6 @@ Language: ru
     <string name="stats_insights_tags_and_categories">Метки и рубрики</string>
     <string name="stats_insights_all_time_stats">За всё время</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Подписчики</string>
     <string name="stats_publicize_service_label">Служба</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Просмотры</string>
@@ -2341,8 +2396,6 @@ Language: ru
     <string name="stats_comments_posts_and_pages">Записи и страницы</string>
     <string name="stats_comments_authors">Авторы</string>
     <string name="stats_follower_since_label">с</string>
-    <string name="stats_follower_label">Подписчик</string>
-    <string name="stats_followers_count_message">Всего %1$s Подписчики: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Настроить статистику</string>
@@ -2444,14 +2497,11 @@ Language: ru
     <string name="sign_out_wpcom_confirm_with_no_changes">Выйти из WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">У вас есть несохраненные изменения к записи, которые еще не были загружены на сайт, они будут потеряны на вашем устройстве при выходе. Всё равно выйти?</string>
     <string name="people_empty_list_filtered_viewers">Ещё нет просмотров</string>
-    <string name="people_empty_list_filtered_email_followers">Ещё нет подписчиков по эл.почте</string>
-    <string name="people_empty_list_filtered_followers">Ещё нет подписчиков</string>
     <string name="people_empty_list_filtered_users">Ещё нет пользователей</string>
     <string name="reader_empty_posts_liked_description">Записи, которые вам понравились будут здесь</string>
     <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
     <string name="reader_no_followed_blogs_button_discover">Искать блоги</string>
     <string name="notifications_empty_likes">Ещё нет отметок \"нравится\"</string>
-    <string name="notifications_empty_followers">Ещё нет подписчиков</string>
     <string name="activity_log_limited_content_on_free_plan">Для бесплатных тарифов число событий в истории ограничено.</string>
     <string name="activity_log_empty_subtitle">При внесении изменений на сайт, вы сможете увидеть историю активности здесь</string>
     <string name="activity_log_empty_title">Активности не отмечено</string>
@@ -3082,6 +3132,7 @@ Language: ru
     <string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
     <string name="error_unknown_post_type">Неизвестный формат записи</string>
     <string name="submit_for_review">Отправить</string>
+    <string name="title_subscriber">Подписчик</string>
     <string name="duplicate_site_detected">Обнаружена копия сайта.</string>
     <string name="cannot_add_duplicate_site">Этот сайт уже существует в приложении, его нельзя добавить.</string>
     <string name="already_logged_in_wpcom">Вы уже вошли в учетную запись WordPress.com. Вы не можете добавить сайт WordPress.com, привязанный к другой учетной записи.</string>
@@ -3130,35 +3181,26 @@ Language: ru
     <string name="preference_open_device_settings">Открыть настройки устройства</string>
     <string name="invite_invalid_email">%s: неверный адрес электронной почты</string>
     <string name="invite_user_blocked_invites">%s: приглашения, заблокированные пользователем</string>
-    <string name="invite_already_following">%s: вы уже подписаны</string>
     <string name="invite_already_a_member">%s: вы уже являетесь участником</string>
     <string name="invite_username_not_found">%s: пользователь не найден</string>
     <string name="comment_moderated_approved">Комментарий одобрен!</string>
     <string name="like">Нравится</string>
     <string name="timespan_now">сейчас</string>
     <string name="role_viewer">Обозреватель</string>
-    <string name="role_follower">Читатель</string>
     <string name="error_post_my_profile_no_connection">Нет сети — не удалось сохранить профиль.</string>
     <string name="alignment_right">Справа</string>
     <string name="alignment_left">Слева</string>
     <string name="alignment_none">Нет</string>
     <string name="site_settings_list_editor_action_mode_title">Выбрано %1$d</string>
     <string name="error_fetch_users_list">Не удалось получить список пользователей сайта</string>
-    <string name="title_email_follower">Подписчик по электронной почте</string>
-    <string name="title_follower">Читатель</string>
     <string name="people_fetching">Получение списка пользователей…</string>
     <string name="people_dropdown_item_viewers">Обозреватели</string>
-    <string name="people_dropdown_item_email_followers">Подписчики по электронной почте</string>
-    <string name="people_dropdown_item_followers">Подписчики</string>
     <string name="people_dropdown_item_team">Команда</string>
     <string name="invite_message_usernames_limit">Вы можете пригласить до 10 пользователей с уникальными адресами эл. почты или учётными данными WordPress.com. Незарегистрированным пользователям будут отправлены инструкции по созданию учётной записи.</string>
     <string name="viewer_remove_confirmation_message">Если удалить этого обозревателя, он больше не сможет зайти на ваш сайт.\n\nВсё равно удалить этого обозревателя?</string>
-    <string name="follower_remove_confirmation_message">Если удалить этого читателя, он больше не будет получать уведомления об изменениях на этом сайте, пока не восстановит подписку.\n\nВсё равно удалить этого читателя?</string>
+    <string name="subscriber_remove_confirmation_message">Если удалить этого читателя, он больше не будет получать уведомления об изменениях на этом сайте, пока не восстановит подписку.\n\nВсё равно удалить этого читателя?</string>
     <string name="follower_subscribed_since">С %1$s</string>
     <string name="error_remove_viewer">Не удалось удалить обозревателя</string>
-    <string name="error_remove_follower">Не удалось удалить читателя</string>
-    <string name="error_fetch_email_followers_list">Не удалось получить список подписчиков по электронной почте</string>
-    <string name="error_fetch_followers_list">Не удалось получить список читателей сайта</string>
     <string name="editor_failed_uploads_switch_html">Некоторые загрузки завершились с ошибкой. В этом состоянии нельзя\nпереключиться в режим HTML. Удалить неудачные загрузки и продолжить?</string>
     <string name="image_thumbnail">Миниатюра</string>
     <string name="visual_editor">Визуальный редактор</string>
@@ -3264,7 +3306,6 @@ Language: ru
     <string name="replies_to_my_comments">Ответы на мои комментарии</string>
     <string name="username_mentions">Упоминания имени пользователя</string>
     <string name="site_achievements">Достижения сайта</string>
-    <string name="site_follows">Читатели сайта</string>
     <string name="likes_on_my_posts">Отметки «Нравится» к моим записям</string>
     <string name="likes_on_my_comments">Отметки «Нравится» к моим комментариям</string>
     <string name="comments_on_my_site">Комментарии на моём сайте</string>
@@ -3535,7 +3576,6 @@ Language: ru
     <string name="stats_followers_minutes">%1$d минуты</string>
     <string name="stats_followers_a_minute_ago">минуту назад</string>
     <string name="stats_followers_seconds_ago">несколько секунд назад</string>
-    <string name="stats_view_followers">Подписчики</string>
     <string name="stats_view_videos">Видео</string>
     <string name="stats_view_top_posts_and_pages">Записи и страницы</string>
     <string name="stats_view_countries">Страны</string>
@@ -3695,7 +3735,6 @@ Language: ru
     <string name="manage">Управление</string>
     <string name="more_notifications">и %d ещё.</string>
     <string name="new_notifications">Новые уведомления: %d</string>
-    <string name="follows">Подписки</string>
     <string name="note_reply_successful">Ответ опубликован</string>
     <string name="sign_in">Войти</string>
     <string name="loading">Загрузка…</string>

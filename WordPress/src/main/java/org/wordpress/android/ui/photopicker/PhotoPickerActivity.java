@@ -34,6 +34,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
+import org.wordpress.android.util.WPMediaUtils.LaunchCameraCallback;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -230,7 +231,20 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void launchCameraForImage() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                mediaCapturePath -> mMediaCapturePath = mediaCapturePath);
+                new LaunchCameraCallback() {
+                    @Override
+                    public void onMediaCapturePathReady(String mediaCapturePath) {
+                        // Handle the path for the captured media
+                        mMediaCapturePath = mediaCapturePath;
+                    }
+
+                    @Override
+                    public void onCameraError(String errorMessage) {
+                        // Handle the error, e.g., display an error message to the user
+                        ToastUtils.showToast(PhotoPickerActivity.this, errorMessage);
+                    }
+                }
+        );
     }
 
     private void launchPictureLibrary(boolean multiSelect) {

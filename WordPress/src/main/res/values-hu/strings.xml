@@ -7,7 +7,6 @@ Language: hu
 -->
 <resources>
     <string name="timespan_now">most</string>
-    <string name="role_follower">Követő</string>
     <string name="language">Nyelv</string>
     <string name="auth_required">A folytatáshoz lépjünk be újra.</string>
     <string name="stats_view_authors">Szerzők</string>

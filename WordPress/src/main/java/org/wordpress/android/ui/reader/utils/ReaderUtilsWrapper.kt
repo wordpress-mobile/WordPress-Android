@@ -63,4 +63,10 @@ class ReaderUtilsWrapper @Inject constructor(
     fun isSelfHosted(authorBlogId: Long) = ReaderUtils.isSelfHosted(authorBlogId)
 
     fun getTagFromTagUrl(url: String): String = ReaderUtils.getTagFromTagUrl(url)
+
+    fun getShortLikeLabelText(numLikes: Int): String =
+        ReaderUtils.getShortLikeLabelText(contextProvider.getContext(), numLikes)
+
+    fun getShortCommentLabelText(numComments: Int): String =
+        ReaderUtils.getShortCommentLabelText(contextProvider.getContext(), numComments)
 }

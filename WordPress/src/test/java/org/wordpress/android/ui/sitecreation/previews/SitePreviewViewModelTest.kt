@@ -62,7 +62,7 @@ class SitePreviewViewModelTest : BaseUnitTest() {
     private lateinit var uiStateObserver: Observer<SitePreviewUiState>
 
     @Mock
-    private lateinit var onOkClickedObserver: Observer<Created>
+    private lateinit var onOkClickedObserver: Observer<Created?>
 
     @Mock
     private lateinit var preloadPreviewObserver: Observer<String>

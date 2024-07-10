@@ -1,3 +1,0 @@
-24.6:
-- Wir haben eine Handvoll Probleme mit der Formatierung von hervorgehobenem Text behoben. Wir wissen nicht, wie es dir geht, aber das ist das Highlight unserer Woche.
-- Die App unterstützt jetzt Textvorschläge, die länger sind als der sichtbare Platz im Editor. Keine Abstürze – nur noch Textansicht, so weit das Auge reicht.

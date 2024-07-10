@@ -78,7 +78,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.widgets.AppRatingDialogWrapper
+import org.wordpress.android.widgets.AppReviewsManagerWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -97,7 +97,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val appRatingDialogWrapper: AppRatingDialogWrapper,
+    private val appReviewsManagerWrapper: AppReviewsManagerWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -207,7 +207,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         source: String
     ) {
         withContext(bgDispatcher) {
-            appRatingDialogWrapper.incrementInteractions(
+            appReviewsManagerWrapper.incrementInteractions(
                 AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
             )
 

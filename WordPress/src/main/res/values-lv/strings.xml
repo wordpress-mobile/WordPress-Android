@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-22 13:18:29+0000
+Translation-Revision-Date: 2024-05-28 13:28:28+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 0 || n % 100 >= 11 && n % 100 <= 19) ? 0 : ((n % 10 == 1 && n % 100 != 11) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: lv
@@ -283,8 +283,6 @@ Language: lv
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lasītājs pāriet uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Jūsu statistika tiek pārvietota uz Jetpack lietotni</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Pārslēdzieties uz jauno Jetpack lietotni</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Pārbaudiet tīkla savienojumu un mēģiniet vēlreiz.</string>
-    <string name="blogging_prompts_list_error_network_title">Pašlaik nevar ielādēt šo saturu</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Ielādējot uzvednes, radās kļūda.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hmm…</string>
     <string name="blogging_prompts_list_no_prompts">Vēl nav uzvedņu</string>
@@ -410,7 +408,7 @@ Language: lv
     <string name="qrcode_auth_flow_validated_subtitle">Skenējiet tikai QR kodus, kas ņemti tieši no jūsu tīmekļa pārlūkprogrammas. Nekad neskenējiet kodu, ko jums nosūtījis kāds cits.</string>
     <string name="qrcode_auth_flow_validated_default_title">Vai mēģināt pieteikties savā tīmekļa pārlūkprogrammā netālu no %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Vai mēģināt pieteikties pakalpojumā %1$s netālu no %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Komentēšana citos emuāros ir lielisks veids, kā piesaistīt uzmanību un sekotājus savai jaunajai vietnei.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Komentēšana citos emuāros ir lielisks veids, kā piesaistīt uzmanību un sekotājus savai jaunajai vietnei.</string>
     <string name="stats_insights_comments_guide_card">💡Pieskarieties SKATĪT VAIRĀK, lai redzētu savus labākos komentētājus.</string>
     <string name="stats_insights_latest_post_empty">Pārbaudiet vēlreiz, kad esat publicējis savu pirmo ziņu!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Apskatiet mūsu galvenos padomus, kā palielināt skatījumu skaitu un datplūsmu %1$s</string>
@@ -448,7 +446,7 @@ Language: lv
     <string name="me_btn_scan_login_code">Skenējiet pieteikšanās kodu</string>
     <string name="stats_insights_likes_guide_card">⭐️ Jūsu jaunākā ziņa %1$s ir saņēmusi %2$s atzīmes Patīk.</string>
     <string name="stats_most_popular_percent_views_empty">Nepietiekama aktivitāte. Atgriezieties vēlāk, kad jūsu vietni būs apmeklējuši vairāk apmeklētāju!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% no kopējā sekotāju skaita</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% no kopējā sekotāju skaita</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopēt saiti</string>
     <string name="quick_start_completed_tour_title">Apsveicu! Jūs zināt, kā rīkoties&lt;br/&gt;</string>
@@ -475,7 +473,6 @@ Language: lv
     <string name="stats_published_minutes_ago">Publicēts pirms %1$d minūtēm</string>
     <string name="stats_published_a_minute_ago">Publicēts pirms minūtes</string>
     <string name="stats_published_seconds_ago">Publicēts pirms dažām sekundēm</string>
-    <string name="stats_view_total_followers">Kopējais sekotāju skaits</string>
     <string name="stats_view_total_comments">Kopā komentāri</string>
     <string name="stats_view_total_likes">Kopējais atzīmju Patīk skaits</string>
     <string name="blogging_prompts_notification_dismiss">Atlaist</string>
@@ -1570,7 +1567,6 @@ Language: lv
     <string name="sharing_facebook_account_must_have_pages">Facebook savienojums nevar atrast nevienu lapu. Jetpack Social nevar izveidot savienojumu ar Facebook profiliem, tikai ar publicētajām lapām.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nav savienots</string>
     <string name="notifications_tab_title_likes">Patīk</string>
-    <string name="notifications_tab_title_follows">Seko</string>
     <string name="notifications_tab_title_comments">Komentāri</string>
     <string name="notifications_tab_title_unread_notifications">Nelasīts</string>
     <string name="dlg_cancel_action_dont_trash">Nemest atkritnē</string>
@@ -1895,9 +1891,7 @@ Language: lv
     <string name="error_restoring_post">Atjaunojot ziņu, radās kļūda</string>
     <string name="backdated_for">Ar atpakaļejošu datumu: %s</string>
     <string name="stats_insights_management_title">Skatiet tikai visatbilstošāko statistiku. Tālāk pievienojiet un kārtojiet savus ieskatus.</string>
-    <string name="stats_insights_social">Sociālie</string>
     <string name="stats_insights_annual_site_stats">Vietņu gada statistika</string>
-    <string name="stats_view_follower_totals">Sekotāju kopsumma</string>
     <string name="domain_suggestions_fetch_error">Domēna ieteikumus nevarēja ielādēt</string>
     <string name="domain_suggestions_search_hint">Ierakstiet atslēgvārdu, lai iegūtu vairāk ideju</string>
     <string name="domains_suggestions_empty_list">Ieteikumi netika atrasti</string>
@@ -2061,7 +2055,6 @@ Language: lv
     <string name="stats_insights_tags_and_categories">Tagi un kategorijas</string>
     <string name="stats_insights_all_time_stats">Visu laiku</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Sekotāji</string>
     <string name="stats_publicize_service_label">Pakalpojums</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Skati</string>
@@ -2074,8 +2067,6 @@ Language: lv
     <string name="stats_comments_posts_and_pages">Ziņas un lapas</string>
     <string name="stats_comments_authors">Autori</string>
     <string name="stats_follower_since_label">Kopš</string>
-    <string name="stats_follower_label">Sekotājs</string>
-    <string name="stats_followers_count_message">Kopējais %1$s sekotāju skaits: %2$s</string>
     <string name="stats_followers_email">E-pasts</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Pārvaldiet ieskatus</string>
@@ -2177,14 +2168,11 @@ Language: lv
     <string name="sign_out_wpcom_confirm_with_no_changes">Vai atteikties no WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Jums ir izmaiņas ziņās, kuras nav augšupielādētas jūsu vietnē. Izrakstoties tūlīt, šīs izmaiņas tiks dzēstas no jūsu ierīces. Vai tomēr atteikties?</string>
     <string name="people_empty_list_filtered_viewers">Skatītāju vēl nav</string>
-    <string name="people_empty_list_filtered_email_followers">Pagaidām nav e-pasta sekotāju</string>
-    <string name="people_empty_list_filtered_followers">Pagaidām nav sekotāju</string>
     <string name="people_empty_list_filtered_users">Pagaidām nav lietotāju</string>
     <string name="reader_empty_posts_liked_description">Šeit parādīsies ziņas, kas jums patīk</string>
     <string name="reader_empty_posts_liked_title">Pagaidām nekas nepatika</string>
     <string name="reader_no_followed_blogs_button_discover">Atklājiet emuārus</string>
     <string name="notifications_empty_likes">Pagaidām nav Patīk</string>
-    <string name="notifications_empty_followers">Pagaidām nav sekotāju</string>
     <string name="activity_log_limited_content_on_free_plan">Tā kā izmantojat bezmaksas plānu, aktivitātēs redzēsiet ierobežotu skaitu notikumu.</string>
     <string name="activity_log_empty_subtitle">Veicot izmaiņas savā vietnē, šeit varēsit skatīt savu darbību vēsturi</string>
     <string name="activity_log_empty_title">Pagaidām nav aktivitātes</string>
@@ -2863,35 +2851,26 @@ Language: lv
     <string name="preference_open_device_settings">Atveriet ierīces iestatījumus</string>
     <string name="invite_invalid_email">%s: nederīgs e-pasts</string>
     <string name="invite_user_blocked_invites">%s: lietotājs bloķēja ielūgumus</string>
-    <string name="invite_already_following">%s: jau seko</string>
     <string name="invite_already_a_member">%s: jau ir dalībnieks</string>
     <string name="invite_username_not_found">%s: lietotājs nav atrasts</string>
     <string name="comment_moderated_approved">Komentārs apstiprināts!</string>
     <string name="like">Patīk</string>
     <string name="timespan_now">tagad</string>
     <string name="role_viewer">Skatītājs</string>
-    <string name="role_follower">Sekotājs</string>
     <string name="error_post_my_profile_no_connection">Nav savienojuma, nevarēja saglabāt jūsu profilu</string>
     <string name="alignment_right">Pa labi</string>
     <string name="alignment_left">Pa kreisi</string>
     <string name="alignment_none">Nav</string>
     <string name="site_settings_list_editor_action_mode_title">Atlasīts %1$d</string>
     <string name="error_fetch_users_list">Nevarēja izgūt vietnes lietotājus</string>
-    <string name="title_email_follower">E-pasta sekotājs</string>
-    <string name="title_follower">Sekotājs</string>
     <string name="people_fetching">Notiek lietotāju ielāde…</string>
     <string name="people_dropdown_item_viewers">Skatītāji</string>
-    <string name="people_dropdown_item_email_followers">E-pasta sekotāji</string>
-    <string name="people_dropdown_item_followers">Sekotāji</string>
     <string name="people_dropdown_item_team">Komanda</string>
     <string name="invite_message_usernames_limit">Uzaiciniet ne vairāk kā 10 e-pasta adreses un / vai WordPress.com lietotājvārdus. Tiem, kuriem nepieciešams lietotājvārds, tiks nosūtīti norādījumi, kā to izveidot.</string>
     <string name="viewer_remove_confirmation_message">Ja šis skatītājs tiks noņemts, viņš vairs nesaņems paziņojumus par šo vietni, ja vien viņš atkārtoti netiks sekots.\n\nVai jūs joprojām vēlaties noņemt šo skatītāju?</string>
-    <string name="follower_remove_confirmation_message">Ja šis lietotājs tiks noņemts, viņš vairs nesaņems paziņojumus par šo vietni, ja vien viņš atkārtoti netiks sekots.\n\nVai jūs joprojām vēlaties noņemt šo sekotāju?</string>
+    <string name="subscriber_remove_confirmation_message">Ja tas tiks noņemts, šis abonents vairs nesaņems paziņojumus par šo vietni, ja vien viņš nebūs atkārtoti pierakstījies.\n\nVai joprojām vēlaties šo abonentu noņemt?</string>
     <string name="follower_subscribed_since">Tā kā %1$s</string>
     <string name="error_remove_viewer">Nevarēja noņemt skatītāju</string>
-    <string name="error_remove_follower">Nevarēja noņemt sekotāju</string>
-    <string name="error_fetch_email_followers_list">Nevarēja izgūt vietnes e-pasta sekotājus</string>
-    <string name="error_fetch_followers_list">Nevarēja izgūt vietnes sekotājus</string>
     <string name="editor_failed_uploads_switch_html">Dažas multivides augšupielādes neizdevās. Šajā stāvoklī nevar pārslēgties uz HTML režīmu. Vai noņemt visas neizdevušās augšupielādes un turpināt?</string>
     <string name="image_thumbnail">Attēla sīktēls</string>
     <string name="visual_editor">Vizuālais redaktors</string>
@@ -2997,7 +2976,6 @@ Language: lv
     <string name="replies_to_my_comments">Atbildes uz maniem komentāriem</string>
     <string name="username_mentions">Lietotājvārda pieminējumi</string>
     <string name="site_achievements">Vietnes sasniegumi</string>
-    <string name="site_follows">Vietne seko</string>
     <string name="likes_on_my_posts">Patīk manām ziņām</string>
     <string name="likes_on_my_comments">Patīk maniem komentāriem</string>
     <string name="comments_on_my_site">Komentāri manā vietnē</string>
@@ -3268,7 +3246,6 @@ Language: lv
     <string name="stats_followers_minutes">%1$d minūtes</string>
     <string name="stats_followers_a_minute_ago">pirms minūtes</string>
     <string name="stats_followers_seconds_ago">pirms dažām sekundēm</string>
-    <string name="stats_view_followers">Sekotāji</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Ziņas un lapas</string>
     <string name="stats_view_countries">Valstis</string>
@@ -3428,7 +3405,6 @@ Language: lv
     <string name="manage">Pārvaldīt</string>
     <string name="more_notifications">un vēl %d.</string>
     <string name="new_notifications">%d jauni paziņojumi</string>
-    <string name="follows">Seko</string>
     <string name="note_reply_successful">Atbilde publicēta</string>
     <string name="sign_in">Pieslēgties</string>
     <string name="loading">Notiek ielāde…</string>

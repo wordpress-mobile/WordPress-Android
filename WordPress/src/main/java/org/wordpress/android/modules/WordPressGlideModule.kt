@@ -24,7 +24,7 @@ import javax.inject.Named
 @GlideModule
 class WordPressGlideModule : AppGlideModule() {
     @Inject
-    @Named("custom-ssl")
+    @Named("custom-ssl-custom-redirects")
     lateinit var requestQueue: RequestQueue
 
     @Inject

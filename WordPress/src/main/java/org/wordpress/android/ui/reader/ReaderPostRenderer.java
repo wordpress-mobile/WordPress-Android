@@ -3,14 +3,17 @@ package org.wordpress.android.ui.reader;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Handler;
+import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.jsoup.Jsoup;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
+import org.wordpress.android.support.JsObjectKt;
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences;
 import org.wordpress.android.ui.reader.models.ReaderReadingPreferences.ThemeValues;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
@@ -44,6 +47,8 @@ import java.util.regex.Pattern;
  * http://developer.android.com/guide/webapps/targeting.html
  */
 public class ReaderPostRenderer {
+    private static final String JAVASCRIPT_MESSAGE_HANDLER = "wvHandler";
+    private static final String JS_OBJECT_ADDED_TAG = "jsObjectAdded";
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
@@ -56,6 +61,8 @@ public class ReaderPostRenderer {
     private ReaderCssProvider mCssProvider;
     private ReaderReadingPreferences mReadingPreferences;
     private ReaderReadingPreferences.ThemeValues mReadingPreferencesTheme;
+    @Nullable
+    private ReaderPostMessageListener mPostMessageListener = null;
 
     @SuppressLint("SetJavaScriptEnabled")
     public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, ReaderCssProvider cssProvider,
@@ -80,6 +87,7 @@ public class ReaderPostRenderer {
         // enable JavaScript in the webView, otherwise videos and other embedded content won't
         // work - note that the content is scrubbed on the backend so this is considered safe
         webView.getSettings().setJavaScriptEnabled(true);
+        setWebViewMessageHandler(webView);
     }
 
     public void beginRender() {
@@ -543,6 +551,7 @@ public class ReaderPostRenderer {
         }
 
         sbHtml.append("</head><body class=\"reader-full-post reader-full-post__story-content\">")
+              .append("<script type=\"text/javascript\" src=\"file:///android_asset/reader_text_events.js\"></script>")
               .append(contentCustomised)
               .append("</body></html>");
 
@@ -634,5 +643,48 @@ public class ReaderPostRenderer {
         return "font-family: " + mReadingPreferences.getFontFamily().getValue() + "; "
                + "font-weight: 400; "
                + "font-size: " + mReadingPreferences.getFontSize().getValue() + "px; ";
+    }
+
+    private void setWebViewMessageHandler(@NonNull WebView webView) {
+        Object tag = webView.getTag(JS_OBJECT_ADDED_TAG.hashCode());
+        if (tag != null && (boolean) tag) {
+            return; // Exit if the object has already been added
+        }
+
+        Set<String> allowedOrigins = new HashSet<>();
+        allowedOrigins.add("*");
+
+        JsObjectKt.createJsObject(
+                webView, JAVASCRIPT_MESSAGE_HANDLER, allowedOrigins,
+                (message) -> {
+                    if (mPostMessageListener == null) {
+                        return null;
+                    }
+
+                    switch (message) {
+                        case ReaderPostMessageListener.MSG_ARTICLE_TEXT_COPIED:
+                            mPostMessageListener.onArticleTextCopied();
+                            break;
+                        case ReaderPostMessageListener.MSG_ARTICLE_TEXT_HIGHLIGHTED:
+                            mPostMessageListener.onArticleTextHighlighted();
+                            break;
+                    }
+                    return null;
+                });
+
+        // Set the tag that the JS object has been added, so we can check before adding it again
+        webView.setTag(JS_OBJECT_ADDED_TAG.hashCode(), true);
+    }
+
+    void setPostMessageListener(@Nullable ReaderPostMessageListener listener) {
+        mPostMessageListener = listener;
+    }
+
+    interface ReaderPostMessageListener {
+        String MSG_ARTICLE_TEXT_COPIED = "articleTextCopied";
+        String MSG_ARTICLE_TEXT_HIGHLIGHTED = "articleTextHighlighted";
+
+        void onArticleTextCopied();
+        void onArticleTextHighlighted();
     }
 }

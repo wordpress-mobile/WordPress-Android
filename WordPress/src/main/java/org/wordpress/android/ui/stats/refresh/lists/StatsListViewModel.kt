@@ -72,7 +72,7 @@ abstract class StatsListViewModel(
         INSIGHT_DETAIL(R.string.stats_insights_views_and_visitors),
         TOTAL_LIKES_DETAIL(R.string.stats_view_total_likes),
         TOTAL_COMMENTS_DETAIL(R.string.stats_view_total_comments),
-        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_followers),
+        TOTAL_FOLLOWERS_DETAIL(R.string.stats_view_total_subscribers),
         ANNUAL_STATS(R.string.stats_insights_annual_site_stats);
     }
 
@@ -327,19 +327,6 @@ class DaysListViewModel @Inject constructor(
 class InsightsDetailListViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     @Named(VIEWS_AND_VISITORS_USE_CASE) statsUseCase: BaseListUseCase,
-    analyticsTracker: AnalyticsTrackerWrapper,
-    dateSelectorFactory: StatsDateSelector.Factory
-) : StatsListViewModel(
-    mainDispatcher,
-    statsUseCase,
-    analyticsTracker,
-    dateSelectorFactory.build(StatsGranularity.WEEKS)
-)
-
-// Using Weeks granularity on Subscribers detail screens
-class SubscribersDetailListViewModel @Inject constructor(
-    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
-    @Named(SUBSCRIBERS_USE_CASE) statsUseCase: BaseListUseCase,
     analyticsTracker: AnalyticsTrackerWrapper,
     dateSelectorFactory: StatsDateSelector.Factory
 ) : StatsListViewModel(

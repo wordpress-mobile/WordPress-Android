@@ -110,7 +110,7 @@ import org.wordpress.android.util.config.OpenWebLinksWithJetpackFlowFeatureConfi
 import org.wordpress.android.util.enqueuePeriodicUploadWorkRequestForAllSites
 import org.wordpress.android.util.experiments.ExPlat
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.widgets.AppRatingDialog
+import org.wordpress.android.widgets.AppReviewManager
 import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
@@ -283,9 +283,9 @@ class AppInitializer @Inject constructor(
     }
 
     fun init() {
+        crashLogging.initialize()
         dispatcher.register(this)
         appConfig.init(appScope)
-
         // Upload any encrypted logs that were queued but not yet uploaded
         encryptedLogging.start()
 
@@ -303,7 +303,7 @@ class AppInitializer @Inject constructor(
         initWpDb()
         context?.let { enableHttpResponseCache(it) }
 
-        AppRatingDialog.init(application)
+        AppReviewManager.init(application)
 
         if (!initialized) {
             // EventBus setup
@@ -431,17 +431,6 @@ class AppInitializer @Inject constructor(
         } catch (e: Exception) {
             AppLog.enableRecording(false)
             AppLog.e(T.UTILS, "Error enabling log file persistence", e)
-        }
-        AppLog.addListener { tag, logLevel, message ->
-            val sb = StringBuffer()
-            sb.append(logLevel.toString())
-                .append("/")
-                .append(AppLog.TAG)
-                .append("-")
-                .append(tag.toString())
-                .append(": ")
-                .append(message)
-            crashLogging.recordEvent(sb.toString(), null)
         }
     }
 

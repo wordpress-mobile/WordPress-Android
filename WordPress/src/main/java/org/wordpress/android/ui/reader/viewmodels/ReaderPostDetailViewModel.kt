@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderCommentTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
@@ -587,9 +586,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
         val stat = if (isGlobal) {
-            AnalyticsTracker.Stat.READER_GLOBAL_RELATED_POST_CLICKED
+            Stat.READER_GLOBAL_RELATED_POST_CLICKED
         } else {
-            AnalyticsTracker.Stat.READER_LOCAL_RELATED_POST_CLICKED
+            Stat.READER_LOCAL_RELATED_POST_CLICKED
         }
         readerTracker.trackPost(stat, findPost(blogId, postId))
     }
@@ -625,7 +624,7 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updatePostDetailsUi() {
         post?.let {
-            readerTracker.trackPost(AnalyticsTracker.Stat.READER_ARTICLE_RENDERED, it)
+            readerTracker.trackPost(Stat.READER_ARTICLE_RENDERED, it)
             _navigationEvents.postValue(Event(ShowPostInWebView(it)))
             _uiState.value = convertPostToUiState(it)
         }
@@ -687,9 +686,9 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun trackNotAuthorisedState() {
         if (shouldOfferSignIn) {
-            post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
+            post?.let { readerTracker.trackPost(Stat.READER_WPCOM_SIGN_IN_NEEDED, it) }
         }
-        post?.let { readerTracker.trackPost(AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED, it) }
+        post?.let { readerTracker.trackPost(Stat.READER_USER_UNAUTHORIZED, it) }
     }
 
     private fun getNotAuthorisedErrorMessageRes() = if (!shouldOfferSignIn) {
@@ -1010,6 +1009,14 @@ class ReaderPostDetailViewModel @Inject constructor(
         if (commentsSnippetFeatureConfig.isEnabled()) {
             eventBusWrapper.unregister(this)
         }
+    }
+
+    fun onArticleTextCopied() {
+        readerTracker.track(Stat.READER_ARTICLE_TEXT_COPIED)
+    }
+
+    fun onArticleTextHighlighted() {
+        readerTracker.track(Stat.READER_ARTICLE_TEXT_HIGHLIGHTED)
     }
 
     companion object {

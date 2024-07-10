@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-03-17 11:41:48+0000
+Translation-Revision-Date: 2024-05-25 06:19:48+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: sk
@@ -192,14 +192,11 @@ Language: sk
     <string name="sign_out_wpcom_confirm_with_no_changes">Odhlásiť sa z WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Máte zmeny v príspevkoch, ktoré neboli nahrané na vaše webové stránky. Ak sa teraz odhlásite, dôjde k ich zmazaniu z vášho zariadenia. Chcete sa aj tak odhlásiť?</string>
     <string name="people_empty_list_filtered_viewers">Zatiaľ žiadni návštevníci</string>
-    <string name="people_empty_list_filtered_email_followers">Zatiaľ žiadni odberatelia e-mailov</string>
-    <string name="people_empty_list_filtered_followers">Zatiaľ žiadni odberatelia</string>
     <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_no_followed_blogs_button_discover">Objavte blogy</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
-    <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
     <string name="activity_log_limited_content_on_free_plan">Keďže máte voľný plán, uvidíte vo svojich aktivitách obmedzené udalosti.</string>
     <string name="activity_log_empty_subtitle">Po vykonaní zmien na vašej webovej stránke budete môcť vidieť svoju históriu aktivít tu</string>
     <string name="activity_log_empty_title">Zatiaľ žiadna aktivita</string>
@@ -877,35 +874,26 @@ Language: sk
     <string name="preference_open_device_settings">Otvoriť nastavenia zariadenia</string>
     <string name="invite_invalid_email">%s: neplatný email</string>
     <string name="invite_user_blocked_invites">%s: Používateľ zablokoval pozvania.</string>
-    <string name="invite_already_following">%s: už odoberá</string>
     <string name="invite_username_not_found">%s: používateľ nebol nájdený</string>
     <string name="invite_already_a_member">%s: je už členom</string>
     <string name="comment_moderated_approved">Komentár schválený!</string>
     <string name="like">Lajk</string>
     <string name="timespan_now">teraz</string>
     <string name="role_viewer">Návštevník</string>
-    <string name="role_follower">Odberateľ</string>
     <string name="error_post_my_profile_no_connection">Žiadne pripojenie, nemožno uložiť váš profil</string>
     <string name="alignment_left">Vľavo</string>
     <string name="alignment_right">Vpravo</string>
     <string name="alignment_none">Žiadne</string>
     <string name="site_settings_list_editor_action_mode_title">Vybraná %1$d</string>
     <string name="error_fetch_users_list">Nepodarilo sa získať používateľov webovej stránky</string>
-    <string name="title_email_follower">Email odberateľa</string>
-    <string name="title_follower">Odberateľ</string>
     <string name="people_fetching">Načítavanie používateľov….</string>
     <string name="people_dropdown_item_viewers">Návštevníci</string>
-    <string name="people_dropdown_item_email_followers">E-mail odoberateľom</string>
-    <string name="people_dropdown_item_followers">Odberatelia</string>
     <string name="people_dropdown_item_team">Tím</string>
     <string name="invite_message_usernames_limit">Pozvať až 10 e-mailových adries a/alebo používateľov WordPress.com. Tým, ktorí budú potrebovať používateľské meno sa pošlú pokyny ako si ho vytvoriť.</string>
     <string name="viewer_remove_confirmation_message">Ak odstránite tento zobrazovač, on alebo ona nebudú môcť navštíviť webovú stránku. Aj tak chcete odstrániť zobrazovač?</string>
-    <string name="follower_remove_confirmation_message">Ak ho odstránite, odberateľ nebude dostávať upozornenia o tejto webovej stránke, pokiaľ ju nezačnú opäť odoberať. Aj tak chcete odstrániť webovú stránku?</string>
+    <string name="subscriber_remove_confirmation_message">Ak sa odstráni, tento odberateľ prestane dostávať oznámenia o tejto stránke, pokiaľ sa opätovne neprihlási na odber.\n\nChcete ešte odstrániť tohto odberateľa?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
     <string name="error_remove_viewer">Nemožno odstrániť návštevníka</string>
-    <string name="error_remove_follower">Nemožno odstrániť odberateľa</string>
-    <string name="error_fetch_email_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
-    <string name="error_fetch_followers_list">Nemožno získať e-mailové adresy odoberateľov webovej stránky.</string>
     <string name="editor_failed_uploads_switch_html">Nahrávanie niektorých médií zlyhalo. Nemôžete prepnúť do HTML módu v tomto štádiu. Odstrániť všetky zlyhané nahrávania a pokračovať?</string>
     <string name="visual_editor">Vizuálny editor</string>
     <string name="image_thumbnail">Obrázok miniatúry</string>
@@ -1012,7 +1000,6 @@ Language: sk
     <string name="site_achievements">Výsledky webovej stránky</string>
     <string name="username_mentions">Používateľské meno uvádza</string>
     <string name="likes_on_my_posts">Lajky v mojich článkoch</string>
-    <string name="site_follows">Webová stránka nasleduje</string>
     <string name="likes_on_my_comments">Lajky pri mojich komentároch</string>
     <string name="comments_on_my_site">Komentáre na mojej stránke</string>
     <string name="site_settings_list_editor_summary_other">%d položky</string>
@@ -1236,6 +1223,7 @@ Language: sk
     <string name="site_picker_create_wpcom">Vytvorte webovú stránku WordPress.com</string>
     <string name="site_picker_edit_visibility">Zobraziť/skryť webové stránky</string>
     <string name="site_picker_add_self_hosted">Pridať webovú stránku s vlastným hostingom</string>
+    <string name="site_picker_add_a_site">Pridať webovú stránku</string>
     <string name="my_site_btn_view_site">Zobraziť webovú stránku</string>
     <string name="site_picker_title">Vybrať webovú stránku</string>
     <string name="my_site_btn_switch_site">Prepnúť webovú stránku</string>
@@ -1283,7 +1271,6 @@ Language: sk
     <string name="stats_followers_a_year">Rok</string>
     <string name="stats_followers_months">počet mesiacov: %1$d</string>
     <string name="stats_followers_years">počet rokov: %1$d</string>
-    <string name="stats_view_followers">Odberatelia</string>
     <string name="stats_likes">Počet lajkov</string>
     <string name="stats_followers_hours">hodín: %1$d</string>
     <string name="stats_followers_minutes">minút: %1$d</string>
@@ -1312,6 +1299,7 @@ Language: sk
     <string name="reader_toast_err_generic">Nie je možné vykonať túto akciu</string>
     <string name="update_verb">Aktualizovať</string>
     <string name="schedule_verb">Rozvrh</string>
+    <string name="reader_hint_add_tag_or_url_follow">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="help">Pomocník</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
@@ -1435,7 +1423,6 @@ Language: sk
     <string name="note_reply_successful">Odpoveď zverejnená</string>
     <string name="new_notifications">Počet nových upozornení: %d</string>
     <string name="more_notifications">a %d ďalším.</string>
-    <string name="follows">Sledovania</string>
     <string name="sign_in">Prihlásiť sa</string>
     <string name="loading">Načítava sa…</string>
     <string name="httpuser">HTTP používateľské meno</string>

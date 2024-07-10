@@ -15,7 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
@@ -23,7 +22,7 @@ fun BarcodeScannerScreen(
     codeScanner: CodeScanner,
     permissionState: BarcodeScanningViewModel.PermissionState,
     onResult: (Boolean) -> Unit,
-    onScannedResult: (Flow<CodeScannerStatus>) -> Unit,
+    onScannedResult: CodeScannerCallback,
 ) {
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),

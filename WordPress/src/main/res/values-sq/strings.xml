@@ -1,16 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-05 12:14:28+0000
+Translation-Revision-Date: 2024-06-03 09:13:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sq_AL
 -->
 <resources>
+    <string name="in_app_update_restart">Rinise</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Postim që nga audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">hapni menunë</string>
+    <string name="reader_tags_feed_error_retry">Riprovoni</string>
+    <string name="reader_tags_feed_error_title">S’u gjetën postime për %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Më tepër nga %s</string>
+    <string name="reader_tags_display_name">Etiketa</string>
+    <string name="reader_announcement_card_reading_preferences_title">Parapëlqime Leximi</string>
+    <string name="reader_announcement_card_title">Të reja në Lexues</string>
+    <string name="reader_dropdown_menu_tags">Etiketat Tuaja</string>
+    <string name="no_connection_error_description">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
+    <string name="no_connection_error_title">S’arrihet të ngarkohet kjo lëndë këtë çast.</string>
+    <string name="stats_subscribers_marker_view_plural">Pajtimtarë</string>
+    <string name="stats_subscribers_marker_view_singular">Pajtimtar</string>
+    <string name="stats_view_subscriber_growth">Shtim Pajtimtarësh</string>
+    <string name="role_subscriber">Pajtimtar</string>
+    <string name="title_email_subscriber">Pajtimtar me Email</string>
+    <string name="people_empty_list_filtered_email_subscribers">Ende pa pajtimtarë me email</string>
+    <string name="people_empty_list_filtered_subscribers">Ende pa pajtimtarë</string>
+    <string name="people_dropdown_item_email_subscribers">Pajtimtarë Me Email</string>
+    <string name="people_dropdown_item_subscribers">Pajtimtarë</string>
+    <string name="invite_already_subscribed">%s: I pajtuar tashmë</string>
+    <string name="error_remove_subscriber">S’u hoq dot pajtimtari</string>
+    <string name="post_settings_add_to_calendar_error">S’arrihet të shtohet te kalendar</string>
+    <string name="site_subscriptions">Pajtime te sajti</string>
+    <string name="notifications_tab_title_subscribers">Pajtimtarë</string>
+    <string name="subscribers">Pajtimtarë</string>
+    <string name="notifications_empty_subscribers">Ende pa pajtimtarë</string>
+    <string name="stats_view_emails">Email-e</string>
+    <string name="stats_view_subscribers">Pajtimtarë</string>
+    <string name="stats_view_total_subscribers">Pajtimtarë Gjithsej</string>
+    <string name="stats_emails_clicks_label">Klikime</string>
+    <string name="stats_emails_opens_label">Hapje</string>
+    <string name="stats_subscriber_since_label">Pajtimtar që prej</string>
+    <string name="stats_name_label">Emër</string>
+    <string name="stats_publicize_subscribers_label">Pajtimtarë</string>
+    <string name="stats_subscriber_label">Pajtimtar</string>
+    <string name="editor_updating_content">Po përditësohet lëndë</string>
+    <string name="stats_subscribers">Pajtimtarë</string>
+    <string name="site_picker_recent_sites">Sajte Së Fundi</string>
+    <string name="site_picker_all_sites">Krejt Sajtet</string>
+    <string name="site_picker_pinned_sites">Sajte të Fiksuar</string>
+    <string name="site_picker_edit_pins">Përpunoni Fiksime</string>
+    <string name="dialog_post_conflict_another_device">Pajisje Tjetër</string>
+    <string name="dialog_post_conflict_current_device">Pajisja e Tanishme</string>
+    <string name="dialog_post_conflict_body">Postimi u ndryshua në tjetër pajisje. Ju lutemi, përzgjidhni versionin e postimit që duhet mbajtur.</string>
+    <string name="dialog_post_conflict_title">Zgjidheni Përplasjen</string>
+    <string name="reader_preferences_font_size_extra_large">Ekstra të mëdha</string>
+    <string name="reader_preferences_font_size_large">Të mëdha</string>
+    <string name="reader_preferences_font_size_normal">Normale</string>
+    <string name="reader_preferences_font_size_small">Të vogla</string>
+    <string name="reader_preferences_font_size_extra_small">Ekstra të vogla</string>
+    <string name="reader_preferences_screen_font_size_label">Madhësi Shkronjash</string>
+    <string name="reader_preferences_screen_font_family_label">Shkronja</string>
+    <string name="reader_preferences_screen_theme_label">Skemë Ngjyrash</string>
+    <string name="reader_preferences_screen_preview_text_feedback_label">jepni përshtypjet tuaja</string>
+    <string name="experimental_badge">&lt;Eksperimentale&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Hiqe ngjyrën e përzgjedhur</string>
     <string name="reader_no_followed_tags_text_title">Pa etiketa të ndjekura</string>
     <string name="reader_toast_err_tag_already_following">E ndiqni tashmë këtë etiketë.</string>
     <string name="reader_menu_reading_preferences">Parapëlqime Leximi</string>
     <string name="reader_page_followed_tags_text_title">Etiketa të ndjekura</string>
+    <string name="reader_preferences_theme_candy">Kallamsheqeri</string>
     <string name="reader_preferences_theme_h4x0r">h4x0r</string>
     <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">Mbrëmje</string>
@@ -31,6 +89,7 @@ Language: sq_AL
     <string name="gutenberg_native_copy_error_details">Kopjo hollësi gabimi</string>
     <string name="gutenberg_native_button_to_copy_post_text">Buton për “Kopjo tekst postimi”</string>
     <string name="gutenberg_native_button_to_copy_error_details">Buton për “Kopjo hollësi gabimi”</string>
+    <string name="editor_updating_content_failed">S’u arrit të përditësohet lëndë</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Legjendë videoje. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Legjendë videoje. E zbrazët</string>
     <string name="gutenberg_native_edit_video_024aee6d">Përpunoni video</string>
@@ -103,10 +162,6 @@ Language: sq_AL
     <string name="reader_filter_empty_blogs_list">Shihni postimet më të reja prej blogjesh ku jeni pajtuar</string>
     <string name="reader_filter_by_tag_title">Filtroji sipas etiketash</string>
     <string name="reader_filter_by_blog_title">Filtroji sipas blogjesh</string>
-    <string name="stats_timeframe_by_year">Sipas vitesh</string>
-    <string name="stats_timeframe_by_month">Sipas muajsh</string>
-    <string name="stats_timeframe_by_week">Sipas javësh</string>
-    <string name="stats_timeframe_by_day">Sipas ditësh</string>
     <string name="gutenberg_native_waiting_for_connection">Po pritet për lidhje</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Punim i Palidhur</string>
@@ -520,8 +575,6 @@ Language: sq_AL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Lexuesi po kalohet te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistikat tuaja po kalojnë te aplikacioni Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Kaloni në aplikacionin e ri Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Kontrolloni lidhjen tuaj në rrjet dhe riprovoni.</string>
-    <string name="blogging_prompts_list_error_network_title">S’arrihet të ngarkohet kjo lëndë këtë çast</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Pati një gabim në ngarkim cytjesh.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hëm</string>
     <string name="blogging_prompts_list_no_prompts">Ende pa cytje</string>
@@ -646,7 +699,7 @@ Language: sq_AL
     <string name="qrcode_auth_flow_validated_subtitle">Skanoni vetëm kode QR të marrë drejt e nga shfletuesi juaj. Mos skanoni kurrë një kod të dërguar për ju nga dikush tjetër.</string>
     <string name="qrcode_auth_flow_validated_default_title">Po provoni të hyni në shfletuesin tuaj pranë %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">A po provoni të hyni te %1$s pranë %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe ndjekësit për sajtin tuaj të ri.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Komentimi në blogje të tjerë është një mënyrë e goditur për të shtuar vëmendjen dhe pajtimtarë për sajtin tuaj të ri.</string>
     <string name="stats_insights_comments_guide_card">💡Prekni “SHIHNI MË TEPËR”, që të shihni komentuesit tuaj kryesues.</string>
     <string name="stats_insights_latest_post_empty">Shihni prapë, kur të keni botuar postimin tuaj të parë!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Shihni ndihmëzat tona kryesuese për shtim të parjeve dhe trafikut %1$s</string>
@@ -684,7 +737,7 @@ Language: sq_AL
     <string name="me_btn_scan_login_code">Skanoni Kod Hyrje</string>
     <string name="stats_insights_likes_guide_card">⭐️ Postimi juaj më i ri %1$s ka marrë %2$s pëlqime.</string>
     <string name="stats_most_popular_percent_views_empty">Pa veprimtari të mjaftueshme. Kontrolloni më vonë, kur sajti juaj të ketë më tepër vizitorë!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% e ndjekësve gjithsej</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% e pajtimtarëve gjithsej</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopjoji lidhjen</string>
     <string name="quick_start_completed_tour_title">Përgëzime! Dini nga shkoni&lt;br/&gt;</string>
@@ -711,7 +764,6 @@ Language: sq_AL
     <string name="stats_published_minutes_ago">Botuar %1$d minuta më parë</string>
     <string name="stats_published_a_minute_ago">Botuar një minutë më parë</string>
     <string name="stats_published_seconds_ago">Botuar pak sekonda më parë</string>
-    <string name="stats_view_total_followers">Ndjekës Gjithsej</string>
     <string name="stats_view_total_comments">Komente Gjithsej</string>
     <string name="stats_view_total_likes">Pëlqime Gjithsej</string>
     <string name="blogging_prompts_notification_dismiss">Hidhe tej</string>
@@ -1132,6 +1184,7 @@ Language: sq_AL
     <string name="gutenberg_native_add_title">Shtoni titull</string>
     <string name="gutenberg_native_no_preview_available">S’ka paraparje gati</string>
     <string name="gutenberg_native_loading">Po ngarkohet</string>
+    <string name="gutenberg_native_link_label">Etiketë lidhjeje</string>
     <string name="gutenberg_native_text_color">Ngjyrë teksti</string>
     <string name="gutenberg_native_s_link">Lidhje %s</string>
     <string name="gutenberg_native_padding">Mbushje</string>
@@ -1803,7 +1856,6 @@ Language: sq_AL
     <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Jetpack Social s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
-    <string name="notifications_tab_title_follows">Ndjekje</string>
     <string name="notifications_tab_title_comments">Komente</string>
     <string name="notifications_tab_title_unread_notifications">Të palexuar</string>
     <string name="dlg_cancel_action_dont_trash">Mos e hidh te hedhurinat</string>
@@ -2128,9 +2180,7 @@ Language: sq_AL
     <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
     <string name="backdated_for">Vënë në plan për: %s</string>
     <string name="stats_insights_management_title">Shihni vetëm statistikat më me peshë. Shtoni dhe sistemoni më poshtë tendencat tuaja.</string>
-    <string name="stats_insights_social">Shoqërore</string>
     <string name="stats_insights_annual_site_stats">Statistika Vjetore Sajti</string>
-    <string name="stats_view_follower_totals">Ndjekës Gjithsej</string>
     <string name="domain_suggestions_fetch_error">S’u ngarkuan dot sugjerime përkatësish</string>
     <string name="domain_suggestions_search_hint">Për më tepër ide, shtypni një fjalëkyç</string>
     <string name="domains_suggestions_empty_list">S’u gjetën sugjerime</string>
@@ -2294,7 +2344,6 @@ Language: sq_AL
     <string name="stats_insights_tags_and_categories">Etiketa dhe Kategori</string>
     <string name="stats_insights_all_time_stats">Për Krejt Kohën</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Ndjekës</string>
     <string name="stats_publicize_service_label">Shërbim</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Parje</string>
@@ -2307,8 +2356,6 @@ Language: sq_AL
     <string name="stats_comments_posts_and_pages">Postime dhe faqe</string>
     <string name="stats_comments_authors">Autorë</string>
     <string name="stats_follower_since_label">Që prej</string>
-    <string name="stats_follower_label">Pasues</string>
-    <string name="stats_followers_count_message">%1$s Ndjekës Gjithsej: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Administroni Tendenca</string>
@@ -2410,14 +2457,11 @@ Language: sq_AL
     <string name="sign_out_wpcom_confirm_with_no_changes">Të dilet nga WordPress-i?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Keni te postime ndryshime që s’janë ngarkuar te sajti juaj. Dalja nga llogaria do të sjellë humbjen e këtyre ndryshimeve. Të bëhet dalja sido qoftë?</string>
     <string name="people_empty_list_filtered_viewers">Ende pa parës</string>
-    <string name="people_empty_list_filtered_email_followers">Ende pa ndjekës me email</string>
-    <string name="people_empty_list_filtered_followers">Ende pa ndjekës</string>
     <string name="people_empty_list_filtered_users">Ende pa përdorues</string>
     <string name="reader_empty_posts_liked_description">Postimet që pëlqeni do të shfaqen këtu</string>
     <string name="reader_empty_posts_liked_title">Ende pa pëlqyer gjë</string>
     <string name="reader_no_followed_blogs_button_discover">Zbuloni blogje</string>
     <string name="notifications_empty_likes">Ende pa pëlqime</string>
-    <string name="notifications_empty_followers">Ende pa ndjekës</string>
     <string name="activity_log_limited_content_on_free_plan">Meqë jeni nën një plan falas, do të shihni akte të kufizuara në veprimtarinë tuaj.</string>
     <string name="activity_log_empty_subtitle">Kur bëni ndryshime te sajti juaj, këtu do të jeni në gjendje të shihni historikun e veprimtarisë tuaj</string>
     <string name="activity_log_empty_title">Ende pa veprimtari</string>
@@ -3048,6 +3092,7 @@ Language: sq_AL
     <string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
     <string name="error_unknown_post_type">Format i panjohur postimesh</string>
     <string name="submit_for_review">Parashtroje</string>
+    <string name="title_subscriber">Pajtimtar</string>
     <string name="duplicate_site_detected">U pikas një sajt i përsëdytur.</string>
     <string name="cannot_add_duplicate_site">Ky sajt ekziston tashmë në aplikacion, s’mund ta shtoni.</string>
     <string name="already_logged_in_wpcom">Jeni tashmë i futur në një llogari WordPress.com, s’mund të shtoni një sajt WordPress.com të lidhur pas një llogarie tjetër.</string>
@@ -3096,35 +3141,26 @@ Language: sq_AL
     <string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
     <string name="invite_invalid_email">%s: Email i pavlefshëm</string>
     <string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
-    <string name="invite_already_following">%s: E ndiqni tashmë</string>
     <string name="invite_already_a_member">%s: Anëtar tashmë</string>
     <string name="invite_username_not_found">%s: Përdoruesi s’u gjet</string>
     <string name="comment_moderated_approved">Komenti u miratua!</string>
     <string name="like">Pëlqejeni</string>
     <string name="timespan_now">tani</string>
     <string name="role_viewer">Shikues</string>
-    <string name="role_follower">Ndjekës</string>
     <string name="error_post_my_profile_no_connection">S’ka lidhje, s’u ruajt dot profili juaj</string>
     <string name="alignment_right">Djathtas</string>
     <string name="alignment_left">Majtas</string>
     <string name="alignment_none">Pa drejtim</string>
     <string name="site_settings_list_editor_action_mode_title">U përzgjodh %1$d</string>
     <string name="error_fetch_users_list">S’u morën dot përdorues të sajtit</string>
-    <string name="title_email_follower">Ndjekës Me Email</string>
-    <string name="title_follower">Ndjekës</string>
     <string name="people_fetching">Po sillen përdoruesit…</string>
     <string name="people_dropdown_item_viewers">Parës</string>
-    <string name="people_dropdown_item_email_followers">Ndjekës Me Email</string>
-    <string name="people_dropdown_item_followers">Ndjekës</string>
     <string name="people_dropdown_item_team">Ekipi</string>
     <string name="invite_message_usernames_limit">Ftoni deri në 10 adresa email dhe/ose emra përdoruesish WordPress.com. Atyre që kanë nevojë për emër përdoruesi, do t’u dërgohen udhëzime se si të krijojnë një të tillë.</string>
     <string name="viewer_remove_confirmation_message">Nëse e hiqni këtë parës, ai ose ajo s’do të jetë në gjendje ta vizitojë këtë sajt.\n\nDo të donit ta hiqnit këtë parës, sido qoftë?</string>
-    <string name="follower_remove_confirmation_message">Në u heqtë, ku ndjekës do të reshtë së marri njoftime mbi këtë sajt, veç në u ribëftë ndjekës.\n\nDo të donit ta hiqnit këtë ndjekës, sido qoftë?</string>
+    <string name="subscriber_remove_confirmation_message">Në u heqtë, ky pajtimtar do të reshtë së marri njoftime mbi këtë sajt, veç në u ripajtofshin.\n\nDo të donit ta hiqnit këtë pajtimar?</string>
     <string name="follower_subscribed_since">Që prej %1$s</string>
     <string name="error_remove_viewer">S’u hoq dot shikuesi</string>
-    <string name="error_remove_follower">S’u hoq dot ndjekësi</string>
-    <string name="error_fetch_email_followers_list">S’u morën dot ndjekës të sajtit me email</string>
-    <string name="error_fetch_followers_list">S’u morën dot ndjekës të sajtit</string>
     <string name="editor_failed_uploads_switch_html">Disa ngarkime mediash dështuan. S’mund të kaloni nën mënyrën HTML\n        në këtë gjendje. Të hiqen krejt ngarkimet e dështuara dhe të vazhdohet?</string>
     <string name="image_thumbnail">Miniaturë figure</string>
     <string name="visual_editor">Përpunues pamor</string>
@@ -3230,7 +3266,6 @@ Language: sq_AL
     <string name="replies_to_my_comments">Përgjigje ndaj komenteve të mia</string>
     <string name="username_mentions">Përmendje të emrit të përdoruesit</string>
     <string name="site_achievements">Arritje sajti</string>
-    <string name="site_follows">Ndjekje të sajtit</string>
     <string name="likes_on_my_posts">Pëlqime të postimeve të mia</string>
     <string name="likes_on_my_comments">Pëlqime të komenteve të mia</string>
     <string name="comments_on_my_site">Komente te sajti im</string>
@@ -3457,6 +3492,7 @@ Language: sq_AL
     <string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
     <string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>
     <string name="site_picker_add_self_hosted">Shto sajt të vetëstrehuar</string>
+    <string name="site_picker_add_a_site">Shtoni një sajt</string>
     <string name="site_picker_edit_visibility">Shfaq/fshih sajte</string>
     <string name="site_picker_title">Zgjidhni një sajt</string>
     <string name="my_site_btn_view_site">Shihni Sajtin</string>
@@ -3500,7 +3536,6 @@ Language: sq_AL
     <string name="stats_followers_minutes">%1$d minuta</string>
     <string name="stats_followers_a_minute_ago">një minutë më parë</string>
     <string name="stats_followers_seconds_ago">sekonda më parë</string>
-    <string name="stats_view_followers">Ndjekës</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Postime &amp;amp; Faqe</string>
     <string name="stats_view_countries">Vende</string>
@@ -3660,7 +3695,6 @@ Language: sq_AL
     <string name="manage">Administroni</string>
     <string name="more_notifications">dhe%d të tjera.</string>
     <string name="new_notifications">%d njoftime të reja</string>
-    <string name="follows">Ndjekje</string>
     <string name="note_reply_successful">Përgjigja u botua</string>
     <string name="sign_in">Hyni</string>
     <string name="loading">Po ngarkohet…</string>

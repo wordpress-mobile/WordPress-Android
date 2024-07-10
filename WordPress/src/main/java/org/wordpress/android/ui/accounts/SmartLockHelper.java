@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
 import com.google.android.gms.auth.api.credentials.CredentialRequest;
-import com.google.android.gms.auth.api.credentials.CredentialRequestResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -82,33 +81,30 @@ public class SmartLockHelper {
                 .setPasswordLoginSupported(true)
                 .build();
         Auth.CredentialsApi.request(mCredentialsClient, credentialRequest).setResultCallback(
-                new ResultCallback<CredentialRequestResult>() {
-                    @Override
-                    public void onResult(@NonNull CredentialRequestResult result) {
-                        Status status = result.getStatus();
-                        if (status.isSuccess()) {
-                            Credential credential = result.getCredential();
-                            callback.onCredentialRetrieved(credential);
-                        } else {
-                            if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
-                                try {
-                                    Activity activity = getActivityAndCheckAvailability();
-                                    if (activity == null) {
-                                        return;
-                                    }
-                                    // Prompt the user to choose a saved credential
-                                    status.startResolutionForResult(activity, RequestCodes.SMART_LOCK_READ);
-                                } catch (IntentSender.SendIntentException e) {
-                                    AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
-
-                                    callback.onCredentialsUnavailable();
-                                }
-                            } else {
-                                // The user must create an account or log in manually.
-                                AppLog.d(T.NUX, "SmartLock: Unsuccessful credential request.");
+                result -> {
+                    Activity currentActivity = getActivityAndCheckAvailability();
+                    if (currentActivity == null) {
+                        return;
+                    }
+                    Status status = result.getStatus();
+                    if (status.isSuccess()) {
+                        Credential credential = result.getCredential();
+                        callback.onCredentialRetrieved(credential);
+                    } else {
+                        if (status.getStatusCode() == CommonStatusCodes.RESOLUTION_REQUIRED) {
+                            try {
+                                // Prompt the user to choose a saved credential
+                                status.startResolutionForResult(currentActivity, RequestCodes.SMART_LOCK_READ);
+                            } catch (IntentSender.SendIntentException e) {
+                                AppLog.d(T.NUX, "SmartLock: Failed to send resolution for credential request");
 
                                 callback.onCredentialsUnavailable();
                             }
+                        } else {
+                            // The user must create an account or log in manually.
+                            AppLog.d(T.NUX, "SmartLock: Unsuccessful credential request.");
+
+                            callback.onCredentialsUnavailable();
                         }
                     }
                 });

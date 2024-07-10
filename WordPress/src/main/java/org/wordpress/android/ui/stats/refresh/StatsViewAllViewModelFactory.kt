@@ -15,6 +15,7 @@ import org.wordpress.android.ui.stats.StatsViewType.CLICKS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_AVERAGE_VIEWS_PER_DAY
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_MONTHS_AND_YEARS
 import org.wordpress.android.ui.stats.StatsViewType.DETAIL_RECENT_WEEKS
+import org.wordpress.android.ui.stats.StatsViewType.EMAILS
 import org.wordpress.android.ui.stats.StatsViewType.FILE_DOWNLOADS
 import org.wordpress.android.ui.stats.StatsViewType.FOLLOWERS
 import org.wordpress.android.ui.stats.StatsViewType.GEOVIEWS
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.stats.StatsViewType.INSIGHTS_VIEWS_AND_VISITORS
 import org.wordpress.android.ui.stats.StatsViewType.PUBLICIZE
 import org.wordpress.android.ui.stats.StatsViewType.REFERRERS
 import org.wordpress.android.ui.stats.StatsViewType.SEARCH_TERMS
+import org.wordpress.android.ui.stats.StatsViewType.SUBSCRIBERS
 import org.wordpress.android.ui.stats.StatsViewType.TAGS_AND_CATEGORIES
 import org.wordpress.android.ui.stats.StatsViewType.TOP_POSTS_AND_PAGES
 import org.wordpress.android.ui.stats.StatsViewType.VIDEO_PLAYS
@@ -52,6 +54,8 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.P
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TagsAndCategoriesUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.TodayStatsUseCase
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.usecases.ViewsAndVisitorsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.EmailsUseCase
+import org.wordpress.android.ui.stats.refresh.lists.sections.subscribers.usecases.SubscribersUseCase
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateSelector
 import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider
 import java.security.InvalidParameterException
@@ -167,7 +171,7 @@ class StatsViewAllViewModelFactory(
                 )
                 FOLLOWERS -> Pair(
                     insightsUseCases.first { it is FollowersUseCase },
-                    R.string.stats_view_followers
+                    R.string.stats_view_subscribers
                 )
                 TAGS_AND_CATEGORIES -> Pair(
                     insightsUseCases.first { it is TagsAndCategoriesUseCase },
@@ -205,6 +209,15 @@ class StatsViewAllViewModelFactory(
                     insightsUseCases.first {
                         it is PostRecentWeeksUseCase
                     } to R.string.stats_detail_recent_weeks
+
+                SUBSCRIBERS -> Pair(
+                    insightsUseCases.first { it is SubscribersUseCase },
+                    R.string.stats_view_subscribers
+                )
+                EMAILS -> Pair(
+                    insightsUseCases.first { it is EmailsUseCase },
+                    R.string.stats_view_emails
+                )
                 else -> throw InvalidParameterException("Invalid insights stats type: ${type.name}")
             }
         }

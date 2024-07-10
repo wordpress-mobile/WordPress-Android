@@ -221,7 +221,6 @@ Language: hi_IN
     <string name="stats_followers_a_month">एक महीना</string>
     <string name="stats_followers_a_year">एक साल</string>
     <string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
-    <string name="stats_view_followers">प्रसंशक</string>
     <string name="stats_timeframe_years">वर्ष </string>
     <string name="stats_view_countries">देश</string>
     <string name="ssl_certificate_details">विवरण</string>

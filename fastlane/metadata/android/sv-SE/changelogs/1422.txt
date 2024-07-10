@@ -1,3 +1,0 @@
-24.6:
-- Vi har åtgärdat en handfull problem rörande formatering av markerad text. Resultatet blev riktigt bra, vilket definitivt var en av veckans höjdpunkter.
-- Appen stöder nu textförslag som är längre än det synliga utrymmet i redigeraren. Inga krascher, bara prediktiv text så långt ögat kan nå.

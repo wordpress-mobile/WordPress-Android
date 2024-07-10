@@ -1,4 +1,0 @@
-24.6:
-- Kami telah memperbaiki sejumlah masalah terkait pemformatan teks yang disorot.
-- Kini, aplikasi mendukung saran teks yang lebih panjang dari yang tertampil di editor.
-- Simbol tak terbatas telah diubah menjadi “100%” di layar Statistik. Keterangan 100% ini menunjukkan performa yang paling optimal.

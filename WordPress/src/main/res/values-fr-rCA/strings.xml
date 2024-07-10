@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 12:54:08+0000
+Translation-Revision-Date: 2024-06-12 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Appuyer pour modifier</string>
+    <string name="voice_to_content_permissions_required_msg">Pour enregistrer l’audio, l’application doit disposer des droits d’accès à votre microphone. Vous avez précédemment refusé ce droit. Veuillez activer les droits d’accès au microphone dans les réglages de l’application pour utiliser cette fonctionnalité.</string>
+    <string name="voice_to_content_permissions_required_title">Autorisation d’enregistrement de l’audio requise</string>
+    <string name="permission_access_media_location">Emplacement des médias</string>
+    <string name="in_app_update_restart">Redémarrer</string>
+    <string name="in_app_update_available">Mise à jour téléchargée. Redémarrez pour appliquer les mises à jour.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Publier à partir d’un contenu audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">ouvrir le menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">retirer la mention J’aime de l’article</string>
+    <string name="reader_tags_feed_action_label_like_post">aimer l’article</string>
+    <string name="reader_tags_feed_action_label_open_blog">ouvrir le blog</string>
+    <string name="reader_tags_feed_action_label_open_post">ouvrir l’article</string>
+    <string name="reader_tags_feed_error_retry">Réessayer</string>
+    <string name="reader_tags_feed_no_content_error_description">Nous n’avons pas trouvé d’articles avec l’étiquette %s dans l’immédiat</string>
+    <string name="reader_tags_feed_loading_error_description">Nous n’avons pas pu charger d’articles avec cette étiquette dans l’immédiat</string>
+    <string name="reader_tags_feed_error_title">Aucun résultat pour %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Plus de %s</string>
+    <string name="reader_tags_display_name">Étiquettes</string>
+    <string name="reader_announcement_card_reading_preferences_description">Choisissez les couleurs et polices qui vous conviennent. Lorsque vous lisez un article, appuyez sur l’icône AA en haut de l’écran.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Préférences de lecture</string>
+    <string name="reader_announcement_card_tags_stream_description">Appuyez sur la liste déroulante en haut et sélectionnez Étiquettes pour accéder aux flux des étiquettes que vous suivez.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flux Étiquettes</string>
+    <string name="reader_announcement_card_title">Nouveau dans le Lecteur</string>
+    <string name="reader_dropdown_menu_tags">Vos étiquettes</string>
+    <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
+    <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
+    <string name="stats_subscribers_marker_view_plural">Abonnés</string>
+    <string name="stats_subscribers_marker_view_singular">Abonné</string>
+    <string name="stats_view_subscriber_growth">Évolution des abonnés</string>
+    <string name="role_subscriber">Abonné</string>
+    <string name="title_email_subscriber">Abonné par e-mail</string>
+    <string name="people_empty_list_filtered_email_subscribers">Aucun abonné par e-mail pour le moment</string>
+    <string name="people_empty_list_filtered_subscribers">Aucun abonné pour le moment</string>
+    <string name="people_dropdown_item_email_subscribers">Abonnés par e-mail</string>
+    <string name="people_dropdown_item_subscribers">Abonnés</string>
+    <string name="invite_already_subscribed">%s : déjà abonné</string>
+    <string name="error_no_camera_available">Aucune application de caméra disponible.</string>
+    <string name="error_remove_subscriber">Impossible de supprimer l’abonné</string>
+    <string name="error_fetch_email_subscribers_list">Impossible de récupérer les abonnés par e-mail du site</string>
+    <string name="error_fetch_subscribers_list">Impossible de récupérer les abonnés du site</string>
+    <string name="post_settings_add_to_calendar_error">Impossible d’ajouter au calendrier</string>
+    <string name="post_settings_no_calendar_app_exists">Impossible de trouver une application pour gérer la requête d’ajout au calendrier</string>
+    <string name="site_subscriptions">Abonnements au site</string>
+    <string name="notifications_tab_title_subscribers">Abonnés</string>
+    <string name="subscribers">Abonnés</string>
+    <string name="notifications_empty_subscribers">Aucun abonné pour le moment</string>
+    <string name="stats_view_emails">E-mails</string>
+    <string name="stats_view_subscribers">Abonnés</string>
+    <string name="stats_view_total_subscribers">Total des abonnés</string>
+    <string name="stats_view_subscriber_totals">Totaux des abonnés</string>
+    <string name="stats_list_item_with_two_values_description">%1$s : %2$s, %3$s : %4$s, %5$s : %6$s</string>
+    <string name="stats_emails_clicks_label">Clics</string>
+    <string name="stats_emails_opens_label">Ouvertures</string>
+    <string name="stats_emails_latest_emails_label">Derniers e-mails</string>
+    <string name="stats_subscriber_since_label">Abonné depuis</string>
+    <string name="stats_name_label">Nom</string>
+    <string name="stats_publicize_subscribers_label">Abonnés</string>
+    <string name="stats_subscriber_label">Abonné</string>
+    <string name="stats_subscribers_count_message">Total des abonnés %1$s : %2$s</string>
+    <string name="page_upload_conflict_error">Il existe une version plus récente de cette page</string>
+    <string name="editor_updating_content">Mise à jour du contenu</string>
+    <string name="stats_subscribers">Abonnés</string>
     <string name="weekly_roundup_notification_text_views_and_comment">La semaine dernière, vous avez eu %1$s vues et 1 commentaire</string>
     <string name="weekly_roundup_notification_text_views_and_like">La semaine dernière, vous avez eu %1$s vues et 1 mention J’aime</string>
     <string name="weekly_roundup_notification_text_views_like_comment">La semaine dernière, vous avez eu %1$s vues, 1 mention J’aime et 1 commentaire.</string>
@@ -58,6 +120,7 @@ Language: fr
     <string name="gutenberg_native_copy_error_details">Copier les détails de l’erreur</string>
     <string name="gutenberg_native_button_to_copy_post_text">Bouton permettant de copier le texte de l’article</string>
     <string name="gutenberg_native_button_to_copy_error_details">Bouton permettant de copier les détails de l’erreur</string>
+    <string name="editor_updating_content_failed">Échec de la mise à jour du contenu</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Légende de la vidéo. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Légende de la vidéo. Vide</string>
     <string name="gutenberg_native_edit_video_024aee6d">Modifier la vidéo</string>
@@ -129,10 +192,6 @@ Language: fr
     <string name="reader_filter_empty_blogs_list">Voir les articles les plus récents des blogs auxquels vous êtes abonné(e)</string>
     <string name="reader_filter_by_tag_title">Filtrer par étiquette</string>
     <string name="reader_filter_by_blog_title">Filtrer par blog</string>
-    <string name="stats_timeframe_by_year">Par an</string>
-    <string name="stats_timeframe_by_month">Par mois</string>
-    <string name="stats_timeframe_by_week">Par semaine</string>
-    <string name="stats_timeframe_by_day">Par jour</string>
     <string name="gutenberg_native_waiting_for_connection">En attente de connexion</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Travail hors ligne</string>
@@ -542,8 +601,6 @@ Language: fr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le lecteur va être déplacé dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Les statistiques vont être déplacées dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passer à la nouvelle application Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Vérifiez votre connexion réseau et réessayez.</string>
-    <string name="blogging_prompts_list_error_network_title">Impossible de charger ce contenu pour le moment</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Un problème est survenu lors du chargement des incitations.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oups</string>
     <string name="blogging_prompts_list_no_prompts">Pas encore d’incitation</string>
@@ -669,7 +726,7 @@ Language: fr
     <string name="qrcode_auth_flow_validated_subtitle">Scannez uniquement les codes QR provenant directement de votre navigateur Web. Ne scannez jamais un code envoyé par une tierce personne.</string>
     <string name="qrcode_auth_flow_validated_default_title">Essayez-vous de vous connecter à votre navigateur Web près de %1$s ?</string>
     <string name="qrcode_auth_flow_validated_title">Essayez-vous de vous connecter à %1$s près de %2$s ?</string>
-    <string name="stats_insights_followers_guide_card">💡 L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
+    <string name="stats_insights_subscribers_guide_card">💡L’ajout de commentaires sur d’autres blogs est un bon moyen d’attirer l’attention et d’obtenir des abonnés pour votre nouveau site.</string>
     <string name="stats_insights_comments_guide_card">💡 Appuyez sur « VOIR PLUS » pour voir les utilisateurs qui ont le plus commenté.</string>
     <string name="stats_insights_latest_post_empty">Revenez lorsque vous aurez publié votre premier article !</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Consultez nos conseils pratiques pour augmenter vos vues et votre trafic %1$s</string>
@@ -707,7 +764,6 @@ Language: fr
     <string name="me_btn_scan_login_code">Scanner le code de connexion</string>
     <string name="stats_insights_likes_guide_card">⭐️ Votre dernier article %1$s a recueilli%2$s mentions « J’aime ».</string>
     <string name="stats_most_popular_percent_views_empty">Pas assez d’activité. Revenez lorsque votre site aura plus de visiteurs !</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% du total des abonnés</string>
     <string name="stats_value_percent"> %1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copier le lien</string>
     <string name="quick_start_completed_tour_title">Félicitations ! Vous connaissez le chemin&lt;br/&gt;</string>
@@ -734,7 +790,6 @@ Language: fr
     <string name="stats_published_minutes_ago">Publié il y a %1$d minutes</string>
     <string name="stats_published_a_minute_ago">Publié il y a 1 minute</string>
     <string name="stats_published_seconds_ago">Publié il y a quelques secondes</string>
-    <string name="stats_view_total_followers">Total des abonnés</string>
     <string name="stats_view_total_comments">Total des commentaires</string>
     <string name="stats_view_total_likes">Total des « J’aime »</string>
     <string name="blogging_prompts_notification_dismiss">Ignorer</string>
@@ -1159,6 +1214,7 @@ Language: fr
     <string name="gutenberg_native_add_title">Ajouter un titre</string>
     <string name="gutenberg_native_no_preview_available">Aucun aperçu disponible</string>
     <string name="gutenberg_native_loading">En cours de chargement…</string>
+    <string name="gutenberg_native_link_label">Libellé du lien</string>
     <string name="gutenberg_native_text_color">Couleur du texte</string>
     <string name="gutenberg_native_s_link">%s lien</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -1830,7 +1886,6 @@ Language: fr
     <string name="sharing_facebook_account_must_have_pages">La connexion Facebook ne trouve aucune page. Jetpack Social peut uniquement se connecter aux pages publiées, et non aux profils Facebook.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non connecté</string>
     <string name="notifications_tab_title_likes">J’aime</string>
-    <string name="notifications_tab_title_follows">Abonnements</string>
     <string name="notifications_tab_title_comments">Commentaires</string>
     <string name="notifications_tab_title_unread_notifications">Non lu</string>
     <string name="dlg_cancel_action_dont_trash">Ne pas supprimer</string>
@@ -2155,9 +2210,7 @@ Language: fr
     <string name="error_restoring_post">Une erreur est survenue pendant la restauration de la publication</string>
     <string name="backdated_for">Antidaté pour : %s</string>
     <string name="stats_insights_management_title">N\'affichez que les statistiques les plus pertinentes. Ajoutez et organisez vos tendances ci-après.</string>
-    <string name="stats_insights_social">Réseaux sociaux</string>
     <string name="stats_insights_annual_site_stats">Statistiques annuelles du site</string>
-    <string name="stats_view_follower_totals">Totaux des abonnés</string>
     <string name="domain_suggestions_fetch_error">Impossible de charger les suggestions de domaine</string>
     <string name="domain_suggestions_search_hint">Saisissez un mot-clé pour obtenir davantage d\'idées</string>
     <string name="domains_suggestions_empty_list">Aucune suggestion n’a été trouvée</string>
@@ -2321,7 +2374,6 @@ Language: fr
     <string name="stats_insights_tags_and_categories">Étiquettes et catégories</string>
     <string name="stats_insights_all_time_stats">Depuis le début</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Abonnés</string>
     <string name="stats_publicize_service_label">Service</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Vues</string>
@@ -2334,8 +2386,6 @@ Language: fr
     <string name="stats_comments_posts_and_pages">Articles et pages</string>
     <string name="stats_comments_authors">Auteurs</string>
     <string name="stats_follower_since_label">Depuis</string>
-    <string name="stats_follower_label">Abonné</string>
-    <string name="stats_followers_count_message">Total des abonnés %1$s : %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Gérer les tendances</string>
@@ -2437,14 +2487,11 @@ Language: fr
     <string name="sign_out_wpcom_confirm_with_no_changes">Se déconnecter de WordPress ?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Vous avez modifié des articles qui n\'ont pas été chargés sur votre site. Si vous vous déconnectez maintenant, vous perdrez ces modifications sur votre appareil. Voulez-vous vous déconnecter malgré tout ?</string>
     <string name="people_empty_list_filtered_viewers">Pas encore de visiteurs</string>
-    <string name="people_empty_list_filtered_email_followers">Pas encore d\'abonnés par e-mail</string>
-    <string name="people_empty_list_filtered_followers">Pas encore d\'abonnés</string>
     <string name="people_empty_list_filtered_users">Pas encore d\'utilisateurs</string>
     <string name="reader_empty_posts_liked_description">Les articles que vous aimez apparaîtront ici</string>
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
     <string name="reader_no_followed_blogs_button_discover">Découvrir des blogs</string>
     <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
-    <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
     <string name="activity_log_limited_content_on_free_plan">Comme vous disposez d\'un plan gratuit, vous ne verrez qu\'un nombre limité d\'événements dans vos activités.</string>
     <string name="activity_log_empty_subtitle">Lorsque vous effectuez des modifications sur votre site, vous pouvez consulter votre historique d\'activités ici</string>
     <string name="activity_log_empty_title">Aucune activité pour le moment</string>
@@ -3123,35 +3170,26 @@ Language: fr
     <string name="preference_open_device_settings">Accéder aux paramètres système</string>
     <string name="invite_invalid_email">%s : Email invalide</string>
     <string name="invite_user_blocked_invites">%s: L\'utilisateur a bloqué les invitations</string>
-    <string name="invite_already_following">%s: Vous suit déjà</string>
     <string name="invite_already_a_member">%s : Déjà membre</string>
     <string name="invite_username_not_found">%s : Utilisateur non trouvé</string>
     <string name="comment_moderated_approved">Commentaire approuvé !</string>
     <string name="like">Like</string>
     <string name="timespan_now">maintenant</string>
     <string name="role_viewer">Lecteur</string>
-    <string name="role_follower">Abonné</string>
     <string name="error_post_my_profile_no_connection">Aucune connexion, impossible d\'enregistrer le profil</string>
     <string name="alignment_right">Droit</string>
     <string name="alignment_left">Gauche</string>
     <string name="alignment_none">Aucun</string>
     <string name="site_settings_list_editor_action_mode_title">Sélectionné %1$d</string>
     <string name="error_fetch_users_list">Impossible de récupérer les utilisateurs du site</string>
-    <string name="title_email_follower">E-mail de l’abonné</string>
-    <string name="title_follower">Abonné</string>
     <string name="people_fetching">Récupération des utilisateurs…</string>
     <string name="people_dropdown_item_viewers">Lecteurs</string>
-    <string name="people_dropdown_item_email_followers">Abonnés par E-mail</string>
-    <string name="people_dropdown_item_followers">Abonnés</string>
     <string name="people_dropdown_item_team">Équipe</string>
     <string name="invite_message_usernames_limit">Invitez jusqu’à 10 adresses e-mail ou identifiants WordPress.com. Ceux nécessitant un identifiant recevront les indications pour le créer.</string>
     <string name="viewer_remove_confirmation_message">Si vous supprimez ce compte de lecteur/trice, il ou elle ne pourra plus se rendre sur ce site.\n\nVoulez-vous toujours supprimer ce compte ?</string>
-    <string name="follower_remove_confirmation_message">Une fois supprimé, cet abonné ne recevra plus de notifications à propos de ce site, à moins de se réabonner.\n\nVoulez-vous vraiment supprimer cet abonné ?</string>
+    <string name="subscriber_remove_confirmation_message">Si supprimé, cet abonné ne recevra plus les notifications du site, à moins qu’ils se ré-abonne.\n\nVoulez-vous vraiment supprimer cet abonné ?</string>
     <string name="follower_subscribed_since">Depuis le %1$s</string>
     <string name="error_remove_viewer">Impossible de supprimer le lecteur</string>
-    <string name="error_remove_follower">Impossible de supprimer l\'abonné</string>
-    <string name="error_fetch_email_followers_list">Impossible de récupérer les abonnés par e-mail</string>
-    <string name="error_fetch_followers_list">Impossible de récupérer les abonnés au site</string>
     <string name="editor_failed_uploads_switch_html">Le téléversement de certains fichiers a échoué. Vous ne pouvez pas \nrepasser en mode HTML dans l\'état actuel des choses.\nSupprimer tous les téléversements échoués et continuer ?</string>
     <string name="image_thumbnail">Image miniature</string>
     <string name="visual_editor">Éditeur visuel</string>
@@ -3257,7 +3295,6 @@ Language: fr
     <string name="replies_to_my_comments">Réponses à mes commentaires</string>
     <string name="username_mentions">Mentions de l\'identifiant</string>
     <string name="site_achievements">Accomplissements du site</string>
-    <string name="site_follows">Abonnements du site</string>
     <string name="likes_on_my_posts">Mentions \"J\'aime\" sur mes articles</string>
     <string name="likes_on_my_comments">Mentions \"J\'aime\" sur mes commentaires</string>
     <string name="comments_on_my_site">Commentaires sur mon site</string>
@@ -3528,7 +3565,6 @@ Language: fr
     <string name="stats_followers_minutes">%1$d minutes</string>
     <string name="stats_followers_a_minute_ago">il y a une minute</string>
     <string name="stats_followers_seconds_ago">il y a quelques secondes</string>
-    <string name="stats_view_followers">Abonnés</string>
     <string name="stats_view_videos">Vidéos</string>
     <string name="stats_view_top_posts_and_pages">Articles et pages</string>
     <string name="stats_view_countries">Pays</string>
@@ -3688,7 +3724,6 @@ Language: fr
     <string name="manage">Organiser</string>
     <string name="more_notifications">et %d autres.</string>
     <string name="new_notifications">%d nouvelles notifications</string>
-    <string name="follows">Suivis</string>
     <string name="note_reply_successful">Réponse envoyée</string>
     <string name="sign_in">Se connecter</string>
     <string name="loading">Chargement…</string>

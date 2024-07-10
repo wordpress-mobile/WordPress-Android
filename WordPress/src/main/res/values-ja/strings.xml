@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 10:54:10+0000
+Translation-Revision-Date: 2024-06-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">タップして編集</string>
+    <string name="voice_to_content_permissions_required_msg">音声を録音するには、このアプリにマイクへのアクセス権限が必要です。 以前、この権限を拒否しています。 この機能を使用するには、アプリの設定でマイクの権限を有効化してください。</string>
+    <string name="voice_to_content_permissions_required_title">音声録音の権限が必須</string>
+    <string name="permission_access_media_location">メディアの位置</string>
+    <string name="in_app_update_restart">再開</string>
+    <string name="in_app_update_available">更新がダウンロードされました。 再起動して適用します。</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">音声ファイルから投稿</string>
+    <string name="reader_tags_feed_action_label_open_menu">メニューを開く</string>
+    <string name="reader_tags_feed_action_label_unlike_post">投稿の「いいね」を削除</string>
+    <string name="reader_tags_feed_action_label_like_post">投稿を「いいね」する</string>
+    <string name="reader_tags_feed_action_label_open_blog">ブログを開く</string>
+    <string name="reader_tags_feed_action_label_open_post">投稿を開く</string>
+    <string name="reader_tags_feed_error_retry">再試行</string>
+    <string name="reader_tags_feed_no_content_error_description">現在、%s がタグ付けされた投稿は見つかりませんでした</string>
+    <string name="reader_tags_feed_loading_error_description">現在、このタグから投稿を読み込むことができません</string>
+    <string name="reader_tags_feed_error_title">%s の投稿が見つかりませんでした</string>
+    <string name="reader_tags_feed_see_more_from_tag">%s の続き</string>
+    <string name="reader_tags_display_name">タグ</string>
+    <string name="reader_announcement_card_reading_preferences_description">お好みの色とフォントを選択してください。 投稿を読んでいるときに、画面上部の AA アイコンをタップします。</string>
+    <string name="reader_announcement_card_reading_preferences_title">閲覧の設定</string>
+    <string name="reader_announcement_card_tags_stream_description">上部のドロップダウンをタップし、「タグ」を選択して、フォロー中のタグからストリームにアクセスします。</string>
+    <string name="reader_announcement_card_tags_stream_title">タグのストリーム</string>
+    <string name="reader_announcement_card_title">Reader の新規</string>
+    <string name="reader_dropdown_menu_tags">あなたのタグ</string>
+    <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="no_connection_error_title">現在このコンテンツを読み込めません</string>
+    <string name="stats_subscribers_marker_view_plural">購読者</string>
+    <string name="stats_subscribers_marker_view_singular">購読者</string>
+    <string name="stats_view_subscriber_growth">購読者の拡大</string>
+    <string name="role_subscriber">購読者</string>
+    <string name="title_email_subscriber">メール購読者</string>
+    <string name="people_empty_list_filtered_email_subscribers">まだメール購読者はいません</string>
+    <string name="people_empty_list_filtered_subscribers">まだ購読者はいません</string>
+    <string name="people_dropdown_item_email_subscribers">メール購読者</string>
+    <string name="people_dropdown_item_subscribers">購読者</string>
+    <string name="invite_already_subscribed">%s: すでに購読済み</string>
+    <string name="error_no_camera_available">利用できるカメラアプリがありません。</string>
+    <string name="error_remove_subscriber">購読者を削除できませんでした</string>
+    <string name="error_fetch_email_subscribers_list">サイトのメール購読者を取得できませんでした</string>
+    <string name="error_fetch_subscribers_list">サイトの購読者を取得できませんでした</string>
+    <string name="post_settings_add_to_calendar_error">カレンダーに追加できません</string>
+    <string name="post_settings_no_calendar_app_exists">カレンダーに追加するリクエストを処理するアプリが見つかりません</string>
+    <string name="site_subscriptions">サイト購読者</string>
+    <string name="notifications_tab_title_subscribers">購読者</string>
+    <string name="subscribers">購読者</string>
+    <string name="notifications_empty_subscribers">まだ購読者はいません</string>
+    <string name="stats_view_emails">メール</string>
+    <string name="stats_view_subscribers">購読者</string>
+    <string name="stats_view_total_subscribers">購読者総数</string>
+    <string name="stats_view_subscriber_totals">購読者の総数</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s、%3$s: %4$s、%5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">クリック数</string>
+    <string name="stats_emails_opens_label">開いた数</string>
+    <string name="stats_emails_latest_emails_label">最新のメール</string>
+    <string name="stats_subscriber_since_label">購読者になった日時</string>
+    <string name="stats_name_label">名前</string>
+    <string name="stats_publicize_subscribers_label">購読者</string>
+    <string name="stats_subscriber_label">購読者</string>
+    <string name="page_upload_conflict_error">このページにはより最近のリビジョンがあります</string>
+    <string name="editor_updating_content">コンテンツを更新しています</string>
+    <string name="stats_subscribers">購読者</string>
     <string name="weekly_roundup_notification_text_views_and_comment">先週、%1$s件の表示と1件のコメントがありました</string>
     <string name="weekly_roundup_notification_text_views_and_like">先週、%1$s件の表示と1件の「いいね」がありました</string>
     <string name="weekly_roundup_notification_text_views_like_comment">先週、%1$s件の表示、1件の「いいね」、1件のコメントがありました。</string>
@@ -54,6 +115,7 @@ Language: ja_JP
     <string name="gutenberg_native_copy_error_details">エラーの詳細をコピー</string>
     <string name="gutenberg_native_button_to_copy_post_text">投稿内容をコピーするボタン</string>
     <string name="gutenberg_native_button_to_copy_error_details">エラーの詳細をコピーするボタン</string>
+    <string name="editor_updating_content_failed">コンテンツの更新に失敗しました</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">動画のキャプション。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">動画のキャプション。 空</string>
     <string name="gutenberg_native_edit_video_024aee6d">動画を編集</string>
@@ -126,10 +188,6 @@ Language: ja_JP
     <string name="reader_filter_empty_blogs_list">購読しているブログの最新の投稿を表示</string>
     <string name="reader_filter_by_tag_title">タグで絞り込む</string>
     <string name="reader_filter_by_blog_title">ブログで絞り込む</string>
-    <string name="stats_timeframe_by_year">年別</string>
-    <string name="stats_timeframe_by_month">月別</string>
-    <string name="stats_timeframe_by_week">週別</string>
-    <string name="stats_timeframe_by_day">日別</string>
     <string name="gutenberg_native_waiting_for_connection">接続を待機中</string>
     <string name="stats_traffic">トラフィック</string>
     <string name="gutenberg_native_working_offline">オフラインで作業</string>
@@ -538,8 +596,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">統計は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">新しい Jetpack アプリに切り替える</string>
-    <string name="blogging_prompts_list_error_network_subtitle">ネットワーク接続を確認して、もう一度お試しください。</string>
-    <string name="blogging_prompts_list_error_network_title">現在このページを読み込めません</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">プロンプトの読み込みでエラーが発生しました。</string>
     <string name="blogging_prompts_list_error_fetch_title">エラーです</string>
     <string name="blogging_prompts_list_no_prompts">プロンプトはまだありません</string>
@@ -665,7 +721,7 @@ Language: ja_JP
     <string name="qrcode_auth_flow_validated_subtitle">Web ブラウザーから直接撮影された QR コードをスキャンするだけです。 他の人から送信されたコードはスキャンしないでください。</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s 近くの Web ブラウザーにログインしてみますか ?</string>
     <string name="qrcode_auth_flow_validated_title">%2$s 近くの %1$s にログインしてみますか ?</string>
-    <string name="stats_insights_followers_guide_card">💡他のブログへのコメントは、自分の新しいサイトへの注目を集め、フォロワーを増やすのに最適です。</string>
+    <string name="stats_insights_subscribers_guide_card">💡他のブログにコメントすると、自分の新しいサイトへの注目を集めることになり、購読者を増やすのに最適です。</string>
     <string name="stats_insights_comments_guide_card">💡「さらに表示」をタップすると上位のコメント投稿者が表示されます。</string>
     <string name="stats_insights_latest_post_empty">最初の投稿を公開したらもう一度確認してください。</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">よく読まれているヒントを確認して表示数とトラフィックを増やす %1$s</string>
@@ -703,7 +759,7 @@ Language: ja_JP
     <string name="me_btn_scan_login_code">ログインコードをスキャン</string>
     <string name="stats_insights_likes_guide_card">⭐️最新の投稿 %1$s が%2$s回「いいね」されました。</string>
     <string name="stats_most_popular_percent_views_empty">アクティビティが足りません。 サイトの訪問者数が増えたら後でもう一度確認してください。</string>
-    <string name="stats_total_followers_content_description">%1$s人、フォロワー総数のうちの%2$s%%</string>
+    <string name="stats_total_subscribers_content_description">%1$s、購読者総数の %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">リンクをコピー</string>
     <string name="quick_start_completed_tour_title">おめでとうございます ! 詳しくなりました&lt;br/&gt;</string>
@@ -730,7 +786,6 @@ Language: ja_JP
     <string name="stats_published_minutes_ago">%1$d分前に投稿</string>
     <string name="stats_published_a_minute_ago">1分前に投稿</string>
     <string name="stats_published_seconds_ago">数秒前に投稿</string>
-    <string name="stats_view_total_followers">フォロワー総数</string>
     <string name="stats_view_total_comments">総コメント数</string>
     <string name="stats_view_total_likes">総いいね数</string>
     <string name="blogging_prompts_notification_dismiss">非表示</string>
@@ -1156,6 +1211,7 @@ Language: ja_JP
     <string name="gutenberg_native_add_title">タイトルを追加</string>
     <string name="gutenberg_native_no_preview_available">利用できるプレビューがありません</string>
     <string name="gutenberg_native_loading">読み込み中</string>
+    <string name="gutenberg_native_link_label">リンクラベル</string>
     <string name="gutenberg_native_text_color">テキスト色</string>
     <string name="gutenberg_native_s_link">%s リンク</string>
     <string name="gutenberg_native_padding">パディング</string>
@@ -1828,7 +1884,6 @@ Language: ja_JP
     <string name="sharing_facebook_account_must_have_pages">Facebook との連携でページが見つかりません。 Jetpack ソーシャルで Facebook のプロフィールに連携できません。連携できるのは公開されているページのみです。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">接続されていません</string>
     <string name="notifications_tab_title_likes">いいね</string>
-    <string name="notifications_tab_title_follows">フォロー</string>
     <string name="notifications_tab_title_comments">コメント</string>
     <string name="notifications_tab_title_unread_notifications">未読</string>
     <string name="dlg_cancel_action_dont_trash">ゴミ箱に移動しない</string>
@@ -2153,9 +2208,7 @@ Language: ja_JP
     <string name="error_restoring_post">投稿を復元する際にエラーが発生しました</string>
     <string name="backdated_for">遡及日 :%s</string>
     <string name="stats_insights_management_title">最も関連の深い統計情報のみを表示します。以下に統計概要を追加し整理します。</string>
-    <string name="stats_insights_social">ソーシャル</string>
     <string name="stats_insights_annual_site_stats">年間サイト統計情報</string>
-    <string name="stats_view_follower_totals">フォロワー合計数</string>
     <string name="domain_suggestions_fetch_error">ドメインの提案が読み込めませんでした</string>
     <string name="domain_suggestions_search_hint">その他のアイデアについてはキーワードを入力します</string>
     <string name="domains_suggestions_empty_list">提案が見つかりません</string>
@@ -2319,7 +2372,6 @@ Language: ja_JP
     <string name="stats_insights_tags_and_categories">タグとカテゴリー</string>
     <string name="stats_insights_all_time_stats">全期間</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">表示数</string>
@@ -2332,8 +2384,6 @@ Language: ja_JP
     <string name="stats_comments_posts_and_pages">Posts and pages</string>
     <string name="stats_comments_authors">投稿者</string>
     <string name="stats_follower_since_label">開始日:</string>
-    <string name="stats_follower_label">フォロワー</string>
-    <string name="stats_followers_count_message">Total %1$s Followers:%2$s</string>
     <string name="stats_followers_email">メール</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">インサイトを管理</string>
@@ -2435,14 +2485,11 @@ Language: ja_JP
     <string name="sign_out_wpcom_confirm_with_no_changes">WordPress からログアウトしますか ?</string>
     <string name="sign_out_wpcom_confirm_with_changes">サイトにアップロードされていない投稿が変更されました。今ログアウトすると、変更が端末から削除されます。それでもログアウトしますか ?</string>
     <string name="people_empty_list_filtered_viewers">閲覧者はまだいません</string>
-    <string name="people_empty_list_filtered_email_followers">メールフォロワーはまだいません</string>
-    <string name="people_empty_list_filtered_followers">フォロワーはまだいません</string>
     <string name="people_empty_list_filtered_users">ユーザーはまだいません</string>
     <string name="reader_empty_posts_liked_description">お気に入りの投稿はここに表示されます</string>
     <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
     <string name="reader_no_followed_blogs_button_discover">ブログを検索</string>
     <string name="notifications_empty_likes">新しい「いいね」はまだついていません</string>
-    <string name="notifications_empty_followers">フォロワーはまだいません</string>
     <string name="activity_log_limited_content_on_free_plan">無料プランをご利用のため、アクティビティで確認できるイベントは限られています。</string>
     <string name="activity_log_empty_subtitle">サイトに変更を加えた後、ここでアクティビティ履歴を確認できます</string>
     <string name="activity_log_empty_title">アクティビティはまだありません</string>
@@ -3121,35 +3168,26 @@ Language: ja_JP
     <string name="preference_open_device_settings">端末設定を開く</string>
     <string name="invite_invalid_email">%s: 無効なメールアドレス</string>
     <string name="invite_user_blocked_invites">%s: ユーザーが招待をブロックしました</string>
-    <string name="invite_already_following">%s: すでにフォロー済です</string>
     <string name="invite_already_a_member">%s: すでにメンバーです</string>
     <string name="invite_username_not_found">%s: ユーザーが見つかりませんでした</string>
     <string name="comment_moderated_approved">コメントを承認しました。</string>
     <string name="like">いいね</string>
     <string name="timespan_now">今</string>
     <string name="role_viewer">閲覧者</string>
-    <string name="role_follower">フォロワー</string>
     <string name="error_post_my_profile_no_connection">接続されていないためプロフィールを保存できませんでした</string>
     <string name="alignment_right">右</string>
     <string name="alignment_left">左</string>
     <string name="alignment_none">なし</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d が選択されています</string>
     <string name="error_fetch_users_list">サイトのユーザーを取得できませんでした</string>
-    <string name="title_email_follower">メールフォロワー</string>
-    <string name="title_follower">フォロワー</string>
     <string name="people_fetching">ユーザーを取得中…</string>
     <string name="people_dropdown_item_viewers">閲覧者</string>
-    <string name="people_dropdown_item_email_followers">メールフォロワー</string>
-    <string name="people_dropdown_item_followers">フォロワー</string>
     <string name="people_dropdown_item_team">チーム</string>
     <string name="invite_message_usernames_limit">メールアドレスまたは WordPress.com ユーザー名を使って10名まで招待できます。ユーザー名をお持ちでない方には作成方法が送信されます。</string>
     <string name="viewer_remove_confirmation_message">この読者を削除すると、この読者はこのサイトにアクセスできなくなります。\n\n本当にこの読者を削除しますか ?</string>
-    <string name="follower_remove_confirmation_message">削除すると、このフォロワーが再度フォローしない限り、このサイトの通知を受け取れなくなります。\n\n本当にこのフォロワーを削除しますか ?</string>
+    <string name="subscriber_remove_confirmation_message">削除すると、この購読者が再度購読しない限り、このサイトの通知を受け取れなくなります。\n\nこの購読者を削除しますか ?</string>
     <string name="follower_subscribed_since">購読日: %1$s</string>
     <string name="error_remove_viewer">閲覧者を削除できませんでした</string>
-    <string name="error_remove_follower">フォロワーを削除できませんでした</string>
-    <string name="error_fetch_email_followers_list">サイトのメールフォロワーを取得できませんでした</string>
-    <string name="error_fetch_followers_list">サイトのフォロワーを取得できませんでした</string>
     <string name="editor_failed_uploads_switch_html">一部のメディアのアップロードに失敗しました。この状態では、HTML モードに切り替えることは\nできません。失敗したアップロードをすべて削除して続行しますか ?</string>
     <string name="image_thumbnail">画像サムネイル</string>
     <string name="visual_editor">ビジュアルエディター</string>
@@ -3255,7 +3293,6 @@ Language: ja_JP
     <string name="replies_to_my_comments">自分のコメントへの返信</string>
     <string name="username_mentions">ユーザー名メンション</string>
     <string name="site_achievements">サイトの達成記録</string>
-    <string name="site_follows">サイトでフォロー</string>
     <string name="likes_on_my_posts">自分の投稿への「いいね」</string>
     <string name="likes_on_my_comments">自分のコメントへの「いいね」</string>
     <string name="comments_on_my_site">サイト上のコメント</string>
@@ -3526,7 +3563,6 @@ Language: ja_JP
     <string name="stats_followers_minutes">%1$d分</string>
     <string name="stats_followers_a_minute_ago">1分前</string>
     <string name="stats_followers_seconds_ago">数秒前</string>
-    <string name="stats_view_followers">フォロワー</string>
     <string name="stats_view_videos">動画</string>
     <string name="stats_view_top_posts_and_pages">投稿とページ</string>
     <string name="stats_view_countries">国</string>
@@ -3686,7 +3722,6 @@ Language: ja_JP
     <string name="manage">管理</string>
     <string name="more_notifications">あと%d件。</string>
     <string name="new_notifications">%d件の新しい通知</string>
-    <string name="follows">フォロー</string>
     <string name="note_reply_successful">返信を公開しました</string>
     <string name="sign_in">ログイン</string>
     <string name="loading">読込中…</string>

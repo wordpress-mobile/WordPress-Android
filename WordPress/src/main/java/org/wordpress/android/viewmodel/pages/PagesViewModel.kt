@@ -351,7 +351,7 @@ class PagesViewModel
 
     fun onPageEditFinished(localPageId: Int, data: Intent) {
         launch {
-            refreshPages() // show local changes immediately
+            updatePageInMap(localPageId) // show local changes immediately
             withContext(defaultDispatcher) {
                 pageStore.getPageByLocalId(pageId = localPageId, site = site)?.let {
                     _scrollToPage.postOnUi(it)
@@ -895,10 +895,10 @@ class PagesViewModel
                 val oldStatus = page.status
 
                 val action = if (status != PageStatus.TRASHED || remoteId > 0) {
+                    // this is executed when a page is moved to
                     PageAction(remoteId, UPLOAD) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-                        refreshPages()
                         _scrollToPage.postOnUi(updatedPage)
                         pageStore.uploadPageToServer(updatedPage)
                     }
@@ -907,7 +907,7 @@ class PagesViewModel
                     PageAction(remoteId, UPDATE) {
                         val updatedPage = updatePageStatus(page, status)
                         pageStore.updatePageInDb(updatedPage)
-                        refreshPages()
+                        // should we scroll to the trash page - probably
                         _scrollToPage.postOnUi(updatedPage)
                     }
                 }
@@ -916,8 +916,7 @@ class PagesViewModel
                     val updatedPage = updatePageStatus(page.copy(remoteId = action.remoteId), oldStatus)
                     launch(defaultDispatcher) {
                         pageStore.updatePageInDb(updatedPage)
-                        refreshPages()
-
+                        updatePageMap(updatedPage)
                         pageStore.uploadPageToServer(updatedPage)
                     }
                 }
@@ -1096,7 +1095,7 @@ class PagesViewModel
         }
         _editPage.postValue(Triple(site, result, loadAutoSaveRevision))
     }
-    
+
     private fun invalidateAllLists() {
         val listTypeIdentifier = PostListDescriptor.calculateTypeIdentifier(site.id)
         dispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(listTypeIdentifier))
@@ -1119,7 +1118,21 @@ class PagesViewModel
     private fun handleInvalidateUploadStatus(ids: List<LocalId>) {
         launch {
             _invalidateUploadStatus.value = ids
-            refreshPages()
+            ids.forEach { updatePageInMap(it.value)}
+        }
+    }
+
+    private fun updatePageMap(page: PageModel) {
+        val updatedMap = pageMap.toMutableMap()
+        updatedMap[page.remoteId] = page
+        pageMap = updatedMap
+    }
+
+    private fun updatePageInMap(localId: Int){
+        launch {
+            pageStore.getPageByLocalId(localId, site)?.let {
+                updatePageMap(it)
+            }
         }
     }
 

@@ -22,7 +22,7 @@ class BlazeViewModel @Inject constructor(
     private val blazeFeatureUtils: BlazeFeatureUtils,
     dispatcher: Dispatcher,
     mediaStore: MediaStore,
-    private val siteSelectedSiteRepository: SelectedSiteRepository
+    private val selectedSiteRepository: SelectedSiteRepository
 ) : ViewModel() {
     private lateinit var blazeFlowSource: BlazeFlowSource
 
@@ -32,6 +32,8 @@ class BlazeViewModel @Inject constructor(
     private val _promoteUiState = MutableLiveData<BlazeUiState.PromoteScreen>()
     val promoteUiState: LiveData<BlazeUiState.PromoteScreen> = _promoteUiState
 
+    private val _onSelectedSiteMissing = MutableLiveData<Unit>()
+    val onSelectedSiteMissing = _onSelectedSiteMissing as LiveData<Unit>
     private val featuredImageTracker =
         PostListFeaturedImageTracker(dispatcher = dispatcher, mediaStore = mediaStore)
 
@@ -39,6 +41,11 @@ class BlazeViewModel @Inject constructor(
         blazeFlowSource = source
         blazeUIModel?.let { initializePromoteContentUIState(it) } ?: run {
             initializePromoteSiteUIState(shouldShowOverlay)
+        }
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null) {
+            _onSelectedSiteMissing.value = Unit
+            return
         }
     }
 
@@ -52,7 +59,7 @@ class BlazeViewModel @Inject constructor(
     private fun initializePromotePostUIState(postModel: PostUIModel) {
         val updatedPostModel = postModel.copy(
             url = UrlUtils.removeScheme(postModel.url),
-            featuredImageUrl = siteSelectedSiteRepository.getSelectedSite()?.let {
+            featuredImageUrl = selectedSiteRepository.getSelectedSite()?.let {
                 featuredImageTracker.getFeaturedImageUrl(
                     it,
                     postModel.featuredImageId
@@ -71,10 +78,12 @@ class BlazeViewModel @Inject constructor(
     private fun initializePromotePageUIState(pageModel: PageUIModel) {
         val updatedPageModel = pageModel.copy(
             url = UrlUtils.removeScheme(pageModel.url),
-            featuredImageUrl = featuredImageTracker.getFeaturedImageUrl(
-                siteSelectedSiteRepository.getSelectedSite()!!,
-                pageModel.featuredImageId
-            )
+            featuredImageUrl = selectedSiteRepository.getSelectedSite()?.let {
+                featuredImageTracker.getFeaturedImageUrl(
+                    it,
+                    pageModel.featuredImageId
+                )
+            }
         )
 
         _promoteUiState.value = BlazeUiState.PromoteScreen.PromotePage(updatedPageModel)

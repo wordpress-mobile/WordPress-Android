@@ -162,9 +162,10 @@ public class AppPrefs {
         SITE_JETPACK_CAPABILITIES,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD,
-        // PUBLISHED_POST_COUNT will increase until it reaches ReviewViewModel.TARGET_COUNT_POST_PUBLISHED
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_POST_PUBLISHED
         PUBLISHED_POST_COUNT,
-        IN_APP_REVIEW_SHOWN,
+        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_NOTIFICATIONS
+        IN_APP_REVIEWS_NOTIFICATION_COUNT,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
         SHOULD_SHOW_WEEKLY_ROUNDUP_NOTIFICATION,
@@ -204,6 +205,7 @@ public class AppPrefs {
         SHOULD_HIDE_DYNAMIC_CARD,
         PINNED_SITE_IDS,
         READER_READING_PREFERENCES_JSON,
+        SHOULD_SHOW_READER_ANNOUNCEMENT_CARD,
     }
 
     /**
@@ -244,6 +246,8 @@ public class AppPrefs {
         ASKED_PERMISSION_CAMERA,
 
         ASKED_PERMISSION_NOTIFICATIONS,
+
+        ASKED_PERMISSION_ACCESS_MEDIA_LOCATION,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,
@@ -385,6 +389,10 @@ public class AppPrefs {
     public static boolean getBoolean(PrefKey key, boolean def) {
         String value = getString(key, Boolean.toString(def));
         return Boolean.parseBoolean(value);
+    }
+
+    public static boolean getRawBoolean(@NonNull final PrefKey key, boolean def) {
+        return prefs().getBoolean(key.name(), def);
     }
 
     public static void putBoolean(final PrefKey key, final boolean value) {
@@ -1298,16 +1306,24 @@ public class AppPrefs {
         putInt(DeletablePrefKey.PUBLISHED_POST_COUNT, getPublishedPostCount() + 1);
     }
 
+    public static void resetPublishedPostCount() {
+        remove(DeletablePrefKey.PUBLISHED_POST_COUNT);
+    }
+
     public static int getPublishedPostCount() {
         return prefs().getInt(DeletablePrefKey.PUBLISHED_POST_COUNT.name(), 0);
     }
 
-    public static void setInAppReviewsShown() {
-        putBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN, true);
+    public static void incrementInAppReviewsNotificationCount() {
+        putInt(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT, getInAppReviewsNotificationCount() + 1);
     }
 
-    public static boolean isInAppReviewsShown() {
-        return prefs().getBoolean(DeletablePrefKey.IN_APP_REVIEW_SHOWN.name(), false);
+    public static int getInAppReviewsNotificationCount() {
+        return prefs().getInt(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT.name(), 0);
+    }
+
+    public static void resetInAppReviewsNotificationCount() {
+        remove(DeletablePrefKey.IN_APP_REVIEWS_NOTIFICATION_COUNT);
     }
 
     public static void setBloggingRemindersShown(int siteId) {
@@ -1778,6 +1794,14 @@ public class AppPrefs {
 
     public static void setPinnedSiteLocalIds(@NonNull final String ids) {
         setString(DeletablePrefKey.PINNED_SITE_IDS, ids);
+    }
+
+    public static boolean getShouldShowReaderAnnouncementCard() {
+        return prefs().getBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), true);
+    }
+
+    public static void setShouldShowReaderAnnouncementCard(final boolean shouldShow) {
+        prefs().edit().putBoolean(DeletablePrefKey.SHOULD_SHOW_READER_ANNOUNCEMENT_CARD.name(), shouldShow).apply();
     }
 
     @Nullable

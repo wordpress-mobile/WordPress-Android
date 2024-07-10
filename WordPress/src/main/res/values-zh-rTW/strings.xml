@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-06-13 12:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">點選以編輯</string>
+    <string name="voice_to_content_permissions_required_msg">若你想要錄製音訊，請將麥克風的存取權限授予給這個應用程式。 你先前曾拒絕授予這項權限。 若想使用這項功能，請在應用程式設定中啟用麥克風權限。</string>
+    <string name="voice_to_content_permissions_required_title">需授予音訊錄製權限</string>
+    <string name="permission_access_media_location">媒體位置</string>
+    <string name="in_app_update_restart">重新開始</string>
+    <string name="in_app_update_available">已下載更新。 重新啟動以套用。</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">從音訊張貼</string>
+    <string name="reader_tags_feed_action_label_open_menu">開啟選單</string>
+    <string name="reader_tags_feed_action_label_unlike_post">從文章移除「讚」</string>
+    <string name="reader_tags_feed_action_label_like_post">對文章按讚</string>
+    <string name="reader_tags_feed_action_label_open_blog">開啟網誌</string>
+    <string name="reader_tags_feed_action_label_open_post">開啟文章</string>
+    <string name="reader_tags_feed_error_retry">重試</string>
+    <string name="reader_tags_feed_no_content_error_description">我們目前找不到加上「%s」標籤的文章</string>
+    <string name="reader_tags_feed_loading_error_description">我們目前無法從此標籤載入文章</string>
+    <string name="reader_tags_feed_error_title">找不到與「%s」相符的文章</string>
+    <string name="reader_tags_feed_see_more_from_tag">更多來自「%s」的項目</string>
+    <string name="reader_tags_display_name">標籤</string>
+    <string name="reader_announcement_card_reading_preferences_description">選擇適合你的顏色和字型。 閱讀文章時，點選畫面頂端的 AA 圖示。</string>
+    <string name="reader_announcement_card_reading_preferences_title">閱讀喜好</string>
+    <string name="reader_announcement_card_tags_stream_description">點選頂端的下拉式清單，然後選取標籤，存取與你關注的標籤相關的文章串。</string>
+    <string name="reader_announcement_card_tags_stream_title">標籤串</string>
+    <string name="reader_announcement_card_title">閱讀器新功能</string>
+    <string name="reader_dropdown_menu_tags">你的標籤</string>
+    <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
+    <string name="no_connection_error_title">目前無法載入此內容</string>
+    <string name="stats_subscribers_marker_view_plural">訂閱者</string>
+    <string name="stats_subscribers_marker_view_singular">訂閱者</string>
+    <string name="stats_view_subscriber_growth">訂閱者的成長狀況</string>
+    <string name="role_subscriber">訂閱者</string>
+    <string name="title_email_subscriber">電子郵件訂閱者</string>
+    <string name="people_empty_list_filtered_email_subscribers">目前沒有電子郵件訂閱者</string>
+    <string name="people_empty_list_filtered_subscribers">目前沒有訂閱者</string>
+    <string name="people_dropdown_item_email_subscribers">電子郵件訂閱者</string>
+    <string name="people_dropdown_item_subscribers">訂閱者</string>
+    <string name="invite_already_subscribed">%s：已訂閱</string>
+    <string name="error_no_camera_available">沒有可供使用的相機應用程式。</string>
+    <string name="error_remove_subscriber">無法移除訂閱者</string>
+    <string name="error_fetch_email_subscribers_list">無法擷取網站電子郵件訂閱者</string>
+    <string name="error_fetch_subscribers_list">無法擷取網站訂閱者</string>
+    <string name="post_settings_add_to_calendar_error">無法新增至行事曆</string>
+    <string name="post_settings_no_calendar_app_exists">找不到可以處理新增至行事曆要求的應用程式</string>
+    <string name="site_subscriptions">網站訂閱</string>
+    <string name="notifications_tab_title_subscribers">訂閱者</string>
+    <string name="subscribers">訂閱者</string>
+    <string name="notifications_empty_subscribers">目前沒有訂閱者</string>
+    <string name="stats_view_emails">電子郵件</string>
+    <string name="stats_view_subscribers">訂閱者</string>
+    <string name="stats_view_total_subscribers">訂閱者總人數</string>
+    <string name="stats_view_subscriber_totals">訂閱者總數</string>
+    <string name="stats_list_item_with_two_values_description">%1$s：%2$s，%3$s：%4$s，%5$s：%6$s</string>
+    <string name="stats_emails_clicks_label">點擊數</string>
+    <string name="stats_emails_opens_label">開啟數</string>
+    <string name="stats_emails_latest_emails_label">最新電子郵件</string>
+    <string name="stats_subscriber_since_label">從以下時間開始訂閱</string>
+    <string name="stats_name_label">名稱</string>
+    <string name="stats_publicize_subscribers_label">訂閱者</string>
+    <string name="stats_subscriber_label">訂閱者</string>
+    <string name="stats_subscribers_count_message">「%1$s」的訂閱者總人數：%2$s</string>
+    <string name="page_upload_conflict_error">這個是頁面的最新修訂版本</string>
+    <string name="editor_updating_content">正在更新內容</string>
+    <string name="stats_subscribers">訂閱者</string>
     <string name="weekly_roundup_notification_text_views_and_comment">上週你有 %1$s 個瀏覽次數和 1 則留言</string>
     <string name="weekly_roundup_notification_text_views_and_like">上週你有 %1$s 個瀏覽次數和 1 個讚</string>
     <string name="weekly_roundup_notification_text_views_like_comment">上週你有 %1$s 個瀏覽次數、1 個讚和 1 則留言。</string>
@@ -58,6 +120,7 @@ Language: zh_TW
     <string name="gutenberg_native_copy_error_details">複製錯誤詳細資料</string>
     <string name="gutenberg_native_button_to_copy_post_text">複製文章文字的按鈕</string>
     <string name="gutenberg_native_button_to_copy_error_details">複製錯誤詳細資料的按鈕</string>
+    <string name="editor_updating_content_failed">無法更新內容</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">影片原文字幕。 %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">影片原文字幕。 無內容</string>
     <string name="gutenberg_native_edit_video_024aee6d">剪輯影片</string>
@@ -130,10 +193,6 @@ Language: zh_TW
     <string name="reader_filter_empty_blogs_list">查看你已訂閱網誌的最新文章</string>
     <string name="reader_filter_by_tag_title">依標籤篩選</string>
     <string name="reader_filter_by_blog_title">依網誌篩選</string>
-    <string name="stats_timeframe_by_year">依年份</string>
-    <string name="stats_timeframe_by_month">依月</string>
-    <string name="stats_timeframe_by_week">依週</string>
-    <string name="stats_timeframe_by_day">依天</string>
     <string name="gutenberg_native_waiting_for_connection">正在等待連線</string>
     <string name="stats_traffic">流量</string>
     <string name="gutenberg_native_working_offline">離線作業</string>
@@ -542,8 +601,6 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">「閱讀器」將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">你的統計資料將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切換至全新 Jetpack 應用程式</string>
-    <string name="blogging_prompts_list_error_network_subtitle">請檢查你的網路連線並再試一次。</string>
-    <string name="blogging_prompts_list_error_network_title">目前無法載入此內容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">載入提示時發生錯誤。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚無提示</string>
@@ -669,7 +726,7 @@ Language: zh_TW
     <string name="qrcode_auth_flow_validated_subtitle">請只掃描直接由網頁瀏覽器顯示的 QR 碼。 永遠不要掃描其他任何人傳送給你的代碼。</string>
     <string name="qrcode_auth_flow_validated_default_title">你是否在 %1$s 附近嘗試登入網頁瀏覽器？</string>
     <string name="qrcode_auth_flow_validated_title">你是否在 %2$s 附近嘗試登入 %1$s？</string>
-    <string name="stats_insights_followers_guide_card">💡 在其他網誌留言是為自己的新網站吸引注意和關注者的絕佳方式。</string>
+    <string name="stats_insights_subscribers_guide_card">💡在其他網誌留言是為自己的新網站吸引注意和訂閱者的絕佳方式。</string>
     <string name="stats_insights_comments_guide_card">💡 點選「檢視更多」即可查看哪些人踴躍留言。</string>
     <string name="stats_insights_latest_post_empty">發表第一篇文章之後，請再回來查看！</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">查看我們的頂尖秘訣，瞭解如何增加瀏覽次數和流量 %1$s</string>
@@ -707,7 +764,7 @@ Language: zh_TW
     <string name="me_btn_scan_login_code">掃描登入碼</string>
     <string name="stats_insights_likes_guide_card">⭐️ 你的最新文章 %1$s 已獲得 %2$s 次按讚。</string>
     <string name="stats_most_popular_percent_views_empty">沒有足夠的活動。 有更多訪客造訪網站的時候，請再回來查看！</string>
-    <string name="stats_total_followers_content_description">%1$s 個追蹤者，共 %2$s%% 個</string>
+    <string name="stats_total_subscribers_content_description">%1$s，訂閱者總人數的 %2$s%%</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">複製連結</string>
     <string name="quick_start_completed_tour_title">恭喜！ 你熟知&lt;br/&gt;</string>
@@ -734,7 +791,6 @@ Language: zh_TW
     <string name="stats_published_minutes_ago">%1$d 分鐘前發佈</string>
     <string name="stats_published_a_minute_ago">1 分鐘前發佈</string>
     <string name="stats_published_seconds_ago">幾秒前發佈</string>
-    <string name="stats_view_total_followers">追蹤者總數</string>
     <string name="stats_view_total_comments">回應總數</string>
     <string name="stats_view_total_likes">按讚總數</string>
     <string name="blogging_prompts_notification_dismiss">關閉</string>
@@ -1159,6 +1215,7 @@ Language: zh_TW
     <string name="gutenberg_native_add_title">新增標題</string>
     <string name="gutenberg_native_no_preview_available">未提供預覽</string>
     <string name="gutenberg_native_loading">載入中</string>
+    <string name="gutenberg_native_link_label">連結標籤</string>
     <string name="gutenberg_native_text_color">文字顏色</string>
     <string name="gutenberg_native_s_link">%s 連結</string>
     <string name="gutenberg_native_padding">邊框間距</string>
@@ -1829,7 +1886,6 @@ Language: zh_TW
     <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。 Jetpack Social 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未連線</string>
     <string name="notifications_tab_title_likes">按讚數</string>
-    <string name="notifications_tab_title_follows">關注者</string>
     <string name="notifications_tab_title_comments">留言</string>
     <string name="notifications_tab_title_unread_notifications">未讀</string>
     <string name="dlg_cancel_action_dont_trash">不要移至垃圾桶</string>
@@ -2154,9 +2210,7 @@ Language: zh_TW
     <string name="error_restoring_post">還原文章時發生錯誤</string>
     <string name="backdated_for">回溯至：%s</string>
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
-    <string name="stats_insights_social">社交</string>
     <string name="stats_insights_annual_site_stats">年度網站統計</string>
-    <string name="stats_view_follower_totals">追蹤者總數</string>
     <string name="domain_suggestions_fetch_error">無法載入網域建議</string>
     <string name="domain_suggestions_search_hint">輸入關鍵字尋找更多想法</string>
     <string name="domains_suggestions_empty_list">找不到任何建議</string>
@@ -2320,7 +2374,6 @@ Language: zh_TW
     <string name="stats_insights_tags_and_categories">標籤和類別</string>
     <string name="stats_insights_all_time_stats">有史以來</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">關注者</string>
     <string name="stats_publicize_service_label">服務</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">瀏覽數</string>
@@ -2333,8 +2386,6 @@ Language: zh_TW
     <string name="stats_comments_posts_and_pages">文章與網頁</string>
     <string name="stats_comments_authors">作者</string>
     <string name="stats_follower_since_label">自從</string>
-    <string name="stats_follower_label">關注者</string>
-    <string name="stats_followers_count_message">%1$s 關注者總數：%2$s</string>
     <string name="stats_followers_email">電子郵件</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">管理洞察報告</string>
@@ -2435,14 +2486,11 @@ Language: zh_TW
     <string name="sign_out_wpcom_confirm_with_no_changes">是否要登出 WordPress？</string>
     <string name="sign_out_wpcom_confirm_with_changes">你已針對尚未上傳至網站的文章進行變更。現在登出將會從你的裝置刪除這些變更。是否仍要登出？</string>
     <string name="people_empty_list_filtered_viewers">尚未有瀏覽者</string>
-    <string name="people_empty_list_filtered_email_followers">尚未有電子郵件關注者</string>
-    <string name="people_empty_list_filtered_followers">尚未有關注者</string>
     <string name="people_empty_list_filtered_users">尚未有使用者</string>
     <string name="reader_empty_posts_liked_description">這裡會顯示你按讚的文章</string>
     <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
     <string name="reader_no_followed_blogs_button_discover">探索網誌</string>
     <string name="notifications_empty_likes">尚未有人按讚</string>
-    <string name="notifications_empty_followers">尚未有關注者</string>
     <string name="activity_log_limited_content_on_free_plan">由於你使用免費版方案，你將無法查看所有活動。</string>
     <string name="activity_log_empty_subtitle">當你變更自己的網站內容時，即可在此查看你的活動記錄</string>
     <string name="activity_log_empty_title">尚未有活動</string>
@@ -3119,35 +3167,26 @@ Language: zh_TW
     <string name="preference_open_device_settings">開啟裝置設定</string>
     <string name="invite_invalid_email">%s：電子郵件無效</string>
     <string name="invite_user_blocked_invites">%s：使用者已封鎖邀請</string>
-    <string name="invite_already_following">%s：已關注</string>
     <string name="invite_already_a_member">%s：已經是成員</string>
     <string name="invite_username_not_found">%s：找不到使用者</string>
     <string name="comment_moderated_approved">留言已核准！</string>
     <string name="like">讚</string>
     <string name="timespan_now">立即</string>
     <string name="role_viewer">瀏覽者</string>
-    <string name="role_follower">關注者</string>
     <string name="error_post_my_profile_no_connection">無法連線，故無法儲存你的個人檔案</string>
     <string name="alignment_right">右</string>
     <string name="alignment_left">左</string>
     <string name="alignment_none">無</string>
     <string name="site_settings_list_editor_action_mode_title">已選取 %1$d</string>
     <string name="error_fetch_users_list">無法擷取網站使用者</string>
-    <string name="title_email_follower">電子郵件關注者</string>
-    <string name="title_follower">關注者</string>
     <string name="people_fetching">正在擷取使用者…</string>
     <string name="people_dropdown_item_viewers">讀者</string>
-    <string name="people_dropdown_item_email_followers">電子郵件關注者</string>
-    <string name="people_dropdown_item_followers">關注者</string>
     <string name="people_dropdown_item_team">團隊</string>
     <string name="invite_message_usernames_limit">可邀請最多 10 個電子郵件地址及/或 WordPress.com 使用者名稱。尚未命名的使用者，將收到一份如何建立使用者名稱的指示。</string>
     <string name="viewer_remove_confirmation_message">如果移除這位瀏覽者，對方將無法造訪此網站。\n\n仍要移除這位瀏覽者嗎？</string>
-    <string name="follower_remove_confirmation_message">移除後，這位關注者如果沒有重新關注，就會停止收到此網站的通知。\n\n仍要移除這位關注者嗎？</string>
+    <string name="subscriber_remove_confirmation_message">在你移除後，這位訂閱者若無重新訂閱，就不會再收到此網站的通知。\n\n你仍要移除這位訂閱者嗎？</string>
     <string name="follower_subscribed_since">自 %1$s 開始</string>
     <string name="error_remove_viewer">無法移除瀏覽者</string>
-    <string name="error_remove_follower">無法移除關注者</string>
-    <string name="error_fetch_email_followers_list">無法擷取網站電子郵件關注者</string>
-    <string name="error_fetch_followers_list">無法擷取網站關注者</string>
     <string name="editor_failed_uploads_switch_html">部分媒體上傳失敗。在此狀態下，你無法\n切換至 HTML 模式。要移除所有上傳失敗的項目並繼續嗎？</string>
     <string name="image_thumbnail">縮圖</string>
     <string name="visual_editor">視覺化編輯器</string>
@@ -3253,7 +3292,6 @@ Language: zh_TW
     <string name="replies_to_my_comments">留言的回覆</string>
     <string name="username_mentions">使用者名稱標記</string>
     <string name="site_achievements">網站成就</string>
-    <string name="site_follows">網站關注數</string>
     <string name="likes_on_my_posts">文章按讚數</string>
     <string name="likes_on_my_comments">留言按讚數</string>
     <string name="comments_on_my_site">網站留言</string>
@@ -3523,7 +3561,6 @@ Language: zh_TW
     <string name="stats_followers_minutes">%1$d 分鐘</string>
     <string name="stats_followers_a_minute_ago">一分鐘前</string>
     <string name="stats_followers_seconds_ago">幾秒鐘前</string>
-    <string name="stats_view_followers">關注者</string>
     <string name="stats_view_videos">影片</string>
     <string name="stats_view_top_posts_and_pages">文章與頁面</string>
     <string name="stats_view_countries">國家</string>
@@ -3605,7 +3642,7 @@ Language: zh_TW
     <string name="saving_changes">正在儲存變更</string>
     <string name="trash">移至回收桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
-    <string name="mnu_comment_trash">移至垃圾桶</string>
+    <string name="mnu_comment_trash">移至回收桶</string>
     <string name="mnu_comment_spam">垃圾</string>
     <string name="mnu_comment_unapprove">駁回</string>
     <string name="mnu_comment_approve">核准</string>
@@ -3683,7 +3720,6 @@ Language: zh_TW
     <string name="manage">管理</string>
     <string name="more_notifications">還有 %d 個。</string>
     <string name="new_notifications">%d 個新通知</string>
-    <string name="follows">關注者</string>
     <string name="note_reply_successful">回覆已發佈</string>
     <string name="sign_in">登入</string>
     <string name="loading">正在載入…</string>

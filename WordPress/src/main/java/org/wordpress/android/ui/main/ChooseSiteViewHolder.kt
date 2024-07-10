@@ -88,10 +88,7 @@ class ChooseSiteViewHolder(private val binding: ItemChooseSiteBinding) : Recycle
     }
 
     private fun handleAvatar(site: SiteRecord) {
-        imageManager.loadImageWithCorners(
-            binding.avatar, site.blavatarType, site.blavatarUrl,
-            itemView.context.resources.getDimensionPixelSize(R.dimen.blavatar_sz) / 2
-        )
+        imageManager.load(binding.avatar, site.blavatarType, site.blavatarUrl)
         val isDarkTheme = itemView.resources.configuration.isDarkTheme()
         val borderColor = ContextCompat.getColor(
             itemView.context,

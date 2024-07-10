@@ -21,7 +21,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewManagerFactory
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.PostListActivityBinding
@@ -52,7 +51,6 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFrag
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.prepublishing.home.PublishPost
 import org.wordpress.android.ui.posts.prepublishing.listeners.PrepublishingBottomSheetListener
-import org.wordpress.android.ui.review.ReviewViewModel
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -61,10 +59,10 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
 import org.wordpress.android.util.extensions.getSerializableCompat
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
-import org.wordpress.android.util.extensions.logException
 import org.wordpress.android.util.extensions.redirectContextClickToLongPressListener
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.viewmodel.observeEvent
+import org.wordpress.android.widgets.AppReviewManager
 import javax.inject.Inject
 import android.R as AndroidR
 
@@ -121,9 +119,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
     @Inject
     internal lateinit var bloggingRemindersViewModel: BloggingRemindersViewModel
-
-    @Inject
-    internal lateinit var reviewViewModel: ReviewViewModel
 
     @Inject
     internal lateinit var blazeFeatureUtils: BlazeFeatureUtils
@@ -209,8 +204,8 @@ class PostsListActivity : LocaleAwareActivity(),
             setupActionBar()
             setupContent()
             initViewModel(initPreviewState, currentBottomSheetPostId)
+            initSearchFragment()
             initBloggingReminders()
-            initInAppReviews()
             initTabLayout(tabIndex)
             loadIntentData(intent)
         }
@@ -336,27 +331,6 @@ class PostsListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun initInAppReviews() {
-        reviewViewModel = ViewModelProvider(this@PostsListActivity, viewModelFactory)[ReviewViewModel::class.java]
-        reviewViewModel.launchReview.observeEvent(this) { launchInAppReviews() }
-    }
-
-    private fun launchInAppReviews() {
-        val manager = ReviewManagerFactory.create(this)
-        val request = manager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val reviewInfo = task.result
-                val flow = manager.launchReviewFlow(this, reviewInfo)
-                flow.addOnFailureListener { e ->
-                    AppLog.e(AppLog.T.POSTS, "Error launching google review API flow.", e)
-                }
-            } else {
-                task.logException()
-            }
-        }
-    }
-
     private fun PostListActivityBinding.setupActions() {
         viewModel.dialogAction.observe(this@PostsListActivity) {
             it?.show(this@PostsListActivity, supportFragmentManager, uiHelpers)
@@ -380,7 +354,9 @@ class PostsListActivity : LocaleAwareActivity(),
                 ) { isFirstTimePublishing ->
                     changeTabsOnPostUpload()
                     bloggingRemindersViewModel.onPublishingPost(site.id, isFirstTimePublishing)
-                    reviewViewModel.onPublishingPost(isFirstTimePublishing)
+                    if (isFirstTimePublishing) {
+                        AppReviewManager.onPostPublished()
+                    }
                 }
             }
         }
@@ -451,6 +427,9 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
+        if (AppReviewManager.shouldShowInAppReviewsPrompt()) {
+            AppReviewManager.launchInAppReviews(this)
+        }
     }
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -492,7 +471,6 @@ class PostsListActivity : LocaleAwareActivity(),
         authorFilterMenuItem = menu.findItem(R.id.author_filter_menu_item)
         searchActionButton = menu.findItem(R.id.toggle_search)
 
-        initSearchFragment()
         binding.initSearchView()
         initAuthorFilter(authorFilterMenuItem)
         return true

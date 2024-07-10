@@ -20,10 +20,14 @@ class DebugSharedPreferenceFlagsViewModelTest {
     @Test
     fun `WHEN init THEN should load the flags from the prefs`() {
         whenever(prefsWrapper.getAllPrefs()).thenReturn(mapOf("key" to true))
+        DebugPrefs.entries.forEach {
+            whenever(prefsWrapper.getDebugBooleanPref(it.key, false)).thenReturn(false)
+        }
 
         initViewModel()
 
         assertTrue(viewModel.uiStateFlow.value["key"]!!)
+        assertTrue(viewModel.uiStateFlow.value.size >= 2)
     }
 
     @Test

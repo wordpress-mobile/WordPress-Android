@@ -1,4 +1,0 @@
-24.6:
-- We hebben een aantal problemen met de opmaak van gemarkeerde tekst opgelost.
-- De app ondersteunt nu tekstsuggesties die langer zijn dan de zichtbare ruimte in de editor.
-- We hebben het oneindigheidssymbool veranderd in '100%' op het scherm Statistieken. Omdat we overal 100% voor gaan.

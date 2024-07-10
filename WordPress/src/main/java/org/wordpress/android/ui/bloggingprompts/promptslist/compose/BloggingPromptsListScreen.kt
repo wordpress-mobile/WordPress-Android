@@ -112,8 +112,8 @@ private fun FetchErrorContent() {
 @Composable
 private fun NetworkErrorContent() {
     EmptyContent(
-        title = stringResource(R.string.blogging_prompts_list_error_network_title),
-        subtitle = stringResource(R.string.blogging_prompts_list_error_network_subtitle),
+        title = stringResource(R.string.no_connection_error_title),
+        subtitle = stringResource(R.string.no_connection_error_description),
         image = R.drawable.img_illustration_cloud_off_152dp,
         modifier = Modifier.fillMaxSize(),
     )

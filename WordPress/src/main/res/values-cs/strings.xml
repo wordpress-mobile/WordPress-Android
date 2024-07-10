@@ -148,8 +148,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Zkontrolujte připojení k síti a zkuste to znovu.</string>
-    <string name="blogging_prompts_list_error_network_title">Momentálně tento obsah nelze načíst</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
     <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
     <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>
@@ -275,7 +273,6 @@ Language: cs_CZ
     <string name="qrcode_auth_flow_validated_subtitle">Skenujte pouze QR kódy pořízené přímo z vašeho webového prohlížeče. Nikdy neskenujte kód, který vám poslal někdo jiný.</string>
     <string name="qrcode_auth_flow_validated_default_title">Pokoušíte se přihlásit do webového prohlížeče poblíž %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Pokoušíte se přihlásit do %1$s poblíž %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Komentování na jiných blozích je skvělý způsob, jak získat pozornost a sledovatele vašeho nového webu.</string>
     <string name="stats_insights_comments_guide_card">💡Klepnutím na „ZOBRAZIT VÍCE“ zobrazíte své nejlepší komentátory.</string>
     <string name="stats_insights_latest_post_empty">Vraťte se, až publikujete svůj první příspěvek!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Podívejte se na naše nejlepší tipy ke zvýšení počtu zhlédnutí a návštěvnosti %1$s</string>
@@ -313,7 +310,6 @@ Language: cs_CZ
     <string name="me_btn_scan_login_code">Naskenujte přihlašovací kód</string>
     <string name="stats_insights_likes_guide_card">⭐️ Váš poslední příspěvek %1$s má %2$s lajků.</string>
     <string name="stats_most_popular_percent_views_empty">Nedostatek aktivity. Vraťte se později, až budou mít vaše stránky více návštěvníků!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% z celkového počtu sledujících</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Kopírovat odkaz</string>
     <string name="quick_start_completed_tour_title">Gratuluji! Vyznáte se&lt;br/&gt;</string>
@@ -341,7 +337,6 @@ Language: cs_CZ
     <string name="stats_published_a_minute_ago">Publikováno před minutou</string>
     <string name="stats_published_seconds_ago">Publikováno před sekundami</string>
     <string name="stats_view_total_comments">Celkový počet komentářů</string>
-    <string name="stats_view_total_followers">Celkem počet fanoušků</string>
     <string name="stats_view_total_likes">Celkem to se mi líbí</string>
     <string name="blogging_prompts_notification_dismiss">Odmítnout</string>
     <string name="blogging_prompts_answer_prompt_notification_answer_action">Odpověď</string>
@@ -762,6 +757,7 @@ Language: cs_CZ
     <string name="gutenberg_native_gif">GIF</string>
     <string name="gutenberg_native_one">Jeden</string>
     <string name="gutenberg_native_no_preview_available">Náhled není k dispozici.</string>
+    <string name="gutenberg_native_link_label">Popisek odkazu</string>
     <string name="gutenberg_native_s_link">%s odkaz</string>
     <string name="gutenberg_native_text_color">Barva textu</string>
     <string name="gutenberg_native_padding">Odsazení</string>
@@ -1017,8 +1013,8 @@ Language: cs_CZ
     <string name="suggestion_none">Nejsou k dispozici žádné návrhy %s.</string>
     <string name="suggestion_problem">Při načítání návrhů došlo k problému.</string>
     <string name="suggestion_no_matching">Bez shody %s.</string>
-    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan nahradí ovlivněný soubor nebo adresář.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan nemůže tuto hrozbu automaticky opravit.\n         Doporučujeme hrozbu vyřešit ručně: ujistěte se, že WordPress, vaše téma a všechny vaše doplňky jsou aktuální, a odstraňte z webu nevhodný kód, téma nebo plugin.\n \n\n         Pokud potřebujete další pomoc při řešení této hrozby, doporučujeme &lt;b&gt;Codeable+&lt;/b&gt;, důvěryhodné tržiště nezávislých odborníků s vysoce prověřenými odborníky na WordPress.\n         Identifikovali vybranou skupinu bezpečnostních odborníků, kteří s těmito projekty pomohli. Ceny se pohybují od 70–120 USD / hodinu a můžete získat bezplatný odhad bez povinnosti najmout.</string>
     <string name="threat_problem_header">Jaký byl problém?</string>
     <string name="threat_technical_details_header">Technické podrobnosti</string>
     <string name="threat_file_description">V souboru nalezena hrozba:</string>
@@ -1431,7 +1427,6 @@ Language: cs_CZ
     <string name="notifications_tab_title_unread_notifications">Nepřečteno</string>
     <string name="dlg_cancel_action_dont_trash">Ponechat</string>
     <string name="dlg_confirm_action_trash">Odstranit</string>
-    <string name="notifications_tab_title_follows">Odběry</string>
     <string name="notifications_tab_title_likes">Líbí se</string>
     <string name="stats_insights_management_activity">Aktivita</string>
     <string name="stats_insights_management_posts_and_pages">Příspěvky a Stránky</string>
@@ -1749,9 +1744,7 @@ Language: cs_CZ
     <string name="domains_suggestions_empty_list">Nebyly nalezeny žádné návrhy</string>
     <string name="domain_suggestions_search_hint">Napište klíčové slovo pro více nápadů</string>
     <string name="domain_suggestions_fetch_error">Návrhy domén nelze načíst</string>
-    <string name="stats_view_follower_totals">Odběratelé celkem</string>
     <string name="stats_insights_annual_site_stats">Roční statistiky stránek</string>
-    <string name="stats_insights_social">Sociální</string>
     <string name="stats_insights_management_title">Zobrazují se pouze nejrelevantnější statistiky. Níže přidejte a uspořádejte své statistiky.</string>
     <string name="backdated_for">Zpětné pro: %s</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Místní změny</string>
@@ -1924,11 +1917,8 @@ Language: cs_CZ
     <string name="stats_comments_title_label">Název</string>
     <string name="stats_comments_posts_and_pages">Příspěvky a stránky</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_publicize_followers_label">Fanoušci</string>
     <string name="stats_publicize_service_label">Služba</string>
     <string name="stats_follower_since_label">Od té doby</string>
-    <string name="stats_follower_label">Fanoušek</string>
-    <string name="stats_followers_count_message">Celkem %1$s fanoušků: %2$s</string>
     <string name="stats_manage_insights">Správa přehledů</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_no_data_yet">Zatím žádná data</string>
@@ -2026,14 +2016,11 @@ Language: cs_CZ
     <string name="sign_out_wpcom_confirm_with_no_changes">Odhlásit se z WordPressu?</string>
     <string name="media_empty_search_list">Vašemu vyhledávání neodpovídají žádná média</string>
     <string name="sign_out_wpcom_confirm_with_changes">U příspěvků, které nebyly nahrány na váš web, došlo ke změnám. Odhlášením se tyto změny ze zařízení smažou. Odhlásit se?</string>
-    <string name="people_empty_list_filtered_followers">Zatím žádní fanoušci</string>
     <string name="people_empty_list_filtered_users">Zatím žádní uživatelé</string>
     <string name="people_empty_list_filtered_viewers">Zatím žádné zobrazení</string>
     <string name="reader_empty_posts_liked_description">Příspěvky, kterým jste dali líbí se mi se zobrazí zde.</string>
-    <string name="people_empty_list_filtered_email_followers">Zatím žádné e-mailové následovníci</string>
     <string name="reader_empty_posts_liked_title">Zatím se nic nelíbilo</string>
     <string name="activity_log_limited_content_on_free_plan">Jelikož máte bezplatný plán, uvidíte ve své aktivitě omezené události.</string>
-    <string name="notifications_empty_followers">Zatím žádní fanoušci</string>
     <string name="notifications_empty_likes">Zatím žádné to se mi líbí</string>
     <string name="activity_log_empty_title">Zatím žádná aktivita</string>
     <string name="activity_log_empty_subtitle">Když na svém webu provedete změny, uvidíte zde svoji historii aktivit.</string>
@@ -2710,14 +2697,12 @@ Language: cs_CZ
     <string name="preference_open_device_settings">Otevřít nastavení v zařízení</string>
     <string name="invite_user_blocked_invites">Uživatel %s má zablokované pozvánky</string>
     <string name="invite_invalid_email">%s je neplatný e-mail</string>
-    <string name="invite_already_following">Uživatel %s již sleduje</string>
     <string name="invite_already_a_member">%s je již uživatel</string>
     <string name="invite_username_not_found">Uživatel %s nenalezen</string>
     <string name="comment_moderated_approved">Komentář schválen!</string>
     <string name="like">To se mi líbí</string>
     <string name="timespan_now">nyní</string>
     <string name="role_viewer">Návštěvník</string>
-    <string name="role_follower">Následovník</string>
     <string name="error_post_my_profile_no_connection">Žádné přípojení, nepodařilo se uložit váš profil</string>
     <string name="alignment_none">Žádné</string>
     <string name="alignment_left">Doleva</string>
@@ -2725,20 +2710,12 @@ Language: cs_CZ
     <string name="site_settings_list_editor_action_mode_title">Vybraný %1$d</string>
     <string name="error_fetch_users_list">Nelze načíst uživatele webu</string>
     <string name="people_fetching">Načítání uživatelů…</string>
-    <string name="title_follower">Fanoušek</string>
-    <string name="title_email_follower">E-mail fanouška</string>
     <string name="people_dropdown_item_viewers">Zobrazení</string>
-    <string name="people_dropdown_item_email_followers">E-maily fanoušků</string>
-    <string name="people_dropdown_item_followers">Fanoušci</string>
     <string name="people_dropdown_item_team">Tým</string>
     <string name="invite_message_usernames_limit">Pozvěte uživatele pomocí až 10 e-mailů / nebo WordPress.com uživatelských jmen. Ty, kteří si budou chtít uživatelské jméno vytvořit, dostanou pokynu pro vytvoření.</string>
     <string name="viewer_remove_confirmation_message">Chcete odstranit tento prohlížeč, pak už nikdo nebude moct navštívit tuto webovou stránku.\n\nChcete určitě odstranit tento prohlížeč?</string>
-    <string name="follower_remove_confirmation_message">Pokud odstraníte tohoto fanouška, nebude už dostávat žádné upozornění z tohoto webu..\n\nChcete určitě odstranit tohoto fanouška?</string>
     <string name="follower_subscribed_since">Od %1$s</string>
-    <string name="error_remove_follower">Nepodařilo se odstranit fanouška</string>
     <string name="error_remove_viewer">Nepodařilo se odstranit zobrazení</string>
-    <string name="error_fetch_email_followers_list">Nepodařilo se načít e-maily fanoušků</string>
-    <string name="error_fetch_followers_list">Nepodařilo se načít webové stránky fanoušků</string>
     <string name="editor_failed_uploads_switch_html">Některá média se nenahrála. Nelze přepnout do režimu HTML\n        v tomhle stavu. Chcete odstranit všechny neúspěšně nahrané soubory a pak pokračovat?</string>
     <string name="visual_editor">Vizuální editor</string>
     <string name="image_thumbnail">Náhled</string>
@@ -2843,7 +2820,6 @@ Language: cs_CZ
     <string name="notif_research">Výzkum</string>
     <string name="site_achievements">Úspěchy webu</string>
     <string name="username_mentions">Uživatelské jméno obsahuje</string>
-    <string name="site_follows">Weboví fanoušci</string>
     <string name="likes_on_my_posts">To se mi líbí u mých příspěvků</string>
     <string name="likes_on_my_comments">To se mi líbí u mých komentářů</string>
     <string name="comments_on_my_site">Komentáře na mém webu</string>
@@ -3100,7 +3076,6 @@ Language: cs_CZ
     <string name="logs_copied_to_clipboard">Aplikační protokoly byly zkopírovány do schránky</string>
     <string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
     <string name="post_uploading">Nahrávám příspěvek</string>
-    <string name="stats_view_followers">Sledující</string>
     <string name="stats_followers_months">%1$d měsíc</string>
     <string name="stats_followers_a_year">Za rok</string>
     <string name="stats_followers_years">%1$d roky</string>
@@ -3266,7 +3241,6 @@ Language: cs_CZ
     <string name="manage">Spravovat</string>
     <string name="discard">Zahodit</string>
     <string name="note_reply_successful">Odpověď publikována</string>
-    <string name="follows">Sledovat</string>
     <string name="new_notifications">%d nových notifikací</string>
     <string name="more_notifications">a %d dalších.</string>
     <string name="sign_in">Přihlásit se</string>

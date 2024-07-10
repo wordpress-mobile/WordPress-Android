@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-17 12:54:08+0000
+Translation-Revision-Date: 2024-06-12 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Tryck här för att redigera</string>
+    <string name="voice_to_content_permissions_required_msg">Den här appen behöver åtkomst till din mikrofon för att kunna spela in ljud. Du har tidigare nekat behörighet för detta. Aktivera mikrofonbehörighet i appinställningarna om du vill använda den här funktionen.</string>
+    <string name="voice_to_content_permissions_required_title">Tillåtelse för ljudinspelning krävs</string>
+    <string name="permission_access_media_location">Mediaplats</string>
+    <string name="in_app_update_restart">Starta om</string>
+    <string name="in_app_update_available">Uppdatering nedladdad. Starta om för att tillämpa.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Inlägg via ljud</string>
+    <string name="reader_tags_feed_action_label_open_menu">öppna meny</string>
+    <string name="reader_tags_feed_action_label_unlike_post">ta bort gillamarkering för inlägg</string>
+    <string name="reader_tags_feed_action_label_like_post">gilla inlägg</string>
+    <string name="reader_tags_feed_action_label_open_blog">öppna blogg</string>
+    <string name="reader_tags_feed_action_label_open_post">öppna inlägg</string>
+    <string name="reader_tags_feed_error_retry">Försök igen</string>
+    <string name="reader_tags_feed_no_content_error_description">Vi kunde för tillfället inte hitta några inlägg med etiketten %s</string>
+    <string name="reader_tags_feed_loading_error_description">Vi kunde för tillfället inte läsa in inläggen från den här etiketten</string>
+    <string name="reader_tags_feed_error_title">Inga inlägg hittades för %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Mer från %s</string>
+    <string name="reader_tags_display_name">Etiketter</string>
+    <string name="reader_announcement_card_reading_preferences_description">Välj färger och typsnitt som passar dig. När du läser ett inlägg, tryck på AA-ikonen längst upp på skärmen.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Läsinställningar</string>
+    <string name="reader_announcement_card_tags_stream_description">Tryck på rullgardinsmenyn längst upp och välj Etiketter för att komma åt strömmar från etiketter du följer.</string>
+    <string name="reader_announcement_card_tags_stream_title">Etikettström</string>
+    <string name="reader_announcement_card_title">Nytt i Läsaren</string>
+    <string name="reader_dropdown_menu_tags">Dina etiketter</string>
+    <string name="no_connection_error_description">Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="no_connection_error_title">Det går inte att ladda detta innehåll för tillfället</string>
+    <string name="stats_subscribers_marker_view_plural">Prenumeranter</string>
+    <string name="stats_subscribers_marker_view_singular">Prenumerant</string>
+    <string name="stats_view_subscriber_growth">Prenumeranttillväxt</string>
+    <string name="role_subscriber">Prenumerant</string>
+    <string name="title_email_subscriber">E-postprenumerant</string>
+    <string name="people_empty_list_filtered_email_subscribers">Inga e-postprenumeranter ännu</string>
+    <string name="people_empty_list_filtered_subscribers">Inga prenumeranter ännu</string>
+    <string name="people_dropdown_item_email_subscribers">E-postprenumeranter</string>
+    <string name="people_dropdown_item_subscribers">Prenumeranter</string>
+    <string name="invite_already_subscribed">%s: Prenumererar redan</string>
+    <string name="error_no_camera_available">Ingen kameraapp tillgänglig.</string>
+    <string name="error_remove_subscriber">Kunde inte ta bort prenumerant</string>
+    <string name="error_fetch_email_subscribers_list">Kunde inte hämta webbplatsens e-postprenumeranter</string>
+    <string name="error_fetch_subscribers_list">Kunde inte hämta webbplatsens prenumeranter</string>
+    <string name="post_settings_add_to_calendar_error">Kalender kunde inte läggas till</string>
+    <string name="post_settings_no_calendar_app_exists">Ingen app hittades för hantering av begäran om att lägga till kalender</string>
+    <string name="site_subscriptions">Webbplatsprenumerationer</string>
+    <string name="notifications_tab_title_subscribers">Prenumeranter</string>
+    <string name="subscribers">Prenumeranter</string>
+    <string name="notifications_empty_subscribers">Inga prenumeranter ännu</string>
+    <string name="stats_view_emails">E-post</string>
+    <string name="stats_view_subscribers">Prenumeranter</string>
+    <string name="stats_view_total_subscribers">Totalt antal prenumeranter</string>
+    <string name="stats_view_subscriber_totals">Totalt antal prenumeranter</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Klick</string>
+    <string name="stats_emails_opens_label">Öppningar</string>
+    <string name="stats_emails_latest_emails_label">Senaste e-postmeddelanden</string>
+    <string name="stats_subscriber_since_label">Prenumerant sedan</string>
+    <string name="stats_name_label">Namn</string>
+    <string name="stats_publicize_subscribers_label">Prenumeranter</string>
+    <string name="stats_subscriber_label">Prenumerant</string>
+    <string name="stats_subscribers_count_message">Totalt %1$s prenumeranter: %2$s</string>
+    <string name="page_upload_conflict_error">Det finns en version av denna sida som är nyare</string>
+    <string name="editor_updating_content">Uppdaterar innehåll</string>
+    <string name="stats_subscribers">Prenumeranter</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Förra veckan hade du %1$s visningar och 1 kommentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Förra veckan hade du %1$s visningar och 1 gillamarkering</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Förra veckan hade du %1$s visningar, 1 gillamarkering och 1 kommentar.</string>
@@ -59,6 +121,7 @@ Language: sv_SE
     <string name="gutenberg_native_copy_error_details">Kopiera felinformation</string>
     <string name="gutenberg_native_button_to_copy_post_text">Knapp för att kopiera inläggstext</string>
     <string name="gutenberg_native_button_to_copy_error_details">Knapp för att kopiera felinformation</string>
+    <string name="editor_updating_content_failed">Misslyckades att uppdatera innehåll</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Beskrivning för videoklipp. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Beskrivning för videoklipp. Tomt</string>
     <string name="gutenberg_native_edit_video_024aee6d">Redigera videoklipp</string>
@@ -131,10 +194,6 @@ Language: sv_SE
     <string name="reader_filter_empty_blogs_list">Se de nyaste inläggen från bloggar du prenumererar på</string>
     <string name="reader_filter_by_tag_title">Filtrera efter etikett</string>
     <string name="reader_filter_by_blog_title">Filtrera efter blogg</string>
-    <string name="stats_timeframe_by_year">Efter år</string>
-    <string name="stats_timeframe_by_month">Efter månad</string>
-    <string name="stats_timeframe_by_week">Efter vecka</string>
-    <string name="stats_timeframe_by_day">Efter dag</string>
     <string name="gutenberg_native_waiting_for_connection">Väntar på anslutning</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Arbetar offline</string>
@@ -549,8 +608,6 @@ Language: sv_SE
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Läsaren flyttar till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Din statistik flyttas till Jetpack-appen</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Byt till den nya Jetpack-appen</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Kontrollera din nätverksanslutning och försök igen.</string>
-    <string name="blogging_prompts_list_error_network_title">Det går inte att ladda detta innehåll just nu</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Det var ett problem att ladda in förslag.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hoppsan</string>
     <string name="blogging_prompts_list_no_prompts">Inga förslag än</string>
@@ -676,7 +733,7 @@ Language: sv_SE
     <string name="qrcode_auth_flow_validated_subtitle">Skanna endast QR-koder som visas direkt i din egen webbläsare. Avläs aldrig en kod som någon annan skickat till dig.</string>
     <string name="qrcode_auth_flow_validated_default_title">Försöker du logga in i din webbläsare i närheten av %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Försöker du att logga in till %1$s i närheten av %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Att kommentera på andras bloggar är ett bra sätt att bli uppmärksammad och få fler följare på den egna webbplatsen.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Att kommentera på andra bloggar är ett bra sätt att bli uppmärksammad och få fler följare på din nya webbplats.</string>
     <string name="stats_insights_comments_guide_card">💡Tryck på ”Visa mer” för att se vilka som kommenterar dig mest.</string>
     <string name="stats_insights_latest_post_empty">Kom tillbaka när du har publicerat ditt första inlägg!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Kolla in våra bästa tips för fler sidvisningar och mer trafik %1$s</string>
@@ -714,7 +771,7 @@ Language: sv_SE
     <string name="me_btn_scan_login_code">Skanna inloggningskoden</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ditt senaste inlägg %1$s har fått %2$s gillamarkeringar.</string>
     <string name="stats_most_popular_percent_views_empty">Inte tillräckligt med aktivitet. Kom tillbaka när din webbplats har haft fler besökare.</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% av totalt antal följare</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% av totalt antal prenumeranter</string>
     <string name="stats_value_percent">%1$s (%2$s %%)</string>
     <string name="pages_copy_link">Kopiera länk</string>
     <string name="quick_start_completed_tour_title">Grattis! Du kan det här&lt;br/&gt;</string>
@@ -741,7 +798,6 @@ Language: sv_SE
     <string name="stats_published_minutes_ago">Publicerades för %1$d minuter sedan</string>
     <string name="stats_published_a_minute_ago">Publicerades för en minut sedan</string>
     <string name="stats_published_seconds_ago">Publicerades för några sekunder sedan</string>
-    <string name="stats_view_total_followers">Totalt antal följare</string>
     <string name="stats_view_total_comments">Kommentarer totalt</string>
     <string name="stats_view_total_likes">Gillamarkeringar totalt</string>
     <string name="blogging_prompts_notification_dismiss">Avfärda</string>
@@ -1167,6 +1223,7 @@ Language: sv_SE
     <string name="gutenberg_native_add_title">Lägg till rubrik</string>
     <string name="gutenberg_native_no_preview_available">Ingen förhandsgranskning tillgänglig</string>
     <string name="gutenberg_native_loading">Laddar in …</string>
+    <string name="gutenberg_native_link_label">Länketikett</string>
     <string name="gutenberg_native_text_color">Textfärg</string>
     <string name="gutenberg_native_s_link">Länk för %s</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -1839,7 +1896,6 @@ Language: sv_SE
     <string name="sharing_facebook_account_must_have_pages">Facebook-anslutningen kan inte hitta några sidor. Jetpack Social kan inte ansluta till Facebook-profiler, endast publicerade sidor.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
     <string name="notifications_tab_title_likes">Gillamarkeringar</string>
-    <string name="notifications_tab_title_follows">Följer</string>
     <string name="notifications_tab_title_comments">Kommentarer</string>
     <string name="notifications_tab_title_unread_notifications">Olästa</string>
     <string name="dlg_cancel_action_dont_trash">Kasta inte</string>
@@ -2164,9 +2220,7 @@ Language: sv_SE
     <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
     <string name="backdated_for">Backdaterad: %s</string>
     <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
-    <string name="stats_insights_social">Socialt</string>
     <string name="stats_insights_annual_site_stats">Årlig webbplatsstatistik</string>
-    <string name="stats_view_follower_totals">Totala antal följare</string>
     <string name="domain_suggestions_fetch_error">Det gick inte att ladda in förslag på domäner</string>
     <string name="domain_suggestions_search_hint">Skriv in ett nyckelord för fler idéer</string>
     <string name="domains_suggestions_empty_list">Inga förslag hittades</string>
@@ -2330,7 +2384,6 @@ Language: sv_SE
     <string name="stats_insights_tags_and_categories">Etiketter och kategorier</string>
     <string name="stats_insights_all_time_stats">Sedan starten</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Följare</string>
     <string name="stats_publicize_service_label">Tjänst</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Visningar</string>
@@ -2343,8 +2396,6 @@ Language: sv_SE
     <string name="stats_comments_posts_and_pages">Inlägg och sidor</string>
     <string name="stats_comments_authors">Författare</string>
     <string name="stats_follower_since_label">Sedan</string>
-    <string name="stats_follower_label">Följare</string>
-    <string name="stats_followers_count_message">Totalt antal följare för ”%1$s”: %2$s</string>
     <string name="stats_followers_email">E-post</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Hantera Insikter</string>
@@ -2446,14 +2497,11 @@ Language: sv_SE
     <string name="sign_out_wpcom_confirm_with_no_changes">Logga ut från WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Du har gjort ändringar i inlägg som ännu inte är uppladdade till webbplatsen. Om du loggar ut nu kommer dessa ändringar tas bort från din enhet. Logga ut ändå?</string>
     <string name="people_empty_list_filtered_viewers">Inga besökare än</string>
-    <string name="people_empty_list_filtered_email_followers">Inga e-postföljare än</string>
-    <string name="people_empty_list_filtered_followers">Inga följare än</string>
     <string name="people_empty_list_filtered_users">Inga användare än</string>
     <string name="reader_empty_posts_liked_description">Inlägg som du gillar kommer att visas här</string>
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_no_followed_blogs_button_discover">Upptäck bloggar</string>
     <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
-    <string name="notifications_empty_followers">Inga följare än</string>
     <string name="activity_log_limited_content_on_free_plan">Eftersom du har ett gratispaket visar din aktivitetslogg begränsade händelser.</string>
     <string name="activity_log_empty_subtitle">När du ändrar saker på din webbplats kommer du att kunna se din aktivitetshistoria här</string>
     <string name="activity_log_empty_title">Ingen aktivitet än</string>
@@ -3084,6 +3132,7 @@ Language: sv_SE
     <string name="error_all_media_upload_canceled">Alla mediauppladdningar har avbrutits på grund av ett okänt fel. Försök ladda upp igen</string>
     <string name="error_unknown_post_type">Okänt inläggsformat</string>
     <string name="submit_for_review">Skicka</string>
+    <string name="title_subscriber">Prenumerant</string>
     <string name="duplicate_site_detected">En dublett-webbplats har hittats.</string>
     <string name="cannot_add_duplicate_site">Det går inte att lägga till denna webbplats. Den finns redan i appen.</string>
     <string name="already_logged_in_wpcom">Du är redan inloggad till ditt konto hos WordPress.com. Du kan inte lägga till någon webbplats från WordPress.com som är kopplad till ett annat konto.</string>
@@ -3132,35 +3181,26 @@ Language: sv_SE
     <string name="preference_open_device_settings">Öppna enhetens inställningar</string>
     <string name="invite_invalid_email">%s: Ogiltig e-postadress</string>
     <string name="invite_user_blocked_invites">%s: Användaren har blockerat inbjudningar</string>
-    <string name="invite_already_following">%s: Följer redan</string>
     <string name="invite_already_a_member">%s: Redan medlem</string>
     <string name="invite_username_not_found">%s: Användaren hittades inte</string>
     <string name="comment_moderated_approved">Kommentar godkänd!</string>
     <string name="like">Gilla</string>
     <string name="timespan_now">nu</string>
     <string name="role_viewer">Läsare</string>
-    <string name="role_follower">Prenumerant</string>
     <string name="error_post_my_profile_no_connection">Ingen nätverksanslutning, kunde inte spara din profil</string>
     <string name="alignment_right">Höger</string>
     <string name="alignment_left">Vänster</string>
     <string name="alignment_none">Ingen</string>
     <string name="site_settings_list_editor_action_mode_title">Vald %1$d</string>
     <string name="error_fetch_users_list">Kunde inte hämta webbplatsens användare</string>
-    <string name="title_email_follower">Följare via e-post</string>
-    <string name="title_follower">Följare</string>
     <string name="people_fetching">Hämtar användare…</string>
     <string name="people_dropdown_item_viewers">Läsare</string>
-    <string name="people_dropdown_item_email_followers">Följare via e-post</string>
-    <string name="people_dropdown_item_followers">Följare</string>
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Bjud in upp till 10 e-postadresser eller användare på WordPress.com. De som behöver ett användarnamn får instruktioner skickade till dem.</string>
     <string name="viewer_remove_confirmation_message">Om du tar bort denna läsare kommer hen inte kunna besöka denna webbplats.\n\nÄr du säker på att du vill ta bort denna läsare?</string>
-    <string name="follower_remove_confirmation_message">Om följaren tas bort kommer han/hon inte längre få aviseringar från denna webbplats såvida han/hon inte följer webbplatsen på nytt.\n\nVill du fortfarande ta bort denna följare?</string>
+    <string name="subscriber_remove_confirmation_message">Om prenumeranten tas bort kommer hen inte längre få aviseringar från denna webbplats såvida hen inte prenumerar på webbplatsen på nytt.\n\nVill du fortfarande ta bort denna prenumerant?</string>
     <string name="follower_subscribed_since">Sedan %1$s</string>
     <string name="error_remove_viewer">Kunde inte ta bort läsare</string>
-    <string name="error_remove_follower">Kunde inte ta bort följare</string>
-    <string name="error_fetch_email_followers_list">Kunde inte hämta följare via e-post</string>
-    <string name="error_fetch_followers_list">Kunde inte hämta följare</string>
     <string name="editor_failed_uploads_switch_html">Vissa mediauppladdningar har misslyckats. Du kan inte skifta till HTML-läget\n        i detta tillstånd. Vill du ta bort alla misslyckade uppladdningar och fortsätta?</string>
     <string name="image_thumbnail">Miniatyrbild</string>
     <string name="visual_editor">Visuell redigerare</string>
@@ -3266,7 +3306,6 @@ Language: sv_SE
     <string name="replies_to_my_comments">Svar på mina kommentarer</string>
     <string name="username_mentions">Omnämnande av användarnamn</string>
     <string name="site_achievements">Webbplats-troféer</string>
-    <string name="site_follows">Webbplatsföljare</string>
     <string name="likes_on_my_posts">Gilla-markeringar för mina inlägg</string>
     <string name="likes_on_my_comments">Gillar mina kommentarer</string>
     <string name="comments_on_my_site">Kommentarer på min webbplats</string>
@@ -3537,7 +3576,6 @@ Language: sv_SE
     <string name="stats_followers_minutes">%1$d minuter</string>
     <string name="stats_followers_a_minute_ago">en minut sedan</string>
     <string name="stats_followers_seconds_ago">sekunder sedan</string>
-    <string name="stats_view_followers">Följare</string>
     <string name="stats_view_videos">Videoklipp</string>
     <string name="stats_view_top_posts_and_pages">Inlägg &amp; sidor</string>
     <string name="stats_view_countries">Länder</string>
@@ -3697,7 +3735,6 @@ Language: sv_SE
     <string name="manage">Hantera</string>
     <string name="more_notifications">och %d mer.</string>
     <string name="new_notifications">%d nya aviseringar</string>
-    <string name="follows">Följer</string>
     <string name="note_reply_successful">Svar publicerat</string>
     <string name="sign_in">Logga in</string>
     <string name="loading">Laddar in …</string>

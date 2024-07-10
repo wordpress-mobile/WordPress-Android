@@ -207,9 +207,9 @@ public class PersonDetailFragment extends Fragment {
             } else {
                 mSubscribedDateContainer.setVisibility(View.VISIBLE);
                 if (mPersonType == Person.PersonType.FOLLOWER) {
-                    mSubscribedDateTitleView.setText(R.string.title_follower);
+                    mSubscribedDateTitleView.setText(R.string.title_subscriber);
                 } else if (mPersonType == Person.PersonType.EMAIL_FOLLOWER) {
-                    mSubscribedDateTitleView.setText(R.string.title_email_follower);
+                    mSubscribedDateTitleView.setText(R.string.title_email_subscriber);
                 }
                 String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                 String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);

@@ -26,6 +26,9 @@
         android:name="android.permission.DUMP"
         tools:ignore="ProtectedPermissions" />
 
+    <!-- Adds this permission temporarily here until Voice to content project is released -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:name=".WordPressDebug"
         android:supportsRtl="true"

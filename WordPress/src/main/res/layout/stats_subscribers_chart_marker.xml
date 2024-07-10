@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/line_chart_marker_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="13dp"
+    android:paddingVertical="@dimen/margin_small_medium"
+    tools:background="@drawable/bg_chart_marker_view">
+
+    <TextView
+        android:id="@+id/marker_text1"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/stats_tool_tip_body"
+        tools:text="6500" />
+
+    <TextView
+        android:id="@+id/marker_text2"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/stats_subscribers_marker_view_plural"
+        android:textColor="@color/stats_tool_tip_body" />
+
+    <TextView
+        android:id="@+id/marker_text3"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:alpha="0.8"
+        android:textColor="@color/stats_tool_tip_body"
+        tools:text="Apr 10" />
+</LinearLayout>

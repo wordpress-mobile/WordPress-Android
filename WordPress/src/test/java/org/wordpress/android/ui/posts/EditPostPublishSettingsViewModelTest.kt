@@ -95,6 +95,7 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
             null
         }
         whenever(editPostRepository.getPost()).thenReturn(post)
+        whenever(editPostRepository.hasPost()).thenReturn(true)
     }
 
     @Test
@@ -449,5 +450,44 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         viewModel.onNotificationCreated(ONE_HOUR)
 
         assertThat(schedulingReminderPeriod).isEqualTo(ONE_HOUR)
+    }
+
+    @Test
+    fun `on start sets current date when post not present in the repository`() {
+        var uiModel: PublishUiModel? = null
+        viewModel.onUiModel.observeForever {
+            uiModel = it
+        }
+
+        whenever(editPostRepository.hasPost()).thenReturn(false)
+        whenever(editPostRepository.getPost()).thenReturn(null)
+
+        viewModel.start(editPostRepository)
+
+        assertThat(viewModel.year).isEqualTo(2019)
+        assertThat(viewModel.month).isEqualTo(6)
+        assertThat(viewModel.day).isEqualTo(6)
+        assertThat(viewModel.hour).isEqualTo(10)
+        assertThat(viewModel.minute).isEqualTo(20)
+
+        assertThat(uiModel!!.publishDateLabel).isEqualTo("Immediately")
+    }
+
+    @Test
+    fun `given dateCreated is empty, when onAddToCalendar, then a toast is shown`() {
+        whenever(editPostRepository.dateCreated).thenReturn("")
+        val expectedToastMessage = ""
+        whenever(resourceProvider.getString(R.string.post_settings_add_to_calendar_error)).thenReturn(
+            expectedToastMessage
+        )
+
+        var toastMessage: String? = null
+        viewModel.onToast.observeForever {
+            toastMessage = it?.getContentIfNotHandled()
+        }
+
+        viewModel.onAddToCalendar(editPostRepository)
+
+        assertThat(toastMessage).isEqualTo(expectedToastMessage)
     }
 }

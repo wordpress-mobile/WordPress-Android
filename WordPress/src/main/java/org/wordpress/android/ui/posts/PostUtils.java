@@ -430,7 +430,8 @@ public class PostUtils {
     }
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile, String siteUrl) {
+                                                                @NonNull String localMediaId, MediaFile mediaFile,
+                                                                @NonNull String siteUrl) {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);

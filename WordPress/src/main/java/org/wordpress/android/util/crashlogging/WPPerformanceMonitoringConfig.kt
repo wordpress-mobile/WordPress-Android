@@ -18,7 +18,14 @@ class WPPerformanceMonitoringConfig @Inject constructor(
         return when {
             hasUserOptedOut || buildConfigWrapper.isDebug() -> PerformanceMonitoringConfig.Disabled
             sampleRate <= 0.0 || sampleRate > 1.0 -> PerformanceMonitoringConfig.Disabled
-            else -> PerformanceMonitoringConfig.Enabled(sampleRate)
+            else -> PerformanceMonitoringConfig.Enabled(
+                sampleRate = sampleRate,
+                profilesSampleRate = RELATIVE_PROFILES_SAMPLE_RATE
+            )
         }
+    }
+
+    companion object {
+        const val RELATIVE_PROFILES_SAMPLE_RATE = 0.01
     }
 }

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 10:25:32+0000
+Translation-Revision-Date: 2024-05-19 23:33:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
 -->
 <resources>
+    <string name="role_subscriber">Subscritor</string>
+    <string name="people_dropdown_item_subscribers">Subscritores</string>
+    <string name="title_email_subscriber">Subscritor por correo electrónico</string>
+    <string name="people_dropdown_item_email_subscribers">Subscritores por correo electrónico</string>
+    <string name="people_empty_list_filtered_subscribers">Aínda non hai subscritores</string>
+    <string name="invite_already_subscribed">%s: Xa suscrito</string>
+    <string name="people_empty_list_filtered_email_subscribers">Aínda non hai subscritores por correo electrónico</string>
+    <string name="error_no_camera_available">Non hai aplicación de cámara dispoñible.</string>
+    <string name="error_remove_subscriber">Non se puido eliminar o subscritor</string>
+    <string name="error_fetch_subscribers_list">Non se puideron recuperar os subscritores do sitio</string>
+    <string name="error_fetch_email_subscribers_list">Non se puideron recuperar os subscritores por correo electrónico do sitio</string>
+    <string name="notifications_tab_title_subscribers">Subscritores</string>
+    <string name="subscribers">Subscritores</string>
+    <string name="site_subscriptions">Subscricións ao sitio</string>
+    <string name="notifications_empty_subscribers">Aínda non hai subscritores</string>
+    <string name="post_settings_add_to_calendar_error">Non se puido engadir ao calendario</string>
+    <string name="post_settings_no_calendar_app_exists">Non se encontrou ningunha aplicación para xestionar a solicitude de engadir ao calendario</string>
+    <string name="stats_view_emails">Correos electrónicos</string>
+    <string name="stats_emails_clicks_label">Clics</string>
+    <string name="stats_view_subscribers">Subscritores</string>
+    <string name="stats_view_total_subscribers">Subscritores totais</string>
+    <string name="stats_view_subscriber_totals">Totais de subscritores</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_name_label">Nome</string>
+    <string name="stats_emails_opens_label">Aperturas</string>
+    <string name="stats_subscriber_label">Subscritor</string>
+    <string name="stats_publicize_subscribers_label">Subscritores</string>
+    <string name="stats_emails_latest_emails_label">Últimos correos electrónicos</string>
+    <string name="stats_subscriber_since_label">Subscritor desde</string>
+    <string name="stats_subscribers_count_message">Total de subscritores de %1$s: %2$s</string>
+    <string name="page_upload_conflict_error">Hai unha revisión máis recente desta páxina</string>
+    <string name="editor_updating_content">Actualizando o contido</string>
+    <string name="stats_subscribers">Subscritores</string>
     <string name="weekly_roundup_notification_text_views_and_like">A semana pasada tiveches %1$s visitas e 1 Gústame</string>
     <string name="weekly_roundup_notification_text_views_and_comment">A semana pasada tiveches %1$s visitas e 1 comentario</string>
     <string name="weekly_roundup_notification_text_views_like_comment">A semana pasada tiveches %1$s visitas, 1 Gústame e 1 comentario.</string>
@@ -59,6 +92,7 @@ Language: gl_ES
     <string name="gutenberg_native_tap_here_to_copy_error_details">Pulsa aquí para copiar os detalles do erro.</string>
     <string name="gutenberg_native_the_editor_has_encountered_an_unexpected_error">O editor atopou un erro inesperado.</string>
     <string name="gutenberg_native_you_can_copy_your_post_text_in_case_your_content_is_impacted_copy">Podes copiar o texto da túa entrada en caso de que o teu contido se vexa afectado. Copia os detalles do erro para depuralo e compartilo co servizo de asistencia.</string>
+    <string name="editor_updating_content_failed">Erro ao actualizar o contido</string>
     <string name="notifications_unread_content_description">Non lido</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editar o vídeo</string>
     <string name="notifications_action_mark_all_as_read">Marcar todo como lido</string>
@@ -131,10 +165,6 @@ Language: gl_ES
     <string name="reader_filter_empty_blogs_action">Subscríbete a un blog</string>
     <string name="reader_filter_empty_blogs_list_title">Non hai subscricións ao blog</string>
     <string name="reader_filter_empty_blogs_list">Ver as últimas entradas dos blogs aos que estás subscrito</string>
-    <string name="stats_timeframe_by_day">Por día</string>
-    <string name="stats_timeframe_by_year">Por ano</string>
-    <string name="stats_timeframe_by_week">Por semana</string>
-    <string name="stats_timeframe_by_month">Por mes</string>
     <string name="stats_traffic">Tráfico</string>
     <string name="gutenberg_native_waiting_for_connection">Esperando conexión</string>
     <string name="gutenberg_native_working_offline">Traballo sen conexión</string>
@@ -554,9 +584,7 @@ Language: gl_ES
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">Os avisos estanse trasladando á aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O lector estase trasladando á aplicación de Jetpack</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Produciuse un erro ao cargar as indicacións.</string>
-    <string name="blogging_prompts_list_error_network_title">Neste momento non se puido cargar este contido</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">A estatísticas estanse trasladado á aplicación de Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Comproba a túa conexión á rede e inténtao de novo.</string>
     <string name="blogging_prompts_list_title">Peticións</string>
     <string name="blogging_prompts_list_answered_prompt">✓ Respondido</string>
     <string name="close_desc">pechar</string>
@@ -676,7 +704,7 @@ Language: gl_ES
     <string name="qrcode_auth_flow_validated_subtitle">Escanea só os códigos QR que colliches directamente do navegador web. Non escanees nunca un código que che enviara alguén.</string>
     <string name="qrcode_auth_flow_error_invalid_data_subtitle">Non se puido validar o código de acceso escaneado. Toca o botón Analizar de novo para volver a escanear o código.</string>
     <string name="qrcode_auth_flow_validated_title">Estás intentando acceder a %1$s cerca de %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Comentar noutros blogs é unha boa forma de chamar a atención e ter máis seguidores no teu novo sitio.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Comentar noutros blogs é unha boa forma de chamar a atención e ter máis subscritores no teu novo sitio.</string>
     <string name="stats_insights_comments_guide_card">💡Toca «VER MÁIS» para ver os principais comentaristas.</string>
     <string name="stats_insights_latest_post_empty">Volve a comprobalo cando teñas publicado a túa primeira entrada!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Comproba os nosos consellos destacados para aumentar as túas visitas e o teu tráfico %1$s</string>
@@ -715,7 +743,7 @@ Language: gl_ES
     <string name="stats_insights_likes_guide_card">⭐️  A túa última entrada %1$s recibiu %2$s gústame.</string>
     <string name="stats_most_popular_percent_views_empty">Non hai suficiente actividade. Volve a comprobalo máis tarde, cando o teu sitio teña máis visitas!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% do total de seguidores</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% do total de subscritores</string>
     <string name="pages_copy_link">Copiar ligazón</string>
     <string name="quick_start_sites_type_get_to_know_app">Coñece a aplicación</string>
     <string name="quick_start_list_upload_media_title">Sube fotos ou vídeos</string>
@@ -732,7 +760,6 @@ Language: gl_ES
     <string name="quick_start_dialog_upload_media_message_short_plus">Selecciona %1$s Máis %2$s para subir medios. Podes engadilos ás túas entradas ou páxinas desde calquera dispositivo.</string>
     <string name="stats_view_total_likes">Total de «Gústame»</string>
     <string name="stats_view_total_comments">Total de comentarios</string>
-    <string name="stats_view_total_followers">Total de seguidores</string>
     <string name="stats_published_a_day_ago">Publicada fai un día</string>
     <string name="stats_published_a_year_ago">Publicada fai un ano</string>
     <string name="stats_published_a_month_ago">Publicada fai un mes</string>
@@ -1167,6 +1194,7 @@ Language: gl_ES
     <string name="gutenberg_native_no_preview_available">Vista previa non dispoñible</string>
     <string name="gutenberg_native_add_title">Engade o título</string>
     <string name="gutenberg_native_loading">Cargando</string>
+    <string name="gutenberg_native_link_label">Etiqueta do enlace</string>
     <string name="gutenberg_native_s_link">ligazón %s</string>
     <string name="gutenberg_native_text_color">Cor do texto</string>
     <string name="gutenberg_native_padding">Recheo</string>
@@ -1841,7 +1869,6 @@ Language: gl_ES
     <string name="notifications_tab_title_likes">Gústame</string>
     <string name="dlg_confirm_action_trash">Papeleira</string>
     <string name="notifications_tab_title_unread_notifications">Non lido</string>
-    <string name="notifications_tab_title_follows">Seguimentos</string>
     <string name="notifications_tab_title_comments">Comentarios</string>
     <string name="dlg_cancel_action_dont_trash">Non enviar á papeleira</string>
     <string name="stats_insights_management_general">Xeral</string>
@@ -2164,9 +2191,7 @@ Language: gl_ES
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
-    <string name="stats_view_follower_totals">Total de seguidores</string>
     <string name="domain_suggestions_fetch_error">Non se puideron cargar as suxerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea unha palabra clave para máis ideas</string>
     <string name="domains_suggestions_empty_list">Non se encontraron suxerencias</string>
@@ -2340,14 +2365,11 @@ Language: gl_ES
     <string name="stats_followers_email">Correo electrónico</string>
     <string name="stats_tags_and_categories_views_label">Visitas</string>
     <string name="stats_publicize_service_label">Servizo</string>
-    <string name="stats_follower_label">Seguidor</string>
     <string name="stats_comments_label">Comentarios</string>
-    <string name="stats_publicize_followers_label">Seguidores</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_manage_insights">Xestionar datos</string>
     <string name="stats_comments_posts_and_pages">Entradas e páxinas</string>
-    <string name="stats_followers_count_message">Total %1$s seguidores: %2$s</string>
     <string name="stats_no_data_yet">Aínda non hai datos</string>
     <string name="stats_empty_insights_title">Aínda non se engadiron impresións</string>
     <string name="menu_debug">Menú de depuración</string>
@@ -2447,13 +2469,10 @@ Language: gl_ES
     <string name="sign_out_wpcom_confirm_with_changes">Tes cambios en entradas que non se subiron ao teu sitio. Saír agora borrará eses cambios do teu dispositivo. Queres saír de todos modos?</string>
     <string name="people_empty_list_filtered_users">Aínda non hai usuarios</string>
     <string name="people_empty_list_filtered_viewers">Aínda non hai lectores</string>
-    <string name="people_empty_list_filtered_followers">Aínda non tes seguidores</string>
-    <string name="people_empty_list_filtered_email_followers">Aínda non hai seguidores por correo electrónico</string>
     <string name="reader_empty_posts_liked_description">As entradas que che gusten aparecerán aquí</string>
     <string name="reader_empty_posts_liked_title">Aínda non che gustou nada</string>
     <string name="reader_no_followed_blogs_button_discover">Descubre blogs</string>
     <string name="notifications_empty_likes">Aínda non hai gústame</string>
-    <string name="notifications_empty_followers">Aínda non hai seguidores</string>
     <string name="activity_log_limited_content_on_free_plan">Como estás nun plan gratuíto verás eventos limitados na túa actividade.</string>
     <string name="activity_log_empty_title">Aínda non hai actividade</string>
     <string name="activity_log_empty_subtitle">Cando fagas cambios no teu sitio poderás ver o historial da túa actividade aquí</string>
@@ -3084,6 +3103,7 @@ Language: gl_ES
     <string name="error_all_media_upload_canceled">Todos os arquivos multimedia canceláronse debido a un erro descoñecido. Por favor, volve a intentar cargalos</string>
     <string name="error_unknown_post_type">Formato de entrada descoñecido</string>
     <string name="submit_for_review">Enviar</string>
+    <string name="title_subscriber">Subscritor</string>
     <string name="duplicate_site_detected">Detectouse un sitio duplicado.</string>
     <string name="cannot_add_duplicate_site">Este sitio xa existe na aplicación, non podes engadilo.</string>
     <string name="already_logged_in_wpcom">Xa estás conectado nunha conta de WordPress.com, non podes engadir un sitio de WordPress.com vinculado a outra conta.</string>
@@ -3132,13 +3152,11 @@ Language: gl_ES
     <string name="preference_open_device_settings">Abrir axustes do dispositivo</string>
     <string name="invite_invalid_email">%s: Correo electrónico non válido</string>
     <string name="invite_user_blocked_invites">%s: Invitacións bloqueadas polo usuario</string>
-    <string name="invite_already_following">%s: Seguindo</string>
     <string name="invite_already_a_member">%s: Xa é membro</string>
     <string name="invite_username_not_found">%s: Usuario non atopado</string>
     <string name="comment_moderated_approved">Comentario aprobado!</string>
     <string name="like">Gústame</string>
     <string name="timespan_now">agora</string>
-    <string name="role_follower">Seguidor</string>
     <string name="role_viewer">Lector</string>
     <string name="error_post_my_profile_no_connection">Sen conexión, non se pode gardar o perfil.</string>
     <string name="alignment_none">Ningún</string>
@@ -3146,21 +3164,14 @@ Language: gl_ES
     <string name="alignment_right">Dereita</string>
     <string name="site_settings_list_editor_action_mode_title">Seleccionado %1$d</string>
     <string name="error_fetch_users_list">Non foi posible obter os usuarios do sitio</string>
-    <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Á procura dos usuarios…</string>
-    <string name="title_email_follower">Seguidor por correo-e</string>
     <string name="people_dropdown_item_viewers">Lectores</string>
-    <string name="people_dropdown_item_email_followers">Seguidores por correo-e</string>
-    <string name="people_dropdown_item_followers">Seguidores</string>
     <string name="people_dropdown_item_team">Equipo</string>
     <string name="invite_message_usernames_limit">Invita ate 10 enderezos de correo electrónico e/ou nomes de usuario de WordPress.com. A\naqueles que necesiten un nome de usuario se lles enviarán instrucións de como crear un.</string>
     <string name="viewer_remove_confirmation_message">Se eliminas a este lector, el ou ela non poderán visitar o sitio.\n\nAínda así, queres eliminar a este lector?</string>
-    <string name="follower_remove_confirmation_message">Se o eliminas, este seguidor deixará de recibir notificacións sobre este sitio, agás que volva a seguirche.\n \n\nAínda así queres eliminar a este seguidor?</string>
+    <string name="subscriber_remove_confirmation_message">Se o eliminas, este subscritor deixará de recibir notificacións sobre este sitio, agás que volva a subscribirse.\n \n\nAínda así queres eliminar a este subscritor?</string>
     <string name="follower_subscribed_since">Desde %1$s</string>
     <string name="error_remove_viewer">Non foi posible eliminar o lector</string>
-    <string name="error_remove_follower">Non foi posible eliminar o seguidor</string>
-    <string name="error_fetch_email_followers_list">Non foi posible obter os seguidores do sitio por correo electrónico</string>
-    <string name="error_fetch_followers_list">Non foi posible obter os seguidores do sitio</string>
     <string name="editor_failed_uploads_switch_html">Fallou a carga dalgúns ficheiros. Nesta situación non podes cambiar a modo HTML\nQueres borrar todas as cargas que fallaron e continuar?</string>
     <string name="visual_editor">Editor visual</string>
     <string name="image_thumbnail">Miniatura</string>
@@ -3266,7 +3277,6 @@ Language: gl_ES
     <string name="notif_research">Investigación</string>
     <string name="site_achievements">Logros do sitio</string>
     <string name="username_mentions">Mencións do usuario</string>
-    <string name="site_follows">Seguimentos do sitio</string>
     <string name="likes_on_my_posts">Gústame nos meus artigos</string>
     <string name="likes_on_my_comments">Gústame nos meus comentarios</string>
     <string name="comments_on_my_site">Comentarios no meu sitio</string>
@@ -3531,7 +3541,6 @@ Language: gl_ES
     <string name="stats_followers_seconds_ago">hai uns segundos</string>
     <string name="stats_view_top_posts_and_pages">Artigos e páxinas</string>
     <string name="stats_view_videos">Vídeos</string>
-    <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_timeframe_years">Anos</string>
     <string name="stats_views">Visitas</string>
@@ -3698,7 +3707,6 @@ Language: gl_ES
     <string name="new_notifications">%d notificacións novas</string>
     <string name="more_notifications">e %d máis.</string>
     <string name="note_reply_successful">Resposta publicada</string>
-    <string name="follows">Segue</string>
     <string name="sign_in">Entrar</string>
     <string name="loading">Cargando…</string>
     <string name="httpuser">usuario HTTP</string>

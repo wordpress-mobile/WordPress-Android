@@ -1,4 +1,0 @@
-24.6:
-- Abbiamo risolto alcuni problemi con la formattazione del testo evidenziato.
-- L'app ora supporta i suggerimenti di testo che sono più lunghi dello spazio visibile nell'editor.
-- Abbiamo modificato il simbolo dell'infinito in "100%" nella schermata Statistiche. E in quel momento, giuro che eravamo al 100%.

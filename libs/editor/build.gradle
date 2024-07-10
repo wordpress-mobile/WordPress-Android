@@ -106,7 +106,7 @@ dependencies {
     implementation "com.google.android.material:material:$googleMaterialVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.code.gson:gson:$googleGsonVersion"
-    implementation "com.automattic:Automattic-Tracks-Android:$automatticTracksVersion"
+    implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 
     lintChecks "org.wordpress:lint:$wordPressLintVersion"
 }

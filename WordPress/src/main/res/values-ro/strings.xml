@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-16 10:08:02+0000
+Translation-Revision-Date: 2024-06-16 18:22:38+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Atinge pentru a edita</string>
+    <string name="voice_to_content_permissions_required_msg">Pentru a înregistra audio, această aplicație are nevoie de permisiunea ta ca să-ți acceseze microfonul. Ai refuzat anterior această permisiune. Ca să folosești această funcționalitate, te rog să activezi permisiunea pentru microfon în setările aplicației.</string>
+    <string name="voice_to_content_permissions_required_title">Permisiunea pentru înregistrare audio este obligatorie</string>
+    <string name="permission_access_media_location">Locație Media</string>
+    <string name="in_app_update_restart">Repornește</string>
+    <string name="in_app_update_available">Am descărcat actualizarea. Repornește pentru a o aplica.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Articol din fișier audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">deschide meniul</string>
+    <string name="reader_tags_feed_action_label_unlike_post">înlătură aprecierea articolului</string>
+    <string name="reader_tags_feed_action_label_like_post">apreciază articolul</string>
+    <string name="reader_tags_feed_action_label_open_blog">deschide blogul</string>
+    <string name="reader_tags_feed_action_label_open_post">deschide articolul</string>
+    <string name="reader_tags_feed_error_retry">Reîncearcă</string>
+    <string name="reader_tags_feed_no_content_error_description">Momentan, nu am găsit niciun articol etichetat cu %s</string>
+    <string name="reader_tags_feed_loading_error_description">Momentan, nu am putut să încărcăm articole cu această etichetă</string>
+    <string name="reader_tags_feed_error_title">Nu am găsit niciun articol pentru %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Mai multe pentru %s</string>
+    <string name="reader_tags_display_name">Etichete</string>
+    <string name="reader_announcement_card_reading_preferences_description">Alegi culorile și fonturile pe care le vrei. Când citești un articol, atinge iconul AA în partea de sus a ecranului.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferințe pentru citire</string>
+    <string name="reader_announcement_card_tags_stream_description">Atinge lista derulantă în partea de sus și selectează Etichete pentru a accesa fluxurile pentru etichetele urmărite.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flux de etichete</string>
+    <string name="reader_announcement_card_title">Noutăți în Cititor</string>
+    <string name="reader_dropdown_menu_tags">Etichetele tale</string>
+    <string name="no_connection_error_description">Verifică conexiunea la rețea și încearcă din nou.</string>
+    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
+    <string name="stats_subscribers_marker_view_plural">Abonați</string>
+    <string name="stats_subscribers_marker_view_singular">Abonat</string>
+    <string name="stats_view_subscriber_growth">Creștere număr de abonați</string>
+    <string name="role_subscriber">Abonat</string>
+    <string name="title_email_subscriber">Abonat prin email</string>
+    <string name="people_empty_list_filtered_email_subscribers">Nu ai niciun abonat prin email până acum</string>
+    <string name="people_empty_list_filtered_subscribers">Nu ai niciun abonat până acum</string>
+    <string name="people_dropdown_item_email_subscribers">Abonați prin email</string>
+    <string name="people_dropdown_item_subscribers">Abonați</string>
+    <string name="invite_already_subscribed">%s: este deja abonat</string>
+    <string name="error_no_camera_available">Nu este disponibilă nicio aplicație pentru cameră.</string>
+    <string name="error_remove_subscriber">Nu am putut să înlătur abonatul</string>
+    <string name="error_fetch_email_subscribers_list">Nu am putut să preiau abonații prin email la site</string>
+    <string name="error_fetch_subscribers_list">Nu am putut să preiau abonații la site</string>
+    <string name="post_settings_add_to_calendar_error">Nu pot să adaug în calendar</string>
+    <string name="post_settings_no_calendar_app_exists">Nu am găsit nicio aplicație care să gestioneze cererea de adăugare în calendar</string>
+    <string name="site_subscriptions">Abonamente la site</string>
+    <string name="notifications_tab_title_subscribers">Abonați</string>
+    <string name="subscribers">Abonați</string>
+    <string name="notifications_empty_subscribers">Nu ai niciun abonat până acum</string>
+    <string name="stats_view_emails">Emailuri</string>
+    <string name="stats_view_subscribers">Abonați</string>
+    <string name="stats_view_total_subscribers">Total abonați</string>
+    <string name="stats_view_subscriber_totals">Total abonați</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Clicuri</string>
+    <string name="stats_emails_opens_label">Deschideri</string>
+    <string name="stats_emails_latest_emails_label">Ultimele emailuri</string>
+    <string name="stats_subscriber_since_label">Abonat de la</string>
+    <string name="stats_name_label">Nume</string>
+    <string name="stats_publicize_subscribers_label">Abonați</string>
+    <string name="stats_subscriber_label">Abonat</string>
+    <string name="stats_subscribers_count_message">Total abonați %1$s: %2$s</string>
+    <string name="page_upload_conflict_error">Există o revizie mai recentă pentru această pagină</string>
+    <string name="editor_updating_content">Actualizez conținutul</string>
+    <string name="stats_subscribers">Abonați</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Săptămâna trecută ai avut %1$s vizualizări și 1 comentariu</string>
     <string name="weekly_roundup_notification_text_views_and_like">Săptămâna trecută ai avut %1$s vizualizări și o apreciere</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Săptămâna trecută ai avut %1$s vizualizări, o apreciere și 1 comentariu.</string>
@@ -59,6 +121,7 @@ Language: ro
     <string name="gutenberg_native_copy_error_details">Copiază detaliile despre erori</string>
     <string name="gutenberg_native_button_to_copy_post_text">Buton pentru a copia textul articolului</string>
     <string name="gutenberg_native_button_to_copy_error_details">Buton pentru a copia detaliile despre erori</string>
+    <string name="editor_updating_content_failed">Actualizarea conținutului a eșuat</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Subtitrare video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Subtitrare video. Nu există</string>
     <string name="gutenberg_native_edit_video_024aee6d">Editează videoul</string>
@@ -131,10 +194,6 @@ Language: ro
     <string name="reader_filter_empty_blogs_list">Vezi cele mai noi articole pe blogurile la care te-ai abonat</string>
     <string name="reader_filter_by_tag_title">Filtrează după etichetă</string>
     <string name="reader_filter_by_blog_title">Filtrează după blog</string>
-    <string name="stats_timeframe_by_year">După an</string>
-    <string name="stats_timeframe_by_month">După lună</string>
-    <string name="stats_timeframe_by_week">După săptămână</string>
-    <string name="stats_timeframe_by_day">După zi</string>
     <string name="gutenberg_native_waiting_for_connection">Aștept conexiunea</string>
     <string name="stats_traffic">Trafic</string>
     <string name="gutenberg_native_working_offline">Lucrează offline</string>
@@ -549,8 +608,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Verifică conexiunea rețelei și încearcă din nou.</string>
-    <string name="blogging_prompts_list_error_network_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
     <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>
@@ -676,7 +733,7 @@ Language: ro
     <string name="qrcode_auth_flow_validated_subtitle">Scanează numai coduri QR preluate direct din navigatorul tău web. Nu scana niciodată coduri trimise de altcineva.</string>
     <string name="qrcode_auth_flow_validated_default_title">Încerci să te autentifici în navigatorul tău web lângă %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Încerci să te autentifici în %1$s lângă %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡 Publicarea de comentarii pe alte bloguri este o modalitate foarte bună de a stârni interesul și de a atrage urmăritori pe noul tău site.</string>
+    <string name="stats_insights_subscribers_guide_card">💡 Publicarea de comentarii pe alte bloguri este o modalitate foarte bună de a stârni interesul și de a atrage abonați pe noul tău site.</string>
     <string name="stats_insights_comments_guide_card">💡 Atinge „Vezi mai multe” pentru a vedea comentatorii cei mai activi.</string>
     <string name="stats_insights_latest_post_empty">Mergi înapoi după ce ai publicat primul articol!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Vezi sfaturile noastre importante pentru a mări numărul de vizualizări și a-ți crește traficul %1$s</string>
@@ -714,7 +771,7 @@ Language: ro
     <string name="me_btn_scan_login_code">Scanează codul de autentificare</string>
     <string name="stats_insights_likes_guide_card">⭐️ Ultimul tău articol %1$s a avut %2$s aprecieri.</string>
     <string name="stats_most_popular_percent_views_empty">Activitate insuficientă. Revino mai târziu când site-ul va avea mai mulți vizitatori!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% din numărul total de urmăritori</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% din numărul total de abonați</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Copiază legătura</string>
     <string name="quick_start_completed_tour_title">Felicitări! Te descurci foarte bine&lt;br/&gt;</string>
@@ -741,7 +798,6 @@ Language: ro
     <string name="stats_published_minutes_ago">Publicat acum %1$d minute</string>
     <string name="stats_published_a_minute_ago">Publicat acum un minut</string>
     <string name="stats_published_seconds_ago">Publicat acum câteva secunde</string>
-    <string name="stats_view_total_followers">Total urmăritori</string>
     <string name="stats_view_total_comments">Total comentarii</string>
     <string name="stats_view_total_likes">Total aprecieri</string>
     <string name="blogging_prompts_notification_dismiss">Refuză</string>
@@ -1167,6 +1223,7 @@ Language: ro
     <string name="gutenberg_native_add_title">Adaugă titlu</string>
     <string name="gutenberg_native_no_preview_available">Nu este disponibilă nicio previzualizare</string>
     <string name="gutenberg_native_loading">Încarc</string>
+    <string name="gutenberg_native_link_label">Etichetă legătură</string>
     <string name="gutenberg_native_text_color">Culoare text</string>
     <string name="gutenberg_native_s_link">Legătură la %s</string>
     <string name="gutenberg_native_padding">Distanțare</string>
@@ -1735,7 +1792,7 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_find_out_mode">Află mai multe</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>
     <string name="crop">decupează</string>
@@ -1839,7 +1896,6 @@ Language: ro
     <string name="sharing_facebook_account_must_have_pages">Conexiunea la Facebook nu găsește nicio pagină. Jetpack Social nu se poate conecta la profilurile Facebook, ci numai la paginile Facebook publicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Neconectat</string>
     <string name="notifications_tab_title_likes">Aprecieri</string>
-    <string name="notifications_tab_title_follows">Urmăriri</string>
     <string name="notifications_tab_title_comments">Comentarii</string>
     <string name="notifications_tab_title_unread_notifications">Necitite</string>
     <string name="dlg_cancel_action_dont_trash">Nu-l arunca</string>
@@ -2122,7 +2178,7 @@ Language: ro
     <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest site.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
     <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu %1$stermenii și condițiile%2$s.</string>
-    <string name="error_network_connection">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="error_network_connection">Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="error_browser_no_network">Nu pot să încarc această pagină chiar acum.</string>
     <string name="error_disabled_apis">Nu am putut aduce setările: unele API-uri sunt indisponibile pentru această combinație de ID aplicație OAuth + cont.</string>
     <string name="jetpack_connection_terms_and_conditions">Prin inițializarea Jetpack ești de acord cu %1$stermenii și condițiile%2$s.</string>
@@ -2164,9 +2220,7 @@ Language: ro
     <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
     <string name="backdated_for">Antedatat pentru: %s</string>
     <string name="stats_insights_management_title">Vezi numai statisticile relevante. Adaugi informații și le organizezi în privirea generală de mai jos.</string>
-    <string name="stats_insights_social">Sociale</string>
     <string name="stats_insights_annual_site_stats">Statistici site anuale</string>
-    <string name="stats_view_follower_totals">Total urmăritori</string>
     <string name="domain_suggestions_fetch_error">Sugestiile pentru domeniu nu au putut fi încărcate</string>
     <string name="domain_suggestions_search_hint">Introdu un cuvânt cheie pentru mai multe idei</string>
     <string name="domains_suggestions_empty_list">Nicio sugestie găsită</string>
@@ -2330,7 +2384,6 @@ Language: ro
     <string name="stats_insights_tags_and_categories">Etichete și categorii</string>
     <string name="stats_insights_all_time_stats">Total general</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Urmăritori</string>
     <string name="stats_publicize_service_label">Serviciu</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Vizualizări</string>
@@ -2343,8 +2396,6 @@ Language: ro
     <string name="stats_comments_posts_and_pages">Articole și pagini</string>
     <string name="stats_comments_authors">Autori</string>
     <string name="stats_follower_since_label">De când</string>
-    <string name="stats_follower_label">Urmăritor</string>
-    <string name="stats_followers_count_message">Total urmăritori %1$s: %2$s</string>
     <string name="stats_followers_email">Prin email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Administrează Privire generală</string>
@@ -2446,14 +2497,11 @@ Language: ro
     <string name="sign_out_wpcom_confirm_with_no_changes">Te dezautentifici din WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Ai modificări la articole care nu au fost încărcate pe site. Dacă te dezautentifici acum aceste modificări vor fi șterse de pe dispozitiv. Te dezautentifici oricum?</string>
     <string name="people_empty_list_filtered_viewers">Niciun vizitator până acum</string>
-    <string name="people_empty_list_filtered_email_followers">Niciun urmăritor prin email până acum</string>
-    <string name="people_empty_list_filtered_followers">Niciun urmăritor până acum</string>
     <string name="people_empty_list_filtered_users">Niciun utilizator până acum</string>
     <string name="reader_empty_posts_liked_description">Articolele pe care le apreciezi vor apărea aici</string>
     <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
     <string name="reader_no_followed_blogs_button_discover">Descoperă bloguri</string>
     <string name="notifications_empty_likes">Nicio apreciere până acum</string>
-    <string name="notifications_empty_followers">Niciun urmăritor până acum</string>
     <string name="activity_log_limited_content_on_free_plan">Deoarece ai un plan gratuit, vei vedea numai anumite evenimente în activitatea ta.</string>
     <string name="activity_log_empty_subtitle">Când faci modificări pe site-ul tău, vei putea vedea aici istoricul activităților tale</string>
     <string name="activity_log_empty_title">Nicio activitate până acum</string>
@@ -2529,7 +2577,7 @@ Language: ro
     <string name="privacy_policy_learn_more_header">Politică de confidențialitate</string>
     <string name="cookie_policy_learn_more_caption">Partajează informații cu instrumentul nostru de analitice despre utilizarea serviciilor în timp ce ești autentificat în contul tău WordPress.com.</string>
     <string name="cookie_policy_learn_more_header">Politică cookie-uri</string>
-    <string name="preference_privacy_settings">Setări confidențialitate</string>
+    <string name="preference_privacy_settings">Setări pentru confidențialitate</string>
     <string name="preference_collect_information">Colectează informații</string>
     <string name="post_submitted">Am trimis articolul</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funcționalitatea modulului necesită ca site-ul să fie în stare bună.</string>
@@ -3084,6 +3132,7 @@ Language: ro
     <string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
     <string name="error_unknown_post_type">Format de articol necunoscut</string>
     <string name="submit_for_review">Trimite</string>
+    <string name="title_subscriber">Abonat</string>
     <string name="duplicate_site_detected">A fost detectat un site duplicat.</string>
     <string name="cannot_add_duplicate_site">Acest site există deja în aplicație, nu-l poți adăuga.</string>
     <string name="already_logged_in_wpcom">Ești deja autentificat în contul tău WordPress.com, nu poți adăuga un site WordPress.com legat la un alt cont.</string>
@@ -3132,35 +3181,26 @@ Language: ro
     <string name="preference_open_device_settings">Deschide setări dispozitiv</string>
     <string name="invite_invalid_email">%s: email invalid</string>
     <string name="invite_user_blocked_invites">%s: invitați blocați de utilizator</string>
-    <string name="invite_already_following">%s: deja urmăresc</string>
     <string name="invite_already_a_member">%s: deja un membru</string>
     <string name="invite_username_not_found">%s: utilizator negăsit</string>
     <string name="comment_moderated_approved">Comentariu aprobat!</string>
     <string name="like">Apreciază</string>
     <string name="timespan_now">acum</string>
     <string name="role_viewer">Vizitator</string>
-    <string name="role_follower">Urmăritor</string>
     <string name="error_post_my_profile_no_connection">Nicio conexiune, nu-ți pot salva profilul</string>
     <string name="alignment_right">Dreapta</string>
     <string name="alignment_left">Stânga</string>
     <string name="alignment_none">Niciuna</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d selectate</string>
-    <string name="error_fetch_users_list">N-am putut aduce utilizatorii site-ului</string>
-    <string name="title_email_follower">Urmăritor prin email</string>
-    <string name="title_follower">Urmăritor</string>
+    <string name="error_fetch_users_list">Nu am putut să preiau utilizatorii site-ului</string>
     <string name="people_fetching">Se aduc utilizatori…</string>
     <string name="people_dropdown_item_viewers">Vizitatori</string>
-    <string name="people_dropdown_item_email_followers">Urmăritori prin email</string>
-    <string name="people_dropdown_item_followers">Urmăritori</string>
     <string name="people_dropdown_item_team">Echipă</string>
     <string name="invite_message_usernames_limit">Invită până la 10 adrese email și/sau nume de utilizator WordPress.com. Celor care au nevoie de un nume de utilizator li se vor trimite instrucțiuni despre cum să creeze unul.</string>
     <string name="viewer_remove_confirmation_message">Dacă înlături acest vizitator, el sau ea nu va mai putea vizita acest site.\n\nMai vrei să înlături acest vizitator?</string>
-    <string name="follower_remove_confirmation_message">Dacă-l înlături, acest urmăritor nu va mai primi notificări despre acest site, decât dacă-l reurmărește.\n\nMai vrei să înlături acest urmăritor?</string>
+    <string name="subscriber_remove_confirmation_message">Dacă-l înlături, acest abonat nu va mai primi notificări despre acest site, decât dacă se reabonează.\n\nMai vrei să înlături acest abonat?</string>
     <string name="follower_subscribed_since">De la %1$s</string>
     <string name="error_remove_viewer">N-am putut înlătura vizitatorul</string>
-    <string name="error_remove_follower">N-am putut înlătura urmăritorul</string>
-    <string name="error_fetch_email_followers_list">N-am putut aduce urmăritorii prin email ai site-ului</string>
-    <string name="error_fetch_followers_list">N-am putut aduce urmăritorii site-ului</string>
     <string name="editor_failed_uploads_switch_html">Unele încărcări media au eșuat. Nu poți comuta la modul HTML\n        în această situație. Înlături toate încărcările eșuate și continui?</string>
     <string name="image_thumbnail">Miniatură imagine</string>
     <string name="visual_editor">Editor vizual</string>
@@ -3201,7 +3241,7 @@ Language: ro
     <string name="role">Rol</string>
     <string name="people">Oameni</string>
     <string name="reader_empty_blogs_posts_in_custom_list">Blogurile din această listă nu au publicat nimic recent</string>
-    <string name="error_remove_user">Nu s-a putut înlătura utilizatorul</string>
+    <string name="error_remove_user">Nu am putut să înlătur utilizatorul</string>
     <string name="error_update_role">Nu s-a putut actualiza rolul utilizatorului</string>
     <string name="error_fetch_viewers_list">N-am putut aduce vizitatorii site-ului</string>
     <string name="error_updating_gravatar">Eroare la actualizare Gravatar</string>
@@ -3266,7 +3306,6 @@ Language: ro
     <string name="replies_to_my_comments">Răspunsuri la comentariile mele</string>
     <string name="username_mentions">Mențiuni nume utilizator</string>
     <string name="site_achievements">Realizări site</string>
-    <string name="site_follows">Urmăriri site</string>
     <string name="likes_on_my_posts">Aprecieri pentru articolele mele</string>
     <string name="likes_on_my_comments">Aprecieri pentru comentariile mele</string>
     <string name="comments_on_my_site">Comentarii pe site-ul meu</string>
@@ -3501,7 +3540,7 @@ Language: ro
     <string name="my_site_btn_switch_site">Comută site</string>
     <string name="my_site_btn_site_settings">Setări site</string>
     <string name="my_site_btn_blog_posts">Articole</string>
-    <string name="my_site_header_publish">Publicare</string>
+    <string name="my_site_header_publish">Publică</string>
     <string name="my_site_header_look_and_feel">Aspect și afect</string>
     <string name="my_site_header_configuration">Configurare</string>
     <string name="reader_label_new_posts_subtitle">Atinge pentru a le arăta</string>
@@ -3537,7 +3576,6 @@ Language: ro
     <string name="stats_followers_minutes">%1$d minute</string>
     <string name="stats_followers_a_minute_ago">acum un minut</string>
     <string name="stats_followers_seconds_ago">acum o secundă</string>
-    <string name="stats_view_followers">Urmăritori</string>
     <string name="stats_view_videos">Videouri</string>
     <string name="stats_view_top_posts_and_pages">Articole și pagini</string>
     <string name="stats_view_countries">Țări</string>
@@ -3697,7 +3735,6 @@ Language: ro
     <string name="manage">Administrează</string>
     <string name="more_notifications">și încă %d.</string>
     <string name="new_notifications">%d noi notificări</string>
-    <string name="follows">Urmăriri</string>
     <string name="note_reply_successful">Răspuns publicat</string>
     <string name="sign_in">Autentificare</string>
     <string name="loading">Încarc…</string>

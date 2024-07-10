@@ -54,7 +54,6 @@ Language: uz
     <string name="new_notifications">%d ta yangi xabarlar</string>
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
-    <string name="follows">Kuzatadi</string>
     <string name="loading">Yuklanmoqda…</string>
     <string name="httppassword">HTTP parol</string>
     <string name="httpuser">HTTP foydalanuvchi nomi</string>

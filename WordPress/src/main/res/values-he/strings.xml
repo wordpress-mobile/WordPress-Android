@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-06-13 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">יש להקיש כדי לערוך</string>
+    <string name="voice_to_content_permissions_required_msg">כדי להקליט אודיו, יש להעניק לאפליקציה הרשאה לגשת אל המיקרופון. בעבר מנעת את ההרשאה הזאת. עליך לאפשר את ההרשאה למיקרופון בהגדרות האפליקציה כדי להשתמש באפשרות הזאת.</string>
+    <string name="voice_to_content_permissions_required_title">נדרשת הרשאה להקליט אודיו</string>
+    <string name="permission_access_media_location">מיקום המדיה</string>
+    <string name="in_app_update_restart">להפעיל מחדש</string>
+    <string name="in_app_update_available">העדכון הורד. כדי להחיל עדכונים יש לבצע הפעלה מחדש.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">פוסט מאודיו</string>
+    <string name="reader_tags_feed_action_label_open_menu">לפתוח תפריט</string>
+    <string name="reader_tags_feed_action_label_unlike_post">להסיר את הלייק מהפוסט</string>
+    <string name="reader_tags_feed_action_label_like_post">להוסיף לייק לפוסט</string>
+    <string name="reader_tags_feed_action_label_open_blog">לפתוח את הבלוג</string>
+    <string name="reader_tags_feed_action_label_open_post">לפתוח את הפוסט</string>
+    <string name="reader_tags_feed_error_retry">לנסות שוב</string>
+    <string name="reader_tags_feed_no_content_error_description">לא הצלחנו למצוא פוסטים עם התגית %s כעת</string>
+    <string name="reader_tags_feed_loading_error_description">לא הצלחנו לטעון את הפוסטים של התגית הזאת כעת</string>
+    <string name="reader_tags_feed_error_title">לא נמצאו פוסטים עבור %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">עוד בנושא %s</string>
+    <string name="reader_tags_display_name">תגיות</string>
+    <string name="reader_announcement_card_reading_preferences_description">לבחור צבעים וגופנים לפי טעמך. כשקוראים פוסט, אפשר ללחוץ על הסמל AA שבחלקו העליון של המסך.</string>
+    <string name="reader_announcement_card_reading_preferences_title">העדפות קריאה</string>
+    <string name="reader_announcement_card_tags_stream_description">יש להקיש על התפריט הנפתח למעלה ולבחור \'תגיות\' כדי לגשת לפיד של התגיות שבמעקב שלך.</string>
+    <string name="reader_announcement_card_tags_stream_title">פיד תגיות</string>
+    <string name="reader_announcement_card_title">חדש ב-Reader</string>
+    <string name="reader_dropdown_menu_tags">התגיות שלך</string>
+    <string name="no_connection_error_description">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="no_connection_error_title">אין אפשרות לטעון את התוכן כרגע</string>
+    <string name="stats_subscribers_marker_view_plural">מנויים</string>
+    <string name="stats_subscribers_marker_view_singular">מנוי</string>
+    <string name="stats_view_subscriber_growth">צמיחת מנויים</string>
+    <string name="role_subscriber">מנוי</string>
+    <string name="title_email_subscriber">מנוי באימייל</string>
+    <string name="people_empty_list_filtered_email_subscribers">אין עדיין מנויים באימייל</string>
+    <string name="people_empty_list_filtered_subscribers">אין עדיין מנויים</string>
+    <string name="people_dropdown_item_email_subscribers">מנויים באימייל</string>
+    <string name="people_dropdown_item_subscribers">מנויים</string>
+    <string name="invite_already_subscribed">%s: כבר רשום לעדכונים</string>
+    <string name="error_no_camera_available">אין אפליקציית מצלמה זמינה.</string>
+    <string name="error_remove_subscriber">לא ניתן היה להסיר את המנוי</string>
+    <string name="error_fetch_email_subscribers_list">לא ניתן היה לאחזר את המנויים של האתר באימייל</string>
+    <string name="error_fetch_subscribers_list">לא ניתן היה לאחזר את המנויים של האתר</string>
+    <string name="post_settings_add_to_calendar_error">אין אפשרות להוסיף ללוח השנה</string>
+    <string name="post_settings_no_calendar_app_exists">לא נמצאה אפליקציה שיכולה לטפל בבקשה להוספה ללוח שנה</string>
+    <string name="site_subscriptions">מינויים לאתר</string>
+    <string name="notifications_tab_title_subscribers">מנויים</string>
+    <string name="subscribers">מנויים</string>
+    <string name="notifications_empty_subscribers">אין עדיין מנויים</string>
+    <string name="stats_view_emails">הודעות אימייל</string>
+    <string name="stats_view_subscribers">מנויים</string>
+    <string name="stats_view_total_subscribers">סך כל המנויים</string>
+    <string name="stats_view_subscriber_totals">המספר הכולל של המנויים</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">קליקים</string>
+    <string name="stats_emails_opens_label">לחיצות לפתיחה</string>
+    <string name="stats_emails_latest_emails_label">האימיילים האחרונים</string>
+    <string name="stats_subscriber_since_label">מנוי מאז</string>
+    <string name="stats_name_label">שם</string>
+    <string name="stats_publicize_subscribers_label">מנויים</string>
+    <string name="stats_subscriber_label">מנוי</string>
+    <string name="stats_subscribers_count_message">סך כל המנויים ⁦%1$s⁩: %2$s</string>
+    <string name="page_upload_conflict_error">קיימת גרסה עדכנית יותר של העמוד</string>
+    <string name="editor_updating_content">מעדכן תוכן</string>
+    <string name="stats_subscribers">מנויים</string>
     <string name="weekly_roundup_notification_text_views_and_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ותגובה אחת</string>
     <string name="weekly_roundup_notification_text_views_and_like">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות ולייק אחד</string>
     <string name="weekly_roundup_notification_text_views_like_comment">בשבוע הקודם היו לך ⁦%1$s⁩ צפיות, לייק אחד ותגובה אחת.</string>
@@ -58,6 +120,7 @@ Language: he_IL
     <string name="gutenberg_native_copy_error_details">הפרטים של שגיאת ההעתקה</string>
     <string name="gutenberg_native_button_to_copy_post_text">כפתור להעתקת הטקסט של הפוסט</string>
     <string name="gutenberg_native_button_to_copy_error_details">כפתור להעתקה של פרטי השגיאה</string>
+    <string name="editor_updating_content_failed">העדכון של התוכן נכשל</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">כיתוב לווידאו. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">כיתוב לווידאו. ריק</string>
     <string name="gutenberg_native_edit_video_024aee6d">לערוך וידאו</string>
@@ -129,10 +192,6 @@ Language: he_IL
     <string name="reader_filter_empty_blogs_list">ניתן לראות את הפוסטים החדשים ביותר מבלוגים שנרשמת לעדכונים מהם</string>
     <string name="reader_filter_by_tag_title">לסנן לפי תגית</string>
     <string name="reader_filter_by_blog_title">לסנן לפי בלוג</string>
-    <string name="stats_timeframe_by_year">לפי שנה</string>
-    <string name="stats_timeframe_by_month">לפי חודש</string>
-    <string name="stats_timeframe_by_week">לפי שבוע</string>
-    <string name="stats_timeframe_by_day">לפי יום</string>
     <string name="gutenberg_native_waiting_for_connection">ממתין לחיבור</string>
     <string name="stats_traffic">תעבורה</string>
     <string name="gutenberg_native_working_offline">עבודה במצב לא מקוון</string>
@@ -542,8 +601,6 @@ Language: he_IL
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">הכלי Reader עובר לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">הנתונים הסטטיסטיים שלך עוברים לאפליקציה של Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">לעבור לאפליקציה החדשה של Jetpack</string>
-    <string name="blogging_prompts_list_error_network_subtitle">יש לבדוק את החיבור לרשת ולנסות שוב.</string>
-    <string name="blogging_prompts_list_error_network_title">אין אפשרות לטעון את התוכן כרגע</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">אירעה שגיאה בטעינת ההצעות.</string>
     <string name="blogging_prompts_list_error_fetch_title">אופס</string>
     <string name="blogging_prompts_list_no_prompts">עדיין אין הצעות</string>
@@ -669,7 +726,6 @@ Language: he_IL
     <string name="qrcode_auth_flow_validated_subtitle">יש לסרוק רק קוד QR שנלקח ישירות מדפדפן האינטרנט שלך. אין לסרוק קוד QR שנשלח אליך ממישהו אחר.</string>
     <string name="qrcode_auth_flow_validated_default_title">האם ניסית להתחבר לדפדפן האינטרנט שלך ליד ⁦%1$s⁩?</string>
     <string name="qrcode_auth_flow_validated_title">האם ניסית להתחבר אל ⁦%1$s⁩ ליד ⁦%2$s⁩?</string>
-    <string name="stats_insights_followers_guide_card">💡הוספת תגובה בבלוגים אחרים היא דרך נהדרת להראות נוכחות ולצבור עוקבים לאתר החדש שלך.</string>
     <string name="stats_insights_comments_guide_card">💡אפשר להקיש על \'להציג עוד\' כדי לראות את המגיבים המובילים שלך.</string>
     <string name="stats_insights_latest_post_empty">כדאי לחזור לכאן אחרי שפרסמת את הפוסט הראשון שלך!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">מומלץ לעיין בעצות המובילות שלנו כדי להגדיל את כמות הצפיות והתעבורה ⁦%1$s⁩</string>
@@ -707,7 +763,7 @@ Language: he_IL
     <string name="me_btn_scan_login_code">סריקת קוד כניסה למערכת</string>
     <string name="stats_insights_likes_guide_card">הפוסט האחרון שלך %1$s קיבל %2$s לייקים.</string>
     <string name="stats_most_popular_percent_views_empty">אין מספיק פעילות. כדאי לחזור לכאן מאוחד יותר לאחר שעוד מבקרים נכנסו לאתר!</string>
-    <string name="stats_total_followers_content_description">⁦%1$s⁩, סך הכול ⁦%2$s⁩%% עוקבים</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% מסך כל המנויים</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">להעתיק את הקישור</string>
     <string name="quick_start_completed_tour_title">ברכותינו! כבר יש לך ניסיון בעבודה עם האפליקציה&lt;br/&gt;</string>
@@ -734,7 +790,6 @@ Language: he_IL
     <string name="stats_published_minutes_ago">פורסמו לפני ⁦%1$d⁩ דקות</string>
     <string name="stats_published_a_minute_ago">פורסמו לפני דקה</string>
     <string name="stats_published_seconds_ago">פורסמו לפני כמה שניות</string>
-    <string name="stats_view_total_followers">סך כל העוקבים</string>
     <string name="stats_view_total_comments">סך כל התגובות</string>
     <string name="stats_view_total_likes">סך כל הלייקים</string>
     <string name="blogging_prompts_notification_dismiss">ביטול</string>
@@ -1158,6 +1213,7 @@ Language: he_IL
     <string name="gutenberg_native_add_title">להוסיף כותרת</string>
     <string name="gutenberg_native_no_preview_available">תצוגה מקדימה לא זמינה</string>
     <string name="gutenberg_native_loading">טוען</string>
+    <string name="gutenberg_native_link_label">קישור תווית</string>
     <string name="gutenberg_native_text_color">צבע טקסט</string>
     <string name="gutenberg_native_s_link">%s קישור</string>
     <string name="gutenberg_native_padding">מרווחים</string>
@@ -1828,7 +1884,6 @@ Language: he_IL
     <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השירות של Jetpack Social לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
-    <string name="notifications_tab_title_follows">עוקבים</string>
     <string name="notifications_tab_title_comments">תגובות</string>
     <string name="notifications_tab_title_unread_notifications">לא נקרא</string>
     <string name="dlg_cancel_action_dont_trash">לא להעביר לפח</string>
@@ -2152,9 +2207,7 @@ Language: he_IL
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
     <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
-    <string name="stats_insights_social">רשתות חברתיות</string>
     <string name="stats_insights_annual_site_stats">נתונים סטטיסטיים שנתיים של האתר</string>
-    <string name="stats_view_follower_totals">סך כל העוקבים</string>
     <string name="domain_suggestions_fetch_error">לא ניתן לטעון הצעות לדומיין</string>
     <string name="domain_suggestions_search_hint">יש להקליד מילת מפתח לרעיונות נוספים</string>
     <string name="domains_suggestions_empty_list">לא נמצאו הצעות</string>
@@ -2318,7 +2371,6 @@ Language: he_IL
     <string name="stats_insights_tags_and_categories">תגיות וקטגוריות</string>
     <string name="stats_insights_all_time_stats">כל הזמנים</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">עוקבים</string>
     <string name="stats_publicize_service_label">שירות</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">צפיות</string>
@@ -2331,8 +2383,6 @@ Language: he_IL
     <string name="stats_comments_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_comments_authors">מחברים</string>
     <string name="stats_follower_since_label">מאז</string>
-    <string name="stats_follower_label">עוקב</string>
-    <string name="stats_followers_count_message">סך הכול %1$s עוקבים: %2$s</string>
     <string name="stats_followers_email">אימייל</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">ניהול תובנות</string>
@@ -2434,14 +2484,11 @@ Language: he_IL
     <string name="sign_out_wpcom_confirm_with_no_changes">האם להתנתק מ-WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">ביצעת שינויים בפוסטים שטרם הועלו לאתר שלך. בהתנתקות מהמערכת כעת, השינויים האלו יימחקו מהמכשיר שלך. האם ברצונך להתנתק?</string>
     <string name="people_empty_list_filtered_viewers">עדיין אין צופים</string>
-    <string name="people_empty_list_filtered_email_followers">עדיין אין עוקבי אימייל</string>
-    <string name="people_empty_list_filtered_followers">עדיין אין עוקבים</string>
     <string name="people_empty_list_filtered_users">עדיין אין משתמשים</string>
     <string name="reader_empty_posts_liked_description">כאן יופיעו פוסטים שסימנת ב\'לייק\'</string>
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
     <string name="reader_no_followed_blogs_button_discover">להכיר בלוגים</string>
     <string name="notifications_empty_likes">עדיין אין לייקים</string>
-    <string name="notifications_empty_followers">עדיין אין עוקבים</string>
     <string name="activity_log_limited_content_on_free_plan">מאחר שנרשמת לתוכנית החינמית, מספר האירועים שיוצגו בפעילות שלך מוגבל.</string>
     <string name="activity_log_empty_subtitle">בעת ביצוע שינויים באתר שלך, אפשר לראות את היסטוריית הפעילות כאן</string>
     <string name="activity_log_empty_title">עדיין אין פעילות</string>
@@ -3071,6 +3118,7 @@ Language: he_IL
     <string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
     <string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
     <string name="submit_for_review">שלח</string>
+    <string name="title_subscriber">מנוי</string>
     <string name="duplicate_site_detected">נמצא אתר כפול.</string>
     <string name="cannot_add_duplicate_site">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
     <string name="already_logged_in_wpcom">כבר התחברת לחשבון שלך ב-WordPress.com. אין באפשרותך להוסיף אתר WordPress.com שקשור לחשבון אחר.</string>
@@ -3119,35 +3167,26 @@ Language: he_IL
     <string name="preference_open_device_settings">פתיחת הגדרות מכשיר</string>
     <string name="invite_invalid_email">%s: אימייל לא תקין</string>
     <string name="invite_user_blocked_invites">%s: משתמש חסם הזמנות</string>
-    <string name="invite_already_following">%s: כבר עוקב</string>
     <string name="invite_already_a_member">%s: כבר חבר</string>
     <string name="invite_username_not_found">%s: משתמש לא נמצא</string>
     <string name="comment_moderated_approved">תגובה אושרה!</string>
     <string name="like">לייק</string>
     <string name="timespan_now">עכשיו</string>
     <string name="role_viewer">צופה</string>
-    <string name="role_follower">עוקב</string>
     <string name="error_post_my_profile_no_connection">אין חיבור, הפרופיל לא נשמר</string>
     <string name="alignment_right">ימין</string>
     <string name="alignment_left">שמאל</string>
     <string name="alignment_none">ללא</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d נבחרו</string>
     <string name="error_fetch_users_list">משיכת נתונים על משתמשי האתר נכשלה</string>
-    <string name="title_email_follower">עוקב אימייל</string>
-    <string name="title_follower">עוקב</string>
     <string name="people_fetching">מאחזר משתמשים…</string>
     <string name="people_dropdown_item_viewers">צופים</string>
-    <string name="people_dropdown_item_email_followers">עוקבי אימייל</string>
-    <string name="people_dropdown_item_followers">עוקבים</string>
     <string name="people_dropdown_item_team">צוות</string>
     <string name="invite_message_usernames_limit">אפשר לשלוח עד 10 הזמנות לכתובות אימייל ו/או שמות משתמשים ב-WordPress.com. הוראות ליצירת שם משתמש יישלחו לכל מי שזקוק לשם משתמש.</string>
     <string name="viewer_remove_confirmation_message">לאחר הסרת צופה זה, הוא או היא לא יוכלו לבקר יותר באתר זה.\n\nבחרת להסיר צופה זה - האם ההחלטה סופית?</string>
-    <string name="follower_remove_confirmation_message">לאחר הסרת עוקב זה, הוא יפסיק לקבל הודעות לגבי אתר זה, אלא אם יגדיר מעקב מחדש.\n\nבחרת להסיר עוקב זה - האם ההחלטה סופית?</string>
+    <string name="subscriber_remove_confirmation_message">לאחר הסרת המנוי הזה, הוא יפסיק לקבל הודעות לגבי אתר זה, אלא אם ירשם לעדכונים מחדש.\n\nהאם עדיין ברצונך להסיר את המנוי?</string>
     <string name="follower_subscribed_since">מאז %1$s</string>
     <string name="error_remove_viewer">לא ניתן היה להסיר צופה</string>
-    <string name="error_remove_follower">לא ניתן היה להסיר עוקב</string>
-    <string name="error_fetch_email_followers_list">לא הצלחנו לאחזר עוקבי אימייל של האתר</string>
-    <string name="error_fetch_followers_list">לא הצלחנו לאחזר עוקבים של האתר</string>
     <string name="editor_failed_uploads_switch_html">מספר העלאות מדיה נכשלו. לא ניתן לעבור למצב HTML\n במצב זה. להסיר את כל ההעלאות שנכשלו ולהמשיך?</string>
     <string name="image_thumbnail">תמונה ממוזערת של תמונה</string>
     <string name="visual_editor">עורך ויזואלי</string>
@@ -3253,7 +3292,6 @@ Language: he_IL
     <string name="replies_to_my_comments">מענה לתגובות שלי</string>
     <string name="username_mentions">אזכורים של שם משתמש</string>
     <string name="site_achievements">הישגי אתר</string>
-    <string name="site_follows">עוקבים אחרי האתר</string>
     <string name="likes_on_my_posts">לייקים בפוסטים שלי</string>
     <string name="likes_on_my_comments">לייקים בתגובות שלי</string>
     <string name="comments_on_my_site">תגובות באתר שלי</string>
@@ -3524,7 +3562,6 @@ Language: he_IL
     <string name="stats_followers_minutes">%1$d דקות</string>
     <string name="stats_followers_a_minute_ago">לפני דקה</string>
     <string name="stats_followers_seconds_ago">לפני כמה שניות</string>
-    <string name="stats_view_followers">עוקבים</string>
     <string name="stats_view_videos">וידאו</string>
     <string name="stats_view_top_posts_and_pages">פוסטים ועמודים</string>
     <string name="stats_view_countries">מדינות</string>
@@ -3684,7 +3721,6 @@ Language: he_IL
     <string name="manage">ניהול</string>
     <string name="more_notifications">הוסף %d נוספים.</string>
     <string name="new_notifications">%d התראות חדשות</string>
-    <string name="follows">עוקבים</string>
     <string name="note_reply_successful">תגובה פורסמה</string>
     <string name="sign_in">להתחבר</string>
     <string name="loading">טוען…</string>

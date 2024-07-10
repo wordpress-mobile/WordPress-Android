@@ -1,4 +1,0 @@
-24.6 :
-- Nous avons corrigé un certain nombre de problèmes liés au formatage du texte en surbrillance.
-- L’application prend désormais en charge les suggestions de texte plus longues que l’espace visible dans l’éditeur.
-- Nous avons remplacé le symbole infini par « 100 % » sur l’écran Stats. Vers 100 % et au-delà !

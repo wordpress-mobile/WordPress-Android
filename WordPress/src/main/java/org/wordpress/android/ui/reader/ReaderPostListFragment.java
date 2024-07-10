@@ -29,7 +29,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -110,12 +109,8 @@ import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarte
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage;
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSearchPage;
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
-import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSuggestedTagsPage;
-import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModelProvider;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
@@ -145,8 +140,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.WPSnackbar;
 
@@ -159,6 +153,7 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
+import static androidx.lifecycle.LifecycleOwnerKt.getLifecycleScope;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
 
@@ -607,24 +602,15 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
-        WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
-                .get(WPMainActivityViewModel.class);
-
-        mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
-                SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
-                SubFilterViewModel.class
-        );
+        mSubFilterViewModel = SubFilterViewModelProvider.
+                getSubFilterViewModelForTag(this, mTagFragmentStartedWith, savedInstanceState);
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
-                mSubFilterViewModel.onSubfilterSelected(subfilterListItem);
-
                 if (shouldShowEmptyViewForSelfHostedCta()) {
                     setEmptyTitleDescriptionAndButton(false);
                     showEmptyView();
                 }
-
-                if (mReaderViewModel != null) mReaderViewModel.onSubFilterItemSelected(subfilterListItem);
             }
         });
 
@@ -633,70 +619,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 changeReaderMode(readerModeInfo, true);
             }
         });
-
-        mSubFilterViewModel.getBottomSheetUiState().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(uiState -> {
-                FragmentManager fm = getChildFragmentManager();
-                if (fm != null) {
-                    SubfilterBottomSheetFragment bottomSheet =
-                            (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
-                    if (uiState.isVisible() && bottomSheet == null) {
-                        mSubFilterViewModel.loadSubFilters();
-                        BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
-                        bottomSheet = SubfilterBottomSheetFragment.newInstance(
-                                SubFilterViewModel.getViewModelKeyForTag(mTagFragmentStartedWith),
-                                visibleState.getCategory(),
-                                mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
-                        );
-                        bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
-                    } else if (!uiState.isVisible() && bottomSheet != null) {
-                        bottomSheet.dismiss();
-                    }
-                }
-                return null;
-            });
-        });
-
-        mSubFilterViewModel.getBottomSheetAction().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(action -> {
-                if (action instanceof OpenSubsAtPage) {
-                    mReaderSubsActivityResultLauncher.launch(
-                            ReaderActivityLauncher.createIntentShowReaderSubs(
-                                    requireActivity(),
-                                    ((OpenSubsAtPage) action).getTabIndex()
-                            )
-                    );
-                } else if (action instanceof OpenLoginPage) {
-                    wpMainActivityViewModel.onOpenLoginPage();
-                } else if (action instanceof OpenSearchPage) {
-                    ReaderActivityLauncher.showReaderSearch(requireActivity());
-                } else if (action instanceof OpenSuggestedTagsPage) {
-                    ReaderActivityLauncher.showReaderInterests(requireActivity());
-                }
-
-                return null;
-            });
-        });
-
-        mSubFilterViewModel.getUpdateTagsAndSites().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(tasks -> {
-                if (NetworkUtils.isNetworkAvailable(getActivity())) {
-                    ReaderUpdateServiceStarter.startService(getActivity(), tasks);
-                }
-                return null;
-            });
-        });
-
-        if (mIsFilterableScreen) {
-            mSubFilterViewModel.getSubFilters().observe(getViewLifecycleOwner(), subFilters -> {
-                mReaderViewModel.showTopBarFilterGroup(mTagFragmentStartedWith, subFilters);
-            });
-            mSubFilterViewModel.updateTagsAndSites();
-        } else {
-            mReaderViewModel.hideTopBarFilterGroup(mTagFragmentStartedWith);
-        }
-
-        mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 
     private void changeReaderMode(ReaderModeInfo readerModeInfo, boolean onlyOnChanges) {
@@ -858,6 +780,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         initReaderSubsActivityResultLauncher();
+
+        final Activity activity = getActivity();
+        if (activity != null) {
+            final Intent intent = new Intent();
+            intent.putExtra(ReaderTagsFeedFragment.RESULT_SHOULD_REFRESH_TAGS_FEED, true);
+            activity.setResult(Activity.RESULT_OK, intent);
+        }
     }
 
     private void initReaderSubsActivityResultLauncher() {
@@ -1995,7 +1924,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mImageManager,
                     mUiHelpers,
                     mNetworkUtilsWrapper,
-                    mIsTopLevel
+                    mIsTopLevel,
+                    getLifecycleScope(this)
             );
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
@@ -2508,7 +2438,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        AppRatingDialog.INSTANCE.incrementInteractions(
+        AppReviewManager.INSTANCE.incrementInteractions(
                 AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST
         );
 

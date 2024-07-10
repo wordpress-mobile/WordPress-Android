@@ -56,7 +56,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.JetpackBrandingUtils
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.StatsTrafficSubscribersTabFeatureConfig
+import org.wordpress.android.util.config.StatsTrafficSubscribersTabsFeatureConfig
 import org.wordpress.android.util.extensions.getSerializableExtraCompat
 import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.mergeNotNull
@@ -83,7 +83,7 @@ class StatsViewModel
     private val notificationsTracker: SystemNotificationsTracker,
     private val jetpackBrandingUtils: JetpackBrandingUtils,
     private val jetpackFeatureRemovalOverlayUtil: JetpackFeatureRemovalOverlayUtil,
-    private val statsTrafficSubscribersTabFeatureConfig: StatsTrafficSubscribersTabFeatureConfig
+    private val statsTrafficSubscribersTabsFeatureConfig: StatsTrafficSubscribersTabsFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean> = _isRefreshing
@@ -150,7 +150,7 @@ class StatsViewModel
     }
 
     private fun getInitialTimeFrame(timeframe: StatsTimeframe?, launchedFrom: StatsLaunchedFrom?): StatsSection? {
-        if (statsTrafficSubscribersTabFeatureConfig.isEnabled() && launchedFrom == StatsLaunchedFrom.LINK) {
+        if (statsTrafficSubscribersTabsFeatureConfig.isEnabled() && launchedFrom == StatsLaunchedFrom.LINK) {
             setupDeeplinkForTrafficTab(timeframe)
         }
 
@@ -202,7 +202,7 @@ class StatsViewModel
                 statsSectionManager.setSelectedSection(it)
 
                 val trafficGranularity = it.toStatsGranularity()
-                if (statsTrafficSubscribersTabFeatureConfig.isEnabled() && trafficGranularity != null) {
+                if (statsTrafficSubscribersTabsFeatureConfig.isEnabled() && trafficGranularity != null) {
                     selectedTrafficGranularityManager.setSelectedTrafficGranularity(trafficGranularity)
                 }
             }
@@ -255,7 +255,7 @@ class StatsViewModel
     }
 
     private fun updateSelectedSectionByTrafficSubscribersTabFeatureConfig() {
-        if (statsTrafficSubscribersTabFeatureConfig.isEnabled()) {
+        if (statsTrafficSubscribersTabsFeatureConfig.isEnabled()) {
             val selectedSection = statsSectionManager.getSelectedSection()
             val isSelectedSectionRemoved = selectedSection == StatsSection.DAYS ||
                     selectedSection == StatsSection.WEEKS ||

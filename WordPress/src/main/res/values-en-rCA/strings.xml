@@ -76,10 +76,6 @@ Language: en_CA
     <string name="reader_filter_empty_blogs_action">Subscribe to a blog</string>
     <string name="reader_filter_empty_blogs_list">See the newest posts from blogs you\'re subscribed to</string>
     <string name="reader_filter_empty_blogs_list_title">No blog subscriptions</string>
-    <string name="stats_timeframe_by_day">By day</string>
-    <string name="stats_timeframe_by_month">By month</string>
-    <string name="stats_timeframe_by_week">By week</string>
-    <string name="stats_timeframe_by_year">By year</string>
     <string name="gutenberg_native_waiting_for_connection">Waiting for connection</string>
     <string name="stats_traffic">Traffic</string>
     <string name="gutenberg_native_file_type_not_supported_as_a_media_file">File type not supported as a media file.</string>
@@ -491,8 +487,6 @@ Language: en_CA
     <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Check your network connection and try again.</string>
-    <string name="blogging_prompts_list_error_network_title">Unable to load this content right now</string>
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
@@ -621,7 +615,6 @@ Language: en_CA
     <string name="qrcode_auth_flow_dismiss">Dismiss</string>
     <string name="qrcode_auth_flow_done_subtitle">Tap dismiss and head back to your web browser to continue.</string>
     <string name="qrcode_auth_flow_validated_title">Are you trying to log in to %1$s near %2$s?</string>
-    <string name="stats_insights_followers_guide_card">💡Commenting on other blogs is a great way to build attention and followers for your new site.</string>
     <string name="stats_insights_comments_guide_card">💡Tap \'VIEW MORE\' to see your top commenters.</string>
     <string name="stats_action_card_schedule_post_message">✍️ Schedule your drafts to publish at the best time to reach your audience.</string>
     <string name="stats_insights_latest_post_empty">Check back when you\'ve published your first post!</string>
@@ -660,7 +653,6 @@ Language: en_CA
     <string name="stats_insights_likes_guide_card">⭐️ Your latest post %1$s has received %2$s likes.</string>
     <string name="stats_most_popular_percent_views_empty">Not enough activity. Check back later when your site\'s had more visitors!</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% of total followers</string>
     <string name="pages_copy_link">Copy link</string>
     <string name="quick_start_completed_tour_title">Congrats! You know your way around&lt;br/&gt;</string>
     <string name="quick_start_sites_type_get_to_know_app">Get to know the app</string>
@@ -680,7 +672,6 @@ Language: en_CA
     <string name="stats_published_minutes_ago">Published %1$d minutes ago</string>
     <string name="stats_published_a_minute_ago">Published a minute ago</string>
     <string name="stats_published_seconds_ago">Published seconds ago</string>
-    <string name="stats_view_total_followers">Total Followers</string>
     <string name="stats_view_total_comments">Total Comments</string>
     <string name="stats_view_total_likes">Total Likes</string>
     <string name="stats_published_years_ago">Published %1$d years ago</string>
@@ -1112,6 +1103,7 @@ Language: en_CA
     <string name="gutenberg_native_no_preview_available">No preview available</string>
     <string name="gutenberg_native_add_title">Add title</string>
     <string name="gutenberg_native_loading">Loading</string>
+    <string name="gutenberg_native_link_label">Link label</string>
     <string name="gutenberg_native_text_color">Text colour</string>
     <string name="gutenberg_native_s_link">%s link</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -1782,7 +1774,6 @@ Language: en_CA
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Jetpack Social cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="notifications_tab_title_likes">Likes</string>
-    <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_comments">Comments</string>
     <string name="notifications_tab_title_unread_notifications">Unread</string>
     <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
@@ -2107,13 +2098,11 @@ Language: en_CA
     <string name="post_list_tab_drafts">Drafts</string>
     <string name="backdated_for">Backdated for: %s</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
-    <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
     <string name="register_domain">Register Domain</string>
     <string name="domain_suggestions_fetch_error">Domain suggestions couldn\'t be loaded</string>
     <string name="domain_suggestions_search_hint">Type a keyword for more ideas</string>
     <string name="domains_suggestions_empty_list">No suggestions found</string>
-    <string name="stats_view_follower_totals">Follower Totals</string>
     <string name="stats_menu_remove">Remove from insights</string>
     <string name="stats_menu_move_down">Move down</string>
     <string name="stats_menu_move_up">Move up</string>
@@ -2273,7 +2262,6 @@ Language: en_CA
     <string name="stats_insights_latest_post_with_no_engagement">It\'s been %1$s since %2$s was published. Get the ball rolling and increase your post views by sharing your post:</string>
     <string name="stats_insights_all_time_stats">All-time</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Followers</string>
     <string name="stats_publicize_service_label">Service</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Views</string>
@@ -2286,8 +2274,6 @@ Language: en_CA
     <string name="stats_comments_posts_and_pages">Posts and pages</string>
     <string name="stats_comments_authors">Authors</string>
     <string name="stats_follower_since_label">Since</string>
-    <string name="stats_follower_label">Follower</string>
-    <string name="stats_followers_count_message">Total %1$s Followers: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Manage Insights</string>
@@ -2389,14 +2375,11 @@ Language: en_CA
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
     <string name="people_empty_list_filtered_viewers">No viewers yet</string>
-    <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
-    <string name="people_empty_list_filtered_followers">No followers yet</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_no_followed_blogs_button_discover">Discover blogs</string>
     <string name="notifications_empty_likes">No likes yet</string>
-    <string name="notifications_empty_followers">No followers yet</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
     <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
     <string name="activity_log_empty_title">No activity yet</string>
@@ -3075,13 +3058,11 @@ Language: en_CA
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
-    <string name="invite_already_following">%s: Already following</string>
     <string name="invite_already_a_member">%s: Already a member</string>
     <string name="invite_username_not_found">%s: User not found</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="like">Like</string>
     <string name="timespan_now">now</string>
-    <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
     <string name="error_post_my_profile_no_connection">No connection, couldn\'t save your profile</string>
     <string name="alignment_none">None</string>
@@ -3089,21 +3070,13 @@ Language: en_CA
     <string name="alignment_right">Right</string>
     <string name="site_settings_list_editor_action_mode_title">Selected %1$d</string>
     <string name="error_fetch_users_list">Couldn\'t retrieve site users</string>
-    <string name="title_follower">Follower</string>
-    <string name="title_email_follower">Email Follower</string>
     <string name="people_fetching">Fetching users…</string>
-    <string name="people_dropdown_item_email_followers">Email Followers</string>
     <string name="people_dropdown_item_viewers">Viewers</string>
-    <string name="people_dropdown_item_followers">Followers</string>
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Invite up to 10 email addresses and/or WordPress.com usernames. Those needing a username will be sent instructions on how to create one.</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
-    <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
     <string name="follower_subscribed_since">Since %1$s</string>
-    <string name="error_remove_follower">Couldn\'t remove follower</string>
     <string name="error_remove_viewer">Couldn\'t remove viewer</string>
-    <string name="error_fetch_email_followers_list">Couldn\'t retrieve site email followers</string>
-    <string name="error_fetch_followers_list">Couldn\'t retrieve site followers</string>
     <string name="editor_failed_uploads_switch_html">Some media uploads have failed. You can\'t switch to HTML mode\n        in this state. Remove all failed uploads and continue?</string>
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
@@ -3210,7 +3183,6 @@ Language: en_CA
     <string name="site_achievements">Site achievements</string>
     <string name="username_mentions">Username mentions</string>
     <string name="likes_on_my_posts">Likes on my posts</string>
-    <string name="site_follows">Site follows</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
@@ -3482,7 +3454,6 @@ Language: en_CA
     <string name="stats_followers_seconds_ago">seconds ago</string>
     <string name="stats_view_top_posts_and_pages">Posts &amp; Pages</string>
     <string name="stats_view_videos">Videos</string>
-    <string name="stats_view_followers">Followers</string>
     <string name="stats_view_countries">Countries</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_timeframe_years">Years</string>
@@ -3637,7 +3608,6 @@ Language: en_CA
     <string name="discard">Discard</string>
     <string name="manage">Manage</string>
     <string name="note_reply_successful">Reply published</string>
-    <string name="follows">Follows</string>
     <string name="new_notifications">%d new notifications</string>
     <string name="more_notifications">and %d more.</string>
     <string name="sign_in">Log in</string>

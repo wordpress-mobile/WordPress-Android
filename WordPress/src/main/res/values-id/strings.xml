@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 09:54:07+0000
+Translation-Revision-Date: 2024-06-17 12:18:34+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Ketuk untuk menyunting</string>
+    <string name="voice_to_content_permissions_required_msg">Aplikasi ini perlu izin untuk mengakses mikrofon untuk merekam audio. Anda telah menolak izin ini sebelumnya. Aktifkan izin mikrofon dalam pengaturan aplikasi untuk menggunakan fitur ini.</string>
+    <string name="voice_to_content_permissions_required_title">Izin Perekaman Audio Diperlukan</string>
+    <string name="permission_access_media_location">Lokasi Media</string>
+    <string name="in_app_update_restart">Mulai ulang</string>
+    <string name="in_app_update_available">Pembaruan telah diunduh. Mulai ulang untuk menerapkan pembaruan.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Pos dari Audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">buka menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">hapus suka pada pos</string>
+    <string name="reader_tags_feed_action_label_like_post">sukai pos</string>
+    <string name="reader_tags_feed_action_label_open_blog">buka blog</string>
+    <string name="reader_tags_feed_action_label_open_post">buka pos</string>
+    <string name="reader_tags_feed_error_retry">Coba lagi</string>
+    <string name="reader_tags_feed_no_content_error_description">Saat ini kami tidak dapat menemukan pos dengan tag %s</string>
+    <string name="reader_tags_feed_loading_error_description">Saat ini kami tidak dapat memuat pos dari tag ini</string>
+    <string name="reader_tags_feed_error_title">Tidak ditemukan pos untuk %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Selengkapnya dari %s</string>
+    <string name="reader_tags_display_name">Tag</string>
+    <string name="reader_announcement_card_reading_preferences_description">Pilih warna dan font sesuai selera. Saat membaca pos, ketuk ikon AA di bagian atas layar.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferensi Membaca</string>
+    <string name="reader_announcement_card_tags_stream_description">Ketuk menu tarik-turun di bagian atas dan pilih Tag untuk mengakses stream dari tag yang Anda ikuti.</string>
+    <string name="reader_announcement_card_tags_stream_title">Tags Stream</string>
+    <string name="reader_announcement_card_title">Baru di Pembaca</string>
+    <string name="reader_dropdown_menu_tags">Tag Anda</string>
+    <string name="no_connection_error_description">Periksa koneksi internet dan coba lagi.</string>
+    <string name="no_connection_error_title">Tidak dapat memuat konten ini sekarang</string>
+    <string name="stats_subscribers_marker_view_plural">Pelanggan</string>
+    <string name="stats_subscribers_marker_view_singular">Pelanggan</string>
+    <string name="stats_view_subscriber_growth">Perkembangan Pelanggan</string>
+    <string name="role_subscriber">Pelanggan</string>
+    <string name="title_email_subscriber">Pelanggan Email</string>
+    <string name="people_empty_list_filtered_email_subscribers">Belum ada pelanggan email</string>
+    <string name="people_empty_list_filtered_subscribers">Belum ada pelanggan</string>
+    <string name="people_dropdown_item_email_subscribers">Pelanggan Email</string>
+    <string name="people_dropdown_item_subscribers">Pelanggan</string>
+    <string name="invite_already_subscribed">%s: Sudah berlangganan</string>
+    <string name="error_no_camera_available">Tidak ada aplikasi kamera.</string>
+    <string name="error_remove_subscriber">Tidak dapat menghapus pelanggan</string>
+    <string name="error_fetch_email_subscribers_list">Gagal menampilkan pelanggan email situs</string>
+    <string name="error_fetch_subscribers_list">Gagal menampilkan pelanggan situs</string>
+    <string name="post_settings_add_to_calendar_error">Gagal menambahkan kalendar</string>
+    <string name="post_settings_no_calendar_app_exists">Tidak ditemukan aplikasi yang dapat menangani permintaan untuk menambahkan ke kalender</string>
+    <string name="site_subscriptions">Situs langganan</string>
+    <string name="notifications_tab_title_subscribers">Pelanggan</string>
+    <string name="subscribers">Pelanggan</string>
+    <string name="notifications_empty_subscribers">Belum ada pelanggan</string>
+    <string name="stats_view_emails">Email</string>
+    <string name="stats_view_subscribers">Pelanggan</string>
+    <string name="stats_view_total_subscribers">Total Pelanggan</string>
+    <string name="stats_view_subscriber_totals">Total Pelanggan</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Klik</string>
+    <string name="stats_emails_opens_label">Buka</string>
+    <string name="stats_emails_latest_emails_label">Email terbaru</string>
+    <string name="stats_subscriber_since_label">Pelanggan sejak</string>
+    <string name="stats_name_label">Nama</string>
+    <string name="stats_publicize_subscribers_label">Pelanggan</string>
+    <string name="stats_subscriber_label">Pelanggan</string>
+    <string name="stats_subscribers_count_message">Total %1$s Pelanggan: %2$s</string>
+    <string name="page_upload_conflict_error">Ada revisi yang lebih baru untuk halaman ini</string>
+    <string name="editor_updating_content">Memperbarui konten</string>
+    <string name="stats_subscribers">Pengikut</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 komentar</string>
     <string name="weekly_roundup_notification_text_views_and_like">Minggu lalu Anda mendapatkan %1$s penayangan dan 1 suka</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Minggu lalu Anda mendapatkan %1$s penayangan, 1 suka, dan 1 komentar.</string>
@@ -32,6 +94,7 @@ Language: id
     <string name="reader_preferences_screen_font_family_label">Font</string>
     <string name="reader_preferences_screen_theme_label">Skema Warna</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">kirim feedback Anda</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Batalkan warna yang dipilih</string>
     <string name="reader_no_followed_tags_text_title">Tidak ada tag yang diikuti</string>
     <string name="reader_toast_err_tag_already_following">Anda telah mengikuti tag ini</string>
@@ -58,6 +121,7 @@ Language: id
     <string name="gutenberg_native_copy_error_details">Salin detail error</string>
     <string name="gutenberg_native_button_to_copy_post_text">Tombol untuk menyalin teks pos</string>
     <string name="gutenberg_native_button_to_copy_error_details">Tombol untuk menyalin detail error</string>
+    <string name="editor_updating_content_failed">Gagal memperbarui konten</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Keterangan video. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Keterangan video. Kosong</string>
     <string name="gutenberg_native_edit_video_024aee6d">Sunting video</string>
@@ -130,10 +194,6 @@ Language: id
     <string name="reader_filter_empty_blogs_list">Lihat pos terbaru dari blog langganan Anda</string>
     <string name="reader_filter_by_tag_title">Saring berdasarkan tag</string>
     <string name="reader_filter_by_blog_title">Saring berdasarkan blog</string>
-    <string name="stats_timeframe_by_year">Menurut tahun</string>
-    <string name="stats_timeframe_by_month">Menurut bulan</string>
-    <string name="stats_timeframe_by_week">Menurut minggu</string>
-    <string name="stats_timeframe_by_day">Menurut hari</string>
     <string name="gutenberg_native_waiting_for_connection">Menunggu koneksi</string>
     <string name="stats_traffic">Lalu lintas</string>
     <string name="gutenberg_native_working_offline">Bekerja secara Offline</string>
@@ -548,8 +608,6 @@ Language: id
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader akan berpindah ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statistik Anda akan berpindah ke aplikasi Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Beralih ke aplikasi Jetpack baru</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Periksa koneksi internet Anda dan coba lagi.</string>
-    <string name="blogging_prompts_list_error_network_title">Tidak dapat memuat konten ini sekarang</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Terjadi eror saat memuat prompt.</string>
     <string name="blogging_prompts_list_error_fetch_title">Waduh</string>
     <string name="blogging_prompts_list_no_prompts">Belum ada prompt</string>
@@ -675,7 +733,7 @@ Language: id
     <string name="qrcode_auth_flow_validated_subtitle">Hanya pindai kode QR yang diambil langsung dari browser web Anda. Jangan pindai kode yang dikirimkan oleh orang lain.</string>
     <string name="qrcode_auth_flow_validated_default_title">Apakah Anda mencoba login melalui browser web di sekitar %1$s?</string>
     <string name="qrcode_auth_flow_validated_title">Apakah Anda mencoba login ke %1$s di sekitar %2$s</string>
-    <string name="stats_insights_followers_guide_card">💡Cobalah memberikan komentar di blog lain untuk menarik perhatian dan pengikut ke situs baru Anda.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Coba berikan komentar di blog lain untuk menarik perhatian dan pelanggan ke situs baru Anda.</string>
     <string name="stats_insights_comments_guide_card">💡Ketuk \'LIHAT LEBIH BANYAK\' untuk melihat komentator teratas Anda.</string>
     <string name="stats_insights_latest_post_empty">Periksa lagi setelah Anda memposkan pos pertama Anda!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Cek tips terbaik kami untuk meningkatkan pratinjau dan kunjungan Anda %1$s</string>
@@ -713,7 +771,7 @@ Language: id
     <string name="me_btn_scan_login_code">Pindai Kode Login</string>
     <string name="stats_insights_likes_guide_card">⭐️ Artikel terbaru Anda %1$s telah menerima %2$s suka.</string>
     <string name="stats_most_popular_percent_views_empty">Aktivitas tidak cukup. Periksa lagi nanti saat situs Anda lebih ramai pengunjung!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% total pengikut</string>
+    <string name="stats_total_subscribers_content_description">%1$s, %2$s%% dari total pelanggan</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Salin tautan</string>
     <string name="quick_start_completed_tour_title">Selamat! Anda telah berhasil&lt;br/&gt;</string>
@@ -740,7 +798,6 @@ Language: id
     <string name="stats_published_minutes_ago">Diposkan %1$d menit yang lalu</string>
     <string name="stats_published_a_minute_ago">Diposkan semenit yang lalu</string>
     <string name="stats_published_seconds_ago">Diposkan beberapa detik yang lalu</string>
-    <string name="stats_view_total_followers">Total Pengikut</string>
     <string name="stats_view_total_comments">Total Komentar</string>
     <string name="stats_view_total_likes">Total Suka</string>
     <string name="blogging_prompts_notification_dismiss">Tutup</string>
@@ -1166,6 +1223,7 @@ Language: id
     <string name="gutenberg_native_add_title">Tambahkan judul</string>
     <string name="gutenberg_native_no_preview_available">Pratinjau tidak tersedia</string>
     <string name="gutenberg_native_loading">Memuat</string>
+    <string name="gutenberg_native_link_label">Label tautan</string>
     <string name="gutenberg_native_text_color">Warna teks</string>
     <string name="gutenberg_native_s_link">%s tautan</string>
     <string name="gutenberg_native_padding">Padding</string>
@@ -1838,7 +1896,6 @@ Language: id
     <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Jetpack Social tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
     <string name="notifications_tab_title_likes">Suka</string>
-    <string name="notifications_tab_title_follows">Mengikuti</string>
     <string name="notifications_tab_title_comments">Komentar</string>
     <string name="notifications_tab_title_unread_notifications">Belum dibaca</string>
     <string name="dlg_cancel_action_dont_trash">Jangan buang</string>
@@ -2163,9 +2220,7 @@ Language: id
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
-    <string name="stats_insights_social">Sosial</string>
     <string name="stats_insights_annual_site_stats">Statistik Situs Tahunan</string>
-    <string name="stats_view_follower_totals">Total Pengikut</string>
     <string name="domain_suggestions_fetch_error">Saran domain tidak dapat dimuat</string>
     <string name="domain_suggestions_search_hint">Ketikkan kata kunci untuk mendapatkan lebih banyak ide</string>
     <string name="domains_suggestions_empty_list">Saran tidak ditemukan</string>
@@ -2329,7 +2384,6 @@ Language: id
     <string name="stats_insights_tags_and_categories">Tag dan Kategori</string>
     <string name="stats_insights_all_time_stats">Sepanjang waktu</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Pengikut</string>
     <string name="stats_publicize_service_label">Layanan</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Tampilan</string>
@@ -2342,8 +2396,6 @@ Language: id
     <string name="stats_comments_posts_and_pages">Pos dan halaman</string>
     <string name="stats_comments_authors">Penulis</string>
     <string name="stats_follower_since_label">Sejak</string>
-    <string name="stats_follower_label">Pengikut</string>
-    <string name="stats_followers_count_message">Total %1$s Pengikut: %2$s</string>
     <string name="stats_followers_email">Email</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Kelola Insights</string>
@@ -2445,14 +2497,11 @@ Language: id
     <string name="sign_out_wpcom_confirm_with_no_changes">Logout dari WordPress?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Ada perubahan pada pos yang belum diunggah ke situs Anda. Perubahan tersebut akan dihapus dari perangkat jika Anda logout sekarang. Tetap logout?</string>
     <string name="people_empty_list_filtered_viewers">Belum ada pengunjung</string>
-    <string name="people_empty_list_filtered_email_followers">Belum ada pengikut email</string>
-    <string name="people_empty_list_filtered_followers">Belum ada pengikut</string>
     <string name="people_empty_list_filtered_users">Belum ada pengguna</string>
     <string name="reader_empty_posts_liked_description">Pos yang Anda sukai akan ditampilkan di sini</string>
     <string name="reader_empty_posts_liked_title">Belum ada yang menyukai</string>
     <string name="reader_no_followed_blogs_button_discover">Temukan blog</string>
     <string name="notifications_empty_likes">Belum ada suka</string>
-    <string name="notifications_empty_followers">Belum ada pengikut</string>
     <string name="activity_log_limited_content_on_free_plan">Karena menggunakan paket gratis, Anda akan melihat sedikit kejadian di aktivitas Anda.</string>
     <string name="activity_log_empty_subtitle">Saat membuat perubahan pada situs, Anda akan dapat melihat riwayat aktivitas di sini</string>
     <string name="activity_log_empty_title">Belum ada aktivitas</string>
@@ -3083,6 +3132,7 @@ Language: id
     <string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
     <string name="error_unknown_post_type">Format pos tidak diketahui</string>
     <string name="submit_for_review">Kirim</string>
+    <string name="title_subscriber">Pelanggan</string>
     <string name="duplicate_site_detected">Situs duplikat terdeteksi.</string>
     <string name="cannot_add_duplicate_site">Situs ini sudah ada dalam aplikasi, Anda tidak bisa menambahkannya.</string>
     <string name="already_logged_in_wpcom">Anda sudah login ke akun WordPress.com, Anda tidak dapat menambahkan situs WordPress.com yang terikat ke akun lain.</string>
@@ -3131,35 +3181,26 @@ Language: id
     <string name="preference_open_device_settings">Buka pengaturan perangkat</string>
     <string name="invite_invalid_email">%s: Email tidak valid</string>
     <string name="invite_user_blocked_invites">%s: Pengguna memblokir undangan</string>
-    <string name="invite_already_following">%s: Sudah mengikuti</string>
     <string name="invite_already_a_member">%s: Sudah jadi anggota</string>
     <string name="invite_username_not_found">%s: Pengguna tidak ditemukan</string>
     <string name="comment_moderated_approved">Komentar disetujui!</string>
     <string name="like">Suka</string>
     <string name="timespan_now">sekarang</string>
     <string name="role_viewer">Penonton</string>
-    <string name="role_follower">Pengikut</string>
     <string name="error_post_my_profile_no_connection">Tak ada koneksi, gagal menyimpan profil Anda</string>
     <string name="alignment_right">Kanan</string>
     <string name="alignment_left">Kiri</string>
     <string name="alignment_none">Tak ada</string>
     <string name="site_settings_list_editor_action_mode_title">Memilih %1$d</string>
     <string name="error_fetch_users_list">Gagal menampilkan pengguna situs</string>
-    <string name="title_email_follower">Pengikut Email</string>
-    <string name="title_follower">Pengikut</string>
     <string name="people_fetching">Mengambil pengguna…</string>
     <string name="people_dropdown_item_viewers">Pengunjung</string>
-    <string name="people_dropdown_item_email_followers">Pengikut Email</string>
-    <string name="people_dropdown_item_followers">Pengikut</string>
     <string name="people_dropdown_item_team">Tim</string>
     <string name="invite_message_usernames_limit">Undang hingga 10 alamat email dan/atau nama pengguna WordPress.com. Mereka yang membutuhkan nama pengguna akan menerima instruksi untuk mendapatkannya.</string>
     <string name="viewer_remove_confirmation_message">Jika Anda menghapus pengunjung ini, ia tak akan bisa mengunjungi situs ini lagi.\n\nApakah Anda masih ingin menghapus pengunjung ini?</string>
-    <string name="follower_remove_confirmation_message">Jika dihapus, pengunjung ini akan berhenti menerima notifikasi mengenai situs ini, kecuali mereka mengikuti lagi.\n\nApakah Anda masih ingin menghapus pengunjung ini?</string>
+    <string name="subscriber_remove_confirmation_message">Jika dihapus, pelanggan ini akan berhenti menerima pemberitahuan tentang situs ini, kecuali jika mereka kembali berlangganan.\n\nApakah Anda masih ingin menghapus pelanggan ini?</string>
     <string name="follower_subscribed_since">Sejak %1$s</string>
     <string name="error_remove_viewer">Gagal menghapus pengunjung</string>
-    <string name="error_remove_follower">Gagal menghapus pengikut</string>
-    <string name="error_fetch_email_followers_list">Gagal menampilkan pengikut email situs</string>
-    <string name="error_fetch_followers_list">Gagal menampilkan pengikut situs</string>
     <string name="editor_failed_uploads_switch_html">Beberapa media gagal diunggah. Anda bisa pindah ke mode HTML\n        dalam situasi begini. Hapus semua unggahan yang gagal dan lanjutkan?</string>
     <string name="image_thumbnail">Miniatur gambar</string>
     <string name="visual_editor">Editor Visual</string>
@@ -3265,7 +3306,6 @@ Language: id
     <string name="replies_to_my_comments">Balas komentar saya</string>
     <string name="username_mentions">Penyebutan nama pengguna</string>
     <string name="site_achievements">Prestasi situs</string>
-    <string name="site_follows">Pengikut Situs</string>
     <string name="likes_on_my_posts">Suka pada pos saya</string>
     <string name="likes_on_my_comments">Suka pada komentar saya</string>
     <string name="comments_on_my_site">Komentar di situs saya</string>
@@ -3536,7 +3576,6 @@ Language: id
     <string name="stats_followers_minutes">%1$d menit</string>
     <string name="stats_followers_a_minute_ago">satu menit yang lalu</string>
     <string name="stats_followers_seconds_ago">detik yang lalu</string>
-    <string name="stats_view_followers">Pengikut</string>
     <string name="stats_view_videos">Video</string>
     <string name="stats_view_top_posts_and_pages">Pos &amp; Halaman</string>
     <string name="stats_view_countries">Negara</string>
@@ -3696,7 +3735,6 @@ Language: id
     <string name="manage">Atur</string>
     <string name="more_notifications">dan %d lagi.</string>
     <string name="new_notifications">%d notifikasi baru</string>
-    <string name="follows">Mengikuti</string>
     <string name="note_reply_successful">Balasan dipublikasikan</string>
     <string name="sign_in">Log in</string>
     <string name="loading">Memuat…</string>

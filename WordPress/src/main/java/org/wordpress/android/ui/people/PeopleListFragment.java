@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.AppBarLayout.LayoutParams;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
@@ -180,7 +181,7 @@ public class PeopleListFragment extends Fragment {
             @Override
             public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
                 mActionableEmptyView.setVisibility(View.GONE);
-                mFilteredRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+                mFilteredRecyclerView.setToolbarScrollFlags(LayoutParams.SCROLL_FLAG_SCROLL);
 
                 switch (emptyViewMsgType) {
                     case LOADING:
@@ -194,11 +195,11 @@ public class PeopleListFragment extends Fragment {
                             case TEAM:
                                 title = getString(R.string.people_empty_list_filtered_users);
                                 break;
-                            case FOLLOWERS:
-                                title = getString(R.string.people_empty_list_filtered_followers);
+                            case SUBSCRIBERS:
+                                title = getString(R.string.people_empty_list_filtered_subscribers);
                                 break;
-                            case EMAIL_FOLLOWERS:
-                                title = getString(R.string.people_empty_list_filtered_email_followers);
+                            case EMAIL_SUBSCRIBERS:
+                                title = getString(R.string.people_empty_list_filtered_email_subscribers);
                                 break;
                             case VIEWERS:
                                 title = getString(R.string.people_empty_list_filtered_viewers);
@@ -213,10 +214,10 @@ public class PeopleListFragment extends Fragment {
                         switch (mPeopleListFilter) {
                             case TEAM:
                                 return getString(R.string.error_fetch_users_list);
-                            case FOLLOWERS:
-                                return getString(R.string.error_fetch_followers_list);
-                            case EMAIL_FOLLOWERS:
-                                return getString(R.string.error_fetch_email_followers_list);
+                            case SUBSCRIBERS:
+                                return getString(R.string.error_fetch_subscribers_list);
+                            case EMAIL_SUBSCRIBERS:
+                                return getString(R.string.error_fetch_email_subscribers_list);
                             case VIEWERS:
                                 return getString(R.string.error_fetch_viewers_list);
                         }
@@ -309,10 +310,10 @@ public class PeopleListFragment extends Fragment {
             case TEAM:
                 peopleList = PeopleTable.getUsers(mSite.getId());
                 break;
-            case FOLLOWERS:
+            case SUBSCRIBERS:
                 peopleList = PeopleTable.getFollowers(mSite.getId());
                 break;
-            case EMAIL_FOLLOWERS:
+            case EMAIL_SUBSCRIBERS:
                 peopleList = PeopleTable.getEmailFollowers(mSite.getId());
                 break;
             case VIEWERS:

@@ -91,7 +91,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
-import org.wordpress.android.widgets.AppRatingDialog;
+import org.wordpress.android.widgets.AppReviewManager;
 import org.wordpress.android.widgets.QuickStartFocusPoint;
 
 import java.util.ArrayList;
@@ -795,6 +795,10 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mMediaCapturePath = mediaCapturePath;
     }
 
+    @Override public void onCameraError(String errorMessage) {
+        ToastUtils.showToast(this, errorMessage, LONG);
+    }
+
     private void showMediaToastError(@StringRes int message, @Nullable String messageDetail) {
         if (isFinishing()) {
             return;
@@ -1093,7 +1097,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
 
         UploadService.uploadMedia(this, mediaModels, "MediaBrowserActivity#addMediaToUploadService");
-        AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
+        AppReviewManager.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
     }
 
     private void queueFileForUpload(Uri uri, String mimeType) {
@@ -1199,10 +1203,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        View snackbarAttachView = findViewById(R.id.tab_layout);
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty() && snackbarAttachView != null) {
             mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     this,
-                    findViewById(R.id.tab_layout),
+                    snackbarAttachView,
                     true,
                     !TextUtils.isEmpty(event.errorMessage)
                     && event.errorMessage.contains(getString(R.string.error_media_quota_exceeded))
@@ -1219,10 +1224,10 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
-                    findViewById(R.id.tab_layout), false,
-                    event.mediaModelList, mSite, event.successMessage);
+        View snackbarAttachView = findViewById(R.id.tab_layout);
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty() && snackbarAttachView != null) {
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this, snackbarAttachView, false, event.mediaModelList,
+                    mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

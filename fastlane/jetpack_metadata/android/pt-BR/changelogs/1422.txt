@@ -1,4 +1,0 @@
-24.6:
-- Corrigimos uma série de problemas na formação de texto em destaque.
-- Agora, o app é compatível com sugestões de texto maiores que o espaço visível no editor.
-- Mudamos o símbolo de infinito para "100%" na tela Estatísticas. E naquele momento eu seria capaz de jurar que éramos 100%.

@@ -1,3 +1,0 @@
-24.6:
-- Vurgulu metin biçimlendirmesiyle ilgili birkaç sorunu düzelttik. Sizi bilemeyiz ancak bizim haftamızın en önemli olayı buydu.
-- Uygulama artık düzenleyicideki görünür alandan daha uzun metin önerilerini destekliyor. Kilitlenme yok, sadece gözün görebileceği kadar tahmini metin var.

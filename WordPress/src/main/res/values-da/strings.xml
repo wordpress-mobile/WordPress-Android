@@ -127,7 +127,6 @@ Language: da_DK
     <string name="stats_followers_months">%1$d måneder</string>
     <string name="themes_fetching">Henter temaer…</string>
     <string name="stats_view_videos">Videoer</string>
-    <string name="stats_view_followers">Følgere</string>
     <string name="stats_view_countries">Lande</string>
     <string name="stats_likes">Likes</string>
     <string name="stats_timeframe_years">År</string>
@@ -264,7 +263,6 @@ Language: da_DK
     <string name="more_notifications">og %d mere.</string>
     <string name="new_notifications">%d nye notifikationer</string>
     <string name="note_reply_successful">Svar sendt</string>
-    <string name="follows">Følger</string>
     <string name="loading">Indlæser…</string>
     <string name="httpuser">HTTP-brugernavn</string>
     <string name="httppassword">HTTP-adgangskode</string>

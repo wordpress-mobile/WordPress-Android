@@ -1,11 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-04-18 11:54:07+0000
+Translation-Revision-Date: 2024-06-13 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Düzenlemek için dokunun</string>
+    <string name="voice_to_content_permissions_required_msg">Ses kaydetmek için bu uygulamanın mikrofonunuza erişim izni olması gerekir. Daha önce bu izni reddetmiştiniz. Bu özelliği kullanmak için lütfen uygulama ayarlarından mikrofon iznini etkinleştirin.</string>
+    <string name="voice_to_content_permissions_required_title">Ses Kaydı İzni Gerekli</string>
+    <string name="permission_access_media_location">Ortamın Konumu</string>
+    <string name="in_app_update_restart">Yeniden Başla</string>
+    <string name="in_app_update_available">Güncelleme indirildi. Uygulamak için yeniden başlayın.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Sesten gönderi oluştur</string>
+    <string name="reader_tags_feed_action_label_open_menu">menüyü aç</string>
+    <string name="reader_tags_feed_action_label_unlike_post">gönderideki beğeniyi kaldır</string>
+    <string name="reader_tags_feed_action_label_like_post">gönderiyi beğen</string>
+    <string name="reader_tags_feed_action_label_open_blog">blogu aç</string>
+    <string name="reader_tags_feed_action_label_open_post">gönderiyi aç</string>
+    <string name="reader_tags_feed_error_retry">Tekrar dene</string>
+    <string name="reader_tags_feed_no_content_error_description">Şu anda %s olarak etiketlenmiş gönderi bulunamadı</string>
+    <string name="reader_tags_feed_loading_error_description">Şu anda bu etiketten gönderiler yüklenemiyor</string>
+    <string name="reader_tags_feed_error_title">%s etiketli hiç yazı bulunamadı</string>
+    <string name="reader_tags_feed_see_more_from_tag">%s etiketli daha fazla içerik</string>
+    <string name="reader_tags_display_name">Etiketler</string>
+    <string name="reader_announcement_card_reading_preferences_description">Size uygun renkler ve yazı tipleri. Bir gönderiyi okurken ekranın üst kısmındaki AA simgesine dokunun.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Okuma Tercihleri</string>
+    <string name="reader_announcement_card_tags_stream_description">Üstteki açılır menüye dokunun ve takip ettiğiniz etiketlerin akışına erişmek için Etiketler seçeneğini belirleyin.</string>
+    <string name="reader_announcement_card_tags_stream_title">Etiket akışı</string>
+    <string name="reader_announcement_card_title">Okuyucuda Yeni</string>
+    <string name="reader_dropdown_menu_tags">Etiketleriniz</string>
+    <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
+    <string name="stats_subscribers_marker_view_plural">Aboneler</string>
+    <string name="stats_subscribers_marker_view_singular">Abone</string>
+    <string name="stats_view_subscriber_growth">Abone Artışı</string>
+    <string name="role_subscriber">Abone</string>
+    <string name="title_email_subscriber">E-posta Abonesi</string>
+    <string name="people_empty_list_filtered_email_subscribers">Henüz e-posta abonesi yok</string>
+    <string name="people_empty_list_filtered_subscribers">Henüz abone yok</string>
+    <string name="people_dropdown_item_email_subscribers">E-posta Aboneleri</string>
+    <string name="people_dropdown_item_subscribers">Aboneler</string>
+    <string name="invite_already_subscribed">%s: Zaten abone</string>
+    <string name="error_no_camera_available">Kullanılabilir kamera uygulaması yok.</string>
+    <string name="error_remove_subscriber">Abone kaldırılamadı</string>
+    <string name="error_fetch_email_subscribers_list">Site e-posta aboneleri alınamadı</string>
+    <string name="error_fetch_subscribers_list">Site aboneleri alınamadı</string>
+    <string name="post_settings_add_to_calendar_error">Takvime eklenemedi</string>
+    <string name="post_settings_no_calendar_app_exists">Takvime ekleme isteğini yönetecek uygulama bulunamadı</string>
+    <string name="site_subscriptions">Site abonelikleri</string>
+    <string name="notifications_tab_title_subscribers">Aboneler</string>
+    <string name="subscribers">Aboneler</string>
+    <string name="notifications_empty_subscribers">Henüz abone yok</string>
+    <string name="stats_view_emails">E-posta Adresleri</string>
+    <string name="stats_view_subscribers">Aboneler</string>
+    <string name="stats_view_total_subscribers">Toplam Abone</string>
+    <string name="stats_view_subscriber_totals">Abone Toplamları</string>
+    <string name="stats_list_item_with_two_values_description">%1$s: %2$s, %3$s: %4$s, %5$s: %6$s</string>
+    <string name="stats_emails_clicks_label">Tıklamalar</string>
+    <string name="stats_emails_opens_label">Açmalar</string>
+    <string name="stats_emails_latest_emails_label">En son e-postalar</string>
+    <string name="stats_subscriber_since_label">Şu tarihten beri abone</string>
+    <string name="stats_name_label">Ad</string>
+    <string name="stats_publicize_subscribers_label">Abone</string>
+    <string name="stats_subscriber_label">Abone</string>
+    <string name="stats_subscribers_count_message">Toplam %1$s Aboneleri: %2$s</string>
+    <string name="page_upload_conflict_error">Bu sayfanın daha yeni olan bir revizyonu var</string>
+    <string name="editor_updating_content">İçerik güncelleniyor</string>
+    <string name="stats_subscribers">Aboneler</string>
     <string name="weekly_roundup_notification_text_views_and_comment">Geçen hafta %1$s görüntüleme oldu ve 1 yorum aldınız</string>
     <string name="weekly_roundup_notification_text_views_and_like">Geçen hafta %1$s görüntüleme oldu ve 1 beğeni aldınız</string>
     <string name="weekly_roundup_notification_text_views_like_comment">Geçen hafta %1$s görüntüleme oldu, 1 beğeni ve 1 yorum aldınız.</string>
@@ -32,12 +94,15 @@ Language: tr
     <string name="reader_preferences_screen_font_family_label">Yazı tipi</string>
     <string name="reader_preferences_screen_theme_label">Renk Düzeni</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">geri bildiriminizi gönderin</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Seçilen rengi temizle</string>
     <string name="reader_no_followed_tags_text_title">Takip edilen etiket yok</string>
     <string name="reader_toast_err_tag_already_following">Bu etiketi zaten takip ediyorsunuz</string>
     <string name="reader_menu_reading_preferences">Okuma Tercihleri</string>
     <string name="reader_page_followed_tags_text_title">Takip edilen etiketler</string>
     <string name="reader_preferences_theme_candy">Şeker</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">Akşam</string>
     <string name="reader_preferences_theme_sepia">Sepya</string>
     <string name="reader_preferences_theme_soft">Yumuşak</string>
@@ -56,6 +121,7 @@ Language: tr
     <string name="gutenberg_native_copy_error_details">Hata ayrıntılarını kopyala</string>
     <string name="gutenberg_native_button_to_copy_post_text">Gönderi metnini kopyalama düğmesi</string>
     <string name="gutenberg_native_button_to_copy_error_details">Hata ayrıntılarını kopyalama düğmesi</string>
+    <string name="editor_updating_content_failed">İçerik güncellenemedi</string>
     <string name="gutenberg_native_video_caption_s_0141bd20">Video yazısı. %s</string>
     <string name="gutenberg_native_video_caption_empty_663aab49">Video yazısı. Boş</string>
     <string name="gutenberg_native_edit_video_024aee6d">Videoyu düzenle</string>
@@ -128,10 +194,6 @@ Language: tr
     <string name="reader_filter_empty_blogs_list">Abone olduğunuz bloglardaki en iyi yazıları görün</string>
     <string name="reader_filter_by_tag_title">Etikete göre süz</string>
     <string name="reader_filter_by_blog_title">Bloğa göre süz</string>
-    <string name="stats_timeframe_by_year">Yıla göre</string>
-    <string name="stats_timeframe_by_month">Aya göre</string>
-    <string name="stats_timeframe_by_week">Haftaya göre</string>
-    <string name="stats_timeframe_by_day">Güne göre</string>
     <string name="gutenberg_native_waiting_for_connection">Bağlantı bekleniyor</string>
     <string name="stats_traffic">Trafik</string>
     <string name="gutenberg_native_working_offline">Çevrim dışı çalışıyor</string>
@@ -546,8 +608,6 @@ Language: tr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Okuyucu, Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">İstatistikleriniz Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Yeni Jetpack uygulamasına geçiş yapın</string>
-    <string name="blogging_prompts_list_error_network_subtitle">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
-    <string name="blogging_prompts_list_error_network_title">Bu içerik şu an yüklenemiyor</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">İstemler yüklenirken bir sorun çıktı.</string>
     <string name="blogging_prompts_list_error_fetch_title">Eyvah</string>
     <string name="blogging_prompts_list_no_prompts">Henüz bir istem yok</string>
@@ -673,7 +733,7 @@ Language: tr
     <string name="qrcode_auth_flow_validated_subtitle">Yalnızca doğrudan tarayıcınızdan alınan QR kodlarını tarayın. Size başkaları tarafından gönderilen bir kodu asla taramayın.</string>
     <string name="qrcode_auth_flow_validated_default_title">%1$s yakınından tarayıcınız ile oturum açmaya mı çalışıyorsunuz?</string>
     <string name="qrcode_auth_flow_validated_title">%1$s için %2$s yakınından oturum açmaya mı çalışıyorsunuz?</string>
-    <string name="stats_insights_followers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve takipçi oluşturmanın harika bir yoludur.</string>
+    <string name="stats_insights_subscribers_guide_card">💡Diğer bloglara yorum yapmak, yeni siteniz için dikkat çekmenin ve abone oluşturmanın harika bir yoludur.</string>
     <string name="stats_insights_comments_guide_card">💡En iyi yorumcularınızı görmek için \'DİĞERLERİ\' üzerine dokunun.</string>
     <string name="stats_insights_latest_post_empty">İlk yazınızı yayınladıktan sonra yeniden bakın!</string>
     <string name="stats_insights_views_and_visitors_visitors_empty_state">Görüntüleme ve trafiğinizi artırmak için en iyi ipuçlarımıza göz atın %1$s</string>
@@ -711,7 +771,7 @@ Language: tr
     <string name="me_btn_scan_login_code">Oturum açma kodunu tara</string>
     <string name="stats_insights_likes_guide_card">⭐️ Son yazınız (%1$s) %2$s beğeni aldı.</string>
     <string name="stats_most_popular_percent_views_empty">Yeterli etkinlik yok. Sitenizin daha fazla ziyaretçisi olduğunda yeniden bakın!</string>
-    <string name="stats_total_followers_content_description">%1$s, %2$s%% toplam takipçi sayısı</string>
+    <string name="stats_total_subscribers_content_description">%1$s, toplam abonelerin %2$s%% kadarı</string>
     <string name="stats_value_percent">%1$s (%2$s%%)</string>
     <string name="pages_copy_link">Bağlantıyı kopyala</string>
     <string name="quick_start_completed_tour_title">Tebrikler! Yolunuzu biliyorsunuz&lt;br/&gt;</string>
@@ -738,7 +798,6 @@ Language: tr
     <string name="stats_published_minutes_ago">%1$d dakika önce yayınlandı</string>
     <string name="stats_published_a_minute_ago">Bir dakika önce yayınlandı</string>
     <string name="stats_published_seconds_ago">Saniyeler önce yayınlandı</string>
-    <string name="stats_view_total_followers">Toplam takipçi</string>
     <string name="stats_view_total_comments">Toplam yorum</string>
     <string name="stats_view_total_likes">Toplam beğeni</string>
     <string name="blogging_prompts_notification_dismiss">Kapat</string>
@@ -1164,6 +1223,7 @@ Language: tr
     <string name="gutenberg_native_add_title">Başlık ekle</string>
     <string name="gutenberg_native_no_preview_available">Ön izleme yok</string>
     <string name="gutenberg_native_loading">Yükleniyor</string>
+    <string name="gutenberg_native_link_label">Bağlantı etiketi</string>
     <string name="gutenberg_native_text_color">Metin rengi</string>
     <string name="gutenberg_native_s_link">%s bağlantı</string>
     <string name="gutenberg_native_padding">Dolgu</string>
@@ -1836,7 +1896,6 @@ Language: tr
     <string name="sharing_facebook_account_must_have_pages">Facebook bağlantısı herhangi bir sayfa bulamadı. Jetpack Social, Facebook Profillerine bağlanamaz, yalnızca yayınlanan sayfalara bağlanır.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Bağlı değil</string>
     <string name="notifications_tab_title_likes">Beğeniler</string>
-    <string name="notifications_tab_title_follows">Takipler</string>
     <string name="notifications_tab_title_comments">Yorumlar</string>
     <string name="notifications_tab_title_unread_notifications">Okunmamış</string>
     <string name="dlg_cancel_action_dont_trash">Çöpe atma</string>
@@ -2161,9 +2220,7 @@ Language: tr
     <string name="error_restoring_post">Yazı geri yüklenirken bir sorun çıktı</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_title">Yalnızca en ilgili istatistikleri görün. Aşağıdan yönelimler ekleyin ve düzenleyin.</string>
-    <string name="stats_insights_social">Sosyal</string>
     <string name="stats_insights_annual_site_stats">Yıllık site istatistikleri</string>
-    <string name="stats_view_follower_totals">Toplam takipçi</string>
     <string name="domain_suggestions_fetch_error">Etki alanı önerileri yüklenemedi</string>
     <string name="domain_suggestions_search_hint">Başka fikirler almak için bir anahtar sözcük yazın</string>
     <string name="domains_suggestions_empty_list">Herhangi bir öneri bulunamadı</string>
@@ -2327,7 +2384,6 @@ Language: tr
     <string name="stats_insights_tags_and_categories">Etiketler ve kategoriler</string>
     <string name="stats_insights_all_time_stats">Tüm zamanlar</string>
     <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
-    <string name="stats_publicize_followers_label">Takipçiler</string>
     <string name="stats_publicize_service_label">Hizmet</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_views_label">Görüntülemeler</string>
@@ -2340,8 +2396,6 @@ Language: tr
     <string name="stats_comments_posts_and_pages">Yazılar ve sayfalar</string>
     <string name="stats_comments_authors">Yazarlar</string>
     <string name="stats_follower_since_label">Başlangıç</string>
-    <string name="stats_follower_label">Takipçi</string>
-    <string name="stats_followers_count_message">Toplam %1$s takipçi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
     <string name="stats_manage_insights">Yönelim yönetimi</string>
@@ -2443,14 +2497,11 @@ Language: tr
     <string name="sign_out_wpcom_confirm_with_no_changes">WordPress oturumu kapatılsın mı?</string>
     <string name="sign_out_wpcom_confirm_with_changes">Yazı üzerinde henüz sitenize yüklenmemiş değişiklikler var. Şimdi oturumu kapatırsanız bu değişiklikler aygıtınızdan silinir. Oturum yine de kapatılsın mı?</string>
     <string name="people_empty_list_filtered_viewers">Henüz bir görüntüleyici yok</string>
-    <string name="people_empty_list_filtered_email_followers">Henüz bir e-posta takipçisi yok</string>
-    <string name="people_empty_list_filtered_followers">Henüz bir takipçi yok</string>
     <string name="people_empty_list_filtered_users">Henüz bir kullanıcı yok</string>
     <string name="reader_empty_posts_liked_description">Beğendiğiniz yazılar burada yer alacak</string>
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
     <string name="reader_no_followed_blogs_button_discover">Blogları keşfedin</string>
     <string name="notifications_empty_likes">Henüz beğeni yok</string>
-    <string name="notifications_empty_followers">Henüz takipçi yok</string>
     <string name="activity_log_limited_content_on_free_plan">Ücretsiz bir paket kullandığınız için etkinliklerinizde sınırlı içerik görüyorsunuz.</string>
     <string name="activity_log_empty_subtitle">Sitenizde değişiklikler yaptığınızda etkinlik geçmişinizi burada görebilirsiniz</string>
     <string name="activity_log_empty_title">Henüz etkinlik yok</string>
@@ -3081,6 +3132,7 @@ Language: tr
     <string name="error_all_media_upload_canceled">Bilinmeyen bir sorun nedeniyle tüm ortam yüklemeleri iptal edildi. Lütfen yeniden yüklemeyi deneyin</string>
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
     <string name="submit_for_review">Gönder</string>
+    <string name="title_subscriber">Abone</string>
     <string name="duplicate_site_detected">Bir çift site bulundu.</string>
     <string name="cannot_add_duplicate_site">Bu site uygulamada zaten var. Yeniden ekleyemezsiniz.</string>
     <string name="already_logged_in_wpcom">Zaten WordPress.com hesabınızda oturum açmış durumdasınız. Başka bir hesapla ilişkili WordPress.com hesabını ekleyemezsiniz.</string>
@@ -3129,35 +3181,26 @@ Language: tr
     <string name="preference_open_device_settings">Aygıt ayarlarını aç</string>
     <string name="invite_invalid_email">%s: E-posta geçersiz</string>
     <string name="invite_user_blocked_invites">%s: Kullanıcının engellediği davetler</string>
-    <string name="invite_already_following">%s: Zaten takip edenler</string>
     <string name="invite_already_a_member">%s: Zaten üye olanlar</string>
     <string name="invite_username_not_found">%s: Kullanıcı bulunamadı</string>
     <string name="comment_moderated_approved">Yorum onaylandı!</string>
     <string name="like">Beğen</string>
     <string name="timespan_now">şu an</string>
     <string name="role_viewer">Görüntüleyici</string>
-    <string name="role_follower">Takipçi</string>
     <string name="error_post_my_profile_no_connection">Bağlantı yok, profiliniz kaydedilemedi</string>
     <string name="alignment_right">Sağda</string>
     <string name="alignment_left">Solda</string>
     <string name="alignment_none">Yok</string>
     <string name="site_settings_list_editor_action_mode_title">%1$d seçilmiş</string>
     <string name="error_fetch_users_list">Site kullanıcıları alınamadı</string>
-    <string name="title_email_follower">E-posta takipçisi</string>
-    <string name="title_follower">Takipçi</string>
     <string name="people_fetching">Kullanıcılar alınıyor…</string>
     <string name="people_dropdown_item_viewers">İzleyiciler</string>
-    <string name="people_dropdown_item_email_followers">E-posta takipçileri</string>
-    <string name="people_dropdown_item_followers">Takipçiler</string>
     <string name="people_dropdown_item_team">Ekip</string>
     <string name="invite_message_usernames_limit">10 taneye kadar e-posta adresi ve/veya WordPress.com kullanıcısı davet edin. Kullanıcı adına gerek duyanlara, nasıl oluşturacakları ile ilgili bilgilendirme gönderilecek.</string>
     <string name="viewer_remove_confirmation_message">Bu izleyiciyi kaldırırsanız artık sitenizi ziyaret edemeyecek.\n\nBu kullanıcıyı gene de kaldırmak istiyor musunuz?</string>
-    <string name="follower_remove_confirmation_message">Kaldırılırsa, bu takipçinin site hakkındaki bildirimleri alması duracak. Tabi yeniden takip etmeye başlayana kadar.\n\nBu takipçiyi gene de kaldırmak istiyor musunuz?</string>
+    <string name="subscriber_remove_confirmation_message">Kaldırılırsa bu abone tekrar abone olmazsa site hakkında bildirimleri almayı durduracaktır.\n\nYine de bu aboneyi kaldırmak istiyor musunuz?</string>
     <string name="follower_subscribed_since">%1$s tarihinden beri</string>
     <string name="error_remove_viewer">İzleyici kaldırılamıyor</string>
-    <string name="error_remove_follower">Takipçi kaldırılamadı</string>
-    <string name="error_fetch_email_followers_list">Sitenin e-posta takipçileri alınamadı</string>
-    <string name="error_fetch_followers_list">Sitenin takipçileri alınamadı</string>
     <string name="editor_failed_uploads_switch_html">Bazı ortamlar yüklenemedi. HTML moduna geçebilirsiniz\n        Tüm başarısız yüklemeler kaldırılıp ilerlensin mi?</string>
     <string name="image_thumbnail">Görsel küçük görseli</string>
     <string name="visual_editor">Görsel düzenleyici</string>
@@ -3263,7 +3306,6 @@ Language: tr
     <string name="replies_to_my_comments">Yorumlarıma yanıtlar</string>
     <string name="username_mentions">Kullanıcı adı bahsedenleri</string>
     <string name="site_achievements">Site başarıları</string>
-    <string name="site_follows">Site takipleri</string>
     <string name="likes_on_my_posts">Yazılarımın beğenileri</string>
     <string name="likes_on_my_comments">Yorumlarımın beğenileri</string>
     <string name="comments_on_my_site">Sitemdeki yorumlar</string>
@@ -3534,7 +3576,6 @@ Language: tr
     <string name="stats_followers_minutes">%1$d dakika</string>
     <string name="stats_followers_a_minute_ago">bir dakika önce</string>
     <string name="stats_followers_seconds_ago">saniye önce</string>
-    <string name="stats_view_followers">Takipçiler</string>
     <string name="stats_view_videos">Videolar</string>
     <string name="stats_view_top_posts_and_pages">Yazılar ve sayfalar</string>
     <string name="stats_view_countries">Ülkeler</string>
@@ -3694,7 +3735,6 @@ Language: tr
     <string name="manage">Yönet</string>
     <string name="more_notifications">ve %d daha.</string>
     <string name="new_notifications">%d yeni bildirim</string>
-    <string name="follows">Takipler</string>
     <string name="note_reply_successful">Yanıt yayınlandı</string>
     <string name="sign_in">Oturum aç</string>
     <string name="loading">Yükleniyor…</string>

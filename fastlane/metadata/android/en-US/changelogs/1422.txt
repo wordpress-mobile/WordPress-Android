@@ -1,2 +1,0 @@
-- We fixed a handful of issues with highlighted text formatting. We don’t know about you, but that’s the highlight of our week.
-- The app now supports text suggestions that are longer than the visible space in the editor. No crashes—just predictive text, as far as the eye can see.

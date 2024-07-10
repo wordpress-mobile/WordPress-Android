@@ -8,8 +8,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseFour
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseNewUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseOne
@@ -18,7 +23,9 @@ import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseT
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalPhase.PhaseSelfHostedUsers
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_ONE
 import org.wordpress.android.ui.jetpackoverlay.JetpackFeatureRemovalSiteCreationPhase.PHASE_TWO
+import org.wordpress.android.ui.main.WPMainNavigationView
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.JetpackFeatureRemovalNewUsersConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseFourConfig
 import org.wordpress.android.util.config.JetpackFeatureRemovalPhaseOneConfig
@@ -58,6 +65,9 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
     @Mock
     private lateinit var phaseFourOverlayFrequencyConfig: PhaseFourOverlayFrequencyConfig
 
+    @Mock
+    private lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
     private lateinit var jetpackFeatureRemovalPhaseHelper: JetpackFeatureRemovalPhaseHelper
 
     @Before
@@ -71,7 +81,8 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
             jetpackFeatureRemovalNewUsersConfig,
             jetpackFeatureRemovalSelfHostedUsersConfig,
             jetpackFeatureRemovalStaticPostersConfig,
-            phaseFourOverlayFrequencyConfig
+            phaseFourOverlayFrequencyConfig,
+            analyticsTrackerWrapper
         )
     }
 
@@ -183,5 +194,42 @@ class JetpackFeatureRemovalPhaseHelperTest : BaseUnitTest() {
         val currentPhase = jetpackFeatureRemovalPhaseHelper.getSiteCreationPhase()
 
         assertEquals(currentPhase, PHASE_TWO)
+    }
+
+    @Test
+    fun `given it is the Jetpack app, when we track reader accessed event, then the proper event is tracked`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(true)
+
+        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
+
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_ACCESSED)
+    }
+
+    @Test
+    fun `given we do not show static posters, when we track reader accessed event, then the proper event is tracked`() {
+        whenever(buildConfigWrapper.isJetpackApp).thenReturn(false)
+        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(false)
+
+        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
+
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_ACCESSED)
+    }
+
+    @Test
+    fun `given we do show static posters, when we track reader accessed event, then the event is not tracked`() {
+        whenever(jetpackFeatureRemovalStaticPostersConfig.isEnabled()).thenReturn(true)
+
+        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.READER)
+
+        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_ACCESSED)
+    }
+
+    @Test
+    fun `given we show static posters, when we track my site accessed event, then the proper event is tracked`() {
+        val site = SiteModel()
+
+        jetpackFeatureRemovalPhaseHelper.trackPageAccessedEventIfNeeded(WPMainNavigationView.PageType.MY_SITE, site)
+
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.MY_SITE_ACCESSED, site)
     }
 }

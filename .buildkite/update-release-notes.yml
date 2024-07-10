@@ -1,16 +1,21 @@
-# Nodes with values to reuse in the pipeline.
-common_params:
-  # Common plugin settings to use with the `plugins` key.
-  - &common_plugins
-    - automattic/a8c-ci-toolkit#2.17.0
+# yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+---
+
 
 steps:
   - label: "Update release notes"
-    plugins: *common_plugins
+    plugins: [$CI_TOOLKIT]
     command: |
-      .buildkite/commands/configure-git-for-release-management.sh
+      echo '--- :robot_face: Use bot for git operations'
+      source use-bot-for-git
+
+      echo '--- :git: Checkout Editorial Branch'
       .buildkite/commands/checkout-editorial-branch.sh
 
+      echo '--- :ruby: Setup Ruby Tools'
       install_gems
 
+      echo '--- :memo: Update Release Notes'
       bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
+    agents:
+       queue: "tumblr-metal"

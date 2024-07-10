@@ -178,7 +178,6 @@
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">40dp</dimen>
-    <dimen name="avatar_sz_medium_radius">20dp</dimen>
     <dimen name="avatar_sz_inner_circle">48dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_extra_large">72dp</dimen>
@@ -189,6 +188,7 @@
     <dimen name="avatar_background_padding">1dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
+    <dimen name="blavatar_sz_radius">5dp</dimen>
     <dimen name="blavatar_sz_extra_large">72dp</dimen>
     <dimen name="my_site_blavatar_sz">56dp</dimen>
 
@@ -551,6 +551,8 @@
 
     <!-- stats -->
     <dimen name="stats_header_height">32dp</dimen>
+    <dimen name="stats_line_chart_tick_width">2dp</dimen>
+    <dimen name="stats_line_chart_tick_height">4dp</dimen>
     <dimen name="stats_bar_chart_height">180dp</dimen>
     <dimen name="stats_pie_chart_slice_width">16dp</dimen>
     <dimen name="stats_block_icon_size">24dp</dimen>
