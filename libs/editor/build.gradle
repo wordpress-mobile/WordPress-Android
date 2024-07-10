@@ -66,17 +66,21 @@ dependencies {
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
         version {
-            strictly wordPressAztecVersion
+            strictly libs.versions.wordPressAztec.get()
         }
     }
-    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:$wordPressAztecVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    api ("$gradle.ext.aztecAndroidWordPressShortcodesPath:${libs.versions.wordPressAztec.get()}") {
         version {
-            strictly wordPressAztecVersion
+            strictly libs.versions.wordPressAztec.get()
         }
     }
-    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:$wordPressAztecVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    api ("$gradle.ext.aztecAndroidWordPressCommentsPath:${libs.versions.wordPressAztec.get()}") {
         version {
-            strictly wordPressAztecVersion
+            strictly libs.versions.wordPressAztec.get()
         }
     }
 
