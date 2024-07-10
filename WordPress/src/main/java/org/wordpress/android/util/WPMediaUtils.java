@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType;
 import org.wordpress.android.fluxc.store.media.MediaErrorSubType.MalformedMediaArgSubType;
+import org.wordpress.android.fluxc.utils.ExifUtils;
 import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.fluxc.utils.MimeTypes.Plan;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -66,6 +69,9 @@ public class WPMediaUtils {
             return null;
         }
 
+        // Read EXIF data from the original image
+        final Map<String, String> exifData = ExifUtils.readExifData(path);
+
         int resizeDimension =
                 AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
@@ -79,6 +85,12 @@ public class WPMediaUtils {
             AppLog.e(AppLog.T.EDITOR, "Optimized picture was null!");
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZE_ERROR);
         } else {
+            // Set the default orientation tag for the EXIF data
+            exifData.put("Orientation", String.valueOf(ExifInterface.ORIENTATION_NORMAL));
+
+            // Write EXIF data to the new image
+            ExifUtils.writeExifData(exifData, optimizedPath);
+
             AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PHOTO_OPTIMIZED);
             return Uri.parse(optimizedPath);
         }

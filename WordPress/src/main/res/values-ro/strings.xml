@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 13:24:24+0000
+Translation-Revision-Date: 2024-06-16 18:22:38+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Atinge pentru a edita</string>
+    <string name="voice_to_content_permissions_required_msg">Pentru a înregistra audio, această aplicație are nevoie de permisiunea ta ca să-ți acceseze microfonul. Ai refuzat anterior această permisiune. Ca să folosești această funcționalitate, te rog să activezi permisiunea pentru microfon în setările aplicației.</string>
+    <string name="voice_to_content_permissions_required_title">Permisiunea pentru înregistrare audio este obligatorie</string>
+    <string name="permission_access_media_location">Locație Media</string>
+    <string name="in_app_update_restart">Repornește</string>
+    <string name="in_app_update_available">Am descărcat actualizarea. Repornește pentru a o aplica.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Articol din fișier audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">deschide meniul</string>
+    <string name="reader_tags_feed_action_label_unlike_post">înlătură aprecierea articolului</string>
+    <string name="reader_tags_feed_action_label_like_post">apreciază articolul</string>
+    <string name="reader_tags_feed_action_label_open_blog">deschide blogul</string>
+    <string name="reader_tags_feed_action_label_open_post">deschide articolul</string>
+    <string name="reader_tags_feed_error_retry">Reîncearcă</string>
+    <string name="reader_tags_feed_no_content_error_description">Momentan, nu am găsit niciun articol etichetat cu %s</string>
+    <string name="reader_tags_feed_loading_error_description">Momentan, nu am putut să încărcăm articole cu această etichetă</string>
+    <string name="reader_tags_feed_error_title">Nu am găsit niciun articol pentru %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Mai multe pentru %s</string>
+    <string name="reader_tags_display_name">Etichete</string>
+    <string name="reader_announcement_card_reading_preferences_description">Alegi culorile și fonturile pe care le vrei. Când citești un articol, atinge iconul AA în partea de sus a ecranului.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferințe pentru citire</string>
+    <string name="reader_announcement_card_tags_stream_description">Atinge lista derulantă în partea de sus și selectează Etichete pentru a accesa fluxurile pentru etichetele urmărite.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flux de etichete</string>
+    <string name="reader_announcement_card_title">Noutăți în Cititor</string>
+    <string name="reader_dropdown_menu_tags">Etichetele tale</string>
+    <string name="no_connection_error_description">Verifică conexiunea la rețea și încearcă din nou.</string>
+    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="stats_subscribers_marker_view_plural">Abonați</string>
     <string name="stats_subscribers_marker_view_singular">Abonat</string>
     <string name="stats_view_subscriber_growth">Creștere număr de abonați</string>
@@ -582,8 +608,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
-    <string name="no_connection_error_description">Verifică conexiunea rețelei și încearcă din nou.</string>
-    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
     <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>
@@ -1768,7 +1792,7 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_find_out_mode">Află mai multe</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>
     <string name="crop">decupează</string>
@@ -2154,7 +2178,7 @@ Language: ro
     <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest site.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
     <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu %1$stermenii și condițiile%2$s.</string>
-    <string name="error_network_connection">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="error_network_connection">Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="error_browser_no_network">Nu pot să încarc această pagină chiar acum.</string>
     <string name="error_disabled_apis">Nu am putut aduce setările: unele API-uri sunt indisponibile pentru această combinație de ID aplicație OAuth + cont.</string>
     <string name="jetpack_connection_terms_and_conditions">Prin inițializarea Jetpack ești de acord cu %1$stermenii și condițiile%2$s.</string>

@@ -15,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.datasets.AsyncTaskExecutor;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -81,11 +83,13 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
+import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
     private final NetworkUtilsWrapper mNetworkUtilsWrapper;
+    private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -371,44 +375,48 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug());
+        AsyncTaskExecutor.executeIo(
+                mScope,
+                () -> !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                isAskingToFollow -> {
+                    final String slugForTracking = currentTag.getTagSlug();
 
-        final String slugForTracking = currentTag.getTagSlug();
+                    ReaderActions.ActionListener listener = succeeded -> {
+                        if (!succeeded) {
+                            int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
+                                    : R.string.reader_toast_err_removing_tag;
+                            ToastUtils.showToast(context, errResId);
+                        } else {
+                            if (isAskingToFollow) {
+                                mReaderTracker.trackTag(
+                                        AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
+                                        slugForTracking,
+                                        mSource
+                                );
+                            } else {
+                                mReaderTracker.trackTag(
+                                        AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
+                                        slugForTracking,
+                                        mSource
+                                );
+                            }
+                        }
+                        renderTagHeader(currentTag, tagHolder, true);
+                    };
 
-        ReaderActions.ActionListener listener = succeeded -> {
-            if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_adding_tag
-                        : R.string.reader_toast_err_removing_tag;
-                ToastUtils.showToast(context, errResId);
-            } else {
-                if (isAskingToFollow) {
-                    mReaderTracker.trackTag(
-                            AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            slugForTracking,
-                            mSource
-                    );
-                } else {
-                    mReaderTracker.trackTag(
-                            AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
-                            slugForTracking,
-                            mSource
-                    );
+                    boolean success;
+                    boolean isLoggedIn = mAccountStore.hasAccessToken();
+                    if (isAskingToFollow) {
+                        success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
+                    } else {
+                        success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
+                    }
+
+                    if (isLoggedIn && success) {
+                        renderTagHeader(currentTag, tagHolder, false);
+                    }
                 }
-            }
-            renderTagHeader(currentTag, tagHolder, true);
-        };
-
-        boolean success;
-        boolean isLoggedIn = mAccountStore.hasAccessToken();
-        if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener, isLoggedIn);
-        } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener, isLoggedIn);
-        }
-
-        if (isLoggedIn && success) {
-            renderTagHeader(currentTag, tagHolder, false);
-        }
+        );
     }
 
     private void renderXPost(int position, ReaderXPostViewHolder holder) {
@@ -684,7 +692,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ImageManager imageManager,
             UiHelpers uiHelpers,
             @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
-            boolean isMainReader
+            boolean isMainReader,
+            LifecycleCoroutineScope scope
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -695,6 +704,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
+        mScope = scope;
 
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);

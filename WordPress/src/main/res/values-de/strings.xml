@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 13:07:40+0000
+Translation-Revision-Date: 2024-06-12 12:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">Zum Bearbeiten tippen</string>
+    <string name="voice_to_content_permissions_required_msg">Für eine Audioaufzeichnung benötigt diese App die Berechtigung, auf dein Mikrofon zuzugreifen. Du hast diese Berechtigung kürzlich verweigert. Bitte aktiviere die Mikrofonberechtigung in den App-Einstellungen, um diese Funktion verwenden zu können.</string>
+    <string name="voice_to_content_permissions_required_title">Berechtigung für Audioaufzeichnung erforderlich</string>
+    <string name="permission_access_media_location">Medienstandort</string>
+    <string name="in_app_update_restart">Neu starten</string>
+    <string name="in_app_update_available">Update heruntergeladen. Zum Anwenden neu starten.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Beitrag aus Audio erstellen</string>
+    <string name="reader_tags_feed_action_label_open_menu">Menü öffnen</string>
+    <string name="reader_tags_feed_action_label_unlike_post">Like vom Beitrag entfernen</string>
+    <string name="reader_tags_feed_action_label_like_post">Beitrag mit einem „Like“ markieren</string>
+    <string name="reader_tags_feed_action_label_open_blog">Blog öffnen</string>
+    <string name="reader_tags_feed_action_label_open_post">Beitrag öffnen</string>
+    <string name="reader_tags_feed_error_retry">Erneut versuchen</string>
+    <string name="reader_tags_feed_no_content_error_description">Es können derzeit keine Beiträge mit dem Schlagwort „%s“ gefunden werden</string>
+    <string name="reader_tags_feed_loading_error_description">Es können derzeit keine Beiträge unter diesem Schlagwort geladen werden</string>
+    <string name="reader_tags_feed_error_title">Es wurden keine Beiträge für „%s“ gefunden</string>
+    <string name="reader_tags_feed_see_more_from_tag">Mehr von %s</string>
+    <string name="reader_tags_display_name">Schlagwörter</string>
+    <string name="reader_announcement_card_reading_preferences_description">Wähle Farben und Schriftarten, die zu dir passen. Wenn du einen Beitrag liest, klicke oben im Bildschirm auf das AA-Icon.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Leseeinstellungen</string>
+    <string name="reader_announcement_card_tags_stream_description">Tippe oben auf das Dropdown-Menü und wähle „Schlagwörter“ aus, um auf Streams deiner abonnierten Schlagwörter zuzugreifen.</string>
+    <string name="reader_announcement_card_tags_stream_title">Schlagwörter-Feed</string>
+    <string name="reader_announcement_card_title">Neu im Reader</string>
+    <string name="reader_dropdown_menu_tags">Deine Schlagwörter</string>
+    <string name="no_connection_error_description">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
+    <string name="no_connection_error_title">Dieser Inhalt kann gerade nicht geladen werden</string>
     <string name="stats_subscribers_marker_view_plural">Abonnenten</string>
     <string name="stats_subscribers_marker_view_singular">Abonnent</string>
     <string name="stats_view_subscriber_growth">Abonnentenwachstum</string>
@@ -582,8 +608,6 @@ Language: de
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Der Reader wird in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Deine Statistiken werden in die Jetpack-App verschoben</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Zur neuen Jetpack-App wechseln</string>
-    <string name="no_connection_error_description">Prüfe deine Netzwerkverbindung und versuche es erneut.</string>
-    <string name="no_connection_error_title">Dieser Inhalt kann gerade nicht geladen werden</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Beim Laden der Schreibanregungen ist ein Fehler aufgetreten.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ups</string>
     <string name="blogging_prompts_list_no_prompts">Noch keine Schreibanregungen</string>

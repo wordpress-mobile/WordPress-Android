@@ -1,2 +1,0 @@
-24.9:
-Webbplatsnamn och URL:er är nu korrekt positionerade för användare med språk från höger till vänster. Höger om.

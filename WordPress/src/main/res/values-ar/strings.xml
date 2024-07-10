@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-15 19:54:08+0000
+Translation-Revision-Date: 2024-06-12 14:54:07+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources>
+    <string name="permission_access_media_location">موقع الوسائط</string>
+    <string name="voice_to_content_permissions_required_title">صلاحية تسجيل الصوت مطلوبة</string>
+    <string name="voice_to_content_permissions_required_msg">لتسجيل صوت، يحتاج هذا التطبيق إلى صلاحية للوصول إلى الميكروفون الخاص بك. لقد سبق لك رفض هذه الصلاحية. يرجى تمكين صلاحية الميكروفون ضمن إعدادات التطبيق لاستخدام هذه الميزة.</string>
+    <string name="gutenberg_native_tap_to_edit">النقر للتحرير</string>
+    <string name="in_app_update_restart">إعادة البدء</string>
+    <string name="in_app_update_available">تم تنزيل التحديث. أعد التشغيل للتطبيق.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">تدوينة من ملف صوتي</string>
+    <string name="reader_tags_feed_action_label_open_menu">فتح قائمة</string>
+    <string name="reader_tags_feed_action_label_unlike_post">إزالة تدوينة تنال الإعجاب</string>
+    <string name="reader_tags_feed_action_label_like_post">الإعجاب بتدوينة</string>
+    <string name="reader_tags_feed_action_label_open_blog">فتح مدونة</string>
+    <string name="reader_tags_feed_action_label_open_post">فتح تدوينة</string>
+    <string name="reader_tags_feed_error_retry">إعادة المحاولة</string>
+    <string name="reader_tags_feed_no_content_error_description">يتعذر علينا العثور على أي تدوينات موسومة بـ %s الآن</string>
+    <string name="reader_tags_feed_loading_error_description">يتعذر علينا تحميل التدوينات من هذا الوسم الآن</string>
+    <string name="reader_tags_feed_error_title">لا توجد تدوينات لـ %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">المزيد من %s</string>
+    <string name="reader_tags_display_name">الوسوم</string>
+    <string name="reader_announcement_card_reading_preferences_description">اختر الألوان والخطوط الملائمة لك. عند قراءة تدوينة، اضغط على أيقونة AA في أعلى الشاشة.</string>
+    <string name="reader_announcement_card_reading_preferences_title">تفضيلات القراءة</string>
+    <string name="reader_announcement_card_tags_stream_description">اضغط على القائمة المنسدلة في الأعلى وحدد الوسوم للوصول إلى التدفقات الواردة من الوسوم التي تتابعها.</string>
+    <string name="reader_announcement_card_tags_stream_title">تدفق الوسوم</string>
+    <string name="reader_announcement_card_title">جديد في القارئ</string>
+    <string name="reader_dropdown_menu_tags">الوسوم الخاصة بك</string>
+    <string name="no_connection_error_description">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
+    <string name="no_connection_error_title">يتعذر تحميل هذا المحتوى حاليًا.</string>
+    <string name="stats_subscribers_marker_view_plural">المشتركون</string>
+    <string name="stats_subscribers_marker_view_singular">مشترك</string>
+    <string name="stats_view_subscriber_growth">نمو المشترك</string>
     <string name="role_subscriber">مشترك</string>
     <string name="title_email_subscriber">مشترك عبر البريد الإلكتروني</string>
     <string name="people_empty_list_filtered_email_subscribers">لا يوجد مشتركون عبر البريد الإلكتروني حتى الآن</string>
@@ -578,14 +607,12 @@ Language: ar
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_notifications">ستنتقل ميزة التنبيهات إلى Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">ستنتقل ميزة القارئ إلى تطبيق Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">التبديل إلى تطبيق Jetpack الجديد</string>
-    <string name="no_connection_error_title">يتعذر تحميل هذا المحتوى حاليًا.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">حدث خطأ في أثناء تحميل المطالبات.</string>
     <string name="blogging_prompts_list_error_fetch_title">عذرًا</string>
     <string name="blogging_prompts_list_no_prompts">لا توجد مطالبات بعد</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d من الإجابات</string>
     <string name="blogging_prompts_list_number_of_answers_one">إجابة واحدة</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">ستنتقل ميزة الإحصاءات لديك إلى تطبيق Jetpack</string>
-    <string name="no_connection_error_description">تحقق من اتصالك بالشبكة وحاول مرة أخرى.</string>
     <string name="blogging_prompts_list_number_of_answers_zero">0 من الإجابات</string>
     <string name="blogging_prompts_list_answered_prompt">✓ تم الرد</string>
     <string name="blogging_prompts_list_title">المطالبات</string>

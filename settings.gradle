@@ -10,6 +10,7 @@ pluginManagement {
     gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '3.0.0'
     gradle.ext.koverVersion = '0.7.5'
+    gradle.ext.dependencyAnalysisVersion = '1.28.0'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -28,6 +29,7 @@ pluginManagement {
         id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
         id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
         id "com.google.devtools.ksp" version gradle.ext.kspVersion
+        id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
     }
     repositories {
         maven {

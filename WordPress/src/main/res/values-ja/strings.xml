@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 09:54:09+0000
+Translation-Revision-Date: 2024-06-13 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">タップして編集</string>
+    <string name="voice_to_content_permissions_required_msg">音声を録音するには、このアプリにマイクへのアクセス権限が必要です。 以前、この権限を拒否しています。 この機能を使用するには、アプリの設定でマイクの権限を有効化してください。</string>
+    <string name="voice_to_content_permissions_required_title">音声録音の権限が必須</string>
+    <string name="permission_access_media_location">メディアの位置</string>
+    <string name="in_app_update_restart">再開</string>
+    <string name="in_app_update_available">更新がダウンロードされました。 再起動して適用します。</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">音声ファイルから投稿</string>
+    <string name="reader_tags_feed_action_label_open_menu">メニューを開く</string>
+    <string name="reader_tags_feed_action_label_unlike_post">投稿の「いいね」を削除</string>
+    <string name="reader_tags_feed_action_label_like_post">投稿を「いいね」する</string>
+    <string name="reader_tags_feed_action_label_open_blog">ブログを開く</string>
+    <string name="reader_tags_feed_action_label_open_post">投稿を開く</string>
+    <string name="reader_tags_feed_error_retry">再試行</string>
+    <string name="reader_tags_feed_no_content_error_description">現在、%s がタグ付けされた投稿は見つかりませんでした</string>
+    <string name="reader_tags_feed_loading_error_description">現在、このタグから投稿を読み込むことができません</string>
+    <string name="reader_tags_feed_error_title">%s の投稿が見つかりませんでした</string>
+    <string name="reader_tags_feed_see_more_from_tag">%s の続き</string>
+    <string name="reader_tags_display_name">タグ</string>
+    <string name="reader_announcement_card_reading_preferences_description">お好みの色とフォントを選択してください。 投稿を読んでいるときに、画面上部の AA アイコンをタップします。</string>
+    <string name="reader_announcement_card_reading_preferences_title">閲覧の設定</string>
+    <string name="reader_announcement_card_tags_stream_description">上部のドロップダウンをタップし、「タグ」を選択して、フォロー中のタグからストリームにアクセスします。</string>
+    <string name="reader_announcement_card_tags_stream_title">タグのストリーム</string>
+    <string name="reader_announcement_card_title">Reader の新規</string>
+    <string name="reader_dropdown_menu_tags">あなたのタグ</string>
+    <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="no_connection_error_title">現在このコンテンツを読み込めません</string>
+    <string name="stats_subscribers_marker_view_plural">購読者</string>
+    <string name="stats_subscribers_marker_view_singular">購読者</string>
+    <string name="stats_view_subscriber_growth">購読者の拡大</string>
     <string name="role_subscriber">購読者</string>
     <string name="title_email_subscriber">メール購読者</string>
     <string name="people_empty_list_filtered_email_subscribers">まだメール購読者はいません</string>
@@ -567,8 +596,6 @@ Language: ja_JP
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Reader は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">統計は Jetpack アプリに移動しています</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">新しい Jetpack アプリに切り替える</string>
-    <string name="no_connection_error_description">ネットワーク接続を確認して、もう一度お試しください。</string>
-    <string name="no_connection_error_title">現在このページを読み込めません</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">プロンプトの読み込みでエラーが発生しました。</string>
     <string name="blogging_prompts_list_error_fetch_title">エラーです</string>
     <string name="blogging_prompts_list_no_prompts">プロンプトはまだありません</string>

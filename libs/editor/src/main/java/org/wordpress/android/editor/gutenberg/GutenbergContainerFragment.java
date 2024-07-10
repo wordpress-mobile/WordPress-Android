@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
@@ -309,6 +310,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void onRedoPressed() {
         mWPAndroidGlueCode.onRedoPressed();
+    }
+
+    public void onContentUpdate(@NonNull String content) {
+        mWPAndroidGlueCode.onContentUpdate(content);
     }
 
     public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {

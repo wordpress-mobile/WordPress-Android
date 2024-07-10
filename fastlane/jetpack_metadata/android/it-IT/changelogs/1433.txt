@@ -1,5 +1,0 @@
-24,9:
-- Abbiamo riorganizzato la schermata Statistiche per mostrare dati su traffico e approfondimenti.
-- Abbiamo aggiunto una scheda Abbonati per mostrare dati sugli abbonati al sito.
-- Abbiamo rimosso gli abbonati social dalla scheda Totale Seguaci.
-- I nomi e URL del sito sono posizionati correttamente per utenti di lingue da destra a sinistra.

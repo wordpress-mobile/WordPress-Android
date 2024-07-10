@@ -1,5 +1,0 @@
-24.9:
-- Wir haben den Stats-Bildschirm neu organisiert, um Daten zu Traffic und Einsichten anzuzeigen.
-- Wir haben den Tab „Abonnenten“ hinzugefügt, um Daten zu Website-Abonnenten anzuzeigen.
-- Social-Media-Abonnenten wurden aus der Karte „Followers gesamt“ entfernt.
-- Websitenamen und URLs sind für Benutzer von Rechts-nach-Links-Sprachen nun richtig positioniert.
