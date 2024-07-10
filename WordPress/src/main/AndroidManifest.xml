@@ -921,7 +921,7 @@
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service"
-            android:foregroundServiceType="dataSync" />
+            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"
