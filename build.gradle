@@ -33,9 +33,6 @@ ext {
     wordPressLoginVersion = '1.16.0'
     wordPressUtilsVersion = '3.14.0'
     gravatarVersion = '1.0.0'
-
-    // main
-    androidxAnnotationVersion = '1.6.0'
 }
 
 measureBuilds {
