@@ -507,7 +507,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
         String dateCreated = post.getDateCreated();
         Date date = DateTimeUtils.dateUTCFromIso8601(dateCreated);
-        if (date != null && post.getStatus().equals(PostStatus.SCHEDULED.toString())) {
+        if (date != null) {
             contentStruct.put("post_date", date);
             // Redundant, but left in just in case
             // Note: XML-RPC sends the same value for dateCreated and date_created_gmt in the first place
