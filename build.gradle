@@ -36,7 +36,6 @@ ext {
 
     // main
     androidxAnnotationVersion = '1.6.0'
-    androidxComposeCompilerVersion = '1.5.9'
 }
 
 measureBuilds {
