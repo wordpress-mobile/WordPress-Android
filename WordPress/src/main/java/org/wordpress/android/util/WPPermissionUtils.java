@@ -265,15 +265,10 @@ public class WPPermissionUtils {
      * open the device's notification settings page for this app so the user can edit permissions
      */
     public static void showNotificationsSettings(@NonNull Context context) {
-        if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        } else {
-            // We can't open notifications settings screen directly. Instead, open the app settings.
-            showAppSettings(context);
-        }
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }
