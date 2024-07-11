@@ -30,12 +30,14 @@ ext {
 
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
+    onBuildMetricsReadyListener { report ->
         SlowSlowTasksMetricsReporter.report(report)
         InternalA8cCiReporter.reportBlocking(
                 report,
                 "wordpress",
                 findProperty('appsMetricsToken')
         )
+    }
     }
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
