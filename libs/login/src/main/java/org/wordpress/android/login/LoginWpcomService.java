@@ -279,6 +279,12 @@ public class LoginWpcomService extends AutoForeground<LoginState> {
     }
 
     @Override
+    public void onTimeout(int startId) {
+        super.onTimeout(startId);
+        setState(LoginStep.FAILURE); // This will cal stopSelf()
+    }
+
+    @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (intent == null) {
             return START_NOT_STICKY;
