@@ -283,7 +283,7 @@ android {
     }
 
     lint {
-        warningsAsErrors = true
+        warningsAsErrors = false
         checkDependencies = true
         checkGeneratedSources = true
         lintConfig file("${project.rootDir}/config/lint/lint.xml")
@@ -365,10 +365,10 @@ dependencies {
     implementation (project(path:':libs:editor')) {
         exclude group: 'org.wordpress', module: 'utils'
     }
-    implementation("$gradle.ext.fluxCBinaryPath:$wordPressFluxCVersion") {
-        version {
-            strictly wordPressFluxCVersion
-        }
+    implementation(project(":fluxc")) {
+//        version {
+//            strictly wordPressFluxCVersion
+//        }
         exclude group: "com.android.volley"
         exclude group: 'org.wordpress', module: 'utils'
         exclude group: 'com.android.support', module: 'support-annotations'

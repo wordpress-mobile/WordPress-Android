@@ -1,0 +1,136 @@
+plugins {
+    id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "org.jetbrains.kotlin.kapt"
+    id "com.google.devtools.ksp"
+    id "org.jetbrains.kotlin.plugin.parcelize"
+    id 'androidx.room' version '2.6.1'
+}
+
+android {
+    useLibrary 'org.apache.http.legacy'
+
+    namespace "org.wordpress.android.fluxc"
+
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        consumerProguardFiles 'proguard-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lint {
+        lintConfig file("${project.rootDir}/config/lint/lint.xml")
+        enable += 'UnknownNullness'
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+room {
+    schemaDirectory "$projectDir/schemas"
+}
+
+android.buildTypes.all { buildType ->
+    // Load gradle properties and add them to BuildConfig
+    Properties gradleProperties = new Properties()
+    File propertiesFile = file("gradle.properties")
+    if (propertiesFile.exists()) {
+        gradleProperties.load(new FileInputStream(propertiesFile))
+    } else {
+        // Load defaults
+        gradleProperties.load(new FileInputStream(file("gradle.properties-example")))
+    }
+    gradleProperties.any { property ->
+        if (property.value.equals("true") || property.value.equals("false")) {
+            buildType.buildConfigField "boolean", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
+                    "Boolean.parseBoolean(\"${property.value}\")"
+        } else {
+            buildType.buildConfigField "String", property.key.replace("fluxc.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        // Apply strict version to all dependencies
+        if(!details.requested.name.contains("fluxc")){
+            details.useVersion(details.requested.version)
+            details.because('Enforcing strict versions for all dependencies.')
+        }
+    }
+}
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.4.0")
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation("androidx.exifinterface:exifinterface:1.0.0")
+    implementation("androidx.security:security-crypto:1.0.0")
+
+    implementation("org.wordpress:utils:3.12.0") {
+        // Using official volleypackage
+        exclude group: "com.mcxiaoke.volley"
+        exclude group: "com.android.support"
+    }
+
+    // Custom WellSql version
+    api("org.wordpress:wellsql:2.0.0")
+    kapt("org.wordpress.wellsql:wellsql-processor:2.0.0")
+
+    api project(":fluxc-annotations")
+    kapt project(":fluxc-processor")
+
+    // External libs
+    api("org.greenrobot:eventbus:3.3.1")
+    api("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("com.squareup.okhttp3:okhttp-urlconnection:4.9.0")
+    api("com.android.volley:volley:1.1.1")
+    implementation("com.google.code.gson:gson:2.8.5")
+
+    implementation("org.apache.commons:commons-text:1.8")
+    api("androidx.paging:paging-runtime:2.1.2")
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    // Dagger
+    implementation("com.google.dagger:dagger:2.50")
+    ksp("com.google.dagger:dagger-compiler:2.50")
+    compileOnly("org.glassfish:javax.annotation:10.0-b28")
+
+    // Coroutinesimplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+    // Encrypted Logging - these were already direct declarations, so I'm leaving them as they are
+    api "com.goterl:lazysodium-android:5.0.2@aar"
+    api "net.java.dev.jna:jna:5.5.0@aar"
+
+    // Unit tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.6.20")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation("androidx.test:core:1.4.0")
+    testImplementation("org.robolectric:robolectric:4.11")
+    testImplementation("org.mockito:mockito-core:4.8.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.mockito:mockito-inline:4.8.1")
+    testImplementation("org.assertj:assertj-core:3.19.0")
+
+    lintChecks("org.wordpress:lint:2.0.0")
+}

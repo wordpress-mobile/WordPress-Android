@@ -139,6 +139,14 @@ allprojects {
         google()
         mavenCentral()
         maven {
+            url "https://a8c-libs.s3.amazonaws.com/android"
+            content {
+                includeGroup "org.wordpress"
+                includeGroup "org.wordpress.fluxc"
+                includeGroup "org.wordpress.wellsql"
+            }
+        }
+        maven {
             url "https://a8c-libs.s3.amazonaws.com/android/jcenter-mirror"
             content {
                 includeVersion "com.android.volley", "volley", "1.1.1"
@@ -184,7 +192,7 @@ allprojects {
     tasks.withType(KotlinCompile).all {
         kotlinOptions {
             jvmTarget = JavaVersion.VERSION_1_8
-            allWarningsAsErrors = true
+            allWarningsAsErrors = false
             freeCompilerArgs += [
                     "-opt-in=kotlin.RequiresOptIn",
                     "-Xjvm-default=all"

@@ -30,6 +30,7 @@ pluginManagement {
         id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
         id "com.google.devtools.ksp" version gradle.ext.kspVersion
         id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
+        id "org.jetbrains.kotlin.kapt" version gradle.ext.kotlinVersion
     }
     repositories {
         maven {
@@ -58,6 +59,10 @@ include ':libs:analytics'
 include ':libs:editor'
 include ':libs:processors'
 include ':libs:annotations'
+
+include ':fluxc'
+include ':fluxc-annotations'
+include ':fluxc-processor'
 
 include ':libs:mocks'
 
