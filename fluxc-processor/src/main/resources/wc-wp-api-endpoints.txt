@@ -126,3 +126,4 @@
 
 /gla/ads/connection
 /gla/ads/campaigns
+/gla/ads/reports/programs
