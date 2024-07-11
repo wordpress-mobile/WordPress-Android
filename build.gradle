@@ -38,7 +38,6 @@ measureBuilds {
                 findProperty('appsMetricsToken')
         )
     }
-    }
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 
