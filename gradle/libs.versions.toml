@@ -93,6 +93,7 @@ zendesk = '5.1.2'
 [libraries]
 android-appUpdate = { group = "com.google.android.play", name = "app-update", version.ref = "googlePlayAppUpdate" }
 android-appUpdate-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "googlePlayAppUpdate" }
+android-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref ="androidDesugar" }
 android-installReferrer = { group = "com.android.installreferrer", name = "installreferrer", version.ref ="androidInstallReferrer" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidxActivity" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -172,7 +173,6 @@ dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", vers
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger" }
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "dagger" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "dagger" }
-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref ="androidDesugar" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
 facebook-flipper = { group = "com.facebook.flipper", name = "flipper", version.ref ="flipper" }
 facebook-flipper-network-plugin = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref ="flipper" }
