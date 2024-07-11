@@ -23,11 +23,6 @@ ext {
     targetSdkVersion = 34
 }
 
-ext {
-    // libs
-    gutenbergMobileVersion = 'v1.121.0-alpha1'
-}
-
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
     onBuildMetricsReadyListener { report ->

@@ -89,7 +89,9 @@ dependencies {
 
     // This dependency will be substituted if the `local-builds.gradle` file contains
     // `localGutenbergMobilePath`. Details for this can be found in the `settings.gradle` file.
-    implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion") {
+    // TODO: Migrate from composite build path modules to version catalogs (libs.version.toml).
+    // noinspection UseTomlInstead
+    implementation ("$rootProject.gradle.ext.gutenbergMobileBinaryPath:${libs.versions.gutenbergMobile.get()}") {
         // We exclude React Native modules from older and newer versions.
         // This is needed to avoid Duplicate class errors when building using local Gutenberg Mobile path.
         exclude module: 'hermes-engine'
