@@ -2,7 +2,6 @@ package org.wordpress.android.util;
 
 import android.content.Context;
 import android.content.pm.ShortcutManager;
-import android.os.Build.VERSION_CODES;
 
 import org.wordpress.android.ui.Shortcut;
 
