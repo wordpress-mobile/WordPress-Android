@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.utils.extensions.filterNotNull
 import org.wordpress.android.fluxc.utils.extensions.putIfNotNull
 import javax.inject.Inject
 import javax.inject.Named
@@ -194,6 +195,7 @@ class JetpackAIRestClient @Inject constructor(
      * @param stream    When true, the response is a set of EventSource events, otherwise a single response
      * @param format    The format of the response: 'text' or 'json_object'
      * @param model     The model to be used for the query: 'gpt-4o' or 'gpt-3.5-turbo-1106'
+     * @param maxTokens The maximum number of tokens to generate in the response, leave null for default
      * @param fields    The fields to be requested in the response
      */
     @Suppress("LongParameterList")
@@ -204,6 +206,7 @@ class JetpackAIRestClient @Inject constructor(
         model: String,
         stream: Boolean,
         format: ResponseFormat,
+        maxTokens: Int? = null,
         fields: String? = null
     ): JetpackAIQueryResponse {
         val url = WPCOMV2.jetpack_ai_query.url
@@ -213,8 +216,9 @@ class JetpackAIRestClient @Inject constructor(
             "stream" to stream,
             "feature" to feature,
             "format" to format.value,
-            "model" to model
-        )
+            "model" to model,
+            "max_tokens" to maxTokens
+        ).filterNotNull()
 
         val response = wpComGsonRequestBuilder.syncPostRequest(
             restClient = this,
