@@ -293,6 +293,7 @@ class JetpackAIStore @Inject constructor(
      * @param stream    When true, the response is a set of EventSource events, otherwise a single response
      * @param format    The format of the response: 'text' or 'json_object'. Default "text"
      * @param model     The model to be used for the query: 'gpt-4o' or 'gpt-3.5-turbo-1106'. Optional
+     * @param maxTokens The maximum number of tokens to generate, leave null for default
      * @param fields    The fields to be requested in the response
      */
     @Suppress("LongParameterList")
@@ -303,6 +304,7 @@ class JetpackAIStore @Inject constructor(
         stream: Boolean,
         model: String = OPENAI_GPT4_MODEL_NAME,
         format: ResponseFormat = ResponseFormat.TEXT,
+        maxTokens: Int? = null,
         fields: String? = null
     ): JetpackAIQueryResponse = coroutineEngine.withDefaultContext(
         tag = AppLog.T.API,
@@ -333,6 +335,7 @@ class JetpackAIStore @Inject constructor(
             format = format,
             model = model,
             stream = stream,
+            maxTokens = maxTokens,
             fields = fields
         )
 
