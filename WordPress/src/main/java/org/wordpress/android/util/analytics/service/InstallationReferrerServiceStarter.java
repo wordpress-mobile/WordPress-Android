@@ -16,9 +16,6 @@ public class InstallationReferrerServiceStarter {
         if (context == null) {
             return;
         }
-        // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
-        // since we are only using it elsewhere on API >= 26 to not break old behavior for pre-existing services,
-        // let's stick to that version as well here.
         ComponentName componentName = new ComponentName(context, InstallationReferrerJobService.class);
         PersistableBundle extras = new PersistableBundle();
         if (referrer != null) {

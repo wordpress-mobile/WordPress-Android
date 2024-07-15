@@ -19,8 +19,6 @@ public class ReaderUpdateServiceStarter {
     public static final String ARG_UPDATE_TASKS = "update_tasks";
 
     public static void startService(Context context, EnumSet<ReaderUpdateLogic.UpdateTask> tasks) {
-        // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
-        // it's preferable to use it only since enforcement in API 26 to not break any old behavior
         ComponentName componentName = new ComponentName(context, ReaderUpdateJobService.class);
 
         PersistableBundle extras = new PersistableBundle();

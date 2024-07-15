@@ -64,8 +64,6 @@ public class ReaderPostServiceStarter {
     }
 
     private static void doScheduleJobWithBundle(Context context, PersistableBundle extras, int jobId) {
-        // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
-        // it's preferable to use it only since enforcement in API 26 to not break any old behavior
         ComponentName componentName = new ComponentName(context, ReaderPostJobService.class);
 
         JobInfo jobInfo = new JobInfo.Builder(jobId, componentName)
