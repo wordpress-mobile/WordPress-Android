@@ -419,7 +419,7 @@ class Note {
                 AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. It could be > 4K", e)
                 0
             } catch (e: ZipException) {
-                AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. Possible zip traversal exploit", e)
+                AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload.", e)
                 0
             }
             val out: String? = try {
