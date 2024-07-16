@@ -337,7 +337,6 @@ platform :android do
   #####################################################################################
   lane :download_translations do
     # WordPress strings
-    check_declared_locales_consistency(app_flavor: 'wordpress', locales_list: WP_APP_LOCALES)
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'main', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:wordpress][:glotpress_appstrings_project],
@@ -345,12 +344,19 @@ platform :android do
     )
 
     # Jetpack strings
-    check_declared_locales_consistency(app_flavor: 'jetpack', locales_list: JP_APP_LOCALES)
     android_download_translations(
       res_dir: File.join('WordPress', 'src', 'jetpack', 'res'),
       glotpress_url: APP_SPECIFIC_VALUES[:jetpack][:glotpress_appstrings_project],
       locales: JP_APP_LOCALES
     )
+  end
+
+  lane :check_locales_consistency do |app:|
+    validate_app_name!(app)
+
+    app_locales = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)
+
+    check_declared_locales_consistency(app_flavor: app, locales_list: app_locales)
   end
 
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.

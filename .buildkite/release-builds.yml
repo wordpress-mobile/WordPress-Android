@@ -41,9 +41,9 @@ steps:
           - "**/build/reports/lint-results*.*"
 
   #################
-  # Beta Builds
+  # Release Builds
   #################
-  - group: "🚀 Beta Builds"
+  - group: "🚀 Release Builds"
     steps:
 
       - label: ":wordpress: :android: Release Build"
