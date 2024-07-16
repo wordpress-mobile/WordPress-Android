@@ -4,7 +4,7 @@ echo "--- :rubygems: Setting up Gems"
 install_gems
 
 echo "--- :globe_with_meridians: Localization check"
-bundle exec fastlane check_locales_consistency app:$1
+bundle exec fastlane check_declared_locales_consistency app:$1
 
 echo "--- :microscope: Linting"
 cp gradle.properties-example gradle.properties

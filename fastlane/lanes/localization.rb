@@ -351,14 +351,6 @@ platform :android do
     )
   end
 
-  lane :check_locales_consistency do |app:|
-    validate_app_name!(app)
-
-    app_locales = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)
-
-    check_declared_locales_consistency(app_flavor: app, locales_list: app_locales)
-  end
-
   # Updates the `.po` file at the given `po_path` using the content of the `sources` files, interpolating `release_version` where appropriate.
   # Internally, this calls the `an_update_metadata_source` release toolkit action and adds Git management to it.
   #
@@ -378,14 +370,16 @@ platform :android do
   # Compares the list of locales declared in the `resourceConfigurations` field of `build.gradle` for a given flavor
   # with the hardcoded list of locales we use in our Fastlane lanes, to ensure they match and we are consistent.
   #
-  # @param [String] app_flavor `"wordpress"` or `"jetpack"` — The `productFlavor` to read from in the build.gradle
-  # @param [Array<Hash>] locales_list The list of Hash defining the locales to compare that list to.
-  #        Typically one of the `WP_APP_LOCALES` or `JP_APP_LOCALES` constants
-  def check_declared_locales_consistency(app_flavor:, locales_list:)
+  # @param [String] app `"wordpress"` or `"jetpack"` — The `productFlavor` to read from in the build.gradle
+  lane :check_declared_locales_consistency do |app:|
+    validate_app_name!(app)
+
+    locales_list = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)
+
     output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
-    resource_configs = output.match(/^#{app_flavor}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
+    resource_configs = output.match(/^#{app}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
-      UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor. Nothing to check.")
+      UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app}` flavor. Nothing to check.")
       return
     end
 
@@ -396,10 +390,10 @@ platform :android do
     expected_locales.sort!
 
     if resource_configs == expected_locales
-      UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app_flavor}` flavor matches what is set in our Fastfile. All is good!")
+      UI.message("The `resourceConfigurations` field set in `build.gradle` for the `#{app}` flavor matches what is set in our Fastfile. All is good!")
     else
       UI.user_error! <<~ERROR
-        The list of `resourceConfigurations` declared in your `build.gradle` for the `#{app_flavor}` flavor
+        The list of `resourceConfigurations` declared in your `build.gradle` for the `#{app}` flavor
         does not match the list of locales we hardcoded in the `fastlane/lanes/localization.rb` for this app.
 
         If you recently updated the hardcoded list of locales to include for this app, be sure to apply those
