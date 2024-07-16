@@ -11,6 +11,7 @@ import android.app.NotificationManager
 import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
+import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.database.SQLException
@@ -114,7 +115,6 @@ import org.wordpress.android.widgets.AppReviewManager
 import org.wordpress.android.workers.WordPressWorkersFactory
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
 import java.net.CookieManager
 import java.util.Date
 import javax.inject.Inject
@@ -887,10 +887,18 @@ class AppInitializer @Inject constructor(
             // registered with Context.registerReceiver() and that context is still valid.
             if (!connectionReceiverRegistered) {
                 connectionReceiverRegistered = true
-                application.registerReceiver(
-                    ConnectionChangeReceiver.getInstance(),
-                    IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-                )
+                if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    application.registerReceiver(
+                        ConnectionChangeReceiver.getInstance(),
+                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                        RECEIVER_NOT_EXPORTED
+                    )
+                } else {
+                    application.registerReceiver(
+                        ConnectionChangeReceiver.getInstance(),
+                        IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+                    )
+                }
             }
             AnalyticsUtils.refreshMetadata(accountStore, siteStore)
             applicationOpenedDate = Date()
