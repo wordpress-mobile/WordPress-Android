@@ -891,7 +891,7 @@ class AppInitializer @Inject constructor(
                     application.registerReceiver(
                         ConnectionChangeReceiver.getInstance(),
                         IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                        ContextWrapper.RECEIVER_NOT_EXPORTED
+                        ContextWrapper.RECEIVER_EXPORTED
                     )
                 } else {
                     application.registerReceiver(

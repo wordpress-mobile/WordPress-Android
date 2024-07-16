@@ -423,7 +423,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             registerReceiver(
                     mReceiver,
                     new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                    RECEIVER_NOT_EXPORTED
+                    RECEIVER_EXPORTED
             );
         } else {
             registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
