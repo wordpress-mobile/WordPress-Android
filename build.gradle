@@ -15,7 +15,7 @@ plugins {
 }
 
 ext {
-    minSdkVersion = 24
+    minSdkVersion = 26
     compileSdkVersion = 34
     targetSdkVersion = 34
 }
@@ -25,9 +25,9 @@ ext {
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.1.0'
-    gutenbergMobileVersion = 'v1.121.0-alpha1'
+    gutenbergMobileVersion = 'v1.121.0-alpha2'
     wordPressAztecVersion = 'v2.1.3'
-    wordPressFluxCVersion = 'trunk-c670e916346bdaa2379936dd8dbb6750766ca319'
+    wordPressFluxCVersion = 'trunk-2d90f9a8abbb862ebc1689553006d76e44a0d3c8'
     wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
@@ -47,13 +47,13 @@ ext {
     androidxCameraVersion = '1.3.4'
     androidxComposeBomVersion = '2023.10.00'
     androidxComposeCompilerVersion = '1.5.9'
-    androidxComposeNavigationVersion = '2.7.6'
+    androidxComposeNavigationVersion = '2.7.7'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.8.0'
-    androidxFragmentVersion = '1.6.2'
+    androidxFragmentVersion = '1.8.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
     androidxPercentlayoutVersion = '1.0.0'
