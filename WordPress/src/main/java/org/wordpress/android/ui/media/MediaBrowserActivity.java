@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -418,7 +419,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public void onStart() {
         super.onStart();
-        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
