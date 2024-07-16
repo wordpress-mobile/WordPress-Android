@@ -4,8 +4,6 @@ import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.PersistableBundle;
 
 import org.wordpress.android.models.ReaderTag;
@@ -39,56 +37,33 @@ public class ReaderPostServiceStarter {
      * update posts with the passed tag
      */
     public static void startServiceForTag(Context context, ReaderTag tag, UpdateAction action) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Intent intent = new Intent(context, ReaderPostService.class);
-            intent.putExtra(ARG_TAG, tag);
-            intent.putExtra(ARG_ACTION, action);
-            context.startService(intent);
-        } else {
-            PersistableBundle extras = new PersistableBundle();
-            extras.putInt(ARG_ACTION, action.ordinal());
-            putReaderTagExtras(extras, tag);
-            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_TAG + tag.getTagSlug().hashCode());
-        }
+        PersistableBundle extras = new PersistableBundle();
+        extras.putInt(ARG_ACTION, action.ordinal());
+        putReaderTagExtras(extras, tag);
+        doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_TAG + tag.getTagSlug().hashCode());
     }
 
     /*
      * update posts in the passed blog
      */
     public static void startServiceForBlog(Context context, long blogId, UpdateAction action) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Intent intent = new Intent(context, ReaderPostService.class);
-            intent.putExtra(ARG_BLOG_ID, blogId);
-            intent.putExtra(ARG_ACTION, action);
-            context.startService(intent);
-        } else {
-            PersistableBundle extras = new PersistableBundle();
-            extras.putLong(ARG_BLOG_ID, blogId);
-            extras.putInt(ARG_ACTION, action.ordinal());
-            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_BLOG);
-        }
+        PersistableBundle extras = new PersistableBundle();
+        extras.putLong(ARG_BLOG_ID, blogId);
+        extras.putInt(ARG_ACTION, action.ordinal());
+        doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_BLOG);
     }
 
     /*
      * update posts in the passed feed
      */
     public static void startServiceForFeed(Context context, long feedId, UpdateAction action) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Intent intent = new Intent(context, ReaderPostService.class);
-            intent.putExtra(ARG_FEED_ID, feedId);
-            intent.putExtra(ARG_ACTION, action);
-            context.startService(intent);
-        } else {
-            PersistableBundle extras = new PersistableBundle();
-            extras.putLong(ARG_FEED_ID, feedId);
-            extras.putInt(ARG_ACTION, action.ordinal());
-            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_FEED);
-        }
+        PersistableBundle extras = new PersistableBundle();
+        extras.putLong(ARG_FEED_ID, feedId);
+        extras.putInt(ARG_ACTION, action.ordinal());
+        doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_FEED);
     }
 
     private static void doScheduleJobWithBundle(Context context, PersistableBundle extras, int jobId) {
-        // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
-        // it's preferable to use it only since enforcement in API 26 to not break any old behavior
         ComponentName componentName = new ComponentName(context, ReaderPostJobService.class);
 
         JobInfo jobInfo = new JobInfo.Builder(jobId, componentName)

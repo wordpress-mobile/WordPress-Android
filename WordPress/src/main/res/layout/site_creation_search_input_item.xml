@@ -31,8 +31,7 @@
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:hint="Type a keyword for more ideas"
-            tools:ignore="RtlSymmetry"
-            tools:targetApi="o" />
+            tools:ignore="RtlSymmetry" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
