@@ -151,7 +151,8 @@ platform :android do
           skip_upload_changelogs: false,
           skip_upload_images: true,
           skip_upload_screenshots: true,
-          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY
+          json_key: UPLOAD_TO_PLAY_STORE_JSON_KEY,
+          version_codes_to_retain: [1440]
         )
       rescue FastlaneCore::Interface::FastlaneError => e
         # Sometimes the upload fails randomly with a "Google Api Error: Invalid request - This Edit has been deleted.".

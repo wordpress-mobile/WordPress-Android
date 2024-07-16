@@ -1,6 +1,4 @@
-<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
-           xmlns:tools="http://schemas.android.com/tools"
-           tools:targetApi="n_mr1">
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:icon="@drawable/ic_shortcut_stats"
         android:shortcutId="stats"
