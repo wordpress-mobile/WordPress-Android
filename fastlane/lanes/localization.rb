@@ -374,8 +374,6 @@ platform :android do
   lane :check_declared_locales_consistency do |app:|
     validate_app_name!(app)
 
-    locales_list = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)
-
     output = gradle(task: 'printResourceConfigurations', flags: '--quiet')
     resource_configs = output.match(/^#{app}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
@@ -383,6 +381,7 @@ platform :android do
       return
     end
 
+    locales_list = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)
     expected_locales = locales_list.map { |l| l[:android] }
     # Support for legacy locale codes
     expected_locales << 'in' if expected_locales.include?('id')
