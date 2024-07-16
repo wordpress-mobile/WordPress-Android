@@ -26,6 +26,7 @@ import java.util.Date
 import java.util.EnumSet
 import java.util.zip.DataFormatException
 import java.util.zip.Inflater
+import java.util.zip.ZipException
 
 class Note {
     val id: String
@@ -416,6 +417,9 @@ class Note {
                 length
             } catch (e: DataFormatException) {
                 AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. It could be > 4K", e)
+                0
+            } catch (e: ZipException) {
+                AppLog.e(AppLog.T.NOTIFS, "Can't decompress the PN BlockListPayload. Possible zip traversal exploit", e)
                 0
             }
             val out: String? = try {
