@@ -378,7 +378,7 @@ platform :android do
     resource_configs = output.match(/^#{app}: \[(.*)\]$/)&.captures&.first&.gsub(' ', '')&.split(',')&.sort
     if resource_configs.nil? || resource_configs.empty?
       UI.message("No `resourceConfigurations` field set in `build.gradle` for the `#{app}` flavor. Nothing to check.")
-      return
+      next
     end
 
     locales_list = { 'wordpress' => WP_APP_LOCALES, 'jetpack' => JP_APP_LOCALES }.fetch(app, nil)

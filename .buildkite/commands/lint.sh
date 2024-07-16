@@ -3,7 +3,7 @@
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
-echo "--- : clipboard: Copying gradle.properties"
+echo "--- :clipboard: Copying gradle.properties"
 cp gradle.properties-example gradle.properties
 
 echo "--- :globe_with_meridians: Check Locales Declaration Consistency"
