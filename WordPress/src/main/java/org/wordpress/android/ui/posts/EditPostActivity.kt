@@ -2531,17 +2531,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
             )
         }
 
-    /**
-     * Checks if the theme supports the new gallery block with image blocks.
-     * Note that if the editor theme has not been initialized (usually on the first app run)
-     * the value returned is null and the `unstable_gallery_with_image_blocks` analytics property will not be reported.
-     * @return true if the the supports the new gallery block with image blocks or null if the theme is not initialized.
-     */
-    private fun themeSupportsGalleryWithImageBlocks(): Boolean? {
-        val editorTheme = editorThemeStore.getEditorThemeForSite(siteModel) ?: return null
-        return editorTheme.themeSupport.galleryWithImageBlocks
-    }
-
     private var mediaCapturePath: String? = ""
     private fun getUploadErrorHtml(mediaId: String, path: String): String {
         return String.format(
@@ -3508,7 +3497,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         if (showAztecEditor && editorFragment is AztecEditorFragment) {
             val entryPoint =
                 intent.getSerializableExtra(EditPostActivityConstants.EXTRA_ENTRY_POINT) as PostUtils.EntryPoint?
-            postEditorAnalyticsSession?.start(null, themeSupportsGalleryWithImageBlocks(), entryPoint)
+            postEditorAnalyticsSession?.start(null, entryPoint)
         }
     }
 
@@ -3523,7 +3512,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
-        postEditorAnalyticsSession?.start(unsupportedBlocksList, themeSupportsGalleryWithImageBlocks(), entryPoint)
+        postEditorAnalyticsSession?.start(unsupportedBlocksList, entryPoint)
         presentNewPageNoticeIfNeeded()
 
         // Start VM, load prompt and populate Editor with content after edit IS ready.

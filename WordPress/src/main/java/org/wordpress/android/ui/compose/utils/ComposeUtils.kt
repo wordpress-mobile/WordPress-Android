@@ -2,7 +2,6 @@ package org.wordpress.android.ui.compose.utils
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.os.Build
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -52,10 +51,6 @@ fun LocaleAwareComposable(
     if (currentLocale != locale) {
         val newConfiguration = Configuration(configuration).apply {
             setLocale(locale)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
-                configuration.locale = locale
-                resources.updateConfiguration(configuration, resources.displayMetrics)
-            }
         }
 
         val newContext = context.createConfigurationContext(newConfiguration)

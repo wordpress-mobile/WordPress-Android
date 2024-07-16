@@ -1,7 +1,5 @@
 package org.wordpress.android.util.extensions
 
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 import android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 import android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
@@ -29,7 +27,7 @@ fun Window.setLightStatusBar(showInLightMode: Boolean) {
 
 @Suppress("DEPRECATION")
 fun Window.setLightNavigationBar(showInLightMode: Boolean, applyDefaultColors: Boolean = false) {
-    if (isLightTheme() && VERSION.SDK_INT >= VERSION_CODES.O) {
+    if (isLightTheme()) {
         decorView.systemUiVisibility = decorView.systemUiVisibility.let {
             if (showInLightMode) {
                 it or SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
