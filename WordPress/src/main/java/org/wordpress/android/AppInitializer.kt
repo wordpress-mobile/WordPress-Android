@@ -11,7 +11,7 @@ import android.app.NotificationManager
 import android.app.SyncNotedAppOp
 import android.content.ComponentCallbacks2
 import android.content.Context
-import android.content.Context.RECEIVER_NOT_EXPORTED
+import android.content.ContextWrapper
 import android.content.IntentFilter
 import android.content.res.Configuration
 import android.database.SQLException
@@ -891,7 +891,7 @@ class AppInitializer @Inject constructor(
                     application.registerReceiver(
                         ConnectionChangeReceiver.getInstance(),
                         IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
-                        RECEIVER_NOT_EXPORTED
+                        ContextWrapper.RECEIVER_NOT_EXPORTED
                     )
                 } else {
                     application.registerReceiver(
