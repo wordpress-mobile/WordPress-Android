@@ -420,7 +420,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public void onStart() {
         super.onStart();
         if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION), RECEIVER_NOT_EXPORTED);
+            registerReceiver(
+                    mReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                    RECEIVER_NOT_EXPORTED
+            );
         } else {
             registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
