@@ -10,6 +10,8 @@ internal object WPAPIDiscoveryUtils {
         val urlWithoutScheme = UrlUtils.removeScheme(url)
         val httpsUrl = UrlUtils.addUrlSchemeIfNeeded(urlWithoutScheme, true)
 
+        // TODO investigate the possibility to use `/?rest_route=` instead,
+        //  `/wp-json` works only when permalinks are enabled, where `/?rest_route=` works without them
         // fallback to ".../wp-json/"
         return httpsUrl.slashJoin("wp-json")
     }
