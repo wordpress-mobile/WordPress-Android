@@ -482,9 +482,13 @@ platform :android do
   #####################################################################################
   def get_app_name_option!(options)
     app = options[:app]&.downcase
+    validate_app_name!(app)
+    app
+  end
+
+  def validate_app_name!(app)
     UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
     UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless %i[wordpress jetpack].include?(app.to_sym)
-    app
   end
 
   def release_notes_path(app)
