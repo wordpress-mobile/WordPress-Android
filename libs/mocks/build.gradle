@@ -18,12 +18,13 @@ android {
 }
 
 dependencies {
-    implementation("com.github.tomakehurst:wiremock") {
+    api("com.github.tomakehurst:wiremock") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
-   }
+    }
+    runtimeOnly('org.apache.httpcomponents:httpclient-android:4.3.5.1')
 
     constraints {
         implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
@@ -41,6 +42,5 @@ dependencies {
         implementation('commons-fileupload:commons-fileupload:1.5') {
             because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
         }
-        implementation('org.apache.httpcomponents:httpclient-android:4.3.5.1')
     }
 }
