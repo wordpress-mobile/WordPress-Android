@@ -9,11 +9,11 @@ import org.wordpress.android.fluxc.network.discovery.DiscoveryUtils
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.discovery.RootWPAPIRestResponse
 import org.wordpress.android.fluxc.network.rest.wpapi.BaseWPAPIRestClient
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIDiscoveryUtils
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Error
 import org.wordpress.android.fluxc.network.rest.wpapi.WPAPIResponse.Success
 import org.wordpress.android.fluxc.store.SiteStore.FetchWPAPISitePayload
-import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
 import javax.inject.Named
@@ -102,6 +102,6 @@ class SiteWPAPIRestClient @Inject constructor(
         url: String
     ): String {
         return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
-            ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
+            ?: WPAPIDiscoveryUtils.buildDefaultRESTBaseUrl(url)
     }
 }
