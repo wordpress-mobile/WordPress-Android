@@ -30,17 +30,20 @@ dependencies {
         implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
             because("newer versions of WireMock use Java APIs not available on Android")
         }
+
+        def wireMockSecurity = "version shipped with WireMock 2.26.3 contains security vulnerabilities"
+
         implementation('org.eclipse.jetty:jetty-webapp:9.4.51.v20230217') {
-            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+            because(wireMockSecurity)
         }
         implementation('com.fasterxml.jackson.core:jackson-databind:2.12.7.1') {
-            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+            because(wireMockSecurity)
         }
         implementation('com.jayway.jsonpath:json-path:2.9.0') {
-            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+            because(wireMockSecurity)
         }
         implementation('commons-fileupload:commons-fileupload:1.5') {
-            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+            because(wireMockSecurity)
         }
     }
 }
