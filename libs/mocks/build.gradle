@@ -18,11 +18,29 @@ android {
 }
 
 dependencies {
-    implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+    implementation("com.github.tomakehurst:wiremock") {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
         exclude group: 'org.json', module: 'json'
+   }
+
+    constraints {
+        implementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
+            because("newer versions of WireMock use Java APIs not available on Android")
+        }
+        implementation('org.eclipse.jetty:jetty-webapp:9.4.51.v20230217') {
+            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+        }
+        implementation('com.fasterxml.jackson.core:jackson-databind:2.12.7.1') {
+            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+        }
+        implementation('com.jayway.jsonpath:json-path:2.9.0') {
+            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+        }
+        implementation('commons-fileupload:commons-fileupload:1.5') {
+            because("version shipped with WireMock 2.26.3 contains security vulnerabilities")
+        }
+        implementation('org.apache.httpcomponents:httpclient-android:4.3.5.1')
     }
-    implementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
 }
