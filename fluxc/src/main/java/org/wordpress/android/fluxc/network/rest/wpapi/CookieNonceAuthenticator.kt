@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.FailedRequest
 import org.wordpress.android.fluxc.network.rest.wpapi.Nonce.Unknown
 import org.wordpress.android.fluxc.persistence.SiteSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
-import org.wordpress.android.fluxc.utils.extensions.slashJoin
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.UrlUtils
 import javax.inject.Inject
@@ -135,7 +134,7 @@ class CookieNonceAuthenticator @Inject constructor(
         url: String
     ): String {
         return discoveryWPAPIRestClient.discoverWPAPIBaseURL(url) // discover rest api endpoint
-            ?: url.slashJoin("wp-json/") // fallback to ".../wp-json/" if discovery fails
+            ?: WPAPIDiscoveryUtils.buildDefaultRESTBaseUrl(url)
     }
 
     sealed interface CookieNonceAuthenticationResult {
