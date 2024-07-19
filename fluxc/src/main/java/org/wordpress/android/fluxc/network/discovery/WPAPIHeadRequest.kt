@@ -1,67 +1,51 @@
-package org.wordpress.android.fluxc.network.discovery;
+package org.wordpress.android.fluxc.network.discovery
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.android.volley.NetworkResponse
+import com.android.volley.ParseError
+import com.android.volley.Response
+import com.android.volley.Response.Listener
+import com.android.volley.toolbox.HttpHeaderParser
+import org.wordpress.android.fluxc.network.BaseRequest
+import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError
+import java.util.regex.Pattern
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.ParseError;
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.HttpHeaderParser;
+class WPAPIHeadRequest(
+    url: String,
+    private val mListener: Listener<String?>,
+    errorListener: BaseErrorListener
+) : BaseRequest<String?>(Method.HEAD, url, errorListener) {
+    private var mResponseLinkHeader: String? = null
 
-import org.wordpress.android.fluxc.network.BaseRequest;
-import org.wordpress.android.fluxc.network.rest.wpapi.WPAPINetworkError;
-
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class WPAPIHeadRequest extends BaseRequest<String> {
-    private static final Pattern LINK_PATTERN = Pattern.compile("^<(.*)>; rel=\"https://api.w.org/\"$");
-
-    @NonNull private final Listener<String> mListener;
-    @Nullable private String mResponseLinkHeader;
-
-    public WPAPIHeadRequest(
-            @NonNull String url,
-            @NonNull Listener<String> listener,
-            @NonNull BaseErrorListener errorListener) {
-        super(Method.HEAD, url, errorListener);
-        mListener = listener;
+    protected override fun deliverResponse(response: String?) {
+        mListener.onResponse(extractEndpointFromLinkHeader(mResponseLinkHeader))
     }
 
-    @Override
-    protected void deliverResponse(@NonNull String response) {
-        mListener.onResponse(extractEndpointFromLinkHeader(mResponseLinkHeader));
-    }
-
-    @NonNull
-    @Override
-    protected Response<String> parseNetworkResponse(@NonNull NetworkResponse response) {
-        Map<String, String> headers = response.headers;
+    override fun parseNetworkResponse(response: NetworkResponse): Response<String?>? {
+        val headers = response.headers
         if (headers != null) {
-            mResponseLinkHeader = headers.get("Link");
-            return Response.success("", HttpHeaderParser.parseCacheHeaders(response));
+            mResponseLinkHeader = headers["Link"]
+            return Response.success("", HttpHeaderParser.parseCacheHeaders(response))
         } else {
-            return Response.error(new ParseError(new Exception("No headers in response")));
+            return Response.error(ParseError(Exception("No headers in response")))
         }
     }
 
-    @NonNull
-    @Override
-    public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
+    override fun deliverBaseNetworkError(error: BaseNetworkError): BaseNetworkError {
         // no op
-        return new WPAPINetworkError(error, null);
+        return WPAPINetworkError(error, null)
     }
 
-    @Nullable
-    private static String extractEndpointFromLinkHeader(@Nullable String linkHeader) {
-        if (linkHeader != null) {
-            Matcher matcher = LINK_PATTERN.matcher(linkHeader);
-            if (matcher.find()) {
-                return matcher.group(1);
+    companion object {
+        private val LINK_PATTERN: Pattern = Pattern.compile("^<(.*)>; rel=\"https://api.w.org/\"$")
+
+        private fun extractEndpointFromLinkHeader(linkHeader: String?): String? {
+            if (linkHeader != null) {
+                val matcher = LINK_PATTERN.matcher(linkHeader)
+                if (matcher.find()) {
+                    return matcher.group(1)
+                }
             }
+            return null
         }
-        return null;
     }
 }
