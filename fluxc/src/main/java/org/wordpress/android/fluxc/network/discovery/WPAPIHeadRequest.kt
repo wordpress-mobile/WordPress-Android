@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.discovery
 
+import com.android.volley.Header
 import com.android.volley.NetworkResponse
 import com.android.volley.ParseError
 import com.android.volley.Response
@@ -11,22 +12,23 @@ import java.util.regex.Pattern
 
 class WPAPIHeadRequest(
     url: String,
-    private val mListener: Listener<String?>,
-    errorListener: BaseErrorListener
-) : BaseRequest<String?>(Method.HEAD, url, errorListener) {
-    private var mResponseLinkHeader: String? = null
-
-    protected override fun deliverResponse(response: String?) {
-        mListener.onResponse(extractEndpointFromLinkHeader(mResponseLinkHeader))
+    errorListener: BaseErrorListener,
+    private val mListener: Listener<String?>
+) : BaseRequest<List<Header>?>(Method.HEAD, url, errorListener) {
+    override fun deliverResponse(response: List<Header>?) {
+        val endpoint = response?.firstNotNullOfOrNull { extractEndpointFromLinkHeader(it.value) }
+        mListener.onResponse(endpoint)
     }
 
-    override fun parseNetworkResponse(response: NetworkResponse): Response<String?>? {
-        val headers = response.headers
-        if (headers != null) {
-            mResponseLinkHeader = headers["Link"]
-            return Response.success("", HttpHeaderParser.parseCacheHeaders(response))
+    override fun parseNetworkResponse(response: NetworkResponse): Response<List<Header>?>? {
+        val headers = response.allHeaders
+            ?.filter { it.name.equals(LINK_HEADER_NAME, ignoreCase = true) }
+            ?.ifEmpty { null }
+
+        return if (headers != null) {
+            Response.success(headers, HttpHeaderParser.parseCacheHeaders(response))
         } else {
-            return Response.error(ParseError(Exception("No headers in response")))
+            Response.error(ParseError(Exception("No headers in response")))
         }
     }
 
@@ -36,6 +38,7 @@ class WPAPIHeadRequest(
     }
 
     companion object {
+        private const val LINK_HEADER_NAME = "Link"
         private val LINK_PATTERN: Pattern = Pattern.compile("^<(.*)>; rel=\"https://api.w.org/\"$")
 
         private fun extractEndpointFromLinkHeader(linkHeader: String?): String? {
