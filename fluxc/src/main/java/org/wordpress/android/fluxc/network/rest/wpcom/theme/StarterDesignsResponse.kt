@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.theme
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.wordpress.android.fluxc.network.Response
 
 data class StarterDesignsResponse(
