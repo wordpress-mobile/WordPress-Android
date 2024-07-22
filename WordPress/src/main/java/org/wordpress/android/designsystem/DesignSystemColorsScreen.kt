@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,7 +65,9 @@ fun DesignSystemColorsScreen(
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ColorCard (colorName: String, color: Color) {
-    Row (modifier = Modifier.padding(10.dp, 3.dp).fillMaxWidth()) {
+    Row (modifier = Modifier
+        .padding(10.dp, 3.dp)
+        .fillMaxWidth()) {
         Column {
             Box(
                 modifier = Modifier
@@ -86,7 +89,7 @@ fun ColorCard (colorName: String, color: Color) {
             )
         }
     }
-    Divider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
+    HorizontalDivider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
 }
 @Composable
 fun ColorCardList(colorOptions: List<ColorOption>) {
