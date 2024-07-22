@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.plans
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @SuppressLint("ParcelCreator")
