@@ -48,10 +48,6 @@ android {
     }
 }
 
-androidExtensions {
-    experimental = true
-}
-
 android.buildTypes.all { buildType ->
     // Load gradle properties and add them to BuildConfig
     Properties gradleProperties = new Properties()
