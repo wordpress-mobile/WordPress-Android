@@ -1,7 +1,7 @@
 plugins {
     alias(sharedLibs.plugins.android.library)
     alias(sharedLibs.plugins.kotlin.android)
-    id "org.jetbrains.kotlin.plugin.parcelize"
+    alias(sharedLibs.plugins.kotlin.parcelize)
     alias(sharedLibs.plugins.kotlin.kapt)
     alias(sharedLibs.plugins.automattic.publishToS3)
 }
