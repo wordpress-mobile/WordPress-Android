@@ -48,3 +48,8 @@ updates:
       - dependency-name: "org.wordpress.aztec:picasso-loader"
       - dependency-name: "com.automattic:about"
       - dependency-name: "com.automattic:Automattic-Tracks-Android"
+      # Ignore dependencies that were added only to address security vulnerabilities of transitive WireMock dependencies
+      - dependency-name: "org.eclipse.jetty:jetty-webapp"
+      - dependency-name: "com.fasterxml.jackson.core:jackson-databind"
+      - dependency-name: "com.jayway.jsonpath:json-path"
+      - dependency-name: "commons-fileupload:commons-fileupload"
