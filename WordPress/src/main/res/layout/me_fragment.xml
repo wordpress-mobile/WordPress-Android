@@ -266,6 +266,26 @@
             <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
+                android:id="@+id/row_feedback"
+                style="@style/MeListRowLayout">
+
+                <ImageView
+                    android:id="@+id/me_feedback_icon"
+                    style="@style/MeListRowIcon"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_pencil_white_24dp" />
+
+                <org.wordpress.android.util.widgets.AutoResizeTextView
+                    style="@style/MeListRowTextView"
+                    android:text="@string/me_btn_feedback" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider_feedback"
+                style="@style/MeListSectionDividerView" />
+
+            <LinearLayout
                 android:id="@+id/recommend_the_app_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
