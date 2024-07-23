@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -59,7 +60,6 @@ private fun MessageSection(
     messageText: State<String>,
     onMessageChanged: (String) -> Unit,
 ) {
-    val maxChars = 500
     Row(
         modifier = Modifier
             .padding(
@@ -69,15 +69,14 @@ private fun MessageSection(
     ) {
         OutlinedTextField(
             value = messageText.value,
-            label = { Text(stringResource(id = R.string.feedback_form_title)) },
             placeholder = { Text(stringResource(id = R.string.feedback_form_message_hint)) },
             onValueChange = {
                 onMessageChanged(it.take(maxChars))
             },
+            shape = RoundedCornerShape(4.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
-                .testTag("issue_description_input"),
         )
     }
 }
@@ -152,3 +151,4 @@ private fun Screen(
 
 private const val hPadding = 18
 private const val vPadding = 12
+private const val maxChars = 500
