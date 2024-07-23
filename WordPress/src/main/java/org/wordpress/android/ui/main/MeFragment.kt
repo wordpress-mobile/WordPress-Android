@@ -208,14 +208,8 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
 
-        // TODO verify Feedback row is Jetpack only
-        if (BuildConfig.IS_JETPACK_APP) {
-            rowFeedback.setOnClickListener {
-                // TODO ActivityLauncher.viewFeedback(requireContext())
-            }
-        } else {
-            rowFeedback.isVisible = false
-            dividerFeedback.isVisible = false
+        rowFeedback.setOnClickListener {
+            // TODO
         }
 
         learnMoreAtGravatar.setOnClickListener {

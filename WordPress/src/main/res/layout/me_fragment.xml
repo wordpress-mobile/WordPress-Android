@@ -281,9 +281,7 @@
 
             </LinearLayout>
 
-            <View
-                android:id="@+id/divider_feedback"
-                style="@style/MeListSectionDividerView" />
+            <View style="@style/MeListSectionDividerView" />
 
             <LinearLayout
                 android:id="@+id/recommend_the_app_container"
