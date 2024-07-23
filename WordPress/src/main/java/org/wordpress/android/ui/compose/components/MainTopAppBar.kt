@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -33,7 +34,7 @@ typealias NavigationIcon = @Composable () -> Unit
 object NavigationIcons {
     val BackIcon: NavigationIcon = {
         Icon(
-            Icons.Default.ArrowBack,
+            Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = stringResource(R.string.navigate_up_desc),
             modifier = Modifier.graphicsLayer(
                 scaleX = if (LocalLayoutDirection.current == LayoutDirection.Rtl) -1f else 1f,
