@@ -24,7 +24,7 @@ android {
                         "room.expandProjection":"true"]
             }
         }
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     lint {
