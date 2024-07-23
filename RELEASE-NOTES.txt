@@ -1,9 +1,8 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-25.4
+25.3
 -----
 * [**] [internal] Set remaining foreground service types for Android 14 [https://github.com/wordpress-mobile/WordPress-Android/pull/21047]
-
 
 25.2
 -----
