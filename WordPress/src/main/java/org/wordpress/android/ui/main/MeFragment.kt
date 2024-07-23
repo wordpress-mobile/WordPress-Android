@@ -734,7 +734,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
-        private const val GRAVATAR_URL = "https://www.gravatar.com";
+        private const val GRAVATAR_URL = "https://www.gravatar.com"
         fun newInstance(): MeFragment {
             return MeFragment()
         }
