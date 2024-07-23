@@ -4915,4 +4915,5 @@ translators: %s: Select control option value e.g: "Auto, 25%". -->
     <string name="voice_to_content_upgrade">Upgrade for more requests</string>
     <string name="voice_to_content_done_label">Done</string>
     <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
+    <string name="gutenberg_native_replace_image" tools:ignore="UnusedResources" a8c-src-lib="gutenberg">Replace image</string>
 </resources>
