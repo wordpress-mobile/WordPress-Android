@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-17 18:36:53+0000
+Translation-Revision-Date: 2024-07-12 18:14:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
@@ -2812,7 +2812,7 @@ Language: nl
     <string name="site_settings_timezone_subtitle">Kies een plaats in je tijdzone</string>
     <string name="site_settings_timezone_title">Tijdzone</string>
     <string name="site_settings_time_format_title">Tijdformaat</string>
-    <string name="site_settings_date_format_title">Datumformaat</string>
+    <string name="site_settings_date_format_title">Datum format</string>
     <string name="site_settings_week_start_title">Week start op</string>
     <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_traffic_header">Verkeer</string>

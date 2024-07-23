@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 12:54:07+0000
+Translation-Revision-Date: 2024-07-16 12:11:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
@@ -2510,7 +2510,7 @@ Language: sv_SE
     <string name="media_empty_upload_media">Ladda upp mediafil</string>
     <string name="media_empty_list">Du har inga mediafiler</string>
     <string name="reader_gallery_images_desc">bildgalleri</string>
-    <string name="blavatar_desc">webbplats-ikon</string>
+    <string name="blavatar_desc">webbplatsikon</string>
     <string name="theme_image_desc">tema-bild</string>
     <string name="featured_image_desc">utvald bild</string>
     <string name="button_discard">Kasta</string>

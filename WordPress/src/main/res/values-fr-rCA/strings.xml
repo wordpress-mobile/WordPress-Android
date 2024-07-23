@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 11:54:07+0000
+Translation-Revision-Date: 2024-06-28 13:20:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
@@ -32,9 +32,6 @@ Language: fr
     <string name="reader_dropdown_menu_tags">Vos étiquettes</string>
     <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
     <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
-    <string name="stats_subscribers_marker_view_plural">Abonnés</string>
-    <string name="stats_subscribers_marker_view_singular">Abonné</string>
-    <string name="stats_view_subscriber_growth">Évolution des abonnés</string>
     <string name="role_subscriber">Abonné</string>
     <string name="title_email_subscriber">Abonné par e-mail</string>
     <string name="people_empty_list_filtered_email_subscribers">Aucun abonné par e-mail pour le moment</string>
@@ -94,6 +91,7 @@ Language: fr
     <string name="reader_preferences_screen_font_family_label">Police</string>
     <string name="reader_preferences_screen_theme_label">Jeu de couleurs</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">envoyez vos commentaires</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Effacer la couleur sélectionnée</string>
     <string name="reader_no_followed_tags_text_title">Aucune étiquette suivie</string>
     <string name="reader_toast_err_tag_already_following">Vous suivez déjà cette étiquette</string>
@@ -175,6 +173,7 @@ Language: fr
     <string name="reader_filter_chip_blog_one">1 blog</string>
     <string name="reader_filter_chip_blog_zero">0 Blog</string>
     <string name="reader_dropdown_menu_lists">Listes</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_liked">J’aime</string>
     <string name="reader_dropdown_menu_saved">Enregistré</string>
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
@@ -207,6 +206,7 @@ Language: fr
     <string name="domains_free_domain">Votre domaine WordPress.com gratuit</string>
     <string name="domains_site_other_domains">Autres domaines pour %s</string>
     <string name="domains_primary_site_domain_chip">Domaine principal</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary, c’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>

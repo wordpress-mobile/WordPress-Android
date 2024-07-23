@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 12:54:07+0000
+Translation-Revision-Date: 2024-07-04 02:42:55+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
@@ -3660,7 +3660,7 @@ Language: de
     <string name="mnu_comment_trash">Papierkorb</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Ablehnen</string>
-    <string name="mnu_comment_approve">Genehmigen</string>
+    <string name="mnu_comment_approve">Freigeben</string>
     <string name="edit_comment">Kommentar bearbeiten</string>
     <string name="comment_status_trash">Gelöscht</string>
     <string name="comment_status_spam">Spam</string>
@@ -3773,7 +3773,7 @@ Language: de
     <string name="sdcard_title">SD-Karte benötigt</string>
     <string name="media">Medien</string>
     <string name="updating_cat_success">Kategorie erfolgreich aktualisiert</string>
-    <string name="approve">Genehmigen</string>
+    <string name="approve">Freigeben</string>
     <string name="delete">Löschen</string>
     <string name="updating_cat_failed">Aktualisieren der Kategorie fehlgeschlagen</string>
     <string name="none">Nichts</string>
