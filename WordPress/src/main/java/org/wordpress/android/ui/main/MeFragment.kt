@@ -209,7 +209,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
 
         rowFeedback.setOnClickListener {
-            // TODO
+            ActivityLauncher.viewFeedbackForm(requireContext())
         }
 
         learnMoreAtGravatar.setOnClickListener {
@@ -699,12 +699,6 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
             }
-        }
-    }
-
-    private fun showFeedbackForm() {
-        if (appPrefsWrapper.supportEmail.isEmpty()) {
-
         }
     }
 

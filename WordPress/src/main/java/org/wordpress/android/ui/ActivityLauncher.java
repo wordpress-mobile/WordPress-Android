@@ -1300,6 +1300,10 @@ public class ActivityLauncher {
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
     }
 
+    public static void viewFeedbackForm(@NonNull Context context) {
+        // TODO analytics?
+    }
+
     public static void viewZendeskTickets(@NonNull Context context,
                                           @Nullable SiteModel selectedSite) {
         viewHelpInNewStack(context, Origin.ZENDESK_NOTIFICATION, selectedSite, null);
