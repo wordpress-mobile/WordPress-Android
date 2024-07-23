@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs.categories.list
 
 import android.os.Bundle
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.R
@@ -25,8 +24,7 @@ class SiteSettingsCategoriesViewHolder(
     }
 
     private fun setPaddingForCategoryName(categoryLevel: Int) {
-        ViewCompat.setPaddingRelative(
-            categoryBinding.siteSettingsCategoryText,
+        categoryBinding.siteSettingsCategoryText.setPaddingRelative(
             horizontalPadding * categoryLevel,
             verticalPadding,
             horizontalPadding,
