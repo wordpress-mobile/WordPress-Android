@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.ViewCompat.LAYOUT_DIRECTION_RTL
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -122,7 +121,7 @@ class JetpackPoweredBottomSheetFragment : BottomSheetDialogFragment() {
         val config: Configuration = resources.configuration
         view.layoutDirection = config.layoutDirection
 
-        return view.layoutDirection == LAYOUT_DIRECTION_RTL
+        return view.layoutDirection == View.LAYOUT_DIRECTION_RTL
     }
 
     private fun setupObservers() {
