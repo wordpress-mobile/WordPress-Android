@@ -44,12 +44,14 @@ open class CoroutineEngine
         caller: Any,
         loggedMessage: String,
         block: suspend FlowCollector<RESULT_TYPE>.() -> Unit
-    ): Flow<RESULT_TYPE> =
-            flow { block() }
-                    .flowOn(context)
-                    .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
-                    .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
-                    .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
+    ): Flow<RESULT_TYPE> {
+        val safeContext = context.minusKey(Job) // Remove Job from context to make it safe for flows
+        return flow { block() }
+            .flowOn(safeContext)
+            .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
+            .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
+            .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
+    }
 
     fun <RESULT_TYPE> launch(
         tag: AppLog.T,
