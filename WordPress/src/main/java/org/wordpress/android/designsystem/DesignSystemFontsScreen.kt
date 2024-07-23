@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +68,7 @@ fun FontCard (text: String, font: TextStyle) {
             )
         }
     }
-    Divider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
+    HorizontalDivider(modifier = Modifier.padding(start = 10.dp, end = 10.dp))
 }
 @Composable
 fun FontsTitle(title: String) {
