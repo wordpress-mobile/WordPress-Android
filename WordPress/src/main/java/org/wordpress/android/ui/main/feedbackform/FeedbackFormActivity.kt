@@ -15,10 +15,6 @@ class FeedbackFormActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            // TODO track screen shown?
-        }
-
         setContentView(
             ComposeView(this).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main.feedbackform
 
 import android.app.Activity
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
@@ -45,12 +44,13 @@ fun FeedbackFormScreen(
         ) {
             viewModel.updateMessageText(it)
         }
-        SendButton {
+        SubmitButton {
             viewModel.onSubmitClick(context)
         }
     }
     Screen(
         content = content,
+        viewModel = viewModel
     )
 }
 
@@ -83,7 +83,7 @@ private fun MessageSection(
 }
 
 @Composable
-private fun SendButton(
+private fun SubmitButton(
     onClick: () -> Unit,
 ) {
     Button(
@@ -94,35 +94,10 @@ private fun SendButton(
                 vertical = vPadding.dp,
                 horizontal = hPadding.dp
             )
-            .testTag("send_message_button")
+            .testTag("submit_message_button")
     ) {
         Text(
             text = stringResource(R.string.submit).uppercase(),
-        )
-    }
-}
-
-@Composable
-private fun TextRow(
-    title: String,
-    onClick: () -> Unit,
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = onClick
-            )
-    ) {
-        Text(
-            text = title,
-            modifier = Modifier
-                .padding(
-                    vertical = vPadding.dp,
-                    horizontal = hPadding.dp
-                ),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -148,6 +123,7 @@ private fun TopCloseButtonBar(
 @Composable
 private fun Screen(
     content: @Composable () -> Unit,
+    viewModel: FeedbackFormViewModel,
 ) {
     val activity = LocalContext.current as? Activity
 
@@ -156,7 +132,7 @@ private fun Screen(
             topBar = {
                 TopCloseButtonBar(
                     onCloseClick = {
-                        activity?.finish()
+                        viewModel.onCloseClick(activity)
                     }
                 )
             },

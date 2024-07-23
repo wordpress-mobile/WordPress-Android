@@ -1131,6 +1131,7 @@
     <!-- feedback form -->
     <string name="feedback_form_title">Feedback</string>
     <string name="feedback_form_message_hint">Please enter your feedback</string>
+    <string name="feedback_form_discard">Discard your feedback?</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
