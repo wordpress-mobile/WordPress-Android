@@ -708,6 +708,12 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
     }
 
+    private fun showFeedbackForm() {
+        if (appPrefsWrapper.supportEmail.isEmpty()) {
+
+        }
+    }
+
     class GravatarUploadFinished internal constructor(val filePath: String, val success: Boolean)
 
     @Subscribe(threadMode = ThreadMode.MAIN)
