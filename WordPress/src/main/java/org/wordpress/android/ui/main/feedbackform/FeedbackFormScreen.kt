@@ -63,15 +63,15 @@ private fun MessageSection(
     Row(
         modifier = Modifier
             .padding(
-                vertical = vPadding.dp,
-                horizontal = hPadding.dp
+                vertical = V_PADDING.dp,
+                horizontal = H_PADDING.dp
             )
     ) {
         OutlinedTextField(
             value = messageText.value,
             placeholder = { Text(stringResource(id = R.string.feedback_form_message_hint)) },
             onValueChange = {
-                onMessageChanged(it.take(maxChars))
+                onMessageChanged(it.take(MAX_CHARS))
             },
             shape = RoundedCornerShape(4.dp),
             modifier = Modifier
@@ -90,8 +90,8 @@ private fun SubmitButton(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                vertical = vPadding.dp,
-                horizontal = hPadding.dp
+                vertical = V_PADDING.dp,
+                horizontal = H_PADDING.dp
             )
             .testTag("submit_message_button")
     ) {
@@ -149,6 +149,6 @@ private fun Screen(
     }
 }
 
-private const val hPadding = 18
-private const val vPadding = 12
-private const val maxChars = 500
+private const val H_PADDING = 18
+private const val V_PADDING = 12
+private const val MAX_CHARS = 500

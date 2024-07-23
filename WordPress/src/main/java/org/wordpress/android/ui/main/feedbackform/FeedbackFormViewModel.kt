@@ -14,7 +14,6 @@ import org.wordpress.android.R
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
 
-
 @HiltViewModel
 class FeedbackFormViewModel @Inject constructor(
 ) : ViewModel() {
