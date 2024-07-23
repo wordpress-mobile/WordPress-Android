@@ -110,7 +110,7 @@ abstract class BaseWPV2MediaRestClient constructor(
                 if (!isClosedForSend) {
                     val payload = ProgressPayload(media, progress, false, null)
                     try {
-                        offer(payload)
+                        trySend(payload).isSuccess
                     } catch (e: CancellationException) {
                         // Do nothing (the flow has been cancelled)
                     }
