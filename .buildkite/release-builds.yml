@@ -30,6 +30,7 @@ steps:
         key: wplint
         command: ".buildkite/commands/lint.sh wordpress"
         priority: 1
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
@@ -37,13 +38,14 @@ steps:
         key: jplint
         command: ".buildkite/commands/lint.sh jetpack"
         priority: 1
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
   #################
-  # Beta Builds
+  # Release Builds
   #################
-  - group: "🚀 Beta Builds"
+  - group: "🚀 Release Builds"
     steps:
 
       - label: ":wordpress: :android: Release Build"

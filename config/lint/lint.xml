@@ -69,4 +69,10 @@
     <issue id="UnknownNullness" severity="informational">
         <ignore path="**/generated/**" />
     </issue>
+
+    <!-- TODO: https://github.com/wordpress-mobile/WordPress-Android/issues/21065 -->
+    <issue id="UsingMaterialAndMaterial3Libraries" severity="warning" />
+
+    <!-- TODO: remove this when we upgrade to AGP 8.5.0 -->
+    <issue id="ObsoleteLintCustomCheck" severity="warning" />
 </lint>
