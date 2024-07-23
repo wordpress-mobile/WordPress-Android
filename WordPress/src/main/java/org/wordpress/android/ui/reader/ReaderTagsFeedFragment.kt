@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.core.view.ViewCompat.animate
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commitNow
@@ -218,7 +217,7 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
         alpha = 0f
         isVisible = true
 
-        animate(this)
+        this.animate()
             // add quick delay to give time for the fragment to be added and load some content
             .setStartDelay(POST_LIST_FADE_IN_DELAY)
             .setDuration(POST_LIST_FADE_DURATION)
@@ -229,7 +228,7 @@ class ReaderTagsFeedFragment : Fragment(R.layout.reader_tag_feed_fragment_layout
     private fun View.fadeOut(
         withEndAction: (() -> Unit)? = null,
     ) {
-        animate(this)
+        this.animate()
             .withEndAction {
                 isVisible = false
                 alpha = 1f
