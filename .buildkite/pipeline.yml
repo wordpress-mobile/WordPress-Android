@@ -55,11 +55,13 @@ steps:
 
       - label: "🕵️ Lint WordPress"
         command: ".buildkite/commands/lint.sh wordpress"
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
       - label: "🕵️ Lint Jetpack"
         command: ".buildkite/commands/lint.sh jetpack"
+        plugins: [$CI_TOOLKIT]
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
