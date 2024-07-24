@@ -3,22 +3,28 @@ package org.wordpress.android.ui.main.feedbackform
 import android.app.Activity
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
-class FeedbackFormViewModel @Inject constructor() : ViewModel() {
-    @Inject
-    lateinit var zendeskHelper: ZendeskHelper
-
+class FeedbackFormViewModel @Inject constructor(
+    @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
+    private val zendeskHelper: ZendeskHelper,
+    private val selectedSiteRepository: SelectedSiteRepository,
+) : ScopedViewModel(mainDispatcher) {
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
 
@@ -36,12 +42,13 @@ class FeedbackFormViewModel @Inject constructor() : ViewModel() {
             return
         }
 
+        val selectedSite = selectedSiteRepository.getSelectedSite()
         _isProgressShowing.value = true
-
-        zendeskHelper.requireIdentity(context, selectedSite = null) {
+        zendeskHelper.requireIdentity(context, selectedSite) {
             createNewZendeskRequest(
                 context = context,
                 description = _messageText.value,
+                selectedSite = selectedSite,
                 callback = object : ZendeskHelper.CreateRequestCallback() {
                     override fun onSuccess() {
                         _isProgressShowing.value = false
@@ -59,12 +66,13 @@ class FeedbackFormViewModel @Inject constructor() : ViewModel() {
     private fun createNewZendeskRequest(
         context: Context,
         description: String,
+        selectedSite: SiteModel?,
         callback: ZendeskHelper.CreateRequestCallback
     ) {
         zendeskHelper.createRequest(
             context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
-            selectedSite = null,
+            selectedSite = selectedSite,
             extraTags = listOf("appreview_jetpack", "in_app_feedback"), // matches iOS
             requestDescription = description,
             callback = callback
