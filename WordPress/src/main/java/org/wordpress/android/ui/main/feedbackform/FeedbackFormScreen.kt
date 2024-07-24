@@ -73,7 +73,7 @@ private fun MessageSection(
             onValueChange = {
                 onMessageChanged(it.take(MAX_CHARS))
             },
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
@@ -151,4 +151,4 @@ private fun Screen(
 
 private const val H_PADDING = 18
 private const val V_PADDING = 12
-private const val MAX_CHARS = 500
+private const val MAX_CHARS = 500 // matches iOS limit
