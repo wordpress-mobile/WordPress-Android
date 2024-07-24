@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -42,13 +41,10 @@ class FeedbackFormViewModel @Inject constructor(
             return
         }
 
-        val selectedSite = selectedSiteRepository.getSelectedSite()
-        _isProgressShowing.value = true
-        zendeskHelper.requireIdentity(context, selectedSite) {
-            createNewZendeskRequest(
+        zendeskHelper.requireIdentity(context, selectedSiteRepository.getSelectedSite()) {
+            _isProgressShowing.value = true
+            createZendeskFeedbackRequest(
                 context = context,
-                description = _messageText.value,
-                selectedSite = selectedSite,
                 callback = object : ZendeskHelper.CreateRequestCallback() {
                     override fun onSuccess() {
                         _isProgressShowing.value = false
@@ -63,18 +59,16 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
-    private fun createNewZendeskRequest(
+    private fun createZendeskFeedbackRequest(
         context: Context,
-        description: String,
-        selectedSite: SiteModel?,
         callback: ZendeskHelper.CreateRequestCallback
     ) {
         zendeskHelper.createRequest(
-            context,
+            context = context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
-            selectedSite = selectedSite,
+            selectedSite = selectedSiteRepository.getSelectedSite(),
             extraTags = listOf("appreview_jetpack", "in_app_feedback"), // matches iOS
-            requestDescription = description,
+            requestDescription = _messageText.value,
             callback = callback
         )
     }
