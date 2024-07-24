@@ -17,7 +17,7 @@ plugins {
 ext {
     minSdkVersion = 26
     compileSdkVersion = 34
-    targetSdkVersion = 34
+    targetSdkVersion = 33
 }
 
 ext {
@@ -41,7 +41,7 @@ ext {
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
-    androidxAnnotationVersion = '1.6.0'
+    androidxAnnotationVersion = '1.8.0'
     androidxAppcompatVersion = '1.6.1'
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.3.4'
@@ -52,7 +52,7 @@ ext {
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
-    androidxActivityVersion = '1.8.0'
+    androidxActivityVersion = '1.9.0'
     androidxFragmentVersion = '1.8.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
@@ -98,7 +98,7 @@ ext {
     facebookReactVersion = '0.73.3'
 
     // test
-    assertjVersion = '3.23.1'
+    assertjVersion = '3.26.3'
     junitVersion = '4.13.2'
     mockitoAndroidVersion = '4.5.1'
     mockitoKotlinVersion = '4.1.0'
