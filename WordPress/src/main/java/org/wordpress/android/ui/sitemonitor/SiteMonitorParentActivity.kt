@@ -186,7 +186,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
                 contentColor = MaterialTheme.colors.onSurface,
                 indicator = { tabPositions ->
                     // Customizing the indicator color and style
-                    TabRowDefaults.Indicator(
+                    TabRowDefaults.SecondaryIndicator(
                         Modifier.tabIndicatorOffset(tabPositions[tabIndex]),
                         color = MaterialTheme.colors.onSurface,
                         height = 2.0.dp
