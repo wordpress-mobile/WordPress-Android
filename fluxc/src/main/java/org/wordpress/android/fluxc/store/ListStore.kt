@@ -261,6 +261,29 @@ class ListStore @Inject constructor(
         handleListStateChange(payload.listDescriptor, newState, payload.error)
     }
 
+    suspend fun saveListFetched(
+        listDescriptor: ListDescriptor,
+        remoteItemIds: List<Long>,
+        canLoadMore: Boolean
+    ) {
+        val newState = if (canLoadMore) ListState.CAN_LOAD_MORE else FETCHED
+
+        listSqlUtils.insertOrUpdateList(listDescriptor, newState)
+
+        val listModel = requireNotNull(listSqlUtils.getList(listDescriptor)) {
+            "The `ListModel` can never be `null` here since either a new list is inserted or existing one " +
+                    "updated"
+        }
+
+        val listItems = remoteItemIds.map { remoteItemId ->
+            val listItemModel = ListItemModel()
+            listItemModel.listId = listModel.id
+            listItemModel.remoteItemId = remoteItemId
+            listItemModel
+        }
+        listItemSqlUtils.insertItemList(listItems)
+    }
+
     /**
      * Handles the [ListAction.LIST_ITEMS_REMOVED] action.
      *
