@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.main.feedbackform
 
 import android.app.Activity
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.AppTheme
@@ -41,10 +44,12 @@ fun FeedbackFormScreen(
     val context = LocalContext.current
     val content: @Composable () -> Unit = @Composable {
         MessageSection(
-            messageText = viewModel.messageText.collectAsState()
-        ) {
-            viewModel.updateMessageText(it)
-        }
+            messageText = viewModel.messageText.collectAsState(),
+            isProgressShowing = viewModel.isProgressShowing.collectAsState().value,
+            onMessageChanged = {
+                viewModel.updateMessageText(it)
+            },
+        )
         SubmitButton {
             viewModel.onSubmitClick(context)
         }
@@ -59,8 +64,9 @@ fun FeedbackFormScreen(
 private fun MessageSection(
     messageText: State<String>,
     onMessageChanged: (String) -> Unit,
+    isProgressShowing: Boolean?,
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .padding(
                 vertical = V_PADDING.dp,
@@ -78,6 +84,9 @@ private fun MessageSection(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
         )
+        if (isProgressShowing == true) {
+            CircularProgressIndicator()
+        }
     }
 }
 
@@ -147,6 +156,22 @@ private fun Screen(
             }
         }
     }
+}
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+)
+@Composable
+private fun FeedbackFormScreenPreview() {
+    FeedbackFormScreen(
+        viewModel = FeedbackFormViewModel()
+    )
 }
 
 private const val H_PADDING = 18

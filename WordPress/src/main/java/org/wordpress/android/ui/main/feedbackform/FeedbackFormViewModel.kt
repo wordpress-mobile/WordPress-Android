@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,6 +21,9 @@ class FeedbackFormViewModel @Inject constructor(
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
 
+    private val _isProgressShowing = MutableStateFlow<Boolean?>(null)
+    val isProgressShowing = _isProgressShowing.asStateFlow()
+
     fun updateMessageText(message: String) {
         if (message != _messageText.value) {
             _messageText.value = message
@@ -30,11 +34,14 @@ class FeedbackFormViewModel @Inject constructor(
         if (_messageText.value.isEmpty()) {
             return
         }
-        if (NetworkUtils.checkConnection(context)) {
+        if (!NetworkUtils.checkConnection(context)) {
             return
         }
         viewModelScope.launch(Dispatchers.Default) {
-            // TODO show progress and submit request
+            // TODO submit request
+            _isProgressShowing.value = true
+            delay(2000L)
+            _isProgressShowing.value = false
         }
     }
 
