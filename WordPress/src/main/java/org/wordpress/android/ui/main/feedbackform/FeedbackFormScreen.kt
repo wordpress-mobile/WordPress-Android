@@ -62,7 +62,7 @@ fun FeedbackFormScreen(
 
 @Composable
 private fun MessageSection(
-    messageText: State<String>,
+    messageText: State<String>?,
     onMessageChanged: (String) -> Unit,
     isProgressShowing: Boolean?,
 ) {
@@ -74,7 +74,7 @@ private fun MessageSection(
             )
     ) {
         OutlinedTextField(
-            value = messageText.value,
+            value = messageText?.value ?: "",
             placeholder = { Text(stringResource(id = R.string.feedback_form_message_hint)) },
             onValueChange = {
                 onMessageChanged(it.take(MAX_CHARS))
@@ -169,7 +169,16 @@ private fun Screen(
 )
 @Composable
 private fun FeedbackFormScreenPreview() {
-    FeedbackFormScreen(
+    val content: @Composable () -> Unit = @Composable {
+        MessageSection(
+            messageText = null,
+            isProgressShowing = true,
+            onMessageChanged = {},
+        )
+        SubmitButton { }
+    }
+    Screen(
+        content = content,
         viewModel = FeedbackFormViewModel()
     )
 }
