@@ -18,7 +18,7 @@ import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
 
 @HiltViewModel
-class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
+class FeedbackFormViewModel @Inject constructor() : ViewModel() {
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
 
@@ -32,38 +32,37 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
     }
 
     fun onSubmitClick(context: Context) {
-        if (_messageText.value.isEmpty()) {
-            return
-        }
-        if (!NetworkUtils.checkConnection(context)) {
-            return
-        }
-        viewModelScope.launch(Dispatchers.Default) {
-            _isProgressShowing.value = true
-
-            @Suppress("MagicNumber")
-            delay(1500L) // TODO submit request
-
-            _isProgressShowing.value = false
-            withContext(Dispatchers.Main) {
-                onSuccess(context)
+        if (NetworkUtils.checkConnection(context)) {
+            viewModelScope.launch(Dispatchers.Default) {
+                _isProgressShowing.value = true
+                val success = submitRequest()
+                _isProgressShowing.value = false
+                withContext(Dispatchers.Main) {
+                    if (success) {
+                        onSuccess(context)
+                    } else {
+                        onFailure(context)
+                    }
+                }
             }
         }
     }
 
-    fun onCloseClick(activity: Activity?) {
-        activity?.let {
+    // TODO submit request
+    @Suppress("MagicNumber")
+    private suspend fun submitRequest(): Boolean {
+        delay(1500L)
+        return true
+    }
+
+    fun onCloseClick(context: Context) {
+        (context as? Activity)?.let { activity ->
             if (_messageText.value.isEmpty()) {
-                it.finish()
+                activity.finish()
             } else {
-                confirmDiscard(it)
+                confirmDiscard(activity)
             }
         }
-    }
-
-    private fun onSuccess(context: Context) {
-        Toast.makeText(context, R.string.feedback_form_success, Toast.LENGTH_LONG).show()
-        (context as? Activity)?.finish()
     }
 
     private fun confirmDiscard(activity: Activity) {
@@ -76,6 +75,15 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
             }
             builder.show()
         }
+    }
+
+    private fun onSuccess(context: Context) {
+        Toast.makeText(context, R.string.feedback_form_success, Toast.LENGTH_LONG).show()
+        (context as? Activity)?.finish()
+    }
+
+    private fun onFailure(context: Context) {
+        Toast.makeText(context, R.string.feedback_form_failure, Toast.LENGTH_LONG).show()
     }
 }
 
