@@ -31,6 +31,7 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
         }
     }
 
+    @Suppress("MagicNumber")
     fun onSubmitClick(context: Context) {
         if (_messageText.value.isEmpty()) {
             return
