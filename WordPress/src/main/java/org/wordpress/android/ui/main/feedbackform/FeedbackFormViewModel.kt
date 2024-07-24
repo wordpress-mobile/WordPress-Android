@@ -62,7 +62,7 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
     }
 
     private fun onSuccess(context: Context) {
-        Toast.makeText(context, R.string.feedback_form_success, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.feedback_form_success, Toast.LENGTH_LONG).show()
         (context as? Activity)?.finish()
     }
 
