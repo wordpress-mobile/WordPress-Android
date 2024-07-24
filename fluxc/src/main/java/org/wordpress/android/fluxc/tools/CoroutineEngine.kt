@@ -44,12 +44,13 @@ open class CoroutineEngine
         caller: Any,
         loggedMessage: String,
         block: suspend FlowCollector<RESULT_TYPE>.() -> Unit
-    ): Flow<RESULT_TYPE> =
-            flow { block() }
-                    .flowOn(context)
-                    .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
-                    .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
-                    .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
+    ): Flow<RESULT_TYPE> {
+        return flow { block() }
+            .flowOn(context)
+            .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
+            .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
+            .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
+    }
 
     fun <RESULT_TYPE> launch(
         tag: AppLog.T,
