@@ -4,15 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.support.ZendeskHelper
+import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.util.NetworkUtils
 import javax.inject.Inject
 
@@ -34,37 +32,43 @@ class FeedbackFormViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onSubmitClick(context: Context) {
-        if (NetworkUtils.checkConnection(context)) {
-            viewModelScope.launch(Dispatchers.Default) {
-                _isProgressShowing.value = true
-                try {
-                    submitRequest(context)
-                } finally {
-                    _isProgressShowing.value = false
-                }
-            }
+        if (!NetworkUtils.checkConnection(context)) {
+            return
+        }
+
+        _isProgressShowing.value = true
+
+        zendeskHelper.requireIdentity(context, selectedSite = null) {
+            createNewZendeskRequest(
+                context = context,
+                description = _messageText.value,
+                callback = object : ZendeskHelper.CreateRequestCallback() {
+                    override fun onSuccess() {
+                        _isProgressShowing.value = false
+                        onSuccess(context)
+                    }
+
+                    override fun onError(errorMessage: String?) {
+                        _isProgressShowing.value = false
+                        onFailure(context, errorMessage)
+                    }
+                })
         }
     }
 
-    private suspend fun submitRequest(context: Context) {
-        zendeskHelper.requireIdentity(context, selectedSiteFromExtras) {
-            showTicketCreatingMessage()
-
-            val description = zendeskHelper.parseChatHistory(
-                getString(R.string.contact_support_bot_ticket_comment_start),
-                getString(R.string.contact_support_bot_ticket_comment_question),
-                getString(R.string.contact_support_bot_ticket_comment_answer),
-                chatHistory
-            )
-            createNewZendeskRequest(description, object : ZendeskHelper.CreateRequestCallback() {
-                override fun onSuccess() {
-                    onSuccess(context)
-                }
-                override fun onError(errorMessage: String?) {
-                    onFailure(context, errorMessage)
-                }
-            })
-        }
+    private fun createNewZendeskRequest(
+        context: Context,
+        description: String,
+        callback: ZendeskHelper.CreateRequestCallback
+    ) {
+        zendeskHelper.createRequest(
+            context,
+            origin = HelpActivity.Origin.FEEDBACK_FORM,
+            selectedSite = null,
+            extraTags = listOf("in_app_feedback", "this_is_a_test_please_ignore"), // TODO remove second tag
+            requestDescription = description,
+            callback = callback
+        )
     }
 
     fun onCloseClick(context: Context) {
@@ -95,7 +99,8 @@ class FeedbackFormViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun onFailure(context: Context, errorMessage: String? = null) {
-        Toast.makeText(context, R.string.feedback_form_failure, Toast.LENGTH_LONG).show()
+        val message = context.getString(R.string.feedback_form_failure) + "\n$errorMessage"
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
 
