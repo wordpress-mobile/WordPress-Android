@@ -7,10 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import okhttp3.Call
@@ -98,7 +97,7 @@ abstract class BaseWPV2MediaRestClient constructor(
             media.setUploadState(FAILED)
             val payload = ProgressPayload(media, 1f, false, error)
             try {
-                sendBlocking(payload)
+                trySendBlocking(payload)
                 close()
             } catch (e: CancellationException) {
                 // Do nothing (the flow has been cancelled)
@@ -111,7 +110,7 @@ abstract class BaseWPV2MediaRestClient constructor(
                 if (!isClosedForSend) {
                     val payload = ProgressPayload(media, progress, false, null)
                     try {
-                        offer(payload)
+                        trySend(payload).isSuccess
                     } catch (e: CancellationException) {
                         // Do nothing (the flow has been cancelled)
                     }
@@ -146,7 +145,7 @@ abstract class BaseWPV2MediaRestClient constructor(
                             val uploadedMedia = res.toMediaModel(site.id)
                             val payload = ProgressPayload(uploadedMedia, 1f, true, false)
                             try {
-                                sendBlocking(payload)
+                                trySendBlocking(payload)
                                 close()
                             } catch (e: CancellationException) {
                                 // Do nothing (the flow has been cancelled)
