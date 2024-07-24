@@ -617,6 +617,8 @@
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="https" translatable="false">https:\/\/</string>
+    <string name="close">Close</string>
+    <string name="submit">Submit</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -1125,6 +1127,13 @@
     <string name="jetpack_plugin_install_error_description">Jetpack could not be installed at this time.</string>
     <string name="jetpack_plugin_install_error_button_retry">Retry</string>
     <string name="jetpack_plugin_install_error_button_contact_support">Contact Support</string>
+
+    <!-- feedback form -->
+    <string name="feedback_form_title">Feedback</string>
+    <string name="feedback_form_message_hint">Your feedback is appreciated!</string>
+    <string name="feedback_form_discard">Discard your feedback?</string>
+    <string name="feedback_form_success">Thanks for submitting your feedback!</string>
+    <string name="feedback_form_failure">We were unable to submit your feedback</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>

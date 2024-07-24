@@ -207,11 +207,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
         }
-
         rowFeedback.setOnClickListener {
-            // TODO
+            ActivityLauncher.viewFeedbackForm(requireContext())
         }
-
         learnMoreAtGravatar.setOnClickListener {
             ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
         }
