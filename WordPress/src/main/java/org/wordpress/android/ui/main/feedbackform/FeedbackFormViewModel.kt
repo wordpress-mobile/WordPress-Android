@@ -31,7 +31,6 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
         }
     }
 
-    @Suppress("MagicNumber")
     fun onSubmitClick(context: Context) {
         if (_messageText.value.isEmpty()) {
             return
@@ -41,7 +40,10 @@ class FeedbackFormViewModel @Inject constructor( ) : ViewModel() {
         }
         viewModelScope.launch(Dispatchers.Default) {
             _isProgressShowing.value = true
+
+            @Suppress("MagicNumber")
             delay(1500L) // TODO submit request
+
             _isProgressShowing.value = false
             withContext(Dispatchers.Main) {
                 onSuccess(context)
