@@ -67,7 +67,7 @@ class FeedbackFormViewModel @Inject constructor(
             context = context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
             selectedSite = selectedSiteRepository.getSelectedSite(),
-            extraTags = listOf("appreview_jetpack", "in_app_feedback"), // matches iOS
+            extraTags = listOf("in_app_feedback"),
             requestDescription = _messageText.value,
             callback = callback
         )
