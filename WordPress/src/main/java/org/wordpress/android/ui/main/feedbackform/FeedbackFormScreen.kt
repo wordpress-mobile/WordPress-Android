@@ -42,14 +42,16 @@ fun FeedbackFormScreen(
     viewModel: FeedbackFormViewModel
 ) {
     val context = LocalContext.current
+    val messageText = viewModel.messageText.collectAsState()
     val content: @Composable () -> Unit = @Composable {
         MessageSection(
-            messageText = viewModel.messageText.collectAsState(),
+            messageText = messageText,
             onMessageChanged = {
                 viewModel.updateMessageText(it)
             },
         )
         SubmitButton(
+            isEnabled = messageText.value.isNotEmpty(),
             isProgressShowing = viewModel.isProgressShowing.collectAsState().value,
             onClick = {
                 viewModel.onSubmitClick(context)
@@ -91,6 +93,7 @@ private fun MessageSection(
 @Composable
 private fun SubmitButton(
     onClick: () -> Unit,
+    isEnabled: Boolean,
     isProgressShowing: Boolean?,
 ) {
     Box(
@@ -106,6 +109,7 @@ private fun SubmitButton(
             CircularProgressIndicator()
         } else {
             Button(
+                enabled = isEnabled,
                 onClick = onClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -182,6 +186,7 @@ private fun FeedbackFormScreenPreview() {
             onMessageChanged = {},
         )
         SubmitButton(
+            isEnabled = true,
             isProgressShowing = false,
             onClick = { }
         )
