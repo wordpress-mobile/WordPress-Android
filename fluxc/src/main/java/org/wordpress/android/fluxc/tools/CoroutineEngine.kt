@@ -45,9 +45,8 @@ open class CoroutineEngine
         loggedMessage: String,
         block: suspend FlowCollector<RESULT_TYPE>.() -> Unit
     ): Flow<RESULT_TYPE> {
-        val safeContext = context.minusKey(Job) // Remove Job from context to make it safe for flows
         return flow { block() }
-            .flowOn(safeContext)
+            .flowOn(context)
             .onStart { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Started") }
             .onEach { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage OnEvent: $it") }
             .onCompletion { appLog.d(tag, "${caller.javaClass.simpleName}: $loggedMessage Completed") }
