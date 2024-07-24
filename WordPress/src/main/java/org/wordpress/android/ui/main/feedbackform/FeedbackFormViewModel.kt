@@ -65,7 +65,7 @@ class FeedbackFormViewModel @Inject constructor() : ViewModel() {
             context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
             selectedSite = null,
-            extraTags = listOf("in_app_feedback", "this_is_a_test_please_ignore"), // TODO remove second tag
+            extraTags = listOf("appreview_jetpack", "in_app_feedback"), // matches iOS
             requestDescription = description,
             callback = callback
         )
