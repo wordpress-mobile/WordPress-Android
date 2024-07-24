@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main.feedbackform
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +24,17 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     FeedbackFormScreen(
-                        viewModel
+                        messageText = viewModel.messageText.collectAsState(),
+                        isProgressShowing = viewModel.isProgressShowing.collectAsState(),
+                        onMessageChanged = {
+                            viewModel.updateMessageText(it)
+                        },
+                        onSubmitClick = {
+                            viewModel.onSubmitClick(this@FeedbackFormActivity)
+                        },
+                        onCloseClick = {
+                            viewModel.onCloseClick(this@FeedbackFormActivity)
+                        }
                     )
                 }
             }

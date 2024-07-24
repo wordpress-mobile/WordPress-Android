@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.main.feedbackform
 
-import android.app.Activity
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,34 +38,38 @@ import org.wordpress.android.ui.compose.theme.AppTheme
 
 @Composable
 fun FeedbackFormScreen(
-    viewModel: FeedbackFormViewModel
+    messageText: State<String>?,
+    isProgressShowing: State<Boolean?>,
+    onMessageChanged: (String) -> Unit,
+    onSubmitClick: (context: Context) -> Unit,
+    onCloseClick: (context: Context) -> Unit
 ) {
     val context = LocalContext.current
-    val messageText = viewModel.messageText.collectAsState()
+    val message = messageText?.value ?: ""
     val content: @Composable () -> Unit = @Composable {
         MessageSection(
-            messageText = messageText,
+            messageText = messageText?.value,
             onMessageChanged = {
-                viewModel.updateMessageText(it)
+                onMessageChanged(it)
             },
         )
         SubmitButton(
-            isEnabled = messageText.value.isNotEmpty(),
-            isProgressShowing = viewModel.isProgressShowing.collectAsState().value,
+            isEnabled = message.isNotEmpty(),
+            isProgressShowing = isProgressShowing.value,
             onClick = {
-                viewModel.onSubmitClick(context)
+                onSubmitClick(context)
             }
         )
     }
     Screen(
         content = content,
-        viewModel = viewModel
+        onCloseClick = { onCloseClick(context) }
     )
 }
 
 @Composable
 private fun MessageSection(
-    messageText: State<String>?,
+    messageText: String?,
     onMessageChanged: (String) -> Unit,
 ) {
     Box(
@@ -77,8 +80,10 @@ private fun MessageSection(
             )
     ) {
         OutlinedTextField(
-            value = messageText?.value ?: "",
-            placeholder = { Text(stringResource(id = R.string.feedback_form_message_hint)) },
+            value = messageText ?: "",
+            placeholder = {
+                Text(stringResource(id = R.string.feedback_form_message_hint))
+            },
             onValueChange = {
                 onMessageChanged(it.take(MAX_CHARS))
             },
@@ -142,16 +147,16 @@ private fun TopCloseButtonBar(
 @Composable
 private fun Screen(
     content: @Composable () -> Unit,
-    viewModel: FeedbackFormViewModel,
+    onCloseClick: (context: Context) -> Unit
 ) {
-    val activity = LocalContext.current as? Activity
+    val context = LocalContext.current
 
     AppTheme {
         Scaffold(
             topBar = {
                 TopCloseButtonBar(
                     onCloseClick = {
-                        viewModel.onCloseClick(activity)
+                        onCloseClick(context)
                     }
                 )
             },
@@ -193,7 +198,7 @@ private fun FeedbackFormScreenPreview() {
     }
     Screen(
         content = content,
-        viewModel = FeedbackFormViewModel()
+        onCloseClick = {},
     )
 }
 
