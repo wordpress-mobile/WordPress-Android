@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -28,6 +29,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -45,14 +47,16 @@ fun FeedbackFormScreen(
     val content: @Composable () -> Unit = @Composable {
         MessageSection(
             messageText = viewModel.messageText.collectAsState(),
-            isProgressShowing = viewModel.isProgressShowing.collectAsState().value,
             onMessageChanged = {
                 viewModel.updateMessageText(it)
             },
         )
-        SubmitButton {
-            viewModel.onSubmitClick(context)
-        }
+        SubmitButton(
+            isProgressShowing = viewModel.isProgressShowing.collectAsState().value,
+            onClick = {
+                viewModel.onSubmitClick(context)
+            }
+        )
     }
     Screen(
         content = content,
@@ -64,7 +68,6 @@ fun FeedbackFormScreen(
 private fun MessageSection(
     messageText: State<String>?,
     onMessageChanged: (String) -> Unit,
-    isProgressShowing: Boolean?,
 ) {
     Box(
         modifier = Modifier
@@ -84,29 +87,38 @@ private fun MessageSection(
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 180.dp)
         )
-        if (isProgressShowing == true) {
-            CircularProgressIndicator()
-        }
     }
 }
 
 @Composable
 private fun SubmitButton(
     onClick: () -> Unit,
+    isProgressShowing: Boolean?,
 ) {
-    Button(
-        onClick = onClick,
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(
                 vertical = V_PADDING.dp,
                 horizontal = H_PADDING.dp
             )
-            .testTag("submit_message_button")
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = stringResource(R.string.submit).uppercase(),
-        )
+        if (isProgressShowing == true) {
+            CircularProgressIndicator(
+
+            )
+        } else {
+            Button(
+                onClick = onClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(R.string.submit).uppercase(),
+                )
+            }
+        }
     }
 }
 
@@ -172,10 +184,12 @@ private fun FeedbackFormScreenPreview() {
     val content: @Composable () -> Unit = @Composable {
         MessageSection(
             messageText = null,
-            isProgressShowing = true,
             onMessageChanged = {},
         )
-        SubmitButton { }
+        SubmitButton(
+            isProgressShowing = false,
+            onClick = { }
+        )
     }
     Screen(
         content = content,
