@@ -88,10 +88,10 @@ class ZendeskHelper(
     }
 
     /**
-     * If there is no identity set yet, create an anonymous one.
-     * warning: This method should only be used for interactions with Zendesk
-     * that doesn't require a confirmed identity and/or a response from support,
-     * such as sending feedback about the app.
+     * Create an anonymous identity if one hasn't been previously set.
+     * Warning: This method should only be used for interactions with
+     * Zendesk that don't require a confirmed identity or a response
+     * from support, such as sending feedback about the app.
      */
     fun createAnonymousIdentityIfNeeded() {
         if (!isIdentitySet()) {
