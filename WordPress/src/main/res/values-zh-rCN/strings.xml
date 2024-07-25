@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 09:54:07+0000
+Translation-Revision-Date: 2024-07-24 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
+    <string name="voice_to_content_generic_error">暂无法查看从音频创建的文章，请稍后再试。</string>
+    <string name="voice_to_content_done_label">完成</string>
+    <string name="voice_to_content_upgrade">升级以获得更多请求次数</string>
+    <string name="voice_to_content_ineligible">您的可用请求次数不足，无法从音频创建文章。</string>
+    <string name="voice_to_content_recording_label">正在录制</string>
+    <string name="voice_to_content_begin_recording_label">开始录制</string>
+    <string name="voice_to_content_secondary_header_label">可用的请求次数：</string>
+    <string name="voice_to_content_base_header_label">从音频创建的文章</string>
+    <string name="voice_to_content_processing_label">正在处理</string>
+    <string name="voice_to_content_error_label">错误</string>
+    <string name="voice_to_content_processing">正在处理</string>
     <string name="gutenberg_native_tap_to_edit">轻点以编辑</string>
     <string name="voice_to_content_permissions_required_msg">要录制音频，此应用程序需要获得您麦克风的使用权限。 您之前已拒绝授予这项权限。 请在应用程序设置中启用麦克风权限，以使用此功能。</string>
     <string name="voice_to_content_permissions_required_title">需要音频录制权限</string>
@@ -94,12 +105,15 @@ Language: zh_CN
     <string name="reader_preferences_screen_font_family_label">字体</string>
     <string name="reader_preferences_screen_theme_label">配色方案</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">发送您的反馈</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">清除选定的颜色</string>
     <string name="reader_no_followed_tags_text_title">无关注的标签</string>
     <string name="reader_toast_err_tag_already_following">您已关注此标签</string>
     <string name="reader_menu_reading_preferences">阅读偏好</string>
     <string name="reader_page_followed_tags_text_title">关注的标签</string>
     <string name="reader_preferences_theme_candy">糖果</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">夜晚</string>
     <string name="reader_preferences_theme_sepia">棕褐色</string>
     <string name="reader_preferences_theme_soft">柔和</string>
@@ -173,6 +187,7 @@ Language: zh_CN
     <string name="reader_filter_chip_blog_one">1 个博客</string>
     <string name="reader_filter_chip_blog_zero">0 个博客</string>
     <string name="reader_dropdown_menu_lists">列表</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_liked">已点赞</string>
     <string name="reader_dropdown_menu_saved">已保存</string>
     <string name="reader_dropdown_menu_subscriptions">订阅</string>
@@ -205,6 +220,7 @@ Language: zh_CN
     <string name="domains_free_domain">您的免费 WordPress.com 域名</string>
     <string name="domains_site_other_domains">%s 的其他域名</string>
     <string name="domains_primary_site_domain_chip">主域名</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary 上线了！</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">开始吧！</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">打开博客提示</string>
@@ -214,6 +230,9 @@ Language: zh_CN
     <string name="bloganuary_dashboard_nudge_overlay_text_two">发表您的回复。</string>
     <string name="bloganuary_dashboard_nudge_overlay_text_one">每天接收新的提示，以获取灵感。</string>
     <string name="bloganuary_dashboard_nudge_overlay_title">加入我们为期一个月的写作挑战</string>
+    <string name="bloganuary_dashboard_nudge_overlay_icon_content_description">Bloganuary</string>
+    <string name="bloganuary_dashboard_nudge_text">在一月份，Bloganuary 将向您发送博客提示，这是我们发起的一项社区挑战，旨在帮助广大用户在新的一年养成写博客的习惯。</string>
+    <string name="bloganuary_dashboard_nudge_title_december">Bloganuary 即将上线！</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_your_web_bro">因此，我们建议使用 Web 浏览器编辑该区块。</string>
     <string name="gutenberg_native_for_this_reason_we_recommend_editing_the_block_using_the_web_edit">因此，我们建议使用 Web 编辑器编辑该区块。</string>
     <string name="gutenberg_native_alternatively_you_can_flatten_the_content_by_ungrouping_the_block">或者，您也可以取消区块分组，以使内容扁平化。</string>
@@ -304,6 +323,7 @@ Language: zh_CN
     <string name="personalization_screen_draft_posts_card_title">文章草稿</string>
     <string name="personalization_screen_stats_card_description">浏览次数、访客人数和点赞数</string>
     <string name="personalization_screen_tab_cards_footer_cards">卡片可能会显示不同的内容，具体取决于您站点的情况</string>
+    <string name="personalization_screen_tab_cards_description">添加或隐藏卡片</string>
     <string name="personalization_screen_title"> 个性化“首页”选项卡</string>
     <string name="personalize_card_content_description">轻点以对您的“首页”选项卡进行个性化</string>
     <string name="personalize_card_text">对您的“首页”选项卡进行个性化</string>
@@ -1342,6 +1362,7 @@ Language: zh_CN
     <string name="gutenberg_native_audio_file">音频文件</string>
     <string name="gutenberg_native_audio_caption_s">音频说明。 %s</string>
     <string name="gutenberg_native_audio_caption_empty">音频说明。 空</string>
+    <string name="gutenberg_native_add_audio">添加音频</string>
     <string name="continue_with_wpcom">使用 WordPress.com 登录或注册</string>
     <string name="photo_picker_use_audio">使用此音频</string>
     <string name="photo_picker_choose_audio">从设备中选择音频</string>
@@ -1868,6 +1889,7 @@ Language: zh_CN
     <string name="app_theme_light">浅色</string>
     <string name="app_theme">外观</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">您最近对此页面所做的更改没有保存。选择要加载的版本：\n\n</string>
+    <string name="gutenberg_native_warning_message">警告消息</string>
     <string name="gutenberg_native_show_post_content">显示文章内容</string>
     <string name="gutenberg_native_only_show_excerpt">仅显示摘录</string>
     <string name="gutenberg_native_link_to">链接到</string>
@@ -1924,6 +1946,7 @@ Language: zh_CN
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  以及 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">更换图像</string>
     <string name="gutenberg_native_gallery_caption_s">图库说明。%s</string>
     <string name="create_post_page_fab_tooltip">创建文章或页面</string>
     <string name="content_description_person_building_website">网站构建者</string>
@@ -2006,6 +2029,7 @@ Language: zh_CN
     <string name="gutenberg_native_choose_from_device">从设备中选择</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">发生了未知错误。请重试。</string>
     <string name="gutenberg_native_alt_text">替代文本</string>
+    <string name="gutenberg_native_add_video">添加视频</string>
     <string name="gutenberg_native_add_url">添加 URL</string>
     <string name="gutenberg_native_add_alt_text">添加alt文字</string>
     <string name="gutenberg_native_add_block_here">在此处添加区块</string>
@@ -3107,6 +3131,9 @@ Language: zh_CN
     <string name="site_settings_image_quality_hint">图片质量。值越高，表示图片质量越好。</string>
     <string name="site_settings_optimize_images_summary">启用以调整图片大小和压缩图片</string>
     <string name="media_encoder_quality_maximum">最高</string>
+    <string name="media_encoder_quality_high">高</string>
+    <string name="media_encoder_quality_medium">中</string>
+    <string name="media_encoder_quality_low">低</string>
     <string name="media_upload_state_uploaded">已上传</string>
     <string name="media_upload_state_failed">上传失败</string>
     <string name="media_upload_state_deleted">已删除</string>

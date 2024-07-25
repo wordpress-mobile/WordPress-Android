@@ -1935,6 +1935,7 @@ Language: ko_KR
     <string name="stats_box_type_low">낮음</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">이미지 교체</string>
     <string name="gutenberg_native_gallery_caption_s">갤러리 캡션. %s</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>

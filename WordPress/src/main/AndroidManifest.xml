@@ -833,7 +833,7 @@
         <service
             android:name=".ui.uploads.UploadService"
             android:label="Upload Service"
-            android:foregroundServiceType="dataSync"/>
+            android:foregroundServiceType="dataSync" />
         <service
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service"
@@ -920,12 +920,14 @@
         <service
             android:name=".login.LoginWpcomService"
             android:exported="false"
-            android:label="Login to WPCOM Service" />
+            android:label="Login to WPCOM Service"
+            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
-            android:label="Site Creation Service" />
+            android:label="Site Creation Service"
+            android:foregroundServiceType="dataSync" />
 
         <!-- Samsung multiwindow support -->
         <uses-library

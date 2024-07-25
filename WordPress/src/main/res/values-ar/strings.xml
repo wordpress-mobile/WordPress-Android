@@ -1937,6 +1937,7 @@ Language: ar
     <string name="stats_bar_chart_accessibility_entry">%1$s، %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">التسمية التوضيحية لمعرض الصور. %s</string>
     <string name="create_post_page_fab_tooltip">إنشاء مقالة أو صفحة</string>
+    <string name="gutenberg_native_replace_image">استبدال الصورة</string>
     <string name="content_description_person_building_website">شخص ينشئ موقعًا على الويب</string>
     <string name="post_signup_interstitial_not_right_now">ليس الآن</string>
     <string name="post_signup_interstitial_subtitle">سواء أرغبتَ في الإنشاء أو المشاركة، فإنَّنا سنساعدك على القيام بذلك بشكل صحيح.</string>
