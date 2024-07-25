@@ -52,7 +52,7 @@ class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
     private val supportHelper: SupportHelper,
-    private val buildConfigWrapper: BuildConfigWrapper
+    private val buildConfigWrapper: BuildConfigWrapper,
 ) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
@@ -85,6 +85,19 @@ class ZendeskHelper(
         val identityEmail = (zendeskInstance.identity as? AnonymousIdentity)?.email
         val hasIdentityWithValidEmail = identityEmail?.let { validateEmail(it) } ?: false
         return hasValidEmail && hasIdentityWithValidEmail
+    }
+
+    /**
+     * If there is no identity set yet, create an anonymous one.
+     * warning: This method should only be used for interactions with Zendesk
+     * that doesn't require a confirmed identity and/or a response from support,
+     * such as sending feedback about the app.
+     */
+    fun createAnonymousIdentityIfNeeded() {
+        if (!isIdentitySet()) {
+            AppLog.i(T.SUPPORT, "Creating anonymous Zendesk identity")
+            zendeskInstance.setIdentity(AnonymousIdentity())
+        }
     }
 
     /**
