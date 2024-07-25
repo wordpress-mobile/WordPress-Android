@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-10 20:05:35+0000
+Translation-Revision-Date: 2024-07-23 19:17:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: en_GB
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Post from audio is unavailable at the moment, please try again later.</string>
+    <string name="voice_to_content_done_label">Done</string>
+    <string name="voice_to_content_upgrade">Upgrade for more requests</string>
+    <string name="voice_to_content_ineligible">You don\'t have enough requests available to create a post from audio.</string>
+    <string name="voice_to_content_recording_label">Recording</string>
+    <string name="voice_to_content_begin_recording_label">Begin recording</string>
+    <string name="voice_to_content_secondary_header_label">Requests available:</string>
+    <string name="voice_to_content_base_header_label">Post from audio</string>
+    <string name="voice_to_content_processing_label">Processing</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing">Processing</string>
     <string name="gutenberg_native_tap_to_edit">Tap to edit</string>
     <string name="voice_to_content_permissions_required_msg">To record audio, this app needs permission to access your microphone. You have previously denied this permission. Please enable the microphone permission in the app settings to use this feature.</string>
     <string name="voice_to_content_permissions_required_title">Audio Recording Permission Required</string>
@@ -1935,6 +1946,7 @@ Language: en_GB
     <string name="stats_box_type_low">low</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Replace image</string>
     <string name="gutenberg_native_gallery_caption_s">Gallery caption. %s</string>
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="content_description_person_building_website">Person building website</string>

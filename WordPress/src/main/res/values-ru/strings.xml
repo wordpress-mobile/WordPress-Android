@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 12:54:07+0000
+Translation-Revision-Date: 2024-07-24 15:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="voice_to_content_done_label">Готово</string>
+    <string name="voice_to_content_upgrade">Перейти на платный тарифный план, чтобы получить больше запросов</string>
+    <string name="voice_to_content_ineligible">Недостаточно запросов для создания публикации из аудио.</string>
+    <string name="voice_to_content_recording_label">Запись…</string>
+    <string name="voice_to_content_begin_recording_label">Начать запись</string>
+    <string name="voice_to_content_secondary_header_label">Доступно запросов:</string>
+    <string name="voice_to_content_base_header_label">Публикация из аудио</string>
+    <string name="voice_to_content_processing_label">Обработка</string>
+    <string name="voice_to_content_error_label">Ошибка</string>
+    <string name="voice_to_content_processing">Обработка</string>
     <string name="gutenberg_native_tap_to_edit">Коснитесь, чтобы внести изменения</string>
     <string name="voice_to_content_permissions_required_msg">Чтобы делать аудиозаписи, приложению необходимо разрешение на доступ к микрофону. Ранее вы отказались дать такое разрешение. Дайте разрешение на доступ к микрофону в настройках приложения, чтобы пользоваться этой функцией.</string>
     <string name="voice_to_content_permissions_required_title">Требуется разрешение на аудиозапись</string>
@@ -1935,6 +1945,7 @@ Language: ru
     <string name="stats_box_type_low">низкий</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Заменить изображение</string>
     <string name="gutenberg_native_gallery_caption_s">Подпись галереи. %s</string>
     <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
     <string name="content_description_person_building_website">Личность, создающая сайт</string>
