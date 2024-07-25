@@ -41,22 +41,24 @@ class FeedbackFormViewModel @Inject constructor(
             return
         }
 
-        zendeskHelper.requireIdentity(context, selectedSiteRepository.getSelectedSite()) {
-            _isProgressShowing.value = true
-            createZendeskFeedbackRequest(
-                context = context,
-                callback = object : ZendeskHelper.CreateRequestCallback() {
-                    override fun onSuccess() {
-                        _isProgressShowing.value = false
-                        onSuccess(context)
-                    }
+        //  we don't want to prompt the user for their name & email so create an anonymous
+        //  identity if it hasn't been previously set
+        zendeskHelper.createAnonymousIdentityIfNeeded()
 
-                    override fun onError(errorMessage: String?) {
-                        _isProgressShowing.value = false
-                        onFailure(context, errorMessage)
-                    }
-                })
-        }
+        _isProgressShowing.value = true
+        createZendeskFeedbackRequest(
+            context = context,
+            callback = object : ZendeskHelper.CreateRequestCallback() {
+                override fun onSuccess() {
+                    _isProgressShowing.value = false
+                    onSuccess(context)
+                }
+
+                override fun onError(errorMessage: String?) {
+                    _isProgressShowing.value = false
+                    onFailure(context, errorMessage)
+                }
+            })
     }
 
     private fun createZendeskFeedbackRequest(
