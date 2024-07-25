@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network
 
 import android.content.Context
 import android.webkit.WebSettings
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -9,9 +10,10 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.PackageUtils
 
 @Suppress("MemberNameEqualsClassName")
-class UserAgent(
+class UserAgent @JvmOverloads constructor(
     private val appContext: Context?,
-    private val appName: String
+    private val appName: String,
+    bgDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
     /**
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
@@ -24,7 +26,7 @@ class UserAgent(
     var userAgent: String = getAppNameVersion()
         private set
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Default)
+    private val coroutineScope = CoroutineScope(bgDispatcher)
 
     init {
         coroutineScope.launch {
