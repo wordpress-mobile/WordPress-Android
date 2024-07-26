@@ -126,33 +126,20 @@ private fun SubmitButton(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TopCloseButtonBar(
-    onCloseClick: () -> Unit
-) {
-    TopAppBar(
-        title = { Text(stringResource(id = R.string.feedback_form_title)) },
-        navigationIcon = {
-            IconButton(onClick = onCloseClick) {
-                Icon(Icons.Filled.Close, stringResource(R.string.close))
-            }
-        },
-    )
-}
-
-@Composable
 private fun Screen(
     content: @Composable () -> Unit,
-    onCloseClick: (context: Context) -> Unit
+    onCloseClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
     AppTheme {
         Scaffold(
             topBar = {
-                TopCloseButtonBar(
-                    onCloseClick = {
-                        onCloseClick(context)
-                    }
+                TopAppBar(
+                    title = { Text(stringResource(id = R.string.feedback_form_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onCloseClick) {
+                            Icon(Icons.Filled.Close, stringResource(R.string.close))
+                        }
+                    },
                 )
             },
         ) { contentPadding ->
