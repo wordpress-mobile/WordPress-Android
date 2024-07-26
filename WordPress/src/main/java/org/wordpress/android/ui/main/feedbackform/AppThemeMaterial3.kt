@@ -19,14 +19,19 @@ private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 /**
  * This is a possible Material3 replacement for AppTheme but has not been thoroughly tested.
  * When this theme is deemed ready to use, it should be moved to the ../compose/theme package.
- * We will also likely want it to replace the M3Theme in the ../domains.management package.
+ * We will also likely want it to replace the M3Theme in the ../domains.management package
+ * because that class only handles the Jetpack colors.
  */
 @Composable
 fun AppThemeMaterial3(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
     content: @Composable () -> Unit
 ) {
-    AppThemeMaterial3WithoutBackground(isDarkTheme) {
+    AppThemeMaterial3WithoutBackground(
+        isDarkTheme = isDarkTheme,
+        isJetpackApp = isJetpackApp
+    ) {
         ContentInSurface(content)
     }
 }
