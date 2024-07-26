@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 15:54:08+0000
+Translation-Revision-Date: 2024-07-24 11:54:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: he_IL
 -->
 <resources>
+    <string name="voice_to_content_generic_error">האפשרות לפרסם פוסטים מאודיו לא זמינה כעת. כדאי לנסות שוב מאוחר יותר.</string>
+    <string name="voice_to_content_done_label">בוצע</string>
+    <string name="voice_to_content_upgrade">יש לשדרג לבקשות נוספות</string>
+    <string name="voice_to_content_ineligible">אין לך יתרת בקשות מספקת ליצירת פוסט מאודיו.</string>
+    <string name="voice_to_content_recording_label">מקליט</string>
+    <string name="voice_to_content_begin_recording_label">להתחיל הקלטה</string>
+    <string name="voice_to_content_secondary_header_label">בקשות זמינות:</string>
+    <string name="voice_to_content_base_header_label">פוסט מאודיו</string>
+    <string name="voice_to_content_processing_label">בטיפול</string>
+    <string name="voice_to_content_error_label">שגיאה</string>
+    <string name="voice_to_content_processing">בטיפול</string>
     <string name="gutenberg_native_tap_to_edit">יש להקיש כדי לערוך</string>
     <string name="voice_to_content_permissions_required_msg">כדי להקליט אודיו, יש להעניק לאפליקציה הרשאה לגשת אל המיקרופון. בעבר מנעת את ההרשאה הזאת. עליך לאפשר את ההרשאה למיקרופון בהגדרות האפליקציה כדי להשתמש באפשרות הזאת.</string>
     <string name="voice_to_content_permissions_required_title">נדרשת הרשאה להקליט אודיו</string>
@@ -1923,6 +1934,7 @@ Language: he_IL
     <string name="stats_box_type_low">נמוכים</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  ו-%1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">החלף תמונה</string>
     <string name="gutenberg_native_gallery_caption_s">כיתוב לגלריה. %s</string>
     <string name="create_post_page_fab_tooltip">ליצור פוסט או עמוד</string>
     <string name="content_description_person_building_website">אדם שבונה אתר אינטרנט</string>
