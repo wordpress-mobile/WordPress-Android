@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -24,7 +25,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.INVALID_TOKEN
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNKNOWN
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
 fun DialogErrorUi(
@@ -33,7 +34,7 @@ fun DialogErrorUi(
     errorType: ErrorType,
 ) {
     val padding = 10.dp
-    val messageId = when(errorType) {
+    val messageId = when (errorType) {
         UNAUTHORIZED -> R.string.account_closure_dialog_error_unauthorized
         ATOMIC_SITE -> R.string.account_closure_dialog_error_atomic_site
         CHARGEBACKED_SITE -> R.string.account_closure_dialog_error_chargebacked_site
@@ -56,8 +57,8 @@ fun DialogErrorUi(
         onClick = onDismissRequest,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.primary,
+            containerColor = Color.Transparent
         ),
     )
     Spacer(Modifier.size(padding))
@@ -72,7 +73,7 @@ fun DialogErrorUi(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewDialogErrorUi() {
-    AppTheme {
+    M3Theme {
         AccountClosureDialog(
             onDismissRequest = {},
         ) {
