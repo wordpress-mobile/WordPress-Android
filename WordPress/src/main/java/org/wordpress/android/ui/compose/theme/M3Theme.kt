@@ -12,8 +12,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import org.wordpress.android.BuildConfig
 
-private val localColors = staticCompositionLocalOf { extraPaletteLight }
+private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 
 @Composable
 fun M3Theme(
@@ -26,15 +27,14 @@ fun M3Theme(
 }
 
 @Composable
-fun M3ThemeWithoutBackground(
+private fun M3ThemeWithoutBackground(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val extraColors = if (isDarkTheme) {
-        extraPaletteDark
-    } else {
-        extraPaletteLight
-    }
+    val extraColors = getExtraColors(
+        isDarkTheme = isDarkTheme,
+        isJetpackApp = BuildConfig.IS_JETPACK_APP
+    )
     CompositionLocalProvider (localColors provides extraColors) {
         MaterialTheme(
             colorScheme = if (isDarkTheme) {
@@ -71,15 +71,46 @@ fun M3ThemeWithoutBackground(
 
 // Provide extra semantic colors
 
-private val extraPaletteLight = ExtraColors(
+private fun getExtraColors(
+    isDarkTheme: Boolean,
+    isJetpackApp: Boolean
+): ExtraColors {
+    return if (isJetpackApp) {
+        if (isDarkTheme) {
+            extraPaletteJPDark
+        } else {
+            extraPaletteJPLight
+        }
+    } else if (isDarkTheme) {
+        extraPaletteWPDark
+    } else {
+        extraPaletteWPLight
+    }
+}
+
+private val extraPaletteJPLight = ExtraColors(
     success = AppColor.JetpackGreen50,
     warning = AppColor.Orange50,
     neutral = AppColor.Gray50,
     ghost = Color(0xFF2B2B55)
 )
 
-private val extraPaletteDark = ExtraColors(
+private val extraPaletteJPDark = ExtraColors(
     success = AppColor.JetpackGreen30,
+    warning = AppColor.Orange40,
+    neutral = AppColor.Gray30,
+    ghost = Color.White
+)
+
+private val extraPaletteWPLight = ExtraColors(
+    success = AppColor.Blue50,
+    warning = AppColor.Orange50,
+    neutral = AppColor.Gray50,
+    ghost = Color(0xFF2B2B55)
+)
+
+private val extraPaletteWPDark =ExtraColors(
+    success = AppColor.Blue30,
     warning = AppColor.Orange40,
     neutral = AppColor.Gray30,
     ghost = Color.White
