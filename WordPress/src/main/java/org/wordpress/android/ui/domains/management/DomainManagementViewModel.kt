@@ -23,9 +23,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.domains.management.util.DomainLocalSearchEngine
 import org.wordpress.android.ui.domains.usecases.AllDomains
 import org.wordpress.android.ui.domains.usecases.FetchAllDomainsUseCase
-import org.wordpress.android.ui.themes.neutral
-import org.wordpress.android.ui.themes.success
-import org.wordpress.android.ui.themes.warning
+import org.wordpress.android.ui.compose.theme.neutral
+import org.wordpress.android.ui.compose.theme.success
+import org.wordpress.android.ui.compose.theme.warning
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.time.LocalDate

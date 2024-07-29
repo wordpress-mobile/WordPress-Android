@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.themes.M3Theme
+import org.wordpress.android.ui.compose.theme.M3Theme
 import org.wordpress.android.util.extensions.setContent
 
 @AndroidEntryPoint

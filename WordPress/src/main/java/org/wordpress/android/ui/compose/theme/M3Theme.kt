@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.themes
+package org.wordpress.android.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -12,7 +12,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-import org.wordpress.android.ui.compose.theme.AppColor
 
 private val localColors = staticCompositionLocalOf { extraPaletteLight }
 
@@ -22,7 +21,7 @@ fun M3Theme(
     content: @Composable () -> Unit
 ) {
     M3ThemeWithoutBackground(isDarkTheme) {
-        ContentInSurface(content)
+        ContentInSurfaceM3(content)
     }
 }
 
@@ -118,7 +117,7 @@ val ColorScheme.ghost
     get() = localColors.current.ghost
 
 @Composable
-private fun ContentInSurface(
+private fun ContentInSurfaceM3(
     content: @Composable () -> Unit
 ) {
     Surface(color = MaterialTheme.colorScheme.background) {

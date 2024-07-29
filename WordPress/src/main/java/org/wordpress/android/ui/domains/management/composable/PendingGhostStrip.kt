@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import org.wordpress.android.ui.themes.ghost
+import org.wordpress.android.ui.compose.theme.ghost
 
 
 @Composable
