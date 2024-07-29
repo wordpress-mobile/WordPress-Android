@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.domains.management
+package org.wordpress.android.ui.themes
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme

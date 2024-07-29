@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.wordpress.android.ui.ActivityNavigator
-import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.themes.M3Theme
 import org.wordpress.android.ui.domains.management.newdomainsearch.composable.NewDomainSearchScreen
 import javax.inject.Inject
 
