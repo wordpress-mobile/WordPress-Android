@@ -203,18 +203,20 @@ object AppReviewManager {
                     val appPackage = requireActivity().packageName
                     val url = "market://details?id=$appPackage"
                     try {
-                        requireActivity().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                        @SuppressWarnings("UnsafeImplicitIntentLaunch")
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        requireActivity().startActivity(intent)
                     } catch (e: ActivityNotFoundException) {
                         // play store app isn't on this device so open app's page in browser instead
-                        requireActivity().startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(
-                                    "http://play.google.com/store/apps/details?id=" +
+                        @SuppressWarnings("UnsafeImplicitIntentLaunch")
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(
+                                "http://play.google.com/store/apps/details?id=" +
                                         requireActivity().packageName
-                                )
                             )
                         )
+                        requireActivity().startActivity(intent)
                     }
 
                     setOptOut()
