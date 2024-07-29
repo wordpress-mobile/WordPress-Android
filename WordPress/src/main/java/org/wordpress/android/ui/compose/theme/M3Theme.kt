@@ -28,49 +28,99 @@ fun M3Theme(
 
 @Composable
 private fun M3ThemeWithoutBackground(
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     val extraColors = getExtraColors(
         isDarkTheme = isDarkTheme,
         isJetpackApp = BuildConfig.IS_JETPACK_APP
     )
-    CompositionLocalProvider (localColors provides extraColors) {
+    CompositionLocalProvider(localColors provides extraColors) {
         MaterialTheme(
-            colorScheme = if (isDarkTheme) {
-                darkColorScheme(
-                    primary = AppColor.JetpackGreen30,
-                    secondary = AppColor.JetpackGreen50,
-                    background = AppColor.DarkGray,
-                    surface = AppColor.DarkGray,
-                    error = AppColor.Red30,
-                    onPrimary = AppColor.Black,
-                    onSecondary = AppColor.White,
-                    onBackground = AppColor.White,
-                    onSurface = AppColor.White,
-                    onError = AppColor.Black
-                )
-            } else {
-                lightColorScheme(
-                    primary = AppColor.JetpackGreen50,
-                    secondary = AppColor.JetpackGreen30,
-                    background = AppColor.White,
-                    surface = AppColor.White,
-                    error = AppColor.Red50,
-                    onPrimary = AppColor.White,
-                    onSecondary = AppColor.White,
-                    onBackground = AppColor.Black,
-                    onSurface = AppColor.Black,
-                    onError = AppColor.White
-                )
-            },
+            colorScheme = getColorScheme(
+                isDarkTheme = isDarkTheme,
+                isJetpackApp = BuildConfig.IS_JETPACK_APP
+            ),
             content = content
         )
     }
 }
 
+// Provide color schemes
+
+@Suppress("SameParameterValue")
+private fun getColorScheme(
+    isDarkTheme: Boolean,
+    isJetpackApp: Boolean
+): ColorScheme {
+    return if (isJetpackApp) {
+        if (isDarkTheme) {
+            colorSchemeJPDark
+        } else {
+            colorSchemeJPLight
+        }
+    } else if (isDarkTheme) {
+        colorSchemeWPDark
+    } else {
+        colorSchemeWPLight
+    }
+}
+
+private val colorSchemeJPLight = lightColorScheme(
+    primary = AppColor.JetpackGreen50,
+    secondary = AppColor.JetpackGreen30,
+    background = AppColor.White,
+    surface = AppColor.White,
+    error = AppColor.Red50,
+    onPrimary = AppColor.White,
+    onSecondary = AppColor.White,
+    onBackground = AppColor.Black,
+    onSurface = AppColor.Black,
+    onError = AppColor.White
+)
+
+private val colorSchemeJPDark = darkColorScheme(
+    primary = AppColor.JetpackGreen30,
+    secondary = AppColor.JetpackGreen50,
+    background = AppColor.DarkGray,
+    surface = AppColor.DarkGray,
+    error = AppColor.Red30,
+    onPrimary = AppColor.Black,
+    onSecondary = AppColor.White,
+    onBackground = AppColor.White,
+    onSurface = AppColor.White,
+    onError = AppColor.Black
+)
+
+private val colorSchemeWPLight = lightColorScheme(
+    primary = AppColor.Blue50,
+    secondary = AppColor.Blue30,
+    background = AppColor.White,
+    surface = AppColor.White,
+    error = AppColor.Red50,
+    onPrimary = AppColor.White,
+    onSecondary = AppColor.White,
+    onBackground = AppColor.Black,
+    onSurface = AppColor.Black,
+    onError = AppColor.White
+)
+
+private val colorSchemeWPDark = darkColorScheme(
+    primary = AppColor.Blue30,
+    secondary = AppColor.Blue50,
+    background = AppColor.DarkGray,
+    surface = AppColor.DarkGray,
+    error = AppColor.Red30,
+    onPrimary = AppColor.Black,
+    onSecondary = AppColor.White,
+    onBackground = AppColor.White,
+    onSurface = AppColor.White,
+    onError = AppColor.Black
+)
+
 // Provide extra semantic colors
 
+@Suppress("SameParameterValue")
 private fun getExtraColors(
     isDarkTheme: Boolean,
     isJetpackApp: Boolean
@@ -109,14 +159,14 @@ private val extraPaletteWPLight = ExtraColors(
     ghost = Color(0xFF2B2B55)
 )
 
-private val extraPaletteWPDark =ExtraColors(
+private val extraPaletteWPDark = ExtraColors(
     success = AppColor.Blue30,
     warning = AppColor.Orange40,
     neutral = AppColor.Gray30,
     ghost = Color.White
 )
 
-data class ExtraColors(
+private data class ExtraColors(
     val success: Color,
     val warning: Color,
     val neutral: Color,
