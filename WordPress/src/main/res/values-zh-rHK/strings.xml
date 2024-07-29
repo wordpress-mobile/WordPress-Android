@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 12:54:07+0000
+Translation-Revision-Date: 2024-07-24 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="voice_to_content_generic_error">從音訊張貼功能目前無法使用，請稍後再試一次。</string>
+    <string name="voice_to_content_done_label">完成</string>
+    <string name="voice_to_content_upgrade">若要取得更多要求，請升級</string>
+    <string name="voice_to_content_ineligible">由於要求數不足，故無法根據音訊產生文章。</string>
+    <string name="voice_to_content_recording_label">正在錄製</string>
+    <string name="voice_to_content_begin_recording_label">開始錄製</string>
+    <string name="voice_to_content_secondary_header_label">可使用的要求：</string>
+    <string name="voice_to_content_base_header_label">從音訊張貼</string>
+    <string name="voice_to_content_processing_label">處理中</string>
+    <string name="voice_to_content_error_label">錯誤</string>
+    <string name="voice_to_content_processing">處理中</string>
     <string name="gutenberg_native_tap_to_edit">點選以編輯</string>
     <string name="voice_to_content_permissions_required_msg">若你想要錄製音訊，請將麥克風的存取權限授予給這個應用程式。 你先前曾拒絕授予這項權限。 若想使用這項功能，請在應用程式設定中啟用麥克風權限。</string>
     <string name="voice_to_content_permissions_required_title">需授予音訊錄製權限</string>
@@ -1925,6 +1936,7 @@ Language: zh_TW
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">更換圖片</string>
     <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
@@ -2797,7 +2809,7 @@ Language: zh_TW
     <string name="site_settings_format_help">深入瞭解日期與時間格式</string>
     <string name="site_settings_format_hint_custom">自訂格式</string>
     <string name="site_settings_format_entry_custom">自訂</string>
-    <string name="site_settings_posts_per_page_title">每頁篇數</string>
+    <string name="site_settings_posts_per_page_title">每頁內容顯示數量</string>
     <string name="site_settings_timezone_subtitle">請選擇你所在時區的城市</string>
     <string name="site_settings_timezone_title">時區</string>
     <string name="site_settings_time_format_title">時間格式</string>

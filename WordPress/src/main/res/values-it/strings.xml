@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 12:54:07+0000
+Translation-Revision-Date: 2024-07-24 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Articolo dall\'audio non è al momento disponibile, riprova più tardi.</string>
+    <string name="voice_to_content_done_label">Fatto</string>
+    <string name="voice_to_content_upgrade">Effettua l\'aggiornamento per disporre di ulteriori richieste</string>
+    <string name="voice_to_content_ineligible">Non hai abbastanza richieste disponibili per creare un articolo dall\'audio.</string>
+    <string name="voice_to_content_recording_label">Registrazione</string>
+    <string name="voice_to_content_begin_recording_label">Inizia la registrazione</string>
+    <string name="voice_to_content_secondary_header_label">Richieste disponibili:</string>
+    <string name="voice_to_content_base_header_label">Articolo dall\'audio</string>
+    <string name="voice_to_content_processing_label">Elaborazione</string>
+    <string name="voice_to_content_error_label">Errore</string>
+    <string name="voice_to_content_processing">Elaborazione</string>
     <string name="gutenberg_native_tap_to_edit">Tocca per modificare</string>
     <string name="voice_to_content_permissions_required_msg">Per registrare l\'audio, questa app ha bisogno dell\'autorizzazione ad accedere al tuo microfono. Hai già negato questa autorizzazione. Per utilizzare questa funzionalità, attiva l\'autorizzazione al microfono nelle impostazioni dell\'app.</string>
     <string name="voice_to_content_permissions_required_title">È richiesta l\'autorizzazione alla registrazione audio</string>
@@ -1280,7 +1291,7 @@ Language: it
     <string name="gutenberg_native_edit_focal_point">Modifica il punto focale</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio nella parte inferiore per modificare, sostituire o cancellare l\'immagine</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio delle azioni per modificare, sostituire o cancellare l\'immagine</string>
-    <string name="new_site_creation_search_domain_example">esempio.com</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">Digita un nome per il sito</string>
     <string name="quick_start_completed_type_grow_message">&lt;b&gt;Tutti i task completati&lt;/b&gt;&lt;br/&gt;Raggiungerai più persone. Buon lavoro.</string>
     <string name="quick_start_completed_type_customize_message">&lt;b&gt;Tutti i task completati&lt;/b&gt;&lt;br/&gt;Hai personalizzato il sito. Ben fatto!</string>
@@ -1928,6 +1939,7 @@ Language: it
     <string name="stats_box_type_low">bassa</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
+    <string name="gutenberg_native_replace_image">Sostituisci immagine</string>
     <string name="gutenberg_native_gallery_caption_s">Didascalia della galleria. %s</string>
     <string name="create_post_page_fab_tooltip">Crea un articolo o una pagina</string>
     <string name="content_description_person_building_website">Creatore del sito web</string>
@@ -2118,7 +2130,7 @@ Language: it
     <string name="post_settings_add_to_calendar">Aggiungi a calendario</string>
     <string name="post_settings_notification">Notifica</string>
     <string name="post_settings_time_and_date">Data e ora</string>
-    <string name="login_invalid_site_url">Inserisci un indirizzo di sito Web completo, come esempio.com.</string>
+    <string name="login_invalid_site_url">Inserisci un indirizzo di sito web completo, come example.com.</string>
     <string name="enter_email_for_site">Accedi con WordPress.com per collegarti a %1$s</string>
     <string name="stats_post_views_label">Visualizzazioni</string>
     <string name="stats_post_label">Articolo</string>

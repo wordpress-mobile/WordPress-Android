@@ -75,6 +75,7 @@ import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity;
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -1298,6 +1299,13 @@ public class ActivityLauncher {
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
+    }
+
+    public static void viewFeedbackForm(@NonNull Context context) {
+        // TODO verify tracks event with iOS
+        AnalyticsTracker.track(Stat.FEEDBACK_FORM_OPENED);
+        Intent intent = new Intent(context, FeedbackFormActivity.class);
+        context.startActivity(intent);
     }
 
     public static void viewZendeskTickets(@NonNull Context context,

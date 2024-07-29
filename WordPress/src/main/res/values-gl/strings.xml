@@ -1908,6 +1908,7 @@ Language: gl_ES
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
+    <string name="gutenberg_native_replace_image">Substituír imaxe</string>
     <string name="post_signup_interstitial_not_right_now">Agora non</string>
     <string name="content_description_person_building_website">Creador da web</string>
     <string name="post_signup_interstitial_subtitle">Calquera cousa que queiras crear ou compartir, axudarémosche a facelo aquí mesmo.</string>
