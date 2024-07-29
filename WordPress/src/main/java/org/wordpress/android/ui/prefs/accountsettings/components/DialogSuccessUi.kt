@@ -3,19 +3,18 @@ package org.wordpress.android.ui.prefs.accountsettings.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
 fun DialogSuccessUi(
@@ -35,9 +34,9 @@ fun DialogSuccessUi(
         onClick = onDismissRequest,
         modifier = Modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
-            contentColor = MaterialTheme.colors.primary,
-            backgroundColor = Color.Transparent,
-        ),
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.primaryContainer
+        )
     )
 }
 
@@ -45,7 +44,7 @@ fun DialogSuccessUi(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewDialogSuccessUi() {
-    AppTheme {
+    M3Theme {
         AccountClosureDialog(
             onDismissRequest = {},
         ) {

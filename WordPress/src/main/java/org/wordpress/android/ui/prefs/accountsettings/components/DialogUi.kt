@@ -7,21 +7,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -69,9 +67,9 @@ fun DialogUi(
             onClick = onCancel,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
-                contentColor = MaterialTheme.colors.onSurface,
-                backgroundColor = Color.Transparent,
-                disabledContentColor = MaterialTheme.colors.onSurface,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.primaryContainer,
+                disabledContentColor = MaterialTheme.colorScheme.onSurface,
             ),
             enabled = !isPending,
         )
@@ -83,8 +81,8 @@ fun DialogUi(
             isPending = isPending,
             onClick = onConfirm,
             colors = ButtonDefaults.buttonColors(
-                contentColor = MaterialTheme.colors.error,
-                backgroundColor = Color.Transparent,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.primaryContainer,
             ),
         )
     }
@@ -94,7 +92,6 @@ fun DialogUi(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable

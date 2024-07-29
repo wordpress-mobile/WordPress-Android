@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.prefs.accountsettings.components
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,7 @@ fun FlatButton(
     modifier = modifier,
     onClick = onClick,
     colors = colors,
-    elevation = ButtonDefaults.elevation(
+    elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
@@ -46,7 +46,7 @@ fun FlatOutlinedButton(
     modifier = modifier,
     onClick = onClick,
     colors = colors,
-    elevation = ButtonDefaults.elevation(
+    elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
