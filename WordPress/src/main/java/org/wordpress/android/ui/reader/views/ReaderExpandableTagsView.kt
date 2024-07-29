@@ -205,8 +205,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 get() = R.layout.reader_expandable_tags_view_overflow_chip
 
             override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
+                return resources.getString(
+                    R.string.reader_expandable_tags_view_overflow_indicator_expand_title,
                     hiddenChipsCount.toString()
                 )
             }
@@ -227,8 +227,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 get() = R.layout.reader_expandable_tags_view_overflow_chip_new
 
             override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
+                return resources.getString(
+                    R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new,
                     hiddenChipsCount.toString()
                 )
             }
