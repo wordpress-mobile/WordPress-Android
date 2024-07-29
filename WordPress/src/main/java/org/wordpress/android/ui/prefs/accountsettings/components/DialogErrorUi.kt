@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.INVALID_TOKEN
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNAUTHORIZED
 import org.wordpress.android.fluxc.network.rest.wpcom.account.CloseAccountResult.ErrorType.UNKNOWN
-import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
 fun DialogErrorUi(
@@ -73,15 +72,13 @@ fun DialogErrorUi(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewDialogErrorUi() {
-    M3Theme {
-        AccountClosureDialog(
+    AccountClosureDialog(
+        onDismissRequest = {},
+    ) {
+        DialogErrorUi(
             onDismissRequest = {},
-        ) {
-            DialogErrorUi(
-                onDismissRequest = {},
-                onHelpRequested = {},
-                errorType = ATOMIC_SITE,
-            )
-        }
+            onHelpRequested = {},
+            errorType = ATOMIC_SITE,
+        )
     }
 }

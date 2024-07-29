@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
 fun AccountClosureDialog(
@@ -20,19 +21,21 @@ fun AccountClosureDialog(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val padding = 10.dp
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            usePlatformDefaultWidth = false,
-        ),
-    ) {
-        Column(
-            modifier = Modifier
-                .widthIn(max = 320.dp)
-                .clip(shape = RoundedCornerShape(padding))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(padding),
-            content = content,
-        )
+    M3Theme {
+        Dialog(
+            onDismissRequest = onDismissRequest,
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+            ),
+        ) {
+            Column(
+                modifier = Modifier
+                    .widthIn(max = 320.dp)
+                    .clip(shape = RoundedCornerShape(padding))
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(padding),
+                content = content,
+            )
+        }
     }
 }
