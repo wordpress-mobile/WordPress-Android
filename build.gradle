@@ -52,7 +52,7 @@ ext {
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
-    androidxActivityVersion = '1.9.1'
+    androidxActivityVersion = '1.9.0'
     androidxFragmentVersion = '1.8.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
@@ -64,7 +64,7 @@ ext {
     androidxWorkManagerVersion = "2.9.0"
     androidxComposeMaterial3Version = '1.2.1'
     androidxWebkitVersion =  '1.11.0'
-    apacheCommonsTextVersion = '1.12.0'
+    apacheCommonsTextVersion = '1.10.0'
     coilComposeVersion = '2.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
