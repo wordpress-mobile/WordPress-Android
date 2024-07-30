@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-24 15:54:08+0000
+Translation-Revision-Date: 2024-07-25 14:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="voice_to_content_generic_error">В данный момент нет возможности сделать публикацию из аудио, повторите попытку позднее.</string>
     <string name="voice_to_content_done_label">Готово</string>
     <string name="voice_to_content_upgrade">Перейти на платный тарифный план, чтобы получить больше запросов</string>
     <string name="voice_to_content_ineligible">Недостаточно запросов для создания публикации из аудио.</string>
-    <string name="voice_to_content_recording_label">Запись…</string>
+    <string name="voice_to_content_recording_label">Запись</string>
     <string name="voice_to_content_begin_recording_label">Начать запись</string>
     <string name="voice_to_content_secondary_header_label">Доступно запросов:</string>
     <string name="voice_to_content_base_header_label">Публикация из аудио</string>
