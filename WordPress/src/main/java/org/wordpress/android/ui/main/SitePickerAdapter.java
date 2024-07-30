@@ -638,7 +638,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return hiddenSites;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         List<SiteRecord> sites = getSelectedSites();
         Set<SiteRecord> changeSet = new HashSet<>();
