@@ -27,6 +27,7 @@ class ActivityItemsAdapter(
         items.clear()
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
+        notifyDataSetChanged()
     }
 
     class ActivityItemDiffUtil(
