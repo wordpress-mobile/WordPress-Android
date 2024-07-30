@@ -13,7 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.compose.theme.M3Theme
 
 @Composable
 fun AccountClosureDialog(
