@@ -14,9 +14,9 @@ echo "--- :microscope: Linting"
 if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
 
-  gzip -c 'WordPress/build/reports/lint-results-wordPressVanillaRelease.sarif' | base64 > sarif_base64.tmp
+  gzip -c '**/build/reports/lint-results*.sarif' | base64 > sarif_base64.tmp
 
-  jq -n \
+  json=$(jq -n \
    --arg commit_sha "$BUILDKITE_COMMIT" \
    --arg pr_number "$BUILDKITE_PULL_REQUEST" \
    --rawfile sarif sarif_base64.tmp \
@@ -24,7 +24,15 @@ if [ "$1" = "wordpress" ]; then
    "commit_sha": $commit_sha,
    "ref": ("refs/pull/"+$pr_number+"/head"),
    "sarif": $sarif
- }'
+ }')
+
+ curl -L \
+   -X POST \
+   -H "Accept: application/vnd.github+json" \
+   -H "Authorization: Bearer $GITHUB_TOKEN" \
+   -H "X-GitHub-Api-Version: 2022-11-28" \
+   https://api.github.com/repos/wordpress-mobile/WordPress-Android/code-scanning/sarifs \
+   -d "$json"
 
   rm sarif_base64.tmp
 	exit 0
