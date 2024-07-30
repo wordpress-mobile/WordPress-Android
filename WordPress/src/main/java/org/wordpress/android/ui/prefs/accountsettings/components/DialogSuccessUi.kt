@@ -14,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.domains.management.M3Theme
 
 @Composable
 fun DialogSuccessUi(
@@ -44,13 +43,11 @@ fun DialogSuccessUi(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewDialogSuccessUi() {
-    M3Theme {
-        AccountClosureDialog(
+    AccountClosureDialog(
+        onDismissRequest = {},
+    ) {
+        DialogSuccessUi(
             onDismissRequest = {},
-        ) {
-            DialogSuccessUi(
-                onDismissRequest = {},
-            )
-        }
+        )
     }
 }
