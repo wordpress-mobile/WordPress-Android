@@ -142,6 +142,9 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
         }
     }
 
+    public void newMethodWithoutNullAnnotations(String parameter) {
+    }
+
     @Override
     public void onClick(View v) {
         if (mDialog != null) {
