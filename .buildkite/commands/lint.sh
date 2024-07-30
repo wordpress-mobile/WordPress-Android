@@ -16,9 +16,7 @@ echo "--- :microscope: Linting"
 if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
 
-	cat 'WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif'
-
-  gzip -c 'WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif' | base64 > sarif_base64.tmp
+  gzip -c "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif" | base64 > sarif_base64.tmp
 
   ls "WordPress/build/reports/"
 
