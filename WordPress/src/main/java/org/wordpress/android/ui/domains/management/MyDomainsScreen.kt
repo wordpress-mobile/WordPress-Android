@@ -42,6 +42,7 @@ import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiS
 import org.wordpress.android.ui.domains.management.DomainManagementViewModel.UiState.PopulatedList
 import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextField
 import org.wordpress.android.ui.domains.management.composable.PrimaryButton
+import org.wordpress.android.ui.compose.theme.M3Theme
 
 @Composable
 fun MyDomainsScreen(

@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.AllDomainsDomain
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainStatus
 import org.wordpress.android.fluxc.network.rest.wpcom.site.StatusType
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
+import org.wordpress.android.ui.compose.theme.M3Theme
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date

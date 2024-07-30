@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.feedbackform
+package org.wordpress.android.ui.compose.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -9,55 +9,46 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.ui.compose.theme.AppColor
 
 private val localColors = staticCompositionLocalOf { extraPaletteJPLight }
 
-/**
- * This is a possible Material3 replacement for AppTheme but has not been thoroughly tested.
- * When this theme is deemed ready to use, it should be moved to the ../compose/theme package.
- * We will also likely want it to replace the M3Theme in the ../domains.management package
- * because that class only handles the Jetpack colors.
- */
 @Composable
-fun AppThemeMaterial3(
+fun M3Theme(
     isDarkTheme: Boolean = isSystemInDarkTheme(),
-    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
     content: @Composable () -> Unit
 ) {
-    AppThemeMaterial3WithoutBackground(
-        isDarkTheme = isDarkTheme,
-        isJetpackApp = isJetpackApp
-    ) {
-        ContentInSurface(content)
+    M3ThemeWithoutBackground(isDarkTheme) {
+        ContentInSurfaceM3(content)
     }
 }
 
 @Composable
-fun AppThemeMaterial3WithoutBackground(
-    isDarkTheme: Boolean = isSystemInDarkTheme(),
-    isJetpackApp: Boolean = BuildConfig.IS_JETPACK_APP,
+private fun M3ThemeWithoutBackground(
+    isDarkTheme: Boolean,
     content: @Composable () -> Unit
 ) {
     val extraColors = getExtraColors(
         isDarkTheme = isDarkTheme,
-        isJetpackApp = isJetpackApp
-    )
-    val colorScheme = getColorScheme(
-        isDarkTheme = isDarkTheme,
-        isJetpackApp = isJetpackApp
+        isJetpackApp = BuildConfig.IS_JETPACK_APP
     )
     CompositionLocalProvider(localColors provides extraColors) {
         MaterialTheme(
-            colorScheme = colorScheme,
+            colorScheme = getColorScheme(
+                isDarkTheme = isDarkTheme,
+                isJetpackApp = BuildConfig.IS_JETPACK_APP
+            ),
             content = content
         )
     }
 }
 
+// Provide color schemes
+
+@Suppress("SameParameterValue")
 private fun getColorScheme(
     isDarkTheme: Boolean,
     isJetpackApp: Boolean
@@ -127,6 +118,9 @@ private val colorSchemeWPDark = darkColorScheme(
     onError = AppColor.Black
 )
 
+// Provide extra semantic colors
+
+@Suppress("SameParameterValue")
 private fun getExtraColors(
     isDarkTheme: Boolean,
     isJetpackApp: Boolean
@@ -172,15 +166,39 @@ private val extraPaletteWPDark = ExtraColors(
     ghost = Color.White
 )
 
-data class ExtraColors(
+private data class ExtraColors(
     val success: Color,
     val warning: Color,
     val neutral: Color,
     val ghost: Color,
 )
 
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.warning
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.warning
+
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.success
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.success
+
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.neutral
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.neutral
+
+@Suppress("UnusedReceiverParameter")
+val ColorScheme.ghost
+    @Composable
+    @ReadOnlyComposable
+    get() = localColors.current.ghost
+
 @Composable
-private fun ContentInSurface(
+private fun ContentInSurfaceM3(
     content: @Composable () -> Unit
 ) {
     Surface(color = MaterialTheme.colorScheme.background) {
