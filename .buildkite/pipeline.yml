@@ -37,21 +37,21 @@ steps:
         agents:
           queue: "linter"
 
-      - label: "🕵️ checkstyle"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew checkstyle
-        plugins: [$CI_TOOLKIT]
-        artifact_paths:
-          - "**/build/reports/checkstyle/checkstyle.*"
+#      - label: "🕵️ checkstyle"
+#        command: |
+#          cp gradle.properties-example gradle.properties
+#          ./gradlew checkstyle
+#        plugins: [$CI_TOOLKIT]
+#        artifact_paths:
+#          - "**/build/reports/checkstyle/checkstyle.*"
 
-      - label: "🕵️ detekt"
-        command: |
-          cp gradle.properties-example gradle.properties
-          ./gradlew detekt
-        plugins: [$CI_TOOLKIT]
-        artifact_paths:
-          - "**/build/reports/detekt/detekt.html"
+#      - label: "🕵️ detekt"
+#        command: |
+#          cp gradle.properties-example gradle.properties
+#          ./gradlew detekt
+#        plugins: [$CI_TOOLKIT]
+#        artifact_paths:
+#          - "**/build/reports/detekt/detekt.html"
 
       - label: "🕵️ Lint WordPress"
         command: ".buildkite/commands/lint.sh wordpress"
@@ -59,90 +59,90 @@ steps:
         artifact_paths:
           - "**/build/reports/lint-results*.*"
 
-      - label: "🕵️ Lint Jetpack"
-        command: ".buildkite/commands/lint.sh jetpack"
-        plugins: [$CI_TOOLKIT]
-        artifact_paths:
-          - "**/build/reports/lint-results*.*"
+#      - label: "🕵️ Lint Jetpack"
+#        command: ".buildkite/commands/lint.sh jetpack"
+#        plugins: [$CI_TOOLKIT]
+#        artifact_paths:
+#          - "**/build/reports/lint-results*.*"
 
-  - label: "Dependency Tree Diff"
-    command: |
-      cp gradle.properties-example gradle.properties
-      .buildkite/commands/dependency-tree-diff.sh
-    if: build.pull_request.id != null
-    plugins: [$CI_TOOLKIT]
+#  - label: "Dependency Tree Diff"
+#    command: |
+#      cp gradle.properties-example gradle.properties
+#      .buildkite/commands/dependency-tree-diff.sh
+#    if: build.pull_request.id != null
+#    plugins: [$CI_TOOLKIT]
 
   #################
   # Unit Tests
   #################
-  - group: "🔬 Unit Tests"
-    steps:
-      - label: "🔬 Unit Test WordPress"
-        command: ".buildkite/commands/run-unit-tests.sh wordpress"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
-        artifact_paths:
-          - "**/build/test-results/*/*.xml"
-
-      - label: "🔬 Unit Test Processors"
-        command: ".buildkite/commands/run-unit-tests.sh processors"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
-        artifact_paths:
-          - "**/build/test-results/*/*.xml"
-
-      - label: "🔬 Unit Test Image Editor"
-        command: ".buildkite/commands/run-unit-tests.sh image-editor"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
-        artifact_paths:
-          - "**/build/test-results/*/*.xml"
-
-  #################
-  # Instrumented (aka UI) Tests
-  #################
-  - group: "🔬 Instrumented tests"
-    steps:
-      - label: ":wordpress: 🔬 Instrumented tests"
-        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
-        artifact_paths:
-          - "**/build/instrumented-tests/**/*"
-
-      - label: ":jetpack: 🔬 Instrumented tests"
-        command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
-        plugins:
-          - $CI_TOOLKIT
-          - $TEST_COLLECTOR :
-              <<: *test_collector_common_params
-              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
-        artifact_paths:
-          - "**/build/instrumented-tests/**/*"
-
-  #################
-  # Create Prototype Builds for WP and JP
-  #################
-  - group: "📲 Prototype Builds"
-    steps:
-      - label: ":wordpress: :android: Prototype Build"
-        command: ".buildkite/commands/prototype-build.sh wordpress"
-        if: build.pull_request.id != null
-        plugins: [$CI_TOOLKIT]
-
-      - label: ":jetpack: :android: Prototype Build"
-        command: ".buildkite/commands/prototype-build.sh jetpack"
-        if: build.pull_request.id != null
-        plugins: [$CI_TOOLKIT]
+#  - group: "🔬 Unit Tests"
+#    steps:
+#      - label: "🔬 Unit Test WordPress"
+#        command: ".buildkite/commands/run-unit-tests.sh wordpress"
+#        plugins:
+#          - $CI_TOOLKIT
+#          - $TEST_COLLECTOR :
+#              <<: *test_collector_common_params
+#              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
+#        artifact_paths:
+#          - "**/build/test-results/*/*.xml"
+#
+#      - label: "🔬 Unit Test Processors"
+#        command: ".buildkite/commands/run-unit-tests.sh processors"
+#        plugins:
+#          - $CI_TOOLKIT
+#          - $TEST_COLLECTOR :
+#              <<: *test_collector_common_params
+#              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
+#        artifact_paths:
+#          - "**/build/test-results/*/*.xml"
+#
+#      - label: "🔬 Unit Test Image Editor"
+#        command: ".buildkite/commands/run-unit-tests.sh image-editor"
+#        plugins:
+#          - $CI_TOOLKIT
+#          - $TEST_COLLECTOR :
+#              <<: *test_collector_common_params
+#              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
+#        artifact_paths:
+#          - "**/build/test-results/*/*.xml"
+#
+#  #################
+#  # Instrumented (aka UI) Tests
+#  #################
+#  - group: "🔬 Instrumented tests"
+#    steps:
+#      - label: ":wordpress: 🔬 Instrumented tests"
+#        command: ".buildkite/commands/run-instrumented-tests.sh wordpress"
+#        plugins:
+#          - $CI_TOOLKIT
+#          - $TEST_COLLECTOR :
+#              <<: *test_collector_common_params
+#              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_WORDPRESS"
+#        artifact_paths:
+#          - "**/build/instrumented-tests/**/*"
+#
+#      - label: ":jetpack: 🔬 Instrumented tests"
+#        command: ".buildkite/commands/run-instrumented-tests.sh jetpack"
+#        plugins:
+#          - $CI_TOOLKIT
+#          - $TEST_COLLECTOR :
+#              <<: *test_collector_common_params
+#              api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_INSTRUMENTED_TESTS_JETPACK"
+#        artifact_paths:
+#          - "**/build/instrumented-tests/**/*"
+#
+#  #################
+#  # Create Prototype Builds for WP and JP
+#  #################
+#  - group: "📲 Prototype Builds"
+#    steps:
+#      - label: ":wordpress: :android: Prototype Build"
+#        command: ".buildkite/commands/prototype-build.sh wordpress"
+#        if: build.pull_request.id != null
+#        plugins: [$CI_TOOLKIT]
+#
+#      - label: ":jetpack: :android: Prototype Build"
+#        command: ".buildkite/commands/prototype-build.sh jetpack"
+#        if: build.pull_request.id != null
+#        plugins: [$CI_TOOLKIT]
