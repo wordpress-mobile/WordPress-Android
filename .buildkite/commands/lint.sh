@@ -13,6 +13,20 @@ echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
+
+  gzip -c 'WordPress/build/reports/lint-results-wordPressVanillaRelease.sarif' | base64 > sarif_base64.tmp
+
+  jq -n \
+   --arg commit_sha "$BUILDKITE_COMMIT" \
+   --arg pr_number "$BUILDKITE_PULL_REQUEST" \
+   --rawfile sarif sarif_base64.tmp \
+ '{
+   "commit_sha": $commit_sha,
+   "ref": ("refs/pull/"+$pr_number+"/head"),
+   "sarif": $sarif
+ }'
+
+  rm sarif_base64.tmp
 	exit 0
 fi
 
