@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -u
 
 pwd
 
@@ -15,6 +15,7 @@ echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
+	lint_exit_code=$?
 
   gzip -c "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif" | base64 > sarif_base64.tmp
 
@@ -41,7 +42,7 @@ if [ "$1" = "wordpress" ]; then
     https://api.github.com/repos/wordpress-mobile/WordPress-Android/code-scanning/sarifs
 
   rm sarif_base64.tmp
-	exit 0
+	exit "$lint_exit_code"
 fi
 
 if [ "$1" = "jetpack" ]; then
