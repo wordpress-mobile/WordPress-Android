@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+pwd
+
 echo "--- :rubygems: Setting up Gems"
 install_gems
 
@@ -15,6 +17,8 @@ if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
 
   gzip -c '**/build/reports/lint-results*.sarif' | base64 > sarif_base64.tmp
+
+  ls "WordPress/build/reports/"
 
   json=$(jq -n \
    --arg commit_sha "$BUILDKITE_COMMIT" \
