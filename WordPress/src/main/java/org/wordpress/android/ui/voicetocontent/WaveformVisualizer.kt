@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -50,17 +50,17 @@ fun WaveformOblongVisualizer(recordingUpdate: RecordingUpdate, currentPosition: 
 
 @Composable
 fun ScrollingWaveformVisualizer(recordingUpdate: RecordingUpdate) {
-    val currentPosition = remember { mutableStateOf(0) }
+    val currentPosition = remember { mutableIntStateOf(0) }
     LaunchedEffect(recordingUpdate) {
         while (true) {
             delay(100) // adjust delay as needed for scrolling speed
-            currentPosition.value += 1
-            if (currentPosition.value >= recordingUpdate.amplitudes.size) {
-                currentPosition.value = 0 // reset to start if we reach the end
+            currentPosition.intValue += 1
+            if (currentPosition.intValue >= recordingUpdate.amplitudes.size) {
+                currentPosition.intValue = 0 // reset to start if we reach the end
             }
         }
     }
-    WaveformOblongVisualizer(recordingUpdate, currentPosition.value)
+    WaveformOblongVisualizer(recordingUpdate, currentPosition.intValue)
 }
 
 @Preview(showBackground = true)
