@@ -661,6 +661,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             if (!changeSet.isEmpty()) {
+                System.out.println("test");
                 notifyDataSetChanged();
             }
         }
