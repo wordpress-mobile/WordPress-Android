@@ -27,8 +27,8 @@ fun M3Theme(
 }
 
 @Composable
-private fun M3ThemeWithoutBackground(
-    isDarkTheme: Boolean,
+fun M3ThemeWithoutBackground(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val extraColors = getExtraColors(

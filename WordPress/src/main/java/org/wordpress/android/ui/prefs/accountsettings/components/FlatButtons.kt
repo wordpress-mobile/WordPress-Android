@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.domains.management.M3ThemeWithoutBackground
+import org.wordpress.android.ui.compose.theme.M3ThemeWithoutBackground
 
 @Composable
 fun FlatButton(
