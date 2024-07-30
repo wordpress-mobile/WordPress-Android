@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="6" by="lint 7.2.1" type="baseline" client="gradle" dependencies="true" name="AGP (7.2.1)" variant="all" version="7.2.1">
+<issues format="6" by="lint 8.5.1" type="baseline" client="gradle" dependencies="true" name="AGP (8.5.1)" variant="all" version="8.5.1">
 
     <issue
         id="InflateParams"
@@ -8,7 +8,7 @@
         errorLine2="                                                                                               ~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/accounts/signup/SettingsUsernameChangerFragment.kt"
-            line="85"
+            line="88"
             column="96"/>
     </issue>
 
@@ -30,7 +30,7 @@
         errorLine2="                                                                                              ~~~~">
         <location
             file="src/main/java/org/wordpress/android/support/SupportHelper.kt"
-            line="96"
+            line="97"
             column="95"/>
     </issue>
 
@@ -41,7 +41,7 @@
         errorLine2="                                                                                                ~~~~">
         <location
             file="src/main/java/org/wordpress/android/widgets/WPDialogSnackbar.java"
-            line="49"
+            line="53"
             column="97"/>
     </issue>
 
@@ -52,161 +52,62 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="391"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="394"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="397"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="400"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="403"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="406"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="426"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="431"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
-        <location
-            file="src/main/AndroidManifest.xml"
             line="436"
-            column="13"/>
+            column="17"/>
     </issue>
 
     <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
             line="441"
-            column="13"/>
+            column="17"/>
     </issue>
 
     <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
             line="446"
-            column="13"/>
+            column="17"/>
     </issue>
 
     <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
             line="451"
-            column="13"/>
+            column="17"/>
     </issue>
 
     <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
             line="456"
-            column="13"/>
+            column="17"/>
     </issue>
 
     <issue
         id="IntentFilterUniqueDataAttributes"
         message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="            &lt;data"
-        errorLine2="            ^">
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
             line="461"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="IntentFilterUniqueDataAttributes"
-        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
-        errorLine1="                &lt;data"
-        errorLine2="                ^">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="494"
             column="17"/>
     </issue>
 
@@ -217,7 +118,7 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="500"
+            line="466"
             column="17"/>
     </issue>
 
@@ -228,7 +129,7 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="506"
+            line="471"
             column="17"/>
     </issue>
 
@@ -239,7 +140,7 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="512"
+            line="476"
             column="17"/>
     </issue>
 
@@ -250,7 +151,7 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="518"
+            line="481"
             column="17"/>
     </issue>
 
@@ -261,7 +162,29 @@
         errorLine2="                ^">
         <location
             file="src/main/AndroidManifest.xml"
-            line="524"
+            line="486"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="491"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="496"
             column="17"/>
     </issue>
 
@@ -288,25 +211,69 @@
     </issue>
 
     <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="            case R.id.app_log_share:"
-        errorLine2="                 ~~~~~~~~~~~~~~~~~~">
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
-            file="src/main/java/org/wordpress/android/ui/AppLogViewerActivity.java"
-            line="152"
-            column="18"/>
+            file="src/main/AndroidManifest.xml"
+            line="542"
+            column="17"/>
     </issue>
 
     <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="            case R.id.app_log_copy_to_clipboard:"
-        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
         <location
-            file="src/main/java/org/wordpress/android/ui/AppLogViewerActivity.java"
-            line="155"
-            column="18"/>
+            file="src/main/AndroidManifest.xml"
+            line="548"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="554"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="560"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="566"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="IntentFilterUniqueDataAttributes"
+        message="Consider splitting data tag into multiple tags with individual attributes to avoid confusion"
+        errorLine1="                &lt;data"
+        errorLine2="                ^">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="572"
+            column="17"/>
     </issue>
 
     <issue
@@ -351,72 +318,6 @@
             file="src/main/java/org/wordpress/android/ui/posts/InsertMediaDialog.java"
             line="143"
             column="30"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="            case R.id.menu_new_media:"
-        errorLine2="                 ~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/media/MediaBrowserActivity.java"
-            line="644"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="            case R.id.menu_search:"
-        errorLine2="                 ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/media/MediaBrowserActivity.java"
-            line="647"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="            case R.id.menu_share:"
-        errorLine2="                 ~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/ReaderPostListActivity.java"
-            line="219"
-            column="18"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                case R.id.menu_delete:"
-        errorLine2="                     ~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/prefs/SiteSettingsFragment.java"
-            line="2174"
-            column="22"/>
-    </issue>
-
-    <issue
-        id="NonConstantResourceId"
-        message="Resource IDs will be non-final by default in Android Gradle Plugin version 8.0, avoid using them in switch case statements"
-        errorLine1="                case R.id.menu_select_all:"
-        errorLine2="                     ~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/prefs/SiteSettingsFragment.java"
-            line="2193"
-            column="22"/>
-    </issue>
-
-    <issue
-        id="RedundantLabel"
-        message="Redundant label can be removed"
-        errorLine1="            android:label=&quot;@string/app_name&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="239"
-            column="13"/>
     </issue>
 
     <issue
@@ -488,17 +389,6 @@
     <issue
         id="VectorRaster"
         message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
-        errorLine1="    android:width=&quot;212dp&quot;"
-        errorLine2="                   ~~~~~">
-        <location
-            file="src/main/res/drawable/img_write_212dp.xml"
-            line="3"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="VectorRaster"
-        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
         errorLine1="    android:width=&quot;224dp&quot;"
         errorLine2="                   ~~~~~">
         <location
@@ -547,7 +437,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"
-            line="98"
+            line="116"
             column="13"/>
     </issue>
 
@@ -558,7 +448,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"
-            line="240"
+            line="692"
             column="13"/>
     </issue>
 
@@ -569,7 +459,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"
-            line="654"
+            line="1120"
             column="13"/>
     </issue>
 
@@ -580,18 +470,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"
-            line="1065"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="LockedOrientationActivity"
-        message="Expecting `android:screenOrientation=&quot;unspecified&quot;` or `&quot;fullSensor&quot;` for this activity so the user can use the application in any orientation and provide a great experience on Chrome OS devices"
-        errorLine1="            android:screenOrientation=&quot;portrait&quot;"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/AndroidManifest.xml"
-            line="1071"
+            line="1127"
             column="13"/>
     </issue>
 
@@ -618,69 +497,25 @@
     </issue>
 
     <issue
-        id="ModifierParameter"
-        message="Modifier parameter should be the first optional parameter"
-        errorLine1="    modifier: Modifier = Modifier,"
-        errorLine2="    ~~~~~~~~">
+        id="DiscouragedApi"
+        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
+        errorLine1="                    context.getResources().getIdentifier(&quot;photo_picker_stock_media&quot;, &quot;string&quot;, packageName);"
+        errorLine2="                                           ~~~~~~~~~~~~~">
         <location
-            file="src/main/java/org/wordpress/android/ui/main/jetpack/migration/compose/components/SiteList.kt"
-            line="50"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="UnnecessaryComposedModifier"
-        message="Unnecessary use of Modifier.composed"
-        errorLine1="                blurModifier = Modifier.composed {"
-        errorLine2="                                        ~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/compose/components/ColumnWithFrostedGlassBackground.kt"
-            line="89"
-            column="41"/>
-    </issue>
-
-    <issue
-        id="UnnecessaryComposedModifier"
-        message="Unnecessary use of Modifier.composed"
-        errorLine1="            .composed { if (userScrollEnabled) this else disableUserScroll() }"
-        errorLine2="             ~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/jetpack/migration/compose/components/SiteList.kt"
-            line="56"
-            column="14"/>
-    </issue>
-
-    <issue
-        id="UnnecessaryComposedModifier"
-        message="Unnecessary use of Modifier.composed"
-        errorLine1="                blurModifier = Modifier.composed {"
-        errorLine2="                                        ~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/jetpack/migration/compose/state/WelcomeStep.kt"
-            line="176"
-            column="41"/>
+            file="src/main/java/org/wordpress/android/editor/gutenberg/GutenbergEditorFragment.java"
+            line="721"
+            column="44"/>
     </issue>
 
     <issue
         id="DiscouragedApi"
         message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
-        errorLine1="                    getResources().getIdentifier(&quot;photo_picker_stock_media&quot;, &quot;string&quot;, packageName);"
-        errorLine2="                                   ~~~~~~~~~~~~~">
+        errorLine1="                    context.getResources().getIdentifier(&quot;photo_picker_gif&quot;, &quot;string&quot;, packageName);"
+        errorLine2="                                           ~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/gutenberg/GutenbergEditorFragment.java"
-            line="675"
-            column="36"/>
-    </issue>
-
-    <issue
-        id="DiscouragedApi"
-        message="Use of this function is discouraged because resource reflection makes it harder to perform build optimizations and compile-time verification of code. It is much more efficient to retrieve resources by identifier (e.g. `R.foo.bar`) than by name (e.g. `getIdentifier(&quot;bar&quot;, &quot;foo&quot;, null)`)."
-        errorLine1="                    getResources().getIdentifier(&quot;photo_picker_gif&quot;, &quot;string&quot;, packageName);"
-        errorLine2="                                   ~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/editor/gutenberg/GutenbergEditorFragment.java"
-            line="681"
-            column="36"/>
+            line="727"
+            column="44"/>
     </issue>
 
     <issue
@@ -690,7 +525,7 @@
         errorLine2="                               ~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/gutenberg/GutenbergEditorFragment.java"
-            line="709"
+            line="755"
             column="32"/>
     </issue>
 
@@ -723,7 +558,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/debug_settings_feature.xml"
-            line="55"
+            line="76"
             column="9"/>
     </issue>
 
@@ -1005,17 +840,6 @@
     <issue
         id="UseAppTint"
         message="Must use `app:tint` instead of `android:tint`"
-        errorLine1="                android:tint=&quot;@color/quick_start_task_card_completed_checkmark&quot;"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/quick_start_list_item.xml"
-            line="56"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="UseAppTint"
-        message="Must use `app:tint` instead of `android:tint`"
         errorLine1="            android:tint=&quot;?attr/colorOnSurface&quot;"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -1064,7 +888,7 @@
         errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="918"
+            line="920"
             column="31"/>
     </issue>
 
@@ -1075,7 +899,7 @@
         errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="947"
+            line="949"
             column="34"/>
     </issue>
 
@@ -1086,7 +910,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="957"
+            line="959"
             column="37"/>
     </issue>
 
@@ -1097,7 +921,7 @@
         errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="979"
+            line="981"
             column="33"/>
     </issue>
 
@@ -1108,7 +932,7 @@
         errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="2359"
+            line="2379"
             column="51"/>
     </issue>
 
@@ -1119,30 +943,8 @@
         errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/editor/AztecEditorFragment.java"
-            line="2371"
+            line="2391"
             column="51"/>
-    </issue>
-
-    <issue
-        id="UseCompatLoadingForDrawables"
-        message="Use `AppCompatResources.getDrawable()`"
-        errorLine1="        badgeBackground = context.getDrawable(badgeBackgroundResId)"
-        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/widgets/BadgedImageView.kt"
-            line="126"
-            column="27"/>
-    </issue>
-
-    <issue
-        id="UseCompatLoadingForDrawables"
-        message="Use `AppCompatResources.getDrawable()`"
-        errorLine1="        badgeIcon = context.getDrawable(badgeIconResId)"
-        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/widgets/BadgedImageView.kt"
-            line="130"
-            column="21"/>
     </issue>
 
     <issue
@@ -1152,7 +954,7 @@
         errorLine2="                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/util/ColorUtils.kt"
-            line="21"
+            line="23"
             column="24"/>
     </issue>
 
@@ -1163,7 +965,7 @@
         errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/jetpack/common/viewholders/JetpackButtonViewHolder.kt"
-            line="54"
+            line="53"
             column="20"/>
     </issue>
 
@@ -1174,29 +976,18 @@
         errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/jetpack/common/viewholders/JetpackButtonViewHolder.kt"
-            line="54"
+            line="53"
             column="20"/>
     </issue>
 
     <issue
         id="UseCompatLoadingForDrawables"
         message="Use `AppCompatResources.getDrawable()`"
-        errorLine1="            context.getDrawable(item.buttonType.iconResId)!!, item.buttonType.colorAttrId"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/PostListItemViewHolder.kt"
-            line="251"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="UseCompatLoadingForDrawables"
-        message="Use `AppCompatResources.getDrawable()`"
         errorLine1="                activityContext.getDrawable(iconId)?.mutate()"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/util/QuickStartUtils.kt"
-            line="94"
+            line="95"
             column="17"/>
     </issue>
 
@@ -1207,30 +998,8 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/util/QuickStartUtils.kt"
-            line="94"
+            line="95"
             column="17"/>
-    </issue>
-
-    <issue
-        id="UseCompatLoadingForDrawables"
-        message="Use `ResourcesCompat.getDrawable()`"
-        errorLine1="        icon = context.resources.getDrawable(drawableId, context.theme)"
-        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/views/ReaderFollowButton.kt"
-            line="73"
-            column="16"/>
-    </issue>
-
-    <issue
-        id="UseCompatLoadingForDrawables"
-        message="Use `ResourcesCompat.getDrawable()`"
-        errorLine1="        icon = context.resources.getDrawable(drawableId, context.theme)"
-        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/views/ReaderFollowButton.kt"
-            line="73"
-            column="16"/>
     </issue>
 
     <issue
@@ -1240,7 +1009,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/discover/viewholders/ReaderRecommendedBlogsCardViewHolder.kt"
-            line="27"
+            line="28"
             column="13"/>
     </issue>
 
@@ -1251,19 +1020,8 @@
         errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/prefs/SiteSettingsFragment.java"
-            line="925"
+            line="965"
             column="38"/>
-    </issue>
-
-    <issue
-        id="PackageManagerGetSignatures"
-        message="Reading app signatures from `getPackageInfo`: The app signatures could be exploited if not validated properly; see issue explanation for details"
-        errorLine1="                .getPackageInfo(trustedPackageId, PackageManager.GET_SIGNATURES).signatures"
-        errorLine2="                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/util/signature/SignatureUtils.kt"
-            line="58"
-            column="51"/>
     </issue>
 
     <issue
@@ -1273,7 +1031,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/publicize/PublicizeWebViewFragment.java"
-            line="106"
+            line="110"
             column="9"/>
     </issue>
 
@@ -1284,7 +1042,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/ReaderPostDetailFragment.kt"
-            line="1641"
+            line="1757"
             column="9"/>
     </issue>
 
@@ -1295,7 +1053,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/ReaderVideoViewerActivity.java"
-            line="33"
+            line="38"
             column="9"/>
     </issue>
 
@@ -1317,7 +1075,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/util/WPWebViewClient.java"
-            line="55"
+            line="51"
             column="13"/>
     </issue>
 
@@ -1467,17 +1225,6 @@
     <issue
         id="NotifyDataSetChanged"
         message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/notifications/adapters/NotesAdapter.java"
-            line="135"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
         errorLine1="            notifyDataSetChanged()"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -1493,7 +1240,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/pages/PageParentFragment.kt"
-            line="233"
+            line="235"
             column="13"/>
     </issue>
 
@@ -1515,7 +1262,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/people/PeopleListFragment.java"
-            line="354"
+            line="355"
             column="13"/>
     </issue>
 
@@ -1526,7 +1273,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/people/PeopleListFragment.java"
-            line="398"
+            line="399"
             column="13"/>
     </issue>
 
@@ -1538,17 +1285,6 @@
         <location
             file="src/main/java/org/wordpress/android/ui/plans/PlansListAdapter.kt"
             line="53"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged()"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/posts/adapters/PostListAdapter.kt"
-            line="112"
             column="9"/>
     </issue>
 
@@ -1570,19 +1306,8 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/publicize/adapters/PublicizeConnectionAdapter.java"
-            line="70"
+            line="75"
             column="13"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/publicize/adapters/PublicizeServiceAdapter.java"
-            line="90"
-            column="9"/>
     </issue>
 
     <issue
@@ -1592,7 +1317,7 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/publicize/adapters/PublicizeServiceAdapter.java"
-            line="223"
+            line="213"
             column="17"/>
     </issue>
 
@@ -1614,7 +1339,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderCommentAdapter.java"
-            line="589"
+            line="601"
             column="13"/>
     </issue>
 
@@ -1625,7 +1350,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderCommentAdapter.java"
-            line="609"
+            line="621"
             column="13"/>
     </issue>
 
@@ -1636,29 +1361,18 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderCommentAdapter.java"
-            line="702"
+            line="714"
             column="17"/>
     </issue>
 
     <issue
         id="NotifyDataSetChanged"
         message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        getCommentAdapter().notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/reader/ReaderCommentListActivity.java"
-            line="666"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
         errorLine1="            notifyDataSetChanged();"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderPostAdapter.java"
-            line="620"
+            line="795"
             column="13"/>
     </issue>
 
@@ -1669,7 +1383,7 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderPostAdapter.java"
-            line="843"
+            line="1028"
             column="17"/>
     </issue>
 
@@ -1680,7 +1394,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/ReaderPostListFragment.java"
-            line="754"
+            line="677"
             column="9"/>
     </issue>
 
@@ -1735,7 +1449,7 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderTagAdapter.java"
-            line="180"
+            line="210"
             column="17"/>
     </issue>
 
@@ -1748,94 +1462,6 @@
             file="src/main/java/org/wordpress/android/ui/reader/adapters/ReaderUserAdapter.java"
             line="130"
             column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="299"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="            notifyDataSetChanged();"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="431"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="468"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="571"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="584"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="        notifyDataSetChanged();"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="593"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="                notifyDataSetChanged();"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="650"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="NotifyDataSetChanged"
-        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
-        errorLine1="                notifyDataSetChanged();"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/main/SitePickerAdapter.java"
-            line="788"
-            column="17"/>
     </issue>
 
     <issue
@@ -1933,7 +1559,7 @@
         errorLine2="         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/blogging_prompt_card_compact.xml"
-            line="66"
+            line="67"
             column="10"/>
     </issue>
 
@@ -1944,7 +1570,7 @@
         errorLine2="         ~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/my_site_blogging_prompt_card.xml"
-            line="56"
+            line="54"
             column="10"/>
     </issue>
 
@@ -2049,17 +1675,6 @@
 
     <issue
         id="VectorPath"
-        message="Very long vector path (818 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
-        errorLine1="        android:pathData=&quot;M17.001,12.999H7.001V10.999H17.001V12.999ZM18.001,6.999H17.001C15.37,6.999 13.936,7.791 13.024,8.999H18.001C19.104,8.999 20.001,9.896 20.001,10.999V12.999C20.001,14.102 19.104,14.999 18.001,14.999H13.024C13.937,16.207 15.371,16.999 17.001,16.999H18.001C19.0618,16.999 20.0793,16.5776 20.8294,15.8275C21.5795,15.0773 22.001,14.0599 22.001,12.999V10.999C22.001,9.9382 21.5795,8.9207 20.8294,8.1706C20.0793,7.4205 19.0618,6.999 18.001,6.999ZM2.001,10.999V12.999C2.001,14.0599 2.4224,15.0773 3.1725,15.8275C3.9227,16.5776 4.9401,16.999 6.001,16.999H7.001C8.631,16.999 10.066,16.207 10.978,14.999H6.001C4.898,14.999 4.001,14.102 4.001,12.999V10.999C4.001,9.896 4.898,8.999 6.001,8.999H10.978C10.066,7.791 8.632,6.999 7.001,6.999H6.001C4.9401,6.999 3.9227,7.4205 3.1725,8.1706C2.4224,8.9207 2.001,9.9382 2.001,10.999V10.999Z&quot; />"
-        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/drawable/ic_gridicons_link_white_24dp.xml"
-            line="8"
-            column="27"/>
-    </issue>
-
-    <issue
-        id="VectorPath"
         message="Very long vector path (1165 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
         errorLine1="      android:pathData=&quot;m5.5,12h1.75l-2.5,3 -2.5,-3h1.75c0,-1.806 0.611,-3.558 1.733,-4.973 1.122,-1.414 2.69,-2.408 4.449,-2.818 1.758,-0.41 3.604,-0.214 5.236,0.558 1.633,0.772 2.956,2.073 3.755,3.692 0.799,1.619 1.027,3.461 0.647,5.226s-1.347,3.35 -2.742,4.496c-1.395,1.146 -3.137,1.787 -4.943,1.817s-3.568,-0.551 -5.001,-1.649l0.907,-1.194c1.164,0.894 2.596,1.367 4.063,1.344 1.467,-0.023 2.883,-0.543 4.018,-1.473s1.921,-2.218 2.231,-3.652c0.31,-1.434 0.126,-2.931 -0.523,-4.247 -0.649,-1.316 -1.724,-2.374 -3.05,-3.002 -1.326,-0.628 -2.826,-0.788 -4.255,-0.455 -1.429,0.333 -2.704,1.14 -3.616,2.289s-1.409,2.573 -1.409,4.041zM15.03,13.97 L12.75,11.69v-3.19c0,-0.199 -0.079,-0.39 -0.22,-0.53 -0.141,-0.141 -0.331,-0.22 -0.53,-0.22s-0.39,0.079 -0.53,0.22c-0.141,0.141 -0.22,0.331 -0.22,0.53v3.5c-0,0.098 0.019,0.195 0.056,0.286 0.038,0.091 0.092,0.173 0.162,0.243l1.282,-0.84 -1.28,0.842 2.5,2.5c0.069,0.072 0.152,0.129 0.243,0.168 0.091,0.039 0.19,0.06 0.29,0.061 0.1,0.001 0.198,-0.018 0.29,-0.056 0.092,-0.038 0.176,-0.094 0.246,-0.164 0.07,-0.071 0.126,-0.154 0.164,-0.246s0.057,-0.191 0.056,-0.291c-0.001,-0.1 -0.022,-0.198 -0.061,-0.289 -0.039,-0.091 -0.097,-0.174 -0.168,-0.243z&quot;"
         errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -2148,39 +1763,6 @@
 
     <issue
         id="VectorPath"
-        message="Very long vector path (3200 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
-        errorLine1="      android:pathData=&quot;M71.625,1.363C71.02,1.797 70.485,2.781 70.014,4.292L69.875,4.762L69.739,5.263L69.608,5.795L69.48,6.358L69.355,6.953L69.235,7.578L69.118,8.235L69.004,8.922C68.985,9.039 68.967,9.157 68.949,9.277L68.841,10.01L68.736,10.773L68.635,11.566L68.537,12.39L68.442,13.243L68.307,14.579L68.179,15.982L68.058,17.45L67.908,19.51L67.804,21.131L67.706,22.817L67.586,25.164L67.531,26.38L67.429,28.896L67.338,31.523L67.239,34.961L67.172,37.835L67.103,41.577L67.048,45.486L67.039,46.287C66.928,56.551 66.986,67.491 67.155,78.23L67.238,83.052L67.382,89.706L67.408,90.703C67.407,91.264 67.458,91.875 67.556,92.508C67.796,94.056 68.307,95.69 69.006,97.345C69.351,98.161 69.72,98.93 70.089,99.63L70.336,100.087L70.592,100.535C70.942,101.116 71.785,101.115 72.134,100.533L72.287,100.263L72.426,100.002L72.629,99.601C73.85,97.107 74.723,94.216 74.811,91.184L74.824,90.55L75.001,85.994L75.172,81.14L75.372,74.863L75.405,73.775C75.444,72.427 75.482,71.082 75.518,69.74L75.621,65.73L75.713,61.751L75.793,57.813L75.86,53.924C75.871,53.28 75.88,52.639 75.889,52L75.937,48.199C75.943,47.572 75.95,46.947 75.955,46.325L75.981,42.897L75.994,39.595L75.994,36.403L75.985,33.892L75.961,30.875L75.932,28.561L75.882,25.793L75.831,23.679L75.771,21.656L75.718,20.198L75.64,18.334L75.551,16.562L75.477,15.293L75.425,14.477L75.341,13.297L75.251,12.169L75.121,10.748L75.016,9.745L74.905,8.796L74.787,7.9L74.704,7.334L74.619,6.792L74.53,6.274L74.439,5.78L74.344,5.311L74.246,4.867L74.145,4.447L74.041,4.052L73.934,3.682C73.898,3.563 73.861,3.448 73.823,3.337L73.71,3.017C73.671,2.915 73.632,2.816 73.593,2.722L73.472,2.452L73.349,2.208C73.14,1.822 72.917,1.541 72.679,1.368C72.366,1.139 71.94,1.137 71.625,1.363ZM72.11,3.583L72.155,3.692L72.245,3.945L72.333,4.225L72.419,4.534C72.433,4.587 72.447,4.642 72.461,4.699L72.544,5.049L72.625,5.427L72.704,5.833L72.781,6.265L72.856,6.725L72.929,7.211L73,7.723L73.103,8.541L73.201,9.416L73.294,10.348L73.383,11.337L73.468,12.381L73.547,13.48L73.646,15.028L73.737,16.67L73.82,18.403L73.894,20.226L73.961,22.137L74.018,24.134L74.079,26.746L74.118,28.928L74.155,31.767L74.175,34.124L74.19,38.428L74.187,40.986L74.171,44.281L74.155,46.309L74.115,50.07C74.107,50.702 74.098,51.338 74.089,51.975L74.029,55.832C74.017,56.479 74.006,57.129 73.993,57.78L73.914,61.713C73.899,62.372 73.884,63.033 73.869,63.695L73.772,67.686C73.755,68.354 73.737,69.023 73.719,69.692L73.573,74.809L73.441,79.04L73.271,84.033L73.019,90.64L73.012,91.128C72.936,93.565 72.304,95.911 71.394,97.988L71.336,98.113L71.266,97.972C71.061,97.548 70.858,97.104 70.664,96.645C70.018,95.115 69.55,93.616 69.335,92.232C69.272,91.823 69.232,91.429 69.215,91.051L69.126,87.301L69.038,83.018L68.995,80.673C68.81,69.984 68.731,59.028 68.817,48.683L68.855,44.939L68.916,40.941L68.995,37.103L69.075,34.033L69.168,31.083L69.273,28.256L69.367,26.086L69.469,24L69.55,22.491L69.636,21.03L69.789,18.707L69.887,17.381L69.989,16.106L70.132,14.489L70.283,12.967L70.401,11.889L70.482,11.201L70.565,10.538L70.65,9.9L70.781,8.99L70.871,8.416L71.009,7.604L71.103,7.095L71.199,6.613L71.298,6.158L71.398,5.729L71.499,5.328L71.603,4.954L71.709,4.609L71.816,4.291C71.834,4.24 71.852,4.19 71.871,4.142L71.981,3.867C71.999,3.823 72.018,3.781 72.036,3.74L72.11,3.583Z&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/drawable/img_write_212dp.xml"
-            line="72"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="VectorPath"
-        message="Very long vector path (964 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
-        errorLine1="      android:pathData=&quot;M79.169,24.683L78.574,27.589L78.394,28.509L78.294,29.064L78.22,29.525L78.184,29.791C77.85,32.51 78.24,34.264 79.042,35.288C79.324,35.648 79.581,35.832 79.726,35.898L79.891,35.964L81.392,36.69C81.839,36.906 82.027,37.444 81.81,37.892C81.611,38.305 81.137,38.496 80.713,38.353L80.608,38.31L79.146,37.603L79.097,37.586C78.707,37.431 78.237,37.116 77.777,36.584L77.625,36.398C76.505,34.968 76.008,32.736 76.398,29.571L76.461,29.122L76.547,28.6L76.662,27.98L77.521,23.746L77.576,23.463C78.085,20.864 78.427,18.697 78.619,16.619C78.95,13.043 78.782,10.116 78.014,7.912C77.38,6.096 76.578,4.821 75.661,4.002C74.63,3.08 73.585,2.814 72.685,2.913L72.471,2.944L72.402,2.958C71.925,3.098 71.425,2.824 71.285,2.347C71.145,1.87 71.419,1.37 71.896,1.23L72.036,1.195C72.092,1.183 72.157,1.171 72.23,1.159C73.663,0.926 75.319,1.282 76.861,2.66C78.018,3.695 78.983,5.229 79.714,7.319C80.583,9.813 80.764,12.976 80.411,16.785C80.229,18.754 79.919,20.786 79.469,23.154L79.169,24.683Z&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/drawable/img_write_212dp.xml"
-            line="84"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="VectorPath"
-        message="Very long vector path (2660 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
-        errorLine1="      android:pathData=&quot;M101.819,89.023C103.183,88.425 104.399,88.204 105.259,88.465C106.504,88.842 106.788,90.044 106.122,91.34C105.747,92.07 104.926,92.705 103.53,93.335L103.116,93.514C102.972,93.574 102.823,93.634 102.669,93.694L102.19,93.875L101.678,94.057L101.131,94.24L100.55,94.426L99.934,94.614L99.282,94.804L98.234,95.097L97.102,95.399L96.651,95.516L96.546,95.653C96.131,96.203 95.74,96.785 95.381,97.394L95.17,97.763C94.092,99.696 92.825,101.614 91.406,103.501C91.041,103.986 90.67,104.464 90.295,104.934L89.68,105.69L89.853,105.597C94.389,103.149 99.11,101.722 103.829,101.782L104.353,101.795L106.013,101.851L108.557,101.92L109.955,101.948L111.257,101.967L112.848,101.977L114.279,101.972L114.934,101.964L115.845,101.945L116.671,101.919L117.611,101.875L118.101,101.843L118.637,101.794L118.831,101.79C123.044,101.692 125.301,100.841 128.29,96.999C128.595,96.607 129.16,96.536 129.553,96.841C129.945,97.146 130.016,97.712 129.71,98.104C126.417,102.338 123.705,103.43 119.198,103.58L118.783,103.59L118.619,103.605L118.092,103.648L117.506,103.683L116.749,103.717L115.908,103.744L114.654,103.768L113.244,103.777L112.082,103.774L111.256,103.767L109.48,103.74L107.534,103.696L105.415,103.632L104.289,103.593C99.43,103.418 94.487,104.986 89.746,107.717C88.166,108.627 86.724,109.603 85.452,110.578L85.192,110.779L84.711,111.162C84.636,111.223 84.562,111.283 84.491,111.342L84,111.76L83.883,111.865C83.022,112.635 81.87,111.418 82.598,110.608L82.701,110.507L83.065,110.17L83.297,109.949C83.463,109.791 83.635,109.624 83.813,109.448L84.364,108.898C84.554,108.706 84.748,108.507 84.948,108.299C86.659,106.52 88.371,104.542 89.967,102.419C91.168,100.822 92.254,99.206 93.201,97.582L93.815,96.507L94.015,96.173L88.441,97.505L86.973,97.869L85.734,98.192L85.184,98.343L84.923,98.416C82.071,99.236 79.07,99.979 76.103,100.633L75.092,100.852L74.138,101.053L72.449,101.392L72.164,101.446C71.675,101.537 71.206,101.214 71.115,100.725C71.024,100.237 71.347,99.767 71.836,99.676L72.893,99.47L74.238,99.194C74.395,99.161 74.554,99.127 74.716,99.092L75.716,98.875C78.229,98.321 80.767,97.703 83.213,97.028L84.973,96.534L85.867,96.295L87.237,95.947L89.895,95.306L92.999,94.567L94.281,94.255C94.488,94.203 94.693,94.153 94.894,94.102L95.623,93.916L95.79,93.714C97.502,91.683 99.518,90.105 101.505,89.166L101.819,89.023ZM104.663,90.17L104.653,90.168C104.26,90.102 103.478,90.261 102.542,90.672C101.455,91.149 100.34,91.858 99.274,92.758L98.996,92.997L99.598,92.818L100.236,92.62L100.83,92.426C100.926,92.394 101.019,92.363 101.111,92.331L101.64,92.144L102.124,91.962L102.565,91.785C103.613,91.346 104.251,90.947 104.484,90.581L104.52,90.518C104.577,90.407 104.616,90.315 104.641,90.244L104.663,90.17Z&quot;"
-        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/drawable/img_write_212dp.xml"
-            line="90"
-            column="25"/>
-    </issue>
-
-    <issue
-        id="VectorPath"
         message="Very long vector path (1906 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
         errorLine1="        android:pathData=&quot;M136.581,75.199L136.671,75.172 136.69,75.322 137.081,75.236 137.495,75.251 137.796,75.267 138.139,74.898 138.513,74.545 138.829,74.206 138.924,74.393 138.991,74.828 138.736,74.83 138.695,75.186 138.785,75.261 138.558,75.368 138.556,75.591 138.41,75.816 138.397,76.031 138.296,76.145 136.794,75.874 136.601,75.325zM141.4,68.636L141.91,68.868 142.286,68.786 142.392,68.509 142.786,68.417 143.068,68.229 143.168,67.732 143.589,67.611 143.667,67.388 143.904,67.556 144.054,67.575 144.333,67.581 144.711,67.712 144.862,67.787 145.225,67.588 145.394,67.707 145.555,67.422 145.854,67.434 145.931,67.342 145.985,67.087 146.2,66.868 146.47,67.01 146.416,67.204 146.568,67.235 146.52,67.761 146.718,67.966 146.893,67.834 147.116,67.773 147.426,67.493 147.77,67.54 148.288,67.54 148.377,67.72 148.084,67.789 147.831,67.905 147.256,67.976 146.72,68.106 146.427,68.376 146.545,68.636 146.604,68.939 146.354,69.194 146.375,69.425 146.238,69.643 145.762,69.623 145.958,70.019 145.64,70.171 145.428,70.527 145.455,70.88 145.258,71.044 145.075,70.99 144.691,71.067 144.638,71.229 144.265,71.229 143.987,71.557 143.969,72.047 143.318,72.285 142.97,72.235 142.868,72.359 142.57,72.288 142.069,72.374 141.232,72.081 141.685,71.559 141.644,71.185 141.266,71.087 141.227,70.714 141.063,70.244 141.277,69.917 141.059,69.83 141.196,69.393zM121.081,64.672L121.018,64.898 121.09,65.181 121.297,65.342 121.286,65.515 121.123,65.611 121.093,65.823 120.861,66.137 120.776,66.092 120.767,65.95 120.488,65.73 120.446,65.418 120.488,64.967 120.556,64.761 120.472,64.656 120.438,64.443 120.656,64.11 120.686,64.238 120.822,64.178 120.929,64.36 121.049,64.427zM132.582,65.178L133.278,65.074 133.381,65.249 133.572,65.363 133.47,65.527 133.738,65.752 133.597,65.959 133.809,66.135 134.034,66.24 134.045,66.686 133.863,66.704 133.659,66.333 133.661,66.235 133.44,66.237 133.292,66.062 133.188,66.08 132.99,65.891 132.619,65.729 132.667,65.41z&quot;"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
@@ -3439,7 +3021,7 @@
         errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
-            file="src/main/res/layout/activity_blaze_parent.xml"
+            file="src/main/res/layout/activity_blaze_campaign.xml"
             line="2"
             column="1"/>
     </issue>
@@ -3450,7 +3032,7 @@
         errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
         errorLine2="^">
         <location
-            file="src/main/res/layout/activity_blaze_campaign.xml"
+            file="src/main/res/layout/activity_blaze_parent.xml"
             line="2"
             column="1"/>
     </issue>
@@ -3557,17 +3139,6 @@
     <issue
         id="Overdraw"
         message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
-        errorLine1="    android:background=&quot;@android:color/white&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@android:color/white` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
         errorLine1="    android:background=&quot;@android:color/white&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
@@ -3626,17 +3197,6 @@
         errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout-land/jetpack_feature_removal_overlay.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/jetpack_powered_bottom_sheet_background` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
             file="src/main/res/layout/jetpack_feature_removal_overlay.xml"
             line="10"
             column="5"/>
@@ -3648,30 +3208,8 @@
         errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout-land/jetpack_feature_removal_overlay_new_users_content.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/jetpack_powered_bottom_sheet_background` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
             file="src/main/res/layout/jetpack_feature_removal_overlay_new_users_content.xml"
             line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/jetpack_powered_bottom_sheet_background` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout-land/jetpack_powered_bottom_sheet.xml"
-            line="7"
             column="5"/>
     </issue>
 
@@ -3694,17 +3232,6 @@
         <location
             file="src/main/res/layout/jetpack_powered_expanded_bottom_sheet.xml"
             line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/jetpack_powered_bottom_sheet_background` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;@color/jetpack_powered_bottom_sheet_background&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout-land/jetpack_powered_expanded_bottom_sheet.xml"
-            line="9"
             column="5"/>
     </issue>
 
@@ -3736,17 +3263,6 @@
         errorLine1="    android:background=&quot;?attr/wpColorLoginPrologueBg&quot;>"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="src/main/res/layout-land/login_intro_template_view.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/wpColorLoginPrologueBg` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/wpColorLoginPrologueBg&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
             file="src/main/res/layout/login_intro_template_view.xml"
             line="7"
             column="5"/>
@@ -3764,356 +3280,26 @@
     </issue>
 
     <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/WordPress_Media_Preview`)"
-        errorLine1="    android:background=&quot;@android:color/black&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/media_preview_activity.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/modal_layout_picker_bottom_toolbar.xml"
-            line="5"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/modal_layout_picker_categories_skeleton.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/modal_layout_picker_error.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/modal_layout_picker_layouts_skeleton.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/note_block_user.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/colorSurface` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="                android:background=&quot;?attr/colorSurface&quot;>"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/notifications_fragment_detail_list.xml"
-            line="6"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress_NoActionBar`)"
-        errorLine1="    android:background=&quot;?android:attr/selectableItemBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/plugin_browser_row.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/wpColorSurfaceSecondary` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/wpColorSurfaceSecondary&quot; />"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/popup_menu_divider.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/publicize_listitem_connection.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/publicize_listitem_service.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/ReaderMediaViewerTheme`)"
-        errorLine1="                android:background=&quot;@android:color/black&quot;>"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_activity_photo_viewer.xml"
-            line="8"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `@color/neutral_70` with a theme that also paints a background (inferred theme is `@style/ReaderMediaViewerTheme`)"
-        errorLine1="    android:background=&quot;@color/neutral_70&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_activity_video_player.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_comments_post_header_view.xml"
-            line="12"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/colorSurface` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/colorSurface&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_fragment_post_detail.xml"
-            line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:attr/actionBarItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:attr/actionBarItemBackground&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_home_settings_menu_action_layout.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_icon_count_view.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/colorSurface` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/colorSurface&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_interests_fragment_layout.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_listitem_blog.xml"
-            line="10"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_listitem_suggestion_recycler.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_listitem_tag.xml"
-            line="12"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_listitem_user.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_post_likers_faces_list.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:attr/listDivider` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:attr/listDivider&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/reader_thumbnail_strip_image.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress_NoActionBar`)"
-        errorLine1="                android:background=&quot;?attr/layoutPickerBackground&quot;>"
-        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/site_creation_activity.xml"
-            line="7"
-            column="17"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/site_creation_intents_fragment.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/layoutPickerBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/layoutPickerBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/site_creation_site_name_fragment.xml"
-            line="7"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:attr/colorBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:attr/colorBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/site_settings_tag_detail_fragment.xml"
-            line="8"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?android:attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?android:attr/selectableItemBackground&quot;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/start_over_preference.xml"
-            line="6"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="Overdraw"
-        message="Possible overdraw: Root element paints background `?attr/colorSurface` with a theme that also paints a background (inferred theme is `@style/WordPress`)"
-        errorLine1="    android:background=&quot;?attr/colorSurface&quot;>"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/unified_comments_edit_fragment.xml"
-            line="9"
-            column="5"/>
-    </issue>
-
-    <issue
         id="UsableSpace"
         message="Consider also using `StorageManager#getAllocatableBytes` and `allocateBytes` which will consider clearable cached data"
         errorLine1="        return (appContext.cacheDir.usableSpace * FULL_STORAGE_PERCENTAGE /"
         errorLine2="                                    ~~~~~~~~~~~">
         <location
             file="src/main/java/org/wordpress/android/util/StorageUtilsProvider.kt"
-            line="53"
+            line="54"
             column="37"/>
     </issue>
 
     <issue
         id="IconDensities"
-        message="Missing the following drawables in `drawable-hdpi`: rppreview1.png, rppreview2.png, rppreview3.png">
+        message="Missing the following drawables in `drawable-hdpi`: illustration_reader_empty.png, rppreview1.png, rppreview2.png, rppreview3.png">
         <location
             file="src/main/res/drawable-hdpi"/>
     </issue>
 
     <issue
         id="IconDensities"
-        message="Missing the following drawables in `drawable-mdpi`: bg_rectangle_total_stats_line_chart_blue_gradient.xml, btn_cab_done_default_wordpress.9.png, btn_cab_done_focused_wordpress.9.png, btn_cab_done_pressed_wordpress.9.png, gallery_icon_circles.png... (19 more)">
+        message="Missing the following drawables in `drawable-mdpi`: bg_rectangle_total_stats_line_chart_blue_gradient.xml, btn_cab_done_default_wordpress.9.png, btn_cab_done_focused_wordpress.9.png, btn_cab_done_pressed_wordpress.9.png, gallery_icon_circles.png... (18 more)">
         <location
             file="src/main/res/drawable-mdpi"/>
     </issue>
@@ -4127,14 +3313,7 @@
 
     <issue
         id="IconDensities"
-        message="Missing the following drawables in `drawable-xxhdpi`: bg_rectangle_total_stats_line_chart_blue_gradient.xml, btn_cab_done_default_wordpress.9.png, btn_cab_done_focused_wordpress.9.png, btn_cab_done_pressed_wordpress.9.png, menu_dropdown_panel_wordpress.9.png... (6 more)">
-        <location
-            file="src/main/res/drawable-xxhdpi"/>
-    </issue>
-
-    <issue
-        id="IconDensities"
-        message="Missing the following drawables in `drawable-xxhdpi`: list_focused_wordpress.9.png (found in drawable-hdpi, drawable-xhdpi)">
+        message="Missing the following drawables in `drawable-xxhdpi`: bg_rectangle_total_stats_line_chart_blue_gradient.xml, btn_cab_done_default_wordpress.9.png, btn_cab_done_focused_wordpress.9.png, btn_cab_done_pressed_wordpress.9.png, menu_dropdown_panel_wordpress.9.png... (4 more)">
         <location
             file="src/main/res/drawable-xxhdpi"/>
     </issue>
@@ -4200,61 +3379,6 @@
         errorLine1="        &lt;EditText"
         errorLine2="         ~~~~~~~~">
         <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="58"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="73"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="87"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="118"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="152"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="Autofill"
-        message="Missing `autofillHints` attribute"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
             file="src/main/res/layout/dialog_link.xml"
             line="16"
             column="10"/>
@@ -4291,61 +3415,6 @@
             file="src/main/res/layout/delete_site_dialog.xml"
             line="7"
             column="6"/>
-    </issue>
-
-    <issue
-        id="LabelFor"
-        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="58"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="LabelFor"
-        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="73"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="LabelFor"
-        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="87"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="LabelFor"
-        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="118"
-            column="10"/>
-    </issue>
-
-    <issue
-        id="LabelFor"
-        message="Missing accessibility label: provide either a view with an `android:labelFor` that references this view or provide an `android:hint`"
-        errorLine1="        &lt;EditText"
-        errorLine2="         ~~~~~~~~">
-        <location
-            file="src/main/res/layout/dialog_image_options.xml"
-            line="152"
-            column="10"/>
     </issue>
 
     <issue
