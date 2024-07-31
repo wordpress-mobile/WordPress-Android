@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.android.play.core.review.ReviewManagerFactory
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit
 object AppReviewManager {
     private const val PREF_NAME = "rate_wpandroid"
     private const val KEY_LAUNCH_TIMES = "rate_launch_times"
+    private const val KEY_INTERACTIONS = "rate_interactions"
     private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
     private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
     private const val TARGET_COUNT_POST_PUBLISHED = 2
@@ -36,7 +38,6 @@ object AppReviewManager {
     fun init(context: Context) {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-
         // Increment launch times
         launchTimes = preferences.getInt(KEY_LAUNCH_TIMES, 0)
         launchTimes++
@@ -47,25 +48,6 @@ object AppReviewManager {
 
         inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))
         doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
-    }
-
-    fun launchInAppReviews(activity: Activity) {
-        AppLog.d(T.UTILS, "Launching in-app reviews prompt")
-        val manager = ReviewManagerFactory.create(activity)
-        val request = manager.requestReviewFlow()
-        request.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val reviewInfo = task.result
-                val flow = manager.launchReviewFlow(activity, reviewInfo)
-                flow.addOnFailureListener { e ->
-                    AppLog.e(T.UTILS, "Error launching google review API flow.", e)
-                }
-            } else {
-                task.logException()
-            }
-        }
-
-        resetInAppReviewsCounters()
     }
 
     /**
@@ -95,12 +77,40 @@ object AppReviewManager {
      * Check whether the in-app reviews prompt should be shown or not.
      * @return true if the prompt should be shown
      */
-    fun shouldShowInAppReviewsPrompt(): Boolean {
+    private fun shouldShowInAppReviewsPrompt(): Boolean {
         val shouldWaitAfterLastShown = Date().time - inAppReviewsShownDate.time < criteriaInstallMs
         val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
         val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
         return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown &&
-            (publishedPostsGoal || notificationsGoal)
+                (publishedPostsGoal || notificationsGoal)
+    }
+
+    /**
+     * Show the in-app reviews prompt if the necessary criteria are met
+     */
+    fun showInAppReviewsPromptIfNecessary(activity: Activity) {
+        if (shouldShowInAppReviewsPrompt()) {
+            launchInAppReviews(activity)
+        }
+    }
+
+    private fun launchInAppReviews(activity: Activity) {
+        AppLog.d(T.UTILS, "Launching in-app reviews prompt")
+        val manager = ReviewManagerFactory.create(activity)
+        val request = manager.requestReviewFlow()
+        request.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val reviewInfo = task.result
+                val flow = manager.launchReviewFlow(activity, reviewInfo)
+                flow.addOnFailureListener { e ->
+                    AppLog.e(T.UTILS, "Error launching google review API flow.", e)
+                }
+            } else {
+                task.logException()
+            }
+        }
+
+        resetInAppReviewsCounters()
     }
 
     /**
@@ -115,5 +125,19 @@ object AppReviewManager {
         storeInAppReviewsShownDate()
         AppPrefs.resetPublishedPostCount()
         AppPrefs.resetInAppReviewsNotificationCount()
+    }
+
+    /**
+     * Called from various places in the app where the user has performed a non-trivial action,
+     * such as publishing a post or page.This was previously used to determine when to show our
+     * custom rating dialog to involved users but is currently unused. It is left intact in
+     * case we want to include interactions in the future when determining whether to show
+     * the Google review dialog.
+     */
+    fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
+        var interactions = preferences.getInt(KEY_INTERACTIONS, 0)
+        interactions++
+        preferences.edit().putInt(KEY_INTERACTIONS, interactions)?.apply()
+        AnalyticsTracker.track(incrementInteractionTracker)
     }
 }

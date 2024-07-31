@@ -1172,9 +1172,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 getSelectedPage()
         );
 
-        if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
-            AppReviewManager.INSTANCE.launchInAppReviews(this);
-        }
+        AppReviewManager.INSTANCE.showInAppReviewsPromptIfNecessary(this);
         checkForInAppUpdate();
 
         mIsChangingConfiguration = false;
