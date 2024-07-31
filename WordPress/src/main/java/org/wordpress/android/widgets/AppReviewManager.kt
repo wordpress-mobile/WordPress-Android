@@ -85,7 +85,8 @@ object AppReviewManager {
 
     fun launchInAppReviews(activity: Activity) {
         AppLog.d(T.UTILS, "Launching in-app reviews prompt")
-        val manager = ReviewManagerFactory.create(activity)
+        // TODO uncomment
+        /*val manager = ReviewManagerFactory.create(activity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -97,7 +98,7 @@ object AppReviewManager {
             } else {
                 task.logException()
             }
-        }
+        }*/
 
         resetInAppReviewsCounters()
     }
@@ -108,7 +109,7 @@ object AppReviewManager {
      */
     fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
-            showRateDialog(fragmentManger)
+            // TODO showRateDialog(fragmentManger)
             true
         } else {
             false
