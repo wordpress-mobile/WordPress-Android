@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-GOOGLE_FIREBASE_SECRETS_PATH = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'firebase.secrets.json')
-
 platform :android do
   #####################################################################################
   # build_and_run_instrumented_test
@@ -31,11 +29,4 @@ platform :android do
       UI.test_failure!(message)
     end
   end
-end
-
-def firebase_secret(name:)
-  UI.user_error!('Unable to locale Firebase Secrets File – did you run `configure apply`?') unless File.file? GOOGLE_FIREBASE_SECRETS_PATH
-  key_file_secrets = JSON.parse(File.read(GOOGLE_FIREBASE_SECRETS_PATH))
-  UI.user_error!("Unable to find key `#{name}` in #{GOOGLE_FIREBASE_SECRETS_PATH}") if key_file_secrets[name].nil?
-  key_file_secrets[name]
 end
