@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-24 13:54:08+0000
+Translation-Revision-Date: 2024-07-30 13:23:29+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: it
@@ -3330,7 +3330,7 @@ Language: it
     <string name="pending_email_change_snackbar">Fai clic sul link di verifica nell\'email inviata a %1$s per confermare il tuo nuovo indirizzo</string>
     <string name="editor_toast_uploading_please_wait">Al momento stai caricando file multimediali. Attendi il termine dell\'operazione.</string>
     <string name="error_refresh_comments_showing_older">Impossibile aggiornare i commenti in questo momento, vengono visualizzati i commenti precedenti</string>
-    <string name="post_settings_set_featured_image">Imposta Immagine in Evidenza</string>
+    <string name="post_settings_set_featured_image">Imposta immagine in evidenza</string>
     <string name="post_settings_featured_image">Immagine in evidenza</string>
     <string name="email_address">Indirizzo email</string>
     <string name="dlg_sure_to_delete_comments">Eliminare in modo permanente questi commenti?</string>

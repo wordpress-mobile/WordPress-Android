@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-24 10:54:07+0000
+Translation-Revision-Date: 2024-07-25 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
@@ -10,11 +10,12 @@ Language: id
     <string name="voice_to_content_done_label">Selesai</string>
     <string name="voice_to_content_upgrade">Upgrade untuk mendapat lebih banyak kuota permintaan</string>
     <string name="voice_to_content_ineligible">Kuota permintaan Anda tidak cukup untuk membuat pos dari audio.</string>
-    <string name="voice_to_content_recording_label">Merekam…</string>
+    <string name="voice_to_content_recording_label">Merekam</string>
     <string name="voice_to_content_begin_recording_label">Mulai Merekam</string>
     <string name="voice_to_content_secondary_header_label">Permintaan tersedia:</string>
     <string name="voice_to_content_base_header_label">Pos dari Audio</string>
     <string name="voice_to_content_processing_label">Pemrosesan</string>
+    <string name="voice_to_content_error_label">Error</string>
     <string name="voice_to_content_processing">Pemrosesan</string>
     <string name="gutenberg_native_tap_to_edit">Ketuk untuk menyunting</string>
     <string name="voice_to_content_permissions_required_msg">Aplikasi ini perlu izin untuk mengakses mikrofon untuk merekam audio. Anda telah menolak izin ini sebelumnya. Aktifkan izin mikrofon dalam pengaturan aplikasi untuk menggunakan fitur ini.</string>

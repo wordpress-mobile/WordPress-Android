@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-23 20:06:30+0000
+Translation-Revision-Date: 2024-07-25 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Es ist derzeit nicht möglich, Beiträge aus Audio zu erstellen. Bitte versuche es später noch einmal.</string>
+    <string name="voice_to_content_recording_label">Aufnahme läuft</string>
     <string name="voice_to_content_begin_recording_label">Aufnahme beginnen</string>
     <string name="voice_to_content_secondary_header_label">Anfragen verfügbar:</string>
+    <string name="voice_to_content_processing_label">Verarbeitung läuft</string>
     <string name="voice_to_content_error_label">Fehler</string>
+    <string name="voice_to_content_processing">Verarbeitung läuft</string>
     <string name="gutenberg_native_tap_to_edit">Zum Bearbeiten tippen</string>
     <string name="voice_to_content_permissions_required_msg">Für eine Audioaufzeichnung benötigt diese App die Berechtigung, auf dein Mikrofon zuzugreifen. Du hast diese Berechtigung kürzlich verweigert. Bitte aktiviere die Mikrofonberechtigung in den App-Einstellungen, um diese Funktion verwenden zu können.</string>
     <string name="voice_to_content_permissions_required_title">Berechtigung für Audioaufzeichnung erforderlich</string>

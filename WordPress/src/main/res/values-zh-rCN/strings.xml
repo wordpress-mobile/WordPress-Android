@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-07-24 09:54:08+0000
+Translation-Revision-Date: 2024-07-25 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_CN
 -->
 <resources>
-    <string name="voice_to_content_generic_error">暂无法查看从音频创建的文章，请稍后再试。</string>
+    <string name="voice_to_content_generic_error">暂时无法查看从音频创建的文章，请稍后再试。</string>
     <string name="voice_to_content_done_label">完成</string>
     <string name="voice_to_content_upgrade">升级以获得更多请求次数</string>
     <string name="voice_to_content_ineligible">您的可用请求次数不足，无法从音频创建文章。</string>
