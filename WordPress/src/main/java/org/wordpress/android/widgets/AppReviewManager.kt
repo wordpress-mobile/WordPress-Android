@@ -15,10 +15,12 @@ import java.util.concurrent.TimeUnit
 
 object AppReviewManager {
     private const val PREF_NAME = "rate_wpandroid"
-    private const val KEY_LAUNCH_TIMES = "rate_launch_times"
-    private const val KEY_INTERACTIONS = "rate_interactions"
+
+    private const val KEY_RATING_LAUNCH_TIMES = "rate_launch_times"
+    private const val KEY_RATING_INTERACTIONS = "rate_interactions"
+
     private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
-    private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
+
     private const val TARGET_COUNT_POST_PUBLISHED = 2
     private const val TARGET_COUNT_NOTIFICATIONS = 10
 
@@ -28,7 +30,6 @@ object AppReviewManager {
 
     private var launchTimes = 0
     private var inAppReviewsShownDate = Date(0)
-    private var doNotShowInAppReviewsPrompt = false
 
     private lateinit var preferences: SharedPreferences
 
@@ -41,15 +42,14 @@ object AppReviewManager {
         // Increment launch times - note that like interactions, this was used by our
         // previous rating dialog but is no longer used. It is here in case we want
         // to include launch times in the future.
-        launchTimes = preferences.getInt(KEY_LAUNCH_TIMES, 0)
+        launchTimes = preferences.getInt(KEY_RATING_LAUNCH_TIMES, 0)
         launchTimes++
         preferences.edit().apply {
-            this.putInt(KEY_LAUNCH_TIMES, launchTimes)
+            this.putInt(KEY_RATING_LAUNCH_TIMES, launchTimes)
             this.apply()
         }
 
         inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))
-        doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
     }
 
     /**
@@ -81,10 +81,13 @@ object AppReviewManager {
      */
     private fun shouldShowInAppReviewsPrompt(): Boolean {
         val shouldWaitAfterLastShown = Date().time - inAppReviewsShownDate.time < criteriaInstallMs
+        if (shouldWaitAfterLastShown) {
+            return false
+        }
+
         val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
         val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
-        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown &&
-                (publishedPostsGoal || notificationsGoal)
+        return publishedPostsGoal || notificationsGoal
     }
 
     /**
@@ -137,9 +140,9 @@ object AppReviewManager {
      * future when determining whether to show the Google review dialog.
      */
     fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
-        var interactions = preferences.getInt(KEY_INTERACTIONS, 0)
+        var interactions = preferences.getInt(KEY_RATING_INTERACTIONS, 0)
         interactions++
-        preferences.edit().putInt(KEY_INTERACTIONS, interactions)?.apply()
+        preferences.edit().putInt(KEY_RATING_INTERACTIONS, interactions)?.apply()
         AnalyticsTracker.track(incrementInteractionTracker)
     }
 }
