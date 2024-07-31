@@ -460,7 +460,11 @@ platform :android do
     app = get_app_name_option!(options)
     app_values = APP_SPECIFIC_VALUES[app.to_sym]
     Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
-      File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build])
+      file_basename_number = Integer(File.basename(file, '.*'))
+
+      next if STORE_VERSION_CODES_TO_RETAIN.include?(file_basename_number)
+
+      File.delete(file) if file_basename_number < Integer(options[:build])
     rescue StandardError
       UI.error("Could not delete file #{file}.")
     end

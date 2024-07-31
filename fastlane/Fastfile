@@ -27,6 +27,8 @@ APP_SPECIFIC_VALUES = {
 
 UPLOAD_TO_PLAY_STORE_JSON_KEY = File.join(Dir.home, '.configure', 'wordpress-android', 'secrets', 'google-upload-credentials.json')
 
+STORE_VERSION_CODES_TO_RETAIN = [1440].freeze
+
 PROTOTYPE_BUILD_FLAVOR = 'Jalapeno'
 PROTOTYPE_BUILD_TYPE = 'Debug'
 PROTOTYPE_BUILD_DOMAIN = 'https://d2twmm2nzpx3bg.cloudfront.net'
