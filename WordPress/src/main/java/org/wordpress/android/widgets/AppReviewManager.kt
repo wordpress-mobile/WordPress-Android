@@ -3,9 +3,7 @@ package org.wordpress.android.widgets
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.util.AppLog
@@ -16,11 +14,7 @@ import java.util.concurrent.TimeUnit
 
 object AppReviewManager {
     private const val PREF_NAME = "rate_wpandroid"
-    private const val KEY_INSTALL_DATE = "rate_install_date"
     private const val KEY_LAUNCH_TIMES = "rate_launch_times"
-    private const val KEY_OPT_OUT = "rate_opt_out"
-    private const val KEY_ASK_LATER_DATE = "rate_ask_later_date"
-    private const val KEY_INTERACTIONS = "rate_interactions"
     private const val IN_APP_REVIEWS_SHOWN_DATE = "in_app_reviews_shown_date"
     private const val DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT = "do_not_show_in_app_reviews_prompt"
     private const val TARGET_COUNT_POST_PUBLISHED = 2
@@ -30,11 +24,7 @@ object AppReviewManager {
     private const val CRITERIA_INSTALL_DAYS: Int = 7
     private val criteriaInstallMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
 
-    private var installDate = Date()
-    private var askLaterDate = Date()
     private var launchTimes = 0
-    private var interactions = 0
-    private var optOut = false
     private var inAppReviewsShownDate = Date(0)
     private var doNotShowInAppReviewsPrompt = false
 
@@ -47,21 +37,11 @@ object AppReviewManager {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val editor = preferences.edit()
 
-        // If it is the first launch, save the date in shared preference.
-        if (preferences.getLong(KEY_INSTALL_DATE, 0) == 0L) {
-            storeInstallDate(context)
-        }
-
         // Increment launch times
         launchTimes = preferences.getInt(KEY_LAUNCH_TIMES, 0)
         launchTimes++
         editor.putInt(KEY_LAUNCH_TIMES, launchTimes)
         editor.apply()
-
-        interactions = preferences.getInt(KEY_INTERACTIONS, 0)
-        optOut = preferences.getBoolean(KEY_OPT_OUT, false)
-        installDate = Date(preferences.getLong(KEY_INSTALL_DATE, 0))
-        askLaterDate = Date(preferences.getLong(KEY_ASK_LATER_DATE, 0))
 
         inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))
         doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
@@ -84,18 +64,6 @@ object AppReviewManager {
         }
 
         resetInAppReviewsCounters()
-    }
-
-    /**
-     * Called from various places in the app where the user has performed a non-trivial action, such as publishing post
-     * or page. We use this to avoid showing the rating dialog to uninvolved users
-     */
-    fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
-        if (!optOut) {
-            interactions++
-            preferences.edit().putInt(KEY_INTERACTIONS, interactions)?.apply()
-            AnalyticsTracker.track(incrementInteractionTracker)
-        }
     }
 
     /**
@@ -127,26 +95,10 @@ object AppReviewManager {
      */
     fun shouldShowInAppReviewsPrompt(): Boolean {
         val shouldWaitAfterLastShown = Date().time - inAppReviewsShownDate.time < criteriaInstallMs
-        val shouldWaitAfterAskLaterTapped = Date().time - askLaterDate.time < criteriaInstallMs
         val publishedPostsGoal = AppPrefs.getPublishedPostCount() == TARGET_COUNT_POST_PUBLISHED
         val notificationsGoal = AppPrefs.getInAppReviewsNotificationCount() == TARGET_COUNT_NOTIFICATIONS
-        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterAskLaterTapped && !shouldWaitAfterLastShown &&
+        return !doNotShowInAppReviewsPrompt && !shouldWaitAfterLastShown &&
             (publishedPostsGoal || notificationsGoal)
-    }
-
-    /**
-     * Store install date - retrieved from package manager if possible.
-     */
-    private fun storeInstallDate(context: Context) {
-        var installDate = Date()
-        val packMan = context.packageManager
-        try {
-            val pkgInfo = packMan.getPackageInfo(context.packageName, 0)
-            installDate = Date(pkgInfo.firstInstallTime)
-        } catch (e: PackageManager.NameNotFoundException) {
-            AppLog.e(T.UTILS, e)
-        }
-        preferences.edit().putLong(KEY_INSTALL_DATE, installDate.time)?.apply()
     }
 
     /**
