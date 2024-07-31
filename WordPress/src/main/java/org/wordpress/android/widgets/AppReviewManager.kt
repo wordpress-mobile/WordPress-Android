@@ -35,13 +35,15 @@ object AppReviewManager {
      */
     fun init(context: Context) {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-        val editor = preferences.edit()
+
 
         // Increment launch times
         launchTimes = preferences.getInt(KEY_LAUNCH_TIMES, 0)
         launchTimes++
-        editor.putInt(KEY_LAUNCH_TIMES, launchTimes)
-        editor.apply()
+        preferences.edit().apply {
+            this.putInt(KEY_LAUNCH_TIMES, launchTimes)
+            this.apply()
+        }
 
         inAppReviewsShownDate = Date(preferences.getLong(IN_APP_REVIEWS_SHOWN_DATE, 0))
         doNotShowInAppReviewsPrompt = preferences.getBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, false)
