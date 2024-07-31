@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 16:07:39+0000
+Translation-Revision-Date: 2024-07-29 20:37:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es_CL
 -->
 <resources>
+    <string name="voice_to_content_generic_error">La entrada de audio no está disponible en este momento. Inténtalo más tarde.</string>
+    <string name="voice_to_content_done_label">Hecho</string>
+    <string name="voice_to_content_upgrade">Mejorar para más solicitudes</string>
+    <string name="voice_to_content_ineligible">No tienes bastantes solicitudes disponibles para crear una entrada desde audio.</string>
+    <string name="voice_to_content_recording_label">Grabando</string>
+    <string name="voice_to_content_begin_recording_label">Iniciar grabación</string>
+    <string name="voice_to_content_secondary_header_label">Solicitudes disponibles:</string>
+    <string name="voice_to_content_base_header_label">Publicar desde audio</string>
+    <string name="voice_to_content_processing_label">Procesando</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing">Procesando</string>
     <string name="gutenberg_native_tap_to_edit">Toca para editar</string>
     <string name="voice_to_content_permissions_required_msg">Para grabar audio, esta app necesita permiso para acceder a tu micrófono. Anteriormente has denegado este permiso. Habilita el permiso del micrófono en los ajustes de la aplicación para utilizar esta función.</string>
     <string name="voice_to_content_permissions_required_title">Se requiere permiso para grabar audio</string>
@@ -1935,6 +1946,7 @@ Language: es_CL
     <string name="stats_box_type_low">bajas</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Reemplazar imagen</string>
     <string name="gutenberg_native_gallery_caption_s">Leyenda de la galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
     <string name="content_description_person_building_website">Creador de la web</string>

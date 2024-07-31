@@ -1,0 +1,5 @@
+25.2 :
+Nous avons corrigé deux gros problèmes dans cette version :
+* Vous pouvez désormais remettre à jour la date de publication d’un article.
+* Certains utilisateurs ne pouvaient pas mettre à jour le contenu de leurs articles.
+Comme toujours, veuillez contacter l’assistance en cas de dysfonctionnement !
