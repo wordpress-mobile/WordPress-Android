@@ -129,10 +129,10 @@ object AppReviewManager {
 
     /**
      * Called from various places in the app where the user has performed a non-trivial action,
-     * such as publishing a post or page.This was previously used to determine when to show our
-     * custom rating dialog to involved users but is currently unused. It is left intact in
-     * case we want to include interactions in the future when determining whether to show
-     * the Google review dialog.
+     * such as publishing a post or page. This was previously used to determine when to show our
+     * custom rating dialog to involved users but is currently unused. It is left intact, and
+     * interactions will continue to be counted, in case we want to include interactions in the
+     * future when determining whether to show the Google review dialog.
      */
     fun incrementInteractions(incrementInteractionTracker: AnalyticsTracker.Stat) {
         var interactions = preferences.getInt(KEY_INTERACTIONS, 0)
