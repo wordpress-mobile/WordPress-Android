@@ -13,6 +13,24 @@ plugins {
     id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
     id "com.google.devtools.ksp"
+    id "com.osacky.fladle"
+}
+
+fladle {
+    variant = "vanillaDebug"
+    serviceAccountCredentials = rootProject.file(".configure-files/firebase.secrets.json")
+    testTargets = [
+            "notPackage org.wordpress.android.ui.screenshots"
+    ]
+    devices = [
+            ["model": "Pixel2.arm", "version": "30"]
+    ]
+
+    localResultsDir = "$rootDir/build/instrumented-tests"
+
+    maxTestShards = 50
+    shardTime = 120
+    smartFlankGcsPath = "gs://fladle/wordpress-android/smart-flank/JUnitReport.xml"
 }
 
 sentry {
