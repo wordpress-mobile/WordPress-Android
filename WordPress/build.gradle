@@ -19,12 +19,16 @@ plugins {
 fladle {
     configs {
         wordpress {
-            debugApk.set(pathForVariant("wordpress", "debugApk"))
-            instrumentationApk.set(pathForVariant("wordpress", "instrumentationApk"))
+            def app = "wordpress"
+            debugApk.set(pathForVariant(app, "debugApk"))
+            instrumentationApk.set(pathForVariant(app, "instrumentationApk"))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
         }
         jetpack {
-            debugApk.set(pathForVariant("jetpack", "debugApk"))
-            instrumentationApk.set(pathForVariant("jetpack", "instrumentationApk"))
+            def app = "jetpack"
+            debugApk.set(pathForVariant(app, "debugApk"))
+            instrumentationApk.set(pathForVariant(app, "instrumentationApk"))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
         }
     }
     serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
@@ -39,7 +43,6 @@ fladle {
 
     maxTestShards = 50
     shardTime = 120
-    smartFlankGcsPath = "gs://fladle/wordpress-android/smart-flank/JUnitReport.xml"
 }
 
 String pathForVariant(String app, String type) {
@@ -52,6 +55,10 @@ String pathForVariant(String app, String type) {
     String path = type == "debugApk" ? appPath : testPath
 
     return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
+}
+
+static String pathForSmartFlankGcsPath(String app) {
+    return "gs://fladle/wordpress-android/${app}/smart-flank/JUnitReport.xml"
 }
 
 sentry {
