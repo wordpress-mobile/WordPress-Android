@@ -28,6 +28,6 @@ else
 fi
 
 echo "--- 🧪 Copying test logs for test collector"
-mkdir buildkite-test-analytics && cp build/instrumented-tests/*/*/*.xml buildkite-test-analytics
+mkdir buildkite-test-analytics && cp -r build/instrumented-tests/matrix_* buildkite-test-analytics
 
 exit $TESTS_EXIT_STATUS
