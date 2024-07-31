@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs.accountsettings.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +28,11 @@ fun CloseAccountButton(onClick: () -> Unit = {}): Unit = Button(
         contentColor = MaterialTheme.colorScheme.error,
         disabledContainerColor = Color.Transparent,
         disabledContentColor = MaterialTheme.colorScheme.error,
-
         ),
     modifier = Modifier
         .fillMaxWidth(),
     onClick = onClick,
+    shape = RoundedCornerShape(0.dp),
 ) {
     Text(
         text = stringResource(R.string.close_account),
