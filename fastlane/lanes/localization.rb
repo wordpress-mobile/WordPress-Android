@@ -168,9 +168,8 @@ platform :android do
   #
   # @option [String|Symbol] app The app to take screenshots for. Must be `wordpress` or `jetpack`
   # @option [String] version The `versionName` of the app, used to extract the release notes from the right GlotPress key. Defaults to current `versionName`.
-  # @option [Int] build_number The `versionCode` of the app, used to save the release notes to the right `changelogs/*.txt` file. Defaults to current `versionCode`.
   # @option [Boolean] skip_release_notes If set to true, will not download release notes. Defaults to `false`. This can be useful when all you want to download
-  #         is screenshots translations and metadata not linked to a specific version (in which case `version` and `build_number` parameters are optional).
+  #         is screenshots translations and metadata not linked to a specific version (in which case the `version` parameters is optional).
   # @option [Boolean] skip_commit If set to true, will skip the `git add`, `git commit` and `git push` operations. Default to false.
   # @option [Boolean] skip_git_push If set to true, will skip the `git push` at the end. Default to false. Inferred to `true` if `skip_commit` is `true`.
   #
@@ -178,7 +177,6 @@ platform :android do
   lane :download_metadata_strings do |options|
     skip_release_notes = options.fetch(:skip_release_notes, false)
     version = skip_release_notes ? nil : options.fetch(:version, current_release_version)
-    build_number = skip_release_notes ? nil : options.fetch(:build_number, current_build_code)
 
     skip_commit = options.fetch(:skip_commit, false)
     skip_git_push = options.fetch(:skip_git_push, false)
@@ -196,9 +194,8 @@ platform :android do
         play_store_desc: { desc: 'full_description.txt', max_size: 4000 }
       }
       unless skip_release_notes
-        delete_old_changelogs(app: app, build: build_number)
         version_suffix = version.split('.').join
-        files["release_note_#{version_suffix}"] = { desc: "changelogs/#{build_number}.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
+        files["release_note_#{version_suffix}"] = { desc: "changelogs/default.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
       end
       # Add key mappings for `screenshots_*` files too
       Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
