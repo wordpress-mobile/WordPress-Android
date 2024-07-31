@@ -19,24 +19,7 @@ platform :android do
 
     gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}VanillaDebug", "WordPress:assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
 
-    # Run the instrumented tests in Firebase Test Lab
-    firebase_login(
-      key_file: GOOGLE_FIREBASE_SECRETS_PATH
-    )
-
-    apk_dir = File.join(PROJECT_ROOT_FOLDER, 'WordPress', 'build', 'outputs', 'apk')
-
-    test_succeeded = android_firebase_test(
-      project_id: firebase_secret(name: 'project_id'),
-      key_file: GOOGLE_FIREBASE_SECRETS_PATH,
-      model: 'Pixel2.arm',
-      version: 30,
-      test_apk_path: File.join(apk_dir, 'androidTest', "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug-androidTest.apk"),
-      apk_path: File.join(apk_dir, "#{app}Vanilla", 'debug', "org.wordpress.android-#{app}-vanilla-debug.apk"),
-      test_targets: 'notPackage org.wordpress.android.ui.screenshots',
-      results_output_dir: File.join(PROJECT_ROOT_FOLDER, 'build', 'instrumented-tests'),
-      crash_on_test_failure: false
-    )
+    test_succeeded = gradle(task: "runFlank#{app.to_s.capitalize}")
 
     annotation_ctx = "firebase-test-#{app}-vanilla-debug"
     if test_succeeded

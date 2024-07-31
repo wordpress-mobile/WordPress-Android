@@ -17,7 +17,14 @@ plugins {
 }
 
 fladle {
-    variant = "vanillaDebug"
+    configs {
+        wordpress {
+            variant.set("wordpressVanillaDebug")
+        }
+        jetpack {
+            variant.set("jetpackVanillaDebug")
+        }
+    }
     serviceAccountCredentials = rootProject.file(".configure-files/firebase.secrets.json")
     testTargets = [
             "notPackage org.wordpress.android.ui.screenshots"
