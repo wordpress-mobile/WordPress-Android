@@ -85,8 +85,7 @@ object AppReviewManager {
 
     fun launchInAppReviews(activity: Activity) {
         AppLog.d(T.UTILS, "Launching in-app reviews prompt")
-        // TODO uncomment
-        /*val manager = ReviewManagerFactory.create(activity)
+        val manager = ReviewManagerFactory.create(activity)
         val request = manager.requestReviewFlow()
         request.addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -98,7 +97,7 @@ object AppReviewManager {
             } else {
                 task.logException()
             }
-        }*/
+        }
 
         resetInAppReviewsCounters()
     }
@@ -109,7 +108,7 @@ object AppReviewManager {
      */
     fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
         return if (shouldShowRateDialog()) {
-            // TODO showRateDialog(fragmentManger)
+            showRateDialog(fragmentManger)
             true
         } else {
             false
@@ -169,11 +168,15 @@ object AppReviewManager {
      * @return true if the dialog should be shown
      */
     private fun shouldShowRateDialog(): Boolean {
-        return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
+        // On July 31, 2024, we decided to never show our custom rating dialog, defaulting to
+        // only showing the much more polished Google Play Store review dialog. We can remove
+        // all the rating-related code in a few months.
+        return false
+        /*return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
             false
         } else {
             Date().time - installDate.time >= criteriaInstallMs && Date().time - askLaterDate.time >= criteriaInstallMs
-        }
+        }*/
     }
 
     private fun showRateDialog(fragmentManger: FragmentManager) {
