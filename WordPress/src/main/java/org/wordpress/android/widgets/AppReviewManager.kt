@@ -38,7 +38,9 @@ object AppReviewManager {
     fun init(context: Context) {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
 
-        // Increment launch times
+        // Increment launch times - note that like interactions, this was used by our
+        // previous rating dialog but is no longer used. It is here in case we want
+        // to include launch times in the future.
         launchTimes = preferences.getInt(KEY_LAUNCH_TIMES, 0)
         launchTimes++
         preferences.edit().apply {
