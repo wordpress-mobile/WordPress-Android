@@ -1,20 +1,10 @@
 package org.wordpress.android.widgets
 
 import android.app.Activity
-import android.app.Dialog
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.review.ReviewManagerFactory
-import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.Note
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -39,12 +29,6 @@ object AppReviewManager {
     // app must have been installed this long before the rating dialog will appear
     private const val CRITERIA_INSTALL_DAYS: Int = 7
     private val criteriaInstallMs = TimeUnit.DAYS.toMillis(CRITERIA_INSTALL_DAYS.toLong())
-
-    // app must have been launched this many times before the rating dialog will appear
-    private const val CRITERIA_LAUNCH_TIMES: Int = 10
-
-    // user must have performed this many interactions before the rating dialog will appear
-    private const val CRITERIA_INTERACTIONS: Int = 10
 
     private var installDate = Date()
     private var askLaterDate = Date()
@@ -103,19 +87,6 @@ object AppReviewManager {
     }
 
     /**
-     * Show the rate dialog if the criteria is satisfied.
-     * @return true if shown, false otherwise.
-     */
-    fun showRateDialogIfNeeded(fragmentManger: FragmentManager): Boolean {
-        return if (shouldShowRateDialog()) {
-            showRateDialog(fragmentManger)
-            true
-        } else {
-            false
-        }
-    }
-
-    /**
      * Called from various places in the app where the user has performed a non-trivial action, such as publishing post
      * or page. We use this to avoid showing the rating dialog to uninvolved users
      */
@@ -164,114 +135,6 @@ object AppReviewManager {
     }
 
     /**
-     * Check whether the rate dialog should be shown or not.
-     * @return true if the dialog should be shown
-     */
-    private fun shouldShowRateDialog(): Boolean {
-        // On July 31, 2024, we decided to never show our custom rating dialog, defaulting to
-        // only showing the much more polished Google Play Store review dialog. We can remove
-        // all the rating-related code in a few months.
-        return false
-        /*return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
-            false
-        } else {
-            Date().time - installDate.time >= criteriaInstallMs && Date().time - askLaterDate.time >= criteriaInstallMs
-        }*/
-    }
-
-    private fun showRateDialog(fragmentManger: FragmentManager) {
-        var dialog = fragmentManger.findFragmentByTag(AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
-        if (dialog == null) {
-            dialog = AppRatingDialog()
-            dialog.show(fragmentManger, AppRatingDialog.TAG_APP_RATING_PROMPT_DIALOG)
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_SAW_PROMPT)
-
-            resetInAppReviewsCounters()
-        }
-    }
-
-    class AppRatingDialog : DialogFragment() {
-        companion object {
-            internal const val TAG_APP_RATING_PROMPT_DIALOG = "TAG_APP_RATING_PROMPT_DIALOG"
-        }
-
-        @Suppress("SwallowedException")
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            val builder = MaterialAlertDialogBuilder(requireActivity())
-            val appName = getString(R.string.app_name)
-            val title = getString(R.string.app_rating_title, appName)
-            builder.setTitle(title)
-                .setMessage(R.string.app_rating_message)
-                .setCancelable(true)
-                .setPositiveButton(R.string.app_rating_rate_now) { _, _ ->
-                    val appPackage = requireActivity().packageName
-                    val url = "market://details?id=$appPackage"
-                    try {
-                        requireActivity().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                    } catch (e: ActivityNotFoundException) {
-                        // play store app isn't on this device so open app's page in browser instead
-                        requireActivity().startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(
-                                    "http://play.google.com/store/apps/details?id=" +
-                                        requireActivity().packageName
-                                )
-                            )
-                        )
-                    }
-
-                    setOptOut()
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_RATED_APP)
-
-                    // Reset the published post counter of in-app reviews prompt flow.
-                    AppPrefs.resetPublishedPostCount()
-                }
-                .setNeutralButton(R.string.app_rating_rate_later) { _, _ ->
-                    clearSharedPreferences()
-                    storeAskLaterDate()
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECIDED_TO_RATE_LATER)
-                }
-                .setNegativeButton(R.string.app_rating_rate_never) { _, _ ->
-                    setOptOut()
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_DECLINED_TO_RATE_APP)
-
-                    doNotShowInAppReviewsPromptAgain()
-                }
-            return builder.create()
-        }
-
-        override fun onCancel(dialog: DialogInterface) {
-            super.onCancel(dialog)
-            clearSharedPreferences()
-            storeAskLaterDate()
-            AnalyticsTracker.track(AnalyticsTracker.Stat.APP_REVIEWS_CANCELLED_PROMPT)
-        }
-    }
-
-    /**
-     * Clear data other than opt-out in shared preferences - called when the "Later" is pressed or dialog is canceled.
-     */
-    private fun clearSharedPreferences() {
-        preferences.edit().remove(KEY_INSTALL_DATE)?.remove(KEY_LAUNCH_TIMES)?.remove(KEY_INTERACTIONS)?.apply()
-    }
-
-    /**
-     * Set opt out flag - the rate dialog will never be shown unless app data is cleared.
-     */
-    private fun setOptOut() {
-        preferences.edit().putBoolean(KEY_OPT_OUT, optOut)?.apply()
-        this.optOut = true
-    }
-
-    /**
-     * Set do not show in-app reviews prompt flag - the in-app reviews prompt will never be shown unless app data is
-     * cleared.
-     */
-    private fun doNotShowInAppReviewsPromptAgain() =
-        preferences.edit().putBoolean(DO_NOT_SHOW_IN_APP_REVIEWS_PROMPT, optOut)?.apply()
-
-    /**
      * Store install date - retrieved from package manager if possible.
      */
     private fun storeInstallDate(context: Context) {
@@ -284,14 +147,6 @@ object AppReviewManager {
             AppLog.e(T.UTILS, e)
         }
         preferences.edit().putLong(KEY_INSTALL_DATE, installDate.time)?.apply()
-    }
-
-    /**
-     * Store the date the user asked for being asked again later.
-     */
-    private fun storeAskLaterDate() {
-        val nextAskDate = System.currentTimeMillis()
-        preferences.edit().putLong(KEY_ASK_LATER_DATE, nextAskDate)?.apply()
     }
 
     /**
