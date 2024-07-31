@@ -25,7 +25,7 @@ fladle {
             variant.set("jetpackVanillaDebug")
         }
     }
-    serviceAccountCredentials = rootProject.file("~/.configure-files/wordpress-android/secrets/firebase.secrets.json")
+    serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
     testTargets = [
             "notPackage org.wordpress.android.ui.screenshots"
     ]
