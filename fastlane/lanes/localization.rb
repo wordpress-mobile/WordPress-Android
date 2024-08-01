@@ -195,7 +195,7 @@ platform :android do
       }
       unless skip_release_notes
         version_suffix = version.split('.').join
-        files["release_note_#{version_suffix}"] = { desc: "changelogs/default.txt", max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
+        files["release_note_#{version_suffix}"] = { desc: 'changelogs/default.txt', max_size: 500, alternate_key: "release_note_short_#{version_suffix}" }
       end
       # Add key mappings for `screenshots_*` files too
       Dir.glob('screenshot_*.txt', base: metadata_source_dir).each do |f|
