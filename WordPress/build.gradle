@@ -17,6 +17,9 @@ plugins {
 }
 
 fladle {
+    testTargets = [
+            "notPackage org.wordpress.android.ui.screenshots"
+    ]
     configs {
         wordpress {
             def app = "wordpress"
@@ -37,9 +40,6 @@ fladle {
         }
     }
     serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
-    testTargets = [
-            "notPackage org.wordpress.android.ui.screenshots"
-    ]
     devices = [
             ["model": "Pixel2.arm", "version": "30"]
     ]
