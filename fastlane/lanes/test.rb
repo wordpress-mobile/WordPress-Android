@@ -17,16 +17,15 @@ platform :android do
 
     gradle(tasks: ["WordPress:assemble#{app.to_s.capitalize}VanillaDebug", "WordPress:assemble#{app.to_s.capitalize}VanillaDebugAndroidTest"])
 
-    test_succeeded = gradle(task: "runFlank#{app.to_s.capitalize}")
-
     annotation_ctx = "firebase-test-#{app}-vanilla-debug"
-    if test_succeeded
-      sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
-    else
-      details_url = lane_context[SharedValues::FIREBASE_TEST_MORE_DETAILS_URL]
-      message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
-      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
-      UI.test_failure!(message)
+    begin
+       gradle(task: "runFlank#{app.to_s.capitalize}")
+       sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
+      rescue
+       details_url = sh('jq ".[].webLink" ~/WordPress-Android/build/instrumented-tests/matrix_ids.json -r')
+       message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
+       sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
+       UI.test_failure!(message)
     end
   end
 end
