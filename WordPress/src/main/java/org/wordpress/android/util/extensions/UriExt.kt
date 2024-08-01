@@ -5,14 +5,17 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.google.common.io.Files
+import org.wordpress.android.util.AppLog
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 
+@Suppress("ReturnCount")
 fun Uri.fileSize(context: Context): Long {
     val assetFileDescriptor = try {
         context.contentResolver.openAssetFileDescriptor(this, "r")
     } catch (e: FileNotFoundException) {
+        AppLog.e(AppLog.T.UTILS, e)
         null
     }
 
@@ -32,12 +35,8 @@ fun Uri.fileSize(context: Context): Long {
                     return@use 0L
                 }
                 cursor.moveToFirst()
-                return try {
-                    cursor.getLong(sizeIndex)
-                } catch (_: Throwable) {
-                    0L
-                }
-            } ?: 0L
+                return cursor.getLong(sizeIndex)
+            } ?: return 0L
     } else {
         return 0L
     }
@@ -64,6 +63,7 @@ fun Uri.copyToTempFile(mimeType: String, context: Context): File? {
                 } ?: return null
             }
         } catch (e: IOException) {
+            AppLog.e(AppLog.T.UTILS, e)
             return null
         }
     } ?: return null
