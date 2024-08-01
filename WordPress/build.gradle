@@ -19,10 +19,12 @@ plugins {
 fladle {
     configs {
         wordpress {
-            variant.set("wordpressVanillaDebug")
+            debugApk.set(pathForVariant("wordpress", "debugApk"))
+            instrumentationApk.set(pathForVariant("wordpress", "instrumentationApk"))
         }
         jetpack {
-            variant.set("jetpackVanillaDebug")
+            debugApk.set(pathForVariant("jetpack", "debugApk"))
+            instrumentationApk.set(pathForVariant("jetpack", "instrumentationApk"))
         }
     }
     serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
@@ -38,6 +40,18 @@ fladle {
     maxTestShards = 50
     shardTime = 120
     smartFlankGcsPath = "gs://fladle/wordpress-android/smart-flank/JUnitReport.xml"
+}
+
+String pathForVariant(String app, String type) {
+    if (!["debugApk", "instrumentationApk"].contains(type)) {
+        throw new IllegalArgumentException("Type must be 'debugApk' or 'instrumentationApk', but was '$type'")
+    }
+    String appPath = "outputs/apk/${app}Vanilla/debug"
+    String testPath = "outputs/apk/androidTest/${app}Vanilla/debug"
+
+    String path = type == "debugApk" ? appPath : testPath
+
+    return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
 }
 
 sentry {
