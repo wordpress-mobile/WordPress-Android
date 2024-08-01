@@ -19,13 +19,13 @@ platform :android do
 
     annotation_ctx = "firebase-test-#{app}-vanilla-debug"
     begin
-       gradle(task: "runFlank#{app.to_s.capitalize}")
-       sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
-      rescue
-       details_url = sh('jq ".[].webLink" ~/WordPress-Android/build/instrumented-tests/matrix_ids.json -r')
-       message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
-       sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
-       UI.test_failure!(message)
+      gradle(task: "runFlank#{app.to_s.capitalize}")
+      sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
+    rescue
+      details_url = sh('jq ".[].webLink" ~/WordPress-Android/build/instrumented-tests/matrix_ids.json -r')
+      message = "Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
+      sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
+      UI.test_failure!(message)
     end
   end
 end
