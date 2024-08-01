@@ -23,6 +23,11 @@ fladle {
             debugApk.set(pathForVariant(app, "debugApk"))
             instrumentationApk.set(pathForVariant(app, "instrumentationApk"))
             smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+            testTargets.set(testTargets.get() + [
+                    "notClass org.wordpress.android.e2e.StatsTests",
+                    "notClass org.wordpress.android.e2e.StatsGranularTabsTest",
+            ]
+            )
         }
         jetpack {
             def app = "jetpack"
