@@ -148,34 +148,48 @@ private fun AttachmentsSection(
     onChooseMediaClick: () -> Unit,
     onRemoveMediaClick: (Uri) -> Unit
 ) {
-    Box {
-        Column(
-            modifier = Modifier.clickable {
-                onChooseMediaClick()
-            }
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_attachment_link),
-                contentDescription = null // decorative element
-            )
-            Text(
-                text = stringResource(R.string.feedback_form_add_attachments),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = V_PADDING.dp,
-                        horizontal = H_PADDING.dp
-                    ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
-    }
+    AttachmentButton(
+        onChooseMediaClick = onChooseMediaClick
+    )
 
     attachments.value.forEach { attachment ->
         AttachmentRow(attachment) {
             onRemoveMediaClick(attachment.uri)
         }
+    }
+}
+
+@Composable
+private fun AttachmentButton(
+    onChooseMediaClick: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onChooseMediaClick()
+            }
+            .padding(
+                vertical = V_PADDING.dp,
+                horizontal = H_PADDING.dp
+            ),
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_attachment_link),
+            tint = MaterialTheme.colorScheme.primary,
+            contentDescription = null // decorative element
+        )
+        Text(
+            text = stringResource(R.string.feedback_form_add_attachments),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = 10.dp
+                ),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
     }
 }
 
@@ -273,7 +287,7 @@ private fun Screen(
 @Composable
 private fun FeedbackFormScreenPreview() {
     val attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
-    val isProgressShowing =  MutableStateFlow<Boolean?>(null)
+    val isProgressShowing = MutableStateFlow<Boolean?>(null)
 
     FeedbackFormScreen(
         messageText = null,
