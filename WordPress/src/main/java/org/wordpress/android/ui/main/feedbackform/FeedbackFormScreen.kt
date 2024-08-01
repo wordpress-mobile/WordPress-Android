@@ -64,10 +64,13 @@ fun FeedbackFormScreen(
                 onMessageChanged(it)
             },
         )
-        AttachmentsSection(
-            attachments = attachments,
-            onChooseMediaClick = { onChooseMediaClick() },
-            onRemoveMediaClick = { onRemoveMediaClick(it) }
+        attachments.value.forEach { attachment ->
+            AttachmentRow(attachment) {
+                onRemoveMediaClick(attachment.uri)
+            }
+        }
+        AttachmentButton(
+            onChooseMediaClick = onChooseMediaClick
         )
         SubmitButton(
             isEnabled = message.isNotEmpty(),
@@ -138,23 +141,6 @@ private fun SubmitButton(
                     text = stringResource(R.string.submit).uppercase(),
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun AttachmentsSection(
-    attachments: State<List<FeedbackFormAttachment>>,
-    onChooseMediaClick: () -> Unit,
-    onRemoveMediaClick: (Uri) -> Unit
-) {
-    AttachmentButton(
-        onChooseMediaClick = onChooseMediaClick
-    )
-
-    attachments.value.forEach { attachment ->
-        AttachmentRow(attachment) {
-            onRemoveMediaClick(attachment.uri)
         }
     }
 }
