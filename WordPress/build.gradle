@@ -30,6 +30,7 @@ sentry {
     (if enabled in WPCrashLoggingDataProvider).
     */
     ignoredBuildTypes = ["debug"]
+    telemetry = false
 }
 
 repositories {
