@@ -136,60 +136,46 @@ class FeedbackFormViewModel @Inject constructor(
     @Suppress("unused")
     fun addAttachment(uri: Uri, context: Context) {
         val list = _attachments.value
-        if (list.size >= MAX_ATTACHMENTS) {
-            showToast(R.string.feedback_form_max_attachments_reached)
-            return
-        }
-
         val newList = list.toMutableList()
-        if (newList.any { it.uri == uri }) {
-            showToast(R.string.feedback_form_attachment_already_added)
-            return
-        }
-
         val size = uri.fileSize(context)
-        if (size > MAX_SINGLE_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_attachment_too_large)
-            return
-        }
-
-        if (totalAttachmentSize() + size > MAX_TOTAL_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_total_attachments_too_large)
-            return
-        }
         val mimeType = uri.mimeType(context)
         val file = uri.copyToTempFile(mimeType, context)
-        if (file == null) {
+
+        if (list.size >= MAX_ATTACHMENTS) {
+            showToast(R.string.feedback_form_max_attachments_reached)
+        } else if (newList.any { it.uri == uri }) {
+            showToast(R.string.feedback_form_attachment_already_added)
+        } else if (size > MAX_SINGLE_ATTACHMENT_SIZE) {
+            showToast(R.string.feedback_form_attachment_too_large)
+        } else if (totalAttachmentSize() + size > MAX_TOTAL_ATTACHMENT_SIZE) {
+            showToast(R.string.feedback_form_total_attachments_too_large)
+        } else if (file == null) {
             showToast(R.string.feedback_form_unable_to_create_tempfile)
-            return
-        }
-
-        if (!feedbackFormUtils.isSupportedAttachmentType(mimeType)) {
+        } else if (!feedbackFormUtils.isSupportedAttachmentType(mimeType)) {
             showToast(R.string.feedback_form_unsupported_attachment)
-            return
-        }
+        } else {
+            val attachmentType = when {
+                mimeType.startsWith("image") -> FeedbackFormAttachmentType.IMAGE
+                mimeType.startsWith("video") -> FeedbackFormAttachmentType.VIDEO
+                mimeType.startsWith("audio") -> FeedbackFormAttachmentType.AUDIO
+                else -> FeedbackFormAttachmentType.DOCUMENT
+            }
+            val sizeFmt = uri.sizeFmt(context)
+            val counter = newList.filter { it.attachmentType == attachmentType }.size + 1
+            val displayName = "${attachmentType}_$counter ($sizeFmt)"
 
-        val attachmentType = when {
-            mimeType.startsWith("image") -> FeedbackFormAttachmentType.IMAGE
-            mimeType.startsWith("video") -> FeedbackFormAttachmentType.VIDEO
-            mimeType.startsWith("audio") -> FeedbackFormAttachmentType.AUDIO
-            else -> FeedbackFormAttachmentType.DOCUMENT
-        }
-        val sizeFmt = uri.sizeFmt(context)
-        val counter = newList.filter { it.attachmentType == attachmentType }.size + 1
-        val displayName = "${attachmentType}_$counter ($sizeFmt)"
-
-        newList.add(
-            FeedbackFormAttachment(
-                uri = uri,
-                tempFile = file,
-                size = size,
-                displayName = displayName,
-                mimeType = mimeType,
-                attachmentType = attachmentType
+            newList.add(
+                FeedbackFormAttachment(
+                    uri = uri,
+                    tempFile = file,
+                    size = size,
+                    displayName = displayName,
+                    mimeType = mimeType,
+                    attachmentType = attachmentType
+                )
             )
-        )
-        _attachments.value = newList.toList()
+            _attachments.value = newList.toList()
+        }
     }
 
     fun onRemoveMediaClick(uri: Uri) {
