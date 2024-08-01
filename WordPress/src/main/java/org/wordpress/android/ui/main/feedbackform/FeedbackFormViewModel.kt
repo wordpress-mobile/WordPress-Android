@@ -129,7 +129,7 @@ class FeedbackFormViewModel @Inject constructor(
     fun onChooseMediaClick(activity: Activity) {
         mediaPickerLauncher.showPhotoPickerForResult(
             activity,
-            browserType = MediaBrowserType.FEEDBACK_FORM_SINGLE_MEDIA_PICKER,
+            browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
             site = selectedSiteRepository.getSelectedSite(),
             localPostId = null
         )
