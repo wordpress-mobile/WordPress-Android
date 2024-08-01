@@ -34,6 +34,13 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                         },
                         onCloseClick = {
                             viewModel.onCloseClick(this@FeedbackFormActivity)
+                        },
+                        attachments = viewModel.attachments.collectAsState(),
+                        onChooseMediaClick = {
+                            viewModel.onChooseMediaClick(this@FeedbackFormActivity)
+                        },
+                        onRemoveMediaClick = {
+                            viewModel.onRemoveMediaClick(it)
                         }
                     )
                 }

@@ -2,13 +2,19 @@ package org.wordpress.android.ui.main.feedbackform
 
 import android.content.Context
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,9 +45,12 @@ import org.wordpress.android.ui.compose.theme.M3Theme
 fun FeedbackFormScreen(
     messageText: State<String>?,
     isProgressShowing: State<Boolean?>,
+    attachments: State<List<FeedbackFormAttachment>>,
     onMessageChanged: (String) -> Unit,
     onSubmitClick: (context: Context) -> Unit,
-    onCloseClick: (context: Context) -> Unit
+    onCloseClick: (context: Context) -> Unit,
+    onChooseMediaClick: () -> Unit,
+    onRemoveMediaClick: (uri: Uri) -> Unit,
 ) {
     val context = LocalContext.current
     val message = messageText?.value ?: ""
@@ -50,6 +60,11 @@ fun FeedbackFormScreen(
             onMessageChanged = {
                 onMessageChanged(it)
             },
+        )
+        AttachmentsSection(
+            attachments = attachments,
+            onChooseMediaClick = { onChooseMediaClick() },
+            onRemoveMediaClick = { onRemoveMediaClick(it) }
         )
         SubmitButton(
             isEnabled = message.isNotEmpty(),
@@ -118,6 +133,89 @@ private fun SubmitButton(
             ) {
                 Text(
                     text = stringResource(R.string.submit).uppercase(),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AttachmentsSection(
+    attachments: State<List<FeedbackFormAttachment>>,
+    onChooseMediaClick: () -> Unit,
+    onRemoveMediaClick: (Uri) -> Unit
+) {
+    Box {
+        Column(
+            modifier = Modifier.clickable {
+                onChooseMediaClick()
+            }
+        ) {
+            Text(
+                text = stringResource(R.string.feedback_form_add_attachments),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = V_PADDING.dp,
+                        horizontal = H_PADDING.dp
+                    ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+    }
+
+    attachments.value.forEach { attachment ->
+        AttachmentRow(attachment) {
+            onRemoveMediaClick(attachment.uri)
+        }
+    }
+}
+
+@Composable
+private fun AttachmentRow(
+    attachment: FeedbackFormAttachment,
+    onDeleteClick: (Uri) -> Unit = {},
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = H_PADDING.dp,
+                vertical = 2.dp
+            ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+        ) {
+            Text(
+                text = attachment.displayName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.0f, true)
+                    .padding(
+                        vertical = V_PADDING.dp,
+                        horizontal = H_PADDING.dp
+                    )
+            )
+            IconButton(
+                onClick = { onDeleteClick(attachment.uri) },
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .weight(0.2f, false)
+                        .align(Alignment.CenterVertically)
+                        .size(24.dp),
+                    imageVector = Icons.Filled.Close,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    contentDescription = null,
                 )
             }
         }

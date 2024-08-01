@@ -16,7 +16,9 @@ import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
@@ -34,6 +36,7 @@ class FeedbackFormViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val feedbackFormUtils: FeedbackFormUtils,
+    private val mediaPickerLauncher: MediaPickerLauncher,
 ) : ScopedViewModel(mainDispatcher) {
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
@@ -121,6 +124,15 @@ class FeedbackFormViewModel @Inject constructor(
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 
+    fun onChooseMediaClick(activity: Activity) {
+        mediaPickerLauncher.showPhotoPickerForResult(
+            activity,
+            browserType = MediaBrowserType.BROWSER,
+            site = selectedSiteRepository.getSelectedSite(),
+            localPostId = null
+        )
+    }
+
     fun addAttachment(uri: Uri, context: Context) {
         val list = _attachments.value
         if (list.size >= MAX_ATTACHMENTS) {
@@ -179,7 +191,7 @@ class FeedbackFormViewModel @Inject constructor(
         _attachments.value = newList.toList()
     }
 
-    fun removeAttachment(uri: Uri) {
+    fun onRemoveMediaClick(uri: Uri) {
         val list = _attachments.value
         val newList = list.toMutableList()
         if (newList.removeIf { it.uri == uri }) {

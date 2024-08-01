@@ -1140,7 +1140,7 @@
     <string name="feedback_form_total_attachments_too_large">The total size of the attachments must be 150MB or smaller</string>
     <string name="feedback_form_attachment_already_added">Attachment already added</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
-
+    <string name="feedback_form_add_attachments">Add attachments</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
