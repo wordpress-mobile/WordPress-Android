@@ -43,6 +43,7 @@ fun Uri.fileSize(context: Context): Long {
     }
 }
 
+@Suppress("NestedBlockDepth", "ReturnCount")
 fun Uri.copyToTempFile(mimeType: String, context: Context): File? {
     this.fileName(context)?.let { name ->
         try {
