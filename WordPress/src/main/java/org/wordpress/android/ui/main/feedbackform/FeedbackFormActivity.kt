@@ -26,6 +26,7 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                     FeedbackFormScreen(
                         messageText = viewModel.messageText.collectAsState(),
                         isProgressShowing = viewModel.isProgressShowing.collectAsState(),
+                        attachments = viewModel.attachments.collectAsState(),
                         onMessageChanged = {
                             viewModel.updateMessageText(it)
                         },
@@ -35,7 +36,6 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                         onCloseClick = {
                             viewModel.onCloseClick(this@FeedbackFormActivity)
                         },
-                        attachments = viewModel.attachments.collectAsState(),
                         onChooseMediaClick = {
                             viewModel.onChooseMediaClick(this@FeedbackFormActivity)
                         },

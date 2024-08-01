@@ -32,12 +32,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.M3Theme
 
@@ -151,6 +154,10 @@ private fun AttachmentsSection(
                 onChooseMediaClick()
             }
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_attachment_link),
+                contentDescription = null // decorative element
+            )
             Text(
                 text = stringResource(R.string.feedback_form_add_attachments),
                 modifier = Modifier
@@ -265,20 +272,18 @@ private fun Screen(
 )
 @Composable
 private fun FeedbackFormScreenPreview() {
-    val content: @Composable () -> Unit = @Composable {
-        MessageSection(
-            messageText = null,
-            onMessageChanged = {},
-        )
-        SubmitButton(
-            isEnabled = true,
-            isProgressShowing = false,
-            onClick = { }
-        )
-    }
-    Screen(
-        content = content,
+    val attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
+    val isProgressShowing =  MutableStateFlow<Boolean?>(null)
+
+    FeedbackFormScreen(
+        messageText = null,
+        isProgressShowing = isProgressShowing.collectAsState(),
+        attachments = attachments.collectAsState(),
+        onMessageChanged = {},
+        onSubmitClick = {},
         onCloseClick = {},
+        onChooseMediaClick = {},
+        onRemoveMediaClick = {}
     )
 }
 
