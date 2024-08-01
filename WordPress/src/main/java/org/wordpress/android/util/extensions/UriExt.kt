@@ -10,6 +10,9 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 
+/**
+ * Returns the file size in bytes from a Uri
+ */
 @Suppress("ReturnCount")
 fun Uri.fileSize(context: Context): Long {
     val assetFileDescriptor = try {
@@ -42,6 +45,9 @@ fun Uri.fileSize(context: Context): Long {
     }
 }
 
+/**
+ * Copies the Uri to a temporary file and returns the file
+ */
 @Suppress("NestedBlockDepth", "ReturnCount")
 fun Uri.copyToTempFile(mimeType: String, context: Context): File? {
     this.fileName(context)?.let { name ->
@@ -73,6 +79,9 @@ fun Uri.mimeType(context: Context): String {
     return context.contentResolver.getType(this) ?: ""
 }
 
+/**
+ * Returns a human-readable file size, ex: "1.5 MB"
+ */
 fun Uri.sizeFmt(context: Context): String {
     return android.text.format.Formatter.formatShortFileSize(
         context,
@@ -80,6 +89,9 @@ fun Uri.sizeFmt(context: Context): String {
     )
 }
 
+/**
+ * Returns the file name from a Uri without any path info
+ */
 fun Uri.fileName(context: Context): String? {
     return context.contentResolver.query(this, null, null, null, null)?.use {
         val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
