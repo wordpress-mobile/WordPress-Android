@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
@@ -35,6 +37,7 @@ class FeedbackFormViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val zendeskHelper: ZendeskHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
     private val feedbackFormUtils: FeedbackFormUtils,
     private val mediaPickerLauncher: MediaPickerLauncher,
@@ -74,7 +77,7 @@ class FeedbackFormViewModel @Inject constructor(
 
                 override fun onError(errorMessage: String?) {
                     _isProgressShowing.value = false
-                    onFailure(context, errorMessage)
+                    onFailure(errorMessage)
                 }
             })
     }
@@ -120,9 +123,9 @@ class FeedbackFormViewModel @Inject constructor(
         (context as? Activity)?.finish()
     }
 
-    private fun onFailure(context: Context, errorMessage: String? = null) {
-        val message = context.getString(R.string.feedback_form_failure) + "\n$errorMessage"
-        showToast(message)
+    private fun onFailure(errorMessage: String? = null) {
+        appLogWrapper.e(AppLog.T.SUPPORT, "Failed to submit feedback form: $errorMessage")
+        showToast(R.string.feedback_form_failure)
     }
 
     fun onChooseMediaClick(activity: Activity) {
@@ -207,12 +210,6 @@ class FeedbackFormViewModel @Inject constructor(
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
-        }
-    }
-
-    private fun showToast(message: String) {
-        viewModelScope.launch {
-            toastUtilsWrapper.showToast(message)
         }
     }
 
