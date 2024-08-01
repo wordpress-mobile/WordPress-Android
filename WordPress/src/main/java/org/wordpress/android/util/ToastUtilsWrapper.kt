@@ -9,4 +9,7 @@ import javax.inject.Inject
 class ToastUtilsWrapper @Inject constructor() {
     fun showToast(@StringRes messageRes: Int) =
         ToastUtils.showToast(WordPress.getContext(), messageRes)
+
+    fun showToast(message: String) =
+        ToastUtils.showToast(WordPress.getContext(), message)
 }

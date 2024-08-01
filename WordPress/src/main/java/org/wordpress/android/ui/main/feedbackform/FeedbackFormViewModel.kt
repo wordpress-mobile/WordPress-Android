@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -117,13 +116,13 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     private fun onSuccess(context: Context) {
-        Toast.makeText(context, R.string.feedback_form_success, Toast.LENGTH_LONG).show()
+        showToast(R.string.feedback_form_success)
         (context as? Activity)?.finish()
     }
 
     private fun onFailure(context: Context, errorMessage: String? = null) {
         val message = context.getString(R.string.feedback_form_failure) + "\n$errorMessage"
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        showToast(message)
     }
 
     fun onChooseMediaClick(activity: Activity) {
@@ -208,6 +207,12 @@ class FeedbackFormViewModel @Inject constructor(
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
+        }
+    }
+
+    private fun showToast(message: String) {
+        viewModelScope.launch {
+            toastUtilsWrapper.showToast(message)
         }
     }
 
