@@ -127,12 +127,13 @@ class FeedbackFormViewModel @Inject constructor(
     fun onChooseMediaClick(activity: Activity) {
         mediaPickerLauncher.showPhotoPickerForResult(
             activity,
-            browserType = MediaBrowserType.BROWSER,
+            browserType = MediaBrowserType.FEEDBACK_FORM_SINGLE_MEDIA_PICKER,
             site = selectedSiteRepository.getSelectedSite(),
             localPostId = null
         )
     }
 
+    @Suppress("unused")
     fun addAttachment(uri: Uri, context: Context) {
         val list = _attachments.value
         if (list.size >= MAX_ATTACHMENTS) {

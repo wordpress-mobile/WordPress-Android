@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.theme.M3Theme
+import java.io.File
 
 @Composable
 fun FeedbackFormScreen(
@@ -64,14 +65,14 @@ fun FeedbackFormScreen(
                 onMessageChanged(it)
             },
         )
+        AttachmentButton(
+            onChooseMediaClick = onChooseMediaClick
+        )
         attachments.value.forEach { attachment ->
             AttachmentRow(attachment) {
                 onRemoveMediaClick(attachment.uri)
             }
         }
-        AttachmentButton(
-            onChooseMediaClick = onChooseMediaClick
-        )
         SubmitButton(
             isEnabled = message.isNotEmpty(),
             isProgressShowing = isProgressShowing.value,
@@ -272,7 +273,15 @@ private fun Screen(
 )
 @Composable
 private fun FeedbackFormScreenPreview() {
-    val attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
+    val attachment = FeedbackFormAttachment(
+        uri = Uri.parse("https://via.placeholder.com/150"),
+        attachmentType = FeedbackFormAttachmentType.IMAGE,
+        size = 123456789,
+        displayName = "attachment.jpg",
+        mimeType = "image/jpeg",
+        tempFile = File("/tmp/attachment.jpg")
+    )
+    val attachments = MutableStateFlow(listOf(attachment))
     val isProgressShowing = MutableStateFlow<Boolean?>(null)
 
     FeedbackFormScreen(
