@@ -313,7 +313,6 @@ platform :android do
     UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
     version_name = current_release_version
-    build_code = current_build_code
     download_metadata_strings(version: version_name)
 
     push_to_git_remote(tags: false)
