@@ -277,15 +277,16 @@ private fun FeedbackFormScreenPreview() {
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
-        displayName = "attachment.jpg",
+        displayName = "attachment.jpg (1.2 MB)",
         mimeType = "image/jpeg",
         tempFile = File("/tmp/attachment.jpg")
     )
     val attachments = MutableStateFlow(listOf(attachment))
     val isProgressShowing = MutableStateFlow<Boolean?>(null)
+    val messageText = MutableStateFlow("I love this app!")
 
     FeedbackFormScreen(
-        messageText = null,
+        messageText = messageText.collectAsState(),
         isProgressShowing = isProgressShowing.collectAsState(),
         attachments = attachments.collectAsState(),
         onMessageChanged = {},
