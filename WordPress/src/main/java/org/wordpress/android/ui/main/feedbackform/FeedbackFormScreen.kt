@@ -222,7 +222,7 @@ private fun AttachmentRow(
                         .align(Alignment.CenterVertically)
                         .size(24.dp),
                     imageVector = Icons.Filled.Close,
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null,
                 )
             }
