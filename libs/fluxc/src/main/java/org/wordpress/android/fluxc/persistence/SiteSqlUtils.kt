@@ -107,7 +107,7 @@ class SiteSqlUtils
      * 5. Exists in the DB, originally an XML-RPC site, and matches by XMLRPC_URL -> UPDATE
      * 6. Not matching any previous cases -> INSERT
      */
-    @Suppress("LongMethod", "ReturnCount")
+    @Suppress("LongMethod", "ReturnCount", "ComplexMethod")
     @Throws(DuplicateSiteException::class)
     fun insertOrUpdateSite(site: SiteModel?): Int {
         if (site == null) {
@@ -172,12 +172,14 @@ class SiteSqlUtils
                     .equals(SiteModelTable.XMLRPC_URL, forcedHttpXmlRpcUrl)
                     .or().equals(SiteModelTable.XMLRPC_URL, forcedHttpsXmlRpcUrl)
                     .endGroup()
-                    .endWhere().asModel
-            if (!siteResult.isEmpty()) {
+                    .endWhere()
+                    .asModel
+            if (siteResult.isNotEmpty()) {
                 AppLog.d(DB, "Site found using XML-RPC url: " + site.xmlRpcUrl)
                 // Four possibilities here:
-                // 1. DB site is WP.com, new site is WP.com:
-                // Something really weird is happening, this should have been caught earlier --> DuplicateSiteException
+                // 1. DB site is WP.com, new site is WP.com with different siteIds:
+                // The site could be having an "Identity Crisis", while this should be fixed on the site itself,
+                // it shouldn't block sign-in -> proceed
                 // 2. DB site is WP.com, new site is XML-RPC:
                 // It looks like an existing Jetpack-connected site over the REST API was added again as an XML-RPC
                 // Wed don't allow this --> DuplicateSiteException
@@ -186,7 +188,13 @@ class SiteSqlUtils
                 // 4. DB site is XML-RPC, new site is XML-RPC:
                 // An existing self-hosted site was logged-into again, and we couldn't identify it by URL or
                 // by WP.com site ID + URL --> proceed
-                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST) {
+                if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST && site.origin == SiteModel.ORIGIN_WPCOM_REST) {
+                    AppLog.d(
+                        DB,
+                        "Duplicate WPCom sites with same URLs, it could be an Identity Crisis, insert both sites"
+                    )
+                    siteResult = emptyList()
+                } else if (siteResult[0].origin == SiteModel.ORIGIN_WPCOM_REST) {
                     AppLog.d(DB, "Site is a duplicate")
                     throw DuplicateSiteException
                 }
