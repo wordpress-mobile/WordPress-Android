@@ -31,23 +31,20 @@ if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
 fi
 
 echo "--- 🚦 Report Tests Status"
-path_pattern="*/build/test-results/*/*.xml"
-results_files=()
-while IFS= read -r -d '' file; do
-  results_files+=("$file")
-done < <(find . -path "$path_pattern" -type f -name "*.xml" -print0)
+results_file="WooCommerce/build/test-results/merged-test-results.xml"
 
-for file in "${results_files[@]}"; do
-  if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
-    annotate_test_failures "$file" --slack "build-and-ship"
-  else
-    annotate_test_failures "$file"
-  fi
-done
+# Merge JUnit results into a single file (for performance reasons with reporting)
+merge_junit -d ${test_log_dir%/*} -o $results_file
+
+if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
+  annotate_test_failures "$results_file" --slack "build-and-ship"
+else
+  annotate_test_failures "$results_file"
+fi
 
 echo "--- 🧪 Copying test logs for test collector"
 mkdir buildkite-test-analytics
-cp $test_log_dir buildkite-test-analytics
+cp $results_file buildkite-test-analytics
 
 echo "--- ⚒️ Uploading code coverage"
 .buildkite/commands/upload-code-coverage.sh $code_coverage_report
