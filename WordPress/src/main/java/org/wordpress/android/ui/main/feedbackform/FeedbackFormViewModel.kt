@@ -98,7 +98,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     fun onCloseClick(context: Context) {
         (context as? Activity)?.let { activity ->
-            if (_messageText.value.isEmpty()) {
+            if (_messageText.value.isEmpty() && _attachments.value.isEmpty()) {
                 activity.finish()
             } else {
                 confirmDiscard(activity)
