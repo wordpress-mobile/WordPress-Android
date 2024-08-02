@@ -140,12 +140,8 @@ class FeedbackFormViewModel @Inject constructor(
     fun onPhotoPickerResult(context: Context, data: Intent) {
         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
-            val uris: MutableList<Uri> = ArrayList(stringArray?.size ?: 0)
             stringArray?.forEach { stringUri ->
-                uris.add(Uri.parse(stringUri))
-            }
-            for (uri in uris) {
-                addAttachment(context, uri)
+                addAttachment(context, Uri.parse(stringUri))
             }
         }
     }
@@ -167,14 +163,13 @@ class FeedbackFormViewModel @Inject constructor(
             showToast(R.string.feedback_form_total_attachments_too_large)
         } else if (file == null) {
             showToast(R.string.feedback_form_unable_to_create_tempfile)
-        } else if (!feedbackFormUtils.isSupportedAttachmentType(mimeType)) {
+        } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
             showToast(R.string.feedback_form_unsupported_attachment)
         } else {
-            val attachmentType = when {
-                mimeType.startsWith("image") -> FeedbackFormAttachmentType.IMAGE
-                mimeType.startsWith("video") -> FeedbackFormAttachmentType.VIDEO
-                mimeType.startsWith("audio") -> FeedbackFormAttachmentType.AUDIO
-                else -> FeedbackFormAttachmentType.DOCUMENT
+            val attachmentType = if (mimeType.startsWith("video")) {
+                FeedbackFormAttachmentType.VIDEO
+            } else {
+                FeedbackFormAttachmentType.IMAGE
             }
             val sizeFmt = uri.sizeFmt(context)
             val counter = newList.filter { it.attachmentType == attachmentType }.size + 1

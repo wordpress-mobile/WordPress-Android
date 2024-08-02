@@ -15,8 +15,6 @@ data class FeedbackFormAttachment(
 enum class FeedbackFormAttachmentType {
     IMAGE,
     VIDEO,
-    AUDIO,
-    DOCUMENT
 }
 
 /**
