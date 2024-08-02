@@ -90,7 +90,7 @@ class WCProductModelTest {
 
         assertThat(map).containsKey(BundleMetadataKeys.BUNDLE_MAX_SIZE)
         assertThat(map).doesNotContainKey(BundleMetadataKeys.BUNDLE_MIN_SIZE)
-        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MAX_SIZE).value).isEqualTo("5")
+        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MAX_SIZE).valueAsString).isEqualTo("5")
     }
     @Test
     fun `Bundled product with min size is serialized correctly`() {
@@ -104,7 +104,7 @@ class WCProductModelTest {
 
         assertThat(map).containsKey(BundleMetadataKeys.BUNDLE_MIN_SIZE)
         assertThat(map).doesNotContainKey(BundleMetadataKeys.BUNDLE_MAX_SIZE)
-        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MIN_SIZE).value).isEqualTo("5")
+        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MIN_SIZE).valueAsString).isEqualTo("5")
     }
 
     @Test
@@ -119,8 +119,8 @@ class WCProductModelTest {
 
         assertThat(map).containsKey(BundleMetadataKeys.BUNDLE_MIN_SIZE)
         assertThat(map).containsKey(BundleMetadataKeys.BUNDLE_MAX_SIZE)
-        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MAX_SIZE).value).isEqualTo("5")
-        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MIN_SIZE).value).isEqualTo("5")
+        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MAX_SIZE).valueAsString).isEqualTo("5")
+        assertThat(map.getValue(BundleMetadataKeys.BUNDLE_MIN_SIZE).valueAsString).isEqualTo("5")
     }
 
     @Test
