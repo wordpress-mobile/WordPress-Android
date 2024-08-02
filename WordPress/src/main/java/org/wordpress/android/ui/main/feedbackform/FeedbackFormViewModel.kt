@@ -92,6 +92,9 @@ class FeedbackFormViewModel @Inject constructor(
             selectedSite = selectedSiteRepository.getSelectedSite(),
             extraTags = listOf("in_app_feedback"),
             requestDescription = _messageText.value,
+            attachmentIds = _attachments.value.filter { !it.zendeskId.isNullOrEmpty() }.map {
+                it.zendeskId!!
+            },
             callback = callback
         )
     }

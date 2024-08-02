@@ -10,20 +10,10 @@ data class FeedbackFormAttachment(
     val mimeType: String,
     val attachmentType: FeedbackFormAttachmentType,
     val size: Long,
+    val zendeskId: String? = null
 )
 
 enum class FeedbackFormAttachmentType {
     IMAGE,
     VIDEO,
 }
-
-/**
- * TODO
- *
-fun FeedbackFormAttachment.toZenDeskAttachment(): SupportNetworkService.ZenDeskSupportTicket.Attachment {
-    return SupportNetworkService.ZenDeskSupportTicket.Attachment(
-        file = this.tempFile,
-        type = this.mimeType
-    )
-}
-*/

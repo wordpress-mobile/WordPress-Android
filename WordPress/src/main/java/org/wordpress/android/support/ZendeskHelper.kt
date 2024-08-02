@@ -172,6 +172,7 @@ class ZendeskHelper(
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>?,
+        attachmentIds: List<String>?,
         requestDescription: String,
         callback: CreateRequestCallback
     ) {
@@ -186,6 +187,7 @@ class ZendeskHelper(
             ticketFormId = TicketFieldIds.form
             tags = buildZendeskTags(siteStore.sites, selectedSite, origin ?: Origin.UNKNOWN, extraTags)
                 .plus("DocsBot")
+            attachments = attachmentIds
         }
 
         Support.INSTANCE.provider()?.requestProvider()?.createRequest(request, object : ZendeskCallback<Request>() {
