@@ -31,7 +31,8 @@ if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
 fi
 
 echo "--- 🚦 Report Tests Status"
-results_file="WooCommerce/build/test-results/merged-test-results.xml"
+test_results_dir=$(echo "$test_log_dir" | sed 's|\(.*test-results\)/.*|\1|')
+results_file="$test_results_dir/merged-test-results.xml"
 
 # Merge JUnit results into a single file (for performance reasons with reporting)
 merge_junit -d ${test_log_dir%/*} -o $results_file
