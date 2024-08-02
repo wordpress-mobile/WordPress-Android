@@ -21,7 +21,7 @@ platform :android do
     begin
       gradle(task: "runFlank#{app.to_s.capitalize}")
       sh("buildkite-agent annotation remove --context '#{annotation_ctx}' || true") if is_ci?
-    rescue
+    rescue StandardError
       details_url = sh('jq ".[].webLink" ../build/instrumented-tests/matrix_ids.json -r')
       message = "#{app} Firebase Tests failed. Failure details can be seen [here in Firebase Console](#{details_url})"
       sh('buildkite-agent', 'annotate', message, '--style', 'error', '--context', annotation_ctx) if is_ci?
