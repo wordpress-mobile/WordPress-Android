@@ -168,11 +168,13 @@ object AppReviewManager {
      * @return true if the dialog should be shown
      */
     private fun shouldShowRateDialog(): Boolean {
-        return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
+        // as of 25.2.1 we no longer want to ever show the rating dialog
+        return false
+        /*return if (optOut or (launchTimes < CRITERIA_LAUNCH_TIMES) or (interactions < CRITERIA_INTERACTIONS)) {
             false
         } else {
             Date().time - installDate.time >= criteriaInstallMs && Date().time - askLaterDate.time >= criteriaInstallMs
-        }
+        }*/
     }
 
     private fun showRateDialog(fragmentManger: FragmentManager) {
