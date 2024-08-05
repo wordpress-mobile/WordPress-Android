@@ -172,9 +172,9 @@ class ZendeskHelper(
         origin: Origin?,
         selectedSite: SiteModel?,
         extraTags: List<String>?,
-        attachmentIds: List<String>?,
         requestDescription: String,
-        callback: CreateRequestCallback
+        callback: CreateRequestCallback,
+        attachmentIds: List<String> = emptyList()
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
