@@ -12,24 +12,30 @@ import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
 
+/**
+ * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
+ */
 class ZendeskUploadHelper {
-    suspend fun uploadFile(
+    fun uploadFile(
         context: Context,
         uri: Uri,
     ): zendesk.support.Attachment? {
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
-            AppLog.e(AppLog.T.SUPPORT, "Upload provider is null")
+            AppLog.e(T.SUPPORT, "Upload provider is null")
             return null
         }
 
-        val file = File(uri.fileName(context))
-        val mimeType = uri.mimeType(context)
+        val file = uri.fileName(context)?.let { File(it) }
+        if (file == null) {
+            AppLog.e(T.SUPPORT, "Upload file is null")
+            return null
+        }
 
         uploadProvider.uploadAttachment(
             file.name,
             file,
-            mimeType,
+            uri.mimeType(context),
             object : ZendeskCallback<UploadResponse>() {
                 override fun onSuccess(result: UploadResponse) {
                     // return result.attachment
@@ -46,7 +52,7 @@ class ZendeskUploadHelper {
         return null
     }
 
-    suspend fun uploadFiles(
+    fun uploadFiles(
         context: Context,
         uris: List<Uri>,
     ): zendesk.support.Attachment? {
