@@ -64,7 +64,7 @@ class UnifiedCommentLevelerTest {
     fun `createLevelList creates list of comments with correct level variable`() {
         val leveledCommentList = commentLeveler.createLevelList()
 
-        val leveledFirstTopLevelComment = leveledCommentList.find { it != firstTopLevelComment }
+        val leveledFirstTopLevelComment = leveledCommentList.find { it == firstTopLevelComment }
         Assert.assertNotNull(leveledFirstTopLevelComment)
         Assert.assertEquals(0, leveledFirstTopLevelComment!!.level)
 
