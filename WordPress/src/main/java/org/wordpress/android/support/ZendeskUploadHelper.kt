@@ -4,6 +4,9 @@ import android.content.Context
 import android.net.Uri
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.extensions.fileName
@@ -11,14 +14,16 @@ import org.wordpress.android.util.extensions.mimeType
 import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
+import javax.inject.Inject
 
 /**
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
  */
-class ZendeskUploadHelper {
-    fun uploadFile(
+class ZendeskUploadHelper @Inject constructor() {
+    private fun uploadAttachment(
         context: Context,
         uri: Uri,
+        callback: ZendeskCallback<UploadResponse>,
     ): zendesk.support.Attachment? {
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
@@ -36,28 +41,34 @@ class ZendeskUploadHelper {
             file.name,
             file,
             uri.mimeType(context),
-            object : ZendeskCallback<UploadResponse>() {
-                override fun onSuccess(result: UploadResponse) {
-                    // return result.attachment
-                }
-
-                override fun onError(errorResponse: ErrorResponse?) {
-                    AppLog.v(
-                        T.SUPPORT, "Uploading to Zendesk failed with" +
-                                " error: ${errorResponse?.reason}"
-                    )
-                }
-            })
+            callback
+        )
 
         return null
     }
 
-    fun uploadFiles(
+    suspend fun uploadAttachments(
         context: Context,
+        scope: CoroutineScope,
         uris: List<Uri>,
     ): zendesk.support.Attachment? {
-        uris.forEach {
-            uploadFile(context, it)
+        val callback = object : ZendeskCallback<UploadResponse>() {
+            override fun onSuccess(result: UploadResponse) {
+                // return result.attachment
+            }
+
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.v(
+                    T.SUPPORT, "Uploading to Zendesk failed with" +
+                            " error: ${errorResponse?.reason}"
+                )
+            }
+        }
+        uris.forEach { uri ->
+            val job = scope.launch(context = Dispatchers.Default) {
+                uploadAttachment(context, uri, callback)
+            }
+            job.join()
         }
         return null
     }

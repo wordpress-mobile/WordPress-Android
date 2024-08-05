@@ -16,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
+import org.wordpress.android.support.ZendeskUploadHelper
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -36,6 +37,7 @@ import javax.inject.Named
 class FeedbackFormViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val zendeskHelper: ZendeskHelper,
+    private val zendeskUploadHelper: ZendeskUploadHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
@@ -65,6 +67,16 @@ class FeedbackFormViewModel @Inject constructor(
         //  we don't want to prompt the user for their name & email so create an anonymous
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
+
+        if (_attachments.value.isNotEmpty()) {
+            launch {
+                zendeskUploadHelper.uploadAttachments(
+                    context = context,
+                    scope = viewModelScope,
+                    uris = _attachments.value.map { it.uri }
+                )
+            }
+        }
 
         _isProgressShowing.value = true
         createZendeskFeedbackRequest(
