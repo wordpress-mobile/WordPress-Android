@@ -24,17 +24,17 @@ class ZendeskUploadHelper @Inject constructor() {
         context: Context,
         uri: Uri,
         callback: ZendeskCallback<UploadResponse>,
-    ): zendesk.support.Attachment? {
+    ) {
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
             AppLog.e(T.SUPPORT, "Upload provider is null")
-            return null
+            return
         }
 
         val file = uri.fileName(context)?.let { File(it) }
         if (file == null) {
             AppLog.e(T.SUPPORT, "Upload file is null")
-            return null
+            return
         }
 
         uploadProvider.uploadAttachment(
@@ -43,18 +43,20 @@ class ZendeskUploadHelper @Inject constructor() {
             uri.mimeType(context),
             callback
         )
-
-        return null
     }
 
     suspend fun uploadAttachments(
         context: Context,
         scope: CoroutineScope,
         uris: List<Uri>,
-    ): zendesk.support.Attachment? {
+    ): List<zendesk.support.Attachment> {
+        val attachments = mutableListOf<zendesk.support.Attachment>()
+
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
-                // return result.attachment
+                result.attachment?.let {
+                    attachments.add(it)
+                }
             }
 
             override fun onError(errorResponse: ErrorResponse?) {
@@ -70,6 +72,7 @@ class ZendeskUploadHelper @Inject constructor() {
             }
             job.join()
         }
-        return null
+
+        return attachments
     }
 }

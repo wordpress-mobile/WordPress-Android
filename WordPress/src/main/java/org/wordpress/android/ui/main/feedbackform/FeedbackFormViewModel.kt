@@ -68,12 +68,14 @@ class FeedbackFormViewModel @Inject constructor(
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
+        val zendeskAttachments = ArrayList<zendesk.support.Attachment>()
         if (_attachments.value.isNotEmpty()) {
             launch {
-                zendeskUploadHelper.uploadAttachments(
+                zendeskAttachments.addAll(zendeskUploadHelper.uploadAttachments(
                     context = context,
                     scope = viewModelScope,
                     uris = _attachments.value.map { it.uri }
+                )
                 )
             }
         }
@@ -81,6 +83,7 @@ class FeedbackFormViewModel @Inject constructor(
         _isProgressShowing.value = true
         createZendeskFeedbackRequest(
             context = context,
+            attachmentIds = zendeskAttachments.map { it.id.toString() },
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
                     _isProgressShowing.value = false
@@ -96,6 +99,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     private fun createZendeskFeedbackRequest(
         context: Context,
+        attachmentIds: List<String>,
         callback: ZendeskHelper.CreateRequestCallback
     ) {
         zendeskHelper.createRequest(
@@ -104,9 +108,7 @@ class FeedbackFormViewModel @Inject constructor(
             selectedSite = selectedSiteRepository.getSelectedSite(),
             extraTags = listOf("in_app_feedback"),
             requestDescription = _messageText.value,
-            attachmentIds = _attachments.value.filter { !it.zendeskId.isNullOrEmpty() }.map {
-                it.zendeskId!!
-            },
+            attachmentIds = attachmentIds,
             callback = callback
         )
     }
