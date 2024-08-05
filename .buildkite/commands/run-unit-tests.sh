@@ -37,7 +37,7 @@ echo "--- 🚦 Report Tests Status"
 results_file="$test_results_dir/merged-test-results.xml"
 
 # Merge JUnit results into a single file (for performance reasons with reporting)
-merge_junit -d ${test_log_dir%/*} -o $results_file
+merge_junit_reports -d ${test_log_dir%/*} -o $results_file
 
 if [[ $BUILDKITE_BRANCH == trunk ]] || [[ $BUILDKITE_BRANCH == release/* ]]; then
   annotate_test_failures "$results_file" --slack "build-and-ship"
