@@ -14,7 +14,7 @@ elif [ "$1" == "processors" ]; then
     code_coverage_report="libs/processors/build/reports/kover/report.xml"
 elif [ "$1" == "image-editor" ]; then
     test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
-    test_results_dir="libs/processors/build/test-results"
+    test_results_dir="libs/image-editor/build/test-results"
     test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
     code_coverage_report="libs/image-editor/build/reports/kover/reportRelease.xml"
 else
