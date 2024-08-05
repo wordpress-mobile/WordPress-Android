@@ -4,15 +4,18 @@ echo "--- 🧪 Testing"
 set +e
 if [ "$1" == "wordpress" ]; then
     test_suite="testWordpressVanillaRelease koverXmlReportWordpressVanillaRelease"
-    test_log_dir="WordPress/build/test-results/*/*.xml"
+    test_results_dir="WordPress/build/test-results"
+    test_log_dir="${test_results_dir}/*/*.xml"
     code_coverage_report="WordPress/build/reports/kover/reportWordpressVanillaRelease.xml"
 elif [ "$1" == "processors" ]; then
     test_suite=":libs:processors:test :libs:processors:koverXmlReport"
-    test_log_dir="libs/processors/build/test-results/test/*.xml"
+    test_results_dir="libs/processors/build/test-results"
+    test_log_dir="${test_results_dir}/test/*.xml"
     code_coverage_report="libs/processors/build/reports/kover/report.xml"
 elif [ "$1" == "image-editor" ]; then
     test_suite=":libs:image-editor:testReleaseUnitTest :libs:image-editor:koverXmlReportRelease"
-    test_log_dir="libs/image-editor/build/test-results/testReleaseUnitTest/*.xml"
+    test_results_dir="libs/processors/build/test-results"
+    test_log_dir="${test_results_dir}/testReleaseUnitTest/*.xml"
     code_coverage_report="libs/image-editor/build/reports/kover/reportRelease.xml"
 else
     echo "Invalid Test Suite! Expected 'wordpress', 'processors', or 'image-editor', received '$1' instead"
@@ -31,7 +34,6 @@ if [[ "$TESTS_EXIT_STATUS" -ne 0 ]]; then
 fi
 
 echo "--- 🚦 Report Tests Status"
-test_results_dir=$(echo "$test_log_dir" | sed 's|\(.*test-results\)/.*|\1|')
 results_file="$test_results_dir/merged-test-results.xml"
 
 # Merge JUnit results into a single file (for performance reasons with reporting)
