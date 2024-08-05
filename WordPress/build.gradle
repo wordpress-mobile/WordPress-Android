@@ -26,6 +26,10 @@ fladle {
             debugApk.set(appPathForVariant(app))
             instrumentationApk.set(testPathForVariant(app))
             smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+            /* Ignoring (already ignored by JUnit#assume) specific tests on the WordPress app to
+            prevent Fladle/Flank from scenario of executing them on a single shard.
+            This avoidance helps prevent test failures due to overly aggressive sharding that
+            could incur unnecessary costs and tests run failure. */
             testTargets.set(testTargets.get() + [
                     "notClass org.wordpress.android.e2e.StatsTests",
                     "notClass org.wordpress.android.e2e.StatsGranularTabsTest",
