@@ -45,7 +45,7 @@ data class NotificationModel(
         companion object {
             private val reverseMap = values().associateBy(
                     Kind::name)
-            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
+            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: UNKNOWN
         }
     }
 
