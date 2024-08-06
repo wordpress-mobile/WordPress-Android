@@ -174,7 +174,7 @@ class ZendeskHelper(
         extraTags: List<String>?,
         requestDescription: String,
         callback: CreateRequestCallback,
-        attachmentIds: List<String> = emptyList()
+        attachmentTokens: List<String> = emptyList()
     ) {
         require(isZendeskEnabled) {
             zendeskNeedsToBeEnabledError
@@ -187,7 +187,7 @@ class ZendeskHelper(
             ticketFormId = TicketFieldIds.form
             tags = buildZendeskTags(siteStore.sites, selectedSite, origin ?: Origin.UNKNOWN, extraTags)
                 .plus("DocsBot")
-            attachments = attachmentIds
+            attachments = attachmentTokens
         }
 
         Support.INSTANCE.provider()?.requestProvider()?.createRequest(request, object : ZendeskCallback<Request>() {

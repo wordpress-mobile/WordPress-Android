@@ -73,10 +73,10 @@ class FeedbackFormViewModel @Inject constructor(
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
-        val zendeskAttachments = ArrayList<zendesk.support.Attachment>()
+        val tokens = ArrayList<String>()
         if (_attachments.value.isNotEmpty()) {
             launch {
-                zendeskAttachments.addAll(
+                tokens.addAll(
                     uploadAttachments(context)
                 )
             }
@@ -85,7 +85,7 @@ class FeedbackFormViewModel @Inject constructor(
         _isProgressShowing.value = true
         createZendeskFeedbackRequest(
             context = context,
-            attachmentIds = zendeskAttachments.map { it.id.toString() },
+            attachmentTokens = tokens,
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
                     _isProgressShowing.value = false
@@ -101,7 +101,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     private fun createZendeskFeedbackRequest(
         context: Context,
-        attachmentIds: List<String>,
+        attachmentTokens: List<String> = emptyList(),
         callback: ZendeskHelper.CreateRequestCallback
     ) {
         zendeskHelper.createRequest(
@@ -110,7 +110,7 @@ class FeedbackFormViewModel @Inject constructor(
             selectedSite = selectedSiteRepository.getSelectedSite(),
             extraTags = listOf("in_app_feedback"),
             requestDescription = _messageText.value,
-            attachmentIds = attachmentIds,
+            attachmentTokens = attachmentTokens,
             callback = callback
         )
     }
@@ -227,17 +227,18 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Uploads the attachments to Zendesk and returns a list of their tokens.
+     */
     private suspend fun uploadAttachments(
         context: Context,
-    ): List<zendesk.support.Attachment> {
-        val uploadedAttachments = mutableListOf<zendesk.support.Attachment>()
+    ): List<String> {
+        val tokens = mutableListOf<String>()
         val uris = _attachments.value.map { it.uri }
 
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
-                result.attachment?.let {
-                    uploadedAttachments.add(it)
-                }
+                tokens.add(result.token.toString())
             }
 
             override fun onError(errorResponse: ErrorResponse?) {
@@ -248,13 +249,13 @@ class FeedbackFormViewModel @Inject constructor(
             }
         }
         uris.forEach { uri ->
-            val job = viewModelScope.launch(context = Dispatchers.Default) {
+            val job = viewModelScope.launch(Dispatchers.Default) {
                 zendeskUploadHelper.uploadAttachment(context, uri, callback)
             }
             job.join()
         }
 
-        return uploadedAttachments
+        return tokens
     }
 
     companion object {
