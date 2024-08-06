@@ -39,7 +39,7 @@ import org.wordpress.android.ui.domains.management.composable.DomainsSearchTextF
 import org.wordpress.android.ui.domains.management.composable.PendingGhostStrip
 import org.wordpress.android.ui.domains.management.newdomainsearch.NewDomainSearchViewModel.UiState
 import org.wordpress.android.ui.domains.management.newdomainsearch.domainsfetcher.ProposedDomain
-import org.wordpress.android.ui.domains.management.success
+import org.wordpress.android.ui.compose.theme.success
 
 @Composable
 fun NewDomainSearchScreen(

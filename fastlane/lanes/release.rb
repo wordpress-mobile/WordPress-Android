@@ -313,8 +313,7 @@ platform :android do
     UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
     version_name = current_release_version
-    build_code = current_build_code
-    download_metadata_strings(version: version_name, build_number: build_code)
+    download_metadata_strings(version: version_name)
 
     push_to_git_remote(tags: false)
 
@@ -455,16 +454,6 @@ platform :android do
   #####################################################################################
   # Private lanes
   #####################################################################################
-
-  private_lane :delete_old_changelogs do |options|
-    app = get_app_name_option!(options)
-    app_values = APP_SPECIFIC_VALUES[app.to_sym]
-    Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
-      File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build])
-    rescue StandardError
-      UI.error("Could not delete file #{file}.")
-    end
-  end
 
   private_lane :cleanup_release_files do |options|
     files = options[:files]
