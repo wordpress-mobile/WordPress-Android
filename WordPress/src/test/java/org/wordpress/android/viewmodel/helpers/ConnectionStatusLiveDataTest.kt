@@ -2,6 +2,7 @@
 
 package org.wordpress.android.viewmodel.helpers
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.net.ConnectivityManager
@@ -25,6 +26,7 @@ class ConnectionStatusLiveDataTest : BaseUnitTest() {
     @Before
     fun setUp() {
         val captor = argumentCaptor<BroadcastReceiver>()
+        @SuppressLint("UnspecifiedRegisterReceiverFlag")
         val context = mock<Context> {
             on { registerReceiver(captor.capture(), any()) } doReturn mock()
         }

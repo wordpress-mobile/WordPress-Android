@@ -85,7 +85,7 @@ steps:
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_WORDPRESS"
         artifact_paths:
-          - "**/build/test-results/*/*.xml"
+          - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test Processors"
         command: ".buildkite/commands/run-unit-tests.sh processors"
@@ -95,7 +95,7 @@ steps:
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_PROCESSORS"
         artifact_paths:
-          - "**/build/test-results/*/*.xml"
+          - "**/build/test-results/merged-test-results.xml"
 
       - label: "🔬 Unit Test Image Editor"
         command: ".buildkite/commands/run-unit-tests.sh image-editor"
@@ -105,7 +105,7 @@ steps:
               <<: *test_collector_common_params
               api-token-env-name: "BUILDKITE_ANALYTICS_TOKEN_UNIT_TESTS_IMAGE_EDITOR"
         artifact_paths:
-          - "**/build/test-results/*/*.xml"
+          - "**/build/test-results/merged-test-results.xml"
 
   #################
   # Instrumented (aka UI) Tests

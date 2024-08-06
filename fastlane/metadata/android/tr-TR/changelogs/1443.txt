@@ -1,5 +1,0 @@
-25.2:
-Bu sürümde iki büyük sorun düzeltildi:
-* Artık gönderi yayımlamanın tarihini yeniden güncelleyebilirsiniz.
-* Bazı kullanıcılar gönderilerinin içeriğini güncelleyemedi.
-Her zamanki gibi lütfen çalışmayan herhangi bir şey varsa destek ekibiyle iletişime geçin!

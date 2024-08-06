@@ -1198,6 +1198,7 @@ public class ActivityLauncher {
     private static void openAtomicBlogPostPreview(Context context, String url, String authenticationUrl,
                                                  String frameNonce) {
         try {
+            @SuppressWarnings("UnsafeImplicitIntentLaunch")
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(authenticationUrl + "?redirect_to=" + URLEncoder
                     .encode(url + "&frame-nonce=" + UrlUtils.urlEncode(frameNonce), ENCODING_UTF8)));
@@ -1560,6 +1561,7 @@ public class ActivityLauncher {
      */
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -1656,6 +1658,7 @@ public class ActivityLauncher {
     }
 
     public static void downloadBackupDownloadFile(Context context, String url) {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(intent);
     }
