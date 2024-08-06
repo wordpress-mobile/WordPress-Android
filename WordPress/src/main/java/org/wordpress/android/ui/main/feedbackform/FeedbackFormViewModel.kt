@@ -7,8 +7,11 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
@@ -30,6 +34,7 @@ import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
+import zendesk.support.UploadResponse
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -71,11 +76,8 @@ class FeedbackFormViewModel @Inject constructor(
         val zendeskAttachments = ArrayList<zendesk.support.Attachment>()
         if (_attachments.value.isNotEmpty()) {
             launch {
-                zendeskAttachments.addAll(zendeskUploadHelper.uploadAttachments(
-                    context = context,
-                    scope = viewModelScope,
-                    uris = _attachments.value.map { it.uri }
-                )
+                zendeskAttachments.addAll(
+                    uploadAttachments(context)
                 )
             }
         }
@@ -141,7 +143,7 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     private fun onFailure(errorMessage: String? = null) {
-        appLogWrapper.e(AppLog.T.SUPPORT, "Failed to submit feedback form: $errorMessage")
+        appLogWrapper.e(T.SUPPORT, "Failed to submit feedback form: $errorMessage")
         showToast(R.string.feedback_form_failure)
     }
 
@@ -223,6 +225,36 @@ class FeedbackFormViewModel @Inject constructor(
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
         }
+    }
+
+    private suspend fun uploadAttachments(
+        context: Context,
+    ): List<zendesk.support.Attachment> {
+        val uploadedAttachments = mutableListOf<zendesk.support.Attachment>()
+        val uris = _attachments.value.map { it.uri }
+
+        val callback = object : ZendeskCallback<UploadResponse>() {
+            override fun onSuccess(result: UploadResponse) {
+                result.attachment?.let {
+                    uploadedAttachments.add(it)
+                }
+            }
+
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.v(
+                    T.SUPPORT, "Uploading to Zendesk failed with" +
+                            " error: ${errorResponse?.reason}"
+                )
+            }
+        }
+        uris.forEach { uri ->
+            val job = viewModelScope.launch(context = Dispatchers.Default) {
+                zendeskUploadHelper.uploadAttachment(context, uri, callback)
+            }
+            job.join()
+        }
+
+        return uploadedAttachments
     }
 
     companion object {

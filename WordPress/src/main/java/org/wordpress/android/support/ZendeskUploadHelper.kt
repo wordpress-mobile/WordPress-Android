@@ -2,11 +2,7 @@ package org.wordpress.android.support
 
 import android.content.Context
 import android.net.Uri
-import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.extensions.fileName
@@ -20,7 +16,7 @@ import javax.inject.Inject
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
  */
 class ZendeskUploadHelper @Inject constructor() {
-    private fun uploadAttachment(
+    fun uploadAttachment(
         context: Context,
         uri: Uri,
         callback: ZendeskCallback<UploadResponse>,
@@ -43,36 +39,5 @@ class ZendeskUploadHelper @Inject constructor() {
             uri.mimeType(context),
             callback
         )
-    }
-
-    suspend fun uploadAttachments(
-        context: Context,
-        scope: CoroutineScope,
-        uris: List<Uri>,
-    ): List<zendesk.support.Attachment> {
-        val attachments = mutableListOf<zendesk.support.Attachment>()
-
-        val callback = object : ZendeskCallback<UploadResponse>() {
-            override fun onSuccess(result: UploadResponse) {
-                result.attachment?.let {
-                    attachments.add(it)
-                }
-            }
-
-            override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.v(
-                    T.SUPPORT, "Uploading to Zendesk failed with" +
-                            " error: ${errorResponse?.reason}"
-                )
-            }
-        }
-        uris.forEach { uri ->
-            val job = scope.launch(context = Dispatchers.Default) {
-                uploadAttachment(context, uri, callback)
-            }
-            job.join()
-        }
-
-        return attachments
     }
 }
