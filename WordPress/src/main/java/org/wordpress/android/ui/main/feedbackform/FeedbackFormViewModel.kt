@@ -11,7 +11,6 @@ import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -234,7 +233,8 @@ class FeedbackFormViewModel @Inject constructor(
 
         fun decAttachments() {
             numAttachments--
-            if (numAttachments == 0) {
+            if (numAttachments <= 0) {
+                _isProgressShowing.value = false
                 completionHandler()
             }
         }
@@ -249,21 +249,19 @@ class FeedbackFormViewModel @Inject constructor(
 
             override fun onError(errorResponse: ErrorResponse?) {
                 AppLog.e(
-                    T.SUPPORT, "Uploading to Zendesk failed with" +
-                            " error: ${errorResponse?.reason}"
+                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
                 )
                 decAttachments()
             }
         }
 
+        _isProgressShowing.value = true
         _attachments.value.forEach { attachment ->
-            viewModelScope.launch(Dispatchers.Default) {
-                zendeskUploadHelper.uploadAttachment(
-                    file = attachment.tempFile,
-                    mimeType = attachment.mimeType,
-                    callback = callback
-                )
-            }
+            zendeskUploadHelper.uploadAttachment(
+                file = attachment.tempFile,
+                mimeType = attachment.mimeType,
+                callback = callback
+            )
         }
 
     }
