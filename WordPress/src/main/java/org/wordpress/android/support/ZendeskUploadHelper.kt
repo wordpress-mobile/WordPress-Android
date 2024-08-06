@@ -45,14 +45,13 @@ class ZendeskUploadHelper @Inject constructor() {
             return
         }
         uploadProvider.deleteAttachment(token, object : ZendeskCallback<Void>() {
-            override fun onSuccess(result: Void?) {
+            override fun onSuccess(result: Void) {
                 AppLog.i(T.SUPPORT, "Successfully deleted Zendesk attachment")
             }
 
             override fun onError(error: ErrorResponse?) {
                 AppLog.e(T.SUPPORT, "Unable to delete Zendesk attachment")
             }
-
         })
     }
 }

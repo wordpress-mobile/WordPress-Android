@@ -263,7 +263,6 @@ class FeedbackFormViewModel @Inject constructor(
                 callback = callback
             )
         }
-
     }
 
     companion object {
