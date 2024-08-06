@@ -26,7 +26,6 @@ class ZendeskUploadHelper @Inject constructor() {
             AppLog.e(T.SUPPORT, "Upload provider is null")
             return
         }
-
         uploadProvider.uploadAttachment(
             file.name,
             file,

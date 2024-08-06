@@ -58,6 +58,8 @@ class FeedbackFormViewModel @Inject constructor(
     private val _attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
     val attachments = _attachments.asStateFlow()
 
+    private val attachmentTokens = ArrayList<String>()
+
     fun updateMessageText(message: String) {
         if (message != _messageText.value) {
             _messageText.value = message
@@ -73,23 +75,29 @@ class FeedbackFormViewModel @Inject constructor(
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
-        val tokens = ArrayList<String>()
+        // if there are attachments, upload them first then create the feedback request when they're all uploaded.
+        // using a completion handler isn't ideal but it's done since Zendesk only provides uploading using callbacks.
         if (_attachments.value.isNotEmpty()) {
-            launch {
-                tokens.addAll(
-                    uploadAttachments()
-                )
-                // TODO for now we delete the attachments (only for testing)
-                tokens.forEach {
-                    zendeskUploadHelper.deleteAttachment(it)
-                }
-            }
+            uploadAttachments(
+                completionHandler = { createZendeskFeedbackRequest(context) }
+            )
+        } else {
+            createZendeskFeedbackRequest(context)
         }
+    }
 
-        /*_isProgressShowing.value = true
-        createZendeskFeedbackRequest(
+    private fun createZendeskFeedbackRequest(
+        context: Context,
+    ) {
+        _isProgressShowing.value = true
+
+        zendeskHelper.createRequest(
             context = context,
-            attachmentTokens = tokens,
+            origin = HelpActivity.Origin.FEEDBACK_FORM,
+            selectedSite = selectedSiteRepository.getSelectedSite(),
+            extraTags = listOf("in_app_feedback"),
+            requestDescription = _messageText.value,
+            attachmentTokens = attachmentTokens,
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
                     _isProgressShowing.value = false
@@ -100,23 +108,7 @@ class FeedbackFormViewModel @Inject constructor(
                     _isProgressShowing.value = false
                     onFailure(errorMessage)
                 }
-            })*/
-    }
-
-    private fun createZendeskFeedbackRequest(
-        context: Context,
-        attachmentTokens: List<String> = emptyList(),
-        callback: ZendeskHelper.CreateRequestCallback
-    ) {
-        zendeskHelper.createRequest(
-            context = context,
-            origin = HelpActivity.Origin.FEEDBACK_FORM,
-            selectedSite = selectedSiteRepository.getSelectedSite(),
-            extraTags = listOf("in_app_feedback"),
-            requestDescription = _messageText.value,
-            attachmentTokens = attachmentTokens,
-            callback = callback
-        )
+            })
     }
 
     fun onCloseClick(context: Context) {
@@ -232,35 +224,48 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     /**
-     * Uploads the attachments to Zendesk and returns a list of their tokens.
+     * Uploads the attachments to Zendesk
      */
-    private suspend fun uploadAttachments(): List<String> {
-        val tokens = mutableListOf<String>()
+    private fun uploadAttachments(
+        completionHandler: () -> Unit
+    ) {
+        attachmentTokens.clear()
+        var numAttachments = _attachments.value.size
+
+        fun decAttachments() {
+            numAttachments--
+            if (numAttachments == 0) {
+                completionHandler()
+            }
+        }
 
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
-                tokens.add(result.token.toString())
+                result.token?.let {
+                    attachmentTokens.add(it)
+                }
+                decAttachments()
             }
 
             override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.v(
+                AppLog.e(
                     T.SUPPORT, "Uploading to Zendesk failed with" +
                             " error: ${errorResponse?.reason}"
                 )
+                decAttachments()
             }
         }
 
         _attachments.value.forEach { attachment ->
-            val job = viewModelScope.launch(Dispatchers.Default) {
+            viewModelScope.launch(Dispatchers.Default) {
                 zendeskUploadHelper.uploadAttachment(
                     file = attachment.tempFile,
                     mimeType = attachment.mimeType,
-                    callback = callback)
+                    callback = callback
+                )
             }
-            job.join()
         }
 
-        return tokens
     }
 
     companion object {
