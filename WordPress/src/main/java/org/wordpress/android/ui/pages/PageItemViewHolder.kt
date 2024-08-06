@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.pages
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.text.Spannable
@@ -287,6 +288,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         it
                     )
                 } ?: stringDate
+                @SuppressLint("SetTextI18n")
                 pageSubtitleSuffix.text = ""
             }
 
