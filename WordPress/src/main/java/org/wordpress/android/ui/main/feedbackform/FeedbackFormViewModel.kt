@@ -77,12 +77,16 @@ class FeedbackFormViewModel @Inject constructor(
         if (_attachments.value.isNotEmpty()) {
             launch {
                 tokens.addAll(
-                    uploadAttachments(context)
+                    uploadAttachments()
                 )
+                // TODO for now we delete the attachments (only for testing)
+                tokens.forEach {
+                    zendeskUploadHelper.deleteAttachment(it)
+                }
             }
         }
 
-        _isProgressShowing.value = true
+        /*_isProgressShowing.value = true
         createZendeskFeedbackRequest(
             context = context,
             attachmentTokens = tokens,
@@ -96,7 +100,7 @@ class FeedbackFormViewModel @Inject constructor(
                     _isProgressShowing.value = false
                     onFailure(errorMessage)
                 }
-            })
+            })*/
     }
 
     private fun createZendeskFeedbackRequest(
@@ -230,11 +234,8 @@ class FeedbackFormViewModel @Inject constructor(
     /**
      * Uploads the attachments to Zendesk and returns a list of their tokens.
      */
-    private suspend fun uploadAttachments(
-        context: Context,
-    ): List<String> {
+    private suspend fun uploadAttachments(): List<String> {
         val tokens = mutableListOf<String>()
-        val uris = _attachments.value.map { it.uri }
 
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
@@ -248,9 +249,13 @@ class FeedbackFormViewModel @Inject constructor(
                 )
             }
         }
-        uris.forEach { uri ->
+
+        _attachments.value.forEach { attachment ->
             val job = viewModelScope.launch(Dispatchers.Default) {
-                zendeskUploadHelper.uploadAttachment(context, uri, callback)
+                zendeskUploadHelper.uploadAttachment(
+                    file = attachment.tempFile,
+                    mimeType = attachment.mimeType,
+                    callback = callback)
             }
             job.join()
         }

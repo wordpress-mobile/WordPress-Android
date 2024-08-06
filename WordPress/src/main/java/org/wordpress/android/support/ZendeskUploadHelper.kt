@@ -1,13 +1,9 @@
 package org.wordpress.android.support
 
-import android.content.Context
-import android.net.Uri
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.extensions.fileName
-import org.wordpress.android.util.extensions.mimeType
 import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
@@ -21,8 +17,8 @@ class ZendeskUploadHelper @Inject constructor() {
      * Uploads an attachment to Zendesk. Note that the UploadResponse will contain the attachment token.
      */
     fun uploadAttachment(
-        context: Context,
-        uri: Uri,
+        file: File,
+        mimeType: String,
         callback: ZendeskCallback<UploadResponse>,
     ) {
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
@@ -31,16 +27,10 @@ class ZendeskUploadHelper @Inject constructor() {
             return
         }
 
-        val file = uri.fileName(context)?.let { File(it) }
-        if (file == null) {
-            AppLog.e(T.SUPPORT, "Upload file is null")
-            return
-        }
-
         uploadProvider.uploadAttachment(
             file.name,
             file,
-            uri.mimeType(context),
+            mimeType,
             callback
         )
     }

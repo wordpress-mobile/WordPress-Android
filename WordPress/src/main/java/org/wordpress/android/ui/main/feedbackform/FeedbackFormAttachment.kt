@@ -10,7 +10,6 @@ data class FeedbackFormAttachment(
     val mimeType: String,
     val attachmentType: FeedbackFormAttachmentType,
     val size: Long,
-    val zendeskId: String? = null
 )
 
 enum class FeedbackFormAttachmentType {
