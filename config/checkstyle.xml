@@ -119,6 +119,17 @@
       <property name="severity" value="error"/>
     </module>
 
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html -->
+    <module name="LineLength">
+        <property name="fileExtensions" value="java"/>
+        <!-- what is a good max value? -->
+        <property name="max" value="120"/>
+        <!-- ignore lines like "$File: //depot/... $" -->
+        <property name="ignorePattern" value="\$File.*\$"/>
+        <property name="severity" value="error"/>
+    </module>
+
     <module name="TreeWalker">
 
         <!-- Checks for Naming Conventions.                  -->
@@ -173,13 +184,6 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-          <!-- what is a good max value? -->
-          <property name="max" value="120"/>
-          <!-- ignore lines like "$File: //depot/... $" -->
-          <property name="ignorePattern" value="\$File.*\$"/>
-          <property name="severity" value="error"/>
-        </module>
         <module name="MethodLength">
           <property name="tokens" value="METHOD_DEF"/>
           <!-- TODO: We should set this value around 40 or 50 -->
