@@ -201,10 +201,8 @@ class FeedbackFormViewModel @Inject constructor(
             showToast(R.string.feedback_form_max_attachments_reached)
         } else if (newList.any { it.uri == uri }) {
             showToast(R.string.feedback_form_attachment_already_added)
-        } else if (size > MAX_SINGLE_ATTACHMENT_SIZE) {
+        } else if (size > MAX_ATTACHMENT_SIZE) {
             showToast(R.string.feedback_form_attachment_too_large)
-        } else if (totalAttachmentSize() + size > MAX_TOTAL_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_total_attachments_too_large)
         } else if (file == null) {
             showToast(R.string.feedback_form_unable_to_create_tempfile)
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
@@ -244,11 +242,6 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
-    private fun totalAttachmentSize(): Long {
-        val list = _attachments.value
-        return list.sumOf { it.size }
-    }
-
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
@@ -256,8 +249,7 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MAX_SINGLE_ATTACHMENT_SIZE = 32_000_000
-        private const val MAX_TOTAL_ATTACHMENT_SIZE = MAX_SINGLE_ATTACHMENT_SIZE * 3
+        private const val MAX_ATTACHMENT_SIZE = 32_000_000
         private const val MAX_ATTACHMENTS = 15
     }
 }
