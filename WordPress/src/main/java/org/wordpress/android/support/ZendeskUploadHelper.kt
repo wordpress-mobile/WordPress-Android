@@ -2,9 +2,9 @@ package org.wordpress.android.support
 
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
-import kotlinx.coroutines.DefaultExecutor.enqueue
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.mimeType
 import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
@@ -17,35 +17,20 @@ import kotlin.coroutines.suspendCoroutine
  */
 class ZendeskUploadHelper @Inject constructor() {
     /**
-     * Uploads an attachment to Zendesk. Note that the UploadResponse will contain the attachment token.
+     * Uploads a single file attachment to Zendesk and returns the token upon completion
      */
-    private fun uploadAttachment(
+    @Suppress("unused")
+    suspend fun uploadFileAttachment(
         file: File,
         mimeType: String,
-        callback: ZendeskCallback<UploadResponse>,
-    ) {
-        val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
-        if (uploadProvider == null) {
-            AppLog.e(T.SUPPORT, "Upload provider is null")
-            return
-        }
-        uploadProvider.uploadAttachment(
-            file.name,
-            file,
-            mimeType,
-            callback
-        )
-    }
-
-    suspend fun uploadAttachment(
-        file: File,
-        mimeType: String,
-    ) = suspendCoroutine<String?> { continuation ->
+    ) = suspendCoroutine { continuation ->
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
             AppLog.e(T.SUPPORT, "Upload provider is null")
             continuation.resume(null)
+            return@suspendCoroutine
         }
+
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
                 continuation.resume(result.token)
@@ -58,12 +43,60 @@ class ZendeskUploadHelper @Inject constructor() {
                 continuation.resume(null)
             }
         }
-        uploadProvider!!.uploadAttachment(
+        uploadProvider.uploadAttachment(
             file.name,
             file,
             mimeType,
             callback
         )
+    }
+
+    /**
+     * Uploads multiple attachments to Zendesk and returns a list of their tokens when completed
+     */
+    suspend fun uploadFileAttachments(
+        files: List<File>,
+    ) = suspendCoroutine { continuation ->
+        val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
+        if (uploadProvider == null) {
+            AppLog.e(T.SUPPORT, "Upload provider is null")
+            continuation.resume(null)
+            return@suspendCoroutine
+        }
+
+        val tokens = ArrayList<String>()
+        var numAttachments = files.size
+
+        fun decAttachments() {
+            numAttachments--
+            if (numAttachments <= 0) {
+                continuation.resume(tokens)
+            }
+        }
+
+        val callback = object : ZendeskCallback<UploadResponse>() {
+            override fun onSuccess(result: UploadResponse) {
+                result.token?.let {
+                    tokens.add(it)
+                }
+                decAttachments()
+            }
+
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.e(
+                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
+                )
+                decAttachments()
+            }
+        }
+        for (file in files) {
+            uploadProvider.uploadAttachment(
+                file.name,
+                file,
+                file.mimeType() ?: "",
+                callback
+            )
+        }
     }
 
     /**
