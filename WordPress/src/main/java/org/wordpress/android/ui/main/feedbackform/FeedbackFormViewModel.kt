@@ -223,7 +223,8 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     /**
-     * Uploads the attachments to Zendesk
+     * Uploads the attachments to Zendesk and builds a list of their tokens. The passed
+     * completion handler will be called once all attachments have been uploaded.
      */
     private fun uploadAttachments(
         completionHandler: () -> Unit
