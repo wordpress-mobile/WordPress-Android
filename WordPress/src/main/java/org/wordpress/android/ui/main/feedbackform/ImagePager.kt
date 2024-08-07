@@ -7,7 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -34,7 +33,7 @@ fun ImagePager(
     )
     HorizontalPager(
         state = pagerState,
-        pageSpacing = 10.dp,
+        pageSpacing = 12.dp,
         pageSize = PageSize.Fixed(IMAGE_SIZE.dp),
         modifier = Modifier.then(modifier)
     ) { index ->
@@ -44,12 +43,11 @@ fun ImagePager(
 
 @Composable
 private fun ImageFile(file: File) {
-    // TODO thumbnail
+    // TODO thumbnails
     val bitmap = BitmapFactory.decodeFile(file.absolutePath)
     Row(
         modifier = Modifier
-            .height(IMAGE_SIZE.dp)
-            .width(IMAGE_SIZE.dp),
+            .height(IMAGE_SIZE.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -57,6 +55,7 @@ private fun ImageFile(file: File) {
             Image(
                 bitmap = bitmap.asImageBitmap(),
                 contentDescription = null,
+                contentScale = ContentScale.FillBounds
             )
         } else {
             Image(
