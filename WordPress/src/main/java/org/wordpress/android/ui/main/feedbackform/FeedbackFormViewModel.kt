@@ -250,7 +250,7 @@ class FeedbackFormViewModel @Inject constructor(
 
     companion object {
         private const val MAX_ATTACHMENT_SIZE = 32_000_000
-        private const val MAX_ATTACHMENTS = 15
+        private const val MAX_ATTACHMENTS = 5
     }
 }
 
