@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats.refresh.lists
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.Menu
@@ -318,6 +319,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
                 if (it.subtitle != null) {
                     emptyView.statsEmptyView.subtitle.setText(it.subtitle)
                 } else {
+                    @SuppressLint("SetTextI18n")
                     emptyView.statsEmptyView.subtitle.text = ""
                 }
                 if (it.image != null) {

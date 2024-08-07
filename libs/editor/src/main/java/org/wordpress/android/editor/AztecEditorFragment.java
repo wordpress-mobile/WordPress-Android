@@ -1815,6 +1815,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // Open the video preview in the default browser for now.
                         // TODO open the preview activity already available in media?
                         final String videoURL = meta.getString(ATTR_SRC);
+                        @SuppressWarnings("UnsafeImplicitIntentLaunch")
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoURL));
                         startActivity(browserIntent);
                     } catch (JSONException e) {

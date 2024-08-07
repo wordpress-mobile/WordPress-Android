@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 09:54:07+0000
+Translation-Revision-Date: 2024-07-25 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ko_KR
 -->
 <resources>
+    <string name="voice_to_content_generic_error">현재 오디오에서 글을 작성할 수 없습니다. 나중에 다시 시도해 주세요.</string>
+    <string name="voice_to_content_ineligible">요청이 오디오에서 글을 작성할 만큼 충분하지 않습니다.</string>
+    <string name="voice_to_content_base_header_label">오디오에서 글 작성하기</string>
+    <string name="voice_to_content_error_label">오류</string>
     <string name="gutenberg_native_tap_to_edit">눌러서 편집</string>
     <string name="voice_to_content_permissions_required_msg">오디오를 녹음하려면 앱에 마이크 액세스 권한이 필요합니다. 이전에 이 권한을 거부하셨습니다. 이 기능을 사용하려면 앱 설정에서 마이크 권한을 활성화하세요.</string>
     <string name="voice_to_content_permissions_required_title">오디오 녹음 권한 필수</string>
@@ -1935,6 +1939,7 @@ Language: ko_KR
     <string name="stats_box_type_low">낮음</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">이미지 교체</string>
     <string name="gutenberg_native_gallery_caption_s">갤러리 캡션. %s</string>
     <string name="create_post_page_fab_tooltip">글 또는 페이지 만들기</string>
     <string name="content_description_person_building_website">사람 건물 웹사이트</string>

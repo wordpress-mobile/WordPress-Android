@@ -114,7 +114,8 @@
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme.TransparentSystemBars"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="DiscouragedApi" />
 
         <activity
             android:name=".ui.accounts.LoginMagicLinkInterceptActivity"
@@ -155,6 +156,11 @@
         <activity
             android:name=".ui.accounts.HelpActivity"
             android:label="@string/help_buttons_screen_title"
+            android:theme="@style/WordPress.NoActionBar" />
+
+        <activity
+            android:name=".ui.main.feedbackform.FeedbackFormActivity"
+            android:label="@string/feedback_form_title"
             android:theme="@style/WordPress.NoActionBar" />
 
         <activity
@@ -601,7 +607,8 @@
         <activity
             android:name=".ui.reader.ReaderVideoViewerActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/ReaderMediaViewerTheme" />
+            android:theme="@style/ReaderMediaViewerTheme"
+            tools:ignore="DiscouragedApi" />
         <activity
             android:name=".ui.reader.discover.interests.ReaderInterestsActivity"
             android:theme="@style/WordPress.NoActionBar" />
@@ -683,7 +690,8 @@
             android:name=".ui.main.jetpack.migration.JetpackMigrationActivity"
             android:label="@string/jp_migration_welcome_title"
             android:screenOrientation="portrait"
-            android:theme="@style/WordPress.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="DiscouragedApi" />
 
         <!-- Notifications activities -->
         <activity
@@ -760,7 +768,7 @@
             android:name=".support.SupportWebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/WordPress.NoActionBar"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"/>
 
         <!-- Lib activities-->
         <activity
@@ -833,7 +841,7 @@
         <service
             android:name=".ui.uploads.UploadService"
             android:label="Upload Service"
-            android:foregroundServiceType="dataSync"/>
+            android:foregroundServiceType="dataSync" />
         <service
             android:name=".ui.media.services.MediaDeleteService"
             android:label="Media Delete Service"
@@ -920,12 +928,14 @@
         <service
             android:name=".login.LoginWpcomService"
             android:exported="false"
-            android:label="Login to WPCOM Service" />
+            android:label="Login to WPCOM Service"
+            android:foregroundServiceType="shortService" />
 
         <service
             android:name=".ui.sitecreation.services.SiteCreationService"
             android:exported="false"
-            android:label="Site Creation Service" />
+            android:label="Site Creation Service"
+            android:foregroundServiceType="dataSync" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -1108,13 +1118,15 @@
             android:exported="false"
             android:label="@string/blaze_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/WordPress.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="DiscouragedApi" />
 
         <activity android:name=".ui.blaze.blazecampaigns.BlazeCampaignParentActivity"
             android:exported="false"
             android:label="@string/blaze_campaigns_page_title"
             android:screenOrientation="portrait"
-            android:theme="@style/WordPress.NoActionBar"/>
+            android:theme="@style/WordPress.NoActionBar"
+            tools:ignore="DiscouragedApi" />
 
         <activity android:name=".ui.jetpackoverlay.JetpackStaticPosterActivity"
             android:exported="false"

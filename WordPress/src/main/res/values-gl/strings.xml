@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-19 23:33:46+0000
+Translation-Revision-Date: 2024-07-27 18:16:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: gl_ES
 -->
 <resources>
+    <string name="voice_to_content_done_label">Feito</string>
+    <string name="voice_to_content_upgrade">Actualizar para máis solicitudes</string>
+    <string name="voice_to_content_ineligible">Non tes suficientes solicitudes dispoñibles para crear unha entrada dende un audio</string>
+    <string name="voice_to_content_recording_label">Gravando</string>
+    <string name="voice_to_content_begin_recording_label">Seguir gravando</string>
+    <string name="voice_to_content_secondary_header_label">Solicitudes dispoñibles</string>
+    <string name="voice_to_content_processing_label">Procesando</string>
+    <string name="voice_to_content_error_label">Erro</string>
+    <string name="voice_to_content_processing">Procesando</string>
+    <string name="voice_to_content_base_header_label">Publicar desde un audio</string>
+    <string name="voice_to_content_generic_error">A publicación do audio non está dispoñible neste momento. Téntao de novo máis tarde.</string>
+    <string name="gutenberg_native_tap_to_edit">Toca para editar</string>
+    <string name="voice_to_content_permissions_required_msg">Para gravar audio, esta aplicación necesita permiso para acceder ao teu micrófono. Anteriormente denegou este permiso. Activa o permiso do micrófono na configuración da aplicación para usar esta función.</string>
+    <string name="voice_to_content_permissions_required_title">Requírese permiso de gravación de audio</string>
+    <string name="permission_access_media_location">Localización de medios</string>
+    <string name="in_app_update_restart">Reiniciar</string>
+    <string name="in_app_update_available">Actualización descargada. Reinicia para aplicar.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Publicación desde un audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">abrir menú</string>
+    <string name="reader_tags_feed_action_label_unlike_post">eliminar Me gusta da entrada</string>
+    <string name="reader_tags_feed_action_label_like_post">dar Me gusta na entrada</string>
+    <string name="reader_tags_feed_action_label_open_blog">abrir blog</string>
+    <string name="reader_tags_feed_action_label_open_post">abrir entrada</string>
+    <string name="reader_tags_feed_error_retry">Reintentar</string>
+    <string name="reader_tags_feed_no_content_error_description">Non puidemos atopar ningunha entrada etiquetada %s neste momento</string>
+    <string name="reader_tags_feed_loading_error_description">Non puidemos cargar as entradas desta etiqueta neste momento</string>
+    <string name="reader_tags_feed_error_title">No se atoparon entradas para %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Máis de %s</string>
+    <string name="reader_tags_display_name">Etiquetas</string>
+    <string name="reader_announcement_card_reading_preferences_description">Escolle cores e fontes que che conveñan. Cando esteas lendo unha publicación, toca a icona AA na parte superior da pantalla.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferencias de lectura</string>
+    <string name="reader_announcement_card_tags_stream_description">Toca o menú despregable na parte superior e selecciona Etiquetas para acceder aos fluxos das túas etiquetas seguidas.</string>
+    <string name="reader_announcement_card_tags_stream_title">Fluxo de etiquetas</string>
+    <string name="reader_announcement_card_title">Novo no lector</string>
+    <string name="reader_dropdown_menu_tags">As túas etiquetas:</string>
+    <string name="no_connection_error_description">Comproba a túa conexión de rede e téntao de novo.</string>
+    <string name="no_connection_error_title">Neste momento non se puido cargar este contido</string>
+    <string name="stats_subscribers_marker_view_singular">Subscriptor</string>
+    <string name="stats_view_subscriber_growth">Crecemento de suscriptores</string>
+    <string name="stats_subscribers_marker_view_plural">Subscriptores</string>
     <string name="role_subscriber">Subscritor</string>
     <string name="people_dropdown_item_subscribers">Subscritores</string>
     <string name="title_email_subscriber">Subscritor por correo electrónico</string>
@@ -1908,6 +1948,7 @@ Language: gl_ES
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">Lenda da galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear unha entrada ou páxina</string>
+    <string name="gutenberg_native_replace_image">Substituír imaxe</string>
     <string name="post_signup_interstitial_not_right_now">Agora non</string>
     <string name="content_description_person_building_website">Creador da web</string>
     <string name="post_signup_interstitial_subtitle">Calquera cousa que queiras crear ou compartir, axudarémosche a facelo aquí mesmo.</string>

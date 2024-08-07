@@ -55,6 +55,7 @@ Language: el_GR
     <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
     <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
     <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
+    <string name="gutenberg_native_replace_image">Αντικατάσταση εικόνας</string>
     <string name="post_signup_interstitial_not_right_now">Όχι τώρα</string>
     <string name="post_signup_interstitial_title">Καλώς ήρθατε στο WordPress!</string>
     <string name="photo_picker_image_selected">, Επιλεγμένο</string>

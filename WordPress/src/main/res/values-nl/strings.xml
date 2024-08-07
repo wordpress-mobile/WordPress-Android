@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-17 18:36:53+0000
+Translation-Revision-Date: 2024-07-30 13:50:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: nl
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Bericht vanaf audio is momenteel niet beschikbaar, probeer het later opnieuw.</string>
+    <string name="voice_to_content_done_label">Klaar</string>
+    <string name="voice_to_content_upgrade">Upgrade voor meer aanvragen</string>
+    <string name="voice_to_content_ineligible">Je hebt niet genoeg aanvragen beschikbaar om een bericht van audio te maken.</string>
+    <string name="voice_to_content_recording_label">Opnemen</string>
+    <string name="voice_to_content_begin_recording_label">Begin met opnemen</string>
+    <string name="voice_to_content_secondary_header_label">Aanvragen beschikbaar:</string>
+    <string name="voice_to_content_base_header_label">Plaats vanuit audio</string>
+    <string name="voice_to_content_processing_label">Aan het verwerken</string>
+    <string name="voice_to_content_error_label">Fout</string>
+    <string name="voice_to_content_processing">Aan het verwerken</string>
     <string name="gutenberg_native_tap_to_edit">Tikken om te bewerken</string>
     <string name="voice_to_content_permissions_required_msg">Om audio op te nemen, heeft deze app toestemming nodig om toegang te krijgen tot je microfoon. Je hebt deze toestemming eerder geweigerd. Schakel de microfoon toestemming in de app-instellingen in om deze functie te gebruiken.</string>
     <string name="voice_to_content_permissions_required_title">Toestemming voor audio-opname vereist</string>
@@ -1935,6 +1946,7 @@ Language: nl
     <string name="stats_box_type_low">laag</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Afbeelding vervangen</string>
     <string name="gutenberg_native_gallery_caption_s">Bijschrift galerij. %s</string>
     <string name="create_post_page_fab_tooltip">Een bericht of pagina maken</string>
     <string name="content_description_person_building_website">Persoon die de site gebouwd heeft</string>
@@ -2812,7 +2824,7 @@ Language: nl
     <string name="site_settings_timezone_subtitle">Kies een plaats in je tijdzone</string>
     <string name="site_settings_timezone_title">Tijdzone</string>
     <string name="site_settings_time_format_title">Tijdformaat</string>
-    <string name="site_settings_date_format_title">Datumformaat</string>
+    <string name="site_settings_date_format_title">Datumnotatie</string>
     <string name="site_settings_week_start_title">Week start op</string>
     <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_traffic_header">Verkeer</string>

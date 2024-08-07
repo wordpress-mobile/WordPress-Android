@@ -1,0 +1,5 @@
+25.2:
+I den här versionen har vi åtgärdat två stora problem:
+* Det är nu möjligt att uppdatera publiceringsdatumet för inlägg igen.
+* Vissa användare kunde inte uppdatera sitt inläggsinnehåll.
+Som alltid, kontakta supporten om något inte fungerar som det ska.

@@ -2,9 +2,12 @@ package org.wordpress.android.viewmodel.helpers
 
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.os.Build
+import android.os.Build.VERSION_CODES
 import androidx.lifecycle.LiveData
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.helpers.ConnectionStatusLiveData.Factory
@@ -28,7 +31,11 @@ class ConnectionStatusLiveData private constructor(private val context: Context)
     override fun onActive() {
         super.onActive()
         val intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        context.registerReceiver(networkReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            context.registerReceiver(networkReceiver, intentFilter, ContextWrapper.RECEIVER_EXPORTED)
+        } else {
+            context.registerReceiver(networkReceiver, intentFilter)
+        }
     }
 
     override fun onInactive() {
