@@ -33,6 +33,7 @@ import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -72,17 +73,23 @@ class FeedbackFormViewModel @Inject constructor(
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
         // if there are attachments, upload them first to get their tokens, then create the feedback request
-        // when they're all uploaded
+        // when they're done uploading
         if (_attachments.value.isNotEmpty()) {
             showProgressDialog(R.string.uploading)
             launch {
-                val files =  _attachments.value.map { it.tempFile }
-                val tokens = zendeskUploadHelper.uploadFileAttachments(files)
-                withContext(Dispatchers.Main) {
-                    createZendeskFeedbackRequest(
-                        context = context,
-                        attachmentTokens = tokens ?: emptyList()
-                    )
+                val files = _attachments.value.map { it.tempFile }
+                try {
+                    val tokens = zendeskUploadHelper.uploadFileAttachments(files)
+                    withContext(Dispatchers.Main) {
+                        createZendeskFeedbackRequest(
+                            context = context,
+                            attachmentTokens = tokens
+                        )
+                    }
+                } catch (e: IOException) {
+                    hideProgressDialog()
+                    onFailure(e.message)
+                    return@launch
                 }
             }
         } else {
@@ -175,12 +182,15 @@ class FeedbackFormViewModel @Inject constructor(
         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             stringArray?.forEach { stringUri ->
-                addAttachment(context, Uri.parse(stringUri))
+                // don't add additional attachments if one fails
+                if (!addAttachment(context, Uri.parse(stringUri))) {
+                    return
+                }
             }
         }
     }
 
-    private fun addAttachment(context: Context, uri: Uri) {
+    private fun addAttachment(context: Context, uri: Uri): Boolean {
         val list = _attachments.value
         val newList = list.toMutableList()
         val size = uri.fileSize(context)
@@ -191,10 +201,8 @@ class FeedbackFormViewModel @Inject constructor(
             showToast(R.string.feedback_form_max_attachments_reached)
         } else if (newList.any { it.uri == uri }) {
             showToast(R.string.feedback_form_attachment_already_added)
-        } else if (size > MAX_SINGLE_ATTACHMENT_SIZE) {
+        } else if (size > MAX_ATTACHMENT_SIZE) {
             showToast(R.string.feedback_form_attachment_too_large)
-        } else if (totalAttachmentSize() + size > MAX_TOTAL_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_total_attachments_too_large)
         } else if (file == null) {
             showToast(R.string.feedback_form_unable_to_create_tempfile)
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
@@ -220,7 +228,10 @@ class FeedbackFormViewModel @Inject constructor(
                 )
             )
             _attachments.value = newList.toList()
+            return true
         }
+
+        return false
     }
 
     fun onRemoveMediaClick(uri: Uri) {
@@ -231,11 +242,6 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
-    private fun totalAttachmentSize(): Long {
-        val list = _attachments.value
-        return list.sumOf { it.size }
-    }
-
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
@@ -243,9 +249,9 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MAX_SINGLE_ATTACHMENT_SIZE = 50000000
-        private const val MAX_TOTAL_ATTACHMENT_SIZE = MAX_SINGLE_ATTACHMENT_SIZE * 3
-        private const val MAX_ATTACHMENTS = 15
+        // these match iOS
+        private const val MAX_ATTACHMENT_SIZE = 32_000_000
+        private const val MAX_ATTACHMENTS = 5
     }
 }
 
