@@ -21,7 +21,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,14 +41,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.ProgressDialog
+import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.compose.theme.M3Theme
 import java.io.File
 
 @Composable
 fun FeedbackFormScreen(
     messageText: State<String>?,
-    isProgressShowing: State<Boolean?>,
     attachments: State<List<FeedbackFormAttachment>>,
+    progressDialogState: State<ProgressDialogState?>?,
     onMessageChanged: (String) -> Unit,
     onSubmitClick: (context: Context) -> Unit,
     onCloseClick: (context: Context) -> Unit,
@@ -75,7 +76,7 @@ fun FeedbackFormScreen(
         }
         SubmitButton(
             isEnabled = message.isNotEmpty(),
-            isProgressShowing = isProgressShowing.value,
+            progressDialogState = progressDialogState?.value,
             onClick = {
                 onSubmitClick(context)
             }
@@ -119,7 +120,7 @@ private fun MessageSection(
 private fun SubmitButton(
     onClick: () -> Unit,
     isEnabled: Boolean,
-    isProgressShowing: Boolean?,
+    progressDialogState: ProgressDialogState? = null,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -130,18 +131,17 @@ private fun SubmitButton(
                 horizontal = H_PADDING.dp
             ),
     ) {
-        if (isProgressShowing == true) {
-            CircularProgressIndicator()
-        } else {
-            Button(
-                enabled = isEnabled,
-                onClick = onClick,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = stringResource(R.string.submit).uppercase(),
-                )
-            }
+        if (progressDialogState != null) {
+            ProgressDialog(progressDialogState)
+        }
+        Button(
+            enabled = isEnabled,
+            onClick = onClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.submit).uppercase(),
+            )
         }
     }
 }
@@ -282,12 +282,18 @@ private fun FeedbackFormScreenPreview() {
         tempFile = File("/tmp/attachment.jpg")
     )
     val attachments = MutableStateFlow(listOf(attachment))
-    val isProgressShowing = MutableStateFlow<Boolean?>(null)
     val messageText = MutableStateFlow("I love this app!")
+    val progressDialogState = MutableStateFlow<ProgressDialogState?>(
+        ProgressDialogState(
+            message = R.string.uploading,
+            showCancel = false,
+            progress = 50f / 100f,
+        )
+    )
 
     FeedbackFormScreen(
         messageText = messageText.collectAsState(),
-        isProgressShowing = isProgressShowing.collectAsState(),
+        progressDialogState = progressDialogState.collectAsState(),
         attachments = attachments.collectAsState(),
         onMessageChanged = {},
         onSubmitClick = {},

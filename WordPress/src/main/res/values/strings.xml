@@ -111,6 +111,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="free">Free</string>
     <string name="dismiss">Dismiss</string>
+    <string name="sending">Sending</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
