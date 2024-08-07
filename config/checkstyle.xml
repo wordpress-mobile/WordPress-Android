@@ -119,8 +119,6 @@
       <property name="severity" value="error"/>
     </module>
 
-    <!-- Checks for Size Violations.                    -->
-    <!-- See http://checkstyle.sf.net/config_sizes.html -->
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <!-- what is a good max value? -->
