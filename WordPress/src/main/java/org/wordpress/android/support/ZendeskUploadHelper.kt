@@ -2,7 +2,6 @@ package org.wordpress.android.support
 
 import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
-import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.extensions.mimeType
@@ -11,6 +10,7 @@ import zendesk.support.UploadResponse
 import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
@@ -21,12 +21,12 @@ class ZendeskUploadHelper @Inject constructor() {
      */
     suspend fun uploadFileAttachments(
         files: List<File>,
-    ) = suspendCancellableCoroutine { continuation ->
+    ) = suspendCoroutine { continuation ->
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
             AppLog.e(T.SUPPORT, "Upload provider is null")
             continuation.resume(null)
-            return@suspendCancellableCoroutine
+            return@suspendCoroutine
         }
 
         val tokens = ArrayList<String>()
