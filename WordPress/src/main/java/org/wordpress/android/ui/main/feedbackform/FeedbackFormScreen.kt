@@ -66,6 +66,9 @@ fun FeedbackFormScreen(
                 onMessageChanged(it)
             },
         )
+        ImagePager(
+            imageFiles = attachments.value.map { it.tempFile }
+        )
         AttachmentButton(
             onChooseMediaClick = onChooseMediaClick
         )

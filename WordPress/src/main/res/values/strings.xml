@@ -1137,7 +1137,7 @@
     <string name="feedback_form_failure">We were unable to submit your feedback</string>
     <string name="feedback_form_max_attachments_reached">Maximum number of attachments reached</string>
     <string name="feedback_form_unsupported_attachment">This file type is not supported</string>
-    <string name="feedback_form_attachment_too_large">Attachments must be %s or smaller</string>
+    <string name="feedback_form_attachment_too_large">Attachments must be 32MB or smaller</string>
     <string name="feedback_form_attachment_already_added">Attachment already added</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
