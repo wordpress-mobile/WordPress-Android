@@ -16,40 +16,6 @@ import kotlin.coroutines.suspendCoroutine
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
  */
 class ZendeskUploadHelper @Inject constructor() {
-    /**
-     * Uploads a single file attachment to Zendesk and returns the token upon completion
-     */
-    @Suppress("unused")
-    suspend fun uploadFileAttachment(
-        file: File,
-        mimeType: String,
-    ) = suspendCoroutine { continuation ->
-        val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
-        if (uploadProvider == null) {
-            AppLog.e(T.SUPPORT, "Upload provider is null")
-            continuation.resume(null)
-            return@suspendCoroutine
-        }
-
-        val callback = object : ZendeskCallback<UploadResponse>() {
-            override fun onSuccess(result: UploadResponse) {
-                continuation.resume(result.token)
-            }
-
-            override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.e(
-                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
-                )
-                continuation.resume(null)
-            }
-        }
-        uploadProvider.uploadAttachment(
-            file.name,
-            file,
-            mimeType,
-            callback
-        )
-    }
 
     /**
      * Uploads multiple attachments to Zendesk and returns a list of their tokens when completed
