@@ -4,34 +4,64 @@ import com.zendesk.service.ErrorResponse
 import com.zendesk.service.ZendeskCallback
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.extensions.mimeType
 import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
  */
 class ZendeskUploadHelper @Inject constructor() {
     /**
-     * Uploads an attachment to Zendesk. Note that the UploadResponse will contain the attachment token.
+     * Uploads multiple attachments to Zendesk and returns a list of their tokens when completed
      */
-    fun uploadAttachment(
-        file: File,
-        mimeType: String,
-        callback: ZendeskCallback<UploadResponse>,
-    ) {
+    suspend fun uploadFileAttachments(
+        files: List<File>,
+    ) = suspendCoroutine { continuation ->
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
             AppLog.e(T.SUPPORT, "Upload provider is null")
-            return
+            continuation.resume(null)
+            return@suspendCoroutine
         }
-        uploadProvider.uploadAttachment(
-            file.name,
-            file,
-            mimeType,
-            callback
-        )
+
+        val tokens = ArrayList<String>()
+        var numAttachments = files.size
+
+        fun decAttachments() {
+            numAttachments--
+            if (numAttachments <= 0) {
+                continuation.resume(tokens)
+            }
+        }
+
+        val callback = object : ZendeskCallback<UploadResponse>() {
+            override fun onSuccess(result: UploadResponse) {
+                result.token?.let {
+                    tokens.add(it)
+                }
+                decAttachments()
+            }
+
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.e(
+                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
+                )
+                decAttachments()
+            }
+        }
+        for (file in files) {
+            uploadProvider.uploadAttachment(
+                file.name,
+                file,
+                file.mimeType() ?: "",
+                callback
+            )
+        }
     }
 
     /**

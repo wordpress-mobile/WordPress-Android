@@ -7,13 +7,13 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.zendesk.service.ErrorResponse
-import com.zendesk.service.ZendeskCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
@@ -25,7 +25,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtilsWrapper
@@ -34,7 +33,6 @@ import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
-import zendesk.support.UploadResponse
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -58,8 +56,6 @@ class FeedbackFormViewModel @Inject constructor(
     private val _progressDialogState = MutableStateFlow<ProgressDialogState?>(null)
     val progressDialogState = _progressDialogState.asStateFlow()
 
-    private val attachmentTokens = ArrayList<String>()
-
     fun updateMessageText(message: String) {
         if (message != _messageText.value) {
             _messageText.value = message
@@ -76,18 +72,28 @@ class FeedbackFormViewModel @Inject constructor(
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
         // if there are attachments, upload them first to get their tokens, then create the feedback request
-        // when they're all uploaded. using a completion handler here isn't ideal but it's done since Zendesk
-        // only provides callbacks for uploading.
+        // when they're all uploaded
         if (_attachments.value.isNotEmpty()) {
-            uploadAttachments(
-                completionHandler = { createZendeskFeedbackRequest(context) }
-            )
+            showProgressDialog(R.string.uploading)
+            launch {
+                val files =  _attachments.value.map { it.tempFile }
+                val tokens = zendeskUploadHelper.uploadFileAttachments(files)
+                withContext(Dispatchers.Main) {
+                    createZendeskFeedbackRequest(
+                        context = context,
+                        attachmentTokens = tokens ?: emptyList()
+                    )
+                }
+            }
         } else {
             createZendeskFeedbackRequest(context)
         }
     }
 
-    private fun createZendeskFeedbackRequest(context: Context) {
+    private fun createZendeskFeedbackRequest(
+        context: Context,
+        attachmentTokens: List<String> = emptyList()
+    ) {
         showProgressDialog(R.string.sending)
         zendeskHelper.createRequest(
             context = context,
@@ -233,50 +239,6 @@ class FeedbackFormViewModel @Inject constructor(
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
-        }
-    }
-
-    /**
-     * Uploads the attachments to Zendesk and builds a list of their tokens. The passed
-     * completion handler will be called once all attachments have been uploaded.
-     */
-    private fun uploadAttachments(
-        completionHandler: () -> Unit
-    ) {
-        attachmentTokens.clear()
-        var numAttachments = _attachments.value.size
-
-        fun decAttachments() {
-            numAttachments--
-            if (numAttachments <= 0) {
-                hideProgressDialog()
-                completionHandler()
-            }
-        }
-
-        val callback = object : ZendeskCallback<UploadResponse>() {
-            override fun onSuccess(result: UploadResponse) {
-                result.token?.let {
-                    attachmentTokens.add(it)
-                }
-                decAttachments()
-            }
-
-            override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.e(
-                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
-                )
-                decAttachments()
-            }
-        }
-
-        showProgressDialog(R.string.uploading)
-        _attachments.value.forEach { attachment ->
-            zendeskUploadHelper.uploadAttachment(
-                file = attachment.tempFile,
-                mimeType = attachment.mimeType,
-                callback = callback
-            )
         }
     }
 
