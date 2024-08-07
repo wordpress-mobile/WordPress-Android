@@ -19,15 +19,15 @@ import kotlin.coroutines.resumeWithException
  */
 class ZendeskUploadHelper @Inject constructor() {
     /**
-     * Uploads multiple attachments to Zendesk and returns a list of their tokens when completed
+     * Uploads multiple file attachments to Zendesk and returns a list of their tokens when
+     * all uploads have completed
      */
     suspend fun uploadFileAttachments(
-        files: List<File>,
+        files: List<File>
     ) = suspendCancellableCoroutine { continuation ->
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
-            AppLog.e(T.SUPPORT, "Upload provider is null")
-            continuation.resumeWithException(IOException("Unable to upload attachments"))
+            continuation.resumeWithException(IOException("Unable to upload attachments (null provider)"))
             return@suspendCancellableCoroutine
         }
 
@@ -48,9 +48,8 @@ class ZendeskUploadHelper @Inject constructor() {
             }
 
             override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.e(T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}")
                 if (continuation.isActive) {
-                    continuation.resumeWithException(IOException("Uploading to Zendesk failed"))
+                    continuation.resumeWithException(IOException("Uploading to Zendesk failed with ${errorResponse?.reason}"))
                 }
             }
         }
