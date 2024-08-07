@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.compose.components
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,7 +62,7 @@ fun ProgressDialog(progressDialogState: ProgressDialogState) {
                     }
                     if (progressDialogState.message != null) {
                         Text(
-                            text = progressDialogState.message,
+                            text = LocalContext.current.getString(progressDialogState.message),
                             Modifier.padding(16.dp, 0.dp, 16.dp, 16.dp),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -86,7 +88,7 @@ fun ProgressDialog(progressDialogState: ProgressDialogState) {
 }
 
 data class ProgressDialogState(
-    val message: String? = null,
+    @StringRes val message: Int? = null,
     val progress: Float? = null,
     val showCancel: Boolean = false,
     val dismissible: Boolean = true,
@@ -106,7 +108,7 @@ data class ProgressDialogState(
 fun ProgressDialogPreview() {
     ProgressDialog(
         progressDialogState = ProgressDialogState(
-            message = "Uploading...",
+            message = R.string.uploading,
             showCancel = true,
             progress = 50f / 100f,
         )
