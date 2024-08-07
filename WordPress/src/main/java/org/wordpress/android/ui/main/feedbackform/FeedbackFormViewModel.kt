@@ -7,6 +7,8 @@ import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.zendesk.service.ErrorResponse
+import com.zendesk.service.ZendeskCallback
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,12 +18,14 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
+import org.wordpress.android.support.ZendeskUploadHelper
 import org.wordpress.android.ui.accounts.HelpActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
@@ -29,6 +33,7 @@ import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
+import zendesk.support.UploadResponse
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,6 +41,7 @@ import javax.inject.Named
 class FeedbackFormViewModel @Inject constructor(
     @Named(UI_THREAD) mainDispatcher: CoroutineDispatcher,
     private val zendeskHelper: ZendeskHelper,
+    private val zendeskUploadHelper: ZendeskUploadHelper,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val appLogWrapper: AppLogWrapper,
     private val toastUtilsWrapper: ToastUtilsWrapper,
@@ -50,6 +56,8 @@ class FeedbackFormViewModel @Inject constructor(
 
     private val _attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
     val attachments = _attachments.asStateFlow()
+
+    private val attachmentTokens = ArrayList<String>()
 
     fun updateMessageText(message: String) {
         if (message != _messageText.value) {
@@ -66,9 +74,29 @@ class FeedbackFormViewModel @Inject constructor(
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
+        // if there are attachments, upload them first then create the feedback request when they're all uploaded.
+        // using a completion handler isn't ideal but it's done since Zendesk only provides uploading using callbacks.
+        if (_attachments.value.isNotEmpty()) {
+            uploadAttachments(
+                completionHandler = { createZendeskFeedbackRequest(context) }
+            )
+        } else {
+            createZendeskFeedbackRequest(context)
+        }
+    }
+
+    private fun createZendeskFeedbackRequest(
+        context: Context,
+    ) {
         _isProgressShowing.value = true
-        createZendeskFeedbackRequest(
+
+        zendeskHelper.createRequest(
             context = context,
+            origin = HelpActivity.Origin.FEEDBACK_FORM,
+            selectedSite = selectedSiteRepository.getSelectedSite(),
+            extraTags = listOf("in_app_feedback"),
+            requestDescription = _messageText.value,
+            attachmentTokens = attachmentTokens,
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
                     _isProgressShowing.value = false
@@ -80,20 +108,6 @@ class FeedbackFormViewModel @Inject constructor(
                     onFailure(errorMessage)
                 }
             })
-    }
-
-    private fun createZendeskFeedbackRequest(
-        context: Context,
-        callback: ZendeskHelper.CreateRequestCallback
-    ) {
-        zendeskHelper.createRequest(
-            context = context,
-            origin = HelpActivity.Origin.FEEDBACK_FORM,
-            selectedSite = selectedSiteRepository.getSelectedSite(),
-            extraTags = listOf("in_app_feedback"),
-            requestDescription = _messageText.value,
-            callback = callback
-        )
     }
 
     fun onCloseClick(context: Context) {
@@ -124,7 +138,7 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     private fun onFailure(errorMessage: String? = null) {
-        appLogWrapper.e(AppLog.T.SUPPORT, "Failed to submit feedback form: $errorMessage")
+        appLogWrapper.e(T.SUPPORT, "Failed to submit feedback form: $errorMessage")
         showToast(R.string.feedback_form_failure)
     }
 
@@ -205,6 +219,49 @@ class FeedbackFormViewModel @Inject constructor(
     private fun showToast(@StringRes msgId: Int) {
         viewModelScope.launch {
             toastUtilsWrapper.showToast(msgId)
+        }
+    }
+
+    /**
+     * Uploads the attachments to Zendesk
+     */
+    private fun uploadAttachments(
+        completionHandler: () -> Unit
+    ) {
+        attachmentTokens.clear()
+        var numAttachments = _attachments.value.size
+
+        fun decAttachments() {
+            numAttachments--
+            if (numAttachments <= 0) {
+                _isProgressShowing.value = false
+                completionHandler()
+            }
+        }
+
+        val callback = object : ZendeskCallback<UploadResponse>() {
+            override fun onSuccess(result: UploadResponse) {
+                result.token?.let {
+                    attachmentTokens.add(it)
+                }
+                decAttachments()
+            }
+
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.e(
+                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
+                )
+                decAttachments()
+            }
+        }
+
+        _isProgressShowing.value = true
+        _attachments.value.forEach { attachment ->
+            zendeskUploadHelper.uploadAttachment(
+                file = attachment.tempFile,
+                mimeType = attachment.mimeType,
+                callback = callback
+            )
         }
     }
 

@@ -16,14 +16,3 @@ enum class FeedbackFormAttachmentType {
     IMAGE,
     VIDEO,
 }
-
-/**
- * TODO
- *
-fun FeedbackFormAttachment.toZenDeskAttachment(): SupportNetworkService.ZenDeskSupportTicket.Attachment {
-    return SupportNetworkService.ZenDeskSupportTicket.Attachment(
-        file = this.tempFile,
-        type = this.mimeType
-    )
-}
-*/
