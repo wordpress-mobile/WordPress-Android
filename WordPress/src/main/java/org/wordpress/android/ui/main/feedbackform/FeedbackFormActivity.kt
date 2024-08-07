@@ -27,7 +27,7 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                 setContent {
                     FeedbackFormScreen(
                         messageText = viewModel.messageText.collectAsState(),
-                        isProgressShowing = viewModel.isProgressShowing.collectAsState(),
+                        progressDialogState = viewModel.progressDialogState.collectAsState(),
                         attachments = viewModel.attachments.collectAsState(),
                         onMessageChanged = {
                             viewModel.updateMessageText(it)

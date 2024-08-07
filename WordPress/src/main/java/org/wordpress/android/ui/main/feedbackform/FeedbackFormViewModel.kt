@@ -20,6 +20,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.support.ZendeskUploadHelper
 import org.wordpress.android.ui.accounts.HelpActivity
+import org.wordpress.android.ui.compose.components.ProgressDialogState
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
@@ -51,11 +52,11 @@ class FeedbackFormViewModel @Inject constructor(
     private val _messageText = MutableStateFlow("")
     val messageText = _messageText.asStateFlow()
 
-    private val _isProgressShowing = MutableStateFlow<Boolean?>(null)
-    val isProgressShowing = _isProgressShowing.asStateFlow()
-
     private val _attachments = MutableStateFlow<List<FeedbackFormAttachment>>(emptyList())
     val attachments = _attachments.asStateFlow()
+
+    private val _progressDialogState = MutableStateFlow<ProgressDialogState?>(null)
+    val progressDialogState = _progressDialogState.asStateFlow()
 
     private val attachmentTokens = ArrayList<String>()
 
@@ -74,8 +75,9 @@ class FeedbackFormViewModel @Inject constructor(
         //  identity if it hasn't been previously set
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
-        // if there are attachments, upload them first then create the feedback request when they're all uploaded.
-        // using a completion handler isn't ideal but it's done since Zendesk only provides uploading using callbacks.
+        // if there are attachments, upload them first to get their tokens, then create the feedback request
+        // when they're all uploaded. using a completion handler here isn't ideal but it's done since Zendesk
+        // only provides callbacks for uploading.
         if (_attachments.value.isNotEmpty()) {
             uploadAttachments(
                 completionHandler = { createZendeskFeedbackRequest(context) }
@@ -85,11 +87,8 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
-    private fun createZendeskFeedbackRequest(
-        context: Context,
-    ) {
-        _isProgressShowing.value = true
-
+    private fun createZendeskFeedbackRequest(context: Context) {
+        showProgressDialog(R.string.sending)
         zendeskHelper.createRequest(
             context = context,
             origin = HelpActivity.Origin.FEEDBACK_FORM,
@@ -99,15 +98,30 @@ class FeedbackFormViewModel @Inject constructor(
             attachmentTokens = attachmentTokens,
             callback = object : ZendeskHelper.CreateRequestCallback() {
                 override fun onSuccess() {
-                    _isProgressShowing.value = false
+                    hideProgressDialog()
                     onSuccess(context)
                 }
 
                 override fun onError(errorMessage: String?) {
-                    _isProgressShowing.value = false
+                    hideProgressDialog()
                     onFailure(errorMessage)
                 }
             })
+    }
+
+    private fun showProgressDialog(
+        @StringRes message: Int
+    ) {
+        _progressDialogState.value =
+            ProgressDialogState(
+                message = message,
+                showCancel = false,
+                dismissible = false
+            )
+    }
+
+    private fun hideProgressDialog() {
+        _progressDialogState.value = null
     }
 
     fun onCloseClick(context: Context) {
@@ -223,7 +237,8 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     /**
-     * Uploads the attachments to Zendesk
+     * Uploads the attachments to Zendesk and builds a list of their tokens. The passed
+     * completion handler will be called once all attachments have been uploaded.
      */
     private fun uploadAttachments(
         completionHandler: () -> Unit
@@ -234,7 +249,7 @@ class FeedbackFormViewModel @Inject constructor(
         fun decAttachments() {
             numAttachments--
             if (numAttachments <= 0) {
-                _isProgressShowing.value = false
+                hideProgressDialog()
                 completionHandler()
             }
         }
@@ -255,7 +270,7 @@ class FeedbackFormViewModel @Inject constructor(
             }
         }
 
-        _isProgressShowing.value = true
+        showProgressDialog(R.string.uploading)
         _attachments.value.forEach { attachment ->
             zendeskUploadHelper.uploadAttachment(
                 file = attachment.tempFile,
