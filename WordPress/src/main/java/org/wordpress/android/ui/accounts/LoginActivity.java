@@ -215,6 +215,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private void initViewModel() {
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(LoginViewModel.class);
 
+        String inputUrl = "https://automatticwidgets.wpcomstaging.com/";
+        String authorizationUrl = mViewModel.runApiDiscoveryTest(inputUrl);
+        WPSnackbar.make(
+                findViewById(R.id.main_view),
+                "Found authorization url: " + authorizationUrl,
+                Snackbar.LENGTH_LONG
+        ).show();
+
         // initObservers
         mViewModel.getNavigationEvents().observe(this, event -> {
             LoginNavigationEvents loginEvent = event.getContentIfNotHandled();
