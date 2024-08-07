@@ -76,11 +76,13 @@ fun FeedbackFormScreen(
         }
         SubmitButton(
             isEnabled = message.isNotEmpty(),
-            progressDialogState = progressDialogState?.value,
             onClick = {
                 onSubmitClick(context)
             }
         )
+        progressDialogState?.value?.let {
+            ProgressDialog(it)
+        }
     }
     Screen(
         content = content,
@@ -120,7 +122,6 @@ private fun MessageSection(
 private fun SubmitButton(
     onClick: () -> Unit,
     isEnabled: Boolean,
-    progressDialogState: ProgressDialogState? = null,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -131,9 +132,6 @@ private fun SubmitButton(
                 horizontal = H_PADDING.dp
             ),
     ) {
-        if (progressDialogState != null) {
-            ProgressDialog(progressDialogState)
-        }
         Button(
             enabled = isEnabled,
             onClick = onClick,
@@ -273,7 +271,7 @@ private fun Screen(
 )
 @Composable
 private fun FeedbackFormScreenPreview() {
-    val attachment = FeedbackFormAttachment(
+    val attachment1 = FeedbackFormAttachment(
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
@@ -281,13 +279,22 @@ private fun FeedbackFormScreenPreview() {
         mimeType = "image/jpeg",
         tempFile = File("/tmp/attachment.jpg")
     )
-    val attachments = MutableStateFlow(listOf(attachment))
+    val attachment2 = FeedbackFormAttachment(
+        uri = Uri.parse("https://via.placeholder.com/150"),
+        attachmentType = FeedbackFormAttachmentType.VIDEO,
+        size = 123456789,
+        displayName = "attachment.mp4 (12.4 MB)",
+        mimeType = "video/mp4",
+        tempFile = File("/tmp/attachment.mp4")
+    )
+    val attachments = MutableStateFlow(listOf(attachment1, attachment2))
     val messageText = MutableStateFlow("I love this app!")
     val progressDialogState = MutableStateFlow<ProgressDialogState?>(
         ProgressDialogState(
             message = R.string.uploading,
             showCancel = false,
             progress = 50f / 100f,
+            dismissible = false,
         )
     )
 
