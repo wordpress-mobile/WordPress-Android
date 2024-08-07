@@ -77,7 +77,7 @@ class FeedbackFormViewModel @Inject constructor(
         if (_attachments.value.isNotEmpty()) {
             showProgressDialog(R.string.uploading)
             launch {
-                val files =  _attachments.value.map { it.tempFile }
+                val files = _attachments.value.map { it.tempFile }
                 try {
                     val tokens = zendeskUploadHelper.uploadFileAttachments(files)
                     withContext(Dispatchers.Main) {
@@ -182,12 +182,15 @@ class FeedbackFormViewModel @Inject constructor(
         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             stringArray?.forEach { stringUri ->
-                addAttachment(context, Uri.parse(stringUri))
+                // don't add additional attachments if one fails
+                if (!addAttachment(context, Uri.parse(stringUri))) {
+                    return
+                }
             }
         }
     }
 
-    private fun addAttachment(context: Context, uri: Uri) {
+    private fun addAttachment(context: Context, uri: Uri): Boolean {
         val list = _attachments.value
         val newList = list.toMutableList()
         val size = uri.fileSize(context)
@@ -227,7 +230,10 @@ class FeedbackFormViewModel @Inject constructor(
                 )
             )
             _attachments.value = newList.toList()
+            return true
         }
+
+        return false
     }
 
     fun onRemoveMediaClick(uri: Uri) {
