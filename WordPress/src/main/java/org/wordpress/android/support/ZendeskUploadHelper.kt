@@ -49,7 +49,9 @@ class ZendeskUploadHelper @Inject constructor() {
 
             override fun onError(errorResponse: ErrorResponse?) {
                 if (continuation.isActive) {
-                    continuation.resumeWithException(IOException("Uploading to Zendesk failed with ${errorResponse?.reason}"))
+                    continuation.resumeWithException(
+                        IOException("Uploading to Zendesk failed with ${errorResponse?.reason}")
+                    )
                 }
             }
         }
