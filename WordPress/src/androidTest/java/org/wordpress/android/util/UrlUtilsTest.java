@@ -2,9 +2,9 @@ package org.wordpress.android.util;
 
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-
 import dagger.hilt.android.testing.HiltAndroidTest;
+
+import static junit.framework.TestCase.assertEquals;
 
 @HiltAndroidTest
 public class UrlUtilsTest {
