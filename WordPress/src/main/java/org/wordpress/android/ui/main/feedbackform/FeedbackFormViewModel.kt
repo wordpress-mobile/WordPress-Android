@@ -115,7 +115,8 @@ class FeedbackFormViewModel @Inject constructor(
         _progressDialogState.value =
             ProgressDialogState(
                 message = message,
-                showCancel = false
+                showCancel = false,
+                dismissible = false
             )
     }
 
