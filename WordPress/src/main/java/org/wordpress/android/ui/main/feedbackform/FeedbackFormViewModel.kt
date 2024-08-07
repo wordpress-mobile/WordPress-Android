@@ -202,7 +202,7 @@ class FeedbackFormViewModel @Inject constructor(
         } else if (newList.any { it.uri == uri }) {
             showToast(R.string.feedback_form_attachment_already_added)
         } else if (size > MAX_ATTACHMENT_SIZE) {
-            showToast(R.string.feedback_form_attachment_too_large)
+            showToast(context.getString(R.string.feedback_form_attachment_too_large, MAX_ATTACHMENT_SIZE_FMT))
         } else if (file == null) {
             showToast(R.string.feedback_form_unable_to_create_tempfile)
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
@@ -248,8 +248,16 @@ class FeedbackFormViewModel @Inject constructor(
         }
     }
 
+    private fun showToast(msg: String) {
+        viewModelScope.launch {
+            toastUtilsWrapper.showToast(msg)
+        }
+    }
+
     companion object {
+        // these match iOS
         private const val MAX_ATTACHMENT_SIZE = 32_000_000
+        private const val MAX_ATTACHMENT_SIZE_FMT = "32MB"
         private const val MAX_ATTACHMENTS = 5
     }
 }
