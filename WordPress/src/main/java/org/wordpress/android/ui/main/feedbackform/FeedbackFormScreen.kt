@@ -67,7 +67,12 @@ fun FeedbackFormScreen(
             },
         )
         ImagePager(
-            imageFiles = attachments.value.map { it.tempFile }
+            imageFiles = attachments.value.map { it.tempFile },
+            modifier = Modifier
+                .padding(
+                    vertical = V_PADDING.dp,
+                    horizontal = H_PADDING.dp
+                )
         )
         AttachmentButton(
             onChooseMediaClick = onChooseMediaClick
