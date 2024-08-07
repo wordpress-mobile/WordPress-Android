@@ -33,6 +33,7 @@ import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -72,17 +73,23 @@ class FeedbackFormViewModel @Inject constructor(
         zendeskHelper.createAnonymousIdentityIfNeeded()
 
         // if there are attachments, upload them first to get their tokens, then create the feedback request
-        // when they're all uploaded
+        // when they're done uploading
         if (_attachments.value.isNotEmpty()) {
             showProgressDialog(R.string.uploading)
             launch {
                 val files =  _attachments.value.map { it.tempFile }
-                val tokens = zendeskUploadHelper.uploadFileAttachments(files)
-                withContext(Dispatchers.Main) {
-                    createZendeskFeedbackRequest(
-                        context = context,
-                        attachmentTokens = tokens ?: emptyList()
-                    )
+                try {
+                    val tokens = zendeskUploadHelper.uploadFileAttachments(files)
+                    withContext(Dispatchers.Main) {
+                        createZendeskFeedbackRequest(
+                            context = context,
+                            attachmentTokens = tokens
+                        )
+                    }
+                } catch (e: IOException) {
+                    hideProgressDialog()
+                    onFailure(e.message)
+                    return@launch
                 }
             }
         } else {

@@ -9,8 +9,10 @@ import org.wordpress.android.util.extensions.mimeType
 import zendesk.support.Support
 import zendesk.support.UploadResponse
 import java.io.File
+import java.io.IOException
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * https://zendesk.github.io/mobile_sdk_javadocs/supportv2/v301/index.html?zendesk/support/UploadProvider.html
@@ -25,33 +27,31 @@ class ZendeskUploadHelper @Inject constructor() {
         val uploadProvider = Support.INSTANCE.provider()?.uploadProvider()
         if (uploadProvider == null) {
             AppLog.e(T.SUPPORT, "Upload provider is null")
-            continuation.resume(null)
+            continuation.resumeWithException(IOException("Unable to upload attachments"))
             return@suspendCancellableCoroutine
         }
 
         val tokens = ArrayList<String>()
         var numAttachments = files.size
 
-        fun decAttachments() {
-            numAttachments--
-            if (numAttachments <= 0) {
-                continuation.resume(tokens)
-            }
-        }
-
         val callback = object : ZendeskCallback<UploadResponse>() {
             override fun onSuccess(result: UploadResponse) {
-                result.token?.let {
-                    tokens.add(it)
+                if (continuation.isActive) {
+                    result.token?.let {
+                        tokens.add(it)
+                    }
+                    numAttachments--
+                    if (numAttachments <= 0) {
+                        continuation.resume(tokens)
+                    }
                 }
-                decAttachments()
             }
 
             override fun onError(errorResponse: ErrorResponse?) {
-                AppLog.e(
-                    T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}"
-                )
-                decAttachments()
+                AppLog.e(T.SUPPORT, "Uploading to Zendesk failed with ${errorResponse?.reason}")
+                if (continuation.isActive) {
+                    continuation.resumeWithException(IOException("Uploading to Zendesk failed"))
+                }
             }
         }
         for (file in files) {
@@ -79,8 +79,8 @@ class ZendeskUploadHelper @Inject constructor() {
                 AppLog.i(T.SUPPORT, "Successfully deleted Zendesk attachment")
             }
 
-            override fun onError(error: ErrorResponse?) {
-                AppLog.e(T.SUPPORT, "Unable to delete Zendesk attachment")
+            override fun onError(errorResponse: ErrorResponse?) {
+                AppLog.e(T.SUPPORT, "Unable to delete Zendesk attachment: ${errorResponse?.reason}")
             }
         })
     }
