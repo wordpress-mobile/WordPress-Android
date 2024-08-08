@@ -23,7 +23,7 @@ import org.wordpress.android.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ImagePager(
+fun UriImagePager(
     imageUris: List<Uri>,
     modifier: Modifier = Modifier
 ) {
@@ -72,10 +72,10 @@ private fun UriImage(uri: Uri) {
 )
 @Composable
 private fun ImagePagerPreview() {
-    val attachment1 = Uri.parse("/tmp/attachment.jpg")
+    val attachment1 = Uri.parse("https://automattic.com/wp-content/uploads/2024/07/automattic-brands.jpg?w=917")
     val attachment2 = Uri.parse("/tmp/attachment.mp4")
     val attachments = listOf(attachment1, attachment2)
-    ImagePager(
+    UriImagePager(
         imageUris = attachments
     )
 }

@@ -66,7 +66,7 @@ fun FeedbackFormScreen(
                 onMessageChanged(it)
             },
         )
-        ImagePager(
+        UriImagePager(
             imageUris = attachments.value.map { it.uri },
             modifier = Modifier
                 .padding(
