@@ -9,11 +9,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -34,7 +36,8 @@ import org.wordpress.android.R
 
 
 /**
- * A simple pager to show a carousel of images from a list of URIs
+ * A simple pager to show a carousel of images from a list of URIs. This was designed
+ * to show feedback form attachments but should be suitable for other use cases.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -107,7 +110,11 @@ private fun BoxScope.ImageButton(
     IconButton(
         onClick = { onButtonClick(uri) },
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
+            .absoluteOffset(x = (-2).dp, y = (-2).dp)
+            .background(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
+                shape = RoundedCornerShape(8.dp)
+            )
             .size(24.dp)
             .align(Alignment.BottomEnd),
     ) {
