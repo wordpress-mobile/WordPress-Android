@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main.feedbackform
+package org.wordpress.android.ui.compose.components
 
 import android.content.Context
 import android.content.res.Configuration
@@ -33,6 +33,9 @@ import coil.request.ImageRequest
 import org.wordpress.android.R
 
 
+/**
+ * A simple pager to show a carousel of images from a list of URIs
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UriImagePager(

@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
+import org.wordpress.android.ui.compose.components.UriImagePager
 import org.wordpress.android.ui.compose.theme.M3Theme
 import java.io.File
 
