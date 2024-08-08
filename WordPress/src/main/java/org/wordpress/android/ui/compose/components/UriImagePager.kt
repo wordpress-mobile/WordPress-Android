@@ -127,15 +127,15 @@ private fun BoxScope.ImageButton(
         modifier = Modifier
             .absoluteOffset(x = (-2).dp, y = (-2).dp)
             .background(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.75f),
-                shape = RoundedCornerShape(8.dp)
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.7f),
+                shape = RoundedCornerShape(2.dp)
             )
             .size(24.dp)
             .align(Alignment.BottomEnd),
     ) {
         Icon(
             imageVector = Icons.Filled.Close,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = stringResource(R.string.remove),
         )
     }
