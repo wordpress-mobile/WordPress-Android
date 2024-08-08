@@ -67,7 +67,7 @@ fun FeedbackFormScreen(
             },
         )
         ImagePager(
-            imageFiles = attachments.value.map { it.tempFile },
+            imageUris = attachments.value.map { it.uri },
             modifier = Modifier
                 .padding(
                     vertical = V_PADDING.dp,
