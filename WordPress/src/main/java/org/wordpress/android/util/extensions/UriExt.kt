@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import com.google.common.io.Files
 import org.wordpress.android.util.AppLog
 import java.io.File
@@ -32,7 +33,8 @@ fun Uri.fileSize(context: Context): Long {
     if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
         return context.contentResolver.query(this, arrayOf(OpenableColumns.SIZE), null, null, null)
             ?.use { cursor ->
-                // maybe shouldn't trust ContentResolver for size: https://stackoverflow.com/questions/48302972/content-resolver-returns-wrong-size
+                // maybe shouldn't trust ContentResolver for size:
+                // https://stackoverflow.com/questions/48302972/content-resolver-returns-wrong-size
                 val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
                 if (sizeIndex == -1) {
                     return@use 0L
@@ -49,10 +51,10 @@ fun Uri.fileSize(context: Context): Long {
  * Copies the Uri to a temporary file and returns the file
  */
 @Suppress("NestedBlockDepth", "ReturnCount")
-fun Uri.copyToTempFile(mimeType: String, context: Context): File? {
+fun Uri.copyToTempFile(context: Context): File? {
     this.fileName(context)?.let { name ->
         try {
-            var extension = mimeType.substringAfterLast("/")
+            var extension = MimeTypeMap.getFileExtensionFromUrl(this.toString())
             if (extension.isEmpty() || extension == "*") {
                 extension = "tmp"
             }
@@ -76,7 +78,12 @@ fun Uri.copyToTempFile(mimeType: String, context: Context): File? {
 }
 
 fun Uri.mimeType(context: Context): String {
-    return context.contentResolver.getType(this) ?: ""
+    return if (this.scheme == ContentResolver.SCHEME_CONTENT) {
+        context.contentResolver.getType(this) ?: ""
+    } else {
+        val extension = MimeTypeMap.getFileExtensionFromUrl(this.toString())
+        MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension) ?: ""
+    }
 }
 
 /**
@@ -93,9 +100,13 @@ fun Uri.sizeFmt(context: Context): String {
  * Returns the file name from a Uri without any path info
  */
 fun Uri.fileName(context: Context): String? {
-    return context.contentResolver.query(this, null, null, null, null)?.use {
-        val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        it.moveToFirst()
-        it.getString(nameIndex)
+    if (this.scheme == ContentResolver.SCHEME_CONTENT) {
+        val cursor = context.contentResolver.query(this, null, null, null, null)
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            it.moveToFirst()
+            return it.getString(nameIndex)
+        }
     }
+    return path?.substringAfterLast("/")
 }
