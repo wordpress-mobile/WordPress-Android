@@ -68,7 +68,7 @@ fun FeedbackFormScreen(
         )
         UriImagePager(
             imageUris = attachments.value.map { it.uri },
-            onDeleteClick =  { uri -> onRemoveMediaClick(uri) },
+            onButtonClick =  { uri -> onRemoveMediaClick(uri) },
             modifier = Modifier
                 .padding(
                     vertical = V_PADDING.dp,

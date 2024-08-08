@@ -3,8 +3,11 @@ package org.wordpress.android.ui.main.feedbackform
 import android.content.res.Configuration
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -14,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -30,8 +34,8 @@ import org.wordpress.android.R
 fun UriImagePager(
     imageUris: List<Uri>,
     modifier: Modifier = Modifier,
-    showDeleteButton: Boolean = true,
-    onDeleteClick: (Uri) -> Unit = {},
+    showButton: Boolean = true,
+    onButtonClick: (Uri) -> Unit = {},
 ) {
     val pagerState = rememberPagerState(
         pageCount = { imageUris.size }
@@ -47,8 +51,8 @@ fun UriImagePager(
             modifier = Modifier.height(IMAGE_SIZE.dp),
         ) {
             UriImage(uri)
-            if (showDeleteButton) {
-                DeleteButton(uri, onDeleteClick)
+            if (showButton) {
+                ImageButton(uri, onButtonClick)
             }
         }
     }
@@ -63,22 +67,26 @@ private fun UriImage(uri: Uri) {
             .placeholder(R.color.placeholder)
             .error(R.drawable.ic_warning)
             .build(),
-        contentScale = ContentScale.Crop,
+        contentScale = ContentScale.FillHeight,
         contentDescription = null,
     )
 }
 
 @Composable
-private fun DeleteButton(
+private fun BoxScope.ImageButton(
     uri: Uri,
-    onDeleteClick: (Uri) -> Unit = {},
+    onButtonClick: (Uri) -> Unit = {},
 ) {
     IconButton(
-        onClick = { onDeleteClick(uri) },
+        onClick = { onButtonClick(uri) },
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .size(24.dp)
+            .align(Alignment.BottomEnd),
     ) {
         Icon(
             imageVector = Icons.Filled.Close,
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = stringResource(R.string.remove),
         )
     }
