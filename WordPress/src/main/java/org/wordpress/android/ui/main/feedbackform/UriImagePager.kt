@@ -80,13 +80,13 @@ private fun BoxScope.ImageButton(
     IconButton(
         onClick = { onButtonClick(uri) },
         modifier = Modifier
-            .background(MaterialTheme.colorScheme.surfaceContainer)
+            .background(MaterialTheme.colorScheme.surface)
             .size(24.dp)
             .align(Alignment.BottomEnd),
     ) {
         Icon(
             imageVector = Icons.Filled.Close,
-            tint = MaterialTheme.colorScheme.onSurface,
+            tint = MaterialTheme.colorScheme.primary,
             contentDescription = stringResource(R.string.remove),
         )
     }
