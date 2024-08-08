@@ -6,7 +6,6 @@ import java.io.File
 data class FeedbackFormAttachment(
     val uri: Uri,
     val tempFile: File,
-    val displayName: String,
     val mimeType: String,
     val attachmentType: FeedbackFormAttachmentType,
     val size: Long,

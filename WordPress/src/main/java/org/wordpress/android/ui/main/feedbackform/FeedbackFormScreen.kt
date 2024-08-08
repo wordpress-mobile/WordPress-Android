@@ -242,7 +242,6 @@ private fun FeedbackFormScreenPreview() {
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
-        displayName = "IMAGE_1 (1.2 MB)",
         mimeType = "image/jpeg",
         tempFile = File("/tmp/attachment.jpg")
     )
@@ -250,7 +249,6 @@ private fun FeedbackFormScreenPreview() {
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.VIDEO,
         size = 123456789,
-        displayName = "VIDEO_1 (12.4 MB)",
         mimeType = "video/mp4",
         tempFile = File("/tmp/attachment.mp4")
     )

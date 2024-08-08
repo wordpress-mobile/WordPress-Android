@@ -31,7 +31,6 @@ import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
 import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
-import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.IOException
 import javax.inject.Inject
@@ -196,8 +195,8 @@ class FeedbackFormViewModel @Inject constructor(
 
     @Suppress("ReturnCount")
     private fun addAttachment(context: Context, uri: Uri): Boolean {
-        val list = _attachments.value
-        val size = uri.fileSize(context)
+        val list = _attachments.value.toMutableList()
+        val fileSize = uri.fileSize(context)
         val mimeType = uri.mimeType(context)
 
         if (list.size >= MAX_ATTACHMENTS) {
@@ -206,7 +205,7 @@ class FeedbackFormViewModel @Inject constructor(
         } else if (list.any { it.uri == uri }) {
             showToast(R.string.feedback_form_attachment_already_added)
             return false
-        } else if (size > MAX_ATTACHMENT_SIZE) {
+        } else if (fileSize > MAX_ATTACHMENT_SIZE) {
             showToast(R.string.feedback_form_attachment_too_large)
             return false
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
@@ -225,22 +224,16 @@ class FeedbackFormViewModel @Inject constructor(
         } else {
             FeedbackFormAttachmentType.IMAGE
         }
-        val newList = list.toMutableList()
-        val counter = newList.filter { it.attachmentType == attachmentType }.size + 1
-        val sizeFmt = uri.sizeFmt(context)
-        val displayName = "${attachmentType}_$counter ($sizeFmt)"
-
-        newList.add(
+        list.add(
             FeedbackFormAttachment(
                 uri = uri,
                 tempFile = file,
-                size = size,
-                displayName = displayName,
+                size = fileSize,
                 mimeType = mimeType,
                 attachmentType = attachmentType
             )
         )
-        _attachments.value = newList.toList()
+        _attachments.value = list
         return true
     }
 
