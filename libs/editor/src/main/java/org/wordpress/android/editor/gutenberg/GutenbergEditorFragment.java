@@ -1,7 +1,9 @@
 package org.wordpress.android.editor.gutenberg;
 
+import kotlin.Unit;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,6 +55,7 @@ import org.wordpress.android.editor.R;
 import org.wordpress.android.editor.WPGutenbergWebViewActivity;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogNegativeClickInterface;
 import org.wordpress.android.editor.gutenberg.GutenbergDialogFragment.GutenbergDialogPositiveClickInterface;
+import org.wordpress.android.editor.gutenberg.GutenbergView;
 import org.wordpress.android.editor.savedinstance.SavedInstanceDatabase;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -101,6 +104,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
+import android.net.Uri;
+import android.webkit.ValueCallback;
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
@@ -109,6 +114,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
+    private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -239,7 +245,26 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
+        mGutenbergView = new GutenbergView(requireContext());
+        mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        mGutenbergView.startWithDevServer();
+        mGutenbergView.setOnFileChooserRequested((intent, requestCode) -> {
+            startActivityForResult(intent, requestCode);
+            return null;
+        });
+
+        mGutenbergView.setEditorDidBecomeAvailable(gutenbergView -> {
+            ArrayList<Object> unsupportedBlocks = new ArrayList<>();
+            boolean replaceBlockActionWaiting = true;
+            mEditorFragmentListener.onEditorFragmentContentReady(unsupportedBlocks, replaceBlockActionWaiting);
+            return Unit.INSTANCE;
+        });
+        mGutenbergView.startWithDevServer();
+        return mGutenbergView;
+      /*  View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         initializeSavingProgressDialog();
 
@@ -587,7 +612,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             showImplicitKeyboard();
         }
 
-        return view;
+        return view;*/
     }
 
     private String calculateHashOnMediaCollectionBasedBlock(ArrayList<Object> mediaFiles) {
@@ -674,6 +699,31 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == mGutenbergView.getPickImageRequestCode()) {
+            ValueCallback<Uri[]> filePathCallback = mGutenbergView.getFilePathCallback();
+
+            if (filePathCallback != null) {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    if (data.getClipData() != null) {
+                        ClipData clipData = data.getClipData();
+                        Uri[] uris = new Uri[clipData.getItemCount()];
+                        for (int i = 0; i < clipData.getItemCount(); i++) {
+                            uris[i] = clipData.getItemAt(i).getUri();
+                        }
+                        filePathCallback.onReceiveValue(uris);
+                    } else if (data.getData() != null) {
+                        Uri uri = data.getData();
+                        filePathCallback.onReceiveValue(new Uri[]{uri});
+                    } else {
+                        filePathCallback.onReceiveValue(null);
+                    }
+                } else {
+                    filePathCallback.onReceiveValue(null);
+                }
+                mGutenbergView.resetFilePathCallback();
+            }
+        }
 
         if (requestCode == UNSUPPORTED_BLOCK_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -762,7 +812,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override public void onResume() {
         super.onResume();
 
-        setEditorProgressBarVisibility(!mEditorDidMount);
+    //    setEditorProgressBarVisibility(!mEditorDidMount);
     }
 
     @Override
