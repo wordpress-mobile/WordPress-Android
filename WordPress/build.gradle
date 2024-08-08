@@ -522,13 +522,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$gradle.ext.daggerVersion"
     ksp "com.google.dagger:hilt-compiler:$gradle.ext.daggerVersion"
 
-    implementation("rs.wordpress.api:android:$wordPressRsVersion") {
-        exclude group: "net.java.dev.jna"
-    }
-    // TODO: 'rs.wordpress.api:android' should include the correct JNA in its next version. Once
-    // it does, remove this dependency and the `exclude group: "net.java.dev.jna"` from
-    // 'rs.wordpress.api:android' dependency above.
-    implementation 'net.java.dev.jna:jna:5.14.0@aar'
+    implementation("rs.wordpress.api:android:$wordPressRsVersion")
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
