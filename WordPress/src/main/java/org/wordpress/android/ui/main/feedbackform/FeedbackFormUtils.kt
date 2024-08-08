@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 class FeedbackFormUtils @Inject constructor() {
     /**
-     * Only images & photos are supported at this point
+     * Only images & videos are supported at this point
      */
     fun isSupportedMimeType(mimeType: String): Boolean {
         return when {

@@ -195,7 +195,7 @@ class FeedbackFormViewModel @Inject constructor(
         val newList = list.toMutableList()
         val size = uri.fileSize(context)
         val mimeType = uri.mimeType(context)
-        val file = uri.copyToTempFile(mimeType, context)
+        val file = uri.copyToTempFile(context)
 
         if (list.size >= MAX_ATTACHMENTS) {
             showToast(R.string.feedback_form_max_attachments_reached)
