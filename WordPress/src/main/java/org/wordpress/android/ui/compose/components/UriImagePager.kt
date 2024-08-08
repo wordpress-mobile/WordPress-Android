@@ -83,7 +83,8 @@ private fun UriImage(uri: Uri) {
     val context = LocalContext.current
     val mimeType = context.contentResolver.getType(uri)
     if (mimeType?.startsWith("video/") == true) {
-        val thumbnail = getVideoThumbnail(context, uri)
+        val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
+        val thumbnail = getVideoThumbnail(context, uri, thumbSize)
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(context)
@@ -145,19 +146,18 @@ private fun BoxScope.ImageButton(
     }
 }
 
-private fun getVideoThumbnail(context: Context, uri: Uri): Bitmap? {
+private fun getVideoThumbnail(context: Context, uri: Uri, thumbSizePx: Int): Bitmap? {
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
         null
     } else {
-        val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
         val mediaMetadataRetriever = MediaMetadataRetriever()
         try {
             mediaMetadataRetriever.setDataSource(context, uri)
             mediaMetadataRetriever.getScaledFrameAtTime(
                 0L,
                 MediaMetadataRetriever.OPTION_CLOSEST,
-                thumbSize,
-                thumbSize
+                thumbSizePx,
+                thumbSizePx
             )
         } catch (e: IllegalArgumentException) {
             AppLog.e(AppLog.T.SUPPORT, "Error getting video thumbnail in feedback form", e)
