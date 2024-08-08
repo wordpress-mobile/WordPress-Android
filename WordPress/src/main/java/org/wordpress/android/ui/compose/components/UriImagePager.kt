@@ -1,11 +1,7 @@
 package org.wordpress.android.ui.compose.components
 
-import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,17 +30,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import org.wordpress.android.R
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DisplayUtils
-
 
 /**
- * A simple pager to show a carousel of images from a list of URIs. This was designed
- * to show feedback form attachments but should be suitable for other use cases. Note
- * that this was intended for local URIs only.
+ * A simple pager to show a carousel from a list of local media URIs. This was designed
+ * to show feedback form attachments but should be suitable for other use cases.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -83,14 +77,18 @@ private fun UriImage(uri: Uri) {
     val context = LocalContext.current
     val mimeType = context.contentResolver.getType(uri)
     if (mimeType?.startsWith("video/") == true) {
-        val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
-        val thumbnail = getVideoThumbnail(context, uri, thumbSize)
+        val imageLoader = ImageLoader.Builder(LocalContext.current)
+            .components {
+                add(VideoFrameDecoder.Factory())
+            }
+            .build()
         Box {
             AsyncImage(
                 model = ImageRequest.Builder(context)
-                    .data(thumbnail)
+                    .data(uri)
                     .crossfade(true)
                     .build(),
+                imageLoader = imageLoader,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
@@ -143,32 +141,6 @@ private fun BoxScope.ImageButton(
             tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = stringResource(R.string.remove),
         )
-    }
-}
-
-/**
- * Returns a thumbnail for a local video file. Ideally this should be relocated outside
- * of the composable.
- */
-private fun getVideoThumbnail(context: Context, uri: Uri, thumbSizePx: Int): Bitmap? {
-    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-        null
-    } else {
-        val mediaMetadataRetriever = MediaMetadataRetriever()
-        try {
-            mediaMetadataRetriever.setDataSource(context, uri)
-            mediaMetadataRetriever.getScaledFrameAtTime(
-                0L,
-                MediaMetadataRetriever.OPTION_CLOSEST,
-                thumbSizePx,
-                thumbSizePx
-            )
-        } catch (e: IllegalArgumentException) {
-            AppLog.e(AppLog.T.SUPPORT, "Error getting video thumbnail in feedback form", e)
-            null
-        } finally {
-            mediaMetadataRetriever.release()
-        }
     }
 }
 
