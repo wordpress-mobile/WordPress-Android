@@ -91,7 +91,7 @@ private fun UriImage(uri: Uri) {
                     .data(thumbnail)
                     .crossfade(true)
                     .build(),
-                contentScale = ContentScale.FillHeight,
+                contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier
                     .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
@@ -113,7 +113,7 @@ private fun UriImage(uri: Uri) {
                 .placeholder(R.color.placeholder)
                 .error(org.wordpress.android.editor.R.drawable.ic_image_failed_grey_a_40_48dp)
                 .build(),
-            contentScale = ContentScale.FillHeight,
+            contentScale = ContentScale.Crop,
             contentDescription = null,
             modifier = Modifier
                 .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
