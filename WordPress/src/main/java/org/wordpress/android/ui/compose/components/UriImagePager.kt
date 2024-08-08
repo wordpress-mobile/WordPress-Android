@@ -53,6 +53,9 @@ fun UriImagePager(
     showButton: Boolean = true,
     onButtonClick: (Uri) -> Unit = {},
 ) {
+    if (imageUris.isEmpty()) {
+        return
+    }
     val pagerState = rememberPagerState(
         pageCount = { imageUris.size }
     )
