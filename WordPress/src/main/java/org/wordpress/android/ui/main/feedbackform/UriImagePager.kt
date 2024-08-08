@@ -3,9 +3,9 @@ package org.wordpress.android.ui.main.feedbackform
 import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.height
@@ -66,24 +66,34 @@ private fun UriImage(
     uri: Uri,
     context: Context
 ) {
+    // videos are not supported yet, for now we just show a placeholder
     val mimeType = context.contentResolver.getType(uri)
-    val isVideo =  mimeType?.startsWith("video/") == true
-    // video thumbnails are not supported yet
-    @DrawableRes val errorRes = if (isVideo) {
-        org.wordpress.android.editor.R.drawable.ic_overlay_video
+    if (mimeType?.startsWith("video/") == true) {
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .error(org.wordpress.android.editor.R.drawable.ic_overlay_video)
+                .build(),
+            contentScale = ContentScale.FillHeight,
+            contentDescription = null,
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
+                .size(IMAGE_SIZE.dp)
+        )
     } else {
-        R.drawable.ic_warning
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(uri)
+                .crossfade(true)
+                .placeholder(R.color.placeholder)
+                .error(R.drawable.ic_warning)
+                .build(),
+            contentScale = ContentScale.FillHeight,
+            contentDescription = null,
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
+                .size(IMAGE_SIZE.dp)
+        )
     }
-    AsyncImage(
-        model = ImageRequest.Builder(context)
-            .data(uri)
-            .crossfade(true)
-            .placeholder(R.color.placeholder)
-            .error(errorRes)
-            .build(),
-        contentScale = ContentScale.FillHeight,
-        contentDescription = null,
-    )
 }
 
 @Composable
@@ -117,9 +127,10 @@ private fun BoxScope.ImageButton(
 )
 @Composable
 private fun ImagePagerPreview() {
-    val attachment = Uri.parse("/tmp/attachment.jpg")
+    val attachment1 = Uri.parse("/tmp/attachment.jpg")
+    val attachment2 = Uri.parse("/tmp/attachment.mp4")
     UriImagePager(
-        imageUris = listOf(attachment, attachment)
+        imageUris = listOf(attachment1, attachment2)
     )
 }
 
