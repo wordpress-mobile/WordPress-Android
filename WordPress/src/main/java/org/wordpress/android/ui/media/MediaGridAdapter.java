@@ -53,9 +53,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
-
 import kotlinx.coroutines.CoroutineScope;
+
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
 /**
  * An adapter for the media gallery grid.
