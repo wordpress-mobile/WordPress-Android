@@ -2,9 +2,11 @@ package org.wordpress.android.ui.compose.components
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -26,13 +28,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.util.DisplayUtils
 
 
 /**
@@ -74,11 +76,16 @@ private fun UriImage(
     uri: Uri,
     context: Context
 ) {
-    // videos are not supported yet, for now we just show a placeholder
     val mimeType = context.contentResolver.getType(uri)
-    if (mimeType?.startsWith("video/") == true) {
-        Image(
-            painter = painterResource(org.wordpress.android.editor.R.drawable.ic_overlay_video),
+    if (mimeType?.startsWith("video/") == false) {
+        val thumbnail = getThumbnail(uri, context)
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .data(thumbnail)
+                .crossfade(true)
+                .placeholder(org.wordpress.android.editor.R.drawable.ic_overlay_video)
+                .error(org.wordpress.android.editor.R.drawable.ic_overlay_video)
+                .build(),
             contentScale = ContentScale.FillHeight,
             contentDescription = null,
             modifier = Modifier
@@ -123,6 +130,28 @@ private fun BoxScope.ImageButton(
             tint = MaterialTheme.colorScheme.primary,
             contentDescription = stringResource(R.string.remove),
         )
+    }
+}
+
+private fun getThumbnail(uri: Uri, context: Context): Bitmap? {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+        return null
+    }
+
+    val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
+    val mediaMetadataRetriever = MediaMetadataRetriever()
+    try {
+        mediaMetadataRetriever.setDataSource(context, uri)
+        return mediaMetadataRetriever.getScaledFrameAtTime(
+            0L,
+            MediaMetadataRetriever.OPTION_CLOSEST,
+            thumbSize,
+            thumbSize
+        )
+    } catch (e: IllegalArgumentException) {
+        return null
+    } finally {
+        mediaMetadataRetriever.release()
     }
 }
 
