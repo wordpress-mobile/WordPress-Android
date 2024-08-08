@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.main.feedbackform
 
+import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -40,6 +42,7 @@ fun UriImagePager(
     val pagerState = rememberPagerState(
         pageCount = { imageUris.size }
     )
+    val context = LocalContext.current
     HorizontalPager(
         state = pagerState,
         pageSpacing = 12.dp,
@@ -50,7 +53,7 @@ fun UriImagePager(
         Box(
             modifier = Modifier.height(IMAGE_SIZE.dp),
         ) {
-            UriImage(uri)
+            UriImage(uri, context)
             if (showButton) {
                 ImageButton(uri, onButtonClick)
             }
@@ -59,13 +62,24 @@ fun UriImagePager(
 }
 
 @Composable
-private fun UriImage(uri: Uri) {
+private fun UriImage(
+    uri: Uri,
+    context: Context
+) {
+    val mimeType = context.contentResolver.getType(uri)
+    val isVideo =  mimeType?.startsWith("video/") == true
+    // video thumbnails are not supported yet
+    @DrawableRes val errorRes = if (isVideo) {
+        org.wordpress.android.editor.R.drawable.ic_overlay_video
+    } else {
+        R.drawable.ic_warning
+    }
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
+        model = ImageRequest.Builder(context)
             .data(uri)
             .crossfade(true)
             .placeholder(R.color.placeholder)
-            .error(R.drawable.ic_warning)
+            .error(errorRes)
             .build(),
         contentScale = ContentScale.FillHeight,
         contentDescription = null,
