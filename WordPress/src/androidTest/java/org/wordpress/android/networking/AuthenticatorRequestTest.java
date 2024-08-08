@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.wordpress.android.FactoryUtils;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNull;
-
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 @HiltAndroidTest
 public class AuthenticatorRequestTest {

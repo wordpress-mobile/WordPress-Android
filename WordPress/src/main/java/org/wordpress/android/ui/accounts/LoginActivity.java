@@ -85,12 +85,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
-
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
 
 @AndroidEntryPoint
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,

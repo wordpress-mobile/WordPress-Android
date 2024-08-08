@@ -165,7 +165,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '8.3'
+        toolVersion = '10.17.0'
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 

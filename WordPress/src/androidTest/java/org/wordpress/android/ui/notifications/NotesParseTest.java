@@ -5,11 +5,11 @@ import android.text.Spanned;
 import org.junit.Test;
 import org.wordpress.android.util.HtmlUtils;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 @HiltAndroidTest
 public class NotesParseTest {
