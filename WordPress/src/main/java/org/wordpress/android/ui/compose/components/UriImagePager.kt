@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import org.wordpress.android.R
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DisplayUtils
 
 
@@ -145,26 +146,25 @@ private fun BoxScope.ImageButton(
 }
 
 private fun getVideoThumbnail(context: Context, uri: Uri): Bitmap? {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
-        return null
-    }
-
-    val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
-    val mediaMetadataRetriever = MediaMetadataRetriever()
-    try {
-        mediaMetadataRetriever.setDataSource(context, uri)
-        return mediaMetadataRetriever.getScaledFrameAtTime(
-            0L,
-            MediaMetadataRetriever.OPTION_CLOSEST,
-            thumbSize,
-            thumbSize
-        )
-    } catch (e: IllegalArgumentException) {
-        return null
-    } catch (e: RuntimeException) {
-        return null
-    } finally {
-        mediaMetadataRetriever.release()
+    return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+        null
+    } else {
+        val thumbSize = DisplayUtils.dpToPx(context, IMAGE_SIZE)
+        val mediaMetadataRetriever = MediaMetadataRetriever()
+        try {
+            mediaMetadataRetriever.setDataSource(context, uri)
+            mediaMetadataRetriever.getScaledFrameAtTime(
+                0L,
+                MediaMetadataRetriever.OPTION_CLOSEST,
+                thumbSize,
+                thumbSize
+            )
+        } catch (e: IllegalArgumentException) {
+            AppLog.e(AppLog.T.SUPPORT, "Error getting video thumbnail in feedback form", e)
+            null
+        } finally {
+            mediaMetadataRetriever.release()
+        }
     }
 }
 
