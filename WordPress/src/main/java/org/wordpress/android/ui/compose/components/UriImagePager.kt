@@ -146,6 +146,10 @@ private fun BoxScope.ImageButton(
     }
 }
 
+/**
+ * Returns a thumbnail for a local video file. Ideally this should be relocated outside
+ * of the composable.
+ */
 private fun getVideoThumbnail(context: Context, uri: Uri, thumbSizePx: Int): Bitmap? {
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
         null
