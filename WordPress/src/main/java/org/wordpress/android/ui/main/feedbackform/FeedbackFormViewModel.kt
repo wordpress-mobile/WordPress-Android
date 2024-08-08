@@ -170,12 +170,16 @@ class FeedbackFormViewModel @Inject constructor(
     }
 
     fun onChooseMediaClick(activity: Activity) {
-        mediaPickerLauncher.showPhotoPickerForResult(
-            activity,
-            browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-            site = selectedSiteRepository.getSelectedSite(),
-            localPostId = null
-        )
+        if (_attachments.value.size >= MAX_ATTACHMENTS) {
+            showToast(R.string.feedback_form_max_attachments_reached)
+        } else {
+            mediaPickerLauncher.showPhotoPickerForResult(
+                activity,
+                browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                site = selectedSiteRepository.getSelectedSite(),
+                localPostId = null
+            )
+        }
     }
 
     fun onPhotoPickerResult(context: Context, data: Intent) {
