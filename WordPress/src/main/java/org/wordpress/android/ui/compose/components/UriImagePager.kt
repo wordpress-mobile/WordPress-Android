@@ -7,6 +7,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -26,9 +27,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -39,7 +42,8 @@ import org.wordpress.android.util.DisplayUtils
 
 /**
  * A simple pager to show a carousel of images from a list of URIs. This was designed
- * to show feedback form attachments but should be suitable for other use cases.
+ * to show feedback form attachments but should be suitable for other use cases. Note
+ * that this was intended for local URIs only.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +56,6 @@ fun UriImagePager(
     val pagerState = rememberPagerState(
         pageCount = { imageUris.size }
     )
-    val context = LocalContext.current
     HorizontalPager(
         state = pagerState,
         pageSpacing = 12.dp,
@@ -63,7 +66,7 @@ fun UriImagePager(
         Box(
             modifier = Modifier.height(IMAGE_SIZE.dp),
         ) {
-            UriImage(uri, context)
+            UriImage(uri)
             if (showButton) {
                 ImageButton(uri, onButtonClick)
             }
@@ -72,33 +75,38 @@ fun UriImagePager(
 }
 
 @Composable
-private fun UriImage(
-    uri: Uri,
-    context: Context
-) {
+private fun UriImage(uri: Uri) {
+    val context = LocalContext.current
     val mimeType = context.contentResolver.getType(uri)
-    if (mimeType?.startsWith("video/") == false) {
-        val thumbnail = getThumbnail(uri, context)
-        AsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(thumbnail)
-                .crossfade(true)
-                .placeholder(org.wordpress.android.editor.R.drawable.ic_overlay_video)
-                .error(org.wordpress.android.editor.R.drawable.ic_overlay_video)
-                .build(),
-            contentScale = ContentScale.FillHeight,
-            contentDescription = null,
-            modifier = Modifier
-                .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
-                .size(IMAGE_SIZE.dp)
-        )
+    if (mimeType?.startsWith("video/") == true) {
+        val thumbnail = getVideoThumbnail(context, uri)
+        Box {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(thumbnail)
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.FillHeight,
+                contentDescription = null,
+                modifier = Modifier
+                    .border(1.dp, MaterialTheme.colorScheme.onBackground.copy(alpha = 0.25f))
+                    .size(IMAGE_SIZE.dp)
+            )
+            Image(
+                imageVector = ImageVector.vectorResource(id = org.wordpress.android.editor.R.drawable.ic_overlay_video),
+                contentDescription = null,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(36.dp)
+            )
+        }
     } else {
         AsyncImage(
             model = ImageRequest.Builder(context)
                 .data(uri)
                 .crossfade(true)
                 .placeholder(R.color.placeholder)
-                .error(R.drawable.ic_warning)
+                .error(org.wordpress.android.editor.R.drawable.ic_image_failed_grey_a_40_48dp)
                 .build(),
             contentScale = ContentScale.FillHeight,
             contentDescription = null,
@@ -133,7 +141,7 @@ private fun BoxScope.ImageButton(
     }
 }
 
-private fun getThumbnail(uri: Uri, context: Context): Bitmap? {
+private fun getVideoThumbnail(context: Context, uri: Uri): Bitmap? {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
         return null
     }
@@ -149,6 +157,8 @@ private fun getThumbnail(uri: Uri, context: Context): Bitmap? {
             thumbSize
         )
     } catch (e: IllegalArgumentException) {
+        return null
+    } catch (e: RuntimeException) {
         return null
     } finally {
         mediaMetadataRetriever.release()
