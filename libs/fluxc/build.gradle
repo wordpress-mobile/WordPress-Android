@@ -63,8 +63,6 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation sharedLibs.androidx.recyclerview
-
     implementation sharedLibs.androidx.exifinterface
     implementation sharedLibs.androidx.security.crypto
 
