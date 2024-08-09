@@ -31,7 +31,6 @@ import org.wordpress.android.util.ToastUtilsWrapper
 import org.wordpress.android.util.extensions.copyToTempFile
 import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
-import org.wordpress.android.util.extensions.sizeFmt
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.io.IOException
 import javax.inject.Inject
@@ -88,7 +87,7 @@ class FeedbackFormViewModel @Inject constructor(
                     }
                 } catch (e: IOException) {
                     hideProgressDialog()
-                    onFailure(e.message)
+                    onFailure(context, e.message)
                     return@launch
                 }
             }
@@ -117,7 +116,7 @@ class FeedbackFormViewModel @Inject constructor(
 
                 override fun onError(errorMessage: String?) {
                     hideProgressDialog()
-                    onFailure(errorMessage)
+                    onFailure(context, errorMessage)
                 }
             })
     }
@@ -164,74 +163,91 @@ class FeedbackFormViewModel @Inject constructor(
         (context as? Activity)?.finish()
     }
 
-    private fun onFailure(errorMessage: String? = null) {
+    private fun onFailure(context: Context, errorMessage: String? = null) {
         appLogWrapper.e(T.SUPPORT, "Failed to submit feedback form: $errorMessage")
-        showToast(R.string.feedback_form_failure)
+        if (errorMessage.isNullOrEmpty()) {
+            showToast(R.string.feedback_form_failure)
+        } else {
+            MaterialAlertDialogBuilder(context).also { builder ->
+                builder.setTitle(R.string.feedback_form_failure)
+                builder.setMessage(errorMessage)
+                builder.setPositiveButton(R.string.ok) { _, _ -> }
+                builder.show()
+            }
+        }
     }
 
     fun onChooseMediaClick(activity: Activity) {
-        mediaPickerLauncher.showPhotoPickerForResult(
-            activity,
-            browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
-            site = selectedSiteRepository.getSelectedSite(),
-            localPostId = null
-        )
+        if (_attachments.value.size >= MAX_ATTACHMENTS) {
+            showToast(R.string.feedback_form_max_attachments_reached)
+        } else {
+            mediaPickerLauncher.showPhotoPickerForResult(
+                activity,
+                browserType = MediaBrowserType.FEEDBACK_FORM_MEDIA_PICKER,
+                site = selectedSiteRepository.getSelectedSite(),
+                localPostId = null
+            )
+        }
     }
 
     fun onPhotoPickerResult(context: Context, data: Intent) {
         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             stringArray?.forEach { stringUri ->
-                // don't add additional attachments if one fails
-                if (!addAttachment(context, Uri.parse(stringUri))) {
+                if (_attachments.value.size >= MAX_ATTACHMENTS) {
+                    showToast(R.string.feedback_form_max_attachments_reached)
                     return
                 }
+                addAttachment(context, Uri.parse(stringUri))
             }
         }
     }
 
+    /**
+     * Adds a single attachment to the list, returns true if it was successfully added
+     */
+    @Suppress("ReturnCount")
     private fun addAttachment(context: Context, uri: Uri): Boolean {
-        val list = _attachments.value
-        val newList = list.toMutableList()
-        val size = uri.fileSize(context)
+        val list = _attachments.value.toMutableList()
+        val fileSize = uri.fileSize(context)
         val mimeType = uri.mimeType(context)
-        val file = uri.copyToTempFile(context)
 
         if (list.size >= MAX_ATTACHMENTS) {
             showToast(R.string.feedback_form_max_attachments_reached)
-        } else if (newList.any { it.uri == uri }) {
+            return false
+        } else if (list.any { it.uri == uri }) {
             showToast(R.string.feedback_form_attachment_already_added)
-        } else if (size > MAX_ATTACHMENT_SIZE) {
+            return false
+        } else if (fileSize > MAX_ATTACHMENT_SIZE) {
             showToast(R.string.feedback_form_attachment_too_large)
-        } else if (file == null) {
-            showToast(R.string.feedback_form_unable_to_create_tempfile)
+            return false
         } else if (!feedbackFormUtils.isSupportedMimeType(mimeType)) {
             showToast(R.string.feedback_form_unsupported_attachment)
-        } else {
-            val attachmentType = if (mimeType.startsWith("video")) {
-                FeedbackFormAttachmentType.VIDEO
-            } else {
-                FeedbackFormAttachmentType.IMAGE
-            }
-            val sizeFmt = uri.sizeFmt(context)
-            val counter = newList.filter { it.attachmentType == attachmentType }.size + 1
-            val displayName = "${attachmentType}_$counter ($sizeFmt)"
-
-            newList.add(
-                FeedbackFormAttachment(
-                    uri = uri,
-                    tempFile = file,
-                    size = size,
-                    displayName = displayName,
-                    mimeType = mimeType,
-                    attachmentType = attachmentType
-                )
-            )
-            _attachments.value = newList.toList()
-            return true
+            return false
         }
 
-        return false
+        val file = uri.copyToTempFile(context)
+        if (file == null) {
+            showToast(R.string.feedback_form_unable_to_create_tempfile)
+            return false
+        }
+
+        val attachmentType = if (mimeType.startsWith("video")) {
+            FeedbackFormAttachmentType.VIDEO
+        } else {
+            FeedbackFormAttachmentType.IMAGE
+        }
+        list.add(
+            FeedbackFormAttachment(
+                uri = uri,
+                tempFile = file,
+                size = fileSize,
+                mimeType = mimeType,
+                attachmentType = attachmentType
+            )
+        )
+        _attachments.value = list
+        return true
     }
 
     fun onRemoveMediaClick(uri: Uri) {

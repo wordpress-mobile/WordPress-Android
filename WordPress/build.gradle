@@ -609,6 +609,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation "io.coil-kt:coil-video:$coilComposeVersion"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"

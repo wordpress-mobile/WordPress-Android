@@ -3,18 +3,15 @@ package org.wordpress.android.ui.main.feedbackform
 import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -49,6 +46,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
+import org.wordpress.android.ui.compose.components.MediaUriPager
 import org.wordpress.android.ui.compose.theme.M3Theme
 import java.io.File
 
@@ -72,14 +70,18 @@ fun FeedbackFormScreen(
                 onMessageChanged(it)
             },
         )
+        MediaUriPager(
+            mediaUris = attachments.value.map { it.uri },
+            onButtonClick =  { uri -> onRemoveMediaClick(uri) },
+            modifier = Modifier
+                .padding(
+                    vertical = V_PADDING.dp,
+                    horizontal = H_PADDING.dp
+                )
+        )
         AttachmentButton(
             onChooseMediaClick = onChooseMediaClick
         )
-        attachments.value.forEach { attachment ->
-            AttachmentRow(attachment) {
-                onRemoveMediaClick(attachment.uri)
-            }
-        }
         SubmitButton(
             isEnabled = message.isNotEmpty(),
             onClick = {
@@ -193,56 +195,6 @@ private fun AttachmentButton(
     }
 }
 
-@Composable
-private fun AttachmentRow(
-    attachment: FeedbackFormAttachment,
-    onDeleteClick: (Uri) -> Unit = {},
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = H_PADDING.dp,
-                vertical = 2.dp
-            ),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-        ) {
-            Text(
-                text = attachment.displayName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1.0f, true)
-                    .padding(
-                        vertical = V_PADDING.dp,
-                        horizontal = H_PADDING.dp
-                    )
-            )
-            IconButton(
-                onClick = { onDeleteClick(attachment.uri) },
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(0.2f, false)
-                        .align(Alignment.CenterVertically)
-                        .size(24.dp),
-                    imageVector = Icons.Filled.Close,
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = null,
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Screen(
@@ -290,7 +242,6 @@ private fun FeedbackFormScreenPreview() {
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
-        displayName = "IMAGE_1 (1.2 MB)",
         mimeType = "image/jpeg",
         tempFile = File("/tmp/attachment.jpg")
     )
@@ -298,7 +249,6 @@ private fun FeedbackFormScreenPreview() {
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.VIDEO,
         size = 123456789,
-        displayName = "VIDEO_1 (12.4 MB)",
         mimeType = "video/mp4",
         tempFile = File("/tmp/attachment.mp4")
     )
