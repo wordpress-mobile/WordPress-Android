@@ -48,16 +48,28 @@ fun Uri.fileSize(context: Context): Long {
 }
 
 /**
+ * Attempts to determine the file extension from a Uri
+ */
+@Suppress("ReturnCount")
+fun Uri.fileExtension(context: Context, defaultExtension: String = "tmp"): String {
+    MimeTypeMap.getFileExtensionFromUrl(this.toString())?.let {
+        return it
+    }
+    val mimeType = this.mimeType(context)
+    MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)?.let {
+        return it
+    }
+    return defaultExtension
+}
+
+/**
  * Copies the Uri to a temporary file and returns the file
  */
-@Suppress("NestedBlockDepth", "ReturnCount")
+@Suppress("ReturnCount", "NestedBlockDepth")
 fun Uri.copyToTempFile(context: Context): File? {
     this.fileName(context)?.let { name ->
         try {
-            var extension = MimeTypeMap.getFileExtensionFromUrl(this.toString())
-            if (extension.isEmpty() || extension == "*") {
-                extension = "tmp"
-            }
+            val extension = this.fileExtension(context)
             @Suppress("UnstableApiUsage") val file = File.createTempFile(
                 Files.getNameWithoutExtension(name),
                 ".$extension"
