@@ -13,6 +13,8 @@ import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_ACTION;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_BLOG_ID;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_FEED_ID;
@@ -22,8 +24,6 @@ import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceSta
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_TAG_PARAM_TAGTYPE;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.ARG_TAG_PARAM_TITLE;
 import static org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * service which updates posts with specific tags or in specific blogs/feeds - relies on

@@ -427,10 +427,9 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
-        if (AppReviewManager.shouldShowInAppReviewsPrompt()) {
-            AppReviewManager.launchInAppReviews(this)
-        }
+        AppReviewManager.showInAppReviewsPromptIfNecessary(this)
     }
+
     @Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -98,10 +98,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_OPEN_PAGE;
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between

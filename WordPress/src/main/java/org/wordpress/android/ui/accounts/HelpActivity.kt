@@ -202,12 +202,14 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun showFaq() {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
     private fun showMigrationFaq() {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)

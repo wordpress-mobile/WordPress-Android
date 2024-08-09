@@ -49,6 +49,7 @@ class DeepLinkNavigator
                 navigateAction.site
             )
             is OpenInBrowser -> {
+                @SuppressWarnings("UnsafeImplicitIntentLaunch")
                 val browserIntent = Intent(Intent.ACTION_VIEW, navigateAction.uri.uri)
                 activity.startActivity(browserIntent)
             }

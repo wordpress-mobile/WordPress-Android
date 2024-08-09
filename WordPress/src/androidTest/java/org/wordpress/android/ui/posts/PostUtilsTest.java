@@ -2,11 +2,11 @@ package org.wordpress.android.ui.posts;
 
 import org.junit.Test;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 @HiltAndroidTest
 public class PostUtilsTest {

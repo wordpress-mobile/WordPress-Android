@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main.feedbackform
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -8,6 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes
 
 @AndroidEntryPoint
 class FeedbackFormActivity : LocaleAwareActivity() {
@@ -25,7 +27,8 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                 setContent {
                     FeedbackFormScreen(
                         messageText = viewModel.messageText.collectAsState(),
-                        isProgressShowing = viewModel.isProgressShowing.collectAsState(),
+                        progressDialogState = viewModel.progressDialogState.collectAsState(),
+                        attachments = viewModel.attachments.collectAsState(),
                         onMessageChanged = {
                             viewModel.updateMessageText(it)
                         },
@@ -34,10 +37,27 @@ class FeedbackFormActivity : LocaleAwareActivity() {
                         },
                         onCloseClick = {
                             viewModel.onCloseClick(this@FeedbackFormActivity)
+                        },
+                        onChooseMediaClick = {
+                            viewModel.onChooseMediaClick(this@FeedbackFormActivity)
+                        },
+                        onRemoveMediaClick = {
+                            viewModel.onRemoveMediaClick(it)
                         }
                     )
                 }
             }
         )
+    }
+
+    @Deprecated("Deprecated in Java")
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RequestCodes.PHOTO_PICKER) {
+            data?.let {
+                viewModel.onPhotoPickerResult(this, it)
+            }
+        }
     }
 }
