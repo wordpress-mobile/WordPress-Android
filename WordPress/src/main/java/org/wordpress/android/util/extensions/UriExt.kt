@@ -50,16 +50,16 @@ fun Uri.fileSize(context: Context): Long {
 /**
  * Attempts to determine the file extension from a Uri
  */
-@Suppress("ReturnCount")
 fun Uri.fileExtension(context: Context, defaultExtension: String = "tmp"): String {
-    MimeTypeMap.getFileExtensionFromUrl(this.toString())?.let {
-        return it
+    var extension = MimeTypeMap.getFileExtensionFromUrl(this.toString())
+    if (extension.isNullOrEmpty()) {
+        val mimeType = this.mimeType(context)
+        extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+        if (extension.isNullOrEmpty()) {
+            extension = defaultExtension
+        }
     }
-    val mimeType = this.mimeType(context)
-    MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)?.let {
-        return it
-    }
-    return defaultExtension
+    return extension
 }
 
 /**
