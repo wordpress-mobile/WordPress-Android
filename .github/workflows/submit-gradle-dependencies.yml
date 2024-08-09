@@ -1,9 +1,5 @@
 name: Submit dependencies to GitHub Dependency Graph
-on:
-  push:
-    branches:
-      - trunk
-      - release/*
+on: [push, pull_request]
 permissions:
   contents: write
 jobs:
