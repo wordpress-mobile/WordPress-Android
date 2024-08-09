@@ -2,23 +2,6 @@ import io.sentry.android.gradle.extensions.InstrumentationFeature
 import se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask
 import se.bjurr.violations.lib.model.SEVERITY
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("se.bjurr.violations:violation-comments-to-github-gradle-plugin:$gradle.ext.violationCommentsVersion") {
-            //noinspection ForeignDelegate
-            constraints {
-                //noinspection ForeignDelegate
-                classpath("com.google.code.gson:gson:$googleGsonVersion") {
-                    because 'GSON used in this plugin contains a security vulnerability'
-                }
-            }
-        }
-    }
-}
-
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
