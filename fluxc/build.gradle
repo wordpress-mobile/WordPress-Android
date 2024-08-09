@@ -84,7 +84,7 @@ dependencies {
     kapt fluxcProcessorProjectDependency
 
     // External libs
-    api sharedLibs.eventbus
+    api sharedLibs.eventbus.java
     api sharedLibs.squareup.okhttp3
     implementation sharedLibs.squareup.okhttp3.urlconnection
     api sharedLibs.volley
