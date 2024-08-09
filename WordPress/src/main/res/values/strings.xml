@@ -1141,6 +1141,7 @@
     <string name="feedback_form_attachment_already_added">Attachment already added</string>
     <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
     <string name="feedback_form_add_attachments">Add attachments</string>
+    <string name="media_pager_remove_item_content_description">Remove item %1$d of %2$d</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
