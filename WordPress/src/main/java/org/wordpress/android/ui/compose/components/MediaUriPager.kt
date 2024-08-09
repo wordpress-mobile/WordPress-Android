@@ -66,11 +66,9 @@ fun MediaUriPager(
         ) {
             MediaUriImage(uri)
             if (showButton) {
-                val contentDescription =
-                    stringResource(R.string.media_pager_remove_item_content_description, index + 1, mediaUris.size)
                 ImageButton(
                     uri = uri,
-                    contentDescription = contentDescription,
+                    itemNumber = index + 1,
                     onButtonClick = onButtonClick
                 )
             }
@@ -129,7 +127,7 @@ private fun MediaUriImage(uri: Uri) {
 @Composable
 private fun BoxScope.ImageButton(
     uri: Uri,
-    contentDescription: String,
+    itemNumber: Int,
     onButtonClick: (Uri) -> Unit = {},
 ) {
     IconButton(
@@ -146,7 +144,10 @@ private fun BoxScope.ImageButton(
         Icon(
             imageVector = Icons.Filled.Close,
             tint = MaterialTheme.colorScheme.onSurface,
-            contentDescription = contentDescription,
+            contentDescription = stringResource(
+                R.string.media_pager_remove_item_content_description,
+                itemNumber
+            )
         )
     }
 }
