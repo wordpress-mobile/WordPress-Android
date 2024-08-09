@@ -42,17 +42,17 @@ import org.wordpress.android.R
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UriImagePager(
-    imageUris: List<Uri>,
+fun MediaUriPager(
+    mediaUris: List<Uri>,
     modifier: Modifier = Modifier,
     showButton: Boolean = true,
     onButtonClick: (Uri) -> Unit = {},
 ) {
-    if (imageUris.isEmpty()) {
+    if (mediaUris.isEmpty()) {
         return
     }
     val pagerState = rememberPagerState(
-        pageCount = { imageUris.size }
+        pageCount = { mediaUris.size }
     )
     HorizontalPager(
         state = pagerState,
@@ -60,11 +60,11 @@ fun UriImagePager(
         pageSize = PageSize.Fixed(IMAGE_SIZE.dp),
         modifier = Modifier.then(modifier)
     ) { index ->
-        val uri = imageUris[index]
+        val uri = mediaUris[index]
         Box(
             modifier = Modifier.height(IMAGE_SIZE.dp),
         ) {
-            UriImage(uri)
+            MediaUriImage(uri)
             if (showButton) {
                 ImageButton(uri, onButtonClick)
             }
@@ -73,7 +73,7 @@ fun UriImagePager(
 }
 
 @Composable
-private fun UriImage(uri: Uri) {
+private fun MediaUriImage(uri: Uri) {
     val context = LocalContext.current
     val mimeType = context.contentResolver.getType(uri)
     if (mimeType?.startsWith("video/") == true) {
@@ -154,11 +154,11 @@ private fun BoxScope.ImageButton(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Composable
-private fun ImagePagerPreview() {
+private fun MediaPagerPreview() {
     val attachment1 = Uri.parse("/tmp/attachment.jpg")
     val attachment2 = Uri.parse("/tmp/attachment.mp4")
-    UriImagePager(
-        imageUris = listOf(attachment1, attachment2)
+    MediaUriPager(
+        mediaUris = listOf(attachment1, attachment2)
     )
 }
 
