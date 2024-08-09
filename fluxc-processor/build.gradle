@@ -20,6 +20,21 @@ dependencies {
     implementation sharedLibs.squareup.javapoet
 }
 
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            exclude("org.jetbrains.kotlin:kotlin-stdlib")
+            exclude("com.google.auto.service:auto-service")
+        }
+        onUnusedAnnotationProcessors {
+            exclude("com.google.auto.service:auto-service")
+        }
+        onRedundantPlugins {
+            exclude("kotlin-kapt")
+        }
+    }
+}
+
 project.afterEvaluate {
     publishing {
         publications {
