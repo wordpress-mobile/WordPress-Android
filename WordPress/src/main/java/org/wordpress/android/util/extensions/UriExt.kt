@@ -70,10 +70,10 @@ fun Uri.copyToTempFile(context: Context): File? {
     this.fileName(context)?.let { name ->
         try {
             val extension = this.fileExtension(context)
-            @Suppress("UnstableApiUsage") val file = File.createTempFile(
-                Files.getNameWithoutExtension(name),
-                ".$extension"
-            )
+            @Suppress("UnstableApiUsage")
+            // make sure the prefix has at least three characters to avoid exception
+            val prefix = "wpa_" + Files.getNameWithoutExtension(name)
+            val file = File.createTempFile(prefix, ".$extension")
             context.contentResolver.openInputStream(this).use { inputStream ->
                 inputStream?.let {
                     file.outputStream().use { outputStream ->
