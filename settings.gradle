@@ -11,6 +11,7 @@ pluginManagement {
     gradle.ext.measureBuildsVersion = '3.1.0'
     gradle.ext.koverVersion = '0.7.5'
     gradle.ext.dependencyAnalysisVersion = '1.28.0'
+    gradle.ext.fladleVersion = '0.17.5'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -30,6 +31,7 @@ pluginManagement {
         id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
         id "com.google.devtools.ksp" version gradle.ext.kspVersion
         id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
+        id "com.osacky.fladle" version gradle.ext.fladleVersion
     }
     repositories {
         maven {

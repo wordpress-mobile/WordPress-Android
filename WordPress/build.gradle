@@ -13,6 +13,57 @@ plugins {
     id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
     id "com.google.devtools.ksp"
+    id "com.osacky.fladle"
+}
+
+fladle {
+    testTargets = [
+            "notPackage org.wordpress.android.ui.screenshots"
+    ]
+    configs {
+        wordpress {
+            def app = "wordpress"
+            debugApk.set(appPathForVariant(app))
+            instrumentationApk.set(testPathForVariant(app))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+            /* Ignoring (already ignored by JUnit#assume) specific tests on the WordPress app to
+            prevent Fladle/Flank from scenario of executing them on a single shard.
+            This avoidance helps prevent test failures due to overly aggressive sharding that
+            could incur unnecessary costs and tests run failure. */
+            testTargets.set(testTargets.get() + [
+                    "notClass org.wordpress.android.e2e.StatsTests",
+                    "notClass org.wordpress.android.e2e.StatsGranularTabsTest",
+            ])
+        }
+        jetpack {
+            def app = "jetpack"
+            debugApk.set(appPathForVariant(app))
+            instrumentationApk.set(testPathForVariant(app))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+        }
+    }
+    serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
+    devices = [
+            ["model": "Pixel2.arm", "version": "30"]
+    ]
+
+    localResultsDir = "$rootDir/build/instrumented-tests"
+
+    maxTestShards = 50
+    shardTime = 120
+}
+
+String appPathForVariant(String app) {
+    String path = "outputs/apk/${app}Vanilla/debug"
+    return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
+}
+String testPathForVariant(String app) {
+    String path = "outputs/apk/androidTest/${app}Vanilla/debug"
+    return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
+}
+
+static String pathForSmartFlankGcsPath(String app) {
+    return "gs://fladle/wordpress-android/${app}/smart-flank/JUnitReport.xml"
 }
 
 sentry {
