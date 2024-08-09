@@ -421,7 +421,7 @@ dependencies {
     implementation "com.google.android.flexbox:flexbox:$googleFlexboxlayoutVersion"
     implementation "androidx.percentlayout:percentlayout:$androidxPercentlayoutVersion"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
-    implementation "androidx.preference:preference:$androidxPreferenceVersion"
+    implementation "androidx.preference:preference-ktx:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
     implementation "androidx.webkit:webkit:$androidxWebkitVersion"
