@@ -87,7 +87,7 @@ class FeedbackFormViewModel @Inject constructor(
                     }
                 } catch (e: IOException) {
                     hideProgressDialog()
-                    onFailure(e.message)
+                    onFailure(context, e.message)
                     return@launch
                 }
             }
@@ -116,7 +116,7 @@ class FeedbackFormViewModel @Inject constructor(
 
                 override fun onError(errorMessage: String?) {
                     hideProgressDialog()
-                    onFailure(errorMessage)
+                    onFailure(context, errorMessage)
                 }
             })
     }
@@ -163,9 +163,18 @@ class FeedbackFormViewModel @Inject constructor(
         (context as? Activity)?.finish()
     }
 
-    private fun onFailure(errorMessage: String? = null) {
+    private fun onFailure(context: Context, errorMessage: String? = null) {
         appLogWrapper.e(T.SUPPORT, "Failed to submit feedback form: $errorMessage")
-        showToast(R.string.feedback_form_failure)
+        if (errorMessage.isNullOrEmpty()) {
+            showToast(R.string.feedback_form_failure)
+        } else {
+            MaterialAlertDialogBuilder(context).also { builder ->
+                builder.setTitle(R.string.feedback_form_failure)
+                builder.setMessage(errorMessage)
+                builder.setPositiveButton(R.string.ok) { _, _ -> }
+                builder.show()
+            }
+        }
     }
 
     fun onChooseMediaClick(activity: Activity) {
