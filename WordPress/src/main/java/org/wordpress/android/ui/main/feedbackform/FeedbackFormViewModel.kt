@@ -194,14 +194,18 @@ class FeedbackFormViewModel @Inject constructor(
         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
             val stringArray = data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)
             stringArray?.forEach { stringUri ->
-                // don't add additional attachments if one fails
-                if (!addAttachment(context, Uri.parse(stringUri))) {
+                if (_attachments.value.size >= MAX_ATTACHMENTS) {
+                    showToast(R.string.feedback_form_max_attachments_reached)
                     return
                 }
+                addAttachment(context, Uri.parse(stringUri))
             }
         }
     }
 
+    /**
+     * Adds a single attachment to the list, returns true if it was successfully added
+     */
     @Suppress("ReturnCount")
     private fun addAttachment(context: Context, uri: Uri): Boolean {
         val list = _attachments.value.toMutableList()
