@@ -56,7 +56,6 @@ dependencies {
     implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectorDrawableAnimatedVersion"
     implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.legacy:legacy-support-v13:$androidxLegacySupportV13Version"
-    implementation "androidx.gridlayout:gridlayout:$androidxGlidLayoutVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
