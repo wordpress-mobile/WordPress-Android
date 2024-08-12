@@ -234,6 +234,7 @@ public class Authenticator {
             if (shouldSendTwoStepSMS && TextUtils.isEmpty(twoStepCode)) {
                 mParams.put("wpcom_resend_otp", "true");
             }
+            mParams.put("wpcom_supports_2fa", "true");
         }
     }
 
