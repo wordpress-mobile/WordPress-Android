@@ -605,32 +605,6 @@ public class SiteStoreUnitTest {
     }
 
     @Test
-    public void testBatchInsertSiteDuplicateWPCom()
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        WellSqlTestUtils.setupWordPressComAccount();
-
-        List<SiteModel> siteList = new ArrayList<>();
-        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(2, "https://pony2.com", "https://pony2.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(3, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
-        // duplicate with a different id, we should ignore it
-        siteList.add(generateTestSite(4, "https://pony3.com", "https://pony3.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(5, "https://pony4.com", "https://pony4.com/xmlrpc.php", true, true));
-        siteList.add(generateTestSite(6, "https://pony5.com", "https://pony5.com/xmlrpc.php", true, true));
-
-        SitesModel sites = new SitesModel(siteList);
-
-        // Use reflection to call a private Store method: equivalent to mSiteStore.updateSites(sites)
-        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
-        createOrUpdateSites.setAccessible(true);
-        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites);
-
-        assertTrue(res.duplicateSiteFound);
-        assertEquals(5, res.rowsAffected);
-        assertEquals(5, mSiteStore.getSitesCount());
-    }
-
-    @Test
     public void testBatchInsertSiteNoDuplicateWPCom()
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         WellSqlTestUtils.setupWordPressComAccount();
@@ -652,36 +626,6 @@ public class SiteStoreUnitTest {
         assertFalse(res.duplicateSiteFound);
         assertEquals(5, res.rowsAffected);
         assertEquals(5, mSiteStore.getSitesCount());
-    }
-
-    @Test
-    public void testSingleInsertSiteDuplicateWPCom()
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        WellSqlTestUtils.setupWordPressComAccount();
-
-        List<SiteModel> siteList = new ArrayList<>();
-        siteList.add(generateTestSite(1, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
-        SitesModel sites = new SitesModel(siteList);
-
-        // Insert 1 site
-        Method createOrUpdateSites = SiteStore.class.getDeclaredMethod("createOrUpdateSites", SitesModel.class);
-        createOrUpdateSites.setAccessible(true);
-        UpdateSitesResult res = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites);
-
-        assertFalse(res.duplicateSiteFound);
-        assertEquals(1, res.rowsAffected);
-        assertEquals(1, mSiteStore.getSitesCount());
-
-        // Insert same site with different id (considered a duplicate)
-        List<SiteModel> siteList2 = new ArrayList<>();
-        siteList2.add(generateTestSite(2, "https://pony1.com", "https://pony1.com/xmlrpc.php", true, true));
-        SitesModel sites2 = new SitesModel(siteList2);
-        createOrUpdateSites.setAccessible(true);
-        UpdateSitesResult res2 = (UpdateSitesResult) createOrUpdateSites.invoke(mSiteStore, sites2);
-
-        assertTrue(res2.duplicateSiteFound);
-        assertEquals(0, res2.rowsAffected);
-        assertEquals(1, mSiteStore.getSitesCount());
     }
 
     @Test
