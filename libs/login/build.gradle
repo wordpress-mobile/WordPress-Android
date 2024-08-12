@@ -54,7 +54,6 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectorDrawableAnimatedVersion"
-    implementation "androidx.media:media:$androidxMediaVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
