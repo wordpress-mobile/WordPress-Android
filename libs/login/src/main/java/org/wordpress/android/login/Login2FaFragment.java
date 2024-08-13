@@ -1,5 +1,7 @@
 package org.wordpress.android.login;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
+
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -52,8 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.content.Context.CLIPBOARD_SERVICE;
 
 import dagger.android.support.AndroidSupportInjection;
 
@@ -208,7 +208,9 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         // restrict the allowed input chars to just numbers
         m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
 
-        boolean isSmsEnabled = mSupportedAuthTypes.contains(SupportedAuthTypes.PUSH);
+        // If we didn't get a list of supported auth types, then the flow is not using webauthn,
+        // We should treat it as if SMS is enabled for the user
+        boolean isSmsEnabled = mSupportedAuthTypes.isEmpty() || mSupportedAuthTypes.contains(SupportedAuthTypes.PUSH);
         mOtpButton = rootView.findViewById(R.id.login_otp_button);
         mOtpButton.setVisibility(isSmsEnabled ? View.VISIBLE : View.GONE);
         mOtpButton.setText(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp);
