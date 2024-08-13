@@ -213,12 +213,12 @@ public class Authenticator {
     public static class PasswordRequest extends OauthRequest {
         public PasswordRequest(String appId, String appSecret, String username, String password,
                                Listener listener, ErrorListener errorListener) {
-            super(LOGIN_BASE_ENDPOINT, appId, appSecret, listener, errorListener);
+            super(TOKEN_ENDPOINT, appId, appSecret, listener, errorListener);
             mParams.put(USERNAME_PARAM_NAME, username);
             mParams.put(PASSWORD_PARAM_NAME, password);
             mParams.put(GRANT_TYPE_PARAM_NAME, PASSWORD_GRANT_TYPE);
-            mParams.put(GET_BEARER_TOKEN, "true");
             mParams.put("wpcom_supports_2fa", "true");
+            mParams.put(WITH_AUTH_TYPES, "true");
         }
     }
 
@@ -235,6 +235,7 @@ public class Authenticator {
                 mParams.put("wpcom_resend_otp", "true");
             }
             mParams.put("wpcom_supports_2fa", "true");
+            mParams.put(WITH_AUTH_TYPES, "true");
         }
     }
 
