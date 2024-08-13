@@ -128,11 +128,6 @@ android {
     useLibrary 'android.test.base'
     useLibrary 'android.test.mock'
 
-    dexOptions {
-        jumboMode = true
-        dexInProcess = true
-    }
-
     namespace "org.wordpress.android"
 
     compileSdkVersion rootProject.compileSdkVersion
