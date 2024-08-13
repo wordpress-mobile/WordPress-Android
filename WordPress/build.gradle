@@ -130,8 +130,6 @@ android {
 
     namespace "org.wordpress.android"
 
-    compileSdkVersion rootProject.compileSdkVersion
-
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
 
     defaultConfig {
@@ -143,6 +141,7 @@ android {
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
 
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
