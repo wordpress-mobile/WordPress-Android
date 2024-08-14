@@ -38,8 +38,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-
-        vectorDrawables.useSupportLibrary = true
     }
     buildFeatures {
         buildConfig true
@@ -53,15 +51,11 @@ dependencies {
     implementation ("com.gravatar:gravatar:$gravatarSdkVersion")
 
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-    implementation "androidx.vectordrawable:vectordrawable-animated:$androidxVectorDrawableAnimatedVersion"
-    implementation "androidx.media:media:$androidxMediaVersion"
-    implementation "androidx.legacy:legacy-support-v13:$androidxLegacySupportV13Version"
-    implementation "androidx.gridlayout:gridlayout:$androidxGlidLayoutVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
     implementation "com.google.android.material:material:$materialVersion"
 
-    implementation "androidx.core:core-ktx:$androidxCoreVersion"
+    implementation "androidx.core:core:$androidxCoreVersion"
 
     api "com.google.android.gms:play-services-auth:$playServicesAuthVersion"
 
