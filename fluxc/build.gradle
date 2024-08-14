@@ -63,9 +63,6 @@ android.buildTypes.all { buildType ->
 }
 
 dependencies {
-    implementation sharedLibs.androidx.appcompat
-    implementation sharedLibs.androidx.recyclerview
-
     implementation sharedLibs.androidx.exifinterface
     implementation sharedLibs.androidx.security.crypto
 
@@ -84,7 +81,7 @@ dependencies {
     kapt fluxcProcessorProjectDependency
 
     // External libs
-    api sharedLibs.eventbus
+    api sharedLibs.eventbus.java
     api sharedLibs.squareup.okhttp3
     implementation sharedLibs.squareup.okhttp3.urlconnection
     api sharedLibs.volley
@@ -118,7 +115,6 @@ dependencies {
     testImplementation sharedLibs.mockito.core
     testImplementation sharedLibs.mockito.kotlin
     testImplementation sharedLibs.mockito.inline
-    testImplementation sharedLibs.assertj.core
 
     lintChecks sharedLibs.wordpress.lint
 }
