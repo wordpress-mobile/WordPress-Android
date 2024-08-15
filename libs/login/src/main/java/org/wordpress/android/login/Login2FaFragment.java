@@ -132,7 +132,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                                                String userId, String webauthnNonce,
                                                String authenticatorNonce, String backupNonce,
                                                String smsNonce, List<String> authTypes) {
-        boolean supportsWebauthn = webauthnNonce != null && !webauthnNonce.isEmpty();
         Login2FaFragment fragment = new Login2FaFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EMAIL_ADDRESS, emailAddress);
