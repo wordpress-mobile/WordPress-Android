@@ -41,7 +41,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 202
+        return 203
     }
 
     override fun getDbName(): String {
@@ -2018,6 +2018,11 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD MAX_ALLOWED_QUANTITY INTEGER")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD GROUP_OF_QUANTITY INTEGER")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD OVERRIDE_PRODUCT_QUANTITIES BOOLEAN")
+                }
+
+                202 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUNDLE_MIN_SIZE REAL")
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUNDLE_MAX_SIZE REAL")
                 }
             }
         }
