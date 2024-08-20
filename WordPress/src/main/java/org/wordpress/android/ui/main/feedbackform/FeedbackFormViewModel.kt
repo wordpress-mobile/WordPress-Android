@@ -77,7 +77,7 @@ class FeedbackFormViewModel @Inject constructor(
         if (_attachments.value.isNotEmpty()) {
             showProgressDialog(R.string.uploading)
             launch {
-                val tempFiles = createTempFiles(context)
+                val tempFiles = createAttachmentTempFiles(context)
                 try {
                     try {
                         val tokens = zendeskUploadHelper.uploadFileAttachments(tempFiles)
@@ -104,13 +104,13 @@ class FeedbackFormViewModel @Inject constructor(
     /**
      * Creates temporary files for each attachment and returns a list of their paths
      */
-    private fun createTempFiles(context: Context): List<File> {
+    private fun createAttachmentTempFiles(context: Context): List<File> {
         val tempFiles = ArrayList<File>()
         val uris = _attachments.value.map { it.uri }
         for (uri in uris) {
             uri.copyToTempFile(context)?.let {
                 tempFiles.add(it)
-            }
+            } ?: appLogWrapper.e(T.SUPPORT, "Failed to copy attachment to temp file: $uri")
         }
         return tempFiles
     }
