@@ -96,14 +96,14 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
+
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 import static org.wordpress.android.ui.reader.FollowConversationUiStateKt.FOLLOW_CONVERSATION_UI_STATE_FLAGS_KEY;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import kotlin.Unit;
 
 @AndroidEntryPoint
 public class ReaderCommentListActivity extends LocaleAwareActivity implements OnConfirmListener,

@@ -26,9 +26,9 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeConstantsKt.TWITTER_DEPRECATION_FIND_OUT_MORE_URL;
-
 import kotlin.Unit;
+
+import static org.wordpress.android.ui.publicize.PublicizeTwitterDeprecationNoticeConstantsKt.TWITTER_DEPRECATION_FIND_OUT_MORE_URL;
 
 public class PublicizeDetailFragment extends PublicizeBaseFragment
         implements PublicizeConnectionAdapter.OnAdapterLoadedListener {

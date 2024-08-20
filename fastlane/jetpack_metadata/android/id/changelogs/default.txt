@@ -1,0 +1,5 @@
+25.2:
+Kami mengatasi dua masalah utama dalam rilis ini:
+* Kini Anda kembali dapat memperbarui tanggal pos yang dipublikasikan.
+* Beberapa pengguna tidak dapat memperbarui konten pos mereka.
+Seperti biasa, Anda bisa menghubungi tim dukungan jika terjadi masalah.

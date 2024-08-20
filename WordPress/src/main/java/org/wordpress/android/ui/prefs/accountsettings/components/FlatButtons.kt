@@ -1,16 +1,19 @@
 package org.wordpress.android.ui.prefs.accountsettings.components
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wordpress.android.ui.compose.theme.AppColor
+import org.wordpress.android.ui.compose.theme.M3ThemeWithoutBackground
 
 @Composable
 fun FlatButton(
@@ -18,14 +21,14 @@ fun FlatButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(
-        contentColor = AppColor.White,
+        contentColor = Color.White,
     ),
     enabled: Boolean = true,
 ): Unit = Button(
     modifier = modifier,
     onClick = onClick,
     colors = colors,
-    elevation = ButtonDefaults.elevation(
+    elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
@@ -46,7 +49,7 @@ fun FlatOutlinedButton(
     modifier = modifier,
     onClick = onClick,
     colors = colors,
-    elevation = ButtonDefaults.elevation(
+    elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
@@ -59,5 +62,29 @@ fun FlatOutlinedButton(
         )
     } else {
         Text(text)
+    }
+}
+
+@Preview(name = "Light Mode")
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewFlatButton() {
+    M3ThemeWithoutBackground {
+        FlatButton(
+            text = "Flat",
+            onClick = {},
+        )
+    }
+}
+
+@Preview(name = "Light Mode")
+@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PreviewOutlinedButton() {
+    M3ThemeWithoutBackground {
+        FlatOutlinedButton(
+            text = "Outlined",
+            onClick = {},
+        )
     }
 }

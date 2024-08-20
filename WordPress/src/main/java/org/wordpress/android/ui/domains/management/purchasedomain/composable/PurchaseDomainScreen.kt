@@ -34,11 +34,11 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.compose.theme.M3Theme
 import org.wordpress.android.ui.domains.management.composable.PrimaryButton
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState
 import org.wordpress.android.ui.domains.management.purchasedomain.PurchaseDomainViewModel.UiState.Initial
-import org.wordpress.android.ui.domains.management.success
+import org.wordpress.android.ui.compose.theme.success
 
 @Composable
 fun PurchaseDomainScreen(

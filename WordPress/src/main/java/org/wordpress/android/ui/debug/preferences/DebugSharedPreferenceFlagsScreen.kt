@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.MainTopAppBar
 import org.wordpress.android.ui.compose.components.NavigationIcons
-import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.compose.theme.M3Theme
 
 @Composable
 fun DebugSharedPreferenceFlagsScreen(
