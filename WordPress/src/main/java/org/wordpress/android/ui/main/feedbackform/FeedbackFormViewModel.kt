@@ -32,6 +32,7 @@ import org.wordpress.android.util.extensions.copyToTempFile
 import org.wordpress.android.util.extensions.fileSize
 import org.wordpress.android.util.extensions.mimeType
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
@@ -76,23 +77,55 @@ class FeedbackFormViewModel @Inject constructor(
         if (_attachments.value.isNotEmpty()) {
             showProgressDialog(R.string.uploading)
             launch {
-                val files = _attachments.value.map { it.tempFile }
+                val tempFiles = createTempFiles(context)
                 try {
-                    val tokens = zendeskUploadHelper.uploadFileAttachments(files)
-                    withContext(Dispatchers.Main) {
-                        createZendeskFeedbackRequest(
-                            context = context,
-                            attachmentTokens = tokens
-                        )
+                    try {
+                        val tokens = zendeskUploadHelper.uploadFileAttachments(tempFiles)
+                        withContext(Dispatchers.Main) {
+                            createZendeskFeedbackRequest(
+                                context = context,
+                                attachmentTokens = tokens
+                            )
+                        }
+                    } catch (e: IOException) {
+                        hideProgressDialog()
+                        onFailure(context, e.message)
+                        return@launch
                     }
-                } catch (e: IOException) {
-                    hideProgressDialog()
-                    onFailure(context, e.message)
-                    return@launch
+                } finally {
+                    deleteTempFiles(tempFiles)
                 }
             }
         } else {
             createZendeskFeedbackRequest(context)
+        }
+    }
+
+    /**
+     * Creates temporary files for each attachment and returns a list of their paths
+     */
+    private fun createTempFiles(context: Context): List<File> {
+        val tempFiles = ArrayList<File>()
+        val uris = _attachments.value.map { it.uri }
+        for (uri in uris) {
+            uri.copyToTempFile(context)?.let {
+                tempFiles.add(it)
+            }
+        }
+        return tempFiles
+    }
+
+    private fun deleteTempFiles(files: List<File>) {
+        for (file in files) {
+            try {
+                if (file.exists()) {
+                    file.delete()
+                }
+            } catch (e: SecurityException) {
+                appLogWrapper.e(T.SUPPORT, "Failed to delete temp file")
+            } catch (e: IOException) {
+                appLogWrapper.e(T.SUPPORT, "Failed to delete temp file")
+            }
         }
     }
 
@@ -226,12 +259,6 @@ class FeedbackFormViewModel @Inject constructor(
             return false
         }
 
-        val file = uri.copyToTempFile(context)
-        if (file == null) {
-            showToast(R.string.feedback_form_unable_to_create_tempfile)
-            return false
-        }
-
         val attachmentType = if (mimeType.startsWith("video")) {
             FeedbackFormAttachmentType.VIDEO
         } else {
@@ -240,7 +267,6 @@ class FeedbackFormViewModel @Inject constructor(
         list.add(
             FeedbackFormAttachment(
                 uri = uri,
-                tempFile = file,
                 size = fileSize,
                 mimeType = mimeType,
                 attachmentType = attachmentType
