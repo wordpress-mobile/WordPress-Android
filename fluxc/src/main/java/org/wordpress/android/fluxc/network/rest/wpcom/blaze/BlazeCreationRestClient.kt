@@ -425,7 +425,9 @@ private data class BlazeCampaignCreationNetworkResponse(
     @SerializedName("target_url")
     val targetURL: String,
     @SerializedName("main_image")
-    val mainImage: BlazeImageNetworkModel
+    val mainImage: BlazeImageNetworkModel,
+    @SerializedName("is_evergreen")
+    val isEvergreen: Boolean
 ) {
     data class BlazeImageNetworkModel(
         val url: String
@@ -444,6 +446,7 @@ private data class BlazeCampaignCreationNetworkResponse(
         impressions = 0L,
         title = siteName,
         totalBudget = totalBudget,
-        spentBudget = 0.0
+        spentBudget = 0.0,
+        isEndlessCampaign = isEvergreen
     )
 }

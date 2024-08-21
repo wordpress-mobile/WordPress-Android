@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.persistence.blaze
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Index
@@ -66,7 +67,9 @@ abstract class BlazeCampaignsDao {
         val clicks: Long,
         val targetUrn: String?,
         val totalBudget: Double,
-        val spentBudget: Double
+        val spentBudget: Double,
+        @ColumnInfo(defaultValue = "0")
+        val isEndlessCampaign: Boolean
     ) {
         fun toDomainModel() = BlazeCampaignModel(
             campaignId = campaignId,
@@ -79,7 +82,8 @@ abstract class BlazeCampaignsDao {
             clicks = clicks,
             targetUrn = targetUrn,
             totalBudget = totalBudget,
-            spentBudget = spentBudget
+            spentBudget = spentBudget,
+            isEndlessCampaign = isEndlessCampaign
         )
 
         companion object {
@@ -98,7 +102,8 @@ abstract class BlazeCampaignsDao {
                 clicks = campaign.clicks,
                 targetUrn = campaign.targetUrn,
                 totalBudget = campaign.totalBudget,
-                spentBudget = campaign.spentBudget
+                spentBudget = campaign.spentBudget,
+                isEndlessCampaign = campaign.isEndlessCampaign
             )
         }
     }
