@@ -36,12 +36,16 @@ data class NotificationModel(
         USER,
         REWIND_BACKUP_INITIAL,
         PLAN_SETUP_NUDGE,
+        BLAZE_APPROVED_NOTE,
+        BLAZE_REJECTED_NOTE,
+        BLAZE_CANCELLED_NOTE,
+        BLAZE_PERFORMED_NOTE,
         UNKNOWN;
 
         companion object {
             private val reverseMap = values().associateBy(
                     Kind::name)
-            fun fromString(type: String) = reverseMap[type.toUpperCase(Locale.US)] ?: UNKNOWN
+            fun fromString(type: String) = reverseMap[type.uppercase(Locale.US)] ?: UNKNOWN
         }
     }
 
