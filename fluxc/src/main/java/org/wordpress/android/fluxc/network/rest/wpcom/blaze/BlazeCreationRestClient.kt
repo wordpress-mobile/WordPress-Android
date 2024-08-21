@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComNetwork
 import org.wordpress.android.fluxc.utils.extensions.filterNotNull
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 class BlazeCreationRestClient @Inject constructor(
@@ -192,12 +193,11 @@ class BlazeCreationRestClient @Inject constructor(
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     suspend fun createCampaign(
         site: SiteModel,
         request: BlazeCampaignCreationRequest
     ): BlazePayload<BlazeCampaignModel> {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         val body = mutableMapOf(
             "origin" to request.origin,
             "origin_version" to request.originVersion,
