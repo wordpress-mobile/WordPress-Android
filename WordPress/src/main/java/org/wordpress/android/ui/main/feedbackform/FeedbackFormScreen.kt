@@ -44,11 +44,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.components.MediaUriPager
 import org.wordpress.android.ui.compose.components.ProgressDialog
 import org.wordpress.android.ui.compose.components.ProgressDialogState
-import org.wordpress.android.ui.compose.components.MediaUriPager
 import org.wordpress.android.ui.compose.theme.M3Theme
-import java.io.File
 
 @Composable
 fun FeedbackFormScreen(
@@ -243,14 +242,12 @@ private fun FeedbackFormScreenPreview() {
         attachmentType = FeedbackFormAttachmentType.IMAGE,
         size = 123456789,
         mimeType = "image/jpeg",
-        tempFile = File("/tmp/attachment.jpg")
     )
     val attachment2 = FeedbackFormAttachment(
         uri = Uri.parse("https://via.placeholder.com/150"),
         attachmentType = FeedbackFormAttachmentType.VIDEO,
         size = 123456789,
         mimeType = "video/mp4",
-        tempFile = File("/tmp/attachment.mp4")
     )
     val attachments = MutableStateFlow(listOf(attachment1, attachment2))
     val messageText = MutableStateFlow("I love this app!")
