@@ -99,7 +99,9 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
-    fun observeBlazeCampaigns(site: SiteModel) = campaignsDao.observeCampaigns(site.siteId)
+    fun observeBlazeCampaigns(site: SiteModel) = campaignsDao
+        .observeCampaigns(site.siteId)
+        .map { campaigns -> campaigns.map { it.toDomainModel() } }
 
     suspend fun getMostRecentBlazeCampaign(site: SiteModel): BlazeCampaignModel? {
         return coroutineEngine.withDefaultContext(

@@ -20,4 +20,5 @@ data class BlazeCampaignModel(
     val targetUrn: String?,
     val totalBudget: Double,
     val spentBudget: Double,
+    val isEndlessCampaign: Boolean
 )
