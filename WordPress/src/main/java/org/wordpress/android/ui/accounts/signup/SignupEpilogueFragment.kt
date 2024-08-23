@@ -2,6 +2,7 @@
 
 package org.wordpress.android.ui.accounts.signup
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
@@ -764,6 +765,7 @@ class SignupEpilogueFragment : LoginBaseFormFragment<SignupEpilogueListener?>(),
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun undoChanges() {
         mDisplayName = if (!TextUtils.isEmpty(mAccountStore.account.displayName)
         ) mAccountStore.account.displayName else requireArguments().getString(ARG_DISPLAY_NAME)

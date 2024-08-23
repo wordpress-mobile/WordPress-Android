@@ -3,10 +3,11 @@ package org.wordpress.android.ui.prefs.accountsettings.components
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,23 +15,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.compose.theme.M3ThemeWithoutBackground
 
 @Composable
 fun CloseAccountButton(onClick: () -> Unit = {}): Unit = Button(
-    elevation = ButtonDefaults.elevation(
+    elevation = ButtonDefaults.buttonElevation(
         defaultElevation = 0.dp,
         pressedElevation = 0.dp,
     ),
     colors = ButtonDefaults.buttonColors(
-        backgroundColor = Color.Transparent,
-        contentColor = MaterialTheme.colors.error,
-        disabledBackgroundColor = Color.Transparent,
-        disabledContentColor = MaterialTheme.colors.error,
-    ),
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.error,
+        disabledContainerColor = Color.Transparent,
+        disabledContentColor = MaterialTheme.colorScheme.error,
+        ),
     modifier = Modifier
         .fillMaxWidth(),
     onClick = onClick,
+    shape = RoundedCornerShape(0.dp),
 ) {
     Text(
         text = stringResource(R.string.close_account),
@@ -43,7 +45,7 @@ fun CloseAccountButton(onClick: () -> Unit = {}): Unit = Button(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewCloseAccountButton() {
-    AppTheme {
+    M3ThemeWithoutBackground {
         CloseAccountButton()
     }
 }

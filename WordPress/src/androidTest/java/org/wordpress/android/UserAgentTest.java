@@ -9,12 +9,12 @@ import org.wordpress.android.fluxc.network.UserAgent;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
-
-import dagger.hilt.android.testing.HiltAndroidRule;
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 @HiltAndroidTest
 public class UserAgentTest {

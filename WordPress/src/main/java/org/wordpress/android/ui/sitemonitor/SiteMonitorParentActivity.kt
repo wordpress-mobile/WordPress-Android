@@ -35,7 +35,7 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -171,7 +171,7 @@ class SiteMonitorParentActivity : AppCompatActivity(), SiteMonitorWebViewClient.
     @Composable
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     fun SiteMonitorHeader(initialTab: Int, modifier: Modifier = Modifier) {
-        var tabIndex by remember { mutableStateOf(initialTab) }
+        var tabIndex by remember { mutableIntStateOf(initialTab) }
 
         val tabs = SiteMonitorTabItem.entries
 

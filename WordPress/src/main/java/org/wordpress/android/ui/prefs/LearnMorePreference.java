@@ -151,6 +151,7 @@ public class LearnMorePreference extends Preference implements View.OnClickListe
         if (mOpenInDialog) {
             showDialog();
         } else {
+            @SuppressWarnings("UnsafeImplicitIntentLaunch")
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl));
             if (browserIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
                 v.getContext().startActivity(browserIntent);

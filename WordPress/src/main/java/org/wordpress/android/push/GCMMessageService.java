@@ -20,9 +20,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.push.GCMMessageHandler.PUSH_TYPE_ZENDESK;
-
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.push.GCMMessageHandler.PUSH_TYPE_ZENDESK;
 
 @AndroidEntryPoint
 public class GCMMessageService extends FirebaseMessagingService {

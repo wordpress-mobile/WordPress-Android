@@ -23,6 +23,11 @@ import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.UiTestingUtils;
 import org.wordpress.android.util.image.ImageType;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+import tools.fastlane.screengrab.Screengrab;
+import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
+import tools.fastlane.screengrab.locale.LocaleTestRule;
+
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
@@ -37,11 +42,6 @@ import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElem
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
 import static org.wordpress.android.support.WPSupportUtils.waitForImagesOfTypeWithPlaceholder;
-
-import dagger.hilt.android.testing.HiltAndroidTest;
-import tools.fastlane.screengrab.Screengrab;
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy;
-import tools.fastlane.screengrab.locale.LocaleTestRule;
 
 @LargeTest
 @HiltAndroidTest

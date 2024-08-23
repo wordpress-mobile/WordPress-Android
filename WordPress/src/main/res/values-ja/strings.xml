@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-13 09:54:07+0000
+Translation-Revision-Date: 2024-07-26 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: ja_JP
 -->
 <resources>
+    <string name="voice_to_content_generic_error">音声ファイルからの投稿は現在利用できません。後ほどもう一度お試しください。</string>
+    <string name="voice_to_content_done_label">完了</string>
+    <string name="voice_to_content_upgrade">アップグレードしてリクエストを増やす</string>
+    <string name="voice_to_content_ineligible">音声ファイルから投稿を作成するためのリクエストが足りません。</string>
+    <string name="voice_to_content_recording_label">録音中</string>
+    <string name="voice_to_content_begin_recording_label">録音を開始</string>
+    <string name="voice_to_content_secondary_header_label">利用可能なリクエスト:</string>
+    <string name="voice_to_content_base_header_label">音声ファイルから投稿</string>
+    <string name="voice_to_content_processing_label">処理中</string>
+    <string name="voice_to_content_error_label">エラー</string>
+    <string name="voice_to_content_processing">処理中</string>
     <string name="gutenberg_native_tap_to_edit">タップして編集</string>
     <string name="voice_to_content_permissions_required_msg">音声を録音するには、このアプリにマイクへのアクセス権限が必要です。 以前、この権限を拒否しています。 この機能を使用するには、アプリの設定でマイクの権限を有効化してください。</string>
     <string name="voice_to_content_permissions_required_title">音声録音の権限が必須</string>
@@ -1923,6 +1934,7 @@ Language: ja_JP
     <string name="stats_box_type_low">低い</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s、%2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">画像の置き換え</string>
     <string name="gutenberg_native_gallery_caption_s">ギャラリーのキャプション。%s</string>
     <string name="create_post_page_fab_tooltip">投稿またはページを作成</string>
     <string name="content_description_person_building_website">サイトを構築する人</string>
