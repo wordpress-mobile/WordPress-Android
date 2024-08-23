@@ -55,10 +55,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.push.NotificationPushIds.GROUP_NOTIFICATION_ID;
 import static org.wordpress.android.push.NotificationPushIds.QUICK_START_REMINDER_NOTIFICATION_ID;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * service which makes it possible to process Notifications quick actions in the background,

@@ -1,4 +1,4 @@
-* [*] Fix ability to update a published post's date [https://github.com/wordpress-mobile/WordPress-Android/pull/21036]
-* [**] Block editor: Fixed an issue preventing some users from editing or creating content [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6967]
-* [*] Block editor: Added partial prefix support for creating Headings, List, and Quote blocks [https://github.com/WordPress/gutenberg/pull/62576]
-
+We fixed two big issues in this release:
+* You can now update a publish post's date again.
+* Some users couldn't update their post's content.
+As always, please reach out to support if anything isn't working right!

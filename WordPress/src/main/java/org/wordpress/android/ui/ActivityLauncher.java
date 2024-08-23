@@ -75,6 +75,7 @@ import org.wordpress.android.ui.main.ChooseSiteActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.feedbackform.FeedbackFormActivity;
 import org.wordpress.android.ui.main.jetpack.migration.JetpackMigrationActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -1197,6 +1198,7 @@ public class ActivityLauncher {
     private static void openAtomicBlogPostPreview(Context context, String url, String authenticationUrl,
                                                  String frameNonce) {
         try {
+            @SuppressWarnings("UnsafeImplicitIntentLaunch")
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(authenticationUrl + "?redirect_to=" + URLEncoder
                     .encode(url + "&frame-nonce=" + UrlUtils.urlEncode(frameNonce), ENCODING_UTF8)));
@@ -1298,6 +1300,13 @@ public class ActivityLauncher {
         properties.put("origin", origin.name());
         AnalyticsTracker.track(Stat.SUPPORT_OPENED, properties);
         context.startActivity(HelpActivity.createIntent(context, origin, selectedSite, extraSupportTags));
+    }
+
+    public static void viewFeedbackForm(@NonNull Context context) {
+        // TODO verify tracks event with iOS
+        AnalyticsTracker.track(Stat.FEEDBACK_FORM_OPENED);
+        Intent intent = new Intent(context, FeedbackFormActivity.class);
+        context.startActivity(intent);
     }
 
     public static void viewZendeskTickets(@NonNull Context context,
@@ -1552,6 +1561,7 @@ public class ActivityLauncher {
      */
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -1648,6 +1658,7 @@ public class ActivityLauncher {
     }
 
     public static void downloadBackupDownloadFile(Context context, String url) {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(intent);
     }

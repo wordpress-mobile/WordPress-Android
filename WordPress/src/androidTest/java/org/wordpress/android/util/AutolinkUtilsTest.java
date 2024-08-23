@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+
+import static junit.framework.TestCase.assertEquals;
 
 @HiltAndroidTest
 public class AutolinkUtilsTest {

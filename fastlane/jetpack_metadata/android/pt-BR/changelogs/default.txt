@@ -1,0 +1,5 @@
+25.2:
+Resolvemos dois problemas grandes nessa atualização:
+* Agora é possível alterar novamente a data de um post.
+* Alguns usuários não podiam alterar os conteúdos do post.
+Se algo não estiver funcionando, entre em contato com nosso suporte!

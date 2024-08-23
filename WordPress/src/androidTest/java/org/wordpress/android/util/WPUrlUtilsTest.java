@@ -7,10 +7,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-
-import dagger.hilt.android.testing.HiltAndroidTest;
 
 @HiltAndroidTest
 public class WPUrlUtilsTest {

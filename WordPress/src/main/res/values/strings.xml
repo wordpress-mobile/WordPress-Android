@@ -111,6 +111,7 @@
     <string name="status_and_visibility">Status &amp; Visibility</string>
     <string name="free">Free</string>
     <string name="dismiss">Dismiss</string>
+    <string name="sending">Sending</string>
 
     <string name="button_not_now">Not now</string>
     <string name="button_skip">Skip</string>
@@ -617,6 +618,8 @@
     <string name="weeks_quantity_one">1 week</string>
     <string name="weeks_quantity_other">%d weeks</string>
     <string name="https" translatable="false">https:\/\/</string>
+    <string name="close">Close</string>
+    <string name="submit">Submit</string>
 
     <!-- PreferenceCategory Headers -->
     <string name="site_settings_general_header">General</string>
@@ -1125,6 +1128,20 @@
     <string name="jetpack_plugin_install_error_description">Jetpack could not be installed at this time.</string>
     <string name="jetpack_plugin_install_error_button_retry">Retry</string>
     <string name="jetpack_plugin_install_error_button_contact_support">Contact Support</string>
+
+    <!-- feedback form -->
+    <string name="feedback_form_title">Feedback</string>
+    <string name="feedback_form_message_hint">Your feedback is appreciated!</string>
+    <string name="feedback_form_discard">Discard your feedback?</string>
+    <string name="feedback_form_success">Thanks for submitting your feedback!</string>
+    <string name="feedback_form_failure">We were unable to submit your feedback</string>
+    <string name="feedback_form_max_attachments_reached">Maximum number of attachments reached</string>
+    <string name="feedback_form_unsupported_attachment">This file type is not supported</string>
+    <string name="feedback_form_attachment_too_large">Attachments must be 32MB or smaller</string>
+    <string name="feedback_form_attachment_already_added">Attachment already added</string>
+    <string name="feedback_form_unable_to_create_tempfile">Unable to create temporary file</string>
+    <string name="feedback_form_add_attachments">Add attachments</string>
+    <string name="media_pager_remove_item_content_description">Remove item %1$d</string>
 
     <!-- activity log -->
     <string name="activity_log">Activity Log</string>
@@ -2557,6 +2574,7 @@
     <string name="me_profile_photo">Profile Photo</string>
     <string name="me_btn_app_settings">App Settings</string>
     <string name="me_btn_help">Help</string>
+    <string name="me_btn_feedback">Send feedback</string>
     <string name="me_btn_share">Share WordPress with a friend</string>
     <string name="me_btn_about">About WordPress</string>
     <string name="me_btn_login_logout">Login/Logout</string>

@@ -157,10 +157,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private fun updateOverflowIndicatorChip() {
         val showOverflowIndicatorChip = hiddenTagChipsCount > 0 || !isSingleLine
         uiHelpers.updateVisibility(overflowIndicatorChip, showOverflowIndicatorChip)
-        overflowIndicatorChip.contentDescription = String.format(
-            resources.getString(R.string.show_n_hidden_items_desc),
-            hiddenTagChipsCount
-        )
+        overflowIndicatorChip.contentDescription =
+            resources.getString(R.string.show_n_hidden_items_desc, hiddenTagChipsCount.toString())
 
         overflowIndicatorChip.text = if (isSingleLine) {
             chipStyle.overflowChipText(resources, hiddenTagChipsCount)
@@ -207,9 +205,9 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 get() = R.layout.reader_expandable_tags_view_overflow_chip
 
             override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                    hiddenChipsCount
+                return resources.getString(
+                    R.string.reader_expandable_tags_view_overflow_indicator_expand_title,
+                    hiddenChipsCount.toString()
                 )
             }
 
@@ -229,9 +227,9 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 get() = R.layout.reader_expandable_tags_view_overflow_chip_new
 
             override fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String {
-                return String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
-                    hiddenChipsCount
+                return resources.getString(
+                    R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new,
+                    hiddenChipsCount.toString()
                 )
             }
 

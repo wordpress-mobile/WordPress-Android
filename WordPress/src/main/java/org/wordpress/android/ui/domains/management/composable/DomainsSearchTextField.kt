@@ -21,7 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wordpress.android.R
-import org.wordpress.android.ui.domains.management.M3Theme
+import org.wordpress.android.ui.compose.theme.M3Theme
 
 @Composable
 fun DomainsSearchTextField(
