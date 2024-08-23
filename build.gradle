@@ -36,14 +36,14 @@ ext {
     gravatarVersion = '1.0.0'
 
     // debug
-    flipperVersion = '0.247.0'
+    flipperVersion = '0.262.0'
     soLoaderVersion = '0.10.5'
 
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
     androidxAnnotationVersion = '1.8.0'
-    androidxAppcompatVersion = '1.6.1'
+    androidxAppcompatVersion = '1.7.0'
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.3.4'
     androidxComposeBomVersion = '2023.10.00'
@@ -62,7 +62,7 @@ ext {
     androidxRecyclerviewVersion = '1.3.2'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkManagerVersion = "2.9.0"
+    androidxWorkManagerVersion = "2.9.1"
     androidxComposeMaterial3Version = '1.2.1'
     androidxWebkitVersion =  '1.11.0'
     apacheCommonsTextVersion = '1.12.0'

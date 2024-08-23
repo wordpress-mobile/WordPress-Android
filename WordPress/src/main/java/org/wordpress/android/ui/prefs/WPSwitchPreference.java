@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -71,6 +72,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
         }
 
         // style custom switch preference
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
         Switch switchControl = getSwitch((ViewGroup) view);
         if (switchControl != null) {
             if (mThumbTint != null) {
@@ -90,6 +92,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
             if (childView instanceof Switch) {
                 return (Switch) childView;
             } else if (childView instanceof ViewGroup) {
+                @SuppressLint("UseSwitchCompatOrMaterialCode")
                 Switch theSwitch = getSwitch((ViewGroup) childView);
                 if (theSwitch != null) {
                     return theSwitch;
