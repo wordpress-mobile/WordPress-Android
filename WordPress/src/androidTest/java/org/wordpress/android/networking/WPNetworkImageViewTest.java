@@ -17,10 +17,10 @@ import org.wordpress.android.util.AppLog.T;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static junit.framework.TestCase.assertTrue;
-
 import dagger.hilt.android.testing.HiltAndroidRule;
 import dagger.hilt.android.testing.HiltAndroidTest;
+
+import static junit.framework.TestCase.assertTrue;
 
 @HiltAndroidTest
 public class WPNetworkImageViewTest {

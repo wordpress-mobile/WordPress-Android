@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2023-08-08 10:50:44+0000
+Translation-Revision-Date: 2024-06-26 20:17:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: hi_IN
 -->
 <resources>
+    <string name="gutenberg_native_tap_to_edit">संपादित करने के लिए टैप करें</string>
+    <string name="reader_dropdown_menu_tags">आपके टैग</string>
+    <string name="stats_subscribers_marker_view_plural">अभिदाता</string>
+    <string name="stats_subscribers_marker_view_singular">अभिदाता</string>
     <string name="privacy_banner_save">सहेजें</string>
     <string name="help_buttons_screen_title">सहायता</string>
     <string name="about_news">समाचार</string>

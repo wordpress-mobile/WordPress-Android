@@ -148,6 +148,7 @@ class SuggestionActivity : LocaleAwareActivity() {
                     }
                 })
 
+                @SuppressLint("SetTextI18n")
                 if (text.isEmpty()) {
                     setText("$prefix")
                     setSelection(1)

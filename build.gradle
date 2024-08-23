@@ -7,6 +7,7 @@ plugins {
     id 'com.automattic.android.measure-builds'
     id "org.jetbrains.kotlinx.kover"
     id "com.autonomousapps.dependency-analysis"
+    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -26,8 +27,8 @@ ext {
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.1.0'
     gutenbergMobileVersion = 'v1.121.0'
-    wordPressAztecVersion = 'v2.1.3'
-    wordPressFluxCVersion = '2.89'
+    wordPressAztecVersion = 'v2.1.4'
+    wordPressFluxCVersion = 'trunk-94d25d35fb4bf58a2e90741a6a5d56b8c6c3ce42'
     wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
@@ -35,14 +36,14 @@ ext {
     gravatarVersion = '1.0.0'
 
     // debug
-    flipperVersion = '0.247.0'
+    flipperVersion = '0.262.0'
     soLoaderVersion = '0.10.5'
 
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
     androidxAnnotationVersion = '1.8.0'
-    androidxAppcompatVersion = '1.6.1'
+    androidxAppcompatVersion = '1.7.0'
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.3.4'
     androidxComposeBomVersion = '2023.10.00'
@@ -52,7 +53,7 @@ ext {
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
-    androidxActivityVersion = '1.9.0'
+    androidxActivityVersion = '1.9.1'
     androidxFragmentVersion = '1.8.1'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
@@ -61,10 +62,10 @@ ext {
     androidxRecyclerviewVersion = '1.3.2'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkManagerVersion = "2.9.0"
+    androidxWorkManagerVersion = "2.9.1"
     androidxComposeMaterial3Version = '1.2.1'
     androidxWebkitVersion =  '1.11.0'
-    apacheCommonsTextVersion = '1.10.0'
+    apacheCommonsTextVersion = '1.12.0'
     coilComposeVersion = '2.4.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
@@ -165,7 +166,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '8.3'
+        toolVersion = '10.17.0'
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 

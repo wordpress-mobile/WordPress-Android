@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-12 12:54:07+0000
+Translation-Revision-Date: 2024-07-25 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: de
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Es ist derzeit nicht möglich, Beiträge aus Audio zu erstellen. Bitte versuche es später noch einmal.</string>
+    <string name="voice_to_content_recording_label">Aufnahme läuft</string>
+    <string name="voice_to_content_begin_recording_label">Aufnahme beginnen</string>
+    <string name="voice_to_content_secondary_header_label">Anfragen verfügbar:</string>
+    <string name="voice_to_content_processing_label">Verarbeitung läuft</string>
+    <string name="voice_to_content_error_label">Fehler</string>
+    <string name="voice_to_content_processing">Verarbeitung läuft</string>
     <string name="gutenberg_native_tap_to_edit">Zum Bearbeiten tippen</string>
     <string name="voice_to_content_permissions_required_msg">Für eine Audioaufzeichnung benötigt diese App die Berechtigung, auf dein Mikrofon zuzugreifen. Du hast diese Berechtigung kürzlich verweigert. Bitte aktiviere die Mikrofonberechtigung in den App-Einstellungen, um diese Funktion verwenden zu können.</string>
     <string name="voice_to_content_permissions_required_title">Berechtigung für Audioaufzeichnung erforderlich</string>
@@ -1935,6 +1942,7 @@ Language: de
     <string name="stats_box_type_low">niedrig</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Bild ersetzen</string>
     <string name="gutenberg_native_gallery_caption_s">Bildunterschrift der Galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Seite oder Beitrag erstellen</string>
     <string name="content_description_person_building_website">Ersteller der Website</string>
@@ -3660,7 +3668,7 @@ Language: de
     <string name="mnu_comment_trash">Papierkorb</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Ablehnen</string>
-    <string name="mnu_comment_approve">Genehmigen</string>
+    <string name="mnu_comment_approve">Freigeben</string>
     <string name="edit_comment">Kommentar bearbeiten</string>
     <string name="comment_status_trash">Gelöscht</string>
     <string name="comment_status_spam">Spam</string>
@@ -3773,7 +3781,7 @@ Language: de
     <string name="sdcard_title">SD-Karte benötigt</string>
     <string name="media">Medien</string>
     <string name="updating_cat_success">Kategorie erfolgreich aktualisiert</string>
-    <string name="approve">Genehmigen</string>
+    <string name="approve">Freigeben</string>
     <string name="delete">Löschen</string>
     <string name="updating_cat_failed">Aktualisieren der Kategorie fehlgeschlagen</string>
     <string name="none">Nichts</string>

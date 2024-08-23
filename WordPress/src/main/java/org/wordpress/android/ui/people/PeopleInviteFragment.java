@@ -62,10 +62,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+
 import static com.google.android.material.textfield.TextInputLayout.END_ICON_DROPDOWN_MENU;
 import static com.google.android.material.textfield.TextInputLayout.END_ICON_NONE;
-
-import kotlin.Unit;
 
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
