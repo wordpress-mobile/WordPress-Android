@@ -1,4 +1,2 @@
-We fixed two big issues in this release:
-* You can now update a publish post's date again.
-* Some users couldn't update their post's content.
-As always, please reach out to support if anything isn't working right!
+* [**] [internal] Set remaining foreground service types for Android 14 [https://github.com/wordpress-mobile/WordPress-Android/pull/21047]
+
