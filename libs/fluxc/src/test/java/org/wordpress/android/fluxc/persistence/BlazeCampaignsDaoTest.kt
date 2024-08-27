@@ -177,6 +177,7 @@ class BlazeCampaignsDaoTest {
             targetUrn = TARGET_URN,
             totalBudget = TOTAL_BUDGET,
             spentBudget = SPENT_BUDGET,
+            isEndlessCampaign = false
         )
         val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
             campaigns = listOf(BLAZE_CAMPAIGN_MODEL),

@@ -85,7 +85,8 @@ private val CAMPAIGN_RESPONSE = BlazeCampaign(
     durationDays = DURATION_IN_DAYS,
     startTime = CREATED_AT,
     targetUrn = TARGET_URN,
-    status = UI_STATUS
+    status = UI_STATUS,
+    isEvergreen = false
 )
 
 private val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignListResponse(
@@ -106,7 +107,8 @@ private val BLAZE_CAMPAIGN_ENTITY = BlazeCampaignEntity(
     clicks = CLICKS,
     targetUrn = TARGET_URN,
     totalBudget = TOTAL_BUDGET,
-    spentBudget = SPENT_BUDGET
+    spentBudget = SPENT_BUDGET,
+    isEndlessCampaign = false
 )
 private val BLAZE_CAMPAIGNS_MODEL = BlazeCampaignsModel(
     campaigns = listOf(BLAZE_CAMPAIGN_ENTITY.toDomainModel()),
@@ -458,6 +460,7 @@ class BlazeCampaignsStoreTest {
             targetUrn = TARGET_URN,
             totalBudget = TOTAL_BUDGET,
             spentBudget = SPENT_BUDGET,
+            isEndlessCampaign = false
         )
 
         whenever(creationRestClient.createCampaign(any(), any())).thenReturn(
