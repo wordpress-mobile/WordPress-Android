@@ -227,7 +227,8 @@ class BlazeCreationRestClient @Inject constructor(
                     "devices" to it.devices,
                     "page_topics" to it.topics
                 ).filterNotNull()
-            }
+            },
+            "is_evergreen" to request.isEndlessCampaign
         ).filterNotNull()
 
         val response = wpComNetwork.executePostGsonRequest(
