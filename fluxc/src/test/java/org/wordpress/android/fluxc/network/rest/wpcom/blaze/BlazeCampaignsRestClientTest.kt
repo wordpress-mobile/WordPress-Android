@@ -209,7 +209,8 @@ class BlazeCampaignsRestClientTest {
             durationDays = DURATION_IN_DAYS,
             startTime = CREATED_AT,
             targetUrn = "urn:wpcom:post:199247490:9",
-            status = UI_STATUS
+            status = UI_STATUS,
+            isEvergreen = false
         )
 
         val BLAZE_CAMPAIGNS_RESPONSE = BlazeCampaignListResponse(
