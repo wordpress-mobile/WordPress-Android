@@ -5,11 +5,10 @@ plugins {
 android {
     namespace "org.wordpress.android.mocks"
 
-    compileSdkVersion rootProject.compileSdkVersion
-
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
     }
 
     lint {
