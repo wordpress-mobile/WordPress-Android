@@ -37,7 +37,7 @@ ext {
 
     // debug
     flipperVersion = '0.262.0'
-    soLoaderVersion = '0.10.5'
+    soLoaderVersion = '0.11.0'
 
     // main
     androidInstallReferrerVersion = '2.2'
