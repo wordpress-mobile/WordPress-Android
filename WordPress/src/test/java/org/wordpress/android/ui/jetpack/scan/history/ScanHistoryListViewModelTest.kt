@@ -188,7 +188,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel.start(ScanHistoryTabType.IGNORED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(1)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
+        verify(scanThreatItemBuilder, times(2)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.IGNORED }
     }
 
@@ -197,7 +197,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel.start(ALL, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(4)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
+        verify(scanThreatItemBuilder, times(8)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }
