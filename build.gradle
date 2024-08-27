@@ -154,9 +154,6 @@ allprojects {
                 includeVersion "com.jraska", "falcon", "2.1.1"
             }
         }
-        flatDir {
-            dirs '../aars'
-        }
     }
 
     tasks.register("checkstyle", Checkstyle) {
