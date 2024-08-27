@@ -9,11 +9,10 @@ plugins {
 android {
     namespace "org.wordpress.android.imageeditor"
 
-    compileSdkVersion rootProject.compileSdkVersion
-
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

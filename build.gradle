@@ -37,7 +37,7 @@ ext {
 
     // debug
     flipperVersion = '0.262.0'
-    soLoaderVersion = '0.10.5'
+    soLoaderVersion = '0.11.0'
 
     // main
     androidInstallReferrerVersion = '2.2'
@@ -54,7 +54,7 @@ ext {
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.9.1'
-    androidxFragmentVersion = '1.8.1'
+    androidxFragmentVersion = '1.8.2'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.8.4'
     androidxPercentlayoutVersion = '1.0.0'
@@ -107,8 +107,8 @@ ext {
     // android test
     androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.5'
-    androidxTestUiAutomatorVersion = '2.2.0'
+    androidxTestExtJunitVersion = '1.2.1'
+    androidxTestUiAutomatorVersion = '2.3.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '4.12.0'
     wiremockVersion = '2.26.3'
@@ -153,9 +153,6 @@ allprojects {
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
             }
-        }
-        flatDir {
-            dirs '../aars'
         }
     }
 
