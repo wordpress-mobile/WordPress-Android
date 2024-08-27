@@ -54,7 +54,7 @@ ext {
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
     androidxActivityVersion = '1.9.1'
-    androidxFragmentVersion = '1.8.1'
+    androidxFragmentVersion = '1.8.2'
     androidxGridlayoutVersion = '1.0.0'
     androidxLifecycleVersion = '2.6.2'
     androidxPercentlayoutVersion = '1.0.0'
@@ -153,9 +153,6 @@ allprojects {
                 // Required for lintWordpressVanillaRelease
                 includeVersion "com.jraska", "falcon", "2.1.1"
             }
-        }
-        flatDir {
-            dirs '../aars'
         }
     }
 
