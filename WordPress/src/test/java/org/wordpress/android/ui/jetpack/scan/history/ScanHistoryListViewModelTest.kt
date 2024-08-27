@@ -5,10 +5,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.mock
@@ -38,7 +36,6 @@ import java.util.Calendar
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class ScanHistoryListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var scanThreatItemBuilder: ThreatItemBuilder
@@ -182,7 +179,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel.start(ScanHistoryTabType.FIXED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(3)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
+        verify(scanThreatItemBuilder, times(6)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.FIXED }
     }
 
@@ -191,7 +188,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel.start(ScanHistoryTabType.IGNORED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(1)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
+        verify(scanThreatItemBuilder, times(2)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.IGNORED }
     }
 
@@ -200,7 +197,7 @@ class ScanHistoryListViewModelTest : BaseUnitTest() {
         viewModel.start(ALL, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(4)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
+        verify(scanThreatItemBuilder, times(8)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }
