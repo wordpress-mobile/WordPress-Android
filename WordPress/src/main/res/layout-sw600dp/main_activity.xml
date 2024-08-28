@@ -12,20 +12,30 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_container" />
+        android:layout_toEndOf="@+id/bottom_navigation"
+        android:layout_alignParentEnd="true"/>
+
+    <org.wordpress.android.ui.main.WPMainNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_alignParentStart="true" />
 
     <!-- this coordinator exists only for snackbars -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_container" />
+        android:layout_above="@+id/bottom_container"
+        android:layout_toEndOf="@id/bottom_navigation"/>
 
     <LinearLayout
         android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/bottom_navigation"
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
@@ -48,14 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_size"
             android:background="?android:attr/listDivider" />
-
-        <org.wordpress.android.ui.main.WPMainNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="@dimen/navbar_elevation"
-            android:visibility="visible"
-            app:menu="@menu/bottom_nav_main" />
     </LinearLayout>
 
     <RelativeLayout

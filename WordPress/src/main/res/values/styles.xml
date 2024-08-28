@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight">
         <!-- Material theme -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
