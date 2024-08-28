@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-06-04 07:31:03+0000
+Translation-Revision-Date: 2024-07-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Sesten gönderi oluşturma şu anda kullanılamıyor, lütfen daha sonra yeniden deneyin.</string>
+    <string name="voice_to_content_done_label">Tamam</string>
+    <string name="voice_to_content_upgrade">Daha fazla istek için paketinizi yükseltin</string>
+    <string name="voice_to_content_ineligible">Sesten gönderi oluşturmak için yeterli isteğiniz yok.</string>
+    <string name="voice_to_content_recording_label">Kaydediliyor</string>
+    <string name="voice_to_content_begin_recording_label">Kayda Başla</string>
+    <string name="voice_to_content_secondary_header_label">Mevcut istekler:</string>
+    <string name="voice_to_content_base_header_label">Sesten gönderi oluştur</string>
+    <string name="voice_to_content_processing_label">İşleniyor</string>
+    <string name="voice_to_content_error_label">Hata</string>
+    <string name="voice_to_content_processing">İşleniyor</string>
+    <string name="gutenberg_native_tap_to_edit">Düzenlemek için dokunun</string>
+    <string name="voice_to_content_permissions_required_msg">Ses kaydetmek için bu uygulamanın mikrofonunuza erişim izni olması gerekir. Daha önce bu izni reddetmiştiniz. Bu özelliği kullanmak için lütfen uygulama ayarlarından mikrofon iznini etkinleştirin.</string>
+    <string name="voice_to_content_permissions_required_title">Ses Kaydı İzni Gerekli</string>
+    <string name="permission_access_media_location">Ortamın Konumu</string>
     <string name="in_app_update_restart">Yeniden Başla</string>
     <string name="in_app_update_available">Güncelleme indirildi. Uygulamak için yeniden başlayın.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Sesten gönderi oluştur</string>
@@ -1931,6 +1946,7 @@ Language: tr
     <string name="stats_box_type_low">düşük</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Görseli değiştir</string>
     <string name="gutenberg_native_gallery_caption_s">Galeri yazısı. %s</string>
     <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
     <string name="content_description_person_building_website">İnsan yapımı site</string>

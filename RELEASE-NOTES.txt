@@ -1,8 +1,18 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
-25.2
+25.4
 -----
 
+
+25.3
+-----
+* [**] [internal] Set remaining foreground service types for Android 14 [https://github.com/wordpress-mobile/WordPress-Android/pull/21047]
+
+25.2
+-----
+* [*] Fix ability to update a published post's date [https://github.com/wordpress-mobile/WordPress-Android/pull/21036]
+* [**] Block editor: Fixed an issue preventing some users from editing or creating content [https://github.com/wordpress-mobile/gutenberg-mobile/pull/6967]
+* [*] Block editor: Added partial prefix support for creating Headings, List, and Quote blocks [https://github.com/WordPress/gutenberg/pull/62576]
 
 25.1
 -----

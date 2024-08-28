@@ -13,13 +13,15 @@ data class SecondaryHeaderUIModel(
     val isLabelVisible: Boolean = true,
     val isProgressIndicatorVisible: Boolean = false,
     val requestsAvailable: String = "0",
-    val timeElapsed: String = "00:00:00",
+    val timeMaxDurationInSeconds: Int = 0,
     val isTimeElapsedVisible: Boolean = false
 )
 
 data class RecordingPanelUIModel(
     val onMicTap: (() -> Unit)? = null,
     val onStopTap: (() -> Unit)? = null,
+    val onPauseRecording: (() -> Unit)? = null,
+    val onResumeRecording: (() -> Unit)? = null,
     val isEligibleForFeature: Boolean = false,
     val hasPermission: Boolean = false,
     val onRequestPermission: (() -> Unit)? = null,
@@ -30,6 +32,12 @@ data class RecordingPanelUIModel(
     val upgradeUrl: String? = null,
     val onLinkTap: ((String) -> Unit)? = null,
     @StringRes val actionLabel: Int
+)
+
+data class ErrorUiModel(
+    @StringRes val errorMessage: Int? = null,
+    val allowRetry: Boolean = false,
+    val onRetryTap: (() -> Unit)? = null
 )
 
 enum class VoiceToContentUIStateType(val trackingName: String) {
@@ -45,5 +53,6 @@ data class VoiceToContentUiState(
     val uiStateType: VoiceToContentUIStateType,
     val header: HeaderUIModel,
     val secondaryHeader: SecondaryHeaderUIModel? = null,
-    val recordingPanel: RecordingPanelUIModel? = null
+    val recordingPanel: RecordingPanelUIModel? = null,
+    val errorPanel: ErrorUiModel? = null
 )

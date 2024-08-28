@@ -1461,6 +1461,7 @@ Language: cs_CZ
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Vytvořte příspěvek nebo stránku</string>
     <string name="gutenberg_native_gallery_caption_s">Titulek galerie. %s</string>
+    <string name="gutenberg_native_replace_image">Nahradit obrázek</string>
     <string name="post_signup_interstitial_subtitle">Cokoli chcete vytvořit nebo sdílet, pomůžeme vám to udělat tady.</string>
     <string name="post_signup_interstitial_not_right_now">Teď ne</string>
     <string name="content_description_person_building_website">Web pro budování osob</string>

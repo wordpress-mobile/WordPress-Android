@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import dagger.hilt.android.testing.HiltAndroidRule;
+
 import static androidx.compose.ui.test.junit4.AndroidComposeTestRule_androidKt.createComposeRule;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
@@ -55,8 +57,6 @@ import static org.wordpress.android.BuildConfig.E2E_SELF_HOSTED_USER_SITE_ADDRES
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_EMAIL;
 import static org.wordpress.android.BuildConfig.E2E_WP_COM_USER_PASSWORD;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
-
-import dagger.hilt.android.testing.HiltAndroidRule;
 
 public class BaseTest {
     static final String TAG = BaseTest.class.getSimpleName();

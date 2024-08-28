@@ -32,6 +32,9 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
     @Mock
     lateinit var contextProvider: ContextProvider
 
+    @Mock
+    lateinit var telemtry: VoiceToContentTelemetry
+
     private lateinit var viewModel: VoiceToContentViewModel
 
 //    private var uiStateChanges = mutableListOf<VoiceToContentUiState>()
@@ -77,7 +80,8 @@ class VoiceToContentViewModelTest : BaseUnitTest() {
             selectedSiteRepository,
             recordingUseCase,
             contextProvider,
-            prepareVoiceToContentUseCase
+            prepareVoiceToContentUseCase,
+            telemtry
         )
     }
 

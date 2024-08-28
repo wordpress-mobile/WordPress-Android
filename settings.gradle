@@ -1,15 +1,17 @@
 pluginManagement {
     gradle.ext.kotlinVersion = '1.9.22'
     gradle.ext.kspVersion = '1.9.22-1.0.17'
-    gradle.ext.agpVersion = '8.1.0'
+    gradle.ext.agpVersion = '8.5.1'
     gradle.ext.googleServicesVersion = '4.3.15'
     gradle.ext.navigationVersion = '2.7.7'
-    gradle.ext.sentryVersion = '4.3.1'
+    gradle.ext.sentryVersion = '4.11.0'
     gradle.ext.daggerVersion = "2.50"
     gradle.ext.detektVersion = '1.23.0'
     gradle.ext.violationCommentsVersion = '1.70.0'
-    gradle.ext.measureBuildsVersion = '2.1.2'
+    gradle.ext.measureBuildsVersion = '3.1.0'
     gradle.ext.koverVersion = '0.7.5'
+    gradle.ext.dependencyAnalysisVersion = '1.28.0'
+    gradle.ext.fladleVersion = '0.17.5'
 
     plugins {
         id "org.jetbrains.kotlin.android" version gradle.ext.kotlinVersion
@@ -28,6 +30,8 @@ pluginManagement {
         id "org.jetbrains.kotlinx.kover" version gradle.ext.koverVersion
         id "com.google.dagger.hilt.android" version gradle.ext.daggerVersion
         id "com.google.devtools.ksp" version gradle.ext.kspVersion
+        id "com.autonomousapps.dependency-analysis" version gradle.ext.dependencyAnalysisVersion
+        id "com.osacky.fladle" version gradle.ext.fladleVersion
     }
     repositories {
         maven {

@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 19:54:08+0000
+Translation-Revision-Date: 2024-07-24 21:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/4.0.1
 Language: ar
 -->
 <resources>
+    <string name="voice_to_content_generic_error">لا تتوفر تدوينة من ملف صوتي في الوقت الحالي، يرجى المحاولة مجددًا في وقت لاحق.</string>
+    <string name="voice_to_content_done_label">تم</string>
+    <string name="voice_to_content_upgrade">الترقية للحصول على مزيد الطلبات</string>
+    <string name="voice_to_content_ineligible">ليست لديك طلبات كافية متوفرة لإنشاء تدوينة من ملف صوتي.</string>
+    <string name="voice_to_content_recording_label">التسجيل</string>
+    <string name="voice_to_content_begin_recording_label">بدء التسجيل</string>
+    <string name="voice_to_content_secondary_header_label">الطلبات المتوفرة:</string>
+    <string name="voice_to_content_base_header_label">تدوينة من ملف صوتي</string>
+    <string name="voice_to_content_processing_label">معالجة</string>
+    <string name="voice_to_content_error_label">خطأ</string>
+    <string name="voice_to_content_processing">معالجة</string>
+    <string name="permission_access_media_location">موقع الوسائط</string>
+    <string name="voice_to_content_permissions_required_title">صلاحية تسجيل الصوت مطلوبة</string>
+    <string name="voice_to_content_permissions_required_msg">لتسجيل صوت، يحتاج هذا التطبيق إلى صلاحية للوصول إلى الميكروفون الخاص بك. لقد سبق لك رفض هذه الصلاحية. يرجى تمكين صلاحية الميكروفون ضمن إعدادات التطبيق لاستخدام هذه الميزة.</string>
+    <string name="gutenberg_native_tap_to_edit">النقر للتحرير</string>
     <string name="in_app_update_restart">إعادة البدء</string>
     <string name="in_app_update_available">تم تنزيل التحديث. أعد التشغيل للتطبيق.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">تدوينة من ملف صوتي</string>
@@ -1933,6 +1948,7 @@ Language: ar
     <string name="stats_bar_chart_accessibility_entry">%1$s، %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">التسمية التوضيحية لمعرض الصور. %s</string>
     <string name="create_post_page_fab_tooltip">إنشاء مقالة أو صفحة</string>
+    <string name="gutenberg_native_replace_image">استبدال الصورة</string>
     <string name="content_description_person_building_website">شخص ينشئ موقعًا على الويب</string>
     <string name="post_signup_interstitial_not_right_now">ليس الآن</string>
     <string name="post_signup_interstitial_subtitle">سواء أرغبتَ في الإنشاء أو المشاركة، فإنَّنا سنساعدك على القيام بذلك بشكل صحيح.</string>

@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-30 12:54:08+0000
+Translation-Revision-Date: 2024-07-25 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: id
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Pos dari audio tidak tersedia saat ini, coba lagi nanti.</string>
+    <string name="voice_to_content_done_label">Selesai</string>
+    <string name="voice_to_content_upgrade">Upgrade untuk mendapat lebih banyak kuota permintaan</string>
+    <string name="voice_to_content_ineligible">Kuota permintaan Anda tidak cukup untuk membuat pos dari audio.</string>
+    <string name="voice_to_content_recording_label">Merekam</string>
+    <string name="voice_to_content_begin_recording_label">Mulai Merekam</string>
+    <string name="voice_to_content_secondary_header_label">Permintaan tersedia:</string>
+    <string name="voice_to_content_base_header_label">Pos dari Audio</string>
+    <string name="voice_to_content_processing_label">Pemrosesan</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing">Pemrosesan</string>
+    <string name="gutenberg_native_tap_to_edit">Ketuk untuk menyunting</string>
+    <string name="voice_to_content_permissions_required_msg">Aplikasi ini perlu izin untuk mengakses mikrofon untuk merekam audio. Anda telah menolak izin ini sebelumnya. Aktifkan izin mikrofon dalam pengaturan aplikasi untuk menggunakan fitur ini.</string>
+    <string name="voice_to_content_permissions_required_title">Izin Perekaman Audio Diperlukan</string>
+    <string name="permission_access_media_location">Lokasi Media</string>
     <string name="in_app_update_restart">Mulai ulang</string>
     <string name="in_app_update_available">Pembaruan telah diunduh. Mulai ulang untuk menerapkan pembaruan.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Pos dari Audio</string>
@@ -1931,6 +1946,7 @@ Language: id
     <string name="stats_box_type_low">rendah</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Ganti gambar</string>
     <string name="gutenberg_native_gallery_caption_s">Keterangan galeri. %s</string>
     <string name="create_post_page_fab_tooltip">Buat pos atau halaman</string>
     <string name="content_description_person_building_website">Orang membangun situs web</string>
@@ -3128,6 +3144,7 @@ Language: id
     <string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
     <string name="error_unknown_post_type">Format pos tidak diketahui</string>
     <string name="submit_for_review">Kirim</string>
+    <string name="title_subscriber">Pelanggan</string>
     <string name="duplicate_site_detected">Situs duplikat terdeteksi.</string>
     <string name="cannot_add_duplicate_site">Situs ini sudah ada dalam aplikasi, Anda tidak bisa menambahkannya.</string>
     <string name="already_logged_in_wpcom">Anda sudah login ke akun WordPress.com, Anda tidak dapat menambahkan situs WordPress.com yang terikat ke akun lain.</string>

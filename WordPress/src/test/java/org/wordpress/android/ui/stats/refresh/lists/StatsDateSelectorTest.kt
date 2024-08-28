@@ -59,14 +59,12 @@ class StatsDateSelectorTest : BaseUnitTest() {
     @Test
     fun `does not reemit hidden date selector`() {
         val models = mutableListOf<DateSelectorUiModel>()
-        dateSelector.dateSelectorData.observeForever { model -> model?.let { models.add(it) } }
 
         dateSelector.updateDateSelector()
-
+        dateSelector.dateSelectorData.observeForever { model -> model?.let { models.add(it) } }
         Assertions.assertThat(models).hasSize(1)
 
         dateSelector.updateDateSelector()
-
         Assertions.assertThat(models).hasSize(1)
     }
 

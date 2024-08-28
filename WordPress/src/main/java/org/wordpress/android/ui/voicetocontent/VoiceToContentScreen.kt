@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
@@ -24,8 +26,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,7 +37,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -47,16 +53,33 @@ import androidx.constraintlayout.compose.Dimension
 import org.wordpress.android.R
 import org.wordpress.android.ui.compose.components.buttons.Drawable
 import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.util.audio.RecordingUpdate
+import java.util.Locale
 
 @Composable
 fun VoiceToContentScreen(
     viewModel: VoiceToContentViewModel
 ) {
     val state by viewModel.state.collectAsState()
-    val amplitudes by viewModel.amplitudes.observeAsState(initial = listOf())
+    val recordingUpdate by viewModel.recordingUpdate.observeAsState(initial = RecordingUpdate())
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
-    val bottomSheetHeight = screenHeight * 0.6f  // Set to 60% of screen height - but how can it be dynamic?
+    val isRecording by viewModel.isRecording.collectAsState()
+
+    DisposableEffect(Unit) {
+        onDispose {
+            if (isRecording) {
+                viewModel.pauseRecording()
+            }
+        }
+    }
+
+    // Adjust the bottom sheet height based on orientation
+    val bottomSheetHeight = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        screenHeight // Full height in landscape
+    } else {
+        screenHeight * 0.6f // 60% height in portrait
+    }
 
     Surface(
         modifier = Modifier
@@ -64,12 +87,22 @@ fun VoiceToContentScreen(
             .height(bottomSheetHeight),
         color = MaterialTheme.colors.surface
     ) {
-        VoiceToContentView(state, amplitudes)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(rememberNestedScrollInteropConnection()) // Enable nested scrolling for the bottom sheet
+                .verticalScroll(rememberScrollState()) // Enable vertical scrolling for the bottom sheet
+        ) {
+            VoiceToContentView(state, recordingUpdate, isRecording)
+        }
     }
 }
 
 @Composable
-fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
+fun VoiceToContentView(state: VoiceToContentUiState,
+                       recordingUpdate: RecordingUpdate,
+                       isRecording: Boolean
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -82,8 +115,8 @@ fun VoiceToContentView(state: VoiceToContentUiState, amplitudes: List<Float>) {
             VoiceToContentUIStateType.ERROR -> ErrorView(state)
             else -> {
                 Header(state.header)
-                SecondaryHeader(state.secondaryHeader)
-                RecordingPanel(state, amplitudes)
+                SecondaryHeader(state.secondaryHeader, recordingUpdate)
+                RecordingPanel(state, recordingUpdate, isRecording)
             }
         }
     }
@@ -117,7 +150,12 @@ fun ErrorView(model: VoiceToContentUiState) {
     ) {
         Header(model.header)
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Unable to use Voice to Content at the moment, please try again later")
+        Text(stringResource(id = model.errorPanel?.errorMessage?:R.string.voice_to_content_generic_error))
+        if (model.errorPanel?.allowRetry == true) {
+            IconButton(onClick = model.errorPanel.onRetryTap?:{}) {
+                Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
+            }
+        }
     }
 }
 
@@ -136,14 +174,16 @@ fun Header(model: HeaderUIModel) {
 }
 
 @Composable
-fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
+fun SecondaryHeader(model: SecondaryHeaderUIModel?, recordingUpdate: RecordingUpdate) {
     model?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = stringResource(id = model.label), style = secondaryHeaderStyle)
-            Spacer(modifier = Modifier.width(8.dp)) // Add space between text and progress
+            if (model.isLabelVisible) {
+                Text(text = stringResource(id = model.label), style = secondaryHeaderStyle)
+                Spacer(modifier = Modifier.width(8.dp)) // Add space between text and progress
+            }
             if (model.isProgressIndicatorVisible) {
                 Box(
                     modifier = Modifier.size(20.dp) // size the progress indicator
@@ -153,7 +193,12 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
                     )
                 }
             } else {
-                Text(text = model.requestsAvailable, style = secondaryHeaderStyle)
+                Text(
+                    text = if (model.isTimeElapsedVisible)
+                        formatTime(recordingUpdate.remainingTimeInSeconds, model.timeMaxDurationInSeconds)
+                    else model.requestsAvailable,
+                    style = secondaryHeaderStyle
+                )
             }
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -161,7 +206,33 @@ fun SecondaryHeader(model: SecondaryHeaderUIModel?) {
 }
 
 @Composable
-fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
+fun formatTime(remainingTimeInSeconds: Int, maxDurationInSeconds: Int): String {
+    val default = getDefaultTimeString(maxDurationInSeconds)
+    if (remainingTimeInSeconds == -1) return default
+
+    val minutes = remainingTimeInSeconds / 60
+    val seconds = remainingTimeInSeconds % 60
+
+    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+}
+
+@Composable
+fun getDefaultTimeString(maxDurationInSeconds: Int): String {
+    if (maxDurationInSeconds <= 0) {
+        return "00:00"
+    }
+
+    val minutes = (maxDurationInSeconds - 1) / 60
+    val seconds = (maxDurationInSeconds - 1) % 60
+
+    return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+}
+
+@Composable
+fun RecordingPanel(model: VoiceToContentUiState,
+                   recordingUpdate: RecordingUpdate,
+                   isRecording: Boolean
+) {
     model.recordingPanel?.let {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -183,19 +254,12 @@ fun RecordingPanel(model: VoiceToContentUiState, amplitudes: List<Float>) {
                             .height(IntrinsicSize.Max)
                             .padding(48.dp)
                     ) {
-                        WaveformVisualizer(
-                            amplitudes = amplitudes,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp)
-                                .padding(16.dp),
-                            color = MaterialTheme.colors.primary
-                        )
+                        ScrollingWaveformVisualizer(recordingUpdate = recordingUpdate)
                     }
                 } else if (model.uiStateType == VoiceToContentUIStateType.INELIGIBLE_FOR_FEATURE) {
                     InEligible(model = it)
                 }
-                MicToStopIcon(it)
+                MicToStopIcon(it, isRecording=isRecording)
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = stringResource(id = it.actionLabel),
@@ -332,7 +396,7 @@ fun PreviewInitializingView() {
                 hasPermission = false
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -354,7 +418,7 @@ fun PreviewReadyToRecordView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -375,7 +439,7 @@ fun PreviewNotEligibleToRecordView() {
                 upgradeUrl = "https://www.wordpress.com"
             )
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }
 
@@ -398,18 +462,7 @@ fun PreviewRecordingView() {
                 isEligibleForFeature = true
             )
         )
-        VoiceToContentView(
-            state = state,
-            amplitudes = listOf(
-                1.1f,
-                2.2f,
-                3.3f,
-                4.4f,
-                2.2f,
-                3.3f,
-                1.1f
-            )
-        )
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = true)
     }
 }
 
@@ -422,6 +475,6 @@ fun PreviewProcessingView() {
             uiStateType = VoiceToContentUIStateType.PROCESSING,
             header = HeaderUIModel(label = R.string.voice_to_content_processing_label, onClose = { })
         )
-        VoiceToContentView(state = state, amplitudes = listOf())
+        VoiceToContentView(state = state, recordingUpdate = RecordingUpdate(), isRecording = false)
     }
 }

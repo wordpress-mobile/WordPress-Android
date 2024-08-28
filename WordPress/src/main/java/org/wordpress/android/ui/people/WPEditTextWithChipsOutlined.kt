@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people
 
 import android.animation.Animator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -404,6 +405,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         resetText()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun resetText() {
         editor.apply {
             text?.clear() ?: setText("")

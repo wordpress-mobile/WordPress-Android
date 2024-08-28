@@ -14,7 +14,6 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.ViewCompat
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
@@ -139,7 +138,7 @@ class PrefMainSwitchToolbarView @JvmOverloads constructor(
         toolbarSwitch.setOnLongClickListener(this)
         toolbarSwitch.setOnClickListener(this)
 
-        ViewCompat.setLabelFor(toolbarSwitch, mainSwitch.id)
+        toolbarSwitch.setLabelFor(mainSwitch.id)
         setupFocusabilityForTalkBack()
         toolbarSwitch.redirectContextClickToLongPressListener()
     }

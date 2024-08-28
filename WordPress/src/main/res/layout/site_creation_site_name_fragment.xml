@@ -78,8 +78,7 @@
                 android:inputType="textCapSentences"
                 android:singleLine="true"
                 android:textAlignment="viewStart"
-                android:textAppearance="?attr/textAppearanceSubtitle1"
-                tools:targetApi="o" />
+                android:textAppearance="?attr/textAppearanceSubtitle1" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

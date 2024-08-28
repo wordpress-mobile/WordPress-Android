@@ -1,2 +1,0 @@
-25.0:
-Giriş ve Yazı Listesi ekranlarındaki çeşitli çökmelerin yanı sıra blog hatırlatıcıları, öne çıkarılmış resimler ve kullanıcı kaldırma ile ilgili eylemleri düzelttik. Daha az çökme mi? Ne kadar harika.

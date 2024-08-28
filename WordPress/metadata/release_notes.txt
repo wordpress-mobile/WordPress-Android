@@ -1,2 +1,3 @@
-* [*] [internal] Block editor: Add onContentUpdate bridge functionality [https://github.com/wordpress-mobile/gutenberg-mobile/pull/20852]
-
+Fixed an annoying bug where users would be repeatedly prompted for feedback.
+Android 14 improvements.
+Improved the user feedback form – please feel free to suggest anything that would make the app better for you!

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -60,6 +61,7 @@ import com.google.android.material.R as MaterialR
  * insert our own custom views so we have more control over their appearance
  */
 @AndroidEntryPoint
+@SuppressLint("RestrictedApi") // https://github.com/wordpress-mobile/WordPress-Android/issues/21079
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
