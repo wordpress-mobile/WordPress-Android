@@ -27,10 +27,10 @@ import org.wordpress.android.util.extensions.CompatExtensionsKt;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.WordPress.getContext;
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_BYPASS_MIGRATION;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 /**
  * An activity to handle deep linking and intercepting links like:

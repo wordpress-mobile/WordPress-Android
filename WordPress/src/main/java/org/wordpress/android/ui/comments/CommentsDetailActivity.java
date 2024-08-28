@@ -43,9 +43,9 @@ import org.wordpress.android.widgets.WPViewPagerTransformer;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
-
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.ui.comments.unified.CommentConstants.COMMENTS_PER_PAGE;
 
 /**
  * @deprecated

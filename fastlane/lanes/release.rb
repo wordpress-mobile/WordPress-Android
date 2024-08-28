@@ -76,8 +76,12 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    setbranchprotection(repository: GHHELPER_REPO, branch: "release/#{new_version}")
-    setfrozentag(repository: GHHELPER_REPO, milestone: new_version)
+    copy_branch_protection(
+      repository: GHHELPER_REPO,
+      from_branch: DEFAULT_BRANCH,
+      to_branch: "release/#{new_version}"
+    )
+    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: new_version)
   end
 
   #####################################################################################
@@ -293,7 +297,7 @@ platform :android do
     release_branch = "release/#{current_release_version}"
 
     # Remove branch protection first, so that we can push the final commits directly to the release branch
-    removebranchprotection(repository: GHHELPER_REPO, branch: release_branch)
+    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
 
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
@@ -309,13 +313,12 @@ platform :android do
     UI.success "Done! New Release Version: #{current_release_version}. New Build Code: #{current_build_code}"
 
     version_name = current_release_version
-    build_code = current_build_code
-    download_metadata_strings(version: version_name, build_number: build_code)
+    download_metadata_strings(version: version_name)
 
     push_to_git_remote(tags: false)
 
     # Wrap up
-    setfrozentag(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
+    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
     create_new_milestone(repository: GHHELPER_REPO)
     close_milestone(repository: GHHELPER_REPO, milestone: version_name)
 
@@ -452,16 +455,6 @@ platform :android do
   # Private lanes
   #####################################################################################
 
-  private_lane :delete_old_changelogs do |options|
-    app = get_app_name_option!(options)
-    app_values = APP_SPECIFIC_VALUES[app.to_sym]
-    Dir.glob(File.join(app_values[:metadata_dir], 'android', '*', 'changelogs', '*')).each do |file|
-      File.delete(file) if Integer(File.basename(file, '.*')) < Integer(options[:build])
-    rescue StandardError
-      UI.error("Could not delete file #{file}.")
-    end
-  end
-
   private_lane :cleanup_release_files do |options|
     files = options[:files]
 
@@ -478,9 +471,13 @@ platform :android do
   #####################################################################################
   def get_app_name_option!(options)
     app = options[:app]&.downcase
+    validate_app_name!(app)
+    app
+  end
+
+  def validate_app_name!(app)
     UI.user_error!("Missing 'app' parameter. Expected 'app:wordpress' or 'app:jetpack'") if app.nil?
     UI.user_error!("Invalid 'app' parameter #{app.inspect}. Expected 'wordpress' or 'jetpack'") unless %i[wordpress jetpack].include?(app.to_sym)
-    app
   end
 
   def release_notes_path(app)

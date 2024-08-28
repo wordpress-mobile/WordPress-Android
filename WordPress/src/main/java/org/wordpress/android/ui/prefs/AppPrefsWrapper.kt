@@ -453,7 +453,7 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
 
     fun setShouldShowReaderAnnouncementCard(shouldShow: Boolean) =
         AppPrefs.setShouldShowReaderAnnouncementCard(shouldShow)
-    
+
     fun getAllPrefs(): Map<String, Any?> = AppPrefs.getAllPrefs()
 
     fun getDebugBooleanPref(key: String, default: Boolean = false) =
@@ -491,6 +491,10 @@ class AppPrefsWrapper @Inject constructor(val buildConfigWrapper: BuildConfigWra
     fun addRecentSiteLocalId(siteLocalId: Int) {
         AppPrefs.addRecentlyPickedSiteId(siteLocalId)
     }
+
+    var supportEmail: String
+        get() = AppPrefs.getSupportEmail()
+        set(value) = AppPrefs.setSupportEmail(value)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

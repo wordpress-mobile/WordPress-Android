@@ -1,2 +1,0 @@
-25.0:
-Wir haben verschiedene Abstürze in den Ansichten für die Anmeldung und die Beitragsliste sowie Aktionen im Zusammenhang mit Blogging-Erinnerungen, Vorschaubildern und dem Entfernen von Benutzern behoben. Weniger Abstürze? Wie toll.

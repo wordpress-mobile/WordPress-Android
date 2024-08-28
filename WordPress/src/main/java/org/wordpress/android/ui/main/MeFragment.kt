@@ -18,16 +18,17 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.gravatar.services.AvatarService
-import com.gravatar.services.ErrorType
-import com.gravatar.services.GravatarListener
+import com.gravatar.services.Result
 import com.gravatar.types.Email
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -205,6 +206,9 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
         }
         rowSupport.setOnClickListener {
             ActivityLauncher.viewHelp(requireContext(), ME_SCREEN_HELP, viewModel.getSite(), null)
+        }
+        rowFeedback.setOnClickListener {
+            ActivityLauncher.viewFeedbackForm(requireContext())
         }
         learnMoreAtGravatar.setOnClickListener {
             ActivityLauncher.openUrlExternal(activity, GRAVATAR_URL)
@@ -679,18 +683,21 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
             return
         }
         binding?.showGravatarProgressBar(true)
-        avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken.orEmpty(),
-            object : GravatarListener<Unit, ErrorType> {
-                override fun onSuccess(response: Unit) {
+        lifecycleScope.launch {
+            val result =
+                avatarService.upload(file, Email(accountStore.account.email), accountStore.accessToken.orEmpty())
+            when (result) {
+                is Result.Failure -> {
+                    AnalyticsTracker.track(ME_GRAVATAR_UPLOAD_EXCEPTION, mapOf("error_type" to result.error.name))
+                    EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
+                }
+
+                is Result.Success -> {
                     AnalyticsTracker.track(ME_GRAVATAR_UPLOADED)
                     EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
                 }
-
-                override fun onError(errorType: ErrorType) {
-                    AnalyticsTracker.track(ME_GRAVATAR_UPLOAD_EXCEPTION, mapOf("error_type" to errorType.name))
-                    EventBus.getDefault().post(GravatarUploadFinished(filePath, false))
-                }
-            })
+            }
+        }
     }
 
     class GravatarUploadFinished internal constructor(val filePath: String, val success: Boolean)
@@ -719,7 +726,7 @@ class MeFragment : Fragment(R.layout.me_fragment), OnScrollToTopListener {
     companion object {
         private const val IS_DISCONNECTING = "IS_DISCONNECTING"
         private const val IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR"
-        private const val GRAVATAR_URL = "https://www.gravatar.com";
+        private const val GRAVATAR_URL = "https://www.gravatar.com"
         fun newInstance(): MeFragment {
             return MeFragment()
         }

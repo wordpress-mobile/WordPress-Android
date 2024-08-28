@@ -65,6 +65,7 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
             return;
         }
         try {
+            @SuppressWarnings("UnsafeImplicitIntentLaunch")
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {

@@ -185,17 +185,17 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function3;
+
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
-
-import dagger.hilt.android.AndroidEntryPoint;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function3;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -355,7 +355,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mIsMagicLinkSignup = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_SIGNUP, false);
         mJetpackConnectSource = (JetpackConnectionSource) getIntent().getSerializableExtra(ARG_JETPACK_CONNECT_SOURCE);
         String authTokenToSet = null;
-        boolean canShowAppRatingPrompt = savedInstanceState != null;
 
         mBottomNav = findViewById(R.id.bottom_navigation);
         mBottomNav.init(getSupportFragmentManager(), this, mJetpackFeatureRemovalPhaseHelper);
@@ -419,8 +418,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         && getIntent().getExtras().getBoolean(ARG_CONTINUE_JETPACK_CONNECT, false)) {
                         JetpackConnectionWebViewActivity.startJetpackConnectionFlow(this, NOTIFICATIONS,
                                 (SiteModel) getIntent().getSerializableExtra(SITE), mAccountStore.hasAccessToken());
-                    } else {
-                        canShowAppRatingPrompt = true;
                     }
                 }
             } else {
@@ -469,7 +466,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             UpdateTokenPayload payload = new UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            canShowAppRatingPrompt = false;
             ActivityLauncher.showLoginEpilogue(
                     this,
                     getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
@@ -477,32 +473,24 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     mBuildConfigWrapper.isSiteCreationEnabled()
             );
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            canShowAppRatingPrompt = false;
             ActivityLauncher.showSignupEpilogue(this,
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
-            canShowAppRatingPrompt = false;
             ActivityLauncher.newBlogForResult(this,
                     SiteCreationSource.fromString(getIntent().getStringExtra(ARG_SITE_CREATION_SOURCE)));
         } else if (getIntent().getBooleanExtra(ARG_WP_COM_SIGN_UP, false) && savedInstanceState == null) {
-            canShowAppRatingPrompt = false;
             ActivityLauncher.showSignInForResultWpComOnly(this);
         } else if (getIntent().getBooleanExtra(ARG_BLOGGING_PROMPTS_ONBOARDING, false)
                    && savedInstanceState == null) {
-            canShowAppRatingPrompt = false;
             showBloggingPromptsOnboarding();
         }
 
         if (isGooglePlayServicesAvailable(this)) {
             // Register for Cloud messaging
             mGCMRegistrationScheduler.scheduleRegistration();
-        }
-
-        if (canShowAppRatingPrompt) {
-            AppReviewManager.INSTANCE.showRateDialogIfNeeded(getSupportFragmentManager());
         }
 
         scheduleLocalNotifications();
@@ -1184,9 +1172,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 getSelectedPage()
         );
 
-        if (AppReviewManager.INSTANCE.shouldShowInAppReviewsPrompt()) {
-            AppReviewManager.INSTANCE.launchInAppReviews(this);
-        }
+        AppReviewManager.INSTANCE.showInAppReviewsPromptIfNecessary(this);
         checkForInAppUpdate();
 
         mIsChangingConfiguration = false;
@@ -1394,10 +1380,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 }
 
-                if (site != null && post != null) {
+                View snackbarAttachView = findViewById(R.id.coordinator);
+                if (site != null && post != null && snackbarAttachView != null) {
                     mUploadUtilsWrapper.handleEditPostResultSnackbars(
                             this,
-                            findViewById(R.id.coordinator),
+                            snackbarAttachView,
                             data,
                             post,
                             site,
@@ -1805,21 +1792,24 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     }
                 }
 
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
-                        this,
-                        findViewById(R.id.coordinator),
-                        event.isError(),
-                        event.isFirstTimePublish,
-                        event.post,
-                        null,
-                        targetSite,
-                        isFirstTimePublishing -> {
-                            mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
-                            if (isFirstTimePublishing) {
-                                AppReviewManager.INSTANCE.onPostPublished();
+                View snackbarAttachView = findViewById(R.id.coordinator);
+                if (snackbarAttachView != null) {
+                    mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                            this,
+                            snackbarAttachView,
+                            event.isError(),
+                            event.isFirstTimePublish,
+                            event.post,
+                            null,
+                            targetSite,
+                            isFirstTimePublishing -> {
+                                mBloggingRemindersViewModel.onPublishingPost(targetSite.getId(), isFirstTimePublishing);
+                                if (isFirstTimePublishing) {
+                                    AppReviewManager.INSTANCE.onPostPublished();
+                                }
                             }
-                        }
-                );
+                    );
+                }
             }
         }
     }

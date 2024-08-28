@@ -164,7 +164,6 @@ public class AppPrefs {
         PINNED_DYNAMIC_CARD,
         // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_POST_PUBLISHED
         PUBLISHED_POST_COUNT,
-        // PUBLISHED_POST_COUNT will increase until it reaches AppReviewManager.TARGET_COUNT_NOTIFICATIONS
         IN_APP_REVIEWS_NOTIFICATION_COUNT,
         BLOGGING_REMINDERS_SHOWN,
         SHOULD_SCHEDULE_CREATE_SITE_NOTIFICATION,
@@ -246,6 +245,8 @@ public class AppPrefs {
         ASKED_PERMISSION_CAMERA,
 
         ASKED_PERMISSION_NOTIFICATIONS,
+
+        ASKED_PERMISSION_ACCESS_MEDIA_LOCATION,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC,

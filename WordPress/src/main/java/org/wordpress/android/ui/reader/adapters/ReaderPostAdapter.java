@@ -15,12 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.AsyncTaskHandler;
+import org.wordpress.android.datasets.AsyncTaskExecutor;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -82,11 +83,13 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
+import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
     private final NetworkUtilsWrapper mNetworkUtilsWrapper;
+    private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -370,7 +373,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        AsyncTaskHandler.load(
+        AsyncTaskExecutor.executeIo(
+                mScope,
                 () -> !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
                 isAskingToFollow -> {
                     final String slugForTracking = currentTag.getTagSlug();
@@ -685,7 +689,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ImageManager imageManager,
             UiHelpers uiHelpers,
             @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
-            boolean isMainReader
+            boolean isMainReader,
+            LifecycleCoroutineScope scope
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -696,6 +701,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
+        mScope = scope;
 
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);

@@ -153,10 +153,11 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
+import kotlin.Unit;
+
+import static androidx.lifecycle.LifecycleOwnerKt.getLifecycleScope;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 import static org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType.INTERNAL;
-
-import kotlin.Unit;
 
 public class ReaderPostListFragment extends ViewPagerFragment
         implements ReaderInterfaces.OnPostSelectedListener,
@@ -1923,7 +1924,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                     mImageManager,
                     mUiHelpers,
                     mNetworkUtilsWrapper,
-                    mIsTopLevel
+                    mIsTopLevel,
+                    getLifecycleScope(this)
             );
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setOnPostSelectedListener(this);

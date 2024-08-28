@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-29 10:54:08+0000
+Translation-Revision-Date: 2024-07-24 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: sv_SE
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Inlägg via ljud är inte tillgängligt för tillfället, försök igen senare.</string>
+    <string name="voice_to_content_done_label">Klar</string>
+    <string name="voice_to_content_upgrade">Uppgradera för fler begäranden</string>
+    <string name="voice_to_content_ineligible">Du har inte tillräckligt många begäranden tillgängliga för att skapa ett inlägg via ljud.</string>
+    <string name="voice_to_content_recording_label">Spelar in</string>
+    <string name="voice_to_content_begin_recording_label">Starta inspelning</string>
+    <string name="voice_to_content_secondary_header_label">Tillgängliga begäranden:</string>
+    <string name="voice_to_content_base_header_label">Inlägg via ljud</string>
+    <string name="voice_to_content_processing_label">Bearbetar</string>
+    <string name="voice_to_content_error_label">Fel</string>
+    <string name="voice_to_content_processing">Bearbetar</string>
+    <string name="gutenberg_native_tap_to_edit">Tryck här för att redigera</string>
+    <string name="voice_to_content_permissions_required_msg">Den här appen behöver åtkomst till din mikrofon för att kunna spela in ljud. Du har tidigare nekat behörighet för detta. Aktivera mikrofonbehörighet i appinställningarna om du vill använda den här funktionen.</string>
+    <string name="voice_to_content_permissions_required_title">Tillåtelse för ljudinspelning krävs</string>
+    <string name="permission_access_media_location">Mediaplats</string>
     <string name="in_app_update_restart">Starta om</string>
     <string name="in_app_update_available">Uppdatering nedladdad. Starta om för att tillämpa.</string>
     <string name="my_site_bottom_sheet_add_post_from_audio">Inlägg via ljud</string>
@@ -1931,6 +1946,7 @@ Language: sv_SE
     <string name="stats_box_type_low">lågt</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Ersätt bild</string>
     <string name="gutenberg_native_gallery_caption_s">Bildtext för galleri. %s</string>
     <string name="create_post_page_fab_tooltip">Skapa ett inlägg eller en sida</string>
     <string name="content_description_person_building_website">Person som bygger en webbplats</string>
@@ -2506,7 +2522,7 @@ Language: sv_SE
     <string name="media_empty_upload_media">Ladda upp mediafil</string>
     <string name="media_empty_list">Du har inga mediafiler</string>
     <string name="reader_gallery_images_desc">bildgalleri</string>
-    <string name="blavatar_desc">webbplats-ikon</string>
+    <string name="blavatar_desc">webbplatsikon</string>
     <string name="theme_image_desc">tema-bild</string>
     <string name="featured_image_desc">utvald bild</string>
     <string name="button_discard">Kasta</string>

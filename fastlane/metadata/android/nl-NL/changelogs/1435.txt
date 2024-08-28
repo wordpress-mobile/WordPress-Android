@@ -1,2 +1,0 @@
-25.0:
-We hebben verschillende crashes op het login en berichtenvermelding scherm opgelost, evenals acties die verband houden met blog herinneringen, uitgelichte afbeeldingen en het verwijderen van gebruikers. Minder crashes? Hoe geweldig.

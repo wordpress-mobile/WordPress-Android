@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -192,6 +190,8 @@ public class WPPermissionUtils {
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_CAMERA;
             case Manifest.permission.POST_NOTIFICATIONS:
                 return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_NOTIFICATIONS;
+            case Manifest.permission.ACCESS_MEDIA_LOCATION:
+                return AppPrefs.UndeletablePrefKey.ASKED_PERMISSION_ACCESS_MEDIA_LOCATION;
             default:
                 AppLog.w(AppLog.T.UTILS, "No key for requested permission");
                 return null;
@@ -216,6 +216,8 @@ public class WPPermissionUtils {
                 return context.getString(R.string.permission_camera);
             case Manifest.permission.RECORD_AUDIO:
                 return context.getString(R.string.permission_microphone);
+            case Manifest.permission.ACCESS_MEDIA_LOCATION:
+                return context.getString(R.string.permission_access_media_location);
             default:
                 AppLog.w(AppLog.T.UTILS, "No name for requested permission");
                 return context.getString(R.string.unknown);
@@ -260,15 +262,10 @@ public class WPPermissionUtils {
      * open the device's notification settings page for this app so the user can edit permissions
      */
     public static void showNotificationsSettings(@NonNull Context context) {
-        if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        } else {
-            // We can't open notifications settings screen directly. Instead, open the app settings.
-            showAppSettings(context);
-        }
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 }

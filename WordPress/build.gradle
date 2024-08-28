@@ -13,6 +13,57 @@ plugins {
     id "com.google.dagger.hilt.android"
     id "org.jetbrains.kotlinx.kover"
     id "com.google.devtools.ksp"
+    id "com.osacky.fladle"
+}
+
+fladle {
+    testTargets = [
+            "notPackage org.wordpress.android.ui.screenshots"
+    ]
+    configs {
+        wordpress {
+            def app = "wordpress"
+            debugApk.set(appPathForVariant(app))
+            instrumentationApk.set(testPathForVariant(app))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+            /* Ignoring (already ignored by JUnit#assume) specific tests on the WordPress app to
+            prevent Fladle/Flank from scenario of executing them on a single shard.
+            This avoidance helps prevent test failures due to overly aggressive sharding that
+            could incur unnecessary costs and tests run failure. */
+            testTargets.set(testTargets.get() + [
+                    "notClass org.wordpress.android.e2e.StatsTests",
+                    "notClass org.wordpress.android.e2e.StatsGranularTabsTest",
+            ])
+        }
+        jetpack {
+            def app = "jetpack"
+            debugApk.set(appPathForVariant(app))
+            instrumentationApk.set(testPathForVariant(app))
+            smartFlankGcsPath.set(pathForSmartFlankGcsPath(app))
+        }
+    }
+    serviceAccountCredentials = new File(System.getProperty("user.home"), ".configure/wordpress-android/secrets/firebase.secrets.json")
+    devices = [
+            ["model": "Pixel2.arm", "version": "30"]
+    ]
+
+    localResultsDir = "$rootDir/build/instrumented-tests"
+
+    maxTestShards = 50
+    shardTime = 120
+}
+
+String appPathForVariant(String app) {
+    String path = "outputs/apk/${app}Vanilla/debug"
+    return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
+}
+String testPathForVariant(String app) {
+    String path = "outputs/apk/androidTest/${app}Vanilla/debug"
+    return new File(layout.buildDirectory.dir(path).get().asFile, '*.apk').absolutePath
+}
+
+static String pathForSmartFlankGcsPath(String app) {
+    return "gs://fladle/wordpress-android/${app}/smart-flank/JUnitReport.xml"
 }
 
 sentry {
@@ -30,6 +81,7 @@ sentry {
     (if enabled in WPCrashLoggingDataProvider).
     */
     ignoredBuildTypes = ["debug"]
+    telemetry = false
 }
 
 repositories {
@@ -76,14 +128,7 @@ android {
     useLibrary 'android.test.base'
     useLibrary 'android.test.mock'
 
-    dexOptions {
-        jumboMode = true
-        dexInProcess = true
-    }
-
     namespace "org.wordpress.android"
-
-    compileSdkVersion rootProject.compileSdkVersion
 
     def versionProperties = loadPropertiesFromFile(file("${rootDir}/version.properties"))
 
@@ -96,6 +141,7 @@ android {
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
 
         testInstrumentationRunner 'org.wordpress.android.WordPressTestRunner'
 
@@ -350,7 +396,7 @@ static def addBuildConfigFieldsFromPrefixedProperties(variant, properties, prefi
 }
 
 dependencies {
-    implementation 'androidx.webkit:webkit:1.10.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
     implementation "androidx.navigation:navigation-compose:$androidxComposeNavigationVersion"
     compileOnly project(path: ':libs:annotations')
     ksp project(':libs:processors')
@@ -463,7 +509,7 @@ dependencies {
     implementation "com.github.indexos.media-for-mobile:domain:$indexosMediaForMobileVersion"
     implementation "com.github.indexos.media-for-mobile:android:$indexosMediaForMobileVersion"
     implementation "com.zendesk:support:$zendeskVersion"
-    implementation (name:'tenor-android-core-jetified', ext:'aar') // Jetified Tenor Gif library
+    implementation files('../aars/tenor-android-core-jetified.aar') // Jetified Tenor Gif library
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "com.github.PhilJay:MPAndroidChart:$philjayMpAndroidChartVersion"
@@ -512,20 +558,13 @@ dependencies {
             strictly androidxTestEspressoVersion
         }
     }
-    androidTestImplementation("com.github.tomakehurst:wiremock:$wiremockVersion") {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-        exclude group: 'org.apache.commons', module: 'commons-lang3'
-        exclude group: 'asm', module: 'asm'
-        exclude group: 'org.json', module: 'json'
-    }
-    androidTestImplementation "org.apache.httpcomponents:httpclient-android:$wiremockHttpClientVersion"
     androidTestImplementation "androidx.test:runner:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestCoreVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestExtJunitVersion"
     androidTestImplementation "tools.fastlane:screengrab:$screengrabVersion",  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestImplementation (name:'cloudtestingscreenshotter_lib', ext:'aar') // Screenshots on Firebase Cloud Testing
+    androidTestImplementation files('../aars/cloudtestingscreenshotter_lib.aar') // Screenshots on Firebase Cloud Testing
     androidTestImplementation "androidx.work:work-testing:$androidxWorkManagerVersion"
     androidTestImplementation "com.google.dagger:hilt-android-testing:$gradle.ext.daggerVersion"
     kspAndroidTest "com.google.dagger:hilt-android-compiler:$gradle.ext.daggerVersion"
@@ -564,6 +603,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"
     // - Jetpack Compose - Other
     implementation "io.coil-kt:coil-compose:$coilComposeVersion"
+    implementation "io.coil-kt:coil-video:$coilComposeVersion"
     implementation "com.airbnb.android:lottie-compose:$lottieVersion"
     // - Jetpack Compose - UI Tests
     androidTestImplementation "androidx.compose.ui:ui-test-junit4"
@@ -573,16 +613,6 @@ dependencies {
     implementation "me.saket.cascade:cascade-compose:2.3.0"
 
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
-
-    // - Flipper
-    debugImplementation ("com.facebook.flipper:flipper:$flipperVersion") {
-        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
-    }
-    debugImplementation "com.facebook.soloader:soloader:$soLoaderVersion"
-    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$flipperVersion"){
-        exclude group:'org.jetbrains.kotlinx', module:'kotlinx-serialization-json-jvm'
-    }
-    releaseImplementation "com.facebook.flipper:flipper-noop:$flipperVersion"
 }
 
 configurations.all {

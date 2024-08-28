@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.text.BidiFormatter
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -187,8 +186,8 @@ class NoteViewHolder(
             if (parent is ViewGroup) {
                 val textDirection = if (BidiFormatter.getInstance()
                         .isRtl(binding.noteSubject.text)
-                ) ViewCompat.LAYOUT_DIRECTION_RTL else ViewCompat.LAYOUT_DIRECTION_LTR
-                ViewCompat.setLayoutDirection(parent, textDirection)
+                ) View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR
+                parent.layoutDirection = textDirection
             }
             // mirror noticon in the rtl mode
             if (RtlUtils.isRtl(itemView.context)) {

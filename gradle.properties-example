@@ -48,3 +48,6 @@ wp.e2e.signup_email=e2eflowsignuptestingmobile@example.com
 wp.e2e.signup_username=e2eflowsignuptestingmobile
 wp.e2e.signup_display_name=e2eflowsignuptestingmobile
 wp.e2e.signup_password=mocked_password
+
+# Dependency Analysis Plugin
+dependency.analysis.android.ignored.variants=release,wordpressVanillaDebug,wordpressVanillaRelease,wordpressWasabiDebug,wordpressWasabiRelease,wordpressJalapenoRelease,jetpackVanillaDebug,jetpackVanillaRelease,jetpackWasabiDebug,jetpackWasabiRelease,jetpackJalapenoRelease
