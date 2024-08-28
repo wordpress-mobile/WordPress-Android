@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.blaze
 
-import android.annotation.SuppressLint
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import org.wordpress.android.fluxc.Payload
@@ -30,6 +29,8 @@ import javax.inject.Inject
 class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
 ) {
+    private val dateFormatter by lazy { SimpleDateFormat("yyyy-MM-dd", Locale.ROOT) }
+
     suspend fun fetchTargetingLocations(
         site: SiteModel,
         query: String,
@@ -142,7 +143,6 @@ class BlazeCreationRestClient @Inject constructor(
     }
 
     @Suppress("LongParameterList")
-    @SuppressLint("SimpleDateFormat")
     suspend fun fetchAdForecast(
         site: SiteModel,
         startDate: Date,
@@ -152,7 +152,6 @@ class BlazeCreationRestClient @Inject constructor(
         targetingParameters: BlazeTargetingParameters?
     ): BlazePayload<BlazeAdForecast> {
         val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.forecast.url
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
 
         val response = wpComNetwork.executePostGsonRequest(
             url = url,
@@ -197,7 +196,6 @@ class BlazeCreationRestClient @Inject constructor(
         site: SiteModel,
         request: BlazeCampaignCreationRequest
     ): BlazePayload<BlazeCampaignModel> {
-        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
         val body = mutableMapOf(
             "origin" to request.origin,
             "origin_version" to request.originVersion,
