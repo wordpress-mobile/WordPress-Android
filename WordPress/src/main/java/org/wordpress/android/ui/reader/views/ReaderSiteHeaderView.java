@@ -29,7 +29,6 @@ import org.wordpress.android.util.PhotonUtils.Quality;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 
@@ -62,11 +61,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
 
     private final ExecutorService mExecutorService = Executors.newSingleThreadExecutor();
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
-    
+
     @Inject AccountStore mAccountStore;
     @Inject ImageManager mImageManager;
     @Inject ReaderTracker mReaderTracker;
-    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
 
     public ReaderSiteHeaderView(Context context) {
         this(context, null);
@@ -84,13 +82,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void initView(Context context) {
-        final int layoutRes;
-        if (mReaderImprovementsFeatureConfig.isEnabled()) {
-            layoutRes = R.layout.reader_site_header_view_new;
-        } else {
-            layoutRes = R.layout.reader_site_header_view;
-        }
-        final View view = inflate(context, layoutRes, this);
+        final View view = inflate(context, R.layout.reader_site_header_view, this);
         mFollowButton = view.findViewById(R.id.follow_button);
         view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
     }
@@ -188,15 +180,11 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        if (mReaderImprovementsFeatureConfig.isEnabled()) {
-            final String imageUrl = blogInfo.getImageUrl();
-            if (imageUrl != null && !imageUrl.isEmpty()) {
-                showBlavatarImage(blogInfo, blavatarImg);
-            } else {
-                blavatarImg.setVisibility(View.GONE);
-            }
-        } else {
+        final String imageUrl = blogInfo.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
             showBlavatarImage(blogInfo, blavatarImg);
+        } else {
+            blavatarImg.setVisibility(View.GONE);
         }
 
         loadFollowCount(blogInfo, txtFollowCount);
@@ -224,35 +212,28 @@ public class ReaderSiteHeaderView extends LinearLayout {
     }
 
     private void loadFollowCount(ReaderBlog blogInfo, TextView txtFollowCount) {
-        if (mReaderImprovementsFeatureConfig.isEnabled()) {
-            final CompactDecimalFormat compactDecimalFormat =
-                    CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
-                            CompactDecimalFormat.CompactStyle.SHORT);
+        final CompactDecimalFormat compactDecimalFormat =
+                CompactDecimalFormat.getInstance(LocaleManager.getSafeLocale(getContext()),
+                        CompactDecimalFormat.CompactStyle.SHORT);
 
-            final int followersStringRes;
-            if (blogInfo.numSubscribers == 1) {
-                followersStringRes = R.string.reader_label_subscribers_count_single;
-            } else {
-                followersStringRes = R.string.reader_label_subscribers_count;
-            }
-
-            final String formattedNumberSubscribers;
-            // Reference: pcdRpT-3BI-p2#comment-5978
-            if (blogInfo.numSubscribers >= MINIMUM_NUMBER_FOLLOWERS_FORMAT) {
-                formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
-            } else {
-                formattedNumberSubscribers = NumberFormat.getInstance().format(blogInfo.numSubscribers);
-            }
-            txtFollowCount.setText(String.format(
-                    LocaleManager.getSafeLocale(getContext()),
-                    getContext().getString(followersStringRes), formattedNumberSubscribers)
-            );
+        final int followersStringRes;
+        if (blogInfo.numSubscribers == 1) {
+            followersStringRes = R.string.reader_label_subscribers_count_single;
         } else {
-            txtFollowCount.setText(String.format(
-                    LocaleManager.getSafeLocale(getContext()),
-                    getContext().getString(R.string.reader_label_subscribe_count),
-                    blogInfo.numSubscribers));
+            followersStringRes = R.string.reader_label_subscribers_count;
         }
+
+        final String formattedNumberSubscribers;
+        // Reference: pcdRpT-3BI-p2#comment-5978
+        if (blogInfo.numSubscribers >= MINIMUM_NUMBER_FOLLOWERS_FORMAT) {
+            formattedNumberSubscribers = compactDecimalFormat.format(blogInfo.numSubscribers);
+        } else {
+            formattedNumberSubscribers = NumberFormat.getInstance().format(blogInfo.numSubscribers);
+        }
+        txtFollowCount.setText(String.format(
+                LocaleManager.getSafeLocale(getContext()),
+                getContext().getString(followersStringRes), formattedNumberSubscribers)
+        );
     }
 
     private void showBlavatarImage(ReaderBlog blogInfo, ImageView blavatarImg) {

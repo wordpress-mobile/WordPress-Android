@@ -1,16 +1,13 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.text.Spanned
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
-import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.views.compose.ReaderAnnouncementCardItemData
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -23,51 +20,6 @@ sealed class ReaderCardUiState {
         val blogId: Long,
         val feedId: Long,
         val isFollowed: Boolean,
-        val blogSection: ReaderBlogSectionUiState,
-        val title: UiString?,
-        val excerpt: String?, // mTxtText
-        val tagItems: List<TagUiState>,
-        val photoTitle: String?,
-        val featuredImageUrl: String?,
-        val featuredImageCornerRadius: UiDimen,
-        val fullVideoUrl: String?,
-        val thumbnailStripSection: GalleryThumbnailStripData?,
-        val discoverSection: DiscoverLayoutUiState?,
-        val expandableTagsViewVisibility: Boolean,
-        val videoOverlayVisibility: Boolean,
-        val featuredImageVisibility: Boolean,
-        val moreMenuVisibility: Boolean,
-        val bookmarkAction: PrimaryAction,
-        val likeAction: PrimaryAction,
-        val reblogAction: PrimaryAction,
-        val commentsAction: PrimaryAction,
-        val moreMenuItems: List<ReaderPostCardAction>? = null,
-        val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (ReaderCardUiState) -> Unit,
-        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
-        val onMoreDismissed: (ReaderPostUiState) -> Unit,
-        val onVideoOverlayClicked: (Long, Long) -> Unit
-    ) : ReaderCardUiState() {
-        data class GalleryThumbnailStripData(
-            val images: ReaderImageList,
-            val isPrivate: Boolean,
-            val content: String // needs to be here as it's required by ReaderThumbnailStrip
-        )
-
-        data class DiscoverLayoutUiState(
-            val discoverText: Spanned,
-            val discoverAvatarUrl: String,
-            val imageType: ImageType,
-            val onDiscoverClicked: ((Long, Long) -> Unit)
-        )
-    }
-
-    data class ReaderPostNewUiState(
-        val source: String,
-        val postId: Long,
-        val blogId: Long,
-        val feedId: Long,
-        val isFollowed: Boolean,
         val blogSection: CompactBlogSectionData,
         val interactionSection: InteractionSectionData,
         val title: UiString?,
@@ -75,7 +27,7 @@ sealed class ReaderCardUiState {
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
         val fullVideoUrl: String?,
-        val thumbnailStripSection: ReaderPostUiState.GalleryThumbnailStripData?,
+        val thumbnailStripSection: GalleryThumbnailStripData?,
         val videoOverlayVisibility: Boolean,
         val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
@@ -84,9 +36,9 @@ sealed class ReaderCardUiState {
         val commentsAction: PrimaryAction,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
         val onItemClicked: (Long, Long) -> Unit,
-        val onItemRendered: (ReaderPostNewUiState) -> Unit,
-        val onMoreButtonClicked: (ReaderPostNewUiState) -> Unit,
-        val onMoreDismissed: (ReaderPostNewUiState) -> Unit,
+        val onItemRendered: (ReaderPostUiState) -> Unit,
+        val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
+        val onMoreDismissed: (ReaderPostUiState) -> Unit,
         val onVideoOverlayClicked: (Long, Long) -> Unit,
     ) : ReaderCardUiState() {
         data class CompactBlogSectionData(
@@ -104,6 +56,12 @@ sealed class ReaderCardUiState {
         data class InteractionSectionData(
             val likeCount: Int,
             val commentCount: Int,
+        )
+
+        data class GalleryThumbnailStripData(
+            val images: ReaderImageList,
+            val isPrivate: Boolean,
+            val content: String // needs to be here as it's required by ReaderThumbnailStrip
         )
     }
 

@@ -1,40 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ReaderCardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?android:colorBackground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/root_layout"
+    <com.google.android.material.card.MaterialCardView
+        style="@style/ReaderCardViewNew"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/reader_you_might_like_background"
+        app:cardCornerRadius="@dimen/margin_medium">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recommended_blogs"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recommended_blogs_header"
-            tools:itemCount="3"
-            tools:listitem="@layout/reader_recommended_blog_item" />
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/recommended_blogs_header"
-            style="@style/ReaderTextView.Card.Header"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/reader_discover_recommended_blogs_to_subscribe_header"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommended_blogs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recommended_blogs_header"
+                tools:itemCount="3"
+                tools:listitem="@layout/reader_recommended_blog_item" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/recommended_blogs_header"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:text="@string/reader_discover_recommended_header_new"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/reader_improvements_recommended_section_text"
+                android:textSize="@dimen/text_sz_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</FrameLayout>

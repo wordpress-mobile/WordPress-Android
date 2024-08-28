@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views
 
 import dagger.Reusable
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.discover.ReaderPostTagsUiStateBuilder
@@ -11,10 +10,8 @@ import org.wordpress.android.ui.reader.views.uistates.InteractionSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderAction
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import javax.inject.Inject
 
 @Reusable
@@ -23,7 +20,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
 ) {
     fun mapPostToUiState(
         post: ReaderPost,
@@ -33,7 +29,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
         val textTitle = post
             .takeIf { post.hasTitle() }
             ?.title?.let { UiStringText(it) }
-            ?: UiStringRes(R.string.reader_untitled_post).takeIf { !readerImprovementsFeatureConfig.isEnabled() }
 
         return ReaderPostDetailsHeaderUiState(
             title = textTitle,
@@ -67,7 +62,6 @@ class ReaderPostDetailsHeaderViewUiStateBuilder @Inject constructor(
     ): ReaderBlogSectionUiState {
         return postUiStateBuilder.mapPostToBlogSectionUiState(
             post,
-            readerImprovementsFeatureConfig.isEnabled(),
             onBlogSectionClicked
         )
     }

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ReaderCardView"
+    style="@style/ReaderCardViewNew"
     android:id="@+id/post_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,7 +18,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/removed_post_title"
-            style="@style/ReaderTextView.RemovedPost.Title"
+            style="@style/ReaderTextView.Post.New.Removed.Title"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/margin_large"

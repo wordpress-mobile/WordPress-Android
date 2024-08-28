@@ -190,7 +190,6 @@ android {
         buildConfigField "boolean", "CONTACT_SUPPORT_CHATBOT", "false"
         buildConfigField "boolean", "ENABLE_DOMAIN_MANAGEMENT_FEATURE", "false"
         buildConfigField "boolean", "PLANS_IN_SITE_CREATION", "false"
-        buildConfigField "boolean", "READER_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BLOGANUARY_DASHBOARD_NUDGE", "false"
         buildConfigField "boolean", "DYNAMIC_DASHBOARD_CARDS", "false"
         buildConfigField "boolean", "STATS_TRAFFIC_SUBSCRIBERS_TABS", "false"

@@ -25,11 +25,6 @@ import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderPostDiscoverData
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
-import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.Organization.NO_ORGANIZATION
@@ -41,9 +36,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.models.ReaderImageList
@@ -56,7 +49,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.WPAvatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
-import org.wordpress.android.util.image.ImageType
 import java.util.Date
 
 @Suppress("LargeClass")
@@ -84,9 +76,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     @Mock
     lateinit var readerUtilsWrapper: ReaderUtilsWrapper
 
-    @Mock
-    lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
-
     @Before
     fun setUp() = test {
         builder = ReaderPostUiStateBuilder(
@@ -96,7 +85,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             dateTimeUtilsWrapper,
             readerImageScannerProvider,
             readerUtilsWrapper,
-            readerPostTagsUiStateBuilder,
             testDispatcher()
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
@@ -106,7 +94,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             .thenReturn(imageScanner)
         whenever(imageScanner.getImageList(anyInt(), anyInt())).thenReturn(ReaderImageList(false))
         whenever(accountStore.hasAccessToken()).thenReturn(true)
-        whenever(readerUtilsWrapper.getLongLikeLabelText(anyInt(), anyBoolean())).thenReturn("")
     }
     // endregion
 
@@ -118,7 +105,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Act
         val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
-        assertThat(uiState.blogSection.blogSectionClickData).isNull()
+        assertThat(uiState.blogSection.onClicked).isNull()
     }
 
     @Test
@@ -126,7 +113,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         // Act
-        val uiState = mapPostToNewUiState(post, BLOG_PREVIEW)
+        val uiState = mapPostToUiState(post, BLOG_PREVIEW)
         // Assert
         assertThat(uiState.blogSection.onClicked).isNull()
     }
@@ -139,7 +126,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             // Act
             val uiState = mapPostToUiState(post, it)
             // Assert
-            assertThat(uiState.blogSection.blogSectionClickData).isNotNull
+            assertThat(uiState.blogSection.onClicked).isNotNull
         }
     }
 
@@ -149,7 +136,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = createPost()
         ReaderPostListType.values().filter { it != BLOG_PREVIEW }.forEach {
             // Act
-            val uiState = mapPostToNewUiState(post, it)
+            val uiState = mapPostToUiState(post, it)
             // Assert
             assertThat(uiState.blogSection.onClicked).isNotNull
         }
@@ -174,102 +161,13 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val p2post = createPost(isp2Post = true)
         val nonP2Post = createPost(isp2Post = false)
         // Act
-        val p2UiState = mapPostToNewUiState(p2post)
-        val nonP2UiState = mapPostToNewUiState(nonP2Post)
+        val p2UiState = mapPostToUiState(p2post)
+        val nonP2UiState = mapPostToUiState(nonP2Post)
         // Assert
         assertThat(p2UiState.blogSection.isAuthorAvatarVisible).isTrue
         assertThat(nonP2UiState.blogSection.isAuthorAvatarVisible).isFalse
     }
 
-    // endregion
-
-    // region BLOG URL
-    @Test
-    fun `scheme is removed from blog url`() = test {
-        // Arrange
-        val post = createPost(blogUrl = "http://dummy.url")
-        whenever(urlUtilsWrapper.removeScheme("http://dummy.url")).thenReturn("dummy.url")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.blogSection.blogUrl).isEqualTo("dummy.url")
-    }
-    // endregion
-
-    // region DISCOVER SECTION
-    @Test
-    fun `discover section is empty when isDiscoverPost is false`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = false)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.discoverSection).isNull()
-    }
-
-    @Test
-    fun `discover section is not empty when isDiscoverPost is true`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = true)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.discoverSection).isNotNull
-    }
-
-    @Test
-    fun `discover section is empty when discoverType is OTHER`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = true, discoverType = OTHER)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.discoverSection).isNull()
-    }
-
-    @Test
-    fun `discover section is not empty when discoverType is other than OTHER`() = test {
-        // Arrange
-        DiscoverType.values().filter { it != OTHER }.forEach {
-            val post = createPost(isDiscoverPost = true, discoverType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.discoverSection).isNotNull
-        }
-    }
-
-    @Test
-    fun `discover uses ImageType AVATAR when EDITOR_PICK`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = true, discoverType = EDITOR_PICK)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        @Suppress("DEPRECATION")
-        assertThat(uiState.discoverSection!!.imageType).isEqualTo(ImageType.AVATAR)
-    }
-
-    @Test
-    fun `discover uses ImageType BLAVATAR when SITE_PICK`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = true, discoverType = SITE_PICK)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.discoverSection!!.imageType).isEqualTo(ImageType.BLAVATAR)
-    }
-
-    @Test
-    fun `discover uses fixed avatar URL`() = test {
-        // Arrange
-        val post = createPost(isDiscoverPost = true)
-        whenever(avatarUtilsWrapper.rewriteAvatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("12345")
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.discoverSection!!.discoverAvatarUrl).isEqualTo("12345")
-    }
     // endregion
 
     // region VIDEO
@@ -288,7 +186,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = VIDEO, featuredVideoUrl = "12345")
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.fullVideoUrl).isEqualTo("12345")
     }
@@ -313,7 +211,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         types.filter { it != VIDEO }.forEach {
             val post = createPost(cardType = it, featuredVideoUrl = "12345")
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.fullVideoUrl).isNull()
         }
@@ -334,7 +232,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = VIDEO)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.videoOverlayVisibility).isTrue
     }
@@ -359,7 +257,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         types.filter { it != VIDEO }.forEach {
             val post = createPost(cardType = it)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.videoOverlayVisibility).isFalse()
         }
@@ -382,7 +280,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = GALLERY)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.thumbnailStripSection).isNotNull
     }
@@ -405,7 +303,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         ReaderCardType.values().filter { it != GALLERY }.forEach {
             val post = createPost(cardType = it)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.thumbnailStripSection).isNull()
         }
@@ -433,7 +331,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         ReaderCardType.values().filter { it == PHOTO || it == DEFAULT }.forEach {
             val post = createPost(cardType = it, hasFeaturedImage = true, featuredImageUrlForDisplay = dummyUrl)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.featuredImageUrl).isEqualTo(dummyUrl)
         }
@@ -457,7 +355,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         ReaderCardType.values().filter { it != PHOTO && it != DEFAULT }.forEach {
             val post = createPost(cardType = it, hasFeaturedImage = true)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.featuredImageUrl).isNull()
         }
@@ -478,43 +376,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = PHOTO, hasFeaturedImage = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.featuredImageUrl).isNull()
-    }
-    // endregion
-
-    // region PHOTO TITLE
-    @Test
-    fun `photo title is displayed for photo card type`() = test {
-        // Arrange
-        val post = createPost(cardType = PHOTO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.photoTitle).isNotNull
-    }
-
-    @Test
-    fun `photo title is not displayed for other than photo card type`() = test {
-        // Arrange
-        ReaderCardType.values().filter { it != PHOTO }.forEach {
-            val post = createPost(cardType = it)
-            // Act
-            val uiState = mapPostToUiState(post)
-            // Assert
-            assertThat(uiState.photoTitle).isNull()
-        }
-    }
-
-    @Test
-    fun `photo title is not displayed when hasTitle returns false`() = test {
-        // Arrange
-        val post = createPost(cardType = PHOTO, hasTitle = false)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.photoTitle).isNull()
     }
     // endregion
 
@@ -532,35 +396,15 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `title is not displayed for PHOTO card type`() = test {
-        // Arrange
-        val post = createPost(cardType = PHOTO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.title).isNull()
-    }
-
-    @Test
     fun `title is displayed for all card types for new UI`() = test {
         // Arrange
         ReaderCardType.values().forEach {
             val post = createPost(cardType = it)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat((uiState.title as UiStringText).text).isEqualTo(post.title)
         }
-    }
-
-    @Test
-    fun `default title is displayed when the post doesn't have a title`() = test {
-        // Arrange
-        val post = createPost(cardType = DEFAULT, hasTitle = false)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat((uiState.title as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
 
     @Test
@@ -568,7 +412,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasTitle = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.title).isNull()
     }
@@ -586,22 +430,12 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `excerpt is not displayed for PHOTO card type`() = test {
-        // Arrange
-        val post = createPost(cardType = PHOTO)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.excerpt).isNull()
-    }
-
-    @Test
     fun `excerpt is displayed for all card types for new UI`() = test {
         // Arrange
         ReaderCardType.values().forEach {
             val post = createPost(cardType = it)
             // Act
-            val uiState = mapPostToNewUiState(post)
+            val uiState = mapPostToUiState(post)
             // Assert
             assertThat(uiState.excerpt).isNotNull()
         }
@@ -622,7 +456,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(cardType = DEFAULT, hasExcerpt = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.excerpt).isNull()
     }
@@ -644,7 +478,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.blogSection.blogName).isNotNull
     }
@@ -664,7 +498,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(hasBlogName = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat((uiState.blogSection.blogName as UiStringRes).stringRes).isEqualTo(R.string.untitled_in_parentheses)
     }
@@ -717,8 +551,8 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
             authorName = "John Smith"
         )
         // Act
-        val firstNameUiState = mapPostToNewUiState(postWithFirstName)
-        val fullNameUiState = mapPostToNewUiState(postWithoutFirstName)
+        val firstNameUiState = mapPostToUiState(postWithFirstName)
+        val fullNameUiState = mapPostToUiState(postWithoutFirstName)
         // Assert
         val firstNameBlog = firstNameUiState.blogSection.blogName as UiStringResWithParams
         assertThat(firstNameBlog.stringRes).isEqualTo(R.string.reader_author_with_blog_name)
@@ -756,73 +590,9 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         whenever(post.getDisplayDate(dateTimeUtilsWrapper)).thenReturn(dummyDate)
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(dummyDate)).thenReturn("success")
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.blogSection.dateLine).isEqualTo("success")
-    }
-    // endregion
-
-    // region BOOKMARK BUTTON
-    @Test
-    fun `bookmark button is disabled when postId is empty`() = test {
-        // Arrange
-        val post = createPost(postId = 0)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse
-    }
-
-    @Test
-    fun `bookmark button is disabled when blogId is empty`() = test {
-        // Arrange
-        val post = createPost(blogId = 0)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isFalse
-    }
-
-    @Test
-    fun `bookmark button is enabled when blogid and postId is not empty`() = test {
-        // Arrange
-        val post = createPost(postId = 1L, blogId = 2L)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.bookmarkAction.isEnabled).isTrue
-    }
-
-    @Test
-    fun `bookmark button is selected when the post is bookmarked`() = test {
-        // Arrange
-        val post = createPost(isBookmarked = true)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isTrue
-    }
-
-    @Test
-    fun `bookmark button is not selected when the post is not bookmarked`() = test {
-        // Arrange
-        val post = createPost(isBookmarked = false)
-        // Act
-        val uiState = mapPostToUiState(post)
-        // Assert
-        assertThat(uiState.bookmarkAction.isSelected).isFalse
-    }
-
-    @Test
-    fun `onButtonClicked listener is correctly assigned to bookmarkAction`() = test {
-        // Arrange
-        val post = createPost()
-        val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
-        val uiState = mapPostToUiState(post, onButtonClicked = onButtonClicked)
-        // Act
-        uiState.bookmarkAction.onClicked!!.invoke(1L, 1L, BOOKMARK)
-        // Assert
-        verify(onButtonClicked).invoke(1L, 1L, BOOKMARK)
     }
     // endregion
 
@@ -842,7 +612,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.likeAction.isEnabled).isTrue
     }
@@ -864,7 +634,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = createPost()
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.likeAction.isEnabled).isFalse
     }
@@ -884,7 +654,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(isCanLikePost = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.likeAction.isEnabled).isFalse
     }
@@ -905,7 +675,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
-        val uiState = mapPostToNewUiState(post, onButtonClicked = onButtonClicked)
+        val uiState = mapPostToUiState(post, onButtonClicked = onButtonClicked)
         // Act
         uiState.likeAction.onClicked!!.invoke(1L, 1L, LIKE)
         // Assert
@@ -929,7 +699,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.reblogAction.isEnabled).isTrue
     }
@@ -949,7 +719,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(isPrivate = true)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.reblogAction.isEnabled).isFalse
     }
@@ -971,7 +741,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = createPost()
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.reblogAction.isEnabled).isFalse
     }
@@ -992,7 +762,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         val onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
-        val uiState = mapPostToNewUiState(post, onButtonClicked = onButtonClicked)
+        val uiState = mapPostToUiState(post, onButtonClicked = onButtonClicked)
         // Act
         uiState.reblogAction.onClicked!!.invoke(1L, 1L, REBLOG)
         // Assert
@@ -1016,7 +786,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost()
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isTrue
     }
@@ -1036,7 +806,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(isCommentsOpen = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1056,7 +826,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(isWPCom = false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1079,7 +849,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = createPost(numOfReplies = 0)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1101,7 +871,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val post = createPost(numOfReplies = 1)
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isTrue
     }
@@ -1121,7 +891,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         // Arrange
         val post = createPost(isDiscoverPost = true)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.commentsAction.isEnabled).isFalse
     }
@@ -1145,7 +915,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val numReplies = 15
         val post = createPost(numOfReplies = numReplies)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.interactionSection.commentCount).isEqualTo(numReplies)
     }
@@ -1156,7 +926,7 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         val numLikes = 15
         val post = createPost(numOfLikes = numLikes)
         // Act
-        val uiState = mapPostToNewUiState(post)
+        val uiState = mapPostToUiState(post)
         // Assert
         assertThat(uiState.interactionSection.likeCount).isEqualTo(numLikes)
     }
@@ -1284,30 +1054,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         return builder.mapPostToUiState(
             source = "source",
             post = post,
-            isDiscover = false,
-            photonWidth = 0,
-            photonHeight = 0,
-            postListType = postListType,
-            onButtonClicked = onButtonClicked,
-            onItemClicked = mock(),
-            onItemRendered = mock(),
-            onDiscoverSectionClicked = mock(),
-            onMoreButtonClicked = mock(),
-            onVideoOverlayClicked = mock(),
-            onPostHeaderViewClicked = mock(),
-            onTagItemClicked = mock(),
-            onMoreDismissed = mock()
-        )
-    }
-
-    private suspend fun mapPostToNewUiState(
-        post: ReaderPost,
-        postListType: ReaderPostListType = TAG_FOLLOWED,
-        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit = mock()
-    ): ReaderPostNewUiState {
-        return builder.mapPostToNewUiState(
-            source = "source",
-            post = post,
             photonWidth = 0,
             photonHeight = 0,
             postListType = postListType,
@@ -1327,7 +1073,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         hasBlogName: Boolean = true,
         blogUrl: String = "",
         isDiscoverPost: Boolean = false,
-        discoverType: DiscoverType = SITE_PICK,
         cardType: ReaderCardType = DEFAULT,
         featuredVideoUrl: String? = null,
         postId: Long = 1L,
@@ -1357,13 +1102,6 @@ class ReaderPostUiStateBuilderTest : BaseUnitTest() {
         })
         // The ReaderPost contains business logic and accesses static classes. Using spy() allows us to use it in tests.
         whenever(post.isDiscoverPost).thenReturn(isDiscoverPost)
-        if (isDiscoverPost) {
-            val mockedDiscoverData: ReaderPostDiscoverData = mock()
-            whenever(post.discoverData).thenReturn(mockedDiscoverData)
-            whenever(mockedDiscoverData.discoverType).thenReturn(discoverType)
-            whenever(mockedDiscoverData.attributionHtml).thenReturn(mock())
-            whenever(mockedDiscoverData.avatarUrl).thenReturn("dummyUrl")
-        }
         post.numReplies = numOfReplies
         post.numLikes = numOfLikes
         post.isPrivate = isPrivate

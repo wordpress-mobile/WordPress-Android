@@ -19,7 +19,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.bloggingprompts.BloggingPromptsPostTagProvider.Companion.BLOGGING_PROMPT_TAG
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
@@ -42,7 +41,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -62,7 +60,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
-    private val readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig,
     private val readerAnnouncementHelper: ReaderAnnouncementHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -236,40 +233,20 @@ class ReaderDiscoverViewModel @Inject constructor(
     private suspend fun convertCardsToUiStates(posts: ReaderDiscoverCards): List<ReaderCardUiState> {
         return posts.cards.map { card ->
             when (card) {
-                is ReaderPostCard -> if (readerImprovementsFeatureConfig.isEnabled()) {
-                    postUiStateBuilder.mapPostToNewUiState(
-                        source = ReaderTracker.SOURCE_DISCOVER,
-                        post = card.post,
-                        photonWidth = photonWidth,
-                        photonHeight = photonHeight,
-                        postListType = TAG_FOLLOWED,
-                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
-                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
-                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClickedNew,
-                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissedNew,
-                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
-                        onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
-                    )
-                } else {
-                    postUiStateBuilder.mapPostToUiState(
-                        source = ReaderTracker.SOURCE_DISCOVER,
-                        post = card.post,
-                        isDiscover = true,
-                        photonWidth = photonWidth,
-                        photonHeight = photonHeight,
-                        onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
-                        onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
-                        onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
-                        onDiscoverSectionClicked = this@ReaderDiscoverViewModel::onDiscoverClicked,
-                        onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
-                        onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
-                        onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
-                        onPostHeaderViewClicked = { onPostHeaderClicked(card.post.postId, card.post.blogId) },
-                        onTagItemClicked = this@ReaderDiscoverViewModel::onTagItemClicked,
-                        postListType = TAG_FOLLOWED
-                    )
-                }
+                is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
+                    source = ReaderTracker.SOURCE_DISCOVER,
+                    post = card.post,
+                    photonWidth = photonWidth,
+                    photonHeight = photonHeight,
+                    postListType = TAG_FOLLOWED,
+                    onButtonClicked = this@ReaderDiscoverViewModel::onButtonClicked,
+                    onItemClicked = this@ReaderDiscoverViewModel::onPostItemClicked,
+                    onItemRendered = this@ReaderDiscoverViewModel::onItemRendered,
+                    onMoreButtonClicked = this@ReaderDiscoverViewModel::onMoreButtonClicked,
+                    onMoreDismissed = this@ReaderDiscoverViewModel::onMoreMenuDismissed,
+                    onVideoOverlayClicked = this@ReaderDiscoverViewModel::onVideoOverlayClicked,
+                    onPostHeaderViewClicked = this@ReaderDiscoverViewModel::onPostHeaderClicked,
+                )
                 is InterestsYouMayLikeCard -> {
                     postUiStateBuilder.mapTagListToReaderInterestUiState(
                         card.interests,
@@ -385,13 +362,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onTagItemClicked(tagSlug: String) {
-        launch(ioDispatcher) {
-            val readerTag = readerUtilsWrapper.getTagFromTagName(tagSlug, FOLLOWED)
-            _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
-        }
-    }
-
     private fun onPostItemClicked(postId: Long, blogId: Long) {
         launch {
             findPost(postId, blogId)?.let {
@@ -452,11 +422,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    @Suppress("unused", "UNUSED_PARAMETER")
-    private fun onDiscoverClicked(postId: Long, blogId: Long) {
-        // TODO malinjir: add on discover clicked listener
-    }
-
     private fun onMoreButtonClicked(postUiState: ReaderPostUiState) {
         changeMoreMenuVisibility(postUiState, true)
     }
@@ -466,30 +431,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun changeMoreMenuVisibility(currentUiState: ReaderPostUiState, show: Boolean) {
-        launch {
-            findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                val moreMenuItems = if (show) {
-                    readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                        post, false, this@ReaderDiscoverViewModel::onButtonClicked
-                    )
-                } else {
-                    null
-                }
-
-                replaceUiStateItem(currentUiState, currentUiState.copy(moreMenuItems = moreMenuItems))
-            }
-        }
-    }
-
-    private fun onMoreButtonClickedNew(postUiState: ReaderPostNewUiState) {
-        changeMoreMenuVisibilityNew(postUiState, true)
-    }
-
-    private fun onMoreMenuDismissedNew(postUiState: ReaderPostNewUiState) {
-        changeMoreMenuVisibilityNew(postUiState, false)
-    }
-
-    private fun changeMoreMenuVisibilityNew(currentUiState: ReaderPostNewUiState, show: Boolean) {
         launch {
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {

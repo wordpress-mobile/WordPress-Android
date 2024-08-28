@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ReaderCardView"
+    style="@style/ReaderCardViewNew"
     android:id="@+id/post_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,49 +13,57 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/reader_card_content_padding">
 
-        <ImageView
-            android:id="@+id/image_blavatar"
-            style="@style/ReaderImageView.Avatar.ExtraSmall"
-            android:background="@drawable/bg_oval_placeholder"
-            android:importantForAccessibility="no"
-            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
-            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/image_avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/image_avatar" />
-
-        <ImageView
-            android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar.ExtraSmall"
-            android:layout_marginStart="@dimen/reader_xpost_avatar_margin_start"
-            android:background="@drawable/bg_oval_stroke_p2_author_1dp"
-            android:importantForAccessibility="no"
-            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
-            android:src="@drawable/bg_rectangle_placeholder_user_32dp"
-            app:layout_constraintBottom_toBottomOf="@+id/text_subtitle"
-            app:layout_constraintStart_toStartOf="@id/image_blavatar"
-            app:layout_constraintTop_toTopOf="@+id/text_subtitle" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_subtitle"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/blog_section_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/ReaderTextView.XPost.SubTitle"
-            app:fixWidowWords="true"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/image_avatar"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="text_subtitle" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/image_avatar"
+                style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
+                android:importantForAccessibility="no"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:src="@drawable/login_prologue_third_asset_three" />
+
+            <ImageView
+                android:id="@+id/image_blavatar"
+                style="@style/ReaderImageView.Avatar.ExtraSmall.OvalSurfaceBackground"
+                android:layout_marginStart="@dimen/reader_a8c_avatar_margin_start_new"
+                android:importantForAccessibility="no"
+                app:layout_constraintStart_toStartOf="@id/image_avatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:src="@drawable/ic_blaze_overlay_image" />
+
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/text_subtitle"
+                style="@style/ReaderTextView.Post.New.XPost.Subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_medium"
+                app:fixWidowWords="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/image_blavatar"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="text_subtitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
-            style="@style/ReaderTextView.Post.Title"
+            style="@style/ReaderTextView.Post.New.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_avatar"
+            app:layout_constraintTop_toBottomOf="@id/blog_section_container"
             tools:text="text_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -137,7 +137,6 @@ import org.wordpress.android.util.SnackbarSequencer;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppReviewManager;
@@ -186,7 +185,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject ReaderTracker mReaderTracker;
     @Inject SnackbarSequencer mSnackbarSequencer;
     @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
-    @Inject ReaderImprovementsFeatureConfig mReaderImprovementsFeatureConfig;
     private ReaderPostAdapter mPostAdapter;
     private ReaderSiteSearchAdapter mSiteSearchAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
@@ -1067,27 +1065,20 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         });
 
-        // set the background color as we have different colors for the new and legacy designs that are not easy to
-        // change via styles, because of the FeatureConfig logic
-        int backgroundColor = mReaderImprovementsFeatureConfig.isEnabled()
-                ? R.color.reader_post_list_background_new
-                : R.color.reader_post_list_background;
-        mRecyclerView.setBackgroundColor(ContextCompat.getColor(requireContext(), backgroundColor));
+        mRecyclerView.setBackgroundColor(ContextCompat.getColor(
+                requireContext(), R.color.reader_post_list_background)
+        );
 
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
         // item is the tag toolbar (shown when viewing posts in followed tags) - this is to avoid
         // having the tag toolbar take up more vertical space than necessary
-        int spacingVerticalRes = mReaderImprovementsFeatureConfig.isEnabled()
-                ? R.dimen.reader_card_gutters_new
-                : R.dimen.reader_card_gutters;
+        int spacingVerticalRes = R.dimen.reader_card_gutters;
         int spacingHorizontal = getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         int spacingVertical = getResources().getDimensionPixelSize(spacingVerticalRes);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical, false));
 
-        // add a proper item divider to the RecyclerView when Reader Improvements are enabled
-        if (mReaderImprovementsFeatureConfig.isEnabled()) {
-            mRecyclerView.addItemDivider(R.drawable.default_list_divider);
-        }
+        // add a proper item divider to the RecyclerView
+        mRecyclerView.addItemDivider(R.drawable.default_list_divider);
 
         mRecyclerView.setToolbarBackgroundColor(0);
         mRecyclerView.setToolbarSpinnerDrawable(R.drawable.ic_dropdown_primary_30_24dp);

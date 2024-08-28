@@ -53,7 +53,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
@@ -64,7 +63,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.databinding.ReaderFragmentPostDetailBinding
 import org.wordpress.android.databinding.ReaderIncludePostDetailFooterBinding
-import org.wordpress.android.databinding.ReaderIncludePostDetailFooterNewBinding
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -145,7 +143,6 @@ import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISS
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.config.CommentsSnippetFeatureConfig
 import org.wordpress.android.util.config.LikesEnhancementsFeatureConfig
-import org.wordpress.android.util.config.ReaderImprovementsFeatureConfig
 import org.wordpress.android.util.config.ReaderReadingPreferencesFeatureConfig
 import org.wordpress.android.util.extensions.getColorFromAttribute
 import org.wordpress.android.util.extensions.getParcelableCompat
@@ -282,9 +279,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     @Inject
     lateinit var jetpackBrandingUtils: JetpackBrandingUtils
-
-    @Inject
-    lateinit var readerImprovementsFeatureConfig: ReaderImprovementsFeatureConfig
 
     @Inject
     lateinit var readingPreferencesFeatureConfig: ReaderReadingPreferencesFeatureConfig
@@ -484,31 +478,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun initLayoutFooter(view: View) {
-        val isReaderImprovementsEnabled = readerImprovementsFeatureConfig.isEnabled()
         view.findViewById<ViewStub>(R.id.layout_post_detail_footer).apply {
-            layoutResource = if (isReaderImprovementsEnabled) {
-                R.layout.reader_include_post_detail_footer_new
-            } else {
-                R.layout.reader_include_post_detail_footer
-            }
+            layoutResource = R.layout.reader_include_post_detail_footer
 
             setOnInflateListener { _, inflated ->
-                layoutFooterBinding = if (isReaderImprovementsEnabled) {
-                    ReaderIncludePostDetailFooterNewBinding.bind(inflated).mapBinding().apply {
+                layoutFooterBinding = ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
                         // the new bar should hide on scroll
                         val params = root.layoutParams as CoordinatorLayout.LayoutParams
                         params.behavior = HideBottomViewOnScrollBehavior<View>()
                     }
-                } else {
-                    ReaderIncludePostDetailFooterBinding.bind(inflated).mapBinding().apply {
-                        // the old bar should have the elevated surface color background
-                        val elevationOverlayProvider = ElevationOverlayProvider(root.context)
-                        val appbarElevation = resources.getDimension(R.dimen.appbar_elevation)
-                        val elevatedSurfaceColor = elevationOverlayProvider
-                            .compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation)
-                        root.setBackgroundColor(elevatedSurfaceColor)
-                    }
-                }
                 layoutFooterBinding.root.isInvisible = true
             }
         }.also { stub ->
@@ -1891,15 +1869,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     )
 
     private fun ReaderIncludePostDetailFooterBinding.mapBinding(): PostDetailFooterBarBinding =
-        PostDetailFooterBarBinding(
-            root,
-            bookmark,
-            reblog,
-            countComments,
-            countLikes,
-        )
-
-    private fun ReaderIncludePostDetailFooterNewBinding.mapBinding(): PostDetailFooterBarBinding =
         PostDetailFooterBarBinding(
             root,
             bookmark,

@@ -12,7 +12,7 @@ import org.wordpress.android.databinding.ReaderCardviewPostNewBinding
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostNewUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -43,7 +43,7 @@ class ReaderPostNewViewHolder(
     }
 
     override fun onBind(uiState: ReaderCardUiState) = with(binding) {
-        val state = uiState as ReaderPostNewUiState
+        val state = uiState as ReaderPostUiState
 
         // Blog section
         updateBlogSection(state)
@@ -91,7 +91,7 @@ class ReaderPostNewViewHolder(
         state.onItemRendered.invoke(uiState)
     }
 
-    private fun updateInteractionCountsSection(state: ReaderPostNewUiState) = with(binding) {
+    private fun updateInteractionCountsSection(state: ReaderPostUiState) = with(binding) {
         val likeCount = state.interactionSection.likeCount
         val commentCount = state.interactionSection.commentCount
 
@@ -103,7 +103,7 @@ class ReaderPostNewViewHolder(
         readerCardDotSeparator.isVisible = likeLabel != null && commentLabel != null
     }
 
-    private fun updateBlogSection(state: ReaderPostNewUiState) = with(binding.layoutBlogSection) {
+    private fun updateBlogSection(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
         updateAvatarOrBlavatar(state)
         uiHelpers.setTextOrHide(blogSectionTextBlogName, state.blogSection.blogName)
         uiHelpers.setTextOrHide(blogSectionTextDateline, state.blogSection.dateLine)
@@ -118,7 +118,7 @@ class ReaderPostNewViewHolder(
         }
     }
 
-    private fun updateAvatarOrBlavatar(state: ReaderPostNewUiState) = with(binding.layoutBlogSection) {
+    private fun updateAvatarOrBlavatar(state: ReaderPostUiState) = with(binding.layoutBlogSection) {
         var isShowingAnyAvatar = false
 
         uiHelpers.updateVisibility(blogSectionImageBlogAvatar, state.blogSection.avatarOrBlavatarUrl != null)
@@ -149,7 +149,7 @@ class ReaderPostNewViewHolder(
         blogSectionAvatarContainer.isVisible = isShowingAnyAvatar
     }
 
-    private fun updateFeaturedImage(state: ReaderPostNewUiState) = with(binding) {
+    private fun updateFeaturedImage(state: ReaderPostUiState) = with(binding) {
         uiHelpers.updateVisibility(imageFeatured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(imageFeatured)
@@ -177,7 +177,7 @@ class ReaderPostNewViewHolder(
         }
     }
 
-    private fun loadVideoThumbnail(state: ReaderPostNewUiState) = with(binding) {
+    private fun loadVideoThumbnail(state: ReaderPostUiState) = with(binding) {
         /* TODO ideally, we'd be passing just a thumbnail url in the UiState. However, the code for retrieving
             thumbnail from full video URL needs to be fully refactored. */
         state.fullVideoUrl?.let { videoUrl ->
@@ -202,7 +202,7 @@ class ReaderPostNewViewHolder(
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostNewUiState, actions: List<ReaderPostCardAction>, v: View) {
+    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<ReaderPostCardAction>, v: View) {
         readerTracker.track(AnalyticsTracker.Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
