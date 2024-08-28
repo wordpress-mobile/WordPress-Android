@@ -4,10 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
@@ -41,7 +39,6 @@ import org.wordpress.android.widgets.AppReviewsManagerWrapper
 private const val REQUEST_BLOG_LISTENER_PARAM_POSITION = 2
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class NotificationsListViewModelTest : BaseUnitTest() {
     @Mock
     private lateinit var appPrefsWrapper: AppPrefsWrapper
