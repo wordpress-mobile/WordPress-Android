@@ -79,7 +79,7 @@ ext {
     googleGsonVersion = '2.11.0'
     googleMaterialVersion = '1.9.0'
 
-    googleMLKitBarcodeScanningVersion = '17.2.0'
+    googleMLKitBarcodeScanningVersion = '17.3.0'
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'
     googleMLKitTextRecognitionVersion = '16.0.0'
     googlePlayReviewVersion = '2.0.1'
