@@ -186,7 +186,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         fun overflowChipText(resources: Resources, hiddenChipsCount: Int): String =
             String.format(
                 resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title_new),
-                hiddenChipsCount
+                hiddenChipsCount.toString()
             )
 
         @ColorRes
