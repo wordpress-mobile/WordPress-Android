@@ -1,56 +1,141 @@
 package org.wordpress.android.ui.voicetocontent
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.compose.foundation.clickable
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import org.wordpress.android.ui.compose.theme.AppTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityNavigator
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
+import org.wordpress.android.ui.compose.theme.AppTheme
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.Dismiss
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchEditPost
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.LaunchExternalBrowser
+import org.wordpress.android.ui.voicetocontent.VoiceToContentActionEvent.RequestPermission
 import org.wordpress.android.util.audio.IAudioRecorder.Companion.REQUIRED_RECORDING_PERMISSIONS
-import android.provider.Settings
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
+    @Inject
+    lateinit var activityNavigator: ActivityNavigator
+
     private val viewModel: VoiceToContentViewModel by viewModels()
 
+    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = ComposeView(requireContext()).apply {
         setContent {
             AppTheme {
                 VoiceToContentScreen(
-                    viewModel = viewModel,
-                    onRequestPermission = { requestAllPermissionsForRecording() },
-                    hasPermission = { hasAllPermissionsForRecording() }
+                    viewModel = viewModel
                 )
+            }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeViewModel()
+        viewModel.start()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        dialog.setOnShowListener {
+            val bottomSheet: FrameLayout = dialog.findViewById(
+                com.google.android.material.R.id.design_bottom_sheet
+            ) ?: return@setOnShowListener
+
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.isDraggable = true
+            behavior.skipCollapsed = true
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+            behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                @SuppressLint("SwitchIntDef")
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN,
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            onBottomSheetClosed()
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    // no op
+                }
+            })
+
+            // Disable touch interception by the bottom sheet to allow nested scrolling for landscape and small screens
+            bottomSheet.setOnTouchListener { _, _ -> false }
+        }
+
+        // Observe the ViewModel to update the cancelable state of closing on outside touch
+        viewModel.isCancelableOutsideTouch.observe(this) { cancelable ->
+            dialog.setCanceledOnTouchOutside(cancelable)
+        }
+
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                if (viewModel.isPaused.value) {
+                    viewModel.resumeRecording()
+                }
+            }
+        }
+
+        return dialog
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (viewModel.isRecording.value) {
+            viewModel.pauseRecording()
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        if (!requireActivity().isChangingConfigurations) {
+            super.onDismiss(dialog)
+            viewModel.onBottomSheetClosed()
+        }
+    }
+
+    private fun onBottomSheetClosed() {
+        dismiss()
+    }
+
+    private fun observeViewModel() {
+        viewModel.actionEvent.observe(viewLifecycleOwner) { actionEvent ->
+            when(actionEvent) {
+                is LaunchEditPost -> launchEditPost(actionEvent)
+                is LaunchExternalBrowser -> launchIneligibleForVoiceToContent(actionEvent)
+                is RequestPermission -> requestAllPermissionsForRecording()
+                is Dismiss -> dismiss()
             }
         }
     }
@@ -60,21 +145,12 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
     ) { permissions ->
         val areAllPermissionsGranted = permissions.entries.all { it.value }
         if (areAllPermissionsGranted) {
-            viewModel.startRecording()
+            viewModel.onPermissionGranted()
         } else {
             // Check if any permissions were denied permanently
             if (permissions.entries.any { !it.value }) {
                 showPermissionDeniedDialog()
             }
-        }
-    }
-
-    private fun hasAllPermissionsForRecording(): Boolean {
-        return REQUIRED_RECORDING_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                it
-            ) == PackageManager.PERMISSION_GRANTED
         }
     }
 
@@ -97,70 +173,29 @@ class VoiceToContentDialogFragment : BottomSheetDialogFragment() {
             .show()
     }
 
+    private fun launchIneligibleForVoiceToContent(event: LaunchExternalBrowser) {
+        context?.let {
+            activityNavigator.openIneligibleForVoiceToContent(it, event.url)
+        }
+    }
+
+    private fun launchEditPost(event: LaunchEditPost) {
+        activity?.let {
+            ActivityLauncher.addNewPostWithContentFromAIForResult(
+                it,
+                event.site,
+                false,
+                PagePostCreationSourcesDetail.POST_FROM_MY_SITE,
+                event.content
+            )
+            dismiss()
+        }
+    }
+
     companion object {
         const val TAG = "voice_to_content_fragment_tag"
 
         @JvmStatic
         fun newInstance() = VoiceToContentDialogFragment()
-    }
-}
-
-@Composable
-fun VoiceToContentScreen(
-    viewModel: VoiceToContentViewModel,
-    onRequestPermission: () -> Unit,
-    hasPermission: () -> Boolean
-) {
-    val result by viewModel.uiState.observeAsState()
-    val assistantFeature by viewModel.aiAssistantFeatureState.observeAsState()
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        when {
-            result?.isError == true -> {
-                Text(text = "Error happened", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            }
-
-            result?.content != null -> {
-                Text(text = result?.content!!, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            }
-
-            assistantFeature != null -> {
-                Text(text = "Assistant Feature Returned Successfully", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            else -> {
-                Text(text = "Ready to fake record - tap microphone", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                Spacer(modifier = Modifier.height(16.dp))
-                Icon(
-                    painterResource(id = R.drawable.ic_mic_white_24dp),
-                    contentDescription = "Microphone",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clickable {
-                            if (hasPermission()) {
-                                viewModel.startRecording()
-                            } else {
-                                onRequestPermission()
-                            }
-                        }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-                Icon(
-                    painterResource(id = com.google.android.exoplayer2.ui.R.drawable.exo_icon_stop),
-                    contentDescription = "Stop",
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clickable {
-                            viewModel.stopRecording()
-                        }
-                )
-            }
-        }
     }
 }

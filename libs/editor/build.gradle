@@ -31,11 +31,10 @@ repositories {
 android {
     namespace "org.wordpress.android.editor"
 
-    compileSdkVersion rootProject.compileSdkVersion
-
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
+        compileSdk rootProject.compileSdkVersion
     }
 
     lint {

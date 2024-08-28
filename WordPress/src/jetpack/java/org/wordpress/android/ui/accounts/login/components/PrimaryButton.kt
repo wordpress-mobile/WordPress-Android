@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -35,6 +36,7 @@ fun PrimaryButton(
         modifier = modifier
             .padding(horizontal = dimensionResource(R.dimen.login_prologue_revamped_buttons_padding))
             .padding(top = Margin.ExtraLarge.value)
+            .widthIn(0.dp, dimensionResource(R.dimen.login_prologue_revamped_buttons_max_width))
             .fillMaxWidth(),
     ) {
         Text(

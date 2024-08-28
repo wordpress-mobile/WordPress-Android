@@ -1,12 +1,12 @@
 package org.wordpress.android.ui.jetpackoverlay
 
 import android.os.Bundle
+import android.view.View.generateViewId
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
 import org.wordpress.android.models.JetpackPoweredScreen
@@ -26,7 +26,7 @@ class JetpackStaticPosterActivity : AppCompatActivity() {
         AndroidView(
             factory = { context ->
                 FrameLayout(context).apply {
-                    id = ViewCompat.generateViewId()
+                    id = generateViewId()
                     layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT

@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 13:54:08+0000
+Translation-Revision-Date: 2024-07-24 09:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: tr
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Sesten gönderi oluşturma şu anda kullanılamıyor, lütfen daha sonra yeniden deneyin.</string>
+    <string name="voice_to_content_done_label">Tamam</string>
+    <string name="voice_to_content_upgrade">Daha fazla istek için paketinizi yükseltin</string>
+    <string name="voice_to_content_ineligible">Sesten gönderi oluşturmak için yeterli isteğiniz yok.</string>
+    <string name="voice_to_content_recording_label">Kaydediliyor</string>
+    <string name="voice_to_content_begin_recording_label">Kayda Başla</string>
+    <string name="voice_to_content_secondary_header_label">Mevcut istekler:</string>
+    <string name="voice_to_content_base_header_label">Sesten gönderi oluştur</string>
+    <string name="voice_to_content_processing_label">İşleniyor</string>
+    <string name="voice_to_content_error_label">Hata</string>
+    <string name="voice_to_content_processing">İşleniyor</string>
+    <string name="gutenberg_native_tap_to_edit">Düzenlemek için dokunun</string>
+    <string name="voice_to_content_permissions_required_msg">Ses kaydetmek için bu uygulamanın mikrofonunuza erişim izni olması gerekir. Daha önce bu izni reddetmiştiniz. Bu özelliği kullanmak için lütfen uygulama ayarlarından mikrofon iznini etkinleştirin.</string>
+    <string name="voice_to_content_permissions_required_title">Ses Kaydı İzni Gerekli</string>
+    <string name="permission_access_media_location">Ortamın Konumu</string>
+    <string name="in_app_update_restart">Yeniden Başla</string>
+    <string name="in_app_update_available">Güncelleme indirildi. Uygulamak için yeniden başlayın.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Sesten gönderi oluştur</string>
+    <string name="reader_tags_feed_action_label_open_menu">menüyü aç</string>
+    <string name="reader_tags_feed_action_label_unlike_post">gönderideki beğeniyi kaldır</string>
+    <string name="reader_tags_feed_action_label_like_post">gönderiyi beğen</string>
+    <string name="reader_tags_feed_action_label_open_blog">blogu aç</string>
+    <string name="reader_tags_feed_action_label_open_post">gönderiyi aç</string>
+    <string name="reader_tags_feed_error_retry">Tekrar dene</string>
+    <string name="reader_tags_feed_no_content_error_description">Şu anda %s olarak etiketlenmiş gönderi bulunamadı</string>
+    <string name="reader_tags_feed_loading_error_description">Şu anda bu etiketten gönderiler yüklenemiyor</string>
+    <string name="reader_tags_feed_error_title">%s etiketli hiç yazı bulunamadı</string>
+    <string name="reader_tags_feed_see_more_from_tag">%s etiketli daha fazla içerik</string>
+    <string name="reader_tags_display_name">Etiketler</string>
+    <string name="reader_announcement_card_reading_preferences_description">Size uygun renkler ve yazı tipleri. Bir gönderiyi okurken ekranın üst kısmındaki AA simgesine dokunun.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Okuma Tercihleri</string>
+    <string name="reader_announcement_card_tags_stream_description">Üstteki açılır menüye dokunun ve takip ettiğiniz etiketlerin akışına erişmek için Etiketler seçeneğini belirleyin.</string>
+    <string name="reader_announcement_card_tags_stream_title">Etiket akışı</string>
+    <string name="reader_announcement_card_title">Okuyucuda Yeni</string>
+    <string name="reader_dropdown_menu_tags">Etiketleriniz</string>
+    <string name="no_connection_error_description">Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
+    <string name="stats_subscribers_marker_view_plural">Aboneler</string>
+    <string name="stats_subscribers_marker_view_singular">Abone</string>
+    <string name="stats_view_subscriber_growth">Abone Artışı</string>
     <string name="role_subscriber">Abone</string>
     <string name="title_email_subscriber">E-posta Abonesi</string>
     <string name="people_empty_list_filtered_email_subscribers">Henüz e-posta abonesi yok</string>
@@ -65,12 +105,15 @@ Language: tr
     <string name="reader_preferences_screen_font_family_label">Yazı tipi</string>
     <string name="reader_preferences_screen_theme_label">Renk Düzeni</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">geri bildiriminizi gönderin</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Seçilen rengi temizle</string>
     <string name="reader_no_followed_tags_text_title">Takip edilen etiket yok</string>
     <string name="reader_toast_err_tag_already_following">Bu etiketi zaten takip ediyorsunuz</string>
     <string name="reader_menu_reading_preferences">Okuma Tercihleri</string>
     <string name="reader_page_followed_tags_text_title">Takip edilen etiketler</string>
     <string name="reader_preferences_theme_candy">Şeker</string>
+    <string name="reader_preferences_theme_h4x0r">h4x0r</string>
+    <string name="reader_preferences_theme_oled">OLED</string>
     <string name="reader_preferences_theme_evening">Akşam</string>
     <string name="reader_preferences_theme_sepia">Sepya</string>
     <string name="reader_preferences_theme_soft">Yumuşak</string>
@@ -576,8 +619,6 @@ Language: tr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Okuyucu, Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">İstatistikleriniz Jetpack uygulamasına taşınıyor</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Yeni Jetpack uygulamasına geçiş yapın</string>
-    <string name="no_connection_error_description">Ağ bağlantınızı denetleyip yeniden deneyin.</string>
-    <string name="no_connection_error_title">Bu içerik şu an yüklenemiyor</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">İstemler yüklenirken bir sorun çıktı.</string>
     <string name="blogging_prompts_list_error_fetch_title">Eyvah</string>
     <string name="blogging_prompts_list_no_prompts">Henüz bir istem yok</string>
@@ -1905,6 +1946,7 @@ Language: tr
     <string name="stats_box_type_low">düşük</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  ve %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Görseli değiştir</string>
     <string name="gutenberg_native_gallery_caption_s">Galeri yazısı. %s</string>
     <string name="create_post_page_fab_tooltip">Yazı veya sayfa oluştur</string>
     <string name="content_description_person_building_website">İnsan yapımı site</string>
@@ -3102,6 +3144,7 @@ Language: tr
     <string name="error_all_media_upload_canceled">Bilinmeyen bir sorun nedeniyle tüm ortam yüklemeleri iptal edildi. Lütfen yeniden yüklemeyi deneyin</string>
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
     <string name="submit_for_review">Gönder</string>
+    <string name="title_subscriber">Abone</string>
     <string name="duplicate_site_detected">Bir çift site bulundu.</string>
     <string name="cannot_add_duplicate_site">Bu site uygulamada zaten var. Yeniden ekleyemezsiniz.</string>
     <string name="already_logged_in_wpcom">Zaten WordPress.com hesabınızda oturum açmış durumdasınız. Başka bir hesapla ilişkili WordPress.com hesabını ekleyemezsiniz.</string>

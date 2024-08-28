@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -20,9 +22,8 @@ import androidx.core.view.setPadding
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarItemView
+import com.google.android.material.navigation.NavigationBarMenuView
 import com.google.android.material.navigation.NavigationBarView
 import com.google.android.material.navigation.NavigationBarView.OnItemReselectedListener
 import com.google.android.material.navigation.NavigationBarView.OnItemSelectedListener
@@ -60,11 +61,12 @@ import com.google.android.material.R as MaterialR
  * insert our own custom views so we have more control over their appearance
  */
 @AndroidEntryPoint
+@SuppressLint("RestrictedApi") // https://github.com/wordpress-mobile/WordPress-Android/issues/21079
 class WPMainNavigationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : BottomNavigationView(context, attrs, defStyleAttr),
+) : FrameLayout(context, attrs, defStyleAttr),
     OnItemSelectedListener, OnItemReselectedListener {
     private lateinit var navAdapter: NavAdapter
     private var fragmentManager: FragmentManager? = null
@@ -75,6 +77,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         resources,
         MaterialR.dimen.material_emphasis_disabled
     )
+    private lateinit var navigationBarView: NavigationBarView
 
     val disabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(0f) })
     val enabledColorFilter = ColorMatrixColorFilter(ColorMatrix().apply { setSaturation(1f) })
@@ -86,14 +89,14 @@ class WPMainNavigationView @JvmOverloads constructor(
     lateinit var accountStore: AccountStore
 
     private var currentPosition: Int
-        get() = getPositionForItemId(selectedItemId)
+        get() = getPositionForItemId(navigationBarView.selectedItemId)
         set(position) = updateCurrentPosition(position)
 
     val activeFragment: Fragment?
         get() = navAdapter.getFragment(currentPosition)
 
     var currentSelectedPage: PageType
-        get() = getPageForItemId(selectedItemId)
+        get() = getPageForItemId(navigationBarView.selectedItemId)
         set(pageType) = updateCurrentPosition(pages().indexOf(pageType))
 
     interface OnPageListener {
@@ -106,17 +109,22 @@ class WPMainNavigationView @JvmOverloads constructor(
         pageListener = listener
         jetpackFeatureRemovalPhaseHelper = helper
 
+        val inflater = LayoutInflater.from(context)
+        inflater.inflate(R.layout.main_navigation_view, this, true)
+        navigationBarView = findViewById(R.id.main_navigation_bar_view)
+        val horizontalPadding: Int = context.resources.getDimensionPixelSize(R.dimen.my_site_navigation_rail_padding)
+        navigationBarView.setPadding(horizontalPadding, 0, horizontalPadding, 0)
+
         navAdapter = NavAdapter()
         assignNavigationListeners(true)
         disableShiftMode()
 
         // overlay each item with our custom view
-        val menuView = getChildAt(0) as BottomNavigationMenuView
+        val menuView = navigationBarView.getChildAt(0) as NavigationBarMenuView
         if (!BuildConfig.ENABLE_READER) hideReaderTab()
 
-        val inflater = LayoutInflater.from(context)
-        for (i in 0 until menu.size()) {
-            val itemView = menuView.getChildAt(i) as BottomNavigationItemView
+        for (i in 0 until navigationBarView.menu.size()) {
+            val itemView = menuView.getChildAt(i) as NavigationBarItemView
             val customView: View = inflater.inflate(R.layout.navbar_item, menuView, false)
 
             val txtLabel = customView.findViewById<TextView>(R.id.nav_label)
@@ -198,16 +206,16 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private fun hideReaderTab() {
-        menu.removeItem(R.id.nav_reader)
+        navigationBarView.menu.removeItem(R.id.nav_reader)
     }
 
     private fun disableShiftMode() {
-        labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
+        navigationBarView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
     }
 
     private fun assignNavigationListeners(assign: Boolean) {
-        setOnItemSelectedListener(if (assign) this else null)
-        setOnItemReselectedListener(if (assign) this else null)
+        navigationBarView.setOnItemSelectedListener(if (assign) this else null)
+        navigationBarView.setOnItemReselectedListener(if (assign) this else null)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -275,7 +283,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         // temporarily disable the nav listeners so they don't fire when we change the selected page
         assignNavigationListeners(false)
         try {
-            selectedItemId = getItemIdForPosition(position)
+            navigationBarView.selectedItemId = getItemIdForPosition(position)
         } finally {
             assignNavigationListeners(true)
         }
@@ -372,10 +380,10 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
-    private fun getItemView(position: Int): BottomNavigationItemView? {
+    private fun getItemView(position: Int): NavigationBarItemView? {
         if (isValidPosition(position)) {
-            val menuView = getChildAt(0) as BottomNavigationMenuView
-            return menuView.getChildAt(position) as BottomNavigationItemView
+            val menuView = navigationBarView.getChildAt(0) as NavigationBarMenuView
+            return menuView.getChildAt(position) as NavigationBarItemView
         }
         return null
     }

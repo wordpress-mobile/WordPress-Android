@@ -680,6 +680,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                if (mCurrentGutenbergPropsBuilder == null) {
+                    SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(getContext());
+                    if (db != null) {
+                        mCurrentGutenbergPropsBuilder = db.getParcel(ARG_GUTENBERG_PROPS_BUILDER,
+                                GutenbergPropsBuilder.CREATOR);
+                    }
+                }
                 // We need to send latest capabilities as JS side clears them
                 getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
                 trackWebViewClosed("save");
@@ -1087,6 +1094,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         String postContent = removeVisualEditorProgressTag(text.toString());
         getGutenbergContainerFragment().setContent(postContent);
+    }
+
+    @Override
+    public void updateContent(@Nullable CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
+
+        if (getGutenbergContainerFragment() != null) {
+            getGutenbergContainerFragment().onContentUpdate(text.toString());
+        }
     }
 
     public void setJetpackSsoEnabled(boolean jetpackSsoEnabled) {

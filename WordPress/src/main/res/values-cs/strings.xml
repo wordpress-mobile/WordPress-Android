@@ -148,8 +148,6 @@ Language: cs_CZ
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Čtečka se přesouvá do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Vaše statistiky se přesouvají do aplikace Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Přepněte na novou aplikaci Jetpack</string>
-    <string name="no_connection_error_description">Zkontrolujte připojení k síti a zkuste to znovu.</string>
-    <string name="no_connection_error_title">Momentálně tento obsah nelze načíst</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Došlo k chybě při načítání to se mi líbí</string>
     <string name="blogging_prompts_list_error_fetch_title">Jejda</string>
     <string name="blogging_prompts_list_no_prompts">Zatím žádné výzvy</string>
@@ -1463,6 +1461,7 @@ Language: cs_CZ
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="create_post_page_fab_tooltip">Vytvořte příspěvek nebo stránku</string>
     <string name="gutenberg_native_gallery_caption_s">Titulek galerie. %s</string>
+    <string name="gutenberg_native_replace_image">Nahradit obrázek</string>
     <string name="post_signup_interstitial_subtitle">Cokoli chcete vytvořit nebo sdílet, pomůžeme vám to udělat tady.</string>
     <string name="post_signup_interstitial_not_right_now">Teď ne</string>
     <string name="content_description_person_building_website">Web pro budování osob</string>

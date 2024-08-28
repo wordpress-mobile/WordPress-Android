@@ -328,25 +328,21 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
                         return;
                     }
 
-                    if (site != null && post != null) {
+                    View snackbarAttachView = findViewById(R.id.coordinator);
+                    if (site != null && post != null && snackbarAttachView != null) {
                         mUploadUtilsWrapper.handleEditPostResultSnackbars(
                                 this,
-                                findViewById(R.id.coordinator),
+                                snackbarAttachView,
                                 data,
                                 post,
                                 site,
                                 mUploadActionUseCase.getUploadAction(post),
-                                new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        UploadUtils.publishPost(
-                                                ReaderPostListActivity.this,
-                                                post,
-                                                site,
-                                                mDispatcher
-                                        );
-                                    }
-                                });
+                                v -> UploadUtils.publishPost(
+                                        ReaderPostListActivity.this,
+                                        post,
+                                        site,
+                                        mDispatcher
+                                ));
                     }
                 }
                 break;
@@ -357,10 +353,11 @@ public class ReaderPostListActivity extends LocaleAwareActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
-        if (site != null && event.post != null) {
+        View snackbarAttachView = findViewById(R.id.coordinator);
+        if (site != null && event.post != null && snackbarAttachView != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,
-                    findViewById(R.id.coordinator),
+                    snackbarAttachView,
                     event.isError(),
                     event.isFirstTimePublish,
                     event.post,

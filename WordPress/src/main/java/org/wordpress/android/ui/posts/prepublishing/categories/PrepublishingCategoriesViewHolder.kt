@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.categories
 
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import org.apache.commons.text.StringEscapeUtils
@@ -39,8 +38,7 @@ sealed class PrepublishingCategoriesViewHolder<T : ViewBinding>(
                 prepublishingCategoryText.context,
                 UIDimenRes(uiState.horizontalPaddingResId)
             )
-            ViewCompat.setPaddingRelative(
-                prepublishingCategoryText,
+            prepublishingCategoryText.setPaddingRelative(
                 horizontalPadding * uiState.categoryNode.level,
                 verticalPadding,
                 horizontalPadding,

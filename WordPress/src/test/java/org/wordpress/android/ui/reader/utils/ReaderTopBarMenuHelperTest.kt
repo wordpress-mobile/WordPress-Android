@@ -73,6 +73,27 @@ class ReaderTopBarMenuHelperTest {
     }
 
     @Test
+    fun `GIVEN custom lists has 2 items or less WHEN createMenu THEN custom lists items are shown outside a submenu`() {
+        val tags = ReaderTagList().apply {
+            add(mockFollowingTag()) // item 0
+            add(mockDiscoverTag()) // item 1
+            add(mockSavedTag()) // item 2
+            add(mockLikedTag()) // item 3
+            add(mockA8CTag()) // item 4
+            add(mockFollowedP2sTag()) // item 5
+            add(createCustomListTag("custom-list-1")) // item 6
+            add(createCustomListTag("custom-list-2")) // item 7
+        }
+        val menu = helper.createMenu(tags)
+
+        val customListItem1 = menu.findSingleItem { it.id == "6" }!!
+        assertThat(customListItem1.text).isEqualTo(UiStringText("custom-list-1"))
+
+        val customListItem2 = menu.findSingleItem { it.id == "7" }!!
+        assertThat(customListItem2.text).isEqualTo(UiStringText("custom-list-2"))
+    }
+
+    @Test
     fun `GIVEN all tags are available and tags FF enabled WHEN createMenu THEN all items are created correctly`() {
         whenever(readerTagsFeedFeatureConfig.isEnabled()).thenReturn(true)
 

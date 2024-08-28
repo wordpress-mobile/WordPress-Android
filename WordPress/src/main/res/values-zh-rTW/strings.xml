@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 09:54:08+0000
+Translation-Revision-Date: 2024-07-24 09:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/4.0.1
 Language: zh_TW
 -->
 <resources>
+    <string name="voice_to_content_generic_error">從音訊張貼功能目前無法使用，請稍後再試一次。</string>
+    <string name="voice_to_content_done_label">完成</string>
+    <string name="voice_to_content_upgrade">若要取得更多要求，請升級</string>
+    <string name="voice_to_content_ineligible">由於要求數不足，故無法根據音訊產生文章。</string>
+    <string name="voice_to_content_recording_label">正在錄製</string>
+    <string name="voice_to_content_begin_recording_label">開始錄製</string>
+    <string name="voice_to_content_secondary_header_label">可使用的要求：</string>
+    <string name="voice_to_content_base_header_label">從音訊張貼</string>
+    <string name="voice_to_content_processing_label">處理中</string>
+    <string name="voice_to_content_error_label">錯誤</string>
+    <string name="voice_to_content_processing">處理中</string>
+    <string name="gutenberg_native_tap_to_edit">點選以編輯</string>
+    <string name="voice_to_content_permissions_required_msg">若你想要錄製音訊，請將麥克風的存取權限授予給這個應用程式。 你先前曾拒絕授予這項權限。 若想使用這項功能，請在應用程式設定中啟用麥克風權限。</string>
+    <string name="voice_to_content_permissions_required_title">需授予音訊錄製權限</string>
+    <string name="permission_access_media_location">媒體位置</string>
+    <string name="in_app_update_restart">重新開始</string>
+    <string name="in_app_update_available">已下載更新。 重新啟動以套用。</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">從音訊張貼</string>
+    <string name="reader_tags_feed_action_label_open_menu">開啟選單</string>
+    <string name="reader_tags_feed_action_label_unlike_post">從文章移除「讚」</string>
+    <string name="reader_tags_feed_action_label_like_post">對文章按讚</string>
+    <string name="reader_tags_feed_action_label_open_blog">開啟網誌</string>
+    <string name="reader_tags_feed_action_label_open_post">開啟文章</string>
+    <string name="reader_tags_feed_error_retry">重試</string>
+    <string name="reader_tags_feed_no_content_error_description">我們目前找不到加上「%s」標籤的文章</string>
+    <string name="reader_tags_feed_loading_error_description">我們目前無法從此標籤載入文章</string>
+    <string name="reader_tags_feed_error_title">找不到與「%s」相符的文章</string>
+    <string name="reader_tags_feed_see_more_from_tag">更多來自「%s」的項目</string>
+    <string name="reader_tags_display_name">標籤</string>
+    <string name="reader_announcement_card_reading_preferences_description">選擇適合你的顏色和字型。 閱讀文章時，點選畫面頂端的 AA 圖示。</string>
+    <string name="reader_announcement_card_reading_preferences_title">閱讀喜好</string>
+    <string name="reader_announcement_card_tags_stream_description">點選頂端的下拉式清單，然後選取標籤，存取與你關注的標籤相關的文章串。</string>
+    <string name="reader_announcement_card_tags_stream_title">標籤串</string>
+    <string name="reader_announcement_card_title">閱讀器新功能</string>
+    <string name="reader_dropdown_menu_tags">你的標籤</string>
+    <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
+    <string name="no_connection_error_title">目前無法載入此內容</string>
+    <string name="stats_subscribers_marker_view_plural">訂閱者</string>
+    <string name="stats_subscribers_marker_view_singular">訂閱者</string>
+    <string name="stats_view_subscriber_growth">訂閱者的成長狀況</string>
     <string name="role_subscriber">訂閱者</string>
     <string name="title_email_subscriber">電子郵件訂閱者</string>
     <string name="people_empty_list_filtered_email_subscribers">目前沒有電子郵件訂閱者</string>
@@ -572,8 +612,6 @@ Language: zh_TW
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">「閱讀器」將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">你的統計資料將轉移至 Jetpack 應用程式</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">切換至全新 Jetpack 應用程式</string>
-    <string name="no_connection_error_description">請檢查你的網路連線並再試一次。</string>
-    <string name="no_connection_error_title">目前無法載入此內容</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">載入提示時發生錯誤。</string>
     <string name="blogging_prompts_list_error_fetch_title">糟糕</string>
     <string name="blogging_prompts_list_no_prompts">尚無提示</string>
@@ -1898,6 +1936,7 @@ Language: zh_TW
     <string name="stats_box_type_low">低</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry"> 與 %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s，%2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">更換圖片</string>
     <string name="gutenberg_native_gallery_caption_s">圖庫標題。%s</string>
     <string name="create_post_page_fab_tooltip">建立文章或頁面</string>
     <string name="content_description_person_building_website">網站架設人員</string>
@@ -2770,7 +2809,7 @@ Language: zh_TW
     <string name="site_settings_format_help">深入瞭解日期與時間格式</string>
     <string name="site_settings_format_hint_custom">自訂格式</string>
     <string name="site_settings_format_entry_custom">自訂</string>
-    <string name="site_settings_posts_per_page_title">每頁篇數</string>
+    <string name="site_settings_posts_per_page_title">每頁內容顯示數量</string>
     <string name="site_settings_timezone_subtitle">請選擇你所在時區的城市</string>
     <string name="site_settings_timezone_title">時區</string>
     <string name="site_settings_time_format_title">時間格式</string>

@@ -308,8 +308,6 @@ Language: pt_BR
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">O Leitor está migrando para o aplicativo Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Suas estatísticas estão migrando para o aplicativo Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Mudar para o novo aplicativo do Jetpack</string>
-    <string name="no_connection_error_description">Verifique sua conexão de rede e tente novamente.</string>
-    <string name="no_connection_error_title">Não foi possível carregar esse conteúdo no momento</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Ocorreu um erro ao carregar as sugestões.</string>
     <string name="blogging_prompts_list_error_fetch_title">Opa</string>
     <string name="blogging_prompts_list_no_prompts">Nenhuma sugestão ainda</string>
@@ -1624,6 +1622,7 @@ Language: pt_BR
     <string name="stats_box_type_low">baixa</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Substituir imagem</string>
     <string name="gutenberg_native_gallery_caption_s">Legenda da galeria. %s</string>
     <string name="create_post_page_fab_tooltip">Criar um post ou página</string>
     <string name="content_description_person_building_website">Pessoa construindo um site</string>

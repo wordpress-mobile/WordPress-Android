@@ -1,17 +1,22 @@
 package org.wordpress.android.ui.voicetocontent
 
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAIQueryResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpackai.JetpackAITranscriptionResponse
 import org.wordpress.android.fluxc.store.jetpackai.JetpackAIStore
+import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.ui.voicetocontent.VoiceToContentResult.Failure.NetworkUnavailable
+import org.wordpress.android.ui.voicetocontent.VoiceToContentResult.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.voicetocontent.VoiceToContentResult.Success
 import java.io.File
 import javax.inject.Inject
 
 class VoiceToContentUseCase @Inject constructor(
-    private val jetpackAIStore: JetpackAIStore
+    private val jetpackAIStore: JetpackAIStore,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val logger: VoiceToContentTelemetry
 ) {
     companion object {
         const val FEATURE = "voice_to_content"
@@ -25,6 +30,10 @@ class VoiceToContentUseCase @Inject constructor(
         file: File
     ): VoiceToContentResult =
         withContext(Dispatchers.IO) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                return@withContext NetworkUnavailable
+            }
+
             val transcriptionResponse = jetpackAIStore.fetchJetpackAITranscription(
                 siteModel,
                 FEATURE,
@@ -36,47 +45,54 @@ class VoiceToContentUseCase @Inject constructor(
                     transcriptionResponse.model
                 }
                 is JetpackAITranscriptionResponse.Error -> {
-                    val message = "${transcriptionResponse.type} ${transcriptionResponse.message}"
-                    Log.i(
-                        javaClass.simpleName,
-                        "Error transcribing audio file: $message"
-                    )
+                    logger.logError("${transcriptionResponse.type} ${transcriptionResponse.message}")
                     null
                 }
             }
 
-            transcribedText?.let {
+            transcribedText?.let { transcribed ->
                 val response = jetpackAIStore.fetchJetpackAIQuery(
                     site = siteModel,
                     feature = FEATURE,
                     role = ROLE,
-                    message = it,
+                    message = transcribed,
                     stream = false,
                     type = TYPE
                 )
 
                 when(response) {
                     is JetpackAIQueryResponse.Success -> {
-                        val finalContent: String = response.choices[0].message.content
+                        val finalContent: String? = response.choices[0].message?.content
                         // __JETPACK_AI_ERROR__ is a special marker we ask GPT to add to the request when it can’t
                         // understand the request for any reason, so maybe something confused GPT on some requests.
-                        if (finalContent == JETPACK_AI_ERROR) {
-                            return@withContext VoiceToContentResult(isError = true)
+                        if (finalContent == null || finalContent == JETPACK_AI_ERROR) {
+                            // Send back the transcribed text here
+                            logger.logError(JETPACK_AI_ERROR)
+                            return@withContext Success(content = transcribed)
                         } else {
-                            return@withContext VoiceToContentResult(content = response.choices[0].message.content)
+                            return@withContext Success(content = finalContent)
                         }
                     }
 
                     is JetpackAIQueryResponse.Error -> {
-                        return@withContext VoiceToContentResult(isError = true)
+                        logger.logError("${response.type.name} - ${response.message}")
+                        return@withContext Success(content = transcribed)
                     }
                 }
-            } ?:return@withContext VoiceToContentResult(isError = true)
+            } ?: run {
+                logger.logError("Unable to transcribe audio content")
+                return@withContext RemoteRequestFailure
+            }
         }
 }
 
-// todo: build out the result object
-data class VoiceToContentResult(
-    val content: String? = null,
-    val isError: Boolean = false
-)
+sealed class VoiceToContentResult {
+    data class Success(
+        val content: String
+    ): VoiceToContentResult()
+
+    sealed class Failure: VoiceToContentResult() {
+        data object NetworkUnavailable: Failure()
+        data object RemoteRequestFailure: Failure()
+    }
+}

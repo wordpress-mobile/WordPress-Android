@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-16 09:54:08+0000
+Translation-Revision-Date: 2024-07-24 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/4.0.1
 Language: fr
 -->
 <resources>
+    <string name="voice_to_content_generic_error">La fonctionnalité Publier à partir d’un contenu audio n’est pas disponible pour le moment, veuillez réessayer plus tard.</string>
+    <string name="voice_to_content_done_label">Terminé</string>
+    <string name="voice_to_content_upgrade">Mettre à niveau pour obtenir plus de requêtes</string>
+    <string name="voice_to_content_ineligible">Vous n’avez pas assez de requêtes disponibles pour créer un article à partir d’un contenu audio.</string>
+    <string name="voice_to_content_recording_label">Enregistrement</string>
+    <string name="voice_to_content_begin_recording_label">Commencer l’enregistrement</string>
+    <string name="voice_to_content_secondary_header_label">Requêtes disponibles :</string>
+    <string name="voice_to_content_base_header_label">Publier à partir d’un contenu audio</string>
+    <string name="voice_to_content_processing_label">Traitement</string>
+    <string name="voice_to_content_error_label">Erreur</string>
+    <string name="voice_to_content_processing">Traitement</string>
+    <string name="gutenberg_native_tap_to_edit">Appuyer pour modifier</string>
+    <string name="voice_to_content_permissions_required_msg">Pour enregistrer l’audio, l’application doit disposer des droits d’accès à votre microphone. Vous avez précédemment refusé ce droit. Veuillez activer les droits d’accès au microphone dans les réglages de l’application pour utiliser cette fonctionnalité.</string>
+    <string name="voice_to_content_permissions_required_title">Autorisation d’enregistrement de l’audio requise</string>
+    <string name="permission_access_media_location">Emplacement des médias</string>
+    <string name="in_app_update_restart">Redémarrer</string>
+    <string name="in_app_update_available">Mise à jour téléchargée. Redémarrez pour appliquer les mises à jour.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Publier à partir d’un contenu audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">ouvrir le menu</string>
+    <string name="reader_tags_feed_action_label_unlike_post">retirer la mention J’aime de l’article</string>
+    <string name="reader_tags_feed_action_label_like_post">aimer l’article</string>
+    <string name="reader_tags_feed_action_label_open_blog">ouvrir le blog</string>
+    <string name="reader_tags_feed_action_label_open_post">ouvrir l’article</string>
+    <string name="reader_tags_feed_error_retry">Réessayer</string>
+    <string name="reader_tags_feed_no_content_error_description">Nous n’avons pas trouvé d’articles avec l’étiquette %s dans l’immédiat</string>
+    <string name="reader_tags_feed_loading_error_description">Nous n’avons pas pu charger d’articles avec cette étiquette dans l’immédiat</string>
+    <string name="reader_tags_feed_error_title">Aucun résultat pour %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Plus de %s</string>
+    <string name="reader_tags_display_name">Étiquettes</string>
+    <string name="reader_announcement_card_reading_preferences_description">Choisissez les couleurs et polices qui vous conviennent. Lorsque vous lisez un article, appuyez sur l’icône AA en haut de l’écran.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Préférences de lecture</string>
+    <string name="reader_announcement_card_tags_stream_description">Appuyez sur la liste déroulante en haut et sélectionnez Étiquettes pour accéder aux flux des étiquettes que vous suivez.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flux Étiquettes</string>
+    <string name="reader_announcement_card_title">Nouveau dans le Lecteur</string>
+    <string name="reader_dropdown_menu_tags">Vos étiquettes</string>
+    <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
+    <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
     <string name="role_subscriber">Abonné</string>
     <string name="title_email_subscriber">Abonné par e-mail</string>
     <string name="people_empty_list_filtered_email_subscribers">Aucun abonné par e-mail pour le moment</string>
@@ -65,6 +102,7 @@ Language: fr
     <string name="reader_preferences_screen_font_family_label">Police</string>
     <string name="reader_preferences_screen_theme_label">Jeu de couleurs</string>
     <string name="reader_preferences_screen_preview_text_feedback_label">envoyez vos commentaires</string>
+    <string name="experimental_badge">&lt;Experimental&gt;</string>
     <string name="gutenberg_native_clear_selected_color">Effacer la couleur sélectionnée</string>
     <string name="reader_no_followed_tags_text_title">Aucune étiquette suivie</string>
     <string name="reader_toast_err_tag_already_following">Vous suivez déjà cette étiquette</string>
@@ -146,6 +184,7 @@ Language: fr
     <string name="reader_filter_chip_blog_one">1 blog</string>
     <string name="reader_filter_chip_blog_zero">0 Blog</string>
     <string name="reader_dropdown_menu_lists">Listes</string>
+    <string name="reader_dropdown_menu_automattic">Automattic</string>
     <string name="reader_dropdown_menu_liked">J’aime</string>
     <string name="reader_dropdown_menu_saved">Enregistré</string>
     <string name="reader_dropdown_menu_subscriptions">Abonnements</string>
@@ -178,6 +217,7 @@ Language: fr
     <string name="domains_free_domain">Votre domaine WordPress.com gratuit</string>
     <string name="domains_site_other_domains">Autres domaines pour %s</string>
     <string name="domains_primary_site_domain_chip">Domaine principal</string>
+    <string name="domains_site_domain">%s</string>
     <string name="bloganuary_dashboard_nudge_title_january">Bloganuary, c’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_dismiss">C’est parti !</string>
     <string name="bloganuary_dashboard_nudge_overlay_action_turn_on_prompts">Activer les invites à bloguer</string>
@@ -572,8 +612,6 @@ Language: fr
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Le lecteur va être déplacé dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Les statistiques vont être déplacées dans l’application Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Passer à la nouvelle application Jetpack</string>
-    <string name="no_connection_error_description">Vérifiez votre connexion réseau et réessayez.</string>
-    <string name="no_connection_error_title">Impossible de charger ce contenu pour le moment</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Un problème est survenu lors du chargement des incitations.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oups</string>
     <string name="blogging_prompts_list_no_prompts">Pas encore d’incitation</string>
@@ -1898,6 +1936,7 @@ Language: fr
     <string name="stats_box_type_low">faible</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%3$s, %2$d %1$s</string>
+    <string name="gutenberg_native_replace_image">Remplacer l’image</string>
     <string name="gutenberg_native_gallery_caption_s">Légende de la galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Créer un article ou une page</string>
     <string name="content_description_person_building_website">Personne en pleine création d’un site Web</string>

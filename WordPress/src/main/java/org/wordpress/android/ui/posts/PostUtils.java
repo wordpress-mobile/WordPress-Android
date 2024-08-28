@@ -394,7 +394,7 @@ public class PostUtils {
         return postsThatContainListedMedia;
     }
 
-    /*
+    /**
     Note the way we detect we're in presence of Gutenberg blocks logic is taken from
     https://github.com/WordPress/gutenberg/blob/5a6693589285363341bebad15bd56d9371cf8ecc/lib/register.php#L331-L345
 
@@ -403,11 +403,8 @@ public class PostUtils {
     * but not validating its structure. For strict accuracy, you should use the
     * block parser on post content.
     *
-    * @since 1.6.0
-    * @see gutenberg_parse_blocks()
-    *
-    * @param string $content Content to test.
-    * @return bool Whether the content contains blocks.
+    * @param postContent Content to test.
+    * @return whether the content contains blocks.
 
     function gutenberg_content_has_blocks( $content ) {
         return false !== strpos( $content, '<!-- wp:' );
@@ -430,7 +427,8 @@ public class PostUtils {
     }
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile, String siteUrl) {
+                                                                @NonNull String localMediaId, MediaFile mediaFile,
+                                                                @NonNull String siteUrl) {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);

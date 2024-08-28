@@ -1,11 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-14 15:15:51+0000
+Translation-Revision-Date: 2024-07-24 18:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/4.0.1
 Language: es
 -->
 <resources>
+    <string name="voice_to_content_generic_error">La entrada de audio no está disponible en este momento. Inténtalo más tarde.</string>
+    <string name="voice_to_content_done_label">Hecho</string>
+    <string name="voice_to_content_upgrade">Mejorar para más solicitudes</string>
+    <string name="voice_to_content_ineligible">No tienes bastantes solicitudes disponibles para crear una entrada desde audio.</string>
+    <string name="voice_to_content_recording_label">Grabando</string>
+    <string name="voice_to_content_begin_recording_label">Iniciar grabación</string>
+    <string name="voice_to_content_secondary_header_label">Solicitudes disponibles:</string>
+    <string name="voice_to_content_base_header_label">Publicar desde audio</string>
+    <string name="voice_to_content_processing_label">Procesando</string>
+    <string name="voice_to_content_error_label">Error</string>
+    <string name="voice_to_content_processing">Procesando</string>
+    <string name="gutenberg_native_tap_to_edit">Toca para editar</string>
+    <string name="voice_to_content_permissions_required_msg">Para grabar audio, esta app necesita permiso para acceder a tu micrófono. Anteriormente has denegado este permiso. Habilita el permiso del micrófono en los ajustes de la aplicación para utilizar esta función.</string>
+    <string name="voice_to_content_permissions_required_title">Se requiere permiso para grabar audio</string>
+    <string name="permission_access_media_location">Ubicación de medios</string>
+    <string name="in_app_update_restart">Reiniciar</string>
+    <string name="in_app_update_available">Actualización descargada. Reinicia para aplicar.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Publicar desde audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">abrir menú</string>
+    <string name="reader_tags_feed_action_label_unlike_post">eliminar Me gusta de la entrada</string>
+    <string name="reader_tags_feed_action_label_like_post">dar Me gusta en la entrada</string>
+    <string name="reader_tags_feed_action_label_open_blog">abrir blog</string>
+    <string name="reader_tags_feed_action_label_open_post">abrir entrada</string>
+    <string name="reader_tags_feed_error_retry">Reintentar</string>
+    <string name="reader_tags_feed_no_content_error_description">No hemos podido encontrar ninguna entrada con la etiqueta %s en este momento</string>
+    <string name="reader_tags_feed_loading_error_description">No hemos podido cargar entradas con esta etiqueta en este momento</string>
+    <string name="reader_tags_feed_error_title">No se encontraron entradas para %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Más de %s</string>
+    <string name="reader_tags_display_name">Etiquetas</string>
+    <string name="reader_announcement_card_reading_preferences_description">Elige colores y fuentes que te gusten. Cuando estés leyendo una entrada, toca el icono AA en la parte superior de la pantalla.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferencias de lectura</string>
+    <string name="reader_announcement_card_tags_stream_description">Toca el menú desplegable en la parte superior y selecciona Etiquetas para acceder al flujo de las etiquetas que sigues.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flujo de etiquetas</string>
+    <string name="reader_announcement_card_title">Nuevo en el lector</string>
+    <string name="reader_dropdown_menu_tags">Tus etiquetas</string>
+    <string name="no_connection_error_description">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
+    <string name="no_connection_error_title">En este momento no se ha podido cargar este contenido</string>
+    <string name="stats_subscribers_marker_view_plural">Suscriptores</string>
+    <string name="stats_subscribers_marker_view_singular">Suscriptor</string>
+    <string name="stats_view_subscriber_growth">Crecimiento de suscriptores</string>
     <string name="role_subscriber">Suscriptor</string>
     <string name="title_email_subscriber">Suscriptor por correo electrónico</string>
     <string name="people_empty_list_filtered_email_subscribers">Aún no hay suscriptores por correo electrónico</string>
@@ -579,8 +619,6 @@ Language: es
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">El lector se está trasladando a la aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">La estadísticas se están trasladado a la aplicación de Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Cambiar a la nueva aplicación de Jetpack</string>
-    <string name="no_connection_error_description">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
-    <string name="no_connection_error_title">En este momento no se ha podido cargar este contenido</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">Se ha producido un error al cargar las indicaciones.</string>
     <string name="blogging_prompts_list_error_fetch_title">¡Vaya!</string>
     <string name="blogging_prompts_list_no_prompts">Todavía no hay sugerencias</string>
@@ -1908,6 +1946,7 @@ Language: es
     <string name="stats_box_type_low">bajas</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  y %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Reemplazar imagen</string>
     <string name="gutenberg_native_gallery_caption_s">Leyenda de la galería. %s</string>
     <string name="create_post_page_fab_tooltip">Crear una entrada o página</string>
     <string name="content_description_person_building_website">Creador de la web</string>

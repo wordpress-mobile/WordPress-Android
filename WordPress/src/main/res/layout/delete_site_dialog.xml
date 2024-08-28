@@ -6,6 +6,7 @@
 
     <EditText
         android:id="@+id/url_confirmation"
+        android:importantForAutofill="no"
         android:inputType="textUri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

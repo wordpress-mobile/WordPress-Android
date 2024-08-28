@@ -1,10 +1,13 @@
-import com.automattic.android.measure.MeasureBuildsExtension
+import com.automattic.android.measure.reporters.InternalA8cCiReporter
+import com.automattic.android.measure.reporters.SlowSlowTasksMetricsReporter
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id "io.gitlab.arturbosch.detekt"
     id 'com.automattic.android.measure-builds'
     id "org.jetbrains.kotlinx.kover"
+    id "com.autonomousapps.dependency-analysis"
+    id "se.bjurr.violations.violation-comments-to-github-gradle-plugin" apply false
     id "androidx.navigation.safeargs.kotlin" apply false
     id "com.android.library" apply false
     id 'com.google.gms.google-services' apply false
@@ -13,7 +16,7 @@ plugins {
 }
 
 ext {
-    minSdkVersion = 24
+    minSdkVersion = 26
     compileSdkVersion = 34
     targetSdkVersion = 34
 }
@@ -23,47 +26,43 @@ ext {
     automatticAboutVersion = '1.4.0'
     automatticRestVersion = '1.0.8'
     automatticTracksVersion = '5.1.0'
-    gutenbergMobileVersion = 'v1.120.0-alpha1'
-    wordPressAztecVersion = 'v2.1.3'
-    wordPressFluxCVersion = 'trunk-8b7eeade00f33c5b4296722fb3854b3a32e06ad8'
-    wordPressLoginVersion = '1.15.0'
+    gutenbergMobileVersion = 'v1.121.0'
+    wordPressAztecVersion = 'v2.1.4'
+    wordPressFluxCVersion = 'trunk-94d25d35fb4bf58a2e90741a6a5d56b8c6c3ce42'
+    wordPressLoginVersion = '1.16.0'
     wordPressPersistentEditTextVersion = '1.0.2'
     wordPressUtilsVersion = '3.14.0'
     indexosMediaForMobileVersion = '43a9026f0973a2f0a74fa813132f6a16f7499c3a'
-    gravatarVersion = '0.3.0'
-
-    // debug
-    flipperVersion = '0.245.0'
-    soLoaderVersion = '0.10.5'
+    gravatarVersion = '1.0.0'
 
     // main
     androidInstallReferrerVersion = '2.2'
     androidVolleyVersion = '1.2.1'
-    androidxAnnotationVersion = '1.6.0'
-    androidxAppcompatVersion = '1.6.1'
+    androidxAnnotationVersion = '1.8.0'
+    androidxAppcompatVersion = '1.7.0'
     androidxArchCoreVersion = '2.2.0'
-    androidxCameraVersion = '1.2.3'
-    androidxComposeBomVersion = '2023.10.00'
+    androidxCameraVersion = '1.3.4'
+    androidxComposeBomVersion = '2024.08.00'
     androidxComposeCompilerVersion = '1.5.9'
-    androidxComposeNavigationVersion = '2.7.6'
+    androidxComposeNavigationVersion = '2.7.7'
     androidxCardviewVersion = '1.0.0'
     androidxConstraintlayoutVersion = '2.1.4'
     androidxConstraintlayoutComposeVersion = '1.0.1'
     androidxCoreVersion = '1.10.0'
-    androidxActivityVersion = '1.8.0'
-    androidxFragmentVersion = '1.6.2'
+    androidxActivityVersion = '1.9.1'
+    androidxFragmentVersion = '1.8.2'
     androidxGridlayoutVersion = '1.0.0'
-    androidxLifecycleVersion = '2.6.2'
+    androidxLifecycleVersion = '2.8.4'
     androidxPercentlayoutVersion = '1.0.0'
     androidxPreferenceVersion = '1.2.0'
-    androidxRecyclerviewVersion = '1.3.0'
+    androidxRecyclerviewVersion = '1.3.2'
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.0.0'
-    androidxWorkManagerVersion = "2.9.0"
-    androidxWebkitVersion =  '1.10.0'
-    androidxComposeMaterial3Version = '1.1.1'
-    apacheCommonsTextVersion = '1.10.0'
-    coilComposeVersion = '2.4.0'
+    androidxWorkManagerVersion = "2.9.1"
+    androidxComposeMaterial3Version = '1.2.1'
+    androidxWebkitVersion =  '1.11.0'
+    apacheCommonsTextVersion = '1.12.0'
+    coilComposeVersion = '2.7.0'
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
@@ -73,20 +72,20 @@ ext {
     googleAutoServiceVersion = '1.0.1'
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
-    googleGsonVersion = '2.10.1'
+    googleGsonVersion = '2.11.0'
     googleMaterialVersion = '1.9.0'
 
-    googleMLKitBarcodeScanningVersion = '17.2.0'
+    googleMLKitBarcodeScanningVersion = '17.3.0'
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'
     googleMLKitTextRecognitionVersion = '16.0.0'
     googlePlayReviewVersion = '2.0.1'
     googlePlayServicesAuthVersion = '20.4.1'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.16.2'
-    kotlinxCoroutinesVersion = '1.7.3'
-    lottieVersion = '6.1.0'
+    kotlinxCoroutinesVersion = '1.8.1'
+    lottieVersion = '6.5.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
-    squareupKotlinPoetVersion = '1.16.0'
+    squareupKotlinPoetVersion = '1.18.1'
     squareupRetrofitVersion = '2.9.0'
     uCropVersion = '2.2.9'
     zendeskVersion = '5.1.2'
@@ -96,7 +95,7 @@ ext {
     facebookReactVersion = '0.73.3'
 
     // test
-    assertjVersion = '3.23.1'
+    assertjVersion = '3.26.3'
     junitVersion = '4.13.2'
     mockitoAndroidVersion = '4.5.1'
     mockitoKotlinVersion = '4.1.0'
@@ -104,8 +103,8 @@ ext {
     // android test
     androidxTestCoreVersion = '1.5.0'
     androidxTestEspressoVersion = '3.4.0'
-    androidxTestExtJunitVersion = '1.1.5'
-    androidxTestUiAutomatorVersion = '2.2.0'
+    androidxTestExtJunitVersion = '1.2.1'
+    androidxTestUiAutomatorVersion = '2.3.0'
     screengrabVersion = '2.1.1'
     squareupMockWebServerVersion = '4.12.0'
     wiremockVersion = '2.26.3'
@@ -118,8 +117,14 @@ ext {
 
 measureBuilds {
     enable = findProperty('measureBuildsEnabled')?.toBoolean() ?: false
-    automatticProject = MeasureBuildsExtension.AutomatticProject.WordPress
-    authToken = findProperty('appsMetricsToken')
+    onBuildMetricsReadyListener { report ->
+        SlowSlowTasksMetricsReporter.report(report)
+        InternalA8cCiReporter.reportBlocking(
+                report,
+                "wordpress",
+                findProperty('appsMetricsToken')
+        )
+    }
     attachGradleScanId = System.getenv('CI')?.toBoolean() ?: false
 }
 
@@ -145,9 +150,6 @@ allprojects {
                 includeVersion "com.jraska", "falcon", "2.1.1"
             }
         }
-        flatDir {
-            dirs '../aars'
-        }
     }
 
     tasks.register("checkstyle", Checkstyle) {
@@ -157,7 +159,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = '8.3'
+        toolVersion = '10.17.0'
         configFile file("${project.rootDir}/config/checkstyle.xml")
     }
 

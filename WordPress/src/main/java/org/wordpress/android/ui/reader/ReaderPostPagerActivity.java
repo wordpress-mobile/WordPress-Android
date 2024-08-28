@@ -98,10 +98,10 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_OPEN_PAGE;
 import static org.wordpress.android.ui.main.WPMainActivity.ARG_READER;
-
-import dagger.hilt.android.AndroidEntryPoint;
 
 /*
  * shows reader post detail fragments in a ViewPager - primarily used for easy swiping between
@@ -1091,10 +1091,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     break;
                 }
 
-                if (site != null && post != null) {
+                View snackbarAttachView = findViewById(R.id.coordinator);
+                if (site != null && post != null && snackbarAttachView != null) {
                     mUploadUtilsWrapper.handleEditPostResultSnackbars(
                             this,
-                            findViewById(R.id.coordinator),
+                            snackbarAttachView,
                             data,
                             post,
                             site,
@@ -1119,10 +1120,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         SiteModel site = mSiteStore.getSiteByLocalId(mSelectedSiteRepository.getSelectedSiteLocalId());
-        if (site != null && event.post != null) {
+        View snackbarAttachView = findViewById(R.id.coordinator);
+        if (site != null && event.post != null && snackbarAttachView != null) {
             mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                     this,
-                    findViewById(R.id.coordinator),
+                    snackbarAttachView,
                     event.isError(),
                     event.isFirstTimePublish,
                     event.post,

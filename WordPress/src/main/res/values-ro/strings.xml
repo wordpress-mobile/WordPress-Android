@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 13:24:24+0000
+Translation-Revision-Date: 2024-07-24 06:37:55+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ro
 -->
 <resources>
+    <string name="voice_to_content_generic_error">Articol din fișier audio nu este disponibil momentan, te rog să reîncerci mai târziu.</string>
+    <string name="voice_to_content_done_label">Gata</string>
+    <string name="voice_to_content_upgrade">Actualizează pentru mai multe cereri</string>
+    <string name="voice_to_content_ineligible">Nu ai disponibile suficiente cereri ca să creezi un articol dintr-un fișier audio.</string>
+    <string name="voice_to_content_recording_label">Înregistrare</string>
+    <string name="voice_to_content_begin_recording_label">Începe înregistrarea</string>
+    <string name="voice_to_content_secondary_header_label">Cereri disponibile:</string>
+    <string name="voice_to_content_base_header_label">Articol din fișier audio</string>
+    <string name="voice_to_content_processing_label">În procesare</string>
+    <string name="voice_to_content_error_label">Eroare</string>
+    <string name="voice_to_content_processing">În procesare</string>
+    <string name="gutenberg_native_tap_to_edit">Atinge pentru a edita</string>
+    <string name="voice_to_content_permissions_required_msg">Pentru a înregistra audio, această aplicație are nevoie de permisiunea ta ca să-ți acceseze microfonul. Ai refuzat anterior această permisiune. Ca să folosești această funcționalitate, te rog să activezi permisiunea pentru microfon în setările aplicației.</string>
+    <string name="voice_to_content_permissions_required_title">Permisiunea pentru înregistrare audio este obligatorie</string>
+    <string name="permission_access_media_location">Locație Media</string>
+    <string name="in_app_update_restart">Repornește</string>
+    <string name="in_app_update_available">Am descărcat actualizarea. Repornește pentru a o aplica.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Articol din fișier audio</string>
+    <string name="reader_tags_feed_action_label_open_menu">deschide meniul</string>
+    <string name="reader_tags_feed_action_label_unlike_post">înlătură aprecierea articolului</string>
+    <string name="reader_tags_feed_action_label_like_post">apreciază articolul</string>
+    <string name="reader_tags_feed_action_label_open_blog">deschide blogul</string>
+    <string name="reader_tags_feed_action_label_open_post">deschide articolul</string>
+    <string name="reader_tags_feed_error_retry">Reîncearcă</string>
+    <string name="reader_tags_feed_no_content_error_description">Momentan, nu am găsit niciun articol etichetat cu %s</string>
+    <string name="reader_tags_feed_loading_error_description">Momentan, nu am putut să încărcăm articole cu această etichetă</string>
+    <string name="reader_tags_feed_error_title">Nu am găsit niciun articol pentru %s</string>
+    <string name="reader_tags_feed_see_more_from_tag">Mai multe pentru %s</string>
+    <string name="reader_tags_display_name">Etichete</string>
+    <string name="reader_announcement_card_reading_preferences_description">Alegi culorile și fonturile pe care le vrei. Când citești un articol, atinge iconul AA în partea de sus a ecranului.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Preferințe pentru citire</string>
+    <string name="reader_announcement_card_tags_stream_description">Atinge lista derulantă în partea de sus și selectează Etichete pentru a accesa fluxurile pentru etichetele urmărite.</string>
+    <string name="reader_announcement_card_tags_stream_title">Flux de etichete</string>
+    <string name="reader_announcement_card_title">Noutăți în Cititor</string>
+    <string name="reader_dropdown_menu_tags">Etichetele tale</string>
+    <string name="no_connection_error_description">Verifică conexiunea la rețea și încearcă din nou.</string>
+    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="stats_subscribers_marker_view_plural">Abonați</string>
     <string name="stats_subscribers_marker_view_singular">Abonat</string>
     <string name="stats_view_subscriber_growth">Creștere număr de abonați</string>
@@ -582,8 +619,6 @@ Language: ro
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Cititorul a fost mutat în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Statisticile se mută în aplicația Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Comută la noua aplicație Jetpack</string>
-    <string name="no_connection_error_description">Verifică conexiunea rețelei și încearcă din nou.</string>
-    <string name="no_connection_error_title">Nu pot să încarc acest conținut chiar acum</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">A fost o eroare la încărcarea îndemnurilor.</string>
     <string name="blogging_prompts_list_error_fetch_title">Hopa</string>
     <string name="blogging_prompts_list_no_prompts">Niciun îndemn încă</string>
@@ -957,7 +992,7 @@ Language: ro
     <string name="about_blog">Blog</string>
     <string name="gutenberg_native_the_basics">De bază</string>
     <string name="gutenberg_native_selected_default">Selectat: implicit</string>
-    <string name="gutenberg_native_more_support_options">Mai multe opțiuni de suport</string>
+    <string name="gutenberg_native_more_support_options">Mai multe opțiuni pentru suport</string>
     <string name="gutenberg_native_get_support">Ai acces la suport</string>
     <string name="gutenberg_native_font_size">Dimensiune font</string>
     <string name="gutenberg_native_double_tap_to_select_font_size">Atinge de două ori pentru a selecta dimensiunea fontului</string>
@@ -1048,19 +1083,19 @@ Language: ro
     <string name="gutenberg_native_selected_s">Selectat: %s</string>
     <string name="gutenberg_native_select_a_color_above">Selectează o culoare de mai sus</string>
     <string name="gutenberg_native_navigates_to_select_s">Navighează pentru a selecta %s</string>
-    <string name="gutenberg_native_move_blocks">Mută blocuri</string>
+    <string name="gutenberg_native_move_blocks">Mută blocurile</string>
     <string name="gutenberg_native_how_to_edit_your_post">Cum să editezi articolul</string>
     <string name="gutenberg_native_how_to_edit_your_page">Cum să editezi pagina</string>
     <string name="gutenberg_native_customize_blocks">Personalizează blocurile</string>
     <string name="gutenberg_native_changes_to_featured_image_will_not_be_affected_by_the_undo_redo_b">Modificările imaginii reprezentative nu vor fi afectate de butoanele revenire/refacere.</string>
-    <string name="gutenberg_native_applies_the_setting">Aplică setările</string>
+    <string name="gutenberg_native_applies_the_setting">Aplică setarea</string>
     <string name="gutenberg_native_you_can_rearrange_blocks_by_tapping_a_block_and_then_tapping_the">Poți rearanja blocurile prin atingerea unui bloc și apoi a săgeților sus și jos care apar în stânga jos a blocului pentru a-l muta mai sus sau sub alte blocuri.</string>
     <string name="gutenberg_native_welcome_to_the_world_of_blocks">Bine ai venit în lumea blocurilor</string>
     <string name="gutenberg_native_to_remove_a_block_select_the_block_and_click_the_three_dots_in_th">Pentru a înlătura un bloc, selectează blocul și dă clic pe cele trei puncte din dreaptă jos a blocului pentru a vizualiza setările. Acolo, alege opțiunea de a înlătura blocul.</string>
     <string name="gutenberg_native_some_blocks_have_additional_settings_tap_the_settings_icon_on_the">Unele blocuri au setări suplimentare. Atinge iconul setări din dreapta jos a blocului pentru a vedea mai multe opțiuni.</string>
     <string name="gutenberg_native_s_block_newly_available">Bloc %s, este disponibil acum</string>
     <string name="gutenberg_native_rich_text_editing">Editare text îmbogățit</string>
-    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">După ce te familiarizezi cu numele blocurilor, poți adăuga un bloc tastând mai întâi un slash (o bară oblică) și apoi numele blocului - de exemplu, /imagine sau /subtitlu.</string>
+    <string name="gutenberg_native_once_you_become_familiar_with_the_names_of_different_blocks_you_c">După ce te familiarizezi cu numele blocurilor, poți să adaugi un bloc tastând un slash (o bară oblică) și apoi numele blocului - de exemplu, /imagine sau /subtitlu.</string>
     <string name="gutenberg_native_make_your_content_stand_out_by_adding_images_gifs_videos_and_embe">Îți scoți conținutul în evidență prin adăugarea de imagini, imagini GIF, videouri și elemente media înglobate în paginile tale.</string>
     <string name="gutenberg_native_give_it_a_try_by_adding_a_few_blocks_to_your_post_or_page">Încearcă-le, adaugă câteva blocuri în articolele sau paginile tale!</string>
     <string name="gutenberg_native_embed_media">Înglobează media</string>
@@ -1098,7 +1133,7 @@ Language: ro
     <string name="login_epilogue_mysites_heading">Alege un site pentru a-l deschide</string>
     <string name="scan_multisite_not_supported_subtitle">Regretăm, Scanarea Jetpack nu este compatibilă cu instalările WordPress multi-site în acest moment.</string>
     <string name="scan_multisite_not_supported_title">Instalările WordPress multi-site nu sunt acceptate</string>
-    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL invalid. Te rog introdu un URL valid.</string>
+    <string name="gutenberg_native_invalid_url_please_enter_a_valid_url">URL-ul nu este valid. Te rog să introduci un URL valid.</string>
     <string name="gutenberg_native_embed_caption_s">Înglobează subtitrarea. %s</string>
     <string name="gutenberg_native_embed_caption_empty">Înglobează subtitrarea. Nu există</string>
     <string name="activity_log_visit_our_documentation_page">vizitează pagina cu documentație.</string>
@@ -1143,14 +1178,14 @@ Language: ro
     <string name="gutenberg_native_y_axis_position">Poziție pe axa Y</string>
     <string name="gutenberg_native_x_axis_position">Poziție pe axa X</string>
     <string name="gutenberg_native_type_a_url">Introdu un URL</string>
-    <string name="gutenberg_native_slash_inserter_results">Rezultatele dispozitivului de inserare „/”</string>
+    <string name="gutenberg_native_slash_inserter_results">Rezultate pentru dispozitivul de inserare slash (bară oblică)</string>
     <string name="gutenberg_native_s_has_url_set">%s are setat un URL</string>
     <string name="gutenberg_native_s_has_no_url_set">%s nu are setat un URL</string>
     <string name="gutenberg_native_s_converted_to_regular_blocks">%s a fost convertit în blocuri normale</string>
     <string name="gutenberg_native_s_block">Bloc %s</string>
     <string name="gutenberg_native_opacity">Opacitate</string>
     <string name="gutenberg_native_media_options">Opțiuni media</string>
-    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL invalid. Nu am găsit fișierul audio.</string>
+    <string name="gutenberg_native_invalid_url_audio_file_not_found">URL-ul nu este valid. Nu am găsit fișierul audio.</string>
     <string name="gutenberg_native_insert_crosspost">Introdu crosspost</string>
     <string name="gutenberg_native_drag_to_adjust_focal_point">Trage pentru a regla punctul de focalizare</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_add_image_or_video">Atinge de două ori pentru a deschide foaia de jos ca să adaugi o imagine sau un video</string>
@@ -1228,7 +1263,7 @@ Language: ro
     <string name="gutenberg_native_search_input_field">Câmp de intrare pentru căutare.</string>
     <string name="gutenberg_native_search_button_current_button_text_is">Buton Căutare. Textul actual al butonului este</string>
     <string name="gutenberg_native_search_blocks">Caută blocuri</string>
-    <string name="gutenberg_native_search_block_label_current_text_is">Etichetă buton Căutare. Textul actual este</string>
+    <string name="gutenberg_native_search_block_label_current_text_is">Etichetă bloc Căutare. Textul actual este</string>
     <string name="gutenberg_native_outside">În exterior</string>
     <string name="gutenberg_native_no_custom_placeholder_set">Nu ai setat niciun substituent personalizat</string>
     <string name="gutenberg_native_inside">În interior</string>
@@ -1258,7 +1293,7 @@ Language: ro
     <string name="threat_fix_all_confirmation_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
     <string name="scan_idle_threats_description_plural">Scanarea a găsit %1$s amenințări posibile pe %2$s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
     <string name="scan_fixing_threats_description_plural">Lucrăm din greu, în fundal, pentru înlăturarea acestor amenințări. Între timp, îți poți folosi site-ul așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
-    <string name="gutenberg_native_edit_focal_point">Editează punctul central</string>
+    <string name="gutenberg_native_edit_focal_point">Editează punctul de focalizare</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia de jos pentru a edita, înlocui sau șterge imaginea</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Atinge de două ori pentru a deschide foaia Acțiuni pentru a edita, înlocui sau șterge imaginea</string>
     <string name="new_site_creation_search_domain_example">exemplu.com</string>
@@ -1325,8 +1360,8 @@ Language: ro
     <string name="gutenberg_native_choose_audio">Alege fișierul audio</string>
     <string name="gutenberg_native_audio_player">Player audio</string>
     <string name="gutenberg_native_audio_file">fișier audio</string>
-    <string name="gutenberg_native_audio_caption_s">Text asociat audio. %s</string>
-    <string name="gutenberg_native_audio_caption_empty">Text asociat audio. Gol</string>
+    <string name="gutenberg_native_audio_caption_s">Subtitrare audio. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">Subtitrare audio. Nu există</string>
     <string name="gutenberg_native_add_audio">Adaugă audio</string>
     <string name="continue_with_wpcom">Autentifică-te în WordPress.com sau înregistrează-te</string>
     <string name="photo_picker_use_audio">Folosește acest fișier audio</string>
@@ -1552,8 +1587,8 @@ Language: ro
     <string name="login_prologue_third_subtitle_three">&lt;b&gt;Johan Brandt&lt;/b&gt; a răspuns la articolul tău</string>
     <string name="login_prologue_third_subtitle_two">Azi ai primit &lt;b&gt;50 de aprecieri&lt;/b&gt; pe site</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; ți-a apreciat articolul</string>
-    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Meniul de blocuri care poate fi derulat este deschis. Selectează un bloc.</string>
-    <string name="gutenberg_native_scrollable_block_menu_closed">Meniul de blocuri care poate fi derulat este închis.</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Meniul derulabil cu blocuri este deschis. Selectează un bloc.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Meniul derulabil cu blocuri este închis.</string>
     <string name="hpp_choose_button">Alege</string>
     <string name="mlp_network_error_subtitle">Atinge reîncearcă când ești din nou online sau creează o pagină goală folosind butonul de mai jos.</string>
     <string name="mlp_network_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
@@ -1623,7 +1658,7 @@ Language: ro
     <string name="error_media_xmlrpc_not_allowed">Acțiunea ta nu este permisă</string>
     <string name="show_n_hidden_items_desc">și încă %1$s elemente</string>
     <string name="gutenberg_native_select_a_layout">Setează un aranjament</string>
-    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Notă: aranjamentul pe coloane poate varia în funcție de temă și dimensiunile ecranului</string>
+    <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Notă: aranjamentul pe coloane poate să varieze în funcție de temă și dimensiunile ecranelor</string>
     <string name="create_post_story_fab_tooltip">Creează un articol sau o narațiune</string>
     <string name="create_page_fab_tooltip">Creează o pagină</string>
     <string name="create_post_fab_tooltip">Creează un articol</string>
@@ -1657,7 +1692,7 @@ Language: ro
     <string name="gutenberg_native_choose_video">Alege videoul</string>
     <string name="gutenberg_native_choose_image_or_video">Alege o imagine sau un video</string>
     <string name="gutenberg_native_choose_image">Alege o imagine</string>
-    <string name="gutenberg_native_block_removed">Bloc înlăturat</string>
+    <string name="gutenberg_native_block_removed">Am înlăturat blocul</string>
     <string name="enter_your_site_address">Introdu adresa site-ului tău de acum</string>
     <string name="signup_confirmation_title">Confirmare înregistrare</string>
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
@@ -1741,7 +1776,7 @@ Language: ro
     <string name="gutenberg_native_open_block_actions_menu">Deschide meniul acțiuni blocuri</string>
     <string name="gutenberg_native_move_to_top">Mută în sus</string>
     <string name="gutenberg_native_insert_mention">Inserează mențiunea</string>
-    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide foaia de jos cu opțiunile disponibile</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide foaia Jos cu opțiunile disponibile</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Atinge de două ori pentru a deschide foaia Acțiuni cu opțiunile disponibile</string>
     <string name="pages_cannot_be_started">Nu putem deschide paginile în acest moment. Te rog reîncearcă mai târziu.</string>
     <string name="pages_set_as_posts_page">Setează ca pagină articole</string>
@@ -1768,7 +1803,7 @@ Language: ro
     <string name="page_cannot_set_homepage">Pentru a seta Prima pagină activează „Prima pagină statică” în Setări site</string>
     <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
-    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_find_out_mode">Află mai multe</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile în %s</string>
     <string name="insert_label_with_count">Inserează %d</string>
     <string name="crop">decupează</string>
@@ -1897,7 +1932,7 @@ Language: ro
     <string name="gutenberg_native_video_caption_s">Subtitrare video. %s</string>
     <string name="gutenberg_native_edit_video">Editează videoul</string>
     <string name="gutenberg_native_edit_media">Editează media</string>
-    <string name="gutenberg_native_add_a_shortcode">Adaugă un scurtcod…</string>
+    <string name="gutenberg_native_add_a_shortcode">Adaugă un scurt-cod…</string>
     <string name="post_list_author">Autor articol</string>
     <string name="fab_create_desc">Creează un articol</string>
     <string name="stats_posting_activity_end_description">Ai văzut toate statisticile pentru această perioadă.\n        Dacă atingi din nou, vor reporni de la început.</string>
@@ -1911,6 +1946,7 @@ Language: ro
     <string name="stats_box_type_low">puține</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  și %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Înlocuiește imaginea</string>
     <string name="gutenberg_native_gallery_caption_s">Text asociat galerie. %s</string>
     <string name="create_post_page_fab_tooltip">Creează un articol sau o pagină</string>
     <string name="content_description_person_building_website">Persoană care construiește un site web</string>
@@ -1948,7 +1984,7 @@ Language: ro
     <string name="suffix_1_000">kilo%s</string>
     <string name="posts_cannot_be_started">Nu putem deschide articolele acum. Te rog reîncearcă mai târziu</string>
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru site-ul tău chiar acum. Te rog reîncearcă mai târziu</string>
-    <string name="gutenberg_native_wordpress_media_library">Bibliotecă media WordPress</string>
+    <string name="gutenberg_native_wordpress_media_library">Bibliotecă Media WordPress</string>
     <string name="gutenberg_native_unsupported">Neacceptat</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Atinge pentru a ascunde tastatura</string>
@@ -1957,7 +1993,7 @@ Language: ro
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
     <string name="gutenberg_native_start_writing">Începe să scrii…</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut care nu este valid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
     <string name="gutenberg_native_cut_block">Șterge blocul</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
@@ -1967,7 +2003,7 @@ Language: ro
     <string name="gutenberg_native_paste_url">Plasează URL-ul</string>
     <string name="gutenberg_native_page_break_block_s">Bloc Sfârșit de pagină. %s</string>
     <string name="gutenberg_native_open_settings">Deschide setările</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Nicio aplicație nu poate gestiona această cerere. Te rog instalează un navigator web.</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Această cerere nu poate fi gestionată de nicio aplicație. Te rog să instalezi un navigator web.</string>
     <string name="gutenberg_native_navigate_up">Navighează în sus</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mută blocul în sus de pe rândul %1$s pe rândul %2$s</string>
     <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
@@ -1991,7 +2027,7 @@ Language: ro
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Atinge de două ori și ține apăsat pentru a edita</string>
     <string name="gutenberg_native_current_value_is_s">Valoarea curentă este %s</string>
     <string name="gutenberg_native_choose_from_device">Alege de pe dispozitiv</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog încearcă din nou.</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">A apărut o eroare necunoscută. Te rog să încerci din nou.</string>
     <string name="gutenberg_native_alt_text">Text alternativ</string>
     <string name="gutenberg_native_add_video">Adaugă video</string>
     <string name="gutenberg_native_add_url">Adaugă URL</string>
@@ -2154,7 +2190,7 @@ Language: ro
     <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest site.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
     <string name="domain_registration_privacy_protection_tos">Prin înregistrarea acestui domeniu ești de acord cu %1$stermenii și condițiile%2$s.</string>
-    <string name="error_network_connection">Verifică conexiunea rețelei și încearcă din nou.</string>
+    <string name="error_network_connection">Verifică conexiunea la rețea și încearcă din nou.</string>
     <string name="error_browser_no_network">Nu pot să încarc această pagină chiar acum.</string>
     <string name="error_disabled_apis">Nu am putut aduce setările: unele API-uri sunt indisponibile pentru această combinație de ID aplicație OAuth + cont.</string>
     <string name="jetpack_connection_terms_and_conditions">Prin inițializarea Jetpack ești de acord cu %1$stermenii și condițiile%2$s.</string>

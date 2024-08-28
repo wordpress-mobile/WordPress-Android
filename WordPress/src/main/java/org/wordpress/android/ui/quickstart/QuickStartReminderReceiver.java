@@ -26,9 +26,9 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
-
 import dagger.hilt.android.AndroidEntryPoint;
+
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 
 @AndroidEntryPoint
 public class QuickStartReminderReceiver extends BroadcastReceiver {

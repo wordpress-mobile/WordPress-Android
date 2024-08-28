@@ -202,12 +202,14 @@ class HelpActivity : LocaleAwareActivity() {
     }
 
     private fun showFaq() {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://apps.wordpress.com/mobile-app-support/"))
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
     }
 
     private fun showMigrationFaq() {
+        @SuppressWarnings("UnsafeImplicitIntentLaunch")
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://jetpack.com/support/switch-to-the-jetpack-app/"))
         startActivity(intent)
         AnalyticsTracker.track(Stat.SUPPORT_MIGRATION_FAQ_TAPPED)
@@ -394,7 +396,8 @@ class HelpActivity : LocaleAwareActivity() {
         JETPACK_INSTALL_FULL_PLUGIN_ONBOARDING("origin:jp-install-full-plugin-overlay"),
         JETPACK_INSTALL_FULL_PLUGIN_ERROR("origin:jp-install-full-plugin-error"),
         JETPACK_REMOTE_INSTALL_PLUGIN_ERROR("origin:jp-remote-install-plugin-error"),
-        ACCOUNT_CLOSURE_DIALOG("origin:account-closure-dialog");
+        ACCOUNT_CLOSURE_DIALOG("origin:account-closure-dialog"),
+        FEEDBACK_FORM("origin:feedback-form");
 
         override fun toString(): String {
             return stringValue

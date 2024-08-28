@@ -12,6 +12,7 @@ import android.content.ServiceConnection;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -418,7 +419,15 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Override
     public void onStart() {
         super.onStart();
-        registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            registerReceiver(
+                    mReceiver,
+                    new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION),
+                    RECEIVER_EXPORTED
+            );
+        } else {
+            registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
     }
@@ -1203,10 +1212,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        View snackbarAttachView = findViewById(R.id.tab_layout);
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty() && snackbarAttachView != null) {
             mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     this,
-                    findViewById(R.id.tab_layout),
+                    snackbarAttachView,
                     true,
                     !TextUtils.isEmpty(event.errorMessage)
                     && event.errorMessage.contains(getString(R.string.error_media_quota_exceeded))
@@ -1223,10 +1233,10 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
-        if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
-                    findViewById(R.id.tab_layout), false,
-                    event.mediaModelList, mSite, event.successMessage);
+        View snackbarAttachView = findViewById(R.id.tab_layout);
+        if (event.mediaModelList != null && !event.mediaModelList.isEmpty() && snackbarAttachView != null) {
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this, snackbarAttachView, false, event.mediaModelList,
+                    mSite, event.successMessage);
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

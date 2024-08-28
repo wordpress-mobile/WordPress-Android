@@ -15,12 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleCoroutineScope;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.datasets.AsyncTaskHandler;
+import org.wordpress.android.datasets.AsyncTaskExecutor;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -79,11 +80,13 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
+import kotlinx.coroutines.CoroutineScope;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
     private final UiHelpers mUiHelpers;
     private final NetworkUtilsWrapper mNetworkUtilsWrapper;
+    private final CoroutineScope mScope;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
     private long mCurrentFeedId;
@@ -92,8 +95,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonWidth;
     private final int mPhotonHeight;
     private final int mAvatarSzSmall;
-
-    private boolean mCanRequestMorePosts;
 
     @NonNull private final ReaderTypes.ReaderPostListType mPostListType;
     @NonNull private String mSource;
@@ -363,7 +364,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        AsyncTaskHandler.load(
+        AsyncTaskExecutor.executeIo(
+                mScope,
                 () -> !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
                 isAskingToFollow -> {
                     final String slugForTracking = currentTag.getTagSlug();
@@ -554,8 +556,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * if we're nearing the end of the posts, fire request to load more
      */
     private void checkLoadMore(int position) {
-        if (mCanRequestMorePosts
-            && mDataRequestedListener != null
+        if (mDataRequestedListener != null
             && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
         }
@@ -569,7 +570,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ImageManager imageManager,
             UiHelpers uiHelpers,
             @NonNull final NetworkUtilsWrapper networkUtilsWrapper,
-            boolean isMainReader
+            boolean isMainReader,
+            LifecycleCoroutineScope scope
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -580,6 +582,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mNetworkUtilsWrapper = networkUtilsWrapper;
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mIsMainReader = isMainReader;
+        mScope = scope;
 
         int displayWidth = DisplayUtils.getWindowPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
@@ -814,7 +817,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderPostList mAllPosts;
 
-        private boolean mCanRequestMorePostsTemp;
         private int mGapMarkerPositionTemp;
 
         @Override
@@ -829,21 +831,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            int numExisting = 0;
             switch (getPostListType()) {
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
                 case SEARCH_RESULTS:
                     mAllPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                    numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
                     if (mCurrentFeedId != 0) {
                         mAllPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                        numExisting = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
                     } else {
                         mAllPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
-                        numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
                     break;
                 case TAGS_FEED:
@@ -853,10 +851,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (mPosts.isSameListWithBookmark(mAllPosts)) {
                 return false;
             }
-
-            // if we're not already displaying the max # posts, enable requesting more when
-            // the user scrolls to the end of the list
-            mCanRequestMorePostsTemp = (numExisting < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY);
 
             // determine whether a gap marker exists - only applies to tagged posts
             mGapMarkerPositionTemp = getGapMarkerPosition();
@@ -897,7 +891,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected void onPostExecute(Boolean result) {
             if (result) {
                 ReaderPostAdapter.this.mGapMarkerPosition = mGapMarkerPositionTemp;
-                ReaderPostAdapter.this.mCanRequestMorePosts = mCanRequestMorePostsTemp;
                 mPosts.clear();
                 mPosts.addAll(mAllPosts);
                 notifyDataSetChanged();

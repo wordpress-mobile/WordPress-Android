@@ -487,8 +487,6 @@ Language: en_CA
     <string name="jetpack_feature_card_content_phase_three">Stats, Reader, Notifications and other features will soon move to the Jetpack mobile app.</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">There was an error loading prompts.</string>
     <string name="blogging_prompts_list_error_fetch_title">Oops</string>
-    <string name="no_connection_error_description">Check your network connection and try again.</string>
-    <string name="no_connection_error_title">Unable to load this content right now</string>
     <string name="blogging_prompts_list_no_prompts">No prompts yet</string>
     <string name="blogging_prompts_list_number_of_answers_one">1 answer</string>
     <string name="blogging_prompts_list_number_of_answers_other">%d answers</string>
@@ -1817,6 +1815,7 @@ Language: en_CA
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
     <string name="gutenberg_native_gallery_caption_s">Gallery caption. %s</string>
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
+    <string name="gutenberg_native_replace_image">Replace image</string>
     <string name="content_description_person_building_website">Person building website</string>
     <string name="post_signup_interstitial_not_right_now">Not right now</string>
     <string name="post_signup_interstitial_subtitle">Whatever you want to create or share, we’ll help you do it right here.</string>

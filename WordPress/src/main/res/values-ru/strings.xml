@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Translation-Revision-Date: 2024-05-23 18:06:53+0000
+Translation-Revision-Date: 2024-07-25 14:54:08+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/4.0.1
 Language: ru
 -->
 <resources>
+    <string name="voice_to_content_generic_error">В данный момент нет возможности сделать публикацию из аудио, повторите попытку позднее.</string>
+    <string name="voice_to_content_done_label">Готово</string>
+    <string name="voice_to_content_upgrade">Перейти на платный тарифный план, чтобы получить больше запросов</string>
+    <string name="voice_to_content_ineligible">Недостаточно запросов для создания публикации из аудио.</string>
+    <string name="voice_to_content_recording_label">Запись</string>
+    <string name="voice_to_content_begin_recording_label">Начать запись</string>
+    <string name="voice_to_content_secondary_header_label">Доступно запросов:</string>
+    <string name="voice_to_content_base_header_label">Публикация из аудио</string>
+    <string name="voice_to_content_processing_label">Обработка</string>
+    <string name="voice_to_content_error_label">Ошибка</string>
+    <string name="voice_to_content_processing">Обработка</string>
+    <string name="gutenberg_native_tap_to_edit">Коснитесь, чтобы внести изменения</string>
+    <string name="voice_to_content_permissions_required_msg">Чтобы делать аудиозаписи, приложению необходимо разрешение на доступ к микрофону. Ранее вы отказались дать такое разрешение. Дайте разрешение на доступ к микрофону в настройках приложения, чтобы пользоваться этой функцией.</string>
+    <string name="voice_to_content_permissions_required_title">Требуется разрешение на аудиозапись</string>
+    <string name="permission_access_media_location">Местоположение медиафайлов</string>
+    <string name="in_app_update_restart">Перезапуск</string>
+    <string name="in_app_update_available">Обновите загруженное. Выполните перезагрузку, чтобы обновления вступили в силу.</string>
+    <string name="my_site_bottom_sheet_add_post_from_audio">Публикация из аудио</string>
+    <string name="reader_tags_feed_action_label_open_menu">открыть меню</string>
+    <string name="reader_tags_feed_action_label_unlike_post">удалить отметку «Нравится» в публикации</string>
+    <string name="reader_tags_feed_action_label_like_post">поставить отметку «Нравится»</string>
+    <string name="reader_tags_feed_action_label_open_blog">открыть блог</string>
+    <string name="reader_tags_feed_action_label_open_post">открыть запись</string>
+    <string name="reader_tags_feed_error_retry">Повторить</string>
+    <string name="reader_tags_feed_no_content_error_description">Не удалось найти записи с метками %s</string>
+    <string name="reader_tags_feed_loading_error_description">Не удалось загрузить записи с этой меткой</string>
+    <string name="reader_tags_feed_error_title">Записей по запросу %s не найдено</string>
+    <string name="reader_tags_feed_see_more_from_tag">Другие записи с меткой %s</string>
+    <string name="reader_tags_display_name">Метки</string>
+    <string name="reader_announcement_card_reading_preferences_description">Выберите цвета и шрифты по своему вкусу. Во время чтения записи нажмите значок АА в верхней части экрана.</string>
+    <string name="reader_announcement_card_reading_preferences_title">Настройки чтения</string>
+    <string name="reader_announcement_card_tags_stream_description">Нажмите раскрывающееся меню в верхней части и выберите «Метки», чтобы перейти к лентам записей с метками, на которые вы подписались.</string>
+    <string name="reader_announcement_card_tags_stream_title">Ленты записей с метками</string>
+    <string name="reader_announcement_card_title">Новое в «Чтиве»</string>
+    <string name="reader_dropdown_menu_tags">Ваши метки</string>
+    <string name="no_connection_error_description">Проверьте подключение к сети и попробуйте снова.</string>
+    <string name="no_connection_error_title">Сейчас невозможно загрузить этот контент.</string>
     <string name="stats_subscribers_marker_view_plural">Подписчики</string>
     <string name="stats_subscribers_marker_view_singular">Подписчик</string>
     <string name="stats_view_subscriber_growth">Рост числа подписчиков</string>
@@ -582,8 +619,6 @@ Language: ru
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_reader">Чтиво переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_phase_two_and_three_title_stats">Статистика переезжает в приложение Jetpack</string>
     <string name="wp_jetpack_feature_removal_overlay_switch_to_new_jetpack_app">Перейти в новое приложение Jetpack</string>
-    <string name="no_connection_error_description">Проверьте ваше подключение к сети и попробуйте снова.</string>
-    <string name="no_connection_error_title">Сейчас невозможно загрузить это содержимое</string>
     <string name="blogging_prompts_list_error_fetch_subtitle">При загрузке подсказок возникла ошибка.</string>
     <string name="blogging_prompts_list_error_fetch_title">Ой!</string>
     <string name="blogging_prompts_list_no_prompts">Пока нет подсказок</string>
@@ -1911,6 +1946,7 @@ Language: ru
     <string name="stats_box_type_low">низкий</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
     <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="gutenberg_native_replace_image">Заменить изображение</string>
     <string name="gutenberg_native_gallery_caption_s">Подпись галереи. %s</string>
     <string name="create_post_page_fab_tooltip">Создать запись или страницу</string>
     <string name="content_description_person_building_website">Личность, создающая сайт</string>

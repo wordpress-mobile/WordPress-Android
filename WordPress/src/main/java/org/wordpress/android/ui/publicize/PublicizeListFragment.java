@@ -56,10 +56,10 @@ import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
+
+import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartNewSiteTask.ENABLE_POST_SHARING;
 
 @AndroidEntryPoint
 public class PublicizeListFragment extends PublicizeBaseFragment {
