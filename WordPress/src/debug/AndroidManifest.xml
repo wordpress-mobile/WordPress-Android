@@ -41,7 +41,5 @@
             android:name=".ui.debug.preferences.DebugSharedPreferenceFlagsActivity"
             android:label="@string/debug_settings_debug_flags_screen"
             android:theme="@style/WordPress.NoActionBar" />
-        <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
-            android:exported="true"/>
     </application>
 </manifest>
