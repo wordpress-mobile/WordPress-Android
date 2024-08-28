@@ -36,7 +36,7 @@ ext {
     gravatarVersion = '1.0.0'
 
     // debug
-    flipperVersion = '0.262.0'
+    flipperVersion = '0.263.0'
     soLoaderVersion = '0.11.0'
 
     // main
