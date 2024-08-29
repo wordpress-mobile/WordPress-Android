@@ -86,7 +86,7 @@ ext {
     lottieVersion = '6.5.0'
     philjayMpAndroidChartVersion = 'v3.1.0'
     squareupKotlinPoetVersion = '1.18.1'
-    squareupRetrofitVersion = '2.9.0'
+    squareupRetrofitVersion = '2.11.0'
     uCropVersion = '2.2.9'
     zendeskVersion = '5.1.2'
     googlePlayInAppUpdateVersion = '2.1.0'
