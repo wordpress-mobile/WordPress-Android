@@ -1,18 +1,14 @@
 package org.wordpress.android.ui.sitecreation.services
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import org.wordpress.android.R
 import org.wordpress.android.util.AutoForegroundNotification
 
 object SiteCreationServiceNotification {
-    @SuppressLint("NonConstantResourceId")
-    private const val channelResId = R.string.notification_channel_normal_id
-    @SuppressLint("NonConstantResourceId")
-    private const val colorResId = R.color.primary_50
-    @SuppressLint("NonConstantResourceId")
-    private const val drawableResId = R.drawable.ic_app_white_24dp
+    private var channelResId = R.string.notification_channel_normal_id
+    private var colorResId = R.color.primary_50
+    private var drawableResId = R.drawable.ic_app_white_24dp
 
     fun createCreatingSiteNotification(context: Context): Notification {
         return AutoForegroundNotification.progressIndeterminate(

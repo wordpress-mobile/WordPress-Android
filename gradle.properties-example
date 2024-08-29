@@ -13,7 +13,7 @@ android.useAndroidX=true
 android.enableJetifier=false
 
 android.nonTransitiveRClass=true
-android.nonFinalResIds=false
+android.nonFinalResIds=true
 android.enableR8.fullMode=false
 
 # For more details on what these properties do visit

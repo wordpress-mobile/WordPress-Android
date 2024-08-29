@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.pages
 
-import android.annotation.SuppressLint
 import androidx.annotation.ColorRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
@@ -15,12 +14,9 @@ import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostU
 import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState.UploadingPost
 import javax.inject.Inject
 
-@SuppressLint("NonConstantResourceId")
-const val ERROR_COLOR = R.color.error
-@SuppressLint("NonConstantResourceId")
-const val PROGRESS_INFO_COLOR = R.color.neutral_50
-@SuppressLint("NonConstantResourceId")
-const val STATE_INFO_COLOR = R.color.warning_dark
+var ERROR_COLOR = R.color.error
+var PROGRESS_INFO_COLOR = R.color.neutral_50
+var STATE_INFO_COLOR = R.color.warning_dark
 
 class PostPageListLabelColorUseCase @Inject constructor() {
     @ColorRes
