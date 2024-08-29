@@ -79,7 +79,7 @@ ext {
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'
     googleMLKitTextRecognitionVersion = '16.0.0'
     googlePlayReviewVersion = '2.0.1'
-    googlePlayServicesAuthVersion = '20.4.1'
+    googlePlayServicesAuthVersion = '21.2.0'
     googlePlayServicesCodeScannerVersion = '16.0.0-beta3'
     jsoupVersion = '1.16.2'
     kotlinxCoroutinesVersion = '1.8.1'
