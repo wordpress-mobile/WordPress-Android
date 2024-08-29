@@ -225,7 +225,8 @@ class BlazeCreationRestClient @Inject constructor(
                     "devices" to it.devices,
                     "page_topics" to it.topics
                 ).filterNotNull()
-            }
+            },
+            "is_evergreen" to request.isEndlessCampaign
         ).filterNotNull()
 
         val response = wpComNetwork.executePostGsonRequest(
@@ -423,7 +424,9 @@ private data class BlazeCampaignCreationNetworkResponse(
     @SerializedName("target_url")
     val targetURL: String,
     @SerializedName("main_image")
-    val mainImage: BlazeImageNetworkModel
+    val mainImage: BlazeImageNetworkModel,
+    @SerializedName("is_evergreen")
+    val isEvergreen: Boolean
 ) {
     data class BlazeImageNetworkModel(
         val url: String
@@ -442,6 +445,7 @@ private data class BlazeCampaignCreationNetworkResponse(
         impressions = 0L,
         title = siteName,
         totalBudget = totalBudget,
-        spentBudget = 0.0
+        spentBudget = 0.0,
+        isEndlessCampaign = isEvergreen
     )
 }

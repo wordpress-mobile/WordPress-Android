@@ -84,8 +84,8 @@ data class BlazeCampaign(
     @SerializedName("start_time") val startTime: String,
     @SerializedName("target_urn") val targetUrn: String,
     @SerializedName("status") val status: String,
-
-    ) {
+    @SerializedName("is_evergreen") val isEvergreen: Boolean, // If the campaign duration is unlimited
+) {
     fun toCampaignsModel(): BlazeCampaignModel {
         val startDate = BlazeCampaignsUtils.stringToDate(startTime)
         return BlazeCampaignModel(
@@ -100,6 +100,7 @@ data class BlazeCampaign(
             targetUrn = targetUrn,
             totalBudget = totalBudget,
             spentBudget = spentBudget,
+            isEndlessCampaign = isEvergreen
         )
     }
 }
