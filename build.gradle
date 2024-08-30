@@ -66,7 +66,7 @@ ext {
     chrisbanesPhotoviewVersion = '2.3.0'
     eventBusVersion = '3.3.1'
     facebookShimmerVersion = '0.5.0'
-    firebaseBomVersion = '32.1.0'
+    firebaseBomVersion = '33.2.0'
     firebaseIidVersion = '21.1.0'
     glideVersion = '4.16.0'
     googleAutoServiceVersion = '1.0.1'
