@@ -374,6 +374,7 @@ class RestoreViewModel @Inject constructor(
         val currentIndex = wizardManager.currentStep
         val targetIndex = wizardManager.stepPosition(targetStep)
 
+        @Suppress("ForEachOnRange")
         (currentIndex downTo targetIndex).forEach { _ ->
             wizardManager.onBackPressed()
         }
