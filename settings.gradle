@@ -5,7 +5,7 @@ pluginManagement {
     gradle.ext.googleServicesVersion = '4.3.15'
     gradle.ext.navigationVersion = '2.7.7'
     gradle.ext.sentryVersion = '4.11.0'
-    gradle.ext.daggerVersion = "2.50"
+    gradle.ext.daggerVersion = "2.52"
     gradle.ext.detektVersion = '1.23.6'
     gradle.ext.violationCommentsVersion = '1.70.0'
     gradle.ext.measureBuildsVersion = '3.1.0'
