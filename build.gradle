@@ -73,7 +73,7 @@ ext {
     googleExoPlayerVersion = '2.13.3'
     googleFlexboxlayoutVersion = '3.0.0'
     googleGsonVersion = '2.11.0'
-    googleMaterialVersion = '1.9.0'
+    googleMaterialVersion = '1.12.0'
 
     googleMLKitBarcodeScanningVersion = '17.3.0'
     googleMLKitBarcodeScanningCommonVersion = '17.0.0'
@@ -111,7 +111,7 @@ ext {
     wiremockHttpClientVersion = '4.3.5.1'
 
     // other
-    androidDesugarVersion = '2.0.4'
+    androidDesugarVersion = '2.1.1'
     wordPressLintVersion = '2.1.0'
 }
 
