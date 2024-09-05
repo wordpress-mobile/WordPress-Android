@@ -282,6 +282,7 @@ class ListStore @Inject constructor(
             listItemModel
         }
         listItemSqlUtils.insertItemList(listItems)
+        emitChange(OnListRequiresRefresh(listDescriptor.typeIdentifier))
     }
 
     /**
