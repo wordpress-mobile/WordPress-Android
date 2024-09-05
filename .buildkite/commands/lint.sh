@@ -13,7 +13,7 @@ echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
 	./gradlew lintWordpressVanillaRelease
-	upload_android_lint_to_gh "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif" "wordpress-mobile" "WordPress-Android"
+	upload_sarif_to_github "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif" "wordpress-mobile" "WordPress-Android"
 	exit 0
 fi
 
