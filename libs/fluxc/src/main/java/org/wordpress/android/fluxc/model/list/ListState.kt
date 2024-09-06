@@ -21,6 +21,7 @@ enum class ListState(val value: Int) {
     fun isLoadingMore() = this == LOADING_MORE
 
     companion object {
-        val defaultState = ListState.NEEDS_REFRESH
+        val defaultState = NEEDS_REFRESH
+        val notExpiredStates = setOf(CAN_LOAD_MORE, FETCHED)
     }
 }
