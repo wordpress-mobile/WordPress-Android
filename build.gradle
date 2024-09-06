@@ -60,7 +60,7 @@ ext {
     androidxSwipeToRefreshVersion = '1.1.0'
     androidxViewpager2Version = '1.1.0'
     androidxWorkManagerVersion = "2.9.1"
-    androidxComposeMaterial3Version = '1.2.1'
+    androidxComposeMaterial3Version = '1.3.0'
     androidxWebkitVersion =  '1.11.0'
     apacheCommonsTextVersion = '1.12.0'
     coilComposeVersion = '2.7.0'
