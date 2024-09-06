@@ -351,14 +351,17 @@ class ListStore @Inject constructor(
     /**
      * A helper function that returns the [ListState] for the given [ListDescriptor].
      */
-    private fun getListState(listDescriptor: ListDescriptor): ListState {
+     fun getListState(listDescriptor: ListDescriptor): ListState {
         val listModel = listSqlUtils.getList(listDescriptor)
-        return if (listModel != null && !isListStateOutdated(listModel)) {
-            requireNotNull(ListState.values().firstOrNull { it.value == listModel.stateDbValue }) {
+        val currentState = listModel?.let {
+            requireNotNull(ListState.entries.firstOrNull { it.value == listModel.stateDbValue }) {
                 "The stateDbValue of the ListModel didn't match any of the `ListState`s. This likely happened " +
                         "because the ListState values were altered without a DB migration."
             }
-        } else ListState.defaultState
+        }
+        val isListStateValid = currentState != null
+                && (isListStateOutdated(listModel).not() || (currentState in ListState.notExpiredStates))
+        return if (isListStateValid) currentState!! else ListState.defaultState
     }
 
     /**
