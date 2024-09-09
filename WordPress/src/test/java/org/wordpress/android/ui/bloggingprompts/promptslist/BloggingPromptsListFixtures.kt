@@ -10,7 +10,7 @@ object BloggingPromptsListFixtures {
     val DOMAIN_MODEL = BloggingPromptModel(
         id = 123,
         text = "Text",
-        date = Date(1671678000000), // December 21, 2022
+        date = Date(1671678000000), // December 22, 2022
         isAnswered = true,
         attribution = "Attribution",
         respondentsCount = 321,
@@ -21,8 +21,8 @@ object BloggingPromptsListFixtures {
     val UI_MODEL = BloggingPromptsListItemModel(
         id = 123,
         text = "Text",
-        date = Date(1671678000000), // December 21, 2022
-        formattedDate = "Dec 21",
+        date = Date(1671678000000), // December 22, 2022
+        formattedDate = "Dec 22",
         isAnswered = true,
         answersCount = 321,
     )
