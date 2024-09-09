@@ -43,7 +43,7 @@ ext {
     androidxAppcompatVersion = '1.7.0'
     androidxArchCoreVersion = '2.2.0'
     androidxCameraVersion = '1.3.4'
-    androidxComposeBomVersion = '2024.08.00'
+    androidxComposeBomVersion = '2024.09.00'
     androidxComposeCompilerVersion = '1.5.14'
     androidxComposeNavigationVersion = '2.7.7'
     androidxCardviewVersion = '1.0.0'
