@@ -50,7 +50,8 @@ data class FormattableMeta(
         @SerializedName("user") val user: Long? = null,
         @SerializedName("comment") val comment: Long? = null,
         @SerializedName("post") val post: Long? = null,
-        @SerializedName("order") val order: Long? = null
+        @SerializedName("order") val order: Long? = null,
+        @SerializedName("campaign_id") val campaignId: Long? = null
     )
 
     data class Links(
