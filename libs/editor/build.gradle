@@ -12,6 +12,7 @@ repositories {
             includeGroup "org.wordpress"
             includeGroup "org.wordpress.aztec"
             includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroup "org.wordpress.gutenbergkit"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
@@ -94,6 +95,7 @@ dependencies {
     }
 
     implementation "org.wordpress:utils:$wordPressUtilsVersion"
+    implementation "org.wordpress.gutenbergkit:android:$gutenbergKitVersion"
 
     implementation "androidx.lifecycle:lifecycle-common:$androidxLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime:$androidxLifecycleVersion"

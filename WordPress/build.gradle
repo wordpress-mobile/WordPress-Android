@@ -93,6 +93,7 @@ repositories {
             includeGroup "org.wordpress.fluxc"
             includeGroup "org.wordpress.wellsql"
             includeGroup "org.wordpress.gutenberg-mobile"
+            includeGroup "org.wordpress.gutenbergkit"
             includeGroupByRegex "org.wordpress.react-native-libraries.*"
             includeGroup "com.automattic"
             includeGroup "com.automattic.tracks"
