@@ -960,8 +960,24 @@
           "is_user_defined": true,
           "is_letter": true,
           "name": "Obalka",
-          "inner_dimensions": "2 x 3 x 4",
+          "outer_dimensions": "2 x 3 x 4",
           "box_weight": 5,
+          "max_weight": 0
+        },
+        {
+          "is_user_defined": true,
+          "is_letter": true,
+          "name": "Flat Box",
+          "dimensions": "5 x 6 x 4",
+          "box_weight": 1,
+          "max_weight": 0
+        },
+        {
+          "is_user_defined": true,
+          "is_letter": false,
+          "name": "Weird Box",
+          "weird_dimensions": "2 x 3 x 4",
+          "box_weight": 0,
           "max_weight": 0
         }
       ],
