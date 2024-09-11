@@ -89,6 +89,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogExceptionListen
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
+import org.wordpress.gutenberg.GutenbergView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,6 +110,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         GutenbergDialogPositiveClickInterface,
         GutenbergDialogNegativeClickInterface,
         GutenbergNetworkConnectionListener {
+    private GutenbergView mGutenbergView;
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -156,6 +158,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private boolean mIsNewPost;
     private boolean mIsJetpackSsoEnabled;
+    private static boolean mIsNewGutenbergEnabled;
 
     private boolean mEditorDidMount;
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
@@ -171,13 +174,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
-                                                      boolean jetpackFeaturesEnabled) {
+                                                      boolean jetpackFeaturesEnabled,
+                                                      boolean newGutenbergEnabled) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
+        mIsNewGutenbergEnabled = newGutenbergEnabled;
         if (db != null) {
             db.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
             db.addParcel(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
@@ -210,16 +215,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
             mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
 
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            GutenbergContainerFragment fragment =
-                    GutenbergContainerFragment.newInstance(requireContext(), gutenbergPropsBuilder);
-            fragment.setRetainInstance(true);
-            fragmentTransaction.add(fragment, GutenbergContainerFragment.TAG);
-            fragmentTransaction.commitNow();
+            if (!mIsNewGutenbergEnabled) {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                GutenbergContainerFragment fragment =
+                        GutenbergContainerFragment.newInstance(requireContext(), gutenbergPropsBuilder);
+                fragment.setRetainInstance(true);
+                fragmentTransaction.add(fragment, GutenbergContainerFragment.TAG);
+                fragmentTransaction.commitNow();
+            }
         }
 
-        if (mUpdateCapabilitiesOnCreate) {
+        if (mUpdateCapabilitiesOnCreate && !mIsNewGutenbergEnabled) {
             getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
         }
 
@@ -239,6 +246,25 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (mIsNewGutenbergEnabled) {
+            mGutenbergView = new GutenbergView(requireContext());
+            mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+            mGutenbergView.start(
+                    "",
+                    "",
+                    "",
+                    false,
+                    null,
+                    "post",
+                    "",
+                    ""
+            );
+
+            return mGutenbergView;
+        }
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         initializeSavingProgressDialog();
@@ -778,6 +804,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private void setEditorProgressBarVisibility(boolean shown) {
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
+
         if (isAdded() && getView() != null) {
             getView().findViewById(R.id.editor_progress).setVisibility(shown ? View.VISIBLE : View.GONE);
         }
@@ -1170,6 +1200,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentNotAddedException {
+        if (mIsNewGutenbergEnabled) {
+            return new Pair<>("", "");
+        }
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
         }
@@ -1442,6 +1475,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onEditorThemeUpdated(Bundle editorTheme) {
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
         getGutenbergContainerFragment().updateTheme(editorTheme);
     }
 

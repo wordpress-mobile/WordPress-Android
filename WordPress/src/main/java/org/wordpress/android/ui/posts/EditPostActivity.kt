@@ -235,6 +235,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSou
 import org.wordpress.android.util.config.ContactSupportFeatureConfig
 import org.wordpress.android.util.config.GlobalStyleSupportFeatureConfig
 import org.wordpress.android.util.config.PostConflictResolutionFeatureConfig
+import org.wordpress.android.util.config.NewGutenbergFeatureConfig
 import org.wordpress.android.util.extensions.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.helpers.MediaGallery
@@ -405,6 +406,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     @Inject lateinit var contactSupportFeatureConfig: ContactSupportFeatureConfig
 
     @Inject lateinit var postConflictResolutionFeatureConfig: PostConflictResolutionFeatureConfig
+
+    @Inject lateinit var newGutenbergFeatureConfig: NewGutenbergFeatureConfig
 
     @Inject lateinit var storePostViewModel: StorePostViewModel
     @Inject lateinit var storageUtilsViewModel: StorageUtilsViewModel
@@ -2403,7 +2406,8 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                         isNewPost,
                         gutenbergWebViewAuthorizationData,
                         gutenbergPropsBuilder,
-                        jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures()
+                        jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
+                        newGutenbergFeatureConfig.isEnabled()
                     )
                 } else {
                     // If gutenberg editor is not selected, default to Aztec.
