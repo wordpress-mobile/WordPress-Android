@@ -169,13 +169,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private String mUpdatedStoryBlockContent = null;
 
     private ProgressDialog mSavingContentProgressDialog;
+    private static Map<String, Object> mSettings;
 
     public static GutenbergEditorFragment newInstance(Context context,
                                                       boolean isNewPost,
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
                                                       boolean jetpackFeaturesEnabled,
-                                                      boolean newGutenbergEnabled) {
+                                                      boolean newGutenbergEnabled,
+                                                      Map<String, Object> settings) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
@@ -183,6 +185,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
         mIsNewGutenbergEnabled = newGutenbergEnabled;
+        mSettings = settings;
         if (db != null) {
             db.addParcel(ARG_GUTENBERG_WEB_VIEW_AUTH_DATA, webViewAuthorizationData);
             db.addParcel(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
@@ -253,14 +256,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
             mGutenbergView.start(
-                    "",
-                    "",
-                    "",
-                    false,
-                    null,
-                    "post",
-                    "",
-                    ""
+                    (String) mSettings.get("siteApiRoot"),
+                    (String) mSettings.get("siteApiNamespace"),
+                    (String) mSettings.get("authHeader"),
+                    true,
+                    (Integer) mSettings.get("postId"),
+                    (String) mSettings.get("postType"),
+                    (String) mSettings.get("postTitle"),
+                    (String) mSettings.get("postContent")
             );
 
             return mGutenbergView;

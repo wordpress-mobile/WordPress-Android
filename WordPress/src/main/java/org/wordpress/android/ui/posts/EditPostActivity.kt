@@ -2401,13 +2401,30 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                             userAgent.toString(),
                             isJetpackSsoEnabled
                         )
+                    val postType = if (editPostRepository.isPage) "page" else "post"
+                    val siteApiRoot = if (isWpCom) "https://public-api.wordpress.com/" else ""
+                    val siteId = site.siteId
+                    val authToken = accountStore.accessToken
+                    val authHeader = "Bearer $authToken"
+                    val siteApiNamespace = "sites/${siteId}"
+
+                    val settings = mutableMapOf<String, Any?>(
+                        "postId" to editPostRepository.getPost()?.remotePostId?.toInt(),
+                        "postType" to postType,
+                        "postTitle" to editPostRepository.getPost()?.title,
+                        "postContent" to editPostRepository.getPost()?.content,
+                        "siteApiRoot" to siteApiRoot,
+                        "authHeader" to authHeader,
+                        "siteApiNamespace" to siteApiNamespace
+                    )
                     return GutenbergEditorFragment.newInstance(
                         getContext(),
                         isNewPost,
                         gutenbergWebViewAuthorizationData,
                         gutenbergPropsBuilder,
                         jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                        newGutenbergFeatureConfig.isEnabled()
+                        newGutenbergFeatureConfig.isEnabled(),
+                        settings
                     )
                 } else {
                     // If gutenberg editor is not selected, default to Aztec.
