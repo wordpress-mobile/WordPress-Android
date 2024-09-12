@@ -458,6 +458,7 @@ dependencies {
     implementation "androidx.activity:activity-compose:$androidxActivityVersion"
     implementation "androidx.fragment:fragment:$androidxFragmentVersion"
     implementation "androidx.fragment:fragment-ktx:$androidxFragmentVersion"
+    implementation "androidx.fragment:fragment-compose:$androidxFragmentVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppcompatVersion"
     implementation "androidx.appcompat:appcompat-resources:$androidxAppcompatVersion"
     implementation "androidx.cardview:cardview:$androidxCardviewVersion"
@@ -600,6 +601,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-unit"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation "androidx.compose.material:material"
+    implementation "androidx.compose.material:material-icons-extended"
     // - Jetpack Compose - AndroidX
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$androidxLifecycleVersion"
     implementation "androidx.constraintlayout:constraintlayout-compose:$androidxConstraintlayoutComposeVersion"

@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.wordpress.android.R
+import org.wordpress.android.ui.compose.theme.AppTheme
 import org.wordpress.android.viewmodel.accounts.SelfHostedLoginFragmentViewModel
 
 class SelfHostedLoginFragment: Fragment() {
@@ -52,7 +53,8 @@ class SelfHostedLoginFragment: Fragment() {
     @Composable
     fun SelfHostedLoginView(viewModel: SelfHostedLoginFragmentViewModel = viewModel()) {
         val siteUrl by viewModel.siteUrl.collectAsState()
-        val context = LocalContext.current
+
+        viewModel.context = LocalContext.current
         // TODO: Have the state reflected in the UI
 
         Scaffold(topBar = {
@@ -90,9 +92,7 @@ class SelfHostedLoginFragment: Fragment() {
                 )
                 Text(stringResource(R.string.login_find_your_site_adress))
                 Spacer(Modifier.padding())
-                Button(onClick = {
-                    viewModel.didTapContinue(context)
-                }) {
+                Button(viewModel::didTapContinue) {
                     Text(stringResource(R.string.continue_label))
                 }
             }
@@ -102,10 +102,8 @@ class SelfHostedLoginFragment: Fragment() {
     @Preview
     @Composable
     fun PreviewSelfHostedLoginView() {
-        MaterialTheme {
-            Box {
-                SelfHostedLoginView()
-            }
+        AppTheme {
+            SelfHostedLoginView()
         }
     }
 }

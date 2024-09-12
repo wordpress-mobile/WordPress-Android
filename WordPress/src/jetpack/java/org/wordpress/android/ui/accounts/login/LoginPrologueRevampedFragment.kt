@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -144,6 +145,13 @@ private fun LoginScreenRevamped(
             )
             SecondaryButton(onClick = onSiteAddressLoginClicked)
         }
+    }
+}
+
+@Composable
+private fun StartSelfHostedLogin() {
+    Box {
+        Text(text = "This is a test")
     }
 }
 
