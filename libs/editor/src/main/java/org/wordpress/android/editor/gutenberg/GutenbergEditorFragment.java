@@ -1405,6 +1405,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onDestroy() {
+        if (mIsNewGutenbergEnabled && mGutenbergView != null) {
+            mGutenbergView.destroy();
+        }
         hideSavingProgressDialog();
         super.onDestroy();
     }
