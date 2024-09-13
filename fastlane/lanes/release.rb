@@ -80,14 +80,36 @@ platform :android do
     )
 
     begin
+      # Move PRs to next milestone
+      moved_prs = update_assigned_milestone(
+        repository: GHHELPER_REPO,
+        from_milestone: new_version,
+        to_milestone: next_release_version,
+        comment: "Version `#{new_version}` has now entered code-freeze, so the milestone of this PR has been updated to `#{next_release_version}`."
+      )
+
       # Add ❄️ marker to milestone title to indicate we entered code-freeze
       set_milestone_frozen_marker(
         repository: GHHELPER_REPO,
         milestone: new_version
       )
     rescue StandardError => e
+      moved_prs = []
+
       report_milestone_error(error_title: "Error freezing milestone `#{new_version}`: #{e.message}")
     end
+
+    UI.message("Moved the following PRs to milestone #{next_release_version}: #{moved_prs.join(', ')}")
+
+    # Annotate the build with the moved PRs
+    moved_prs_info = if moved_prs.empty?
+                       "👍 No open PR were targeting `#{new_version}` at the time of code-freeze"
+                     else
+                       "#{moved_prs.count} PRs targeting `#{new_version}` were still open and thus moved to `#{next_release_version}`:\n" \
+                         + moved_prs.map { |pr_num| "[##{pr_num}](https://github.com/#{GHHELPER_REPO}/pull/#{pr_num})" }.join(', ')
+                     end
+
+    buildkite_annotate(style: moved_prs.empty? ? 'success' : 'warning', context: 'start-code-freeze', message: moved_prs_info) if is_ci
   end
 
   #####################################################################################
