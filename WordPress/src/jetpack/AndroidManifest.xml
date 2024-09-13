@@ -36,8 +36,6 @@
                 <data android:host="notifications" />
                 <data android:host="home" />
                 <data android:host="media" />
-                <data android:host="authorize-success" />
-                <data android:host="authorize-failure" />
             </intent-filter>
         </activity>
 
@@ -48,6 +46,17 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.accounts.LoginActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="jetpack" />
+                <data android:host="authorize-success" />
+                <data android:host="authorize-failure" />
             </intent-filter>
         </activity>
 

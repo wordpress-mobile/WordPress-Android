@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
+import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
@@ -92,8 +93,11 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import dagger.hilt.android.AndroidEntryPoint;
+import uniffi.wp_api.ParsedUrl;
+import uniffi.wp_api.WpApiApplicationPasswordDetails;
 
 import static org.wordpress.android.util.ActivityUtils.hideKeyboard;
+import static uniffi.wp_api.Wp_apiKt.extractLoginDetailsFromUrl;
 
 @AndroidEntryPoint
 public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
@@ -149,6 +153,19 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         setContentView(R.layout.login_activity);
 
+        WpApiApplicationPasswordDetails details = getSelfHostedLoginDetails();
+        LoginSiteAddressFragment fragment = new LoginSiteAddressFragment();
+
+        if (details != null) {
+            SiteModel model = new SiteModel();
+            model.setEmail(details.getUserLogin());
+            model.setPassword(details.getPassword());
+//            model.setApplicationPasswordsAuthorizeUrl(); // TODO: We have this data
+            model.setUrl(details.getSiteUrl());
+
+            // What do I do with the model now?
+        }
+
         if (savedInstanceState == null) {
             if (getIntent() != null) {
                 mJetpackConnectSource =
@@ -172,7 +189,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case JETPACK_SELFHOSTED:
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
-                    showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
+                    SelfHostedLoginFragment fragment = new SelfHostedLoginFragment();
+                    showFragment(fragment, SelfHostedLoginFragment.TAG);
                     break;
                 case JETPACK_STATS:
                     mUnifiedLoginTracker.setSource(Source.JETPACK);
@@ -213,6 +231,30 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         }
 
         initViewModel();
+    }
+
+    private @Nullable WpApiApplicationPasswordDetails getSelfHostedLoginDetails() {
+        String data = getIntent().getDataString();
+
+        if (data != null) {
+            try (ParsedUrl url = ParsedUrl.Companion.parse(data)) {
+                WpApiApplicationPasswordDetails details = extractLoginDetailsFromUrl(url);
+                Log.d("WP_RS", details.getSiteUrl());
+                Log.d("WP_RS", details.getUserLogin());
+                Log.d("WP_RS", details.getPassword());
+
+                return details;
+            } catch (Exception ex) {
+                String message = ex.getMessage();
+                if (message != null) {
+                    Log.e("WP_RS", message);
+                } else {
+                    Log.e("WP_RS", "Unknown parsing error");
+                }
+            }
+        }
+
+        return null;
     }
 
     private void initViewModel() {
@@ -302,6 +344,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         // compute and cache the Login mode
         mLoginMode = LoginMode.fromIntent(getIntent());
+
+        WpApiApplicationPasswordDetails details = getSelfHostedLoginDetails();
+
+        if (details != null) {
+            mLoginMode = LoginMode.SELFHOSTED_ONLY;
+        }
 
         return mLoginMode;
     }
