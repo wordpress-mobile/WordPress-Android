@@ -22,6 +22,9 @@ import rs.wordpress.api.kotlin.WpLoginClient
 import uniffi.wp_api.ParsedUrl
 import uniffi.wp_api.WpUuid
 import uniffi.wp_api.createApplicationPasswordAuthenticationUrl
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -98,9 +101,12 @@ class SelfHostedLoginFragmentViewModel @Inject constructor(
         Log.d("WP_RS", "Found authorization URL: $authenticationUrl")
         AnalyticsTracker.track(Stat.BACKGROUND_REST_AUTODISCOVERY_SUCCESSFUL)
 
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
+        val dateString = sdf.format(Date())
+
         return Uri.parse(createApplicationPasswordAuthenticationUrl(
             ParsedUrl.parse(authenticationUrl),
-            "Jetpack for Android",
+            "Jetpack for Android – $dateString",
             WpUuid.parse("00000000-0000-4000-8000-000000000000"),
             "jetpack://authorize-success",
             "jetpack://authorize-failure"

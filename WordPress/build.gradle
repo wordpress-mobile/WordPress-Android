@@ -430,9 +430,6 @@ dependencies {
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.barcode.scanning.main)
 
-    // okhttp
-    implementation("com.squareup.okhttp3:okhttp-coroutines:5.0.0")
-
     // CameraX
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
