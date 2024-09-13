@@ -350,42 +350,29 @@ platform :android do
     )
   end
 
-  #####################################################################################
-  # trigger_beta_build
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane trigger_beta_build branch_to_build:<branch_name>
+  # Triggers a beta build using the `.buildkite/beta-builds.yml` pipeline.
   #
-  #####################################################################################
-  lane :trigger_beta_build do |options|
-    buildkite_trigger_build(
-      buildkite_organization: 'automattic',
-      buildkite_pipeline: 'wordpress-android',
-      branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'beta-builds.yml',
-      message: 'Beta Builds'
+  # @param branch_to_build [String] The branch to build. Defaults to the current git branch.
+  #
+  # @example
+  #   bundle exec fastlane trigger_beta_build branch_to_build:"release/1.2.3"
+  lane :trigger_beta_build do |branch_to_build: git_branch|
+    trigger_buildkite_release_build(
+      branch: branch_to_build,
+      beta: true
     )
   end
 
-  #####################################################################################
-  # trigger_release_build
-  # -----------------------------------------------------------------------------------
-  # This lane triggers a release build using the `.buildkite/release-builds.yml`
-  # pipeline.
-  # -----------------------------------------------------------------------------------
-  # Usage:
-  # bundle exec fastlane trigger_release_build branch_to_build:<branch_name>
+  # Triggers a release build using the `.buildkite/release-builds.yml` pipeline.
   #
-  #####################################################################################
-  lane :trigger_release_build do |options|
-    buildkite_trigger_build(
-      buildkite_organization: 'automattic',
-      buildkite_pipeline: 'wordpress-android',
-      branch: options[:branch_to_build] || git_branch,
-      pipeline_file: 'release-builds.yml',
-      message: 'Release Builds'
+  # @param branch_to_build [String] The branch to build. Defaults to the current git branch.
+  #
+  # @example
+  #   bundle exec fastlane trigger_release_build branch_to_build:"release/1.2.3"
+  lane :trigger_release_build do |branch_to_build: git_branch|
+    trigger_buildkite_release_build(
+      branch: branch_to_build,
+      beta: false
     )
   end
 
@@ -498,6 +485,22 @@ platform :android do
       message: 'Bump version number',
       files: VERSION_PROPERTIES_PATH
     )
+  end
+
+  def trigger_buildkite_release_build(branch:, beta:)
+    pipeline_file = beta ? 'beta-builds.yml' : 'release-builds.yml'
+    message = beta ? 'Beta Builds' : 'Release Builds'
+
+    build_url = buildkite_trigger_build(
+      buildkite_organization: 'automattic',
+      buildkite_pipeline: 'wordpress-android',
+      branch: branch,
+      pipeline_file: pipeline_file,
+      message: message
+    )
+
+    message = "This build triggered a build on <code>#{branch}</code>:<br>- #{build_url}"
+    buildkite_annotate(style: 'info', context: 'trigger-release-build', message: message) if is_ci
   end
 
   def create_backmerge_pr
