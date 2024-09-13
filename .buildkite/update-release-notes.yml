@@ -19,3 +19,7 @@ steps:
       bundle exec fastlane update_appstore_strings version:${RELEASE_VERSION}
     agents:
        queue: "tumblr-metal"
+    retry:
+      manual:
+        # If those jobs fail, one should always prefer re-triggering a new build from ReleaseV2 rather than retrying the individual job from Buildkite
+        allowed: false
