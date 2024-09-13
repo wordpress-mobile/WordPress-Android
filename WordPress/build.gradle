@@ -486,6 +486,9 @@ dependencies {
     implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
     implementation "com.google.mlkit:barcode-scanning:$googleMLKitBarcodeScanningVersion"
 
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp-coroutines:5.0.0")
+
     // CameraX
     implementation "androidx.camera:camera-camera2:$androidxCameraVersion"
     implementation "androidx.camera:camera-lifecycle:$androidxCameraVersion"

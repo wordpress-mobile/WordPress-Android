@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,8 +50,6 @@ class SelfHostedLoginFragment: Fragment() {
     @Composable
     fun SelfHostedLoginView(viewModel: SelfHostedLoginFragmentViewModel = viewModel()) {
         val siteUrl by viewModel.siteUrl.collectAsState()
-
-        viewModel.context = LocalContext.current
         // TODO: Have the state reflected in the UI
 
         Scaffold(topBar = {
@@ -84,7 +79,7 @@ class SelfHostedLoginFragment: Fragment() {
             ) {
                 Text(stringResource(R.string.enter_site_address))
                 OutlinedTextField(
-                    value = siteUrl, // Start with a space to ensure the label stays on top
+                    value = siteUrl,
                     label = {
                         Text("Site address")
                     },
