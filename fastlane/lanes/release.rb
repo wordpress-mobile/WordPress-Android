@@ -78,7 +78,16 @@ platform :android do
       from_branch: DEFAULT_BRANCH,
       to_branch: "release/#{new_version}"
     )
-    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: new_version)
+
+    begin
+      # Add ❄️ marker to milestone title to indicate we entered code-freeze
+      set_milestone_frozen_marker(
+        repository: GHHELPER_REPO,
+        milestone: new_version
+      )
+    rescue StandardError => e
+      report_milestone_error(error_title: "Error freezing milestone `#{new_version}`: #{e.message}")
+    end
   end
 
   #####################################################################################
@@ -241,6 +250,16 @@ platform :android do
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
 
     create_backmerge_pr
+
+    # Close hotfix milestone
+    begin
+      close_milestone(
+        repository: GHHELPER_REPO,
+        milestone: current_release_version
+      )
+    rescue StandardError => e
+      report_milestone_error(error_title: "Error closing milestone `#{current_release_version}`: #{e.message}")
+    end
   end
 
   # This lane finalizes a release by updating store metadata and running release checks.
@@ -263,9 +282,6 @@ platform :android do
 
     release_branch = "release/#{current_release_version}"
 
-    # Remove branch protection first, so that we can push the final commits directly to the release branch
-    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
-
     # Don't check translation coverage for now since we are finalizing the release in CI
     # check_translations_coverage
     download_translations
@@ -284,15 +300,26 @@ platform :android do
 
     push_to_git_remote(tags: false)
 
-    # Wrap up
-    set_milestone_frozen_marker(repository: GHHELPER_REPO, milestone: version_name, freeze: false)
-    create_new_milestone(repository: GHHELPER_REPO)
-    close_milestone(repository: GHHELPER_REPO, milestone: version_name)
-
-    # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
     create_backmerge_pr
+
+    remove_branch_protection(repository: GHHELPER_REPO, branch: release_branch)
+
+    # Close milestone
+    begin
+      set_milestone_frozen_marker(
+        repository: GHHELPER_REPO,
+        milestone: version_name,
+        freeze: false
+      )
+      close_milestone(
+        repository: GHHELPER_REPO,
+        milestone: version_name
+      )
+    rescue StandardError => e
+      report_milestone_error(error_title: "Error closing milestone `#{version}`: #{e.message}")
+    end
   end
 
   lane :check_translations_coverage do |options|
@@ -519,5 +546,18 @@ platform :android do
     buildkite_annotate(style: 'error', context: 'error-checking-branch', message: error_message) if is_ci
 
     UI.user_error!(error_message)
+  end
+
+  def report_milestone_error(error_title:)
+    error_message = <<-MESSAGE
+      #{error_title}
+
+      - If this is not the first time you are running the release task (e.g. retrying because it failed on first attempt), the milestone might have already been closed and this error is expected.
+      - Otherwise if this is the first you are running the release task for this version, please investigate the error.
+    MESSAGE
+
+    UI.error(error_message)
+
+    buildkite_annotate(style: 'warning', context: 'error-with-milestone', message: error_message) if is_ci
   end
 end
