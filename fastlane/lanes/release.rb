@@ -115,10 +115,7 @@ platform :android do
 
     trigger_beta_build(branch_to_build: "release/#{new_version}")
 
-    # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("merge/#{new_version}-code-freeze-into-trunk")
-    push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{new_version} code freeze into trunk")
+    create_backmerge_pr
   end
 
   #####################################################################################
@@ -172,18 +169,11 @@ platform :android do
     commit_version_bump
     UI.success "Done! New Beta Version: #{current_beta_version}. New Build Code: #{current_build_code}"
 
-    release_branch = "release/#{current_release_version}"
-    release_version = current_version_name
-
-    # Create an intermediate branch
-    new_beta_branch_name = "new_beta/#{release_version}"
-    Fastlane::Helper::GitHelper.create_branch(new_beta_branch_name)
-
     push_to_git_remote(tags: false)
 
-    trigger_beta_build(branch_to_build: new_beta_branch_name)
+    trigger_beta_build(branch_to_build: "release/#{current_release_version}")
 
-    create_release_management_pull_request(release_branch, "Merge #{release_version} to #{release_branch}")
+    create_backmerge_pr
   end
 
   #####################################################################################
@@ -267,6 +257,8 @@ platform :android do
     UI.user_error!('Aborted by user request') unless options[:skip_confirm] || UI.confirm('Do you want to continue?')
 
     trigger_release_build(branch_to_build: "release/#{current_release_version}")
+
+    create_backmerge_pr
   end
 
   #####################################################################################
@@ -325,10 +317,7 @@ platform :android do
     # Trigger release build
     trigger_release_build(branch_to_build: "release/#{version_name}")
 
-    # Create an intermediate branch
-    Fastlane::Helper::GitHelper.create_branch("merge/#{version_name}-final-into-trunk")
-    push_to_git_remote(tags: false)
-    create_release_management_pull_request('trunk', "Merge #{version_name} final into trunk")
+    create_backmerge_pr
   end
 
   lane :check_translations_coverage do |options|
@@ -510,4 +499,31 @@ platform :android do
       files: VERSION_PROPERTIES_PATH
     )
   end
+
+  def create_backmerge_pr
+    version = current_release_version
+
+    pr_url = create_release_backmerge_pull_request(
+      repository: GHHELPER_REPO,
+      source_branch: "release/#{version}",
+      labels: ['Releases'],
+      milestone_title: next_release_version
+    )
+  rescue StandardError => e
+    error_message = <<-MESSAGE
+      Error creating backmerge pull request:
+
+      #{e.message}
+
+      If this is not the first time you are running the release task, the backmerge PR for the version `#{version}` might have already been previously created.
+      Please close any previous backmerge PR for `#{version}`, delete the previous merge branch, then run the release task again.
+    MESSAGE
+
+    buildkite_annotate(style: 'error', context: 'error-creating-backmerge', message: error_message) if is_ci
+
+    UI.user_error!(error_message)
+
+    pr_url
+  end
+
 end
