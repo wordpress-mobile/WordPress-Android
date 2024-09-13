@@ -29,9 +29,12 @@ platform :android do
 
     UI.user_error!('Aborted by user request') unless skip_confirm || UI.confirm('Do you want to continue?')
 
+    release_branch_name = "release/#{next_release_version}"
+    ensure_branch_does_not_exist!(release_branch_name)
+
     # Create the release branch
     UI.message 'Creating release branch...'
-    Fastlane::Helper::GitHelper.create_branch("release/#{next_release_version}", from: DEFAULT_BRANCH)
+    Fastlane::Helper::GitHelper.create_branch(release_branch_name, from: DEFAULT_BRANCH)
     ensure_git_branch(branch: '^release/')
     UI.success "Done! New release branch is: #{git_branch}"
 
@@ -507,4 +510,14 @@ platform :android do
     pr_url
   end
 
+  def ensure_branch_does_not_exist!(branch_name)
+    return unless Fastlane::Helper::GitHelper.branch_exists_on_remote?(branch_name: branch_name)
+
+    error_message = "The branch `#{branch_name}` already exists. Please check first if there is an existing Pull Request that needs to be merged or closed first, " \
+                    'or delete the branch to then run again the release task.'
+
+    buildkite_annotate(style: 'error', context: 'error-checking-branch', message: error_message) if is_ci
+
+    UI.user_error!(error_message)
+  end
 end
