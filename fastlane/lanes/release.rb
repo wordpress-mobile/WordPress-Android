@@ -440,7 +440,7 @@ platform :android do
     end.join("\n\n")
     File.write(tmp_file, unified_notes)
 
-    create_release(
+    create_github_release(
       repository: GHHELPER_REPO,
       version: release_title,
       release_notes_file_path: tmp_file,
