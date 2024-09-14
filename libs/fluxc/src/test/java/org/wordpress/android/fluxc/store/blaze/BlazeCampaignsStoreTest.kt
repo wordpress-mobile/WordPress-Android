@@ -236,6 +236,27 @@ class BlazeCampaignsStoreTest {
     }
 
     @Test
+    fun `when observing campaign objectives, then return data from DB`() = test {
+        whenever(blazeCampaignsDao.observeObjectives(any())).thenReturn(
+            flowOf(
+                List(4) {
+                    BlazeCampaignObjectiveEntity(
+                        id = it.toString(),
+                        title = "Title $it",
+                        description = "Description $it",
+                        locale = "en"
+                    )
+                }
+            )
+        )
+
+        val objectives = store.observeBlazeCampaignObjectives().first()
+
+        assertThat(objectives).isNotNull
+        assertThat(objectives.size).isEqualTo(4)
+    }
+
+    @Test
     fun `when fetching targeting locations, then locations are returned`() = test {
         whenever(creationRestClient.fetchTargetingLocations(any(), any(), any())).thenReturn(
             BlazeCreationRestClient.BlazePayload(
