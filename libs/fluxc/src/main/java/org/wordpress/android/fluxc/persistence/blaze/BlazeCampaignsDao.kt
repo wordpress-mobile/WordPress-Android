@@ -51,6 +51,21 @@ abstract class BlazeCampaignsDao {
     @Query("DELETE FROM BlazeCampaigns where siteId = :siteId")
     abstract fun clearBlazeCampaigns(siteId: Long)
 
+    @Query("SELECT * FROM BlazeCampaignObjectives WHERE locale = :locale")
+    abstract fun observeObjectives(locale: String): Flow<List<BlazeCampaignObjectiveEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertObjectives(topics: List<BlazeCampaignObjectiveEntity>)
+
+    @Query("DELETE FROM BlazeCampaignObjectives")
+    abstract suspend fun deleteObjectives()
+
+    @Transaction
+    open suspend fun replaceObjectives(objectives: List<BlazeCampaignObjectiveEntity>) {
+        deleteObjectives()
+        insertObjectives(objectives)
+    }
+
     @Entity(
         tableName = "BlazeCampaigns",
         indices = [Index(value = ["siteId"], unique = false)],
