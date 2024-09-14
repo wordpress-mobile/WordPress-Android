@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignCreationRequest
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethods
@@ -248,6 +249,15 @@ class BlazeCreationRestClient @Inject constructor(
         constructor(error: WPComGsonNetworkError) : this(null) {
             this.error = error
         }
+    }
+}
+
+private class BlazeCampaignObjectiveListResponse(
+    @SerializedName("objectives")
+    val objectives: List<BlazeCampaignObjectiveNetworkModel>
+) {
+    class BlazeCampaignObjectiveNetworkModel(val id: String, val title: String, val description: String) {
+        fun toDomainModel() = BlazeCampaignObjective(id, title, description)
     }
 }
 
