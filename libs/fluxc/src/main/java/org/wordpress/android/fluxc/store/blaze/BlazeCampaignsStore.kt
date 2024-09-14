@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCampaignsRestCl
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestClient
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -116,6 +117,32 @@ class BlazeCampaignsStore @Inject constructor(
     fun observeMostRecentBlazeCampaign(site: SiteModel) =
         campaignsDao.observeMostRecentCampaignForSite(site.siteId)
             .map { it?.toDomainModel() }
+
+    suspend fun fetchBlazeCampaignObjectives(
+        site: SiteModel,
+        locale: String = Locale.getDefault().language
+    ) = coroutineEngine.withDefaultContext(
+        tag = AppLog.T.API,
+        caller = this,
+        loggedMessage = "fetch blaze objectives"
+    ) {
+        creationRestClient.fetchCampaignObjectives(site, locale).let { payload ->
+            when {
+                payload.isError -> BlazeResult(BlazeError(payload.error))
+                else -> {
+                    campaignsDao.replaceObjectives(payload.data?.map {
+                        BlazeCampaignObjectiveEntity(
+                            id = it.id,
+                            title = it.title,
+                            description = it.description,
+                            locale = locale
+                        )
+                    }.orEmpty())
+                    BlazeResult(payload.data)
+                }
+            }
+        }
+    }
 
     suspend fun fetchBlazeTargetingLocations(
         site: SiteModel,
