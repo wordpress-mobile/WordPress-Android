@@ -32,6 +32,24 @@ class BlazeCreationRestClient @Inject constructor(
 ) {
     private val dateFormatter by lazy { SimpleDateFormat("yyyy-MM-dd", Locale.ROOT) }
 
+    suspend fun fetchCampaignObjectives(site: SiteModel, locale: String): BlazePayload<List<BlazeCampaignObjective>> {
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.campaigns.objectives.url
+
+        val response = wpComNetwork.executeGetGsonRequest(
+            url = url,
+            params = mapOf("locale" to locale),
+            clazz = BlazeCampaignObjectiveListResponse::class.java
+        )
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> {
+                BlazePayload(response.data.objectives.map { it.toDomainModel() })
+            }
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
+
     suspend fun fetchTargetingLocations(
         site: SiteModel,
         query: String,
