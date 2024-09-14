@@ -6,11 +6,13 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.persistence.coverters.BlazeCampaignsDateConverter
 import java.util.Date
@@ -106,5 +108,15 @@ abstract class BlazeCampaignsDao {
                 isEndlessCampaign = campaign.isEndlessCampaign
             )
         }
+    }
+
+    @Entity(tableName = "BlazeCampaignObjectives")
+    data class BlazeCampaignObjectiveEntity(
+        @PrimaryKey val id: String,
+        val title: String,
+        val description: String,
+        val locale: String,
+    ) {
+        fun toDomainModel() = BlazeCampaignObjective(id, title, description)
     }
 }
