@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignsModel
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
@@ -38,6 +39,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignImage
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -212,6 +214,25 @@ class BlazeCampaignsStoreTest {
         val result = store.getMostRecentBlazeCampaign(siteModel)
 
         assertThat(result).isNull()
+    }
+
+    @Test
+    fun `when fetching campaign objectives, then persist data in DB`() = test {
+        whenever(creationRestClient.fetchCampaignObjectives(any(), any())).thenReturn(
+            BlazeCreationRestClient.BlazePayload(
+                List(4) {
+                    BlazeCampaignObjective(
+                        id = it.toString(),
+                        title = "Title $it",
+                        description = "Description $it"
+                    )
+                }
+            )
+        )
+
+        store.fetchBlazeCampaignObjectives(siteModel)
+
+        verify(blazeCampaignsDao).replaceObjectives(any())
     }
 
     @Test
