@@ -144,6 +144,10 @@ class BlazeCampaignsStore @Inject constructor(
         }
     }
 
+    fun observeBlazeCampaignObjectives(
+        locale: String = Locale.getDefault().language
+    ) = campaignsDao.observeObjectives(locale).map { objectives -> objectives.map { it.toDomainModel() } }
+
     suspend fun fetchBlazeTargetingLocations(
         site: SiteModel,
         query: String,
