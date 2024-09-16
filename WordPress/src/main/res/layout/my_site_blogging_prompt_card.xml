@@ -53,13 +53,17 @@
 
         <LinearLayout
             android:id="@+id/attribution_container"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
+            android:background="?attr/selectableItemBackground"
             android:orientation="horizontal"
             android:paddingTop="@dimen/margin_medium"
+            android:paddingBottom="@dimen/margin_medium"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/prompt_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible">
 
             <ImageView
@@ -93,7 +97,7 @@
             android:id="@+id/answered_users_avatars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
             app:iconSize="@dimen/avatar_sz_extra_small"
             app:placeholder="@drawable/bg_oval_placeholder_user_32dp"
             app:chainUseRtl="true"

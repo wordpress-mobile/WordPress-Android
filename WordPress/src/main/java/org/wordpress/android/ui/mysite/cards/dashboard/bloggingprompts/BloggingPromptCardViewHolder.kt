@@ -77,8 +77,8 @@ class BloggingPromptCardViewHolder(
                 attributionIcon.setImageResource(iconRes)
             }
 
-        attribution.containerRes
-            .takeIf { it != -1 }
+        attribution.isContainerClickable
+            .takeIf { true }
             ?.let {
                 attributionContainer.setOnClickListener { containerClicked() }
             }

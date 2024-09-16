@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.bloggingprompts.BloggingPromptModel
@@ -10,23 +9,23 @@ enum class BloggingPromptAttribution(
     val value: String,
     @StringRes val contentRes: Int,
     @DrawableRes val iconRes: Int,
-    @LayoutRes val containerRes: Int,
-    @DrawableRes val externalLinkIconRes: Int
+    @DrawableRes val externalLinkIconRes: Int,
+    val isContainerClickable: Boolean
 ) {
-    NO_ATTRIBUTION("", -1, -1, -1, -1),
+    NO_ATTRIBUTION("", -1, -1, -1, false),
     DAY_ONE(
         "dayone",
         R.string.my_site_blogging_prompt_card_attribution_day_one,
         R.drawable.ic_dayone_24dp,
         R.id.attribution_container,
-        R.id.attribution_external_link_icon
+        true
     ),
     BLOGANUARY(
         "bloganuary",
         R.string.my_site_blogging_prompt_card_attribution_bloganuary,
         R.drawable.ic_bloganuary_24dp,
         -1,
-        -1
+        false
     );
 
     companion object {
