@@ -81,11 +81,6 @@ class BloggingPromptCardViewHolder(
             .takeIf { it }
             ?.let {
                 attributionContainer.setOnClickListener { containerClicked() }
-            }
-
-        attribution.externalLinkIconRes
-            .takeIf { it != -1 }
-            ?.let {
                 attributionExternalLinkIcon.setVisible(true)
             }
     }

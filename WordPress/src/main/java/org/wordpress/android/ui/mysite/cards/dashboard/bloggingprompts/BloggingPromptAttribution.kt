@@ -9,22 +9,19 @@ enum class BloggingPromptAttribution(
     val value: String,
     @StringRes val contentRes: Int,
     @DrawableRes val iconRes: Int,
-    @DrawableRes val externalLinkIconRes: Int,
     val isContainerClickable: Boolean
 ) {
-    NO_ATTRIBUTION("", -1, -1, -1, false),
+    NO_ATTRIBUTION("", -1, -1, false),
     DAY_ONE(
         "dayone",
         R.string.my_site_blogging_prompt_card_attribution_day_one,
         R.drawable.ic_dayone_24dp,
-        R.id.attribution_container,
         true
     ),
     BLOGANUARY(
         "bloganuary",
         R.string.my_site_blogging_prompt_card_attribution_bloganuary,
         R.drawable.ic_bloganuary_24dp,
-        -1,
         false
     );
 
