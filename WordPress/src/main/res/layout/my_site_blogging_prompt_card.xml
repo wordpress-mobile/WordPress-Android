@@ -77,6 +77,16 @@
                 android:textAppearance="?attr/textAppearanceCaption"
                 tools:text="@string/my_site_blogging_prompt_card_attribution_day_one" />
 
+            <ImageView
+                android:id="@+id/attribution_external_link_icon"
+                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/margin_small"
+                android:visibility="gone"
+                android:contentDescription="@string/open_external_link_desc"
+                android:src="@drawable/ic_external_white_24dp"
+                app:tint="?attr/colorPrimary" />
+
         </LinearLayout>
 
         <org.wordpress.android.ui.compose.views.TrainOfAvatarsView

@@ -13,6 +13,7 @@ import org.wordpress.android.ui.mysite.cards.dashboard.bloggingprompts.BloggingP
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.extensions.getColorStateListFromAttributeOrRes
+import org.wordpress.android.util.extensions.setVisible
 import org.wordpress.android.util.extensions.viewBinding
 
 class BloggingPromptCardViewHolder(
@@ -20,7 +21,8 @@ class BloggingPromptCardViewHolder(
     private val uiHelpers: UiHelpers,
     private val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     private val htmlCompatWrapper: HtmlCompatWrapper,
-    private val learnMoreClicked: () -> Unit
+    private val learnMoreClicked: () -> Unit,
+    private val containerClicked: () -> Unit,
 ) : MySiteCardAndItemViewHolder<MySiteBloggingPromptCardBinding>(
     parent.viewBinding(MySiteBloggingPromptCardBinding::inflate)
 ) {
@@ -73,6 +75,18 @@ class BloggingPromptCardViewHolder(
             .takeIf { it != -1 }
             ?.let { iconRes ->
                 attributionIcon.setImageResource(iconRes)
+            }
+
+        attribution.containerRes
+            .takeIf { it != -1 }
+            ?.let {
+                attributionContainer.setOnClickListener { containerClicked() }
+            }
+
+        attribution.externalLinkIconRes
+            .takeIf { it != -1 }
+            ?.let {
+                attributionExternalLinkIcon.setVisible(true)
             }
     }
 
