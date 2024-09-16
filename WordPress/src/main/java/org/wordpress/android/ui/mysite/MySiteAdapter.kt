@@ -110,7 +110,7 @@ class MySiteAdapter(
                 bloggingPromptsCardAnalyticsTracker,
                 htmlCompatWrapper,
                 learnMoreClicked,
-                containerClicked,
+                containerClicked
             )
 
             MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD.ordinal -> BloganuaryNudgeCardViewHolder(parent)
