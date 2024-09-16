@@ -78,7 +78,7 @@ class BloggingPromptCardViewHolder(
             }
 
         attribution.isContainerClickable
-            .takeIf { true }
+            .takeIf { it }
             ?.let {
                 attributionContainer.setOnClickListener { containerClicked() }
             }
