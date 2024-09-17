@@ -65,3 +65,4 @@ include ':libs:mocks'
 
 apply from: './config/gradle/included_builds.gradle'
 apply from: './config/gradle/gradle_build_cache.gradle'
+apply from: './config/gradle/gradle_build_scan.gradle'
