@@ -259,4 +259,3 @@ dependencies {
 }
 
 apply from: './config/gradle/code_coverage.gradle'
-apply from: './config/gradle/gradle_build_scan.gradle'
