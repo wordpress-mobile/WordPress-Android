@@ -464,7 +464,6 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$androidxSwipeToRefreshVersion"
     implementation "androidx.preference:preference:$androidxPreferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkManagerVersion"
-    implementation "androidx.work:work-runtime-ktx:$androidxWorkManagerVersion"
     implementation "androidx.webkit:webkit:$androidxWebkitVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintlayoutVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel:$androidxLifecycleVersion"
