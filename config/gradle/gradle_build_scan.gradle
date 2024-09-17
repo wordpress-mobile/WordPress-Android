@@ -10,4 +10,10 @@ if (System.getenv('CI')) {
             uploadInBackground = false
         }
     }
+} else {
+    develocity {
+        buildScan {
+            publishing.onlyIf { false }
+        }
+    }
 }
