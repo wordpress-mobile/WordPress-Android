@@ -73,7 +73,8 @@ class MySiteAdapter(
     val gravatarLoader: MeGravatarLoader,
     val bloggingPromptsCardAnalyticsTracker: BloggingPromptsCardAnalyticsTracker,
     val htmlCompatWrapper: HtmlCompatWrapper,
-    val learnMoreClicked: () -> Unit
+    val learnMoreClicked: () -> Unit,
+    val containerClicked: () -> Unit
 ) : ListAdapter<MySiteCardAndItem, MySiteCardAndItemViewHolder<*>>(MySiteAdapterDiffCallback) {
     private var nestedScrollStates = Bundle()
 
@@ -108,7 +109,8 @@ class MySiteAdapter(
                 uiHelpers,
                 bloggingPromptsCardAnalyticsTracker,
                 htmlCompatWrapper,
-                learnMoreClicked
+                learnMoreClicked,
+                containerClicked
             )
 
             MySiteCardAndItem.Type.BLOGANUARY_NUDGE_CARD.ordinal -> BloganuaryNudgeCardViewHolder(parent)

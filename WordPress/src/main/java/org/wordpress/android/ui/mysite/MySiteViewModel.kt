@@ -417,6 +417,11 @@ class MySiteViewModel @Inject constructor(
         _onNavigation.postValue(Event(BloggingPromptCardNavigationAction.LearnMore))
     }
 
+    fun onBloggingPromptsAttributionClicked() {
+        _onNavigation.value = Event(
+            SiteNavigationAction.OpenExternalUrl(DAY_ONE_EXTERNAL_URL)
+        )
+    }
 
     // FluxC events
     @Subscribe(threadMode = MAIN)
@@ -458,5 +463,6 @@ class MySiteViewModel @Inject constructor(
         const val ARG_QUICK_START_TASK = "ARG_QUICK_START_TASK"
         const val HIDE_WP_ADMIN_GMT_TIME_ZONE = "GMT"
         private const val DELAY_BEFORE_SHOWING_JETPACK_INDIVIDUAL_PLUGIN_OVERLAY = 500L
+        private const val DAY_ONE_EXTERNAL_URL = "https://dayoneapp.com/?utm_source=jetpack&utm_medium=prompts"
     }
 }
