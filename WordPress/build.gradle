@@ -538,7 +538,6 @@ dependencies {
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoAndroidVersion"
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "com.squareup.okhttp3:mockwebserver:$squareupMockWebServerVersion"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$androidxTestUiAutomatorVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxTestEspressoVersion", {
         version {
