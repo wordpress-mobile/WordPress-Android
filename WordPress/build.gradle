@@ -443,7 +443,6 @@ dependencies {
     implementation "$gradle.ext.gravatarBinaryPath:$gravatarVersion"
 
     implementation "com.google.android.play:app-update:$googlePlayInAppUpdateVersion"
-    implementation "com.google.android.play:app-update-ktx:$googlePlayInAppUpdateVersion"
 
     implementation "com.google.code.gson:gson:$googleGsonVersion"
     implementation "androidx.core:core:$androidxCoreVersion"
@@ -472,7 +471,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$androidxLifecycleVersion"
     implementation "com.android.volley:volley:$androidVolleyVersion"
     implementation "com.google.android.play:review:$googlePlayReviewVersion"
-    implementation "com.google.android.play:review-ktx:$googlePlayReviewVersion"
     implementation "com.google.android.gms:play-services-auth:$googlePlayServicesAuthVersion"
     implementation "com.google.mlkit:barcode-scanning-common:$googleMLKitBarcodeScanningCommonVersion"
     implementation "com.google.mlkit:text-recognition:$googleMLKitTextRecognitionVersion"
