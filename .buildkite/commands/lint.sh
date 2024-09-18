@@ -13,17 +13,17 @@ echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
   set +e
-	./gradlew lintWordpressVanillaRelease
-	lint_exit_code=$?
-	set -e
+  ./gradlew lintWordpressVanillaRelease
+  lint_exit_code=$?
+  set -e
 
-	upload_sarif_to_github "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif"
-	exit $lint_exit_code
+  upload_sarif_to_github "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif"
+  exit $lint_exit_code
 fi
 
 if [ "$1" = "jetpack" ]; then
-	./gradlew lintJetpackVanillaRelease
-	exit 0
+  ./gradlew lintJetpackVanillaRelease
+  exit 0
 fi
 
 echo "No target provided – unable to lint"
