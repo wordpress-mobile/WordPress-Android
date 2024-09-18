@@ -46,7 +46,8 @@
         <ignore path="**/libs/editor/src/main/res/drawable-hdpi/**" />  <!-- 6 errors -->
         <!-- GOOGLE SERVICES -->
         <ignore path="**/generated/res/google-services/**/values/values.xml" />
-        <ignore path="**/generated/res/google-services/**/xml/global_tracker.xml" />
+        <ignore path="**/xml/global_tracker.xml" />
+        <ignore regexp="ga_trackingId|project_id" />
         <!-- LOCALIZATION -->
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
         <ignore regexp=".*\/values\/strings\.xml$"/>

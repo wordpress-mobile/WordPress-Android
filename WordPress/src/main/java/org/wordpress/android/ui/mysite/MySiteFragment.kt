@@ -349,8 +349,10 @@ class MySiteFragment : Fragment(R.layout.my_site_fragment),
             accountStore,
             meGravatarLoader,
             bloggingPromptsCardAnalyticsTracker,
-            htmlCompatWrapper
-        ) { viewModel.onBloggingPromptsLearnMoreClicked() }
+            htmlCompatWrapper,
+            { viewModel.onBloggingPromptsLearnMoreClicked() },
+            { viewModel.onBloggingPromptsAttributionClicked() }
+        )
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
