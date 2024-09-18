@@ -12,9 +12,13 @@ bundle exec fastlane check_declared_locales_consistency app:"$1"
 echo "--- :microscope: Linting"
 
 if [ "$1" = "wordpress" ]; then
+  set +e
 	./gradlew lintWordpressVanillaRelease
-	upload_sarif_to_github "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif" "wordpress-mobile" "WordPress-Android"
-	exit 0
+	lint_exit_code=$?
+	set -e
+
+	upload_sarif_to_github "WordPress/build/reports/lint-results-wordpressVanillaRelease.sarif"
+	exit $lint_exit_code
 fi
 
 if [ "$1" = "jetpack" ]; then
