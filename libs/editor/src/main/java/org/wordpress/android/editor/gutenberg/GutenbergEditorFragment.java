@@ -90,6 +90,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButton
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageListener;
 import org.wordpress.gutenberg.GutenbergView;
+import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,6 +100,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeType;
@@ -255,12 +257,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
+
+            Integer postId = (Integer) mSettings.get("postId");
+            if (postId != null && postId == 0) {
+                postId = null;
+            }
+
             mGutenbergView.start(
                     (String) mSettings.get("siteApiRoot"),
                     (String) mSettings.get("siteApiNamespace"),
                     (String) mSettings.get("authHeader"),
                     true,
-                    (Integer) mSettings.get("postId"),
+                    postId,
                     (String) mSettings.get("postType"),
                     (String) mSettings.get("postTitle"),
                     (String) mSettings.get("postContent")
@@ -1116,6 +1124,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             title = "";
         }
 
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
         getGutenbergContainerFragment().setTitle(title.toString());
     }
 
@@ -1180,6 +1191,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void sendToJSPostSaveEvent() {
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
         getGutenbergContainerFragment().sendToJSPostSaveEvent();
     }
 
@@ -1204,7 +1218,25 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public Pair<CharSequence, CharSequence> getTitleAndContent(CharSequence originalContent) throws
             EditorFragmentNotAddedException {
         if (mIsNewGutenbergEnabled) {
-            return new Pair<>("", "");
+            final Pair<CharSequence, CharSequence>[] result = new Pair[1];
+            final CountDownLatch latch = new CountDownLatch(1);
+
+            mGutenbergView.getTitleAndContent(new TitleAndContentCallback() {
+                @Override
+                public void onResult(@Nullable String title, @NonNull String content) {
+                    result[0] = new Pair<>(title, content);
+                    latch.countDown();
+                }
+            });
+
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return new Pair<>("", "");
+            }
+
+            return result[0] != null ? result[0] : new Pair<>("", "");
         }
         if (!isAdded()) {
             throw new EditorFragmentNotAddedException();
