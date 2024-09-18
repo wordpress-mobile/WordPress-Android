@@ -2371,7 +2371,6 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
      */
     inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) :
         FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-
         @Suppress("ReturnCount")
         override fun getItem(position: Int): Fragment {
             return when (position) {
