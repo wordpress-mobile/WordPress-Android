@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.blaze.BlazeAdForecast
 import org.wordpress.android.fluxc.model.blaze.BlazeAdSuggestion
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignCreationRequest
 import org.wordpress.android.fluxc.model.blaze.BlazeCampaignModel
+import org.wordpress.android.fluxc.model.blaze.BlazeCampaignObjective
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethod
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethodUrls
 import org.wordpress.android.fluxc.model.blaze.BlazePaymentMethods
@@ -30,6 +31,27 @@ class BlazeCreationRestClient @Inject constructor(
     private val wpComNetwork: WPComNetwork
 ) {
     private val dateFormatter by lazy { SimpleDateFormat("yyyy-MM-dd", Locale.ROOT) }
+
+    suspend fun fetchCampaignObjectives(
+        site: SiteModel,
+        locale: String
+    ): BlazePayload<List<BlazeCampaignObjective>> {
+        val url = WPCOMV2.sites.site(site.siteId).wordads.dsp.api.v1_1.campaigns.objectives.url
+
+        val response = wpComNetwork.executeGetGsonRequest(
+            url = url,
+            params = mapOf("locale" to locale),
+            clazz = BlazeCampaignObjectiveListResponse::class.java
+        )
+
+        return when (response) {
+            is WPComGsonRequestBuilder.Response.Success -> {
+                BlazePayload(response.data.objectives.map { it.toDomainModel() })
+            }
+
+            is WPComGsonRequestBuilder.Response.Error -> BlazePayload(response.error)
+        }
+    }
 
     suspend fun fetchTargetingLocations(
         site: SiteModel,
@@ -248,6 +270,20 @@ class BlazeCreationRestClient @Inject constructor(
         constructor(error: WPComGsonNetworkError) : this(null) {
             this.error = error
         }
+    }
+}
+
+private class BlazeCampaignObjectiveListResponse(
+    @SerializedName("objectives")
+    val objectives: List<BlazeCampaignObjectiveNetworkModel>
+) {
+    class BlazeCampaignObjectiveNetworkModel(
+        val id: String,
+        val title: String,
+        val description: String,
+        @SerializedName("suitable_for_description") val suitableForDescription: String
+    ) {
+        fun toDomainModel() = BlazeCampaignObjective(id, title, description, suitableForDescription)
     }
 }
 
