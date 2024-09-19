@@ -979,6 +979,8 @@ public class MediaStore extends Store {
 
         if (payload.site.isUsingWpComRestApi()) {
             mMediaRestClient.fetchMedia(payload.site, payload.media);
+        } else if (payload.site.isJetpackCPConnected()) {
+            mWPComV2MediaRestClient.fetchMedia(payload.site, payload.media);
         } else {
             mMediaXmlrpcClient.fetchMedia(payload.site, payload.media);
         }
