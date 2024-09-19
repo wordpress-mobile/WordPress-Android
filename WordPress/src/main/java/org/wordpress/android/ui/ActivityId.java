@@ -37,7 +37,7 @@ public enum ActivityId {
     }
 
     public static void trackLastActivity(ActivityId activityId) {
-        AppLog.v(T.UTILS, "trackLastActivity, activityId: " + activityId);
+        AppLog.v(T.UTILS, "trackLastActivity something, activityId: " + activityId);
         if (activityId != null) {
             AppPrefs.setLastActivityStr(activityId.name());
         }

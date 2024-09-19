@@ -4,28 +4,6 @@
     <issue
         id="InflateParams"
         message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
-        errorLine1="        val layout = layoutInflater.inflate(R.layout.settings_username_changer_confirm_dialog, null)"
-        errorLine2="                                                                                               ~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/accounts/signup/SettingsUsernameChangerFragment.kt"
-            line="88"
-            column="96"/>
-    </issue>
-
-    <issue
-        id="InflateParams"
-        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
-        errorLine1="        val rootView = requireActivity().layoutInflater.inflate(R.layout.stats_widget_site_selector, null)"
-        errorLine2="                                                                                                     ~~~~">
-        <location
-            file="src/main/java/org/wordpress/android/ui/stats/refresh/lists/widget/configuration/StatsWidgetSiteSelectionDialogFragment.kt"
-            line="27"
-            column="102"/>
-    </issue>
-
-    <issue
-        id="InflateParams"
-        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
         errorLine1="    val layout = LayoutInflater.from(context).inflate(R.layout.support_email_and_name_dialog, null)"
         errorLine2="                                                                                              ~~~~">
         <location
