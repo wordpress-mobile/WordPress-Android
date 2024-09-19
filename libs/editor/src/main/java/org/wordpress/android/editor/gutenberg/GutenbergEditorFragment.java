@@ -95,6 +95,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnSetFeaturedImageLi
 import org.wordpress.gutenberg.GutenbergView;
 import org.wordpress.gutenberg.GutenbergView.TitleAndContentCallback;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -126,6 +127,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public static final String ARG_FAILED_MEDIAS = "arg_failed_medias";
     public static final String ARG_FEATURED_IMAGE_ID = "featured_image_id";
     public static final String ARG_JETPACK_FEATURES_ENABLED = "jetpack_features_enabled";
+    public static final String ARG_IS_NEW_GUTENBERG_ENABLED = "new_gutenberg";
+    public static final String ARG_NEW_GUTENBERG_SETTINGS = "new_gutenberg_settings";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -187,6 +190,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putBoolean(ARG_JETPACK_FEATURES_ENABLED, jetpackFeaturesEnabled);
+        args.putBoolean(ARG_IS_NEW_GUTENBERG_ENABLED, newGutenbergEnabled);
+        args.putSerializable(ARG_NEW_GUTENBERG_SETTINGS, (Serializable) settings);
         fragment.setArguments(args);
         SavedInstanceDatabase db = SavedInstanceDatabase.Companion.getDatabase(context);
         mIsNewGutenbergEnabled = newGutenbergEnabled;
@@ -199,6 +204,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private GutenbergContainerFragment getGutenbergContainerFragment() {
+        if (mIsNewGutenbergEnabled) {
+            return mRetainedGutenbergContainerFragment;
+        }
+
         if (mRetainedGutenbergContainerFragment == null) {
             mRetainedGutenbergContainerFragment = (GutenbergContainerFragment) getChildFragmentManager()
                     .findFragmentByTag(GutenbergContainerFragment.TAG);
@@ -214,6 +223,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mIsNewGutenbergEnabled = getArguments().getBoolean(ARG_IS_NEW_GUTENBERG_ENABLED);
+        }
 
         if (getGutenbergContainerFragment() == null) {
             GutenbergPropsBuilder gutenbergPropsBuilder = null;
@@ -248,12 +261,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     ARG_STORY_BLOCK_EXTERNALLY_EDITED_ORIGINAL_HASH);
             mFailedMediaIds = (HashSet<String>) savedInstanceState.getSerializable(ARG_FAILED_MEDIAS);
             mFeaturedImageId = savedInstanceState.getLong(ARG_FEATURED_IMAGE_ID);
+            mIsNewGutenbergEnabled = savedInstanceState.getBoolean(ARG_IS_NEW_GUTENBERG_ENABLED);
         }
     }
 
     @SuppressWarnings("MethodLength")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
+            mIsNewGutenbergEnabled = getArguments().getBoolean(ARG_IS_NEW_GUTENBERG_ENABLED);
+            mSettings = (Map<String, Object>) getArguments().getSerializable(ARG_NEW_GUTENBERG_SETTINGS);
+        }
+
         if (mIsNewGutenbergEnabled) {
             mGutenbergView = new GutenbergView(requireContext());
             mGutenbergView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -285,10 +305,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         View view = inflater.inflate(R.layout.fragment_gutenberg_editor, container, false);
 
         initializeSavingProgressDialog();
-
-        if (getArguments() != null) {
-            mIsNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-        }
 
         ViewGroup gutenbergContainer = view.findViewById(R.id.gutenberg_container);
         getGutenbergContainerFragment().attachToContainer(gutenbergContainer,
@@ -1590,6 +1606,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onConnectionStatusChange(boolean isConnected) {
+        if (mIsNewGutenbergEnabled) {
+            return;
+        }
         getGutenbergContainerFragment().onConnectionStatusChange(isConnected);
         if (isConnected && hasFailedMediaUploads()) {
             mEditorFragmentListener.onMediaRetryAll(mFailedMediaIds);

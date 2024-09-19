@@ -311,6 +311,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
     private var isXPostsCapable: Boolean? = null
     private var onGetSuggestionResult: Consumer<String?>? = null
     private var isVoiceContentSet = false
+    private var isNewGutenbergEditor = false
 
     // For opening the context menu after permissions have been granted
     private var menuView: View? = null
@@ -513,6 +514,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         }
         onBackPressedDispatcher.addCallback(this, callback)
         dispatcher.register(this)
+        isNewGutenbergEditor = newGutenbergFeatureConfig.isEnabled()
 
         createEditShareMessageActivityResultLauncher()
 
@@ -721,6 +723,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 }
 
             isNewPost = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, false)
+            isNewGutenbergEditor = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_GUTENBERG, false)
             isVoiceContentSet = state.getBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, false)
             updatePostLoadingAndDialogState(
                 fromInt(
@@ -1191,6 +1194,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         outState.putInt(EditPostActivityConstants.STATE_KEY_POST_LOADING_STATE, postLoadingState.value)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_POST, isNewPost)
         outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_VOICE_CONTENT_SET, isVoiceContentSet)
+        outState.putBoolean(EditPostActivityConstants.STATE_KEY_IS_NEW_GUTENBERG, isNewGutenbergEditor)
         outState.putBoolean(
             EditPostActivityConstants.STATE_KEY_IS_PHOTO_PICKER_VISIBLE,
             editorPhotoPicker?.isPhotoPickerShowing() ?: false
@@ -2146,6 +2150,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
         i.putExtra(EditPostActivityConstants.EXTRA_RESTART_EDITOR, restartEditorOption.name)
         i.putExtra(EditPostActivityConstants.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
         i.putExtra(EditPostActivityConstants.EXTRA_IS_NEW_POST, isNewPost)
+        i.putExtra(EditPostActivityConstants.STATE_KEY_IS_NEW_GUTENBERG, isNewGutenbergEditor)
         setResult(RESULT_OK, i)
     }
 
@@ -2437,7 +2442,7 @@ class EditPostActivity : LocaleAwareActivity(), EditorFragmentActivity, EditorIm
                 gutenbergWebViewAuthorizationData,
                 gutenbergPropsBuilder,
                 jetpackFeatureRemovalPhaseHelper.shouldShowJetpackPoweredEditorFeatures(),
-                newGutenbergFeatureConfig.isEnabled(),
+                isNewGutenbergEditor,
                 settings
             )
         }
