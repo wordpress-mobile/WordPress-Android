@@ -654,35 +654,6 @@ tasks.register("violationCommentsToGitHub", ViolationCommentsToGitHubTask) {
     ]
 }
 
-tasks.register("dependencyTreeDiffCommentToGitHub", ViolationCommentsToGitHubTask) {
-    repositoryOwner = "wordpress-mobile"
-    repositoryName = "WordPress-Android"
-    pullRequestId = System.properties['GITHUB_PULLREQUESTID']
-    oAuth2Token = System.properties['GITHUB_OAUTH2TOKEN']
-    gitHubUrl = "https://api.github.com/"
-    createCommentWithAllSingleFileComments = true
-    createSingleFileComments = false
-    commentOnlyChangedContent = true
-    commentOnlyChangedFiles = false
-    minSeverity = SEVERITY.INFO
-    commentTemplate = """
-<details><summary>The PR caused some dependency changes (expand to see details)</summary>
-<p>
-
-```diff
-{{{violation.message}}}
-```
-
-</p>
-</details>
-
-*Please review and act accordingly*
-"""
-    violations = [
-            ["GENERIC", ".", ".*/build/.*/diff/.*\\.txt\$", "DependenciesDiffChecker"],
-    ]
-}
-
 tasks.register("printVersionName") {
     doLast {
         println android.defaultConfig.versionName
