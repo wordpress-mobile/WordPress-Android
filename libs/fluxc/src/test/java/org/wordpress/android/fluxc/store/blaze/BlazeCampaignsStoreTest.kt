@@ -39,7 +39,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.blaze.BlazeCreationRestCli
 import org.wordpress.android.fluxc.network.rest.wpcom.blaze.CampaignImage
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignEntity
-import org.wordpress.android.fluxc.persistence.blaze.BlazeCampaignsDao.BlazeCampaignObjectiveEntity
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao
+import org.wordpress.android.fluxc.persistence.blaze.BlazeObjectivesDao.BlazeCampaignObjectiveEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDao
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingDeviceEntity
 import org.wordpress.android.fluxc.persistence.blaze.BlazeTargetingLanguageEntity
@@ -123,6 +124,7 @@ class BlazeCampaignsStoreTest {
     private val creationRestClient: BlazeCreationRestClient = mock()
     private val blazeCampaignsDao: BlazeCampaignsDao = mock()
     private val blazeTargetingDao: BlazeTargetingDao = mock()
+    private val blazeObjectivesDao: BlazeObjectivesDao = mock()
     private val siteModel = SiteModel().apply { siteId = SITE_ID }
 
     private lateinit var store: BlazeCampaignsStore
@@ -137,7 +139,8 @@ class BlazeCampaignsStoreTest {
             creationRestClient = creationRestClient,
             campaignsDao = blazeCampaignsDao,
             targetingDao = blazeTargetingDao,
-            coroutineEngine = initCoroutineEngine()
+            coroutineEngine = initCoroutineEngine(),
+            blazeObjectivesDao = blazeObjectivesDao
         )
     }
 
@@ -224,7 +227,8 @@ class BlazeCampaignsStoreTest {
                     BlazeCampaignObjective(
                         id = it.toString(),
                         title = "Title $it",
-                        description = "Description $it"
+                        description = "Description $it",
+                        suitableForDescription = "Suitable for description $it"
                     )
                 }
             )
@@ -232,18 +236,19 @@ class BlazeCampaignsStoreTest {
 
         store.fetchBlazeCampaignObjectives(siteModel)
 
-        verify(blazeCampaignsDao).replaceObjectives(any())
+        verify(blazeObjectivesDao).replaceObjectives(any())
     }
 
     @Test
     fun `when observing campaign objectives, then return data from DB`() = test {
-        whenever(blazeCampaignsDao.observeObjectives(any())).thenReturn(
+        whenever(blazeObjectivesDao.observeObjectives(any())).thenReturn(
             flowOf(
                 List(4) {
                     BlazeCampaignObjectiveEntity(
                         id = it.toString(),
                         title = "Title $it",
                         description = "Description $it",
+                        suitableForDescription = "Suitable for description $it",
                         locale = "en"
                     )
                 }
