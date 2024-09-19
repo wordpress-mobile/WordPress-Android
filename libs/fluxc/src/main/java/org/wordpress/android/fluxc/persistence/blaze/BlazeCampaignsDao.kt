@@ -130,8 +130,9 @@ abstract class BlazeCampaignsDao {
         @PrimaryKey val id: String,
         val title: String,
         val description: String,
-        val locale: String,
+        val suitableForDescription: String,
+        val locale: String
     ) {
-        fun toDomainModel() = BlazeCampaignObjective(id, title, description)
+        fun toDomainModel() = BlazeCampaignObjective(id, title, description, suitableForDescription)
     }
 }
