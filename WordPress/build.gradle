@@ -607,6 +607,15 @@ dependencies {
     implementation "com.automattic.tracks:crashlogging:$automatticTracksVersion"
 }
 
+dependencyAnalysis {
+    issues {
+        onUnusedDependencies {
+            // This dependency is actually needed because otherwise UI tests fail to run (but do compile).
+            exclude("org.mockito:mockito-android")
+        }
+    }
+}
+
 configurations.all {
     // Exclude packaged wordpress sub projects, force the use of the source project
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
